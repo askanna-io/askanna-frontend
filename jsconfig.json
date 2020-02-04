@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "baseUrl": ".",
+    "paths": {
+      "core/*": [".src/core/*"],
+      "features/*": [".src/features/*"],
+      "public/*": ["./public/*"]
+    }
+  }
+}
