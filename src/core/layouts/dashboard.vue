@@ -33,7 +33,7 @@
       <v-container class="fill-height" fluid>
         <v-menu v-model="menu" :close-on-content-click="false" :nudge-width="400" offset-y nudge-bottom="10">
           <template v-slot:activator="{ on }">
-            <v-btn small dark class="white primary--text" text v-on="on">
+            <v-btn small dark class="white primary--text" text v-on="on" :to="{ path: '/' }">
               Projects
             </v-btn>
           </template>
@@ -85,6 +85,9 @@
             </v-col>
           </v-row>
         </v-menu>
+        <v-btn small dark class="ml-1 white primary--text" text :to="{ name: 'jobs' }">
+          Jobs
+        </v-btn>
         <v-spacer />
         <v-menu transition="slide-y-transition">
           <template v-slot:activator="{ on }">

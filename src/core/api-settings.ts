@@ -28,7 +28,8 @@ export const api: ApiSettings = {
   points: {
     auth: {
       logout: () => `rest-auth/logout/`
-    }
+    },
+    jobs: {}
   }
 }
 
