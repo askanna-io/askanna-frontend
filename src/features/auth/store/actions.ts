@@ -30,9 +30,12 @@ export const actions: ActionTree<AuthState, RootState> = {
 
       commit(mt.SET_AUTH, data)
 
-      router.push({ name: '/' })
+      router.push({ path: '/' })
     } catch (error) {
       if ((error && error.response && error.response.status === 400) || error.statusCode === 400) {
+        const message = error.response.data.non_field_errors[0]
+        dispatch(`global/${actionType.showSnackBar}`, { message }, { root })
+
         return error
       }
 
@@ -50,16 +53,16 @@ export const actions: ActionTree<AuthState, RootState> = {
         actionType.apiService,
         {
           action: apiString.logout,
+          method: 'post',
           serviceName
         },
         { root }
       )
     } catch (error) {
-      console.log(error)
       router.push({ path: '/login' })
     }
+    commit(mt.DROP_AUTH, null)
 
     router.push({ path: '/login' })
-    commit(mt.DROP_AUTH, null)
   }
 }

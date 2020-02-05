@@ -2,7 +2,13 @@
   <v-row align="center" justify="center" class="login-wrapper">
     <v-col cols="6" xl="2" md="3" sm="5">
       <img alt="AskAnna logo" src="@/assets/logo.png" class="logo" />
-      <v-form ref="loginForm" v-model="isFormValid" lazy-validation>
+      <v-form
+        ref="loginForm"
+        v-model="isFormValid"
+        lazy-validation
+        @keyup.native.enter="handleLogin"
+        @submit="handleLogin"
+      >
         <v-text-field
           v-model="formData.username"
           dark
@@ -32,22 +38,13 @@
 
 <script>
 import { createNamespacedHelpers } from 'vuex'
+import { login } from '@/core/store/actionTypes'
 import { AUTH_STORE } from '@/core/store/storeTypes'
-import useSnackBar from '@/core/components/useSnackBar'
-import { login, getProjectInfo } from '@/core/store/actionTypes'
 
 const { mapActions } = createNamespacedHelpers(AUTH_STORE)
 
 export default {
   name: 'Login',
-
-  setup() {
-    let state = useSnackBar()
-
-    return {
-      ...state
-    }
-  },
 
   data: () => ({
     formData: {
@@ -67,12 +64,7 @@ export default {
         return
       }
 
-      const result = await this.login({ ...this.formData })
-      const message = result.response.data.non_field_errors[0] || 'Success'
-      this.setSnackBar({ message })
-
-      this.reset()
-      this.resetValidation()
+      await this.login({ ...this.formData })
     },
     reset() {
       this.$refs.loginForm.reset()

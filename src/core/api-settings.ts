@@ -23,11 +23,11 @@ export const api: ApiSettings = {
   // auth api
   auth: {
     login: () => `rest-auth/login/`,
-    logout: () => `oauth2/logout`
+    logout: () => `rest-auth/logout/`
   },
   points: {
     auth: {
-      logout: () => `oauth2/logout`
+      logout: () => `rest-auth/logout/`
     }
   }
 }

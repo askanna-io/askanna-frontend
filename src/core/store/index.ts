@@ -28,14 +28,7 @@ const store: StoreOptions<RootState> = {
     loading: false
   },
 
-  mutations: {
-    [mt.LOADING_START](state) {
-      state.loading = true
-    },
-    [mt.LOADING_STOP](state) {
-      state.loading = false
-    }
-  },
+  mutations: {},
   actions: {
     async [at.apiService](
       { commit, rootState },
@@ -50,8 +43,6 @@ const store: StoreOptions<RootState> = {
         serviceName = 'order'
       }
     ) {
-      commit(mt.LOADING_START)
-
       try {
         const result = await $axios({
           data,
