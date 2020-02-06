@@ -3,7 +3,7 @@ export default {
     {
       path: '/jobs',
       name: 'jobs',
-      component: () => import(/* webpackChunkName: "login" */ './views/TheJobs.vue')
+      component: () => import(/* webpackChunkName: "jobs" */ './views/TheJobs.vue')
     }
   ]
 }

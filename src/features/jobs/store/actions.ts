@@ -1,18 +1,31 @@
-import axios from 'axios'
-import { AxiosRequestConfig } from 'axios'
-
-import router from '@/core/router'
-
-import * as mt from '@/core/store/mutationTypes'
+import * as type from './types'
 import { apiStringify } from '@/core/api-settings'
-import { api } from '@/core/api-settings'
-import * as actionType from '@/core/store/actionTypes'
+import * as rootTypes from '@/core/store/actionTypes'
 
 import { ActionTree } from 'vuex'
 import { JobsState, JOBS_STORE } from './types'
 
 const root = true
 const serviceName = JOBS_STORE
-const apiString = apiStringify(serviceName)
+const api = apiStringify(serviceName)
 
-export const actions: ActionTree<JobsState, RootState> = {}
+export const actions: ActionTree<JobsState, RootState> = {
+  async [type.getJobsList]({ commit, dispatch, state }) {
+    let list
+    try {
+      list = await dispatch(
+        rootTypes.apiService,
+        {
+          action: api.list,
+          serviceName
+        },
+        { root }
+      )
+    } catch (e) {
+      console.error('Error on load jobs list items in getJobsList action.\nError: ', e)
+      return
+    }
+
+    commit(type.SET_JOBS_LIST, list)
+  }
+}
