@@ -29,7 +29,7 @@
 
     <v-app-bar app clipped-left dark color="primary">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <img alt="AskAnna logo" src="@/assets/logo2.png" class="logo" />
+      <img alt="AskAnna logo" src="@/assets/logo.png" class="logo" />
       <v-container class="fill-height" fluid>
         <v-menu v-model="menu" :close-on-content-click="false" :nudge-width="400" offset-y nudge-bottom="10">
           <template v-slot:activator="{ on }">

@@ -1,7 +1,7 @@
 <template>
   <v-row align="center" justify="center" class="login-wrapper">
     <v-col cols="12">
-      <v-data-table :headers="headers" :items="list" class="elevation-1" @click:row="gotoJob">
+      <v-data-table :headers="headers" :items="list" class="elevation-1">
         <template v-slot:item.uuid>
           <v-chip :color="getColor(Math.round(Math.random() * 10))" dark>{{ Math.round(Math.random() * 10) }}</v-chip>
         </template>
@@ -69,18 +69,11 @@ export default {
     }
   },
 
-  updated() {
-    console.log(this.list)
-  },
-
   methods: {
     getColor(fails) {
       if (fails > 5) return 'red'
       else if (fails >= 1) return 'orange'
       else return 'green'
-    },
-    gotoJob(item) {
-      console.log(item)
     }
   }
 }
