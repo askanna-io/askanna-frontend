@@ -1,6 +1,5 @@
-import { computed } from '@vue/composition-api'
 import { useState, useActions } from '@u3u/vue-hooks'
-import { JOB_STORE, actionTypes } from '../store/types'
+import { JOB_STORE, action } from '../store/types'
 
 export default function() {
   const state = {
@@ -8,7 +7,7 @@ export default function() {
   }
 
   const actions = {
-    ...useActions(JOB_STORE, [...actionTypes])
+    ...useActions(JOB_STORE, { ...action })
   }
 
   return {

@@ -10,7 +10,7 @@ const serviceName = JOB_STORE
 const api = apiStringify(serviceName)
 
 export const actions: ActionTree<jobState, RootState> = {
-  async [type.getJob]({ commit, dispatch, state }, id) {
+  async [type.action.getJob]({ commit, dispatch, state }, id) {
     let job
     try {
       job = await dispatch(
@@ -49,6 +49,69 @@ export const actions: ActionTree<jobState, RootState> = {
     }
 
     console.log(job)
+
+    commit(type.UPDATE_JOB, job)
+  },
+
+  async [type.action.stopJob]({ commit, dispatch, state }, id) {
+    let job
+    try {
+      job = await dispatch(
+        rootTypes.apiService,
+        {
+          action: api.stop,
+          method: 'post',
+          serviceName,
+          uuid: id
+        },
+        { root }
+      )
+    } catch (e) {
+      console.error('Error on stop job  in stopJob action.\nError: ', e)
+      return
+    }
+
+    commit(type.UPDATE_JOB, job)
+  },
+
+  async [type.action.pauseJob]({ commit, dispatch, state }, id) {
+    let job
+    try {
+      job = await dispatch(
+        rootTypes.apiService,
+        {
+          action: api.pause,
+          method: 'post',
+          serviceName,
+          uuid: id
+        },
+        { root }
+      )
+    } catch (e) {
+      console.error('Error on pause job  in pauseJob action.\nError: ', e)
+      return
+    }
+
+    commit(type.UPDATE_JOB, job)
+  },
+
+  async [type.action.resetJob]({ commit, dispatch, state }, id) {
+    let job
+    try {
+      job = await dispatch(
+        rootTypes.apiService,
+        {
+          action: api.reset,
+          method: 'post',
+          serviceName,
+          uuid: id
+        },
+        { root }
+      )
+    } catch (e) {
+      console.error('Error on reset job  in resetJob action.\nError: ', e)
+      return
+    }
 
     commit(type.UPDATE_JOB, job)
   }

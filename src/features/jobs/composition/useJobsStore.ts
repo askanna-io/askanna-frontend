@@ -1,4 +1,3 @@
-import { computed } from '@vue/composition-api'
 import { useState, useActions } from '@u3u/vue-hooks'
 import { JOBS_STORE, getJobsList } from '../store/types'
 

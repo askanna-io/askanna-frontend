@@ -1,5 +1,7 @@
+import { SetupContext } from '@vue/composition-api'
+
 export default function() {
-  const fetchData = function(context, ...params) {
+  const fetchData = function(context: SetupContext, ...params: any) {
     return (async () => {
       for (let action of params) {
         if (Array.isArray(action)) {
@@ -10,14 +12,14 @@ export default function() {
               }
 
               if (typeof el === 'string') {
-                return context.$store.dispatch(el)
+                return context.root.$store.dispatch(el)
               }
             })
           )
         }
 
         if (typeof action === 'string') {
-          await context.$store.dispatch(action)
+          await context.root.$store.dispatch(action)
         }
 
         if (typeof action === 'function') {

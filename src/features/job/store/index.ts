@@ -2,10 +2,10 @@ import { Module } from 'vuex'
 import { getters } from './getters'
 import { actions } from './actions'
 import { mutations } from './mutations'
-import { jobState, JOB_STORE } from './types'
+import { jobState, JOB_STORE, JobModel } from './types'
 
 export const state: jobState = {
-  job: {}
+  job: new JobModel().state
 }
 
 const namespaced: boolean = true

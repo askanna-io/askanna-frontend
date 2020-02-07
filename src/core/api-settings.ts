@@ -17,8 +17,8 @@ interface FuaturesApi {
   [featureApi: string]: (uuid: string) => void | string
 }
 
-const apiUrl = 'https://api.askanna.eu'
-const apiPort = 443
+const apiUrl = 'http://localhost'
+const apiPort = 8005
 export const api: ApiSettings = {
   url: () => `${apiUrl}:${apiPort}/`,
   apiUrl: () => `${apiUrl}:${apiPort}/api/v1/`,
