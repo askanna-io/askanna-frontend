@@ -41,10 +41,11 @@ export const api: ApiSettings = {
       remove: id => `job/${id}/`,
       info: id => `job/${id}/info/`,
       kill: id => `job/${id}/kill/`,
-      pause: id => `job/${id}/kill/`,
+      pause: id => `job/${id}/pause/`,
       reset: id => `job/${id}/reset/`,
       start: id => `job/${id}/start/`,
-      stop: id => `job/${id}/stop/`
+      stop: id => `job/${id}/stop/`,
+      result: id => `job/${id}/result/`
     }
   }
 }

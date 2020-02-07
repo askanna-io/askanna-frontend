@@ -3,7 +3,7 @@ import { apiStringify } from '@/core/api-settings'
 import * as rootTypes from '@/core/store/actionTypes'
 
 import { ActionTree } from 'vuex'
-import { jobState, JOB_STORE } from './types'
+import { JobModel, jobState, JOB_STORE } from './types'
 
 const root = true
 const serviceName = JOB_STORE
@@ -114,5 +114,51 @@ export const actions: ActionTree<jobState, RootState> = {
     }
 
     commit(type.UPDATE_JOB, job)
+  },
+
+  async [type.action.killJob]({ commit, dispatch, state }, id) {
+    let job
+    try {
+      job = await dispatch(
+        rootTypes.apiService,
+        {
+          action: api.kill,
+          method: 'post',
+          serviceName,
+          uuid: id
+        },
+        { root }
+      )
+    } catch (e) {
+      console.error('Error on kill job  in killJob action.\nError: ', e)
+      return
+    }
+
+    commit(type.UPDATE_JOB, job)
+  },
+
+  async [type.action.resultJob]({ commit, dispatch, state }, id) {
+    let result
+    try {
+      result = await dispatch(
+        rootTypes.apiService,
+        {
+          action: api.result,
+          method: 'post',
+          serviceName,
+          uuid: id
+        },
+        { root }
+      )
+    } catch (e) {
+      console.error('Error on result job  in resultJob action.\nError: ', e)
+      return
+    }
+
+    commit(type.UPDATE_JOB_RESULT, result.result!)
+  },
+
+  async [type.action.resetStore]({ commit }) {
+    commit(type.UPDATE_JOB_RESULT, '')
   }
 }

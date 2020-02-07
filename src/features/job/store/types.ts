@@ -2,6 +2,7 @@ export interface jobState extends jobData {}
 
 export interface jobData {
   job: Job
+  result: string
 }
 
 interface Job {
@@ -23,6 +24,8 @@ export const action = {
   startJob: 'startJob',
   updateJob: 'updateJob',
   removeJob: 'removeJob',
+  resultJob: 'resultJob',
+  resetStore: 'resetStore',
   getJobInfo: 'getJobInfo'
 }
 
@@ -41,6 +44,7 @@ export const getJobInfo = 'getJobInfo'
 //mutations
 export const SET_JOB = 'SET_JOB'
 export const UPDATE_JOB = 'UPDATE_JOB'
+export const UPDATE_JOB_RESULT = 'UPDATE_JOB_RESULT'
 
 export class JobModel {
   private _state: Job
