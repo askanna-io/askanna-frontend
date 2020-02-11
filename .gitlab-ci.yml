@@ -9,7 +9,7 @@ build_dist:
   tags:
     - normal
   script:
-    - npm install
+    - npm ci
     - npm run build
 
 build_docker:
