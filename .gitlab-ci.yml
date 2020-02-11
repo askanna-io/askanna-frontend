@@ -1,0 +1,11 @@
+stages:
+  - build
+  - test
+
+build_dist:
+  image: node:lts-alpine
+  tags:
+    - normal
+  script:
+    - npm install
+    - npm run build
