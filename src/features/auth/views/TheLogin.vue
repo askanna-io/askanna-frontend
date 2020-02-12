@@ -8,12 +8,7 @@
             <v-row no-gutters>
               <v-col cols="4" :class="{ 'primary--text': open }">Sign in</v-col>
               <v-col cols="8">
-                <v-fade-transition leave-absolute>
-                  <span v-if="open" key="0">
-                    Please fill fields
-                  </span>
-                  <span v-else key="1"></span>
-                </v-fade-transition>
+                <v-fade-transition leave-absolute> </v-fade-transition>
               </v-col>
             </v-row>
           </v-expansion-panel-header>
@@ -23,18 +18,6 @@
         </v-expansion-panel>
 
         <v-expansion-panel :key="1" active-class="colored-border">
-          <v-expansion-panel-header v-slot="{ open }">
-            <v-row no-gutters>
-              <v-col cols="4" :class="{ 'primary--text': open }">Sign in via google</v-col>
-              <v-col cols="8"> </v-col>
-            </v-row>
-          </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <the-sign-in-google />
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-
-        <v-expansion-panel :key="2" active-class="colored-border">
           <v-expansion-panel-header v-slot="{ open }">
             <v-row no-gutters>
               <v-col cols="4" :class="{ 'primary--text': open }">Sign up</v-col>
@@ -66,8 +49,7 @@ export default {
 
   components: {
     TheSignIn,
-    TheSignUp,
-    TheSignInGoogle
+    TheSignUp
   },
 
   data: () => ({

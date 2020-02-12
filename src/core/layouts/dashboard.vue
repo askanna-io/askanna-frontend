@@ -27,10 +27,13 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-app-bar app clipped-left dark color="primary">
+    <v-app-bar app dense clipped-left dark color="primary">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <img alt="AskAnna logo" src="@/assets/logo.png" class="logo" />
-      <v-container class="fill-height" fluid>
+      <v-container class="fill-height flex-sm-nowrap" fluid>
+        <v-btn small dark class="white mx-1 primary--text" text :to="{ name: 'workspace' }">
+          Workspace
+        </v-btn>
         <v-menu v-model="menu" :close-on-content-click="false" :nudge-width="400" offset-y nudge-bottom="10">
           <template v-slot:activator="{ on }">
             <v-btn small dark class="white primary--text" text v-on="on" :to="{ path: '/' }">
@@ -116,7 +119,7 @@
     </v-content>
 
     <v-footer app>
-      <span>&copy; 2020</span>
+      <span>&copy; AskAnna 2020</span>
     </v-footer>
   </v-app>
 </template>

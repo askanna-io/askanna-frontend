@@ -29,15 +29,15 @@
       />
       <input type="password" style="display:none" browserAutocomplete="new-password" autocomplete="new-password" />
       <v-btn :disabled="!isFormValid" color="primary" class="mr-4" @click="handleLogin">
-        Login
+        Sign in
       </v-btn>
-
-      <v-checkbox label="Remember me" />
+      <v-checkbox dense label="Remember me" />
     </v-form>
 
     <v-slide-y-transition>
       <the-two-step-verification v-if="isSuccesLogedIn" />
     </v-slide-y-transition>
+    <the-sign-in-google v-if="!isSuccesLogedIn" />
   </div>
 </template>
 
@@ -47,13 +47,14 @@ import TheTwoStepVerification from './TheTwoStepVerification'
 import { createNamespacedHelpers } from 'vuex'
 import { login } from '@/core/store/actionTypes'
 import { AUTH_STORE } from '@/core/store/storeTypes'
+import TheSignInGoogle from '../components/TheSignInGoogle'
 
 const { mapActions } = createNamespacedHelpers(AUTH_STORE)
 
 export default {
   name: 'TheSignIn',
 
-  components: { TheTwoStepVerification },
+  components: { TheSignInGoogle, TheTwoStepVerification },
 
   data: () => ({
     expand: false,

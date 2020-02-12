@@ -1,12 +1,12 @@
 <template>
-  <v-card dark width="100%" class="mx-auto no-bg ">
-    <v-card-actions>
-      <v-btn class="ma-2"><v-icon dark>mdi-google</v-icon> Google </v-btn>
-    </v-card-actions>
-    <v-card-actions>
-      <v-checkbox label="Remember me" />
-    </v-card-actions>
-  </v-card>
+  <div class="mx-auto no-bg ">
+    <v-subheader>
+      Sign in via google
+    </v-subheader>
+    <v-divider></v-divider>
+    <v-btn class="my-2"><v-icon>$google</v-icon> Google </v-btn>
+    <v-checkbox dense label="Remember me" />
+  </div>
 </template>
 
 <script>

@@ -1,17 +1,15 @@
 <template>
   <v-form ref="loginForm" v-model="isFormValid" lazy-validation @keyup.native.enter="handleLogin" @submit="handleLogin">
-    <v-card class="no-bg">
-      <v-card-title>Two-Factor Authentication</v-card-title>
-      <v-card-subtitle></v-card-subtitle>
-      <v-card-text>
-        <v-text-field v-model="code" label="Two-factor authentication code" :hint="hintMessage" />
-      </v-card-text>
-      <v-card-actions>
-        <v-btn :disabled="!isFormValid" color="primary" class="mr-4" @click="handleLogin">
-          Verify
-        </v-btn>
-      </v-card-actions>
-    </v-card>
+    <div class="mx-auto no-bg ">
+      <v-subheader class="px-0">
+        Two-Factor Authentication
+      </v-subheader>
+      <v-divider></v-divider>
+      <v-text-field v-model="code" label="Code" />
+      <v-btn :disabled="!isFormValid" color="primary" class="mr-4 mt-1" @click="handleLogin">
+        Verify
+      </v-btn>
+    </div>
   </v-form>
 </template>
 

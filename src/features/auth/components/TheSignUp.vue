@@ -1,30 +1,13 @@
 <template>
   <v-form ref="loginForm" v-model="isFormValid" lazy-validation @keyup.native.enter="handleLogin" @submit="handleLogin">
-    <v-text-field label="Email address" value="example" suffix="@gmail.com"></v-text-field>
-    <v-text-field
-      v-model="formData.username"
-      dark
-      :rules="[RULE.min('Must be at least 3 characters long', 3), RULE.required('Username is required')]"
-      label="Username"
-      required
-    />
+    <v-text-field label="Email address" v-model="formData.username"></v-text-field>
     <v-text-field
       v-model="formData.password"
       dark
-      :rules="[RULE.min('Must be at least 8 characters long', 8), RULE.required('Username is required')]"
+      :rules="[RULE.min('Must be at least 8 characters long', 8), RULE.required('Email is required')]"
       :type="isShowPassword ? 'text' : 'password'"
       name="input-10-1"
       label="Password"
-      counter
-      @click:append="isShowPassword = !isShowPassword"
-    />
-    <v-text-field
-      v-model="formData.passwordR"
-      dark
-      :rules="[RULE.min('Must be at least 8 characters long', 8), RULE.required('Username is required')]"
-      :type="isShowPassword ? 'text' : 'password'"
-      name="input-10-1"
-      label="Repeat password"
       counter
       @click:append="isShowPassword = !isShowPassword"
     />
@@ -48,8 +31,7 @@ export default {
   data: () => ({
     formData: {
       password: '',
-      username: '',
-      passwordR: ''
+      username: ''
     },
     isFormValid: false,
     isShowPassword: false

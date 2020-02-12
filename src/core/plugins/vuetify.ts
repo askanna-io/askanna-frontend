@@ -5,6 +5,8 @@ import colors from 'vuetify/lib/util/colors'
 import '@mdi/font/css/materialdesignicons.css'
 import '@fortawesome/fontawesome-free/css/all.css'
 
+import GoogleIcon from '@/core/components/icons/GoogleIcon.vue'
+
 Vue.use(Vuetify)
 
 export default new Vuetify({
@@ -25,6 +27,11 @@ export default new Vuetify({
     }
   },
   icons: {
-    iconfont: 'mdi'
+    iconfont: 'mdi',
+    values: {
+      google: {
+        component: GoogleIcon
+      }
+    }
   }
 })
