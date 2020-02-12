@@ -1,5 +1,16 @@
 # askanna-frontend
 
+## Running build version in docker-compose
+```
+docker-compose up
+```
+
+If you have changed files and want to check a new build:
+
+```
+docker-compose up --build
+```
+
 ## Project setup
 ```
 npm install

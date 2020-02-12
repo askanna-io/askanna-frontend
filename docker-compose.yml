@@ -1,0 +1,21 @@
+---
+version: '3'
+
+services:
+  webserver:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile-production
+    image: askanna:local
+    environment:
+      VIRTUAL_HOST: askanna.localhost
+  apiserver:
+    image: jwilder/whoami
+    environment:
+      VIRTUAL_HOST: api.askanna.localhost
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
