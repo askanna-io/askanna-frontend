@@ -8,8 +8,8 @@ services:
       dockerfile: ./compose/local/Dockerfile
     image: askanna:local
     volumes:
-      - '.:/app'
-      - '/app/node_modules'
+      - .:/app
+      - /app/node_modules
     environment:
       VIRTUAL_HOST: askanna.localhost
 
