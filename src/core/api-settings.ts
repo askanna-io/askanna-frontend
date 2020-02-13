@@ -1,9 +1,10 @@
 type apiPoint<T> = { [key: string]: T }
-type apiUrl = (uuid: string) => string
+type apiUrl = (uuid: number) => string
 type AuthApiUrl = () => string
 
 interface ApiSettings {
   url: () => string
+  apiUrl: () => string
   auth: {
     login: AuthApiUrl
     logout: apiUrl
@@ -16,10 +17,11 @@ interface FuaturesApi {
   [featureApi: string]: (uuid: string) => void | string
 }
 
-const apiUrl = 'localhost'
-const apiPort = 8005
+const apiUrl = process.env.VUE_APP_API_URL
+const apiPort = process.env.VUE_APP_API_PORT
 export const api: ApiSettings = {
-  url: () => `http://${apiUrl}:${apiPort}/`,
+  url: () => `${apiUrl}:${apiPort}/`,
+  apiUrl: () => `${apiUrl}:${apiPort}/api/v1/`,
   // auth api
   auth: {
     login: () => `rest-auth/login/`,
