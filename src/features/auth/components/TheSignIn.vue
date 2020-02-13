@@ -10,6 +10,7 @@
     >
       <v-text-field
         v-model="formData.username"
+        autofocus
         autocomplete="off"
         dark
         :rules="[RULE.min('Must be at least 3 characters long', 3), RULE.required('Username is required')]"

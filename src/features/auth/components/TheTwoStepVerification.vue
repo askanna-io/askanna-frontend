@@ -5,7 +5,7 @@
         Two-Factor Authentication
       </v-subheader>
       <v-divider></v-divider>
-      <v-text-field v-model="code" label="Code" />
+      <v-text-field v-model="code" autofocus label="Code" />
       <v-btn :disabled="!isFormValid" color="primary" class="mr-4 mt-1" @click="handleLogin">
         Verify
       </v-btn>

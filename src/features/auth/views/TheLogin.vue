@@ -62,8 +62,8 @@ export default {
 <style scoped>
 .login-wrapper {
   height: 100vh;
-  background: rgb(176, 132, 182);
-  background: linear-gradient(0deg, rgba(176, 132, 182, 1) 7%, rgba(14, 43, 50, 1) 57%);
+  background-image: url('~@/assets/bg/askanna-bg-01.png');
+  background-size: cover;
 }
 .logo {
   height: 27px;
