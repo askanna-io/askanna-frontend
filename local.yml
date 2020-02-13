@@ -2,17 +2,22 @@
 version: '3'
 
 services:
-  webserver:
+  frontend:
     build:
       context: .
-      dockerfile: docker/Dockerfile-production
+      dockerfile: ./compose/local/Dockerfile
     image: askanna:local
+    volumes:
+      - '.:/app'
+      - '/app/node_modules'
     environment:
       VIRTUAL_HOST: askanna.localhost
-  apiserver:
-    image: jwilder/whoami
+
+  backend:
+    image: jwilder/whoami 
     environment:
       VIRTUAL_HOST: api.askanna.localhost
+
   nginx-proxy:
     image: jwilder/nginx-proxy
     ports:
