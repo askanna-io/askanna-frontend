@@ -8,7 +8,7 @@
       </div>
     </div>
     <v-timeline clipped>
-      <v-timeline-item class="mb-4" color="grey" icon-color="grey lighten-2" small>
+      <v-timeline-item class="mb-4" color="secondary" icon-color="grey lighten-2" small>
         <v-row justify="space-between" no-gutters>
           <v-col cols="12"
             >dAAp
@@ -38,7 +38,7 @@
         </v-row>
       </v-timeline-item>
 
-      <v-timeline-item class="mb-4" color="grey" icon-color="grey lighten-2" small>
+      <v-timeline-item class="mb-4" color="secondary" icon-color="grey lighten-2" small>
         <v-row justify="space-between" no-gutters>
           <v-col cols="12"
             >AskAnna HQ
@@ -68,7 +68,7 @@
       <v-timeline-item class="mb-4" small>
         <v-row justify="space-between">
           <v-col cols="7">
-            <v-chip class="white--text ml-0" color="purple" label small>
+            <v-chip class="white--text ml-0" color="primary" label small>
               Project 1
             </v-chip>
             All jobs were fulfilled .

@@ -10,6 +10,7 @@
     >
       <v-text-field
         v-model="formData.username"
+        validate-on-blur
         autofocus
         autocomplete="off"
         dark

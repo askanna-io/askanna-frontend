@@ -1,8 +1,9 @@
 <template>
   <v-form ref="loginForm" v-model="isFormValid" lazy-validation @keyup.native.enter="handleLogin" @submit="handleLogin">
-    <v-text-field label="Email address" v-model="formData.username"></v-text-field>
+    <v-text-field label="Email address" validate-on-blur v-model="formData.username"></v-text-field>
     <v-text-field
       v-model="formData.password"
+      validate-on-blur
       dark
       :rules="[RULE.min('Must be at least 8 characters long', 8), RULE.required('Email is required')]"
       :type="isShowPassword ? 'text' : 'password'"

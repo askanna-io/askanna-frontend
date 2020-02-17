@@ -15,7 +15,7 @@
 
         <v-divider></v-divider>
 
-        <v-list-item v-for="item in items" :key="item.title" link>
+        <v-list-item v-for="item in items" :key="item.title" link :to="{ name: item.name }">
           <v-list-item-icon>
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-item-icon>
@@ -31,12 +31,12 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <img alt="AskAnna logo" src="@/assets/logo.png" class="logo" />
       <v-container class="fill-height flex-sm-nowrap" fluid>
-        <v-btn small dark class="white mx-1 primary--text" text :to="{ name: 'workspace' }">
+        <v-btn small dark class=" mx-1 white--text" text :to="{ name: 'workspace' }">
           Workspace
         </v-btn>
         <v-menu v-model="menu" :close-on-content-click="false" :nudge-width="400" offset-y nudge-bottom="10">
           <template v-slot:activator="{ on }">
-            <v-btn small dark class="white primary--text" text v-on="on" :to="{ path: '/' }">
+            <v-btn small dark class="white--text" text v-on="on" :to="{ path: '/' }">
               Projects
             </v-btn>
           </template>
@@ -88,7 +88,7 @@
             </v-col>
           </v-row>
         </v-menu>
-        <v-btn small dark class="ml-1 white primary--text" text :to="{ name: 'jobs' }">
+        <v-btn small dark class="ml-1 white--text" text :to="{ name: 'jobs' }">
           Jobs
         </v-btn>
         <v-spacer />
@@ -162,8 +162,8 @@ export default {
       { text: 'Conversions', icon: 'mdi-flag' }
     ],
     items: [
-      { title: 'Dashboard', icon: 'mdi-view-dashboard' },
-      { title: 'Projects', icon: 'mdi-image' }
+      { title: 'Workspace', name: 'workspace', icon: 'mdi-view-dashboard' },
+      { title: 'Projects', name: 'projects', icon: 'mdi-image' }
     ]
   }),
 

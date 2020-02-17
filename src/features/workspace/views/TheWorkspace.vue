@@ -49,58 +49,17 @@
         </v-toolbar>
       </template>
       <template v-slot:default="props">
-        <v-row>
+        <v-row v-if="!projectView">
           <v-col v-for="item in props.items" :key="item.name" cols="12" sm="6" md="4" lg="3">
-            <v-card class="mx-auto">
-              <v-card-title>
-                <v-icon large left>
-                  mdi-semantic-web
-                </v-icon>
-                <span class="title font-weight-light">Project title 1</span>
-              </v-card-title>
-
-              <v-card-text class="font-weight-bold">
-                "Turns out semicolon-less style is easier and safer in TS because most gotcha edge cases are type
-                invalid as well."
-              </v-card-text>
-
-              <v-card-actions>
-                <v-alert text dense type="success" class="d-flex">
-                  Status: <strong>success</strong> Last run on <strong>Oct 23, 2019</strong>
-                </v-alert>
-              </v-card-actions>
-              <v-card-actions>
-                <v-list-item>
-                  <v-list-item-content color="grey darken-3">
-                    <v-avatar>
-                      <img src="https://randomuser.me/api/portraits/men/81.jpg" />
-                    </v-avatar>
-                  </v-list-item-content>
-                  <v-list-item-content color="grey darken-3">
-                    <v-avatar>
-                      <img src="https://randomuser.me/api/portraits/men/81.jpg" />
-                    </v-avatar>
-                  </v-list-item-content>
-                  <v-list-item-content color="grey darken-3">
-                    <v-avatar>
-                      <img src="https://randomuser.me/api/portraits/men/81.jpg" />
-                    </v-avatar>
-                  </v-list-item-content>
-                  <v-list-item-content color="grey darken-3">
-                    <v-avatar>
-                      <img src="https://randomuser.me/api/portraits/men/81.jpg" />
-                    </v-avatar>
-                  </v-list-item-content>
-                  <v-list-item-content color="grey darken-3">
-                    <v-avatar>
-                      <img src="https://randomuser.me/api/portraits/men/81.jpg" />
-                    </v-avatar>
-                  </v-list-item-content>
-                </v-list-item>
-              </v-card-actions>
-            </v-card>
+            <workspace-project-card-item :project="item" />
           </v-col>
         </v-row>
+        <div v-if="projectView">
+          <div v-for="item in props.items" :key="item.name">
+            <workspace-project-list-item :project="item" cols="12" />
+            <v-divider />
+          </div>
+        </div>
       </template>
     </v-data-iterator>
     <ask-anna-divider text="Latest Activity" />
@@ -109,36 +68,39 @@
 </template>
 
 <script>
+import WorkspaceProjectCardItem from '../components/WorkspaceProjectCardItem'
+import WorkspaceProjectListItem from '../components/WorkspaceProjectListItem'
 export default {
   name: 'TheWorkspace',
+  components: { WorkspaceProjectCardItem, WorkspaceProjectListItem },
 
   data() {
     return {
       menu: false,
-      projectView: true,
+      projectView: 0,
       workspace: 'Workspace 2',
       selection: 2,
       items: ['Workspace 1', 'Workspace 2', 'Workspace 3'],
       projects: [
         {
-          name: 'Frozen Yogurt',
-          calories: 159,
-          fat: 6.0,
-          carbs: 24,
-          protein: 4.0,
-          sodium: 87,
-          calcium: '14%',
-          iron: '1%'
+          name: 'Project title 1',
+          description:
+            'Turns out semicolon-less style is easier and safer in TS because most gotcha edge cases are type invalid as well.'
         },
         {
-          name: 'Frozen Yogurt2',
-          calories: 159,
-          fat: 6.0,
-          carbs: 24,
-          protein: 4.0,
-          sodium: 87,
-          calcium: '14%',
-          iron: '1%'
+          name: 'roject title 2',
+          description:
+            'Turns out semicolon-less style is easier and safer in TS because most gotcha edge cases are type invalid as well.'
+        },
+        {
+          name: 'roject title 3',
+          description:
+            'Turns out semicolon-less style is easier and safer in TS because most gotcha edge cases are type invalid as well.'
+        },
+        {
+          name: 'roject title 4',
+          description:
+            'Turns out semicolon-less style is easier and safer in TS because most gotcha edge cases are type invalid as well.'
         }
       ]
     }
