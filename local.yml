@@ -12,6 +12,7 @@ services:
       - /app/node_modules
     environment:
       VIRTUAL_HOST: askanna.localhost
+      VIRTUAL_PORT: 8080
 
   backend:
     image: jwilder/whoami 
@@ -23,4 +24,5 @@ services:
     ports:
       - "80:80"
     volumes:
+      - ./compose/local/vhost.d:/etc/nginx/vhost.d:ro
       - /var/run/docker.sock:/tmp/docker.sock:ro
