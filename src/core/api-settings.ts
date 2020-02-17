@@ -17,8 +17,9 @@ interface FuaturesApi {
   [featureApi: string]: (uuid: string) => void | string
 }
 
-const apiUrl = 'http://localhost'
-const apiPort = 8005
+const apiUrl = process.env.VUE_APP_API_URL
+const apiPort = process.env.VUE_APP_API_PORT
+
 export const api: ApiSettings = {
   url: () => `${apiUrl}:${apiPort}/`,
   apiUrl: () => `${apiUrl}:${apiPort}/api/v1/`,

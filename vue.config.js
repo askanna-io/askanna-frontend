@@ -1,6 +1,7 @@
 module.exports = {
   // options...
   devServer: {
-    host: 'localhost'
+    host: '0.0.0.0',
+    public: 'askanna.localhost'
   }
 }
