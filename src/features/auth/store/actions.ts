@@ -30,7 +30,8 @@ export const actions: ActionTree<AuthState, RootState> = {
 
       commit(mt.SET_AUTH, data)
 
-      router.push({ path: '/' })
+      return data
+      // router.push({ path: '/' })
     } catch (error) {
       if ((error && error.response && error.response.status === 400) || error.statusCode === 400) {
         const message = error.response.data.non_field_errors[0]

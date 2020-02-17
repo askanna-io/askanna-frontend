@@ -50,7 +50,7 @@ const store: StoreOptions<RootState> = {
           params,
           headers,
           responseType,
-          url: api.url() + api.points[serviceName][action](uuid)
+          url: api.apiUrl() + api.points[serviceName][action](uuid)
         })
 
         if (result.status === 200) {
