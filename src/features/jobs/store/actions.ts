@@ -22,7 +22,7 @@ export const actions: ActionTree<JobsState, RootState> = {
         { root }
       )
     } catch (e) {
-      console.error('Error on load jobs list items in getJobsList action.\nError: ', e)
+      // cconsole.error('Error on load jobs list items in getJobsList action.\nError: ', e)
       return
     }
 

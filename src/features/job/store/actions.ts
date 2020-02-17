@@ -23,7 +23,7 @@ export const actions: ActionTree<jobState, RootState> = {
         { root }
       )
     } catch (e) {
-      console.error('Error on load job  in getJob action.\nError: ', e)
+      // cconsole.error('Error on load job  in getJob action.\nError: ', e)
       return
     }
 
@@ -44,11 +44,11 @@ export const actions: ActionTree<jobState, RootState> = {
         { root }
       )
     } catch (e) {
-      console.error('Error on start job  in startJob action.\nError: ', e)
+      // cconsole.error('Error on start job  in startJob action.\nError: ', e)
       return
     }
 
-    console.log(job)
+    // console.log(job)
 
     commit(type.UPDATE_JOB, job)
   },
@@ -67,7 +67,7 @@ export const actions: ActionTree<jobState, RootState> = {
         { root }
       )
     } catch (e) {
-      console.error('Error on stop job  in stopJob action.\nError: ', e)
+      // cconsole.error('Error on stop job  in stopJob action.\nError: ', e)
       return
     }
 
@@ -88,7 +88,7 @@ export const actions: ActionTree<jobState, RootState> = {
         { root }
       )
     } catch (e) {
-      console.error('Error on pause job  in pauseJob action.\nError: ', e)
+      // cconsole.error('Error on pause job  in pauseJob action.\nError: ', e)
       return
     }
 
@@ -109,7 +109,7 @@ export const actions: ActionTree<jobState, RootState> = {
         { root }
       )
     } catch (e) {
-      console.error('Error on reset job  in resetJob action.\nError: ', e)
+      // cconsole.error('Error on reset job  in resetJob action.\nError: ', e)
       return
     }
 
@@ -130,7 +130,7 @@ export const actions: ActionTree<jobState, RootState> = {
         { root }
       )
     } catch (e) {
-      console.error('Error on kill job  in killJob action.\nError: ', e)
+      // cconsole.error('Error on kill job  in killJob action.\nError: ', e)
       return
     }
 
@@ -151,7 +151,7 @@ export const actions: ActionTree<jobState, RootState> = {
         { root }
       )
     } catch (e) {
-      console.error('Error on result job  in resultJob action.\nError: ', e)
+      // cconsole.error('Error on result job  in resultJob action.\nError: ', e)
       return
     }
 
