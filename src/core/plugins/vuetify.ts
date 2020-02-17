@@ -2,7 +2,10 @@ import Vue from 'vue'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 import colors from 'vuetify/lib/util/colors'
+import '@mdi/font/css/materialdesignicons.css'
 import '@fortawesome/fontawesome-free/css/all.css'
+
+import GoogleIcon from '@/core/components/icons/GoogleIcon.vue'
 
 Vue.use(Vuetify)
 
@@ -13,8 +16,8 @@ export default new Vuetify({
     },
     themes: {
       light: {
-        primary: colors.deepPurple.accent4,
-        secondary: '#424242',
+        primary: '#6A4580',
+        secondary: '#515151',
         accent: '#82B1FF',
         error: '#FF5252',
         info: '#2196F3',
@@ -24,6 +27,11 @@ export default new Vuetify({
     }
   },
   icons: {
-    iconfont: 'fa'
+    iconfont: 'mdi',
+    values: {
+      google: {
+        component: GoogleIcon
+      }
+    }
   }
 })

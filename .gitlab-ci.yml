@@ -1,0 +1,31 @@
+variables:
+  DOCKER_REPO: gitlab.askanna.io:4567/askanna/askanna-frontend
+stages:
+  - build
+  - test
+
+build_dist:
+  image: node:lts-alpine
+  tags:
+    - normal
+  script:
+    - npm ci
+    - npm run build
+
+build_docker:
+  image: docker:git
+  stage: build
+  tags:
+    - normal
+  variables:
+    DOCKER_TLS_CERTDIR: ""
+  services:
+    - docker:dind
+  script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker build -t ${DOCKER_REPO}:$CI_COMMIT_REF_NAME -f compose/production/Dockerfile .
+    - docker push ${DOCKER_REPO}:$CI_COMMIT_REF_NAME
+  only:
+    refs:
+      - master
+      - schedules

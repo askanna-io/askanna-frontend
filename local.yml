@@ -1,0 +1,28 @@
+---
+version: '3'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: ./compose/local/Dockerfile
+    image: askanna:local
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      VIRTUAL_HOST: askanna.localhost
+      VIRTUAL_PORT: 8080
+
+  backend:
+    image: jwilder/whoami 
+    environment:
+      VIRTUAL_HOST: api.askanna.localhost
+
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - ./compose/local/vhost.d:/etc/nginx/vhost.d:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro

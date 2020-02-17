@@ -1,6 +1,7 @@
 module.exports = {
   // options...
   devServer: {
-    proxy: 'http://localhost:8005/'
+    host: '0.0.0.0',
+    public: 'askanna.localhost'
   }
 }
