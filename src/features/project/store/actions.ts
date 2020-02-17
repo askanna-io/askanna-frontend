@@ -22,7 +22,7 @@ export const actions: ActionTree<projectState, RootState> = {
         { root }
       )
     } catch (e) {
-      console.error('Error on load project  in getProject action.\nError: ', e)
+      // cconsole.error('Error on load project  in getProject action.\nError: ', e)
       return
     }
 
