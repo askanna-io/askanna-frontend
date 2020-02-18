@@ -7,6 +7,7 @@ import { GlobalState, globalStoreName } from './types'
 export const state: GlobalState = {
   snackbar: {
     open: false,
+    color: '',
     message: '',
     timeout: 6000,
     top: true,

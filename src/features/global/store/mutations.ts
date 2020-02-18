@@ -1,5 +1,5 @@
-import * as type from '@/core/store/mutationTypes'
 import { TIMINGS } from '@/core/utils/const'
+import * as type from '@/core/store/mutationTypes'
 
 import { MutationTree } from 'vuex'
 import { GlobalState } from './types'
@@ -12,10 +12,14 @@ export const mutations: MutationTree<GlobalState> = {
       timeout = message.length * TIMINGS.SNACKBAR_SYMBOL_READ_TIME
     }
 
-    state.snackbar = Object.assign({}, state.snackbar, params, {
-      timeout,
-      open: true
-    })
+    state.snackbar = {
+      ...state.snackbar,
+      ...params,
+      ...{
+        timeout,
+        open: true
+      }
+    }
   },
 
   [type.CLOSE_SNACKBAR](state) {

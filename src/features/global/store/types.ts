@@ -4,6 +4,7 @@ export interface GlobalState {
 
 export interface Snackbar {
   top: boolean
+  color: string
   left: boolean
   open: boolean
   right: boolean

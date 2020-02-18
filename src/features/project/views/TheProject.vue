@@ -21,7 +21,7 @@ import { onBeforeMount } from '@vue/composition-api'
 export default {
   name: 'TheJob',
 
-  setup(rops, context) {
+  setup(props, context) {
     const project = useProject()
 
     onBeforeMount(() => {
