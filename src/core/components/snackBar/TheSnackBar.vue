@@ -1,6 +1,6 @@
 <template>
   <v-snackbar
-    :value="snackbar.open"
+    v-model="snackbar.open"
     :color="snackbar.color"
     :timeout="snackbar.timeout"
     :multi-line="snackbar.message && snackbar.message.length > 60"

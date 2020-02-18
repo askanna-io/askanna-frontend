@@ -1,5 +1,6 @@
 import _Vue from 'vue'
 import store from '../store'
+import { provide, inject } from '@vue/composition-api'
 
 const LOGGER = {
   consoleLog: process.env.NODE_ENV !== 'production',
@@ -11,12 +12,13 @@ const LOGGER = {
 const globalStore = 'global'
 const setSnackBar = `${globalStore}/${'SET_SNACKBAR'}`
 
-export const loggerFunctions = {
+export const logger = {
   success(...message: any) {
     const timeout = 2000
     store.commit(setSnackBar, {
       message,
-      timeout
+      timeout,
+      color: 'deep-orange'
     })
   },
   authError() {
@@ -34,7 +36,7 @@ export const loggerFunctions = {
   userWarning(message: any) {
     store.commit(setSnackBar, { message, color: 'orange' })
   },
-  error(message: any, error: any) {
+  error(message: any, error?: any) {
     let timeout
 
     if (LOGGER.snackBar) {
@@ -48,8 +50,31 @@ export const loggerFunctions = {
   }
 }
 
-export function logger(Vue: typeof _Vue, options?: any): void {
-  Vue.prototype.logger = loggerFunctions
+export default function Logger(Vue: typeof _Vue, options?: any): void {
+  Vue.prototype.logger = logger
 }
 
-export default logger
+/* const createLogger = () => ({
+  success: function(...message: any) {
+    const timeout = 2000
+    store.commit(setSnackBar, {
+      message,
+      timeout
+    })
+  }
+})
+
+const LoggerSymbol = Symbol()
+
+export function provideLogger() {
+  const Logger = createLogger()
+  provide(LoggerSymbol, Logger)
+}
+
+export function useLogger() {
+  const Logger = inject(LoggerSymbol)
+  if (!Logger) throw new Error('No Logger provided!!!')
+
+  return logger
+}
+ */

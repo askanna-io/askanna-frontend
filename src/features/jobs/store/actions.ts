@@ -1,6 +1,7 @@
 import * as type from './types'
 import { apiStringify } from '@/core/api-settings'
 import * as rootTypes from '@/core/store/actionTypes'
+import { logger } from '@/core/plugins/logger'
 
 import { ActionTree } from 'vuex'
 import { JobsState, JOBS_STORE } from './types'
@@ -22,7 +23,7 @@ export const actions: ActionTree<JobsState, RootState> = {
         { root }
       )
     } catch (e) {
-      // cconsole.error('Error on load jobs list items in getJobsList action.\nError: ', e)
+      logger.error('Error on load jobs list items in getJobsList action.\nError: ', e)
       return
     }
 
