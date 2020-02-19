@@ -4,11 +4,13 @@ import './core/components'
 import VueAxios from 'vue-axios'
 import hooks from '@u3u/vue-hooks'
 import { app, router, store } from './core'
+import Logger from '@/core/plugins/logger'
 import vuetify from '@/core/plugins/vuetify'
 import VueCompositionApi from '@vue/composition-api'
 import validationRules from '@/core/plugins/validationRules'
 
 Vue.use(hooks)
+Vue.use(Logger)
 Vue.use(validationRules)
 Vue.use(VueCompositionApi)
 Vue.config.productionTip = false

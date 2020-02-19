@@ -1,6 +1,7 @@
 import { apiStringify } from '@/core/api-settings'
 import * as rootTypes from '@/core/store/actionTypes'
 
+import { logger } from '@/core/plugins/logger'
 import { ActionTree } from 'vuex'
 import { projectState, PROJECT_STORE, action, mutation } from './types'
 
@@ -22,7 +23,7 @@ export const actions: ActionTree<projectState, RootState> = {
         { root }
       )
     } catch (e) {
-      // cconsole.error('Error on load project  in getProject action.\nError: ', e)
+      logger.error('Error on load project  in getProject action.\nError: ', e)
       return
     }
 
