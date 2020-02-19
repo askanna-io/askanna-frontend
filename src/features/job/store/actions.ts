@@ -1,6 +1,7 @@
 import * as type from './types'
 import { apiStringify } from '@/core/api-settings'
 import * as rootTypes from '@/core/store/actionTypes'
+import { logger } from '@/core/plugins/logger'
 
 import { ActionTree } from 'vuex'
 import { JobModel, jobState, JOB_STORE } from './types'
@@ -23,7 +24,7 @@ export const actions: ActionTree<jobState, RootState> = {
         { root }
       )
     } catch (e) {
-      // cconsole.error('Error on load job  in getJob action.\nError: ', e)
+      logger.error('Error on load job  in getJob action.\nError: ', e)
       return
     }
 
@@ -43,12 +44,11 @@ export const actions: ActionTree<jobState, RootState> = {
         },
         { root }
       )
+      logger.success('Job was started')
     } catch (e) {
-      // cconsole.error('Error on start job  in startJob action.\nError: ', e)
+      logger.error('Error on start job  in startJob action.\nError: ', e)
       return
     }
-
-    // console.log(job)
 
     commit(type.UPDATE_JOB, job)
   },
@@ -66,8 +66,10 @@ export const actions: ActionTree<jobState, RootState> = {
         },
         { root }
       )
+      logger.userDanger('Job was stoped')
     } catch (e) {
-      // cconsole.error('Error on stop job  in stopJob action.\nError: ', e)
+      logger.error('Error on stop job  in stopJob action.\nError: ', e)
+
       return
     }
 
@@ -88,7 +90,8 @@ export const actions: ActionTree<jobState, RootState> = {
         { root }
       )
     } catch (e) {
-      // cconsole.error('Error on pause job  in pauseJob action.\nError: ', e)
+      logger.error('Error on pause job  in pauseJob action.\nError: ', e)
+
       return
     }
 
@@ -108,8 +111,10 @@ export const actions: ActionTree<jobState, RootState> = {
         },
         { root }
       )
+      logger.userWarning('Job was reseted')
     } catch (e) {
-      // cconsole.error('Error on reset job  in resetJob action.\nError: ', e)
+      logger.error('Error on reset job  in resetJob action.\nError: ', e)
+
       return
     }
 
@@ -130,7 +135,8 @@ export const actions: ActionTree<jobState, RootState> = {
         { root }
       )
     } catch (e) {
-      // cconsole.error('Error on kill job  in killJob action.\nError: ', e)
+      logger.error('Error on kill job  in killJob action.\nError: ', e)
+
       return
     }
 
@@ -151,7 +157,8 @@ export const actions: ActionTree<jobState, RootState> = {
         { root }
       )
     } catch (e) {
-      // cconsole.error('Error on result job  in resultJob action.\nError: ', e)
+      logger.error('Error on result job  in resultJob action.\nError: ', e)
+
       return
     }
 
