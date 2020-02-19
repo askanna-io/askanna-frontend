@@ -23,6 +23,12 @@ export const mutations: MutationTree<GlobalState> = {
   },
 
   [type.CLOSE_SNACKBAR](state) {
-    state.snackbar.open = false
+    state.snackbar = {
+      ...state.snackbar,
+      ...{
+        message: '',
+        open: false
+      }
+    }
   }
 }

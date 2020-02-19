@@ -3,8 +3,8 @@ import store from '../store'
 import { provide, inject } from '@vue/composition-api'
 
 const LOGGER = {
-  consoleLog: process.env.NODE_ENV !== 'production',
-  snackBar: process.env.NODE_ENV !== 'production',
+  consoleLog: true,
+  snackBar: true, //process.env.NODE_ENV !== 'production',
   development: true,
   production: false
 }
@@ -13,12 +13,12 @@ const globalStore = 'global'
 const setSnackBar = `${globalStore}/${'SET_SNACKBAR'}`
 
 export const logger = {
-  success(...message: any) {
+  success(message: any) {
     const timeout = 2000
     store.commit(setSnackBar, {
       message,
       timeout,
-      color: 'deep-orange'
+      color: 'light-green'
     })
   },
   authError() {
@@ -36,16 +36,24 @@ export const logger = {
   userWarning(message: any) {
     store.commit(setSnackBar, { message, color: 'orange' })
   },
-  error(message: any, error?: any) {
-    let timeout
-
+  userDanger(message: any) {
+    store.commit(setSnackBar, { message, color: 'amber darken-4' })
+  },
+  error(errorHint: string, error: Error) {
+    let message, timeout
     if (LOGGER.snackBar) {
-      store.commit(setSnackBar, { message, timeout, color: 'deep-orange' })
+      message = `${errorHint}\n ${error.message}`
+
+      store.commit(setSnackBar, {
+        message,
+        timeout,
+        color: 'amber darken-4'
+      })
     }
 
     if (LOGGER.consoleLog) {
       // eslint-disable-next-line no-console
-      console.log(message, error)
+      console.log(errorHint, error)
     }
   }
 }

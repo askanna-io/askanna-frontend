@@ -44,6 +44,7 @@ export const actions: ActionTree<jobState, RootState> = {
         },
         { root }
       )
+      logger.success('Job was started')
     } catch (e) {
       logger.error('Error on start job  in startJob action.\nError: ', e)
       return
@@ -65,6 +66,7 @@ export const actions: ActionTree<jobState, RootState> = {
         },
         { root }
       )
+      logger.userDanger('Job was stoped')
     } catch (e) {
       logger.error('Error on stop job  in stopJob action.\nError: ', e)
 
@@ -109,6 +111,7 @@ export const actions: ActionTree<jobState, RootState> = {
         },
         { root }
       )
+      logger.userWarning('Job was reseted')
     } catch (e) {
       logger.error('Error on reset job  in resetJob action.\nError: ', e)
 

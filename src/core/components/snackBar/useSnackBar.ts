@@ -7,10 +7,12 @@ export default function() {
     ...useState('global', { snackbar: 'snackbar', open: 'snackbar.open' })
   }
 
-  const open = computed({
-    get: () => state.open.value,
+  const openVmodel = computed({
+    get: () => {
+      return state.snackbar.value.open
+    },
     set: () => {
-      closeSnackBar
+      actions.closeSnackBar()
     }
   })
 
@@ -19,7 +21,7 @@ export default function() {
   }
 
   return {
-    open,
+    openVmodel,
     ...state,
     ...actions
   }
