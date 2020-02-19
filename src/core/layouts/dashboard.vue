@@ -92,6 +92,7 @@
           Jobs
         </v-btn>
         <v-spacer />
+        <span>Build version:&nbsp;{{ version }}</span>
         <v-menu transition="slide-y-transition">
           <template v-slot:activator="{ on }">
             <v-btn icon v-on="on">
@@ -119,7 +120,7 @@
     </v-content>
 
     <v-footer app>
-      <span>&copy; AskAnna 2020</span>
+      <span>&copy; AskAnna 2020</span> <v-spacer /> <span>Build version:&nbsp;{{ version }}</span>
     </v-footer>
   </v-app>
 </template>
@@ -134,6 +135,7 @@ export default {
   name: 'dashboard',
 
   data: () => ({
+    version: process.env.VERSION,
     project: '',
     fav: true,
     menu: false,
