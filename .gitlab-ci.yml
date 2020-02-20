@@ -1,8 +1,8 @@
 variables:
   DOCKER_REPO: gitlab.askanna.io:4567/askanna/askanna-frontend
 stages:
-  - build
   - test
+  - build
   - deploy
   - cleanup
 
