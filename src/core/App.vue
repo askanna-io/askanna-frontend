@@ -26,3 +26,8 @@ export default class App extends Vue {
   }
 }
 </script>
+<style>
+.br-r5 {
+  border-radius: 5px !important;
+}
+</style>

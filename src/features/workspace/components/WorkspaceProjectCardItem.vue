@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto">
+  <v-card class="mx-auto" :elevation="hover ? 16 : 2" :to="`project/${project.id}`">
     <v-card-title>
       <v-icon large left>
         mdi-semantic-web
@@ -31,6 +31,7 @@
 <script lang="ts">
 interface Project {
   name: string
+  id: string
   description: string
   lastRunOn: string
 }
@@ -40,5 +41,8 @@ import { Component, Vue, Prop } from 'vue-property-decorator'
 export default class WorkspaceProjectCardItem extends Vue {
   @Prop({ required: true })
   public project!: Project
+
+  @Prop({ required: false })
+  public hover!: boolean
 }
 </script>

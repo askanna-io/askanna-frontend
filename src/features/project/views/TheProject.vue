@@ -1,44 +1,153 @@
 <template>
   <v-card class="mx-auto" outlined>
-    <v-list-item three-line>
-      <v-list-item-content>
-        <div class="overline mb-4">{{ project.name }}</div>
-        <v-list-item-title class="headline mb-1">Status: {{ project.status }}</v-list-item-title>
-        <v-list-item-subtitle>Result: {{ project.esult }}</v-list-item-subtitle>
-      </v-list-item-content>
+    <v-breadcrumbs :items="items">
+      <template v-slot:item="{ item }">
+        <v-breadcrumbs-item :href="item.href" :disabled="item.disabled">
+          {{ item.text.toUpperCase() }}
+        </v-breadcrumbs-item>
+      </template>
+    </v-breadcrumbs>
+    <v-divider />
+    <v-card-title>
+      <v-icon large left>
+        mdi-semantic-web
+      </v-icon>
+      <span class="title font-weight-light">{{ project.name }}</span>
+    </v-card-title>
 
-      <v-list-item-avatar tile size="80" color="grey"></v-list-item-avatar>
-    </v-list-item>
+    <v-card-text class="font-weight-bold">
+      {{ project.description }}
+    </v-card-text>
+    <v-divider />
 
-    <v-card-actions> </v-card-actions>
+    <v-toolbar color="white" flat dense class="br-r5 mx-3">
+      <v-tabs v-model="currentTab" left align-with-title>
+        <v-tabs-slider color="primary" />
+
+        <v-tab v-for="tab of projectTools" ripple :key="tab.id">
+          {{ tab.name }}
+        </v-tab>
+      </v-tabs>
+
+      <v-spacer />
+
+      <v-menu bottom color="primary" :close-on-content-click="false" :nudge-width="200" offset-x>
+        <template v-slot:activator="{ on }">
+          <v-btn icon v-on="on" color="primary">
+            <v-icon>mdi-dots-vertical</v-icon>
+          </v-btn>
+        </template>
+
+        <v-list>
+          <v-list-item>
+            <v-list-item-title>Admin / Config</v-list-item-title>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-title>Advanced options</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+    </v-toolbar>
+
+    <v-tabs-items v-model="currentTab">
+      <v-tab-item v-for="tab of projectTools" :key="tab.id">
+        <component :is="tab.component" />
+      </v-tab-item>
+    </v-tabs-items>
   </v-card>
 </template>
 
 <script>
 import useProject from '../composition/useProject'
+
+import Flows from '../components/tabs/Flows'
+import Overview from '../components/tabs/Overview'
+import RunsCode from '../components/tabs/RunsCode'
+import Documantation from '../components/tabs/Documantation'
+
 import { onBeforeMount } from '@vue/composition-api'
 
 export default {
-  name: 'TheJob',
+  name: 'TheProject',
+  components: {
+    Flows,
+    Overview,
+    RunsCode,
+    Documantation
+  },
 
   setup(props, context) {
     const project = useProject()
 
-    onBeforeMount(() => {
+    /*   onBeforeMount(() => {
       const { id } = context.root.$route.params
 
       project.getProject(id)
-    })
+    }) */
 
-    return {
+    /* return {
       ...project
-    }
+    } */
   },
 
   data() {
     return {
-      selection: 2
+      menu: false,
+      projectView: 0,
+      project: {
+        name: 'Project title 1',
+        id: 1,
+        description:
+          'Turns out semicolon-less style is easier and safer in TS because most gotcha edge cases are type invalid as well.'
+      },
+      items: [
+        {
+          text: 'Dashboard',
+          disabled: false,
+          href: '/'
+        },
+        {
+          text: 'Workspaces',
+          disabled: false,
+          href: '/workspace'
+        },
+        {
+          text: 'Project title 1',
+          disabled: true,
+          href: ''
+        }
+      ],
+      currentTab: 0,
+      projectTools: [
+        {
+          id: 0,
+          name: 'Overview',
+          component: 'Overview'
+        },
+        {
+          id: 1,
+          name: 'Flows',
+          component: 'Flows'
+        },
+        {
+          id: 2,
+          name: 'Runs code',
+          component: 'RunsCode'
+        },
+        {
+          id: 3,
+          name: 'Documantation',
+          component: 'Documantation'
+        }
+      ]
     }
   }
+
+  /*  computed: {
+    getTabComponent() {
+      const tab = this.projectTools.find(tab => tab.id === this.currentTab)
+      return () => import(`../components/tabs/${tab.component}.vue`)
+    }
+  } */
 }
 </script>
