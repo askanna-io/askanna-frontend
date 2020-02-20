@@ -9,6 +9,10 @@ import vuetify from '@/core/plugins/vuetify'
 import VueCompositionApi from '@vue/composition-api'
 import validationRules from '@/core/plugins/validationRules'
 
+// register globally
+import Sticky from 'vue-sticky-directive'
+Vue.use(Sticky)
+
 Vue.use(hooks)
 Vue.use(Logger)
 Vue.use(validationRules)

@@ -51,7 +51,9 @@
       <template v-slot:default="props">
         <v-row v-if="!projectView">
           <v-col v-for="item in props.items" :key="item.name" cols="12" sm="6" md="4" lg="3">
-            <workspace-project-card-item :project="item" />
+            <v-hover v-slot:default="{ hover }" open-delay="200">
+              <workspace-project-card-item :project="item" :hover="hover" :to="{ path: '/' }" />
+            </v-hover>
           </v-col>
         </v-row>
         <div v-if="projectView">
@@ -72,6 +74,7 @@ import WorkspaceProjectCardItem from '../components/WorkspaceProjectCardItem'
 import WorkspaceProjectListItem from '../components/WorkspaceProjectListItem'
 export default {
   name: 'TheWorkspace',
+
   components: { WorkspaceProjectCardItem, WorkspaceProjectListItem },
 
   data() {
@@ -84,6 +87,7 @@ export default {
       projects: [
         {
           name: 'Project title 1',
+          id: 1,
           description:
             'Turns out semicolon-less style is easier and safer in TS because most gotcha edge cases are type invalid as well.'
         },
@@ -109,8 +113,4 @@ export default {
   methods: {}
 }
 </script>
-<style scoped>
-.br-r5 {
-  border-radius: 5px;
-}
-</style>
+
