@@ -67,7 +67,6 @@ export default {
   },
   methods: {
     onStick(data) {
-      console.log(data)
       this.sticked = data.sticked
     }
   }
