@@ -39,7 +39,7 @@ stop_review:
   tags:
     - normal
   script:
-    - curl -X POST -F token=${DEPLOY_TOKEN} -F ref=master -F WHAT=frontend -F branch=${CI_COMMIT_REF_NAME} -F action=undeploy ${TRIGGER_URL}
+    - curl -X POST -F token=${DEPLOY_TOKEN} -F ref=master -F variables[product]=frontend -F variables[branch]=${CI_COMMIT_REF_NAME} -F variables[action]=undeploy ${TRIGGER_URL}
   except:
     - master
 
@@ -49,7 +49,7 @@ stop_review:
   tags:
     - normal
   script:
-    - curl -X POST -F token=${DEPLOY_TOKEN} -F ref=master -F WHAT=frontend -F branch=${CI_COMMIT_REF_NAME} -F action=deploy -F slug=${CI_ENVIRONMENT_SLUG} ${TRIGGER_URL}
+    - curl -X POST -F token=${DEPLOY_TOKEN} -F ref=master -F variables[product]=frontend -F variables[branch]=${CI_COMMIT_REF_NAME} -F variables[action]=deploy -F variables[slug]=${CI_ENVIRONMENT_SLUG} ${TRIGGER_URL}
 
 deploy_branch:
   <<: *deploy
