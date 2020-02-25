@@ -15,6 +15,31 @@
         continue.</strong
       >
     </noscript>
+    <script type="text/x-template" id="node-template">
+      <b>234</b>
+    </script>
+
+    <script type="text/x-template" id="arc-template">
+      234 - 234
+    </script>
+    <script type="text/x-template" id="arc-template-detail">
+      <table class="arc-information">
+      	<thead>
+        	<tr>
+          	<th>{{id}}</th>
+      		</tr>
+      	</thead>
+        <tbody>
+        	<tr>
+          	<td>{{name}} </td>
+      		</tr>
+
+          <tr>
+          	<td><v-btn @click="showDetail">details</v-btn></td>
+      		</tr>
+      	</tbody>
+      </table>
+    </script>
     <div id="app"></div>
     <!-- built files will be auto injected -->
   </body>
