@@ -2,7 +2,7 @@
   <div>
     <v-data-iterator :items="projects" hide-default-footer>
       <template v-slot:header>
-        <v-toolbar color="secondary" flat dense class="br-r5">
+        <v-toolbar color="grey lighten-4" flat dense class="br-r5">
           <v-btn small rounded color="primary" class="mr-3">
             <v-icon left>mdi-plus</v-icon>
             Create Project
@@ -18,11 +18,11 @@
             dense
             solo
           />
-          <v-spacer></v-spacer>
+          <v-spacer />
 
           <v-menu v-model="menu" :close-on-content-click="false" :nudge-width="200" offset-x>
             <template v-slot:activator="{ on }">
-              <v-btn icon v-on="on" color="white">
+              <v-btn icon v-on="on">
                 <v-icon>mdi-dots-vertical</v-icon>
               </v-btn>
             </template>
@@ -50,7 +50,7 @@
       </template>
       <template v-slot:default="props">
         <v-row v-if="!projectView">
-          <v-col v-for="item in props.items" :key="item.name" cols="12" sm="6" md="4" lg="3">
+          <v-col v-for="item in props.items" :key="item.name" cols="12" sm="6" md="6" lg="4">
             <v-hover v-slot:default="{ hover }" open-delay="200">
               <workspace-project-card-item :project="item" :hover="hover" :to="{ path: '/' }" />
             </v-hover>
@@ -113,4 +113,3 @@ export default {
   methods: {}
 }
 </script>
-
