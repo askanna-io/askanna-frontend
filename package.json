@@ -1,6 +1,6 @@
 {
   "name": "askanna-frontend",
-  "version": "0.1.13",
+  "version": "0.1.18",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -55,10 +55,11 @@
     "eslint-plugin-standard": "4.0.0",
     "eslint-plugin-vue": "6.1.2",
     "prettier": "1.19.1",
-    "sass": "1.25.0",
-    "sass-loader": "8.0.2",
+    "sass": "1.26.0",
+    "sass-loader": "^8.0.2",
     "typescript": "3.7.5",
-    "vue-cli-plugin-vuetify": "^2.0.3",
-    "vue-template-compiler": "2.6.11"
+    "vue-cli-plugin-vuetify": "^2.0.5",
+    "vue-template-compiler": "2.6.11",
+    "vuetify-loader": "1.4.3"
   }
 }
