@@ -9,5 +9,6 @@ module.exports = {
   devServer: {
     host: '0.0.0.0',
     public: process.env.NODE_ENV === 'production' ? 'askanna.localhost' : 'localhost'
-  }
+  },
+  transpileDependencies: ['vuetify']
 }
