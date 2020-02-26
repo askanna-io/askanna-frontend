@@ -2,7 +2,7 @@
   <v-row align="center" justify="center" class="login-wrapper">
     <v-col cols="6" xl="2" md="4" sm="6">
       <img alt="AskAnna logo" src="@/assets/logo.png" class="logo" />
-      <v-expansion-panels flat dark class="lodin-expansion" v-model="panel">
+      <v-expansion-panels flat dark class="login-expansion" v-model="panel">
         <v-expansion-panel :key="0" active-class="colored-border">
           <v-expansion-panel-header v-slot="{ open }">
             <v-row no-gutters>
@@ -70,8 +70,8 @@ export default {
   padding-left: 10px;
   margin-bottom: 6px;
 }
-.lodin-expansion .v-expansion-panel {
-  background: transparent;
+.login-expansion .v-expansion-panel {
+  background: transparent !important;
 }
 .colored-border {
   border: 1px solid;
