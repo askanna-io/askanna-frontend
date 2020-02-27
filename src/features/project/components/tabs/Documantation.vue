@@ -53,10 +53,6 @@
 
 <script>
 export default {
-  name: 'Documantation',
-
-  data() {
-    return {}
-  }
+  name: 'Documantation'
 }
 </script>
