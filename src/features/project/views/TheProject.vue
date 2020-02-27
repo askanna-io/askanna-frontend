@@ -60,7 +60,9 @@
 <script>
 import useProject from '../composition/useProject'
 
-import Flows from '../components/tabs/Flows'
+import Jobs from '../components/tabs/Jobs'
+import Activity from '../components/tabs/Activity'
+
 import Overview from '../components/tabs/Overview'
 import RunsCode from '../components/tabs/RunsCode'
 import Documantation from '../components/tabs/Documantation'
@@ -70,7 +72,8 @@ import { onBeforeMount } from '@vue/composition-api'
 export default {
   name: 'TheProject',
   components: {
-    Flows,
+    Jobs,
+    Activity,
     Overview,
     RunsCode,
     Documantation
@@ -121,21 +124,17 @@ export default {
       projectTools: [
         {
           id: 0,
-          name: 'Overview',
-          component: 'Overview'
+          name: 'Activity',
+          component: 'Activity'
         },
         {
           id: 1,
-          name: 'Flows',
-          component: 'Flows'
+          name: 'Jobs',
+          component: 'Jobs'
         },
+
         {
           id: 2,
-          name: 'Runs code',
-          component: 'RunsCode'
-        },
-        {
-          id: 3,
           name: 'Documantation',
           component: 'Documantation'
         }

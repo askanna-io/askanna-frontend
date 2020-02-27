@@ -6,7 +6,9 @@ import { jobState, JOB_STORE, JobModel } from './types'
 
 export const state: jobState = {
   job: new JobModel().state,
-  result: ''
+  result: '',
+  runs: [],
+  openJobRunResult: false
 }
 
 const namespaced: boolean = true

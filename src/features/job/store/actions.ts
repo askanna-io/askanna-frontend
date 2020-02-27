@@ -165,7 +165,36 @@ export const actions: ActionTree<jobState, RootState> = {
     commit(type.UPDATE_JOB_RESULT, result.result!)
   },
 
+  async [type.action.getRunsJob]({ commit, dispatch, state }, id) {
+    let runs
+    try {
+      runs = await dispatch(
+        rootTypes.apiService,
+        {
+          action: api.runs,
+          method: 'post',
+          serviceName,
+          uuid: id
+        },
+        { root }
+      )
+    } catch (e) {
+      logger.error('Error on runs job  in getRunsJob action.\nError: ', e)
+
+      return
+    }
+
+    commit(type.SET_RUN_JOB, runs)
+  },
+
   async [type.action.resetStore]({ commit }) {
     commit(type.UPDATE_JOB_RESULT, '')
+  },
+
+  [type.action.showJobRunResult]({ commit }, params) {
+    commit(type.mutation.SET_RESULT_MODAL, params)
+  },
+  [type.action.closeResultModal]({ commit }) {
+    commit(type.mutation.CLOSE_RESULT_MODAL)
   }
 }
