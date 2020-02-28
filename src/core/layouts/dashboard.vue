@@ -181,7 +181,6 @@ export default {
 
     onResize() {
       this.xsOnly = this.$vuetify.breakpoint.xlOnly || this.$vuetify.breakpoint.mdAndDown
-      console.log(this.$vuetify)
     }
   }
 }

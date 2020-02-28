@@ -49,7 +49,8 @@ export const api: ApiSettings = {
       reset: id => `job/${id}/reset/`,
       start: id => `job/${id}/start/`,
       stop: id => `job/${id}/stop/`,
-      result: id => `job/${id}/result/`
+      result: id => `job/${id}/result/`,
+      runs: id => `job/${id}/runs/`
     }
   }
 }

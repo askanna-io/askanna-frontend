@@ -147,7 +147,7 @@ export default class AskAnnaTimeLines extends Vue {
   get items() {
     const items = [
       {
-        avatar: 'content/avatars/robert.gif',
+        avatar: '/content/avatars/robert.gif',
         title: `<h4 class="activity-item__what">
       Robbert commented on
       <a class="decorated" href="/4281589/buckets/14710304/todos/2412190293#__recording_2412196691">Add onboarding story to AskAnna Global</a>
@@ -163,7 +163,7 @@ export default class AskAnnaTimeLines extends Vue {
       },
       { divider: true, inset: true },
       {
-        avatar: 'content/avatars/robert.gif',
+        avatar: '/content/avatars/robert.gif',
         title: `<h4 class="activity-item__what">
       Andrii S. answered:
       <a class="decorated" href="/4281589/buckets/13602999/question_answers/2409478225">What did you work on today?</a>
@@ -188,7 +188,7 @@ export default class AskAnnaTimeLines extends Vue {
   get items2() {
     const items = [
       {
-        avatar: 'content/avatars/antonis.gif',
+        avatar: '/content/avatars/antonis.gif',
         title: `<h4 class="activity-item__what">
       Robbert commented on
       <a class="decorated" href="/4281589/buckets/14710304/todos/2412190293#__recording_2412196691">Add onboarding story to AskAnna Global</a>
@@ -201,7 +201,7 @@ export default class AskAnnaTimeLines extends Vue {
       },
       { divider: true, inset: true },
       {
-        avatar: 'content/avatars/robert.gif',
+        avatar: '/content/avatars/robert.gif',
         title: `<h4 class="activity-item__what">
       Robbert commented on
       <a class="decorated" href="/4281589/buckets/13602999/question_answers/2409478225#__recording_2411741763">Andrii S.’s answer to “What did you work on today?”</a>
@@ -218,7 +218,7 @@ export default class AskAnnaTimeLines extends Vue {
   get items3() {
     const items = [
       {
-        avatar: 'content/avatars/anthony.gif',
+        avatar: '/content/avatars/anthony.gif',
         title: `<h4 class="activity-item__what">
       Robbert commented on
       <a class="decorated" href="/4281589/buckets/14710304/todos/2412190293#__recording_2412196691">Add onboarding story to AskAnna Global</a>
@@ -231,7 +231,7 @@ export default class AskAnnaTimeLines extends Vue {
       },
       { divider: true, inset: true },
       {
-        avatar: 'content/avatars/andrii.gif',
+        avatar: '/content/avatars/andrii.gif',
         title: `<h4 class="activity-item__what">
       Robbert commented on
       <a class="decorated" href="/4281589/buckets/13602999/question_answers/2409478225#__recording_2411741763">Andrii S.’s answer to “What did you work on today?”</a>
