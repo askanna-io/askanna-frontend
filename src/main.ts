@@ -5,6 +5,7 @@ import VueAxios from 'vue-axios'
 import hooks from '@u3u/vue-hooks'
 import { app, router, store } from './core'
 import Logger from '@/core/plugins/logger'
+import dagreD3 from '@/core/plugins/dagre-d3'
 import vuetify from '@/core/plugins/vuetify'
 import VueCompositionApi from '@vue/composition-api'
 import validationRules from '@/core/plugins/validationRules'
@@ -12,11 +13,13 @@ import validationRules from '@/core/plugins/validationRules'
 // register globally
 import Sticky from 'vue-sticky-directive'
 Vue.use(Sticky)
-
 Vue.use(hooks)
 Vue.use(Logger)
+Vue.use(dagreD3)
+
 Vue.use(validationRules)
 Vue.use(VueCompositionApi)
+Vue.use(require('vue-moment'))
 Vue.config.productionTip = false
 
 //check if the current user is authenticated
