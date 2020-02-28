@@ -1,8 +1,8 @@
 <template>
   <v-dialog v-model="openVmodel" width="500">
     <v-card>
-      <v-card-title class="headline grey lighten-2" primary-title> Job name: {{ item.name }} </v-card-title>
-      <v-card-text>
+      <v-card-title class="headline grey lighten-2 text-white" primary-title> Job name: {{ item.name }} </v-card-title>
+      <v-card-text class="pt-2">
         <v-simple-table height="300px" dark>
           <template v-slot:default>
             <tbody>

@@ -1,6 +1,6 @@
 {
   "name": "askanna-frontend",
-  "version": "0.1.18",
+  "version": "0.1.1817",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",

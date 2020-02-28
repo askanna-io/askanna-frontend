@@ -6,36 +6,35 @@
         :items="list"
         fixed-header
         class="job-table scrollbar"
+        single-expand
         :expanded.sync="expanded"
         @item-expanded="handleExpand"
         show-expand
       >
         <template v-slot:expanded-item>
-          <td :colspan="8">
-            <v-data-table
-              dense
-              fixed-header
-              :page.sync="page"
-              :headers="headers2"
-              :items="runs"
-              :items-per-page="5"
-              :footer-props="{
-                disableItemsPerPage: false
-              }"
-              class="job-sub-table mx-5"
-              @page-count="pageCount = $event"
-            >
-              <template v-slot:item.info="{ item }">
-                <v-btn @click="handleJobInfo(item)" class="ma-2" large color="teal" icon>
-                  <v-icon>mdi-information-outline</v-icon>
-                </v-btn>
-              </template>
-              <template v-slot:item.timing="{ item }">
-                {{ item.created }}
-                {{ item.finished }}
-                duration
-              </template>
-            </v-data-table>
+          <td :colspan="8" class="py-5">
+            <v-skeleton-loader ref="skeleton" :type="'table-row'" class="mx-auto" :loading="loading">
+              <v-data-table
+                dense
+                fixed-header
+                :page.sync="page"
+                :headers="headers2"
+                :items="runs"
+                class="job-sub-table"
+                @page-count="pageCount = $event"
+              >
+                <template v-slot:item.info="{ item }">
+                  <v-btn @click="handleJobInfo(item)" class="ma-2" large color="teal" icon>
+                    <v-icon>mdi-information-outline</v-icon>
+                  </v-btn>
+                </template>
+                <template v-slot:item.timing="{ item }">
+                  <b>Started:</b> &nbsp;{{ $moment(item.created).format(' Do MMMM YYYY, h:mm:ss a') }} <br />
+                  <b>Finished:</b> &nbsp;{{ $moment(item.finished).format(' Do MMMM YYYY, h:mm:ss a') }}<br />
+                  <b>Duration:</b> &nbsp;{{ runTimeHours(item.created, item.finished) }} seconds<br />
+                </template>
+              </v-data-table>
+            </v-skeleton-loader>
           </td>
         </template>
 
@@ -43,11 +42,12 @@
           NPOBP
         </template>
         <template v-slot:item.status="{ item }">
-          {{ item.status }}
+          {{ item.status && item.status.lastrun.status ? item.status.lastrun.status + ': ' : '' }} Last run
+          {{ ago(item.status.lastrun.finished) }}
         </template>
         <template v-slot:item.actions="{ item }">
           <v-chip-group outlined v-model="selection" mandatory>
-            <v-chip outlined label color="primary" @click="startJob(item.id)">
+            <v-chip outlined label color="success" @click="startJob(item.id)">
               <v-avatar left><v-icon>mdi-play</v-icon></v-avatar
               >start</v-chip
             >
@@ -56,9 +56,12 @@
             >
           </v-chip-group>
         </template>
+        <!-- Comment 
         <template v-slot:item.id="{ item }">
-          <v-btn :to="`job/${item.id}`" text>...</v-btn>
+        
+          <v-btn :to="`/job/${item.id}`" text>...</v-btn>
         </template>
+        -->
       </v-data-table>
       <job-run-results :item="jobResults" />
     </v-col>
@@ -67,6 +70,7 @@
 
 <script>
 import useJobs from '../composition/useJobs'
+import useMoment from '@/core/composition/useMoment.js'
 import useJobRunResults from '../composition/useJobRunResults'
 
 import useJob from '../../job/composition/useJob'
@@ -78,14 +82,17 @@ export default {
 
   components: { JobRunResults },
 
-  setup() {
+  setup(props, context) {
     const job = useJob()
     const jobs = useJobs()
+    const moment = useMoment(context)
+
     const jobRunResult = useJobRunResults()
 
     return {
       ...job,
       ...jobs,
+      ...moment,
       ...jobRunResult
     }
   },
@@ -93,8 +100,14 @@ export default {
   data() {
     return {
       currentJob: null,
+      loading: true,
       openD: false,
-      jobResults: null,
+      jobResults: {
+        name: '',
+        runtime: '',
+        memory: '',
+        return_payload: ''
+      },
       page: 1,
       pageCount: 2,
       itemsPerPage: 10,
@@ -111,8 +124,7 @@ export default {
         },
         { text: 'Runs', value: 'uuid' },
         { text: 'Status', value: 'status' },
-        { text: 'Actions', value: 'actions' },
-        { text: '', value: 'id' }
+        { text: 'Actions', value: 'actions' }
       ],
 
       headers2: [
@@ -124,7 +136,7 @@ export default {
         },
         { text: 'Status', value: 'status' },
         { text: 'Timing', value: 'timing' },
-        { text: 'CPU time', value: 'cputime' },
+        { text: 'CPU time', value: 'runtime' },
         { text: 'Memory used', value: 'memory' }
       ]
     }
@@ -144,14 +156,15 @@ export default {
   methods: {
     async handleJobInfo(jobResults) {
       this.jobResults = { ...this.currentJob, ...jobResults }
-      console.log(this.jobResults)
+
       this.showJobRunResult()
     },
-    handleExpand({ item, value }) {
-      console.log(item, value)
+    async handleExpand({ item, value }) {
+      this.loading = true
       if (!value) return
       this.currentJob = item
-      this.getRunsJob(item.id)
+      await this.getRunsJob(item.id)
+      this.loading = false
     },
     onStick(data) {
       this.sticked = data.sticked
@@ -175,7 +188,15 @@ export default {
   background-color: aliceblue;
 }
 
+.v-data-table__expanded.v-data-table__expanded__content {
+  box-shadow: none !important;
+}
+
 .job-sub-table .v-data-table__wrapper table {
   background: aliceblue;
+}
+
+.job-sub-table table .v-data-table-header tr th {
+  background-color: beige !important;
 }
 </style>

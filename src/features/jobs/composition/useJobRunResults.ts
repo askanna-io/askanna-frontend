@@ -11,7 +11,6 @@ export default function() {
 
   const openVmodel = computed({
     get: () => {
-      console.log(state.openJobRunResult.value)
       return state.openJobRunResult.value
     },
     set: () => {
