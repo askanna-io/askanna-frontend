@@ -136,113 +136,103 @@
   </v-container>
 </template>
 
-<script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator'
+<script>
+export default {
+  name: 'AskAnnaTimeLines',
 
-@Component
-export default class AskAnnaTimeLines extends Vue {
-  @Prop({ required: true })
-  public text!: string
-
-  get items() {
-    const items = [
-      {
-        avatar: '/content/avatars/robert.gif',
-        title: `<h4 class="activity-item__what">
+  computed: {
+    items() {
+      return [
+        {
+          avatar: '/content/avatars/robert.gif',
+          title: `<h4 class="activity-item__what">
       Robbert commented on
       <a class="decorated" href="/4281589/buckets/14710304/todos/2412190293#__recording_2412196691">Add onboarding story to AskAnna Global</a>
     </h4>`,
-        description: `
+          description: `
         
   Started the morning with bugfixing the database of mvizet, adding the missing sequences
 - Management on MR mvizet and shotgun
 - basic setup of docker-compose for scenario 2 (test build of front-end) with resolving to domain names locally (web.askanna.localhost and api.askanna.localhost) ! Works i...
 
-
       `
-      },
-      { divider: true, inset: true },
-      {
-        avatar: '/content/avatars/robert.gif',
-        title: `<h4 class="activity-item__what">
+        },
+        { divider: true, inset: true },
+        {
+          avatar: '/content/avatars/robert.gif',
+          title: `<h4 class="activity-item__what">
       Andrii S. answered:
-      <a class="decorated" href="/4281589/buckets/13602999/question_answers/2409478225">What did you work on today?</a>
+      <a class="decorated" href="#">What did you work on today?</a>
     </h4>`,
-        description: `
+          description: `
        
-  • refactored the Login page, combine Sign in and sign in&nbsp; via Google in one section, delete useless text
-• create a google icon component
-• started work on the workspace view
+            • refactored the Login page, combine Sign in and sign in&nbsp; via Google in one section, delete useless text
+          • create a google icon component
+          • started work on the workspace view
 
-[Peek 2020-02-12 17-51.mp4]
-[askanna-frontend-workspace1.png]
-
+          [Peek 2020-02-12 17-51.mp4]
+          [askanna-frontend-workspace1.png]
     
       `
-      }
-    ]
+        }
+      ]
+    },
 
-    return items
-  }
-
-  get items2() {
-    const items = [
-      {
-        avatar: '/content/avatars/antonis.gif',
-        title: `<h4 class="activity-item__what">
+    items2() {
+      return [
+        {
+          avatar: '/content/avatars/antonis.gif',
+          title: `<h4 class="activity-item__what">
       Robbert commented on
-      <a class="decorated" href="/4281589/buckets/14710304/todos/2412190293#__recording_2412196691">Add onboarding story to AskAnna Global</a>
+      <a class="decorated" href="#">Add onboarding story to AskAnna Global</a>
     </h4>`,
-        description: `
+          description: `
         I have added an initial story for the onboarding of a new user. It describes a potential flow and some ideas I have. Andrii Anthony Antonis, please check it out, add feedback, share ideas, etc.
 
       If you agree, please add an approval so we can merge it. If the merge request is already merged, you c...
       `
-      },
-      { divider: true, inset: true },
-      {
-        avatar: '/content/avatars/robert.gif',
-        title: `<h4 class="activity-item__what">
+        },
+        { divider: true, inset: true },
+        {
+          avatar: '/content/avatars/robert.gif',
+          title: `<h4 class="activity-item__what">
       Robbert commented on
-      <a class="decorated" href="/4281589/buckets/13602999/question_answers/2409478225#__recording_2411741763">Andrii S.’s answer to “What did you work on today?”</a>
+      <a class="decorated" href="#">Andrii S.’s answer to “What did you work on today?”</a>
     </h4>`,
-        description: `
+          description: `
        Good improvement regarding the login page. Also great to see that you started with the workspace view. If you want feedback, please let me know!
       `
-      }
-    ]
+        }
+      ]
+    },
 
-    return items
-  }
-
-  get items3() {
-    const items = [
-      {
-        avatar: '/content/avatars/anthony.gif',
-        title: `<h4 class="activity-item__what">
+    tems3() {
+      return [
+        {
+          avatar: '/content/avatars/anthony.gif',
+          title: `<h4 class="activity-item__what">
       Robbert commented on
       <a class="decorated" href="/4281589/buckets/14710304/todos/2412190293#__recording_2412196691">Add onboarding story to AskAnna Global</a>
     </h4>`,
-        description: `
+          description: `
         I have added an initial story for the onboarding of a new user. It describes a potential flow and some ideas I have. Andrii Anthony Antonis, please check it out, add feedback, share ideas, etc.
 
       If you agree, please add an approval so we can merge it. If the merge request is already merged, you c...
       `
-      },
-      { divider: true, inset: true },
-      {
-        avatar: '/content/avatars/andrii.gif',
-        title: `<h4 class="activity-item__what">
+        },
+        { divider: true, inset: true },
+        {
+          avatar: '/content/avatars/andrii.gif',
+          title: `<h4 class="activity-item__what">
       Robbert commented on
-      <a class="decorated" href="/4281589/buckets/13602999/question_answers/2409478225#__recording_2411741763">Andrii S.’s answer to “What did you work on today?”</a>
+      <a class="decorated" href="#">Andrii S.’s answer to “What did you work on today?”</a>
     </h4>`,
-        description: `
+          description: `
        Good improvement regarding the login page. Also great to see that you started with the workspace view. If you want feedback, please let me know!
       `
-      }
-    ]
-
-    return items
+        }
+      ]
+    }
   }
 }
 </script>
