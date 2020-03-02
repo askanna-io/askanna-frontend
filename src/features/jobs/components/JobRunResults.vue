@@ -44,10 +44,11 @@
 </template>
 
 <script>
+import { createComponent } from '@vue/composition-api'
 import useMoment from '@/core/composition/useMoment.js'
 import useJobRunResults from '../composition/useJobRunResults'
 
-export default {
+export default createComponent({
   name: 'JobRunResults',
 
   props: {
@@ -80,5 +81,5 @@ export default {
       ...moment
     }
   }
-}
+})
 </script>

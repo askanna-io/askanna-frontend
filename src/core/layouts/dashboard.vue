@@ -1,6 +1,7 @@
 <template>
   <v-app>
     <v-app-bar app clipped-left dark color="primary">
+      <v-app-bar-nav-icon @click.stop="mobileMenu = !mobileMenu" class="hidden-sm-and-up" />
       <v-container fluid>
         <div
           class="d-flex justify-space-between justify-sm-center align-center justify-md-space-between"
@@ -8,18 +9,42 @@
           align="center"
           no-gutters
         >
+          <v-navigation-drawer v-model="mobileMenu" app absolute temporary>
+            <v-list-item>
+              <v-list-item-avatar>
+                <v-img src="/content/avatars/andrii.gif" />
+              </v-list-item-avatar>
+
+              <v-list-item-content>
+                <v-list-item-title>Adnrii Shapovalov</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+
+            <v-divider />
+
+            <v-list dense>
+              <v-list-item v-for="item in items" :key="item.title" link :to="{ name: item.name }">
+                <v-list-item-icon>
+                  <v-icon>{{ item.icon }}</v-icon>
+                </v-list-item-icon>
+
+                <v-list-item-content>
+                  <v-list-item-title>{{ item.title }}</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+          </v-navigation-drawer>
           <div md="auto" sm="12" text-sm-center>
-            <img alt="AskAnna logo" src="@/assets/logo.png" class="logo d-none d-sm-flex " />
-            <img alt="AskAnna logo" src="@/assets/ask-anna-moile.svg" class="logo --mobile hidden-sm-and-up" />
+            <img alt="AskAnna logo" src="@/assets/logo.png" class="logo" />
           </div>
-          <div class="text-sm-center ml-sm-6 ml-md-0">
+          <div class="text-sm-center ml-sm-6 ml-md-0 d-none d-sm-flex">
             <v-flex>
               <v-btn small dark class=" mx-1 white--text" text :to="{ name: 'workspace' }">
                 Workspace
               </v-btn>
               <v-menu v-model="menu" :close-on-content-click="false" :nudge-width="400" offset-y nudge-bottom="10">
                 <template v-slot:activator="{ on }">
-                  <v-btn small dark class="white--text" text v-on="on" :to="{ path: '/' }">
+                  <v-btn small dark class="white--text" text v-on="on" :to="{ path: '/projects' }">
                     Projects
                   </v-btn>
                 </template>
@@ -71,16 +96,12 @@
                   </v-col>
                 </v-row>
               </v-menu>
-              <v-btn small dark class="ml-1 white--text" text :to="{ name: 'jobs' }">
-                Jobs
-              </v-btn>
               <v-menu v-model="menu2" v-resize="onResize" :close-on-content-click="false" :nudge-width="200" offset-x>
                 <template v-slot:activator="{ on }">
                   <v-btn icon v-on="on" class="d-md-none ">
                     <v-icon>mdi-dots-vertical</v-icon>
                   </v-btn>
                 </template>
-
                 <v-list dense>
                   <v-list-item>
                     <v-list-item-title>Settings</v-list-item-title>
@@ -138,6 +159,7 @@ export default {
   name: 'dashboard',
 
   data: () => ({
+    mobileMenu: false,
     xsOnly: null,
     version: process.env.VERSION,
     project: '',

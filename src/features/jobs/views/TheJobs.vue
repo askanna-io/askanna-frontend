@@ -69,15 +69,16 @@
 </template>
 
 <script>
+import { createComponent } from '@vue/composition-api'
+
 import useJobs from '../composition/useJobs'
+import useJob from '../../job/composition/useJob'
 import useMoment from '@/core/composition/useMoment.js'
 import useJobRunResults from '../composition/useJobRunResults'
 
-import useJob from '../../job/composition/useJob'
-
 import JobRunResults from '../components/JobRunResults'
 
-export default {
+export default createComponent({
   name: 'TheJobs',
 
   components: { JobRunResults },
@@ -86,7 +87,6 @@ export default {
     const job = useJob()
     const jobs = useJobs()
     const moment = useMoment(context)
-
     const jobRunResult = useJobRunResults()
 
     return {
@@ -170,7 +170,7 @@ export default {
       this.sticked = data.sticked
     }
   }
-}
+})
 </script>
 
 <style>

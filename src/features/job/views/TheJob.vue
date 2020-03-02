@@ -40,9 +40,9 @@
 
 <script>
 import useJob from '../composition/useJob'
-import { onBeforeMount } from '@vue/composition-api'
+import { onBeforeMount, createComponent } from '@vue/composition-api'
 
-export default {
+export default createComponent({
   name: 'TheJob',
 
   setup(rops, context) {
@@ -64,8 +64,6 @@ export default {
     return {
       selection: 2
     }
-  },
-
-  methods: {}
-}
+  }
+})
 </script>

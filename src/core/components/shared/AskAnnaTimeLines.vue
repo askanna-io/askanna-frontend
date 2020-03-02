@@ -206,7 +206,7 @@ export default {
       ]
     },
 
-    tems3() {
+    items3() {
       return [
         {
           avatar: '/content/avatars/anthony.gif',
