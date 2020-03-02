@@ -16,8 +16,9 @@
 
 <script>
 import useSnackBar from './useSnackBar'
+import { createComponent } from '@vue/composition-api'
 
-export default {
+export default createComponent({
   name: 'TheSnackBar',
 
   setup() {
@@ -27,5 +28,5 @@ export default {
       ...state
     }
   }
-}
+})
 </script>

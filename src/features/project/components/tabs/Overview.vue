@@ -41,6 +41,7 @@
 import Code from './Code'
 export default {
   name: 'Overview',
+
   components: { Code },
 
   data() {
