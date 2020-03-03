@@ -3,23 +3,12 @@
     <v-data-iterator :items="projects" hide-default-footer>
       <template v-slot:header>
         <v-toolbar color="grey lighten-4" flat dense class="br-r5">
+          <v-toolbar-title>Workspace</v-toolbar-title>
+          <v-spacer />
           <v-btn small rounded color="primary" class="mr-3">
             <v-icon left>mdi-plus</v-icon>
             Create Project
           </v-btn>
-          <v-select
-            v-model="workspace"
-            :width="'30px'"
-            color="primary"
-            :items="items"
-            hide-details
-            flat
-            label="Solo field"
-            dense
-            solo
-          />
-          <v-spacer />
-
           <v-menu v-model="menu" :close-on-content-click="false" :nudge-width="200" offset-x>
             <template v-slot:activator="{ on }">
               <v-btn icon v-on="on">

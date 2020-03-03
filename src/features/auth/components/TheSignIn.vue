@@ -35,24 +35,15 @@
       </v-btn>
       <v-checkbox dense label="Remember me" />
     </v-form>
-
-    <v-slide-y-transition>
-      <the-two-step-verification v-if="isSuccesLogedIn" />
-    </v-slide-y-transition>
-    <the-sign-in-google v-if="!isSuccesLogedIn" />
   </div>
 </template>
 
 <script>
 import { createComponent } from '@vue/composition-api'
 import useAuthStore from '../composition/useAuthStore'
-import TheSignInGoogle from '../components/TheSignInGoogle'
-import TheTwoStepVerification from './TheTwoStepVerification'
 
 export default createComponent({
   name: 'TheSignIn',
-
-  components: { TheSignInGoogle, TheTwoStepVerification },
 
   data: () => ({
     expand: false,
@@ -79,10 +70,7 @@ export default createComponent({
         return
       }
 
-      const isSuccesLogedIn = await this.login({ ...this.formData })
-      if (isSuccesLogedIn && isSuccesLogedIn.key) {
-        this.isSuccesLogedIn = true
-      }
+      this.login({ ...this.formData })
     },
     reset() {
       this.$refs.loginForm.reset()

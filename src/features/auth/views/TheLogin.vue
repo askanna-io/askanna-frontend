@@ -42,7 +42,6 @@
 <script>
 import TheSignUp from '../components/TheSignUp'
 import TheSignIn from '../components/TheSignIn'
-import TheSignInGoogle from '../components/TheSignInGoogle'
 
 export default {
   name: 'Login',
