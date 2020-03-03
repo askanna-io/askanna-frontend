@@ -5,7 +5,6 @@ import VueAxios from 'vue-axios'
 import hooks from '@u3u/vue-hooks'
 import { app, router, store } from './core'
 import Logger from '@/core/plugins/logger'
-import dagreD3 from '@/core/plugins/dagre-d3'
 import vuetify from '@/core/plugins/vuetify'
 import VueCompositionApi from '@vue/composition-api'
 import validationRules from '@/core/plugins/validationRules'
@@ -15,7 +14,6 @@ import Sticky from 'vue-sticky-directive'
 Vue.use(Sticky)
 Vue.use(hooks)
 Vue.use(Logger)
-Vue.use(dagreD3)
 
 Vue.use(validationRules)
 Vue.use(VueCompositionApi)
@@ -29,7 +27,7 @@ router.beforeEach((to, _, next) => {
   if (!token && to.name !== 'login') {
     next('login')
   } else if (token && to.name === 'login') {
-    next('/')
+    next('/workspace')
   } else {
     next()
   }

@@ -15,13 +15,15 @@
 </template>
 
 <script>
+import { snackbar } from './store'
 import useSnackBar from './useSnackBar'
 import { createComponent } from '@vue/composition-api'
+const snackbarStore = 'snackbarStore'
 
 export default createComponent({
   name: 'TheSnackBar',
 
-  setup() {
+  setup(props, context) {
     const state = useSnackBar()
 
     return {

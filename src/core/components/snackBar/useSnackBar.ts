@@ -1,10 +1,12 @@
 import { computed } from '@vue/composition-api'
 import { useState, useActions } from '@u3u/vue-hooks'
-import { showSnackBar, closeSnackBar } from '@/core/store/actionTypes'
+import { ac, snackbarStoreName } from './store/types'
+
+const { showSnackBar, closeSnackBar } = ac
 
 export default function() {
   const state = {
-    ...useState('global', { snackbar: 'snackbar', open: 'snackbar.open' })
+    ...useState(snackbarStoreName, { snackbar: 'snackbar', open: 'snackbar.open' })
   }
 
   const openVmodel = computed({
@@ -17,7 +19,7 @@ export default function() {
   })
 
   const actions = {
-    ...useActions('global', [showSnackBar, closeSnackBar])
+    ...useActions(snackbarStoreName, [showSnackBar, closeSnackBar])
   }
 
   return {

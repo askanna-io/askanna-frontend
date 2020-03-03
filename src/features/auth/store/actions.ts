@@ -1,24 +1,19 @@
 import axios from 'axios'
-import { AxiosRequestConfig } from 'axios'
-
-import router from '@/core/router'
-
-import * as mt from '@/core/store/mutationTypes'
-import { apiStringify } from '@/core/api-settings'
-import { api } from '@/core/api-settings'
-import * as actionType from '@/core/store/actionTypes'
-
+import { ac, mt } from './types'
 import { ActionTree } from 'vuex'
+import router from '@/core/router'
 import { AuthState } from './types'
-
+import { api } from '@/core/api-settings'
+import { apiStringify } from '@/core/api-settings'
 import { AUTH_STORE } from '@/core/store/storeTypes'
+import * as gbTypes from '@/core/store/actionTypes'
 
 const root = true
 const serviceName = AUTH_STORE
 const apiString = apiStringify(serviceName)
 
 export const actions: ActionTree<AuthState, RootState> = {
-  async [actionType.login]({ commit, dispatch, rootState }, { username, password }) {
+  async [ac.login]({ commit, dispatch, rootState }, { username, password }) {
     const url = api.url() + api.auth.login()
 
     axios.defaults.xsrfCookieName = 'csrftoken'
@@ -31,11 +26,10 @@ export const actions: ActionTree<AuthState, RootState> = {
       commit(mt.SET_AUTH, data)
 
       return data
-      // router.push({ path: '/' })
     } catch (error) {
       if ((error && error.response && error.response.status === 400) || error.statusCode === 400) {
         const message = error.response.data.non_field_errors[0]
-        dispatch(`global/${actionType.showSnackBar}`, { message }, { root })
+        dispatch(`global/${gbTypes.ac.showSnackBar}`, { message }, { root })
 
         return error
       }
@@ -48,10 +42,10 @@ export const actions: ActionTree<AuthState, RootState> = {
     }
   },
 
-  async [actionType.logout]({ commit, dispatch }) {
+  async [ac.logout]({ commit, dispatch }) {
     try {
       await dispatch(
-        actionType.apiService,
+        gbTypes.apiService,
         {
           action: apiString.logout,
           method: 'post',

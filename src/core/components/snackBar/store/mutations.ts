@@ -1,11 +1,8 @@
-import { TIMINGS } from '@/core/utils/const'
-import * as type from '@/core/store/mutationTypes'
-
 import { MutationTree } from 'vuex'
-import { GlobalState } from './types'
+import { mt, TIMINGS, SnackbarState } from './types'
 
-export const mutations: MutationTree<GlobalState> = {
-  [type.SET_SNACKBAR](state, params) {
+export const mutations: MutationTree<SnackbarState> = {
+  [mt.SET_SNACKBAR](state, params) {
     let { timeout, message = '' } = params
 
     if (!timeout) {
@@ -22,7 +19,7 @@ export const mutations: MutationTree<GlobalState> = {
     }
   },
 
-  [type.CLOSE_SNACKBAR](state) {
+  [mt.CLOSE_SNACKBAR](state) {
     state.snackbar = {
       ...state.snackbar,
       ...{

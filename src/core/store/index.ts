@@ -1,19 +1,26 @@
 import Vue from 'vue'
 import { $axios } from '@/main'
-
+import * as at from './actionTypes'
 import { api } from '../api-settings'
 import Vuex, { StoreOptions } from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
-import * as at from './actionTypes'
-import * as mt from './mutationTypes'
 
-// find all store modules from features folder
+// find all store modules from features and core folders
 const stores: any = {}
-const modules = require.context('@/features', true, /store\/index$/)
-const moduleKeys = modules.keys()
+const featureModules = require.context('@/features', true, /store\/index$/)
+const moduleKeys = featureModules.keys()
 
 for (const modulePath of moduleKeys) {
-  const storeModule = modules(modulePath)
+  const storeModule = featureModules(modulePath)
+
+  stores[storeModule.name] = storeModule[storeModule.name]
+}
+
+const coreModules = require.context('@/core/components', true, /store\/index$/)
+const coreModuleKeys = coreModules.keys()
+
+for (const modulePath of coreModuleKeys) {
+  const storeModule = coreModules(modulePath)
   stores[storeModule.name] = storeModule[storeModule.name]
 }
 

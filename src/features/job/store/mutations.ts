@@ -23,7 +23,7 @@ export const mutations: MutationTree<jobState> = {
     state.openJobRunResult = false
   },
 
-  [type.mutation.SET_RESULT_MODAL](state, params) {
+  [type.mutation.SET_RESULT_MODAL](state) {
     state.openJobRunResult = true
   }
 }

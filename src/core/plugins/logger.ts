@@ -1,6 +1,5 @@
 import _Vue from 'vue'
 import store from '../store'
-import { provide, inject } from '@vue/composition-api'
 
 const LOGGER = {
   consoleLog: true,
@@ -9,8 +8,8 @@ const LOGGER = {
   production: false
 }
 
-const globalStore = 'global'
-const setSnackBar = `${globalStore}/${'SET_SNACKBAR'}`
+const snackbarStore = 'snackbar'
+const setSnackBar = `${snackbarStore}/${'SET_SNACKBAR'}`
 
 export const logger = {
   success(message: any) {
@@ -61,28 +60,3 @@ export const logger = {
 export default function Logger(Vue: typeof _Vue, options?: any): void {
   Vue.prototype.logger = logger
 }
-
-/* const createLogger = () => ({
-  success: function(...message: any) {
-    const timeout = 2000
-    store.commit(setSnackBar, {
-      message,
-      timeout
-    })
-  }
-})
-
-const LoggerSymbol = Symbol()
-
-export function provideLogger() {
-  const Logger = createLogger()
-  provide(LoggerSymbol, Logger)
-}
-
-export function useLogger() {
-  const Logger = inject(LoggerSymbol)
-  if (!Logger) throw new Error('No Logger provided!!!')
-
-  return logger
-}
- */
