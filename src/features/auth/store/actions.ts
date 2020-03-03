@@ -24,6 +24,7 @@ export const actions: ActionTree<AuthState, RootState> = {
       const { data } = result
 
       commit(mt.SET_AUTH, data)
+      router.push({ path: '/workspace' })
 
       return data
     } catch (error) {

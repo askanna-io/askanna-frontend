@@ -20,7 +20,16 @@
     </v-card-text>
     <v-divider />
 
-    <v-toolbar color="white" flat dense class="br-r5 mx-3">
+    <v-toolbar
+      color="white"
+      class="br-r5 ma-3"
+      dense
+      :flat="!sticked"
+      on-stick="onStick"
+      sticky-container
+      v-sticky="true"
+      sticky-offset="{top: 52, bottom: 10}"
+    >
       <v-tabs v-model="currentTab" left align-with-title>
         <v-tabs-slider color="primary" />
 
@@ -58,16 +67,15 @@
 </template>
 
 <script>
-import useProject from '../composition/useProject'
-
 import Jobs from '../components/tabs/Jobs'
 import Activity from '../components/tabs/Activity'
-import Documantation from '../components/tabs/Documantation'
-
+import useProject from '../composition/useProject'
 import { onBeforeMount } from '@vue/composition-api'
+import Documantation from '../components/tabs/Documantation'
 
 export default {
   name: 'TheProject',
+
   components: {
     Jobs,
     Activity,
@@ -80,6 +88,7 @@ export default {
 
   data() {
     return {
+      stickedVal: false,
       menu: false,
       projectView: 0,
       project: {
@@ -124,6 +133,22 @@ export default {
           component: 'Documantation'
         }
       ]
+    }
+  },
+
+  computed: {
+    sticked: {
+      get() {
+        return this.stickedVal
+      },
+      set(val) {
+        this.stickedVal = val
+      }
+    }
+  },
+  methods: {
+    onStick(data) {
+      this.sticked = data.sticked
     }
   }
 }
