@@ -1,3 +1,0 @@
-export const TIMINGS = {
-  SNACKBAR_SYMBOL_READ_TIME: 300
-}

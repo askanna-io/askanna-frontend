@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto h-100" :elevation="hover ? 16 : 2" :to="`project/${project.id}`">
+  <v-card class="mx-auto h-100" :elevation="hover ? 16 : 2" :to="`/workspace/project/${project.id}`">
     <v-card-title>
       <v-icon large left>
         mdi-semantic-web
@@ -24,7 +24,7 @@
           size="35"
           color="grey "
           :hover="hover"
-          :to="`project/${project.id}`"
+          :to="`/workspace/project/${project.id}`"
         >
           <img src="https://randomuser.me/api/portraits/men/81.jpg" />
         </v-avatar>

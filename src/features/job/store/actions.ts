@@ -4,7 +4,7 @@ import * as rootTypes from '@/core/store/actionTypes'
 import { logger } from '@/core/plugins/logger'
 
 import { ActionTree } from 'vuex'
-import { JobModel, jobState, JOB_STORE } from './types'
+import { jobState, JOB_STORE } from './types'
 
 const root = true
 const serviceName = JOB_STORE

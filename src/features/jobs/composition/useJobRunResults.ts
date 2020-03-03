@@ -1,6 +1,6 @@
 import { computed } from '@vue/composition-api'
-import { useState, useActions } from '@u3u/vue-hooks'
 import { action } from '@/features/job/store/types'
+import { useState, useActions } from '@u3u/vue-hooks'
 
 const { showJobRunResult, closeResultModal } = action
 

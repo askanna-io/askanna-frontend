@@ -2,7 +2,7 @@
   <v-card class="mx-auto" outlined>
     <v-breadcrumbs :items="items">
       <template v-slot:item="{ item }">
-        <v-breadcrumbs-item :href="item.href" :disabled="item.disabled">
+        <v-breadcrumbs-item :to="item.to" :disabled="item.disabled">
           {{ item.text.toUpperCase() }}
         </v-breadcrumbs-item>
       </template>
@@ -62,9 +62,6 @@ import useProject from '../composition/useProject'
 
 import Jobs from '../components/tabs/Jobs'
 import Activity from '../components/tabs/Activity'
-
-import Overview from '../components/tabs/Overview'
-import RunsCode from '../components/tabs/RunsCode'
 import Documantation from '../components/tabs/Documantation'
 
 import { onBeforeMount } from '@vue/composition-api'
@@ -74,23 +71,11 @@ export default {
   components: {
     Jobs,
     Activity,
-    Overview,
-    RunsCode,
     Documantation
   },
 
   setup(props, context) {
     const project = useProject()
-
-    /*   onBeforeMount(() => {
-      const { id } = context.root.$route.params
-
-      project.getProject(id)
-    }) */
-
-    /* return {
-      ...project
-    } */
   },
 
   data() {
@@ -107,17 +92,17 @@ export default {
         {
           text: 'Dashboard',
           disabled: false,
-          href: '/'
+          to: '/'
         },
         {
           text: 'Workspaces',
           disabled: false,
-          href: '/workspace'
+          to: '/workspace/index'
         },
         {
           text: 'Project title 1',
           disabled: true,
-          href: ''
+          to: ''
         }
       ],
       currentTab: 0,
@@ -141,12 +126,5 @@ export default {
       ]
     }
   }
-
-  /*  computed: {
-    getTabComponent() {
-      const tab = this.projectTools.find(tab => tab.id === this.currentTab)
-      return () => import(`../components/tabs/${tab.component}.vue`)
-    }
-  } */
 }
 </script>

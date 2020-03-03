@@ -44,16 +44,12 @@
 </template>
 
 <script>
+import { createComponent } from '@vue/composition-api'
+import useAuthStore from '../composition/useAuthStore'
+import TheSignInGoogle from '../components/TheSignInGoogle'
 import TheTwoStepVerification from './TheTwoStepVerification'
 
-import { createNamespacedHelpers } from 'vuex'
-import { login } from '@/core/store/actionTypes'
-import { AUTH_STORE } from '@/core/store/storeTypes'
-import TheSignInGoogle from '../components/TheSignInGoogle'
-
-const { mapActions } = createNamespacedHelpers(AUTH_STORE)
-
-export default {
+export default createComponent({
   name: 'TheSignIn',
 
   components: { TheSignInGoogle, TheTwoStepVerification },
@@ -69,10 +65,15 @@ export default {
     isSuccesLogedIn: false
   }),
 
+  setup(rops, context) {
+    const authStore = useAuthStore()
+
+    return {
+      ...authStore
+    }
+  },
+
   methods: {
-    ...mapActions({
-      login
-    }),
     async handleLogin() {
       if (!this.$refs.loginForm.validate()) {
         return
@@ -90,5 +91,5 @@ export default {
       this.$refs.loginForm.resetValidation()
     }
   }
-}
+})
 </script>

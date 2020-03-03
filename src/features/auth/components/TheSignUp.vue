@@ -20,13 +20,10 @@
 </template>
 
 <script>
-import { createNamespacedHelpers } from 'vuex'
-import { login } from '@/core/store/actionTypes'
-import { AUTH_STORE } from '@/core/store/storeTypes'
+import { createComponent } from '@vue/composition-api'
+import useAuthStore from '../composition/useAuthStore'
 
-const { mapActions } = createNamespacedHelpers(AUTH_STORE)
-
-export default {
+export default createComponent({
   name: 'TheSignIn',
 
   data: () => ({
@@ -38,10 +35,15 @@ export default {
     isShowPassword: false
   }),
 
+  setup(rops, context) {
+    const authStore = useAuthStore()
+
+    return {
+      ...authStore
+    }
+  },
+
   methods: {
-    ...mapActions({
-      login
-    }),
     async handleLogin() {
       if (!this.$refs.loginForm.validate()) {
         return
@@ -56,7 +58,7 @@ export default {
       this.$refs.loginForm.resetValidation()
     }
   }
-}
+})
 </script>
 <style scoped>
 .login-wrapper {

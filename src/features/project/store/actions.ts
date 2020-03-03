@@ -1,8 +1,8 @@
+import { ActionTree } from 'vuex'
+import { logger } from '@/core/plugins/logger'
 import { apiStringify } from '@/core/api-settings'
 import * as rootTypes from '@/core/store/actionTypes'
 
-import { logger } from '@/core/plugins/logger'
-import { ActionTree } from 'vuex'
 import { projectState, PROJECT_STORE, action, mutation } from './types'
 
 const root = true

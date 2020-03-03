@@ -56,12 +56,6 @@
             >
           </v-chip-group>
         </template>
-        <!-- Comment 
-        <template v-slot:item.id="{ item }">
-        
-          <v-btn :to="`/job/${item.id}`" text>...</v-btn>
-        </template>
-        -->
       </v-data-table>
       <job-run-results :item="jobResults" />
     </v-col>
