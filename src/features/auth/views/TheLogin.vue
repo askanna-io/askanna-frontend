@@ -65,7 +65,7 @@ export default {
   background-size: cover;
 }
 .logo {
-  height: 27px;
+  height: 54px;
   padding-left: 10px;
   margin-bottom: 6px;
 }
