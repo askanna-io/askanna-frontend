@@ -68,6 +68,7 @@
 
 <script>
 import Jobs from '../components/tabs/Jobs'
+import Code from '../components/tabs/Code'
 import Activity from '../components/tabs/Activity'
 import useProject from '../composition/useProject'
 import { onBeforeMount } from '@vue/composition-api'
@@ -78,6 +79,7 @@ export default {
 
   components: {
     Jobs,
+    Code,
     Activity,
     Documantation
   },
@@ -123,12 +125,17 @@ export default {
         },
         {
           id: 1,
+          name: 'Code',
+          component: 'Code'
+        },
+        {
+          id: 2,
           name: 'Jobs',
           component: 'Jobs'
         },
 
         {
-          id: 2,
+          id: 3,
           name: 'Documantation',
           component: 'Documantation'
         }
