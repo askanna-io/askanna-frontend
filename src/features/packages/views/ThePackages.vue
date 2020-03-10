@@ -1,7 +1,7 @@
 <template>
-  <v-row align="center" justify="center" class="login-wrapper">
+  <v-row align="center" justify="center">
     <v-col cols="12" class="pt-0">
-      <v-data-table :headers="headers" :items="list" fixed-header class="job-table scrollbar">
+      <v-data-table :headers="headers" :items="list" @click:row="handleClickRow" fixed-header class="j21">
         <template v-slot:top>
           <v-subheader>Packages</v-subheader>
         </template>
@@ -14,7 +14,7 @@
         </template>
 
         <template v-slot:item.menu="{ item }">
-          <v-menu bottom color="primary" :close-on-content-click="false" :nudge-width="200" offset-x :key="item">
+          <v-menu bottom color="primary" :close-on-content-click="false" :nudge-width="200" offset-x :key="item.name">
             <template v-slot:activator="{ on }">
               <v-btn icon v-on="on" color="primary">
                 <v-icon>mdi-dots-horizontal</v-icon>
@@ -22,21 +22,19 @@
             </template>
 
             <v-list>
-              <v-list-item>
+              <v-list-item @click="handleHistory">
                 <v-list-item-title>History</v-list-item-title>
               </v-list-item>
             </v-list>
           </v-menu>
         </template>
       </v-data-table>
-      <job-run-results :item="jobResults" />
     </v-col>
   </v-row>
 </template>
 
 <script>
 import { createComponent } from '@vue/composition-api'
-
 import useMoment from '@/core/composition/useMoment.js'
 
 export default createComponent({
@@ -122,6 +120,18 @@ export default createComponent({
   },
 
   methods: {
+    handleHistory() {
+      this.$router.push({
+        name: 'workspace-project-packages-uuid-history',
+        params: { projectId: '1', packageId: '1', versionId: '1' }
+      })
+    },
+    handleClickRow() {
+      this.$router.push({
+        name: 'workspace-project-packages-uuid-version-uuid',
+        params: { projectId: '1', packageId: '1', versionId: '1' }
+      })
+    },
     async handleJobInfo(jobResults) {
       this.jobResults = { ...this.currentJob, ...jobResults }
 
@@ -141,7 +151,7 @@ export default createComponent({
 })
 </script>
 
-<style>
+<style scoped>
 .job-table .v-data-table__wrapper {
   max-height: 500px;
 }

@@ -33,7 +33,7 @@
       <v-tabs v-model="currentTab" left align-with-title>
         <v-tabs-slider color="primary" />
 
-        <v-tab v-for="tab of projectTools" ripple :key="tab.id">
+        <v-tab v-for="tab of projectTools" ripple :key="tab.id" :to="{ name: tab.to }">
           {{ tab.name }}
         </v-tab>
       </v-tabs>
@@ -58,31 +58,16 @@
       </v-menu>
     </v-toolbar>
 
-    <v-tabs-items v-model="currentTab">
-      <v-tab-item v-for="tab of projectTools" :key="tab.id">
-        <component :is="tab.component" />
-      </v-tab-item>
-    </v-tabs-items>
+    <router-view />
   </v-card>
 </template>
 
 <script>
-import Jobs from '../components/tabs/Jobs'
-import Code from '../components/tabs/Code'
-import Activity from '../components/tabs/Activity'
 import useProject from '../composition/useProject'
 import { onBeforeMount } from '@vue/composition-api'
-import Documantation from '../components/tabs/Documantation'
 
 export default {
   name: 'TheProject',
-
-  components: {
-    Jobs,
-    Code,
-    Activity,
-    Documantation
-  },
 
   setup(props, context) {
     const project = useProject()
@@ -116,28 +101,32 @@ export default {
           to: ''
         }
       ],
-      currentTab: 0,
+      currentTab: 'workspace-project-activity',
       projectTools: [
         {
           id: 0,
           name: 'Activity',
-          component: 'Activity'
+          component: 'Activity',
+          to: 'workspace-project-activity'
         },
         {
           id: 1,
           name: 'Code',
-          component: 'Code'
+          component: 'Code',
+          to: 'workspace-project-packages'
         },
         {
           id: 2,
           name: 'Jobs',
-          component: 'Jobs'
+          component: 'Jobs',
+          to: 'workspace-project-jobs'
         },
 
         {
           id: 3,
           name: 'Documantation',
-          component: 'Documantation'
+          component: 'Documantation',
+          to: 'workspace-project-documantation'
         }
       ]
     }

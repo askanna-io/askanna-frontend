@@ -1,27 +1,26 @@
 <template>
-  <v-row align="center" justify="center" class="login-wrapper">
+  <v-row align="center" justify="center">
     <v-col cols="12" class="pt-0">
       <v-data-table
-        dense
         fixed-header
         :page.sync="page"
-        :headers="headers2"
+        :headers="headers"
         :items="packageHistory"
-        class="job-sub-table"
+        class="j21"
         @page-count="pageCount = $event"
+        @click:row="handleClickRow"
       >
         <template v-slot:top>
-          <v-subheader>Package history</v-subheader>
-        </template>
-        <template v-slot:item.info="{ item }">
-          <v-btn @click="handleJobInfo(item)" class="ma-2" large color="teal" icon>
-            <v-icon>mdi-information-outline</v-icon>
-          </v-btn>
-        </template>
-        <template v-slot:item.timing="{ item }">
-          <b>Started:</b> &nbsp;{{ $moment(item.created).format(' Do MMMM YYYY, h:mm:ss a') }} <br />
-          <b>Finished:</b> &nbsp;{{ $moment(item.finished).format(' Do MMMM YYYY, h:mm:ss a') }}<br />
-          <b>Duration:</b> &nbsp;{{ runTimeHours(item.created, item.finished) }} seconds<br />
+          <v-breadcrumbs :items="items">
+            <template v-slot:divider>
+              <v-icon>mdi-chevron-right</v-icon>
+            </template>
+            <template v-slot:item="{ item }">
+              <v-breadcrumbs-item :to="item.to" :disabled="item.disabled" exact>
+                {{ item.text }}
+              </v-breadcrumbs-item>
+            </template>
+          </v-breadcrumbs>
         </template>
       </v-data-table>
     </v-col>
@@ -46,19 +45,36 @@ export default createComponent({
 
   data() {
     return {
-      list: [
+      items: [
         {
-          name: 'MyGreatPackage',
-          date: '10 feb 2020',
-          author: 'Evan You'
+          text: 'Packages',
+          disabled: false,
+          to: '/workspace/project/1/packages/'
+        },
+        {
+          text: 'Package - #1',
+          disabled: false,
+          to: '/workspace/project/1/packages/1'
+        },
+        {
+          text: 'History',
+          disabled: true,
+          to: '/workspace/project/1/packages/1/hystory'
         }
       ],
 
       packageHistory: [
         {
           name: 'MyGreatPackage',
+          date: '12 feb 2020',
+          author: 'Evan You',
+          id: 2
+        },
+        {
+          name: 'MyGreatPackage',
           date: '10 feb 2020',
-          author: 'Evan You'
+          author: 'Evan You',
+          id: 1
         }
       ],
 
@@ -85,19 +101,9 @@ export default createComponent({
           sortable: false,
           value: 'name'
         },
-        { text: 'Modified', value: 'uuid' },
+        { text: 'Version', value: 'id' },
+        { text: 'Modified', value: 'date' },
         { text: 'Author', value: 'author' }
-      ],
-
-      headers2: [
-        {
-          text: 'Name',
-          align: 'left',
-          sortable: false,
-          value: 'name'
-        },
-        { text: 'Modified', value: 'uuid' },
-        { text: 'By', value: 'author' }
       ]
     }
   },
@@ -114,6 +120,12 @@ export default createComponent({
   },
 
   methods: {
+    handleClickRow({ id }) {
+      this.$router.push({
+        name: 'workspace-project-packages-uuid-version-uuid',
+        params: { projectId: '1', packageId: '1', versionId: id }
+      })
+    },
     async handleJobInfo(jobResults) {
       this.jobResults = { ...this.currentJob, ...jobResults }
 
@@ -133,7 +145,7 @@ export default createComponent({
 })
 </script>
 
-<style>
+<style scoped>
 .job-table .v-data-table__wrapper {
   max-height: 500px;
 }
