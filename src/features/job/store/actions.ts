@@ -11,7 +11,7 @@ const serviceName = JOB_STORE
 const api = apiStringify(serviceName)
 
 export const actions: ActionTree<jobState, RootState> = {
-  async [type.action.getJob]({ commit, dispatch, state }, id) {
+  async [type.action.getJob]({ commit, dispatch }, id) {
     let job
     try {
       job = await dispatch(

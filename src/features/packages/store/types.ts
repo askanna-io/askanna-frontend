@@ -1,37 +1,24 @@
-export interface JobsState extends jobsData {}
+export interface PackagesState extends Packages {}
 
-export interface jobsData {
-  list: JobItem[]
+export interface Packages {
+  projectPackages: Package[]
 }
 
-export interface JobItem {
-  id: number
+export interface Package {
   uuid: string
-  name: string
-  status: {
-    name: string
-    project: string | null
-    function: string
-    backend: string
-    created: string
-    payload: any
-    lastrun: {
-      status: string
-      runtime: number
-      memory: number
-      return_payload: string
-      stdout: null
-      created: string
-      finished: string
-    }
-  }
+  filename: string
+  storage_location: string
+  project_id: number
+  size: number
+  created_by: number
+  created_at: string
 }
 
-export const JOBS_STORE = 'jobs'
+export const PACKAGES_STORE = 'packages'
 
 // actions
-export const getJobsList = 'getJobsList'
+export const getProjectPackages = 'getProjectPackages'
+export const downloadPackage = 'downloadPackage'
 
 //mutations
-export const SET_JOBS_LIST = 'SET_JOBS_LIST'
-export const UDPDATE_LIST = 'UDPDATE_LIST'
+export const SET_PROJECT_PACKAGES = 'SET_PROJECT_PACKAGES'

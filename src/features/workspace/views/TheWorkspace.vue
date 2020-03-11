@@ -76,7 +76,7 @@ export default {
       projects: [
         {
           name: 'Project title 1',
-          id: 1,
+          id: 0,
           description:
             'Turns out semicolon-less style is easier and safer in TS because most gotcha edge cases are type invalid as well.'
         },

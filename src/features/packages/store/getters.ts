@@ -1,4 +1,4 @@
 import { GetterTree } from 'vuex'
-import { JobsState } from './types'
+import { PackagesState } from './types'
 
-export const getters: GetterTree<JobsState, RootState> = {}
+export const getters: GetterTree<PackagesState, RootState> = {}

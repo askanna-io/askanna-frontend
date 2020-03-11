@@ -1,36 +1,52 @@
 import * as type from './types'
 import { ActionTree } from 'vuex'
 import { logger } from '@/core/plugins/logger'
-import { JobsState, JOBS_STORE } from './types'
+import { PackagesState, PACKAGES_STORE } from './types'
 import { apiStringify } from '@/core/api-settings'
 import * as rootTypes from '@/core/store/actionTypes'
 
 const root = true
-const serviceName = JOBS_STORE
+const serviceName = PACKAGES_STORE
 const api = apiStringify(serviceName)
 
-export const actions: ActionTree<JobsState, RootState> = {
-  async [type.getJobsList]({ commit, dispatch, state }) {
-    let list
+export const actions: ActionTree<PackagesState, RootState> = {
+  async [type.getProjectPackages]({ commit, dispatch }, uuid) {
+    let packages
     try {
-      list = await dispatch(
+      packages = await dispatch(
         rootTypes.apiService,
         {
-          action: api.list,
-          serviceName
+          action: api.projectPackages,
+          serviceName,
+          uuid
         },
         { root }
       )
     } catch (e) {
-      logger.error('Error on load jobs list items in getJobsList action.\nError: ', e)
+      logger.error('Error on load packages in getProjectPackages action.\nError: ', e)
       return
     }
-    // @TODO #1 refactore after implement job list on backend
-    list.forEach(async (element: any, index: number) => {
-      const jobInfo = await dispatch(`job/getJobInfo`, element.id, { root })
-      const data = { ...element, status: jobInfo.status }
+    commit(type.SET_PROJECT_PACKAGES, packages)
+  },
 
-      commit(type.UDPDATE_LIST, { data, index })
-    })
+  async [type.downloadPackage]({ commit, dispatch }, uuid) {
+    let packageSource
+    try {
+      packageSource = await dispatch(
+        rootTypes.apiService,
+        {
+          action: api.getDownloadLink,
+          serviceName,
+          uuid
+        },
+        { root }
+      )
+    } catch (e) {
+      logger.error('Error on load packageSource in downloadPackage action.\nError: ', e)
+      return
+    }
+
+    console.log(packageSource)
+    return packageSource
   }
 }

@@ -8,6 +8,7 @@ export default function() {
   const fetchData = useFetchData()
 
   onBeforeMount((context: SetupContext) => {
+    console.log(context)
     fetchData(context, jobsStore.getJobsList)
   })
 
