@@ -39,6 +39,7 @@ export const api: ApiSettings = {
       list: () => `job/`
     },
     project: {
+      get: id => `project/${id}/`,
       list: () => `project/`,
       packages: id => `project/${id}/packages/`
     },

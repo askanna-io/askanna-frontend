@@ -2,6 +2,7 @@ export interface PackagesState extends Packages {}
 
 export interface Packages {
   projectPackages: Package[]
+  projectPackageHistory: Package[]
 }
 
 export interface Package {

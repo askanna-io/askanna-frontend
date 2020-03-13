@@ -5,7 +5,8 @@ import { mutations } from './mutations'
 import { PackagesState, PACKAGES_STORE } from './types'
 
 export const state: PackagesState = {
-  projectPackages: []
+  projectPackages: [],
+  projectPackageHistory: []
 }
 
 const namespaced: boolean = true

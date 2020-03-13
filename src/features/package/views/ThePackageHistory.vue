@@ -5,19 +5,19 @@
         fixed-header
         :page.sync="page"
         :headers="headers"
-        :items="packageHistory"
+        :items="projectPackageHistory"
         class="j21"
         @page-count="pageCount = $event"
         @click:row="handleClickRow"
       >
         <template v-slot:top>
-          <v-breadcrumbs :items="items">
+          <v-breadcrumbs :items="breadcrumbs">
             <template v-slot:divider>
               <v-icon>mdi-chevron-right</v-icon>
             </template>
             <template v-slot:item="{ item }">
-              <v-breadcrumbs-item :to="item.to" :disabled="item.disabled" exact>
-                {{ item.text }}
+              <v-breadcrumbs-item :to="item.to" exact>
+                {{ item.title }}
               </v-breadcrumbs-item>
             </template>
           </v-breadcrumbs>
@@ -29,6 +29,8 @@
 
 <script>
 import { createComponent } from '@vue/composition-api'
+import usePackages from '../../packages/composition/usePackages'
+import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
 
 import useMoment from '@/core/composition/useMoment.js'
 
@@ -37,9 +39,13 @@ export default createComponent({
 
   setup(props, context) {
     const moment = useMoment(context)
+    const packages = usePackages(context)
+    const breadcrumbs = useBreadcrumbs(context, 2)
 
     return {
-      ...moment
+      ...moment,
+      ...packages,
+      breadcrumbs
     }
   },
 
@@ -63,21 +69,6 @@ export default createComponent({
         }
       ],
 
-      packageHistory: [
-        {
-          name: 'MyGreatPackage',
-          date: '12 feb 2020',
-          author: 'Evan You',
-          id: 2
-        },
-        {
-          name: 'MyGreatPackage',
-          date: '10 feb 2020',
-          author: 'Evan You',
-          id: 1
-        }
-      ],
-
       currentJob: null,
       loading: true,
       openD: false,
@@ -93,17 +84,15 @@ export default createComponent({
       expanded: [],
       singleExpand: false,
       selection: 2,
-
       headers: [
         {
           text: 'Name',
           align: 'left',
-          sortable: false,
-          value: 'name'
+          value: 'filename'
         },
-        { text: 'Version', value: 'id' },
-        { text: 'Modified', value: 'date' },
-        { text: 'Author', value: 'author' }
+        { text: 'Created', value: 'created_at' },
+        { text: '', value: 'uuid', sortable: false },
+        { text: '', value: 'menu' }
       ]
     }
   },
@@ -120,10 +109,10 @@ export default createComponent({
   },
 
   methods: {
-    handleClickRow({ id }) {
+    handleClickRow({ project_id, uuid }) {
       this.$router.push({
         name: 'workspace-project-packages-uuid-version-uuid',
-        params: { projectId: '1', packageId: '1', versionId: id }
+        params: { projectId: project_id, packageId: uuid, versionId: '1' }
       })
     },
     async handleJobInfo(jobResults) {
