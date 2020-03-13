@@ -5,7 +5,8 @@ import { mutations } from './mutations'
 import { projectState, PROJECT_STORE, ProjectModel } from './types'
 
 export const state: projectState = {
-  project: new ProjectModel().state
+  project: new ProjectModel().state,
+  projects: []
 }
 
 const namespaced: boolean = true

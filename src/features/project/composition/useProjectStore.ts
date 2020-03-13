@@ -3,7 +3,7 @@ import { PROJECT_STORE, action } from '../store/types'
 
 export default function() {
   const state = {
-    ...useState(PROJECT_STORE, { project: 'project' })
+    ...useState(PROJECT_STORE, { project: 'project', projects: 'projects' })
   }
 
   const actions = {
@@ -11,7 +11,6 @@ export default function() {
   }
 
   return {
-    open,
     ...state,
     ...actions
   }

@@ -1,20 +1,20 @@
 import { SetupContext } from '@vue/composition-api'
 import { onBeforeMount } from '@vue/composition-api'
-import usePackagesStore from './usePackagesStore'
+import usePackageStore from './usePackageStore'
 import useFetchData from '@/core/composition/useFetchData'
 
 export default function(context: SetupContext) {
-  const packagesStore: any = usePackagesStore()
+  const packageStore: any = usePackageStore()
   const fetchData = useFetchData()
 
   onBeforeMount(() => {
-    const { projectId } = context.root.$route.params
+    /* const { projectId } = context.root.$route.params
 
-    fetchData(context, packagesStore.getProjectPackages(projectId))
+    fetchData(context, packageStore.getProjectPackages(projectId)) */
   })
 
   return {
-    ...packagesStore,
+    ...packageStore,
     fetchData
   }
 }

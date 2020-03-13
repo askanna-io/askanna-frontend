@@ -42,10 +42,14 @@ export const api: ApiSettings = {
       list: () => `project/`,
       packages: id => `project/${id}/packages/`
     },
+    package: {
+      get: ({ projectId, packageId }) => `project/${projectId}/packages/${packageId}/`
+    },
     packages: {
       list: () => `project/`,
       projectPackages: id => `project/${id}/packages/`,
-      getDownloadLink: ({ projectId, packageId }) => 'project/0/packages/5f1bf12a-d4ae-4f44-bfa1-2cca92cfff81/download/'
+      getDownloadLink: ({ projectId, packageId }) => `project/${projectId}/packages/${packageId}/download/`
+      //getDownloadLink: ({ projectId, packageId }) => 'project/1/packages/45d1816c-4973-4db1-b909-a4a2a6cda9b4/download/'
     },
     job: {
       add: () => 'job/',

@@ -47,7 +47,7 @@ const store: StoreOptions<RootState> = {
         method = 'get',
         action = 'get',
         responseType = '',
-        serviceName = 'order'
+        serviceName = 'workspace'
       }
     ) {
       try {
@@ -58,6 +58,34 @@ const store: StoreOptions<RootState> = {
           headers,
           responseType,
           url: api.apiUrl() + api.points[serviceName][action](uuid)
+        })
+
+        if (result.status === 200) {
+          return result.data
+        } else {
+          throw result
+        }
+      } catch (error) {
+        if (error.response && error.response.status === 400 && error.response.data.reasons) {
+          throw error.response.data.reasons
+        } else {
+          throw error
+        }
+      }
+    },
+
+    async [at.apiDownloadSerice](
+      { commit, rootState },
+      { url, data = null, headers = {}, params = null, method = 'get', responseType = 'blob' }
+    ) {
+      try {
+        const result = await $axios({
+          data,
+          method,
+          params,
+          headers,
+          responseType,
+          url
         })
 
         if (result.status === 200) {

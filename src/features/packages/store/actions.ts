@@ -29,10 +29,10 @@ export const actions: ActionTree<PackagesState, RootState> = {
     commit(type.SET_PROJECT_PACKAGES, packages)
   },
 
-  async [type.downloadPackage]({ commit, dispatch }, uuid) {
-    let packageSource
+  async [type.getTargetPackage]({ commit, dispatch }, uuid) {
+    let packageTarget
     try {
-      packageSource = await dispatch(
+      packageTarget = await dispatch(
         rootTypes.apiService,
         {
           action: api.getDownloadLink,
@@ -42,11 +42,30 @@ export const actions: ActionTree<PackagesState, RootState> = {
         { root }
       )
     } catch (e) {
+      logger.error('Error on load packageTarget in getTargetPackage action.\nError: ', e)
+      return
+    }
+
+    return packageTarget?.target
+  },
+
+  async [type.downloadPackage]({ commit, dispatch }, uuid) {
+    const url = await dispatch(type.getTargetPackage, uuid)
+
+    let packageSource
+    try {
+      packageSource = await dispatch(
+        rootTypes.apiDownloadSerice,
+        {
+          url
+        },
+        { root }
+      )
+    } catch (e) {
       logger.error('Error on load packageSource in downloadPackage action.\nError: ', e)
       return
     }
 
-    console.log(packageSource)
     return packageSource
   }
 }

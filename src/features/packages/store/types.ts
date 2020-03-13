@@ -19,6 +19,7 @@ export const PACKAGES_STORE = 'packages'
 // actions
 export const getProjectPackages = 'getProjectPackages'
 export const downloadPackage = 'downloadPackage'
+export const getTargetPackage = 'getTargetPackage'
 
 //mutations
 export const SET_PROJECT_PACKAGES = 'SET_PROJECT_PACKAGES'

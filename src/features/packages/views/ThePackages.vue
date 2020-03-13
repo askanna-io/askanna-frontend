@@ -7,7 +7,7 @@
         </template>
 
         <template v-slot:item.uuid="{ item }">
-          <v-chip outlined label color="primary" @click.stop="handleDownload(item.uuid)">
+          <v-chip outlined label color="primary" @click.stop="handleDownload(item)">
             <v-avatar left><v-icon>mdi-cloud-download</v-icon></v-avatar
             >Download</v-chip
           >
@@ -38,7 +38,6 @@
 </template>
 
 <script>
-import { fileDownload } from 'js-file-download'
 import { createComponent } from '@vue/composition-api'
 import useMoment from '@/core/composition/useMoment.js'
 import usePackages from '../composition/usePackages'
@@ -128,9 +127,20 @@ export default createComponent({
   },
 
   methods: {
-    async handleDownload(packageId) {
-      const packageSource = await this.downloadPackage({ projectId: 0, packageId })
-      console.log(packageSource)
+    async handleDownload(packageData) {
+      const packageSource = await this.downloadPackage({
+        projectId: packageData.project_id,
+        packageId: packageData.uuid
+      })
+      this.forceFileDownload(packageSource, packageData)
+    },
+    forceFileDownload(response, packageData) {
+      const url = window.URL.createObjectURL(new Blob([response]))
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', `${packageData.filename}`)
+      document.body.appendChild(link)
+      link.click()
     },
     handleHistory() {
       this.$router.push({
@@ -138,10 +148,10 @@ export default createComponent({
         params: { projectId: '1', packageId: '1', versionId: '1' }
       })
     },
-    handleClickRow() {
+    handleClickRow({ project_id, uuid }) {
       this.$router.push({
         name: 'workspace-project-packages-uuid-version-uuid',
-        params: { projectId: '1', packageId: '1', versionId: '1' }
+        params: { projectId: project_id, packageId: uuid, versionId: '1' }
       })
     },
     async handleJobInfo(jobResults) {

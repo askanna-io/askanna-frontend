@@ -5,7 +5,7 @@
         fixed-header
         :page.sync="page"
         :headers="headers"
-        :items="packageFiles"
+        :items="packageData.files"
         class="job-2ble"
         @page-count="pageCount = $event"
       >
@@ -21,12 +21,12 @@
             </template>
           </v-breadcrumbs>
         </template>
-        <template v-slot:item.icon="{ item }">
-          <v-icon v-if="!item.file">
-            {{ open ? 'mdi-folder-open' : 'mdi-folder' }}
+        <template v-slot:item.type="{ item }">
+          <v-icon v-if="item.is_dir">
+            mdi-folder
           </v-icon>
           <v-icon v-else>
-            {{ files[item.file] }}
+            {{ files[item.ext] }}
           </v-icon>
         </template>
         <template v-slot:item.info="{ item }">
@@ -41,16 +41,28 @@
 
 <script>
 import { createComponent } from '@vue/composition-api'
-
 import useMoment from '@/core/composition/useMoment.js'
+import { onBeforeMount } from '@vue/composition-api'
+import usePackage from '../composition/usePackage'
 
 export default createComponent({
-  name: 'ThePackages',
+  name: 'ThePackage',
 
   setup(props, context) {
     const moment = useMoment(context)
+    const packageData = usePackage()
+
+    onBeforeMount(() => {
+      const { projectId, packageId } = context.root.$route.params
+
+      packageData.getPackage({
+        projectId,
+        packageId
+      })
+    })
 
     return {
+      ...packageData,
       ...moment
     }
   },
@@ -69,69 +81,24 @@ export default createComponent({
           to: '/workspace/project/1/packages/1'
         }
       ],
-      packageFiles: [
-        {
-          name: '.git',
-          date: '10 feb 2020',
-          author: 'Evan You',
-          modified: '10 March 2020'
-        },
-        {
-          name: '.public',
-          date: '8 feb 2020',
-          author: 'Robert',
-          modified: '10 March 2020'
-        },
-        {
-          name: '.gitignore',
-          file: 'txt',
-          date: '9 feb 2020',
-          author: 'Andrii',
-          modified: '20 March 2020'
-        },
-        {
-          name: 'babel.config.js',
-          file: 'js',
-          date: '2 feb 2020',
-          author: 'Andrii',
-          modified: '12 March 2020'
-        },
-        {
-          name: 'package.json',
-          file: 'json',
-          date: '3 feb 2020',
-          author: 'Andrii',
-          modified: '3 March 2020'
-        },
-        {
-          name: 'README.md',
-          file: 'md',
-          date: '1 feb 2020',
-          author: 'Andrii',
-          modified: '10 March 2020'
-        },
-        {
-          name: 'vue.config.js',
-          file: 'js',
-          date: '2 feb 2020',
-          author: 'Andrii',
-          modified: '13 March 2020'
-        },
-        {
-          name: 'yarn.lock',
-          file: 'txt'
-        }
-      ],
-
-      currentJob: null,
-      loading: true,
-      openD: false,
-      jobResults: {
-        name: '',
-        runtime: '',
-        memory: '',
-        return_payload: ''
+      files: {
+        html: 'mdi-language-html5',
+        js: 'mdi-nodejs',
+        json: 'mdi-json',
+        md: 'mdi-markdown',
+        pdf: 'mdi-file-pdf',
+        png: 'mdi-file-image',
+        txt: 'mdi-file-document-outline',
+        yml: 'mdi-file-document-outline',
+        rst: 'mdi-file-document-outline',
+        gitignore: 'mdi-file-document-outline',
+        in: 'mdi-file-settings',
+        cfg: 'mdi-file-settings',
+        xls: 'mdi-file-excel',
+        py: 'mdi-language-python',
+        ini: 'mdi-file-cog-outline'
       },
+
       page: 1,
       pageCount: 2,
       itemsPerPage: 10,
@@ -144,7 +111,7 @@ export default createComponent({
           text: '',
           align: 'left',
           sortable: false,
-          value: 'icon',
+          value: 'type',
           width: 10
         },
         {
@@ -153,76 +120,11 @@ export default createComponent({
           sortable: false,
           value: 'name'
         },
-        { text: 'Modified', value: 'modified' },
-        { text: 'Author', value: 'author' }
+        { text: 'Size', value: 'size' },
+        { text: 'Modified', value: 'last_modified' }
       ],
 
-      open: ['public'],
-      files: {
-        html: 'mdi-language-html5',
-        js: 'mdi-nodejs',
-        json: 'mdi-json',
-        md: 'mdi-markdown',
-        pdf: 'mdi-file-pdf',
-        png: 'mdi-file-image',
-        txt: 'mdi-file-document-outline',
-        xls: 'mdi-file-excel'
-      },
-      tree: [],
-      items2: [
-        {
-          name: '.git'
-        },
-        {
-          name: 'node_modules'
-        },
-        {
-          name: 'public',
-          children: [
-            {
-              name: 'static',
-              children: [
-                {
-                  name: 'logo.png',
-                  file: 'png'
-                }
-              ]
-            },
-            {
-              name: 'favicon.ico',
-              file: 'png'
-            },
-            {
-              name: 'index.html',
-              file: 'html'
-            }
-          ]
-        },
-        {
-          name: '.gitignore',
-          file: 'txt'
-        },
-        {
-          name: 'babel.config.js',
-          file: 'js'
-        },
-        {
-          name: 'package.json',
-          file: 'json'
-        },
-        {
-          name: 'README.md',
-          file: 'md'
-        },
-        {
-          name: 'vue.config.js',
-          file: 'js'
-        },
-        {
-          name: 'yarn.lock',
-          file: 'txt'
-        }
-      ]
+      open: ['public']
     }
   },
 
