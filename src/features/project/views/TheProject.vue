@@ -1,9 +1,9 @@
 <template>
   <v-card class="mx-auto" outlined>
-    <v-breadcrumbs :items="items">
+    <v-breadcrumbs :items="breadcrumbs">
       <template v-slot:item="{ item }">
-        <v-breadcrumbs-item :to="item.to" :disabled="item.disabled">
-          {{ item.text.toUpperCase() }}
+        <v-breadcrumbs-item :to="item.to" exact>
+          {{ item.title }}
         </v-breadcrumbs-item>
       </template>
     </v-breadcrumbs>
@@ -64,13 +64,16 @@
 
 <script>
 import useProject from '../composition/useProject'
-import { onBeforeMount } from '@vue/composition-api'
+import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
 
 export default {
   name: 'TheProject',
 
   setup(props, context) {
-    const project = useProject()
+    const project = useProject(context)
+    const breadcrumbs = useBreadcrumbs(context, 0, 3)
+
+    return { ...project, breadcrumbs }
   },
 
   data() {
@@ -78,54 +81,28 @@ export default {
       stickedVal: false,
       menu: false,
       projectView: 0,
-      project: {
-        name: 'Project title 1',
-        id: 1,
-        description:
-          'Turns out semicolon-less style is easier and safer in TS because most gotcha edge cases are type invalid as well.'
-      },
-      items: [
-        {
-          text: 'Dashboard',
-          disabled: false,
-          to: '/'
-        },
-        {
-          text: 'Workspaces',
-          disabled: false,
-          to: '/workspace/index'
-        },
-        {
-          text: 'Project title 1',
-          disabled: true,
-          to: ''
-        }
-      ],
+
       currentTab: 'workspace-project-activity',
       projectTools: [
         {
           id: 0,
           name: 'Activity',
-          component: 'Activity',
           to: 'workspace-project-activity'
         },
         {
           id: 1,
           name: 'Code',
-          component: 'Code',
           to: 'workspace-project-packages'
         },
         {
           id: 2,
           name: 'Jobs',
-          component: 'Jobs',
           to: 'workspace-project-jobs'
         },
 
         {
           id: 3,
           name: 'Documantation',
-          component: 'Documantation',
           to: 'workspace-project-documantation'
         }
       ]

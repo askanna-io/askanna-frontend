@@ -70,10 +70,10 @@ export default {
   components: { WorkspaceProjectCardItem, WorkspaceProjectListItem },
 
   setup(props, context) {
-    const project = useProject()
+    const project = useProject(context)
 
     onBeforeMount(() => {
-      project.getProjects()
+      project.fetchData(context, project.getProjects())
     })
 
     return {

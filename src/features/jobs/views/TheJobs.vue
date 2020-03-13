@@ -1,5 +1,5 @@
 <template>
-  <v-row align="center" justify="center" class="login-wrapper">
+  <v-row align="center" justify="center">
     <v-col cols="12" class="pt-0">
       <v-data-table
         :headers="headers"

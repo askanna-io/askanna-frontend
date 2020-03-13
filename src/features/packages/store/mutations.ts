@@ -1,9 +1,15 @@
 import * as type from './types'
 import { MutationTree } from 'vuex'
-import { PackagesState } from './types'
+import { Package, PackagesState } from './types'
 
 export const mutations: MutationTree<PackagesState> = {
   [type.SET_PROJECT_PACKAGES](state, data) {
-    state.projectPackages = data
+    data = data.map((el: Package, versionId: number) => {
+      return { ...el, versionId }
+    })
+    const projectPackages = data.pop()
+
+    state.projectPackages = [projectPackages]
+    state.projectPackageHistory = data
   }
 }

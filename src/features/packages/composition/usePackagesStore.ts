@@ -3,7 +3,7 @@ import { PACKAGES_STORE, getProjectPackages, downloadPackage } from '../store/ty
 
 export default function() {
   const state = {
-    ...useState(PACKAGES_STORE, { projectPackages: 'projectPackages' })
+    ...useState(PACKAGES_STORE, { projectPackages: 'projectPackages', projectPackageHistory: 'projectPackageHistory' })
   }
 
   const actions = {
