@@ -3,11 +3,9 @@
     <v-col cols="12" class="pt-0">
       <v-data-table
         fixed-header
-        :page.sync="page"
         :headers="headers"
         :items="projectPackageHistory"
-        class="j21"
-        @page-count="pageCount = $event"
+        class="job-table scrollbar"
         @click:row="handleClickRow"
       >
         <template v-slot:top>
@@ -51,39 +49,6 @@ export default createComponent({
 
   data() {
     return {
-      items: [
-        {
-          text: 'Packages',
-          disabled: false,
-          to: '/workspace/project/1/packages/'
-        },
-        {
-          text: 'Package - #1',
-          disabled: false,
-          to: '/workspace/project/1/packages/1'
-        },
-        {
-          text: 'History',
-          disabled: true,
-          to: '/workspace/project/1/packages/1/hystory'
-        }
-      ],
-
-      currentJob: null,
-      loading: true,
-      openD: false,
-      jobResults: {
-        name: '',
-        runtime: '',
-        memory: '',
-        return_payload: ''
-      },
-      page: 1,
-      pageCount: 2,
-      itemsPerPage: 10,
-      expanded: [],
-      singleExpand: false,
-      selection: 2,
       headers: [
         {
           text: 'Name',
@@ -97,44 +62,18 @@ export default createComponent({
     }
   },
 
-  computed: {
-    sticked: {
-      get() {
-        return this.stickedVal
-      },
-      set(val) {
-        this.stickedVal = val
-      }
-    }
-  },
-
   methods: {
-    handleClickRow({ project_id, uuid }) {
+    handleClickRow({ project_id, uuid, versionId }) {
       this.$router.push({
         name: 'workspace-project-packages-uuid-version-uuid',
-        params: { projectId: project_id, packageId: uuid, versionId: '1' }
+        params: { projectId: project_id, packageId: uuid, versionId }
       })
-    },
-    async handleJobInfo(jobResults) {
-      this.jobResults = { ...this.currentJob, ...jobResults }
-
-      this.showJobRunResult()
-    },
-    async handleExpand({ item, value }) {
-      this.loading = true
-      if (!value) return
-      /*     this.currentJob = item
-      await this.getRunsJob(item.id) */
-      this.loading = false
-    },
-    onStick(data) {
-      this.sticked = data.sticked
     }
   }
 })
 </script>
 
-<style scoped>
+<style>
 .job-table .v-data-table__wrapper {
   max-height: 500px;
 }

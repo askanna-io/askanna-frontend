@@ -10,13 +10,13 @@
         @page-count="pageCount = $event"
       >
         <template v-slot:top>
-          <v-breadcrumbs :items="items">
+          <v-breadcrumbs :items="breadcrumbs">
             <template v-slot:divider>
               <v-icon>mdi-chevron-right</v-icon>
             </template>
             <template v-slot:item="{ item }">
-              <v-breadcrumbs-item :to="item.to" :disabled="item.disabled" exact>
-                {{ item.text }}
+              <v-breadcrumbs-item :to="item.to" exact>
+                {{ item.title }}
               </v-breadcrumbs-item>
             </template>
           </v-breadcrumbs>
@@ -40,10 +40,11 @@
 </template>
 
 <script>
+import usePackage from '../composition/usePackage'
+import { onBeforeMount } from '@vue/composition-api'
 import { createComponent } from '@vue/composition-api'
 import useMoment from '@/core/composition/useMoment.js'
-import { onBeforeMount } from '@vue/composition-api'
-import usePackage from '../composition/usePackage'
+import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
 
 export default createComponent({
   name: 'ThePackage',
@@ -51,6 +52,7 @@ export default createComponent({
   setup(props, context) {
     const moment = useMoment(context)
     const packageData = usePackage()
+    const breadcrumbs = useBreadcrumbs(context, 3)
 
     onBeforeMount(() => {
       const { projectId, packageId } = context.root.$route.params
@@ -62,25 +64,14 @@ export default createComponent({
     })
 
     return {
+      ...moment,
       ...packageData,
-      ...moment
+      breadcrumbs
     }
   },
 
   data() {
     return {
-      items: [
-        {
-          text: 'Packages',
-          disabled: false,
-          to: '/workspace/project/1/packages/'
-        },
-        {
-          text: 'Package - #1',
-          disabled: true,
-          to: '/workspace/project/1/packages/1'
-        }
-      ],
       files: {
         html: 'mdi-language-html5',
         js: 'mdi-nodejs',

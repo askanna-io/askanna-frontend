@@ -6,7 +6,7 @@ export default function(context: SetupContext, start = 0, end = undefined) {
 
   const getBreadcrumbs = function() {
     let isReachCurrent = false
-    console.log(context.root.$route)
+
     breadcrumbs = context.root.$route.matched
       .filter(route => route.meta.breadcrumb)
       .slice(start, end)
