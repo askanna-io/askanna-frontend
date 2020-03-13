@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto h-100" :elevation="hover ? 16 : 2" :to="`/workspace/project/${project.id}`">
+  <v-card class="mx-auto h-100" :elevation="hover ? 16 : 2" :to="`/workspace/project/${project.id}/activity`">
     <v-card-title>
       <v-icon large left>
         mdi-semantic-web

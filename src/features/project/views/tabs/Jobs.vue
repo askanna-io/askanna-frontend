@@ -9,10 +9,6 @@ export default {
 
   components: {
     TheJobs
-  },
-
-  data() {
-    return {}
   }
 }
 </script>

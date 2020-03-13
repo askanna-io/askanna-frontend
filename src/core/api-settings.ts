@@ -1,6 +1,9 @@
 type apiPoint<T> = { [key: string]: T }
-type apiUrl = (uuid: number) => string
+type apiUrl = (ids: apiUrlFunctionParams) => string
 type AuthApiUrl = () => string
+type apiUrlFunctionParams = {
+  [key: string]: string
+}
 
 interface ApiSettings {
   url: () => string
@@ -36,7 +39,17 @@ export const api: ApiSettings = {
       list: () => `job/`
     },
     project: {
-      list: () => `project/`
+      list: () => `project/`,
+      packages: id => `project/${id}/packages/`
+    },
+    package: {
+      get: ({ projectId, packageId }) => `project/${projectId}/packages/${packageId}/`
+    },
+    packages: {
+      list: () => `project/`,
+      projectPackages: id => `project/${id}/packages/`,
+      getDownloadLink: ({ projectId, packageId }) => `project/${projectId}/packages/${packageId}/download/`
+      //getDownloadLink: ({ projectId, packageId }) => 'project/1/packages/45d1816c-4973-4db1-b909-a4a2a6cda9b4/download/'
     },
     job: {
       add: () => 'job/',

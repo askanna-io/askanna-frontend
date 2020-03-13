@@ -59,6 +59,9 @@
 </template>
 
 <script>
+import useProject from '../../project/composition/useProject'
+import { onBeforeMount } from '@vue/composition-api'
+
 import WorkspaceProjectCardItem from '../components/WorkspaceProjectCardItem'
 import WorkspaceProjectListItem from '../components/WorkspaceProjectListItem'
 export default {
@@ -66,36 +69,25 @@ export default {
 
   components: { WorkspaceProjectCardItem, WorkspaceProjectListItem },
 
+  setup(props, context) {
+    const project = useProject()
+
+    onBeforeMount(() => {
+      project.getProjects()
+    })
+
+    return {
+      ...project
+    }
+  },
+
   data() {
     return {
       menu: false,
       projectView: 0,
       workspace: 'Workspace 2',
       selection: 2,
-      items: ['Workspace 1', 'Workspace 2', 'Workspace 3'],
-      projects: [
-        {
-          name: 'Project title 1',
-          id: 1,
-          description:
-            'Turns out semicolon-less style is easier and safer in TS because most gotcha edge cases are type invalid as well.'
-        },
-        {
-          name: 'roject title 2',
-          description:
-            'Turns out semicolon-less style is easier and safer in TS because most gotcha edge cases are type invalid as well.'
-        },
-        {
-          name: 'roject title 3',
-          description:
-            'Turns out semicolon-less style is easier and safer in TS because most gotcha edge cases are type invalid as well.'
-        },
-        {
-          name: 'roject title 4',
-          description:
-            'Turns out semicolon-less style is easier and safer in TS because most gotcha edge cases are type invalid as well.'
-        }
-      ]
+      items: ['Workspace 1', 'Workspace 2', 'Workspace 3']
     }
   },
 

@@ -2,6 +2,7 @@ export interface projectState extends ProjectData {}
 
 export interface ProjectData {
   project: Project
+  projects: []
 }
 
 interface Project {
@@ -16,11 +17,13 @@ export const PROJECT_STORE = 'project'
 
 export const action = {
   addProject: 'addProject',
-  getProject: 'getProject'
+  getProject: 'getProject',
+  getProjects: 'getProjects'
 }
 
 export const mutation = {
   SET_PROJECT: 'SET_PROJECT',
+  SET_PROJECTS: 'SET_PROJECTS',
   UPDATE_ROJECT: 'UPDATE_ROJECT'
 }
 
