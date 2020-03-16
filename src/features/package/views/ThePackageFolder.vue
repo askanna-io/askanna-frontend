@@ -3,12 +3,12 @@
     <v-col cols="12" class="pt-0">
       <v-data-table
         fixed-header
+        :page.sync="page"
         :headers="headers"
         :items="treeView"
-        :options="{ itemsPerPage: -1 }"
-        class="job-table scrollbar"
+        class="job-2ble"
+        @page-count="pageCount = $event"
         @click:row="handleClickRow"
-        hide-default-footer
       >
         <template v-slot:top>
           <v-breadcrumbs :items="breadcrumbs">
@@ -41,6 +41,8 @@
 </template>
 
 <script>
+import { set, get } from 'lodash'
+
 import usePackage from '../composition/usePackage'
 import { onBeforeMount } from '@vue/composition-api'
 import { createComponent } from '@vue/composition-api'
@@ -48,7 +50,7 @@ import useMoment from '@/core/composition/useMoment.js'
 import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
 
 export default createComponent({
-  name: 'ThePackage',
+  name: 'ThePackageFolder',
 
   setup(props, context) {
     const moment = useMoment(context)
@@ -131,9 +133,17 @@ export default createComponent({
         this.stickedVal = val
       }
     },
+
     treeView() {
-      const path = this.$route.params.folderName || '/'
-      return this.packageData.files.filter(file => file.parent === path)
+      const tree = get(this.packageData.files, this.$route.params.folderName)
+      if (!tree) return []
+
+      console.log(tree.child)
+      const result = Object.keys(tree.child).map(function(key) {
+        return tree.child[key]
+      })
+
+      return (tree && Object.values(tree.child)) || []
     }
   },
 
@@ -143,7 +153,6 @@ export default createComponent({
     },
 
     handleClickRow(item) {
-      console.log(item.path)
       this.$router.push({
         name: 'workspace-project-packages-uuid-version-uuid-name',
         params: { ...this.$route.params, folderName: item.path }
@@ -153,12 +162,11 @@ export default createComponent({
 })
 </script>
 
-<style>
+<style scoped>
 .job-table .v-data-table__wrapper {
-  max-height: 500px;
+  max-height: 100vh;
 }
 .job-sub-table .v-data-table__wrapper {
-  max-height: 200px;
 }
 .job-sub-table .v-data-table__wrapper tr th {
   z-index: 1;

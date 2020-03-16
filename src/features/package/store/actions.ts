@@ -27,6 +27,6 @@ export const actions: ActionTree<PackageState, RootState> = {
 
       return
     }
-    commit(type.SET_PACKAGE, packageData)
+    commit(type.SET_PACKAGE, { packageData, uuid })
   }
 }
