@@ -2,7 +2,6 @@ export interface PackageState extends PackageData {}
 
 export interface PackageData {
   packageData?: Package
-  currentFolder: File[]
 }
 
 export interface File {
