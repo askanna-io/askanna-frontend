@@ -38,7 +38,7 @@ export default createComponent({
   setup(props, context) {
     const moment = useMoment(context)
     const packages = usePackages(context)
-    const breadcrumbs = useBreadcrumbs(context, 2)
+    const breadcrumbs = useBreadcrumbs(context, { start: 2 })
 
     return {
       ...moment,

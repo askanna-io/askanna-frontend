@@ -117,8 +117,21 @@ export default {
                             ),
                           name: 'workspace-project-packages-uuid-version-uuid-name',
                           meta: {
-                            breadcrumb: 'Project - #:folderName'
-                          }
+                            breadcrumb: ':folderName'
+                          },
+                          children: [
+                            {
+                              path: ':subFolderName',
+                              component: () =>
+                                import(
+                                  /* webpackChunkName: "workspace-project-uuid-packages-uuid-version-name-sub" */ '../package/views/ThePackage.vue'
+                                ),
+                              name: 'workspace-project-packages-uuid-version-uuid-name-sub',
+                              meta: {
+                                breadcrumb: ':subFolderName'
+                              }
+                            }
+                          ]
                         }
                       ]
                     }

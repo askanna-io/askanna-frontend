@@ -6,6 +6,7 @@
         :headers="headers"
         :items="treeView"
         :options="{ itemsPerPage: -1 }"
+        :height="calcHeight"
         class="job-table scrollbar"
         @click:row="handleClickRow"
         hide-default-footer
@@ -30,10 +31,8 @@
             {{ files[item.ext] }}
           </v-icon>
         </template>
-        <template v-slot:item.info="{ item }">
-          <v-btn @click="handleJobInfo(item)" class="ma-2" large color="teal" icon>
-            <v-icon>mdi-information-outline</v-icon>
-          </v-btn>
+        <template v-slot:item.last_modified="{ item }">
+          {{ $moment(item.last_modified).format(' Do MMMM YYYY, h:mm:ss a') }}
         </template>
       </v-data-table>
     </v-col>
@@ -41,6 +40,7 @@
 </template>
 
 <script>
+import { useWindowSize } from '@u3u/vue-hooks'
 import usePackage from '../composition/usePackage'
 import { onBeforeMount } from '@vue/composition-api'
 import { createComponent } from '@vue/composition-api'
@@ -53,7 +53,8 @@ export default createComponent({
   setup(props, context) {
     const moment = useMoment(context)
     const packageData = usePackage()
-    const breadcrumbs = useBreadcrumbs(context, 3)
+    const breadcrumbs = useBreadcrumbs(context, { start: 3, subRoutes: true })
+    const { height } = useWindowSize()
 
     onBeforeMount(() => {
       const { projectId, packageId, folderName } = context.root.$route.params
@@ -63,12 +64,12 @@ export default createComponent({
         packageId,
         folderName
       })
-      console.log(packageData.packageData.value)
     })
 
     return {
       ...moment,
       ...packageData,
+      height,
       breadcrumbs
     }
   },
@@ -90,15 +91,9 @@ export default createComponent({
         cfg: 'mdi-file-settings',
         xls: 'mdi-file-excel',
         py: 'mdi-language-python',
-        ini: 'mdi-file-cog-outline'
+        ini: 'mdi-file-cog-outline',
+        bat: 'mdi-file-cog-outline'
       },
-
-      page: 1,
-      pageCount: 2,
-      itemsPerPage: 10,
-      expanded: [],
-      singleExpand: false,
-      selection: 2,
 
       headers: [
         {
@@ -116,34 +111,33 @@ export default createComponent({
         },
         { text: 'Size', value: 'size' },
         { text: 'Modified', value: 'last_modified' }
-      ],
-
-      open: ['public']
+      ]
     }
   },
 
   computed: {
-    sticked: {
-      get() {
-        return this.stickedVal
-      },
-      set(val) {
-        this.stickedVal = val
-      }
-    },
     treeView() {
       const path = this.$route.params.folderName || '/'
-      return this.packageData.files.filter(file => file.parent === path)
+      let parentPath
+      if (path && path !== '/') {
+        const currentPath = this.packageData.files.find(file => file.path === path && file.is_dir)
+        parentPath = this.packageData.files.find(file => file.path === currentPath.parent && file.is_dir)
+        parentPath = {
+          ...parentPath,
+          name: '...',
+          ext: 'parent'
+        }
+      }
+      const tree = this.packageData.files.filter(file => file.parent === path)
+      return parentPath ? [parentPath, ...tree] : tree
+    },
+    calcHeight() {
+      return this.height - 450
     }
   },
 
   methods: {
-    onStick(data) {
-      this.sticked = data.sticked
-    },
-
     handleClickRow(item) {
-      console.log(item.path)
       this.$router.push({
         name: 'workspace-project-packages-uuid-version-uuid-name',
         params: { ...this.$route.params, folderName: item.path }
@@ -152,31 +146,3 @@ export default createComponent({
   }
 })
 </script>
-
-<style>
-.job-table .v-data-table__wrapper {
-  max-height: 500px;
-}
-.job-sub-table .v-data-table__wrapper {
-  max-height: 200px;
-}
-.job-sub-table .v-data-table__wrapper tr th {
-  z-index: 1;
-}
-
-.job-table .v-data-table__expanded__row {
-  background-color: aliceblue;
-}
-
-.v-data-table__expanded.v-data-table__expanded__content {
-  box-shadow: none !important;
-}
-
-.job-sub-table .v-data-table__wrapper table {
-  background: aliceblue;
-}
-
-.job-sub-table table .v-data-table-header tr th {
-  background-color: beige !important;
-}
-</style>
