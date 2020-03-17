@@ -102,12 +102,38 @@ export default {
                       path: 'version/:versionId',
                       component: () =>
                         import(
-                          /* webpackChunkName: "workspace-project-uuid-packages-uuid-history" */ '../package/views/ThePackage.vue'
+                          /* webpackChunkName: "workspace-project-uuid-packages-uuid-version" */ '../package/views/ThePackage.vue'
                         ),
                       name: 'workspace-project-packages-uuid-version-uuid',
                       meta: {
                         breadcrumb: 'Version - #:versionId'
-                      }
+                      },
+                      children: [
+                        {
+                          path: ':folderName',
+                          component: () =>
+                            import(
+                              /* webpackChunkName: "workspace-project-uuid-packages-uuid-version-name" */ '../package/views/ThePackage.vue'
+                            ),
+                          name: 'workspace-project-packages-uuid-version-uuid-name',
+                          meta: {
+                            breadcrumb: ':folderName'
+                          },
+                          children: [
+                            {
+                              path: ':subFolderName',
+                              component: () =>
+                                import(
+                                  /* webpackChunkName: "workspace-project-uuid-packages-uuid-version-name-sub" */ '../package/views/ThePackage.vue'
+                                ),
+                              name: 'workspace-project-packages-uuid-version-uuid-name-sub',
+                              meta: {
+                                breadcrumb: ':subFolderName'
+                              }
+                            }
+                          ]
+                        }
+                      ]
                     }
                   ]
                 }

@@ -71,7 +71,7 @@ export default {
 
   setup(props, context) {
     const project = useProject(context)
-    const breadcrumbs = useBreadcrumbs(context, 0, 3)
+    const breadcrumbs = useBreadcrumbs(context, { start: 0, end: 3 })
 
     return { ...project, breadcrumbs }
   },

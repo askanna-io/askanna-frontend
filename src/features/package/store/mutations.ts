@@ -1,21 +1,18 @@
+import { set, get } from 'lodash'
 import * as type from './types'
 import { MutationTree } from 'vuex'
 import { File, PackageState } from './types'
 
 export const mutations: MutationTree<PackageState> = {
-  [type.SET_PACKAGE](state, data) {
+  [type.SET_PACKAGE](state, { packageData: data, uuid: { folderName } }) {
     const re = /(?:\.([^.]+))?$/
-    const reducer = (acc: File[], cr: File) => {
-      if (cr.name && cr.parent === '/') {
-        const ext = re.exec(cr.name)
+    const files = data.files.map((file: File) => {
+      const fileExt = re.exec(file.name)
+      const ext = (!file.is_dir && fileExt && typeof fileExt[1] !== 'undefined' && fileExt[1]) || 'txt'
 
-        cr.ext = (ext && typeof ext[1] !== 'undefined' && ext[1]) || 'txt'
-        acc.push(cr)
-      }
+      return { ...file, ext }
+    })
 
-      return acc
-    }
-    const files = data.files.reduce(reducer, [])
     state.packageData = { ...data, files }
   }
 }

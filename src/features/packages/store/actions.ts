@@ -29,7 +29,7 @@ export const actions: ActionTree<PackagesState, RootState> = {
     commit(type.SET_PROJECT_PACKAGES, packages)
   },
 
-  async [type.getTargetPackage]({ commit, dispatch }, uuid) {
+  async [type.getTargetPackage]({ dispatch }, uuid) {
     let packageTarget
     try {
       packageTarget = await dispatch(
@@ -49,7 +49,7 @@ export const actions: ActionTree<PackagesState, RootState> = {
     return packageTarget?.target
   },
 
-  async [type.downloadPackage]({ commit, dispatch }, uuid) {
+  async [type.downloadPackage]({ dispatch }, uuid) {
     const url = await dispatch(type.getTargetPackage, uuid)
 
     let packageSource
