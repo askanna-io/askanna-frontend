@@ -31,6 +31,10 @@ export default class App extends Vue {
   border-radius: 5px !important;
 }
 
+.br-none {
+  border: none !important;
+}
+
 .scrollbar {
   overflow-y: auto !important;
   overflow-x: hidden !important;

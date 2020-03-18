@@ -9,5 +9,9 @@ export default function(context) {
     return moment(time).fromNow()
   }
 
-  return { runTimeHours, ago }
+  const seconds = function(seconds) {
+    return moment.utc(moment.duration(seconds, 'seconds').asMilliseconds()).format('HH:mm:s')
+  }
+
+  return { runTimeHours, ago, seconds }
 }
