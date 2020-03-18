@@ -14,7 +14,7 @@ interface Job {
   status: string
 }
 
-interface JobRun {
+export interface JobRun {
   uuid: string
   payload: {
     duration: number

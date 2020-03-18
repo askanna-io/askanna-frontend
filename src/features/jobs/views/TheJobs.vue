@@ -1,6 +1,6 @@
 <template>
   <v-row align="center" justify="center">
-    <v-col cols="12" class="pt-0">
+    <v-col cols="12" class="pa-0">
       <v-data-table
         :headers="headers"
         :items="list"
@@ -8,18 +8,20 @@
         class="job-table scrollbar"
         single-expand
         :expanded.sync="expanded"
+        :height="calcHeight"
         @item-expanded="handleExpand"
         show-expand
       >
         <template v-slot:expanded-item>
-          <td :colspan="8" class="py-5">
-            <v-skeleton-loader ref="skeleton" :type="'table-row'" class="mx-auto" :loading="loading">
+          <td :colspan="8" class="pa-0">
+            <v-skeleton-loader ref="skeleton" :type="'table-row'" :loading="loading">
               <v-data-table
-                dense
                 fixed-header
                 :page.sync="page"
                 :headers="headers2"
                 :items="runs"
+                :height="calcSubHeight"
+                :options="{ itemsPerPage: 5 }"
                 class="job-sub-table"
                 @page-count="pageCount = $event"
               >
@@ -28,6 +30,11 @@
                     <v-icon>mdi-information-outline</v-icon>
                   </v-btn>
                 </template>
+                <template v-slot:item.status="{ item }">
+                  <ask-anna-chip-status :status="item.status" />
+                </template>
+
+                <template v-slot:item.runtime="{ item }"> {{ seconds(item.runtime) }} </template>
                 <template v-slot:item.timing="{ item }">
                   <b>Started:</b> &nbsp;{{ $moment(item.created).format(' Do MMMM YYYY, h:mm:ss a') }} <br />
                   <b>Finished:</b> &nbsp;{{ $moment(item.finished).format(' Do MMMM YYYY, h:mm:ss a') }}<br />
@@ -41,9 +48,9 @@
         <template v-slot:item.uuid>
           NPOBP
         </template>
+
         <template v-slot:item.status="{ item }">
-          {{ item.status && item.status.lastrun.status ? item.status.lastrun.status + ': ' : '' }} Last run
-          {{ ago(item.status.lastrun.finished) }}
+          <ask-anna-alert-status :statusData="item.status && item.status.lastrun" />
         </template>
         <template v-slot:item.actions="{ item }">
           <v-chip-group outlined v-model="selection" mandatory>
@@ -66,6 +73,7 @@
 import { createComponent } from '@vue/composition-api'
 
 import useJobs from '../composition/useJobs'
+import { useWindowSize } from '@u3u/vue-hooks'
 import useJob from '../../job/composition/useJob'
 import useMoment from '@/core/composition/useMoment.js'
 import useJobRunResults from '../composition/useJobRunResults'
@@ -81,9 +89,11 @@ export default createComponent({
     const job = useJob()
     const jobs = useJobs()
     const moment = useMoment(context)
+    const { height } = useWindowSize()
     const jobRunResult = useJobRunResults()
 
     return {
+      height,
       ...job,
       ...jobs,
       ...moment,
@@ -130,7 +140,7 @@ export default createComponent({
         },
         { text: 'Status', value: 'status' },
         { text: 'Timing', value: 'timing' },
-        { text: 'CPU time', value: 'runtime' },
+        { text: 'CPU time  (h:m:s)', value: 'runtime' },
         { text: 'Memory used', value: 'memory' }
       ]
     }
@@ -144,6 +154,16 @@ export default createComponent({
       set(val) {
         this.stickedVal = val
       }
+    },
+    calcHeight() {
+      return this.height - 450
+    },
+    calcSubHeight() {
+      const countItems = this.runs.length
+      const rowHeight = 64
+      const subRowHeiht = countItems >= 5 ? 368 : countItems * rowHeight + 70
+
+      return subRowHeiht
     }
   },
 
@@ -168,29 +188,14 @@ export default createComponent({
 </script>
 
 <style>
-.job-table .v-data-table__wrapper {
-  max-height: 500px;
-}
-.job-sub-table .v-data-table__wrapper {
-  max-height: 200px;
-}
 .job-sub-table .v-data-table__wrapper tr th {
   z-index: 1;
 }
-
-.job-table .v-data-table__expanded__row {
-  background-color: aliceblue;
+.theme--light.v-data-table .v-data-footer {
+  border: none;
 }
 
 .v-data-table__expanded.v-data-table__expanded__content {
   box-shadow: none !important;
-}
-
-.job-sub-table .v-data-table__wrapper table {
-  background: aliceblue;
-}
-
-.job-sub-table table .v-data-table-header tr th {
-  background-color: beige !important;
 }
 </style>

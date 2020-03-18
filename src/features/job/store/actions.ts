@@ -4,7 +4,7 @@ import * as rootTypes from '@/core/store/actionTypes'
 import { logger } from '@/core/plugins/logger'
 
 import { ActionTree } from 'vuex'
-import { jobState, JOB_STORE } from './types'
+import { jobState, JobRun, JOB_STORE } from './types'
 
 const root = true
 const serviceName = JOB_STORE
@@ -31,7 +31,7 @@ export const actions: ActionTree<jobState, RootState> = {
     commit(type.SET_JOB, job)
   },
 
-  async [type.startJob]({ commit, dispatch, state }, id) {
+  async [type.startJob]({ commit, dispatch }, id) {
     let job
     try {
       job = await dispatch(
@@ -53,7 +53,7 @@ export const actions: ActionTree<jobState, RootState> = {
     commit(type.UPDATE_JOB, job)
   },
 
-  async [type.action.stopJob]({ commit, dispatch, state }, id) {
+  async [type.action.stopJob]({ commit, dispatch }, id) {
     let job
     try {
       job = await dispatch(
@@ -76,7 +76,7 @@ export const actions: ActionTree<jobState, RootState> = {
     commit(type.UPDATE_JOB, job)
   },
 
-  async [type.action.pauseJob]({ commit, dispatch, state }, id) {
+  async [type.action.pauseJob]({ commit, dispatch }, id) {
     let job
     try {
       job = await dispatch(
@@ -98,7 +98,7 @@ export const actions: ActionTree<jobState, RootState> = {
     commit(type.UPDATE_JOB, job)
   },
 
-  async [type.action.resetJob]({ commit, dispatch, state }, id) {
+  async [type.action.resetJob]({ commit, dispatch }, id) {
     let job
     try {
       job = await dispatch(
@@ -121,7 +121,7 @@ export const actions: ActionTree<jobState, RootState> = {
     commit(type.UPDATE_JOB, job)
   },
 
-  async [type.action.killJob]({ commit, dispatch, state }, id) {
+  async [type.action.killJob]({ commit, dispatch }, id) {
     let job
     try {
       job = await dispatch(
@@ -143,7 +143,7 @@ export const actions: ActionTree<jobState, RootState> = {
     commit(type.UPDATE_JOB, job)
   },
 
-  async [type.action.resultJob]({ commit, dispatch, state }, id) {
+  async [type.action.resultJob]({ commit, dispatch }, id) {
     let result
     try {
       result = await dispatch(
@@ -165,8 +165,8 @@ export const actions: ActionTree<jobState, RootState> = {
     commit(type.UPDATE_JOB_RESULT, result.result!)
   },
 
-  async [type.action.getRunsJob]({ commit, dispatch, state }, id) {
-    let runs
+  async [type.action.getRunsJob]({ commit, dispatch }, id) {
+    let runs: JobRun[]
     try {
       runs = await dispatch(
         rootTypes.apiService,
@@ -184,10 +184,17 @@ export const actions: ActionTree<jobState, RootState> = {
       return
     }
 
+    runs = runs.sort((a, b) => {
+      const dateA = new Date(a.created)
+      const dateB = new Date(b.created)
+
+      return dateB.getTime() - dateA.getTime()
+    })
+
     commit(type.SET_RUN_JOB, runs)
   },
 
-  async [type.action.getJobInfo]({ commit, dispatch }, id) {
+  async [type.action.getJobInfo]({ dispatch }, id) {
     let info = {}
     try {
       info = await dispatch(
