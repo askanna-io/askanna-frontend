@@ -25,7 +25,7 @@ const apiPort = process.env.VUE_APP_API_PORT
 
 export const api: ApiSettings = {
   url: () => `${apiUrl}:${apiPort}/`,
-  apiUrl: () => `${apiUrl}:${apiPort}/api/v1/`,
+  apiUrl: () => `${apiUrl}:${apiPort}/v1/`,
   // auth api
   auth: {
     login: () => `rest-auth/login/`,
