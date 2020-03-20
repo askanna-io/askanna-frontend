@@ -1,4 +1,3 @@
-import { set, get } from 'lodash'
 import * as type from './types'
 import { MutationTree } from 'vuex'
 import { File, PackageState } from './types'
@@ -14,5 +13,10 @@ export const mutations: MutationTree<PackageState> = {
     })
 
     state.packageData = { ...data, files }
+  },
+
+  [type.SET_FILE](state, { file, fileSource }) {
+    state.file = file
+    state.fileSource = fileSource
   }
 }

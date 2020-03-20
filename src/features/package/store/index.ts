@@ -5,7 +5,9 @@ import { mutations } from './mutations'
 import { PackageState, PACKAGE_STORE, PackageModel } from './types'
 
 export const state: PackageState = {
-  packageData: new PackageModel().state
+  packageData: new PackageModel().state,
+  file: '',
+  fileSource: new Blob()
 }
 
 const namespaced: boolean = true

@@ -102,8 +102,8 @@ export default {
 
         {
           id: 3,
-          name: 'Documantation',
-          to: 'workspace-project-documantation'
+          name: 'Documentation',
+          to: 'workspace-project-documentation'
         }
       ]
     }

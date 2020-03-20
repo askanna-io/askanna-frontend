@@ -1,6 +1,6 @@
 {
   "name": "askanna-frontend",
-  "version": "0.1.26",
+  "version": "0.1.27",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -12,14 +12,18 @@
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
     "@types/lodash": "^4.14.149",
+    "@types/prismjs": "^1.16.0",
     "@u3u/vue-hooks": "^2.0.1",
     "@vue/composition-api": "^0.3.4",
     "axios": "0.19.2",
     "core-js": "3.4.4",
+    "prismjs": "^1.19.0",
     "vue": "2.6.11",
     "vue-axios": "2.1.5",
     "vue-class-component": "7.2.2",
+    "vue-clipboard2": "^0.3.1",
     "vue-moment": "^4.1.0",
+    "vue-prism-editor": "^0.5.1",
     "vue-property-decorator": "8.3.0",
     "vue-router": "3.1.5",
     "vue-sticky-directive": "0.0.10",

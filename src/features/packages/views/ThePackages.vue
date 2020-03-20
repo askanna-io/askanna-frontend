@@ -40,6 +40,8 @@
 <script>
 import { createComponent } from '@vue/composition-api'
 import useMoment from '@/core/composition/useMoment.js'
+import useForceFileDownload from '@/core/composition/useForceFileDownload'
+
 import usePackages from '../composition/usePackages'
 
 export default createComponent({
@@ -48,10 +50,12 @@ export default createComponent({
   setup(props, context) {
     const moment = useMoment(context)
     const packages = usePackages(context)
+    const forceFileDownload = useForceFileDownload()
 
     return {
       ...moment,
-      ...packages
+      ...packages,
+      forceFileDownload
     }
   },
 
@@ -72,19 +76,11 @@ export default createComponent({
 
   methods: {
     async handleDownload(packageData) {
-      const packageSource = await this.downloadPackage({
+      const source = await this.downloadPackage({
         projectId: packageData.project_id,
         packageId: packageData.uuid
       })
-      this.forceFileDownload(packageSource, packageData)
-    },
-    forceFileDownload(response, packageData) {
-      const url = window.URL.createObjectURL(new Blob([response]))
-      const link = document.createElement('a')
-      link.href = url
-      link.setAttribute('download', `${packageData.filename}`)
-      document.body.appendChild(link)
-      link.click()
+      this.forceFileDownload.trigger({ source, name: packageData.filename })
     },
     handleHistory({ project_id, uuid }) {
       this.$router.push({
