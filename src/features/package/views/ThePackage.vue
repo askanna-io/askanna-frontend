@@ -1,7 +1,15 @@
 <template>
   <v-row align="center" justify="center">
-    <v-col cols="12" class="pt-0">
+    <v-col cols="12" class="pt-0 pb-0">
+      <the-file
+        v-if="file"
+        :fileSource="fileSource"
+        :file="file"
+        :breadcrumbs="breadcrumbs"
+        :currentPath="currentPath"
+      />
       <v-data-table
+        v-else
         fixed-header
         :headers="headers"
         :items="treeView"
@@ -47,8 +55,12 @@ import { createComponent } from '@vue/composition-api'
 import useMoment from '@/core/composition/useMoment.js'
 import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
 
+import TheFile from './TheFile'
+
 export default createComponent({
   name: 'ThePackage',
+
+  components: { TheFile },
 
   setup(props, context) {
     const moment = useMoment(context)
@@ -58,6 +70,9 @@ export default createComponent({
 
     onBeforeMount(() => {
       const { projectId, packageId, folderName } = context.root.$route.params
+      const path = folderName || '/'
+
+      packageData.getFileSource()
 
       packageData.getPackage({
         projectId,
@@ -116,19 +131,32 @@ export default createComponent({
   },
 
   computed: {
+    path() {
+      return this.$route.params.folderName || '/'
+    },
+    currentPath() {
+      const pathArray = this.path.split('/')
+      const fileName = pathArray.pop()
+      const currentPath = this.packageData.files.find(item => item.name === fileName)
+
+      if (currentPath && !currentPath.is_dir && currentPath.name !== '') {
+        this.getFileSource(currentPath.path)
+      }
+
+      return currentPath
+    },
+
     treeView() {
-      const path = this.$route.params.folderName || '/'
       let parentPath
-      if (path && path !== '/') {
-        const currentPath = this.packageData.files.find(file => file.path === path && file.is_dir)
-        parentPath = this.packageData.files.find(file => file.path === currentPath.parent && file.is_dir)
+      if (this.currentPath && this.currentPath.is_dir && this.path !== '/') {
+        parentPath = this.packageData.files.find(file => file.name === this.currentPath.parent && file.is_dir)
         parentPath = {
           ...parentPath,
           name: '...',
           ext: 'parent'
         }
       }
-      const tree = this.packageData.files.filter(file => file.parent === path)
+      const tree = this.packageData.files.filter(item => item.parent === this.path)
       return parentPath ? [parentPath, ...tree] : tree
     },
     calcHeight() {
@@ -137,10 +165,25 @@ export default createComponent({
   },
 
   methods: {
-    handleClickRow(item) {
+    async handleClickRow(item) {
+      const { projectId, packageId, versionId, folderName = '' } = this.$route.params
+
+      if (typeof item.path === 'undefined') {
+        this.$router.push({
+          path: `/workspace/project/${projectId}/packages/${packageId}/version/${versionId}`
+        })
+        return
+      }
+
+      if (item.is_dir) {
+        this.$router.push({
+          path: `/workspace/project/${projectId}/packages/${packageId}/version/${versionId}/${item.path}`
+        })
+        return
+      }
+
       this.$router.push({
-        name: 'workspace-project-packages-uuid-version-uuid-name',
-        params: { ...this.$route.params, folderName: item.path }
+        path: `/workspace/project/${projectId}/packages/${packageId}/version/${versionId}/${folderName}/${item.name}`
       })
     }
   }

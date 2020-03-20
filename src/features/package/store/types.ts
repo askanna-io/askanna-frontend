@@ -2,6 +2,8 @@ export interface PackageState extends PackageData {}
 
 export interface PackageData {
   packageData?: Package
+  file: string
+  fileSource: Blob
 }
 
 export interface File {
@@ -17,6 +19,7 @@ export interface File {
 
 export interface Package {
   uuid: string
+  cdn_base_url: string
   filename: string
   storage_location: string
   project_id: number
@@ -31,9 +34,11 @@ export const PACKAGE_STORE = 'packageStore'
 
 // actions
 export const getPackage = 'getPackage'
+export const getFileSource = 'getFileSource'
 
 //mutations
 export const SET_PACKAGE = 'SET_PACKAGE'
+export const SET_FILE = 'SET_FILE'
 
 export class PackageModel {
   private _state: Package
@@ -50,6 +55,7 @@ export class PackageModel {
     return {
       uuid: '',
       filename: '',
+      cdn_base_url: '',
       storage_location: '',
       project_id: 0,
       size: 0,

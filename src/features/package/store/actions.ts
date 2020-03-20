@@ -28,5 +28,29 @@ export const actions: ActionTree<PackageState, RootState> = {
       return
     }
     commit(type.SET_PACKAGE, { packageData, uuid })
+  },
+
+  async [type.getFileSource]({ dispatch, state, commit }, path) {
+    if (!path) return commit(type.SET_FILE, '')
+
+    const url = `${state.packageData?.cdn_base_url}/${path}`
+
+    let fileSource
+    try {
+      fileSource = await dispatch(
+        rootTypes.apiDownloadSerice,
+        {
+          url
+        },
+        { root }
+      )
+    } catch (e) {
+      logger.error('Error on load fileSource in getFileSource action.\nError: ', e)
+      return
+    }
+
+    const file = await fileSource.text()
+
+    commit(type.SET_FILE, { file, fileSource })
   }
 }

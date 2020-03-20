@@ -9,6 +9,14 @@ import vuetify from '@/core/plugins/vuetify'
 import VueCompositionApi from '@vue/composition-api'
 import validationRules from '@/core/plugins/validationRules'
 
+import 'prismjs'
+import 'prismjs/themes/prism-tomorrow.css'
+import 'vue-prism-editor/dist/VuePrismEditor.css'
+
+import VueClipboard from 'vue-clipboard2'
+
+Vue.use(VueClipboard)
+
 // register globally
 import Sticky from 'vue-sticky-directive'
 Vue.use(Sticky)

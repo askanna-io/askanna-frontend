@@ -43,14 +43,14 @@ export default {
               }
             },
             {
-              path: 'documantation',
+              path: 'documentation',
               component: () =>
                 import(
-                  /* webpackChunkName: "workspace-project-uuid-documantation" */ '../project/views/tabs/Documantation.vue'
+                  /* webpackChunkName: "workspace-project-uuid-documentation" */ '../project/views/tabs/Documentation.vue'
                 ),
-              name: 'workspace-project-documantation',
+              name: 'workspace-project-documentation',
               meta: {
-                breadcrumb: 'Documantation'
+                breadcrumb: 'Documentation'
               }
             },
             {
@@ -110,7 +110,7 @@ export default {
                       },
                       children: [
                         {
-                          path: ':folderName',
+                          path: ':folderName(.*)',
                           component: () =>
                             import(
                               /* webpackChunkName: "workspace-project-uuid-packages-uuid-version-name" */ '../package/views/ThePackage.vue'
@@ -119,19 +119,7 @@ export default {
                           meta: {
                             breadcrumb: ':folderName'
                           },
-                          children: [
-                            {
-                              path: ':subFolderName',
-                              component: () =>
-                                import(
-                                  /* webpackChunkName: "workspace-project-uuid-packages-uuid-version-name-sub" */ '../package/views/ThePackage.vue'
-                                ),
-                              name: 'workspace-project-packages-uuid-version-uuid-name-sub',
-                              meta: {
-                                breadcrumb: ':subFolderName'
-                              }
-                            }
-                          ]
+                          children: []
                         }
                       ]
                     }
