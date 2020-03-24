@@ -25,20 +25,22 @@
                 class="job-sub-table"
                 @page-count="pageCount = $event"
               >
-                <template v-slot:item.info="{ item }">
-                  <v-btn @click="handleJobInfo(item)" class="ma-2" large color="teal" icon>
-                    <v-icon>mdi-information-outline</v-icon>
-                  </v-btn>
-                </template>
-                <template v-slot:item.status="{ item }">
-                  <ask-anna-chip-status :status="item.status" />
-                </template>
-
-                <template v-slot:item.runtime="{ item }"> {{ seconds(item.runtime) }} </template>
-                <template v-slot:item.timing="{ item }">
-                  <b>Started:</b> &nbsp;{{ $moment(item.created).format(' Do MMMM YYYY, h:mm:ss a') }} <br />
-                  <b>Finished:</b> &nbsp;{{ $moment(item.finished).format(' Do MMMM YYYY, h:mm:ss a') }}<br />
-                  <b>Duration:</b> &nbsp;{{ runTimeHours(item.created, item.finished) }} seconds<br />
+                <template v-slot:item="{ item, index }">
+                  <tr @click="handleClickOnRow(item)">
+                    <td class="text-start">#{{ index }}</td>
+                    <td class="text-start">
+                      <ask-anna-chip-status :status="item.status" />
+                    </td>
+                    <td class="text-start">{{ seconds(item.runtime) }}</td>
+                    <td class="text-start">
+                      <b>Started:</b> &nbsp;{{ $moment(item.created).format(' Do MMMM YYYY, h:mm:ss a') }} <br />
+                      <b>Finished:</b> &nbsp;{{ $moment(item.finished).format(' Do MMMM YYYY, h:mm:ss a') }}<br />
+                      <b>Duration:</b> &nbsp;{{ runTimeHours(item.created, item.finished) }} seconds<br />
+                    </td>
+                    <td class="text-start">
+                      {{ item.memory }}
+                    </td>
+                  </tr>
                 </template>
               </v-data-table>
             </v-skeleton-loader>
@@ -133,8 +135,7 @@ export default createComponent({
 
       headers2: [
         {
-          text: 'Information',
-          align: 'start',
+          text: 'Run',
           sortable: false,
           value: 'info'
         },
@@ -177,11 +178,19 @@ export default createComponent({
       this.loading = true
       if (!value) return
       this.currentJob = item
+
       await this.getRunsJob(item.id)
+
       this.loading = false
     },
     onStick(data) {
       this.sticked = data.sticked
+    },
+    handleClickOnRow(item) {
+      this.$router.push({
+        name: 'workspace-project-jobs-name-uuid',
+        params: { ...this.$route.params, jobRunId: item.uuid, jobName: this.currentJob.name || 'jobname' }
+      })
     }
   }
 })

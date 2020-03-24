@@ -36,11 +36,46 @@ export default {
             {
               path: 'jobs',
               component: () =>
-                import(/* webpackChunkName: "workspace-project-uuid-jobs" */ '../project/views/tabs/Jobs.vue'),
-              name: 'workspace-project-jobs',
+                import(
+                  /* webpackChunkName: "workspace-project-uuid-jobs-index" */ '../project/views/tabs/jobs/index.vue'
+                ),
               meta: {
                 breadcrumb: 'Jobs'
-              }
+              },
+              children: [
+                {
+                  path: '',
+                  component: () =>
+                    import(/* webpackChunkName: "workspace-project-uuid-jobs" */ '../project/views/tabs/jobs/Jobs.vue'),
+                  name: 'workspace-project-jobs',
+                  meta: {
+                    breadcrumb: 'Packages'
+                  }
+                },
+                {
+                  path: ':jobName',
+                  component: () =>
+                    import(
+                      /* webpackChunkName: "workspace-project-uuid-jobs-name-index" */ '../project/views/tabs/jobs/name/index.vue'
+                    ),
+                  meta: {
+                    breadcrumb: ':jobName'
+                  },
+                  children: [
+                    {
+                      path: ':jobRunId',
+                      component: () =>
+                        import(
+                          /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid" */ '../jobs/views/JobRun.vue'
+                        ),
+                      name: 'workspace-project-jobs-name-uuid',
+                      meta: {
+                        breadcrumb: 'Packages'
+                      }
+                    }
+                  ]
+                }
+              ]
             },
             {
               path: 'documentation',
@@ -115,7 +150,7 @@ export default {
                             import(
                               /* webpackChunkName: "workspace-project-uuid-packages-uuid-version-name" */ '../package/views/ThePackage.vue'
                             ),
-                          name: 'workspace-project-packages-uuid-version-uuid-name',
+                          name: 'workspace-project-packages-uuid-version-uuid-name-folder',
                           meta: {
                             breadcrumb: ':folderName'
                           },
