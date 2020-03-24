@@ -1,5 +1,5 @@
 <template>
-  <v-chip class="ma-2" small label outlined :color="statusColor">
+  <v-chip class="ma-2 askaanna-chip-status" small label outlined :color="statusColor">
     <v-avatar left>
       <v-icon small>{{ statusIcon }}</v-icon>
     </v-avatar>
@@ -18,11 +18,19 @@ export default createComponent({
   },
 
   setup(props) {
-    const COLORS = reactive({ SUCCESS: 'success', UNDIFENED: 'grey', FAILURE: 'error' })
+    const COLORS = reactive({
+      SUCCESS: 'success',
+      UNDIFENED: 'grey',
+      FAILURE: 'error',
+      PENDING: 'yellow darken-2',
+      SUBMITTED: 'amber lighten-1'
+    })
     const ICONS = reactive({
       UNDIFENED: 'mdi-do-not-disturb',
-      FAILURE: 'mdi-close-circle-outline',
-      SUCCESS: 'mdi-checkbox-marked-circle'
+      FAILURE: 'mdi-alert-decagram-outline',
+      SUCCESS: 'mdi-checkbox-marked-circle',
+      PENDING: 'mdi-progress-clock',
+      SUBMITTED: 'mdi-progress-check'
     })
     const status = props.status ? props.status : 'UNDIFENED'
 
@@ -38,3 +46,8 @@ export default createComponent({
   }
 })
 </script>
+<style>
+.askaanna-chip-status.v-chip:before {
+  background-color: initial;
+}
+</style>

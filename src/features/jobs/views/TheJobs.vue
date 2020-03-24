@@ -54,7 +54,7 @@
         </template>
         <template v-slot:item.actions="{ item }">
           <v-chip-group outlined v-model="selection" mandatory>
-            <v-chip outlined label color="success" @click="startJob(item.id)">
+            <v-chip outlined label class="askaanna-chip-status" color="success" @click="startJob(item.id)">
               <v-avatar left><v-icon>mdi-play</v-icon></v-avatar
               >start</v-chip
             >
