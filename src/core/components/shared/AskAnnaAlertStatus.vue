@@ -1,6 +1,6 @@
 <template>
-  <v-alert text outlined dense :type="statusType" class="d-flex mb-0">
-    Last run on <strong> {{ ago(statusData.finished) }}</strong> was <strong>{{ statusValue }}</strong>
+  <v-alert text outlined dense :color="statusColor" :icon="statusIcon" :height="32" class="mb-0 askanna-alert">
+    Last status: {{ statusValue }} ({{ ago(statusData.finished) }})
   </v-alert>
 </template>
 
@@ -31,15 +31,56 @@ export default createComponent({
   setup(props, context) {
     const moment = useMoment(context)
 
-    const TYPES = reactive({ SUCCESS: 'success', UNDIFENED: 'warning', FAILURE: 'error' })
+    const ALERT_COLORS = reactive({
+      SUCCESS: 'success',
+      FAILURE: 'error',
+      UNDIFENED: 'grey',
+      PENDING: 'yellow darken-2',
+      SUBMITTED: 'amber lighten-1'
+    })
+    const ALERT_VALUES = reactive({
+      SUCCESS: 'success',
+      UNDIFENED: 'undefined',
+      FAILURE: 'failure',
+      PENDING: 'pending',
+      SUBMITTED: 'submitted'
+    })
+
+    const ALERT_ICONS = reactive({
+      SUCCESS: 'mdi-check-circle',
+      UNDIFENED: 'mdi-do-not-disturb',
+      FAILURE: 'mdi-alert-decagram-outline',
+      PENDING: 'mdi-progress-clock',
+      SUBMITTED: 'mdi-progress-check'
+    })
 
     const status = props.statusData.status ? props.statusData.status : 'UNDIFENED'
 
-    const statusType = computed(() => {
-      return TYPES[status]
+    const statusColor = computed(() => {
+      return ALERT_COLORS[status]
     })
 
-    return { statusType, statusValue: status, ...moment }
+    const statusValue = computed(() => {
+      return ALERT_VALUES[status]
+    })
+
+    const statusIcon = computed(() => {
+      return ALERT_ICONS[status]
+    })
+
+    return { statusColor, statusValue, statusIcon, ...moment }
   }
 })
 </script>
+<style>
+.askanna-alert.v-alert {
+  width: 360px;
+  font-size: 14px;
+}
+.askanna-alert.v-alert.v-alert--dense {
+  padding-top: 3px;
+}
+.askanna-alert.v-alert--text:before {
+  background-color: initial;
+}
+</style>
