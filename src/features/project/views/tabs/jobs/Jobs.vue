@@ -1,15 +1,31 @@
 <template>
-  <v-card flat class="px-3 mt-2 br-none" outlined><the-jobs /></v-card>
+  <v-card flat class="px-3 mt-2 br-none" outlined> <the-jobs :data="projectJobs"/></v-card>
 </template>
 
 <script>
-import TheJobs from '@/features/jobs/views/TheJobs'
+import { createComponent, onBeforeMount } from '@vue/composition-api'
+import TheJobs from '@jobs/views/TheJobs'
 
-export default {
+import useProjectStore from '../../../composition/useProjectStore'
+
+export default createComponent({
   name: 'RunsCode',
 
   components: {
     TheJobs
+  },
+
+  setup(props, context) {
+    const projectStore = useProjectStore()
+    const { projectId } = context.root.$route.params
+
+    onBeforeMount(() => {
+      projectStore.getProjectJobs(projectId)
+    })
+
+    return {
+      ...projectStore
+    }
   }
-}
+})
 </script>

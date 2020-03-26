@@ -66,11 +66,11 @@ export default {
                       path: ':jobRunId',
                       component: () =>
                         import(
-                          /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid" */ '../jobs/views/JobRun.vue'
+                          /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid" */ '@job/views/JobRun.vue'
                         ),
                       name: 'workspace-project-jobs-name-uuid',
                       meta: {
-                        breadcrumb: 'Packages'
+                        breadcrumb: 'Job run - #:jobRunId'
                       }
                     }
                   ]

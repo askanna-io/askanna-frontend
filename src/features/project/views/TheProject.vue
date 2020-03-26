@@ -71,7 +71,6 @@ export default {
 
   setup(props, context) {
     const project = useProject(context)
-    console.log(context.root.$route.name, context.root.$route.name.indexOf('jobs'))
     const end = context.root.$route.name.indexOf('jobs-name') >= 1 ? 5 : 3
     const breadcrumbs = useBreadcrumbs(context, { start: 0, end })
 

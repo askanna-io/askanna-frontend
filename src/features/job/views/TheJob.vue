@@ -39,24 +39,24 @@
 </template>
 
 <script>
-import useJob from '../composition/useJob'
 import { onBeforeMount, createComponent } from '@vue/composition-api'
+import useJobStore from '../composition/useJobStore'
 
 export default createComponent({
   name: 'TheJob',
 
   setup(rops, context) {
-    const job = useJob()
+    const jobStore = useJobStore()
 
     onBeforeMount(() => {
-      job.resetStore()
+      useJobStore.resetStore()
       const { id } = context.root.$route.params
 
-      job.getJob(id)
+      useJobStore.getJob(id)
     })
 
     return {
-      ...job
+      ...useJobStore
     }
   },
 

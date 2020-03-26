@@ -3,7 +3,7 @@
     <v-col cols="12" class="pa-0">
       <v-data-table
         :headers="headers"
-        :items="list"
+        :items="data"
         fixed-header
         class="job-table scrollbar"
         single-expand
@@ -76,30 +76,30 @@ import { createComponent } from '@vue/composition-api'
 
 import useJobs from '../composition/useJobs'
 import { useWindowSize } from '@u3u/vue-hooks'
-import useJob from '../../job/composition/useJob'
+import useJobStore from '../../job/composition/useJobStore'
 import useMoment from '@/core/composition/useMoment.js'
-import useJobRunResults from '../composition/useJobRunResults'
-
-import JobRunResults from '../components/JobRunResults'
 
 export default createComponent({
   name: 'TheJobs',
 
-  components: { JobRunResults },
+  props: {
+    data: {
+      type: Array,
+      default: () => []
+    }
+  },
 
   setup(props, context) {
-    const job = useJob()
+    const jobStore = useJobStore()
     const jobs = useJobs()
     const moment = useMoment(context)
     const { height } = useWindowSize()
-    const jobRunResult = useJobRunResults()
 
     return {
       height,
-      ...job,
       ...jobs,
       ...moment,
-      ...jobRunResult
+      ...jobStore
     }
   },
 

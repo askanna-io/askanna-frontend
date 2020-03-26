@@ -8,5 +8,8 @@ export const mutations: MutationTree<projectState> = {
   },
   [mutation.SET_PROJECTS](state, data) {
     state.projects = data
+  },
+  [mutation.SET_PROJECT_JOBS](state, data) {
+    state.projectJobs = data
   }
 }

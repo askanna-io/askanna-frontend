@@ -31,6 +31,7 @@ export const JOBS_STORE = 'jobs'
 
 // actions
 export const getJobsList = 'getJobsList'
+export const getProjecJobs = 'getProjecJobs'
 
 //mutations
 export const SET_JOBS_LIST = 'SET_JOBS_LIST'

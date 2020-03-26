@@ -56,5 +56,25 @@ export const actions: ActionTree<projectState, RootState> = {
     })
 
     commit(mutation.SET_PROJECTS, projects)
+  },
+
+  async [action.getProjectJobs]({ commit, dispatch }, uuid) {
+    let jobs
+    try {
+      jobs = await dispatch(
+        rootTypes.apiService,
+        {
+          action: api.jobs,
+          serviceName,
+          uuid
+        },
+        { root }
+      )
+    } catch (e) {
+      logger.error('Error on load project jobs in getProjectJobs action.\nError: ', e)
+      return
+    }
+
+    commit(mutation.SET_PROJECT_JOBS, jobs)
   }
 }

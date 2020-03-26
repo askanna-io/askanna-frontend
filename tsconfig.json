@@ -1,4 +1,13 @@
 {
+  "moduleResolution": "node",
+  "baseUrl": "src",
+  "paths": {
+    "@core/*": ["core/*"],
+    "@job/*": ["features/job/*"],
+    "@jobs/*": ["features/jobs/*"],
+    "@package/*": ["features/package/*"],
+    "@packages/*": ["features/packages/*"]
+  },
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
