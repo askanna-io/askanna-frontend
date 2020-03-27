@@ -25,12 +25,12 @@ export const actions: ActionTree<JobsState, RootState> = {
       logger.error('Error on load jobs list items in getJobsList action.\nError: ', e)
       return
     }
-    // @TODO #1 refactore after implement job list on backend
+    /*  // @TODO #1 refactore after implement job list on backend
     list.forEach(async (element: any, index: number) => {
       const jobInfo = await dispatch(`job/getJobInfo`, element.id, { root })
       const data = { ...element, status: jobInfo.status }
 
       commit(type.UDPDATE_LIST, { data, index })
-    })
+    }) */
   }
 }

@@ -18,6 +18,7 @@ module.exports = {
         '@': path.resolve(__dirname, 'src/'),
         '@job': path.resolve(__dirname, 'src/features/job/'),
         '@jobs': path.resolve(__dirname, 'src/features/jobs/'),
+        '@project': path.resolve(__dirname, 'src/features/project/'),
         '@package': path.resolve(__dirname, 'src/features/package/'),
         '@packages': path.resolve(__dirname, 'src/features/packages/')
       }

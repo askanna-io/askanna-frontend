@@ -20,14 +20,16 @@ export const action = {
   addProject: 'addProject',
   getProject: 'getProject',
   getProjects: 'getProjects',
-  getProjectJobs: 'getProjectJobs'
+  getProjectJobs: 'getProjectJobs',
+  resetProjectJobs: 'resetProjectJobs'
 }
 
 export const mutation = {
   SET_PROJECT: 'SET_PROJECT',
   SET_PROJECTS: 'SET_PROJECTS',
   UPDATE_ROJECT: 'UPDATE_ROJECT',
-  SET_PROJECT_JOBS: 'SET_PROJECT_JOBS'
+  SET_PROJECT_JOBS: 'SET_PROJECT_JOBS',
+  RESET_PORJECT_JOBS: 'RESET_PORJECT_JOBS'
 }
 
 export class ProjectModel {

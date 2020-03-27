@@ -194,7 +194,7 @@ export const actions: ActionTree<jobState, RootState> = {
     commit(type.SET_RUN_JOB, runs)
   },
 
-  async [type.action.getJobInfo]({ dispatch }, id) {
+  async [type.action.getJobInfo]({ dispatch }, uuid) {
     let info = {}
     try {
       info = await dispatch(
@@ -203,7 +203,7 @@ export const actions: ActionTree<jobState, RootState> = {
           action: api.info,
           method: 'post',
           serviceName,
-          uuid: id
+          uuid
         },
         { root }
       )

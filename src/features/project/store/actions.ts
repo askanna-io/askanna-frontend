@@ -76,5 +76,9 @@ export const actions: ActionTree<projectState, RootState> = {
     }
 
     commit(mutation.SET_PROJECT_JOBS, jobs)
+  },
+
+  async [action.resetProjectJobs]({ commit }) {
+    commit(mutation.RESET_PORJECT_JOBS)
   }
 }

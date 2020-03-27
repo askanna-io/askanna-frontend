@@ -11,5 +11,8 @@ export const mutations: MutationTree<projectState> = {
   },
   [mutation.SET_PROJECT_JOBS](state, data) {
     state.projectJobs = data
+  },
+  [mutation.RESET_PORJECT_JOBS](state) {
+    state.projectJobs = []
   }
 }

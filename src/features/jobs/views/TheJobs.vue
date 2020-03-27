@@ -66,7 +66,6 @@
           </v-chip-group>
         </template>
       </v-data-table>
-      <job-run-results :item="jobResults" />
     </v-col>
   </v-row>
 </template>
