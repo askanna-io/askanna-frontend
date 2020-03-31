@@ -5,7 +5,6 @@ export interface jobsData {
 }
 
 export interface JobItem {
-  id: number
   uuid: string
   name: string
   status: {
