@@ -10,7 +10,7 @@ const serviceName = PROJECT_STORE
 const api = apiStringify(serviceName)
 
 export const actions: ActionTree<projectState, RootState> = {
-  async [action.getProject]({ commit, dispatch }, id) {
+  async [action.getProject]({ commit, dispatch }, uuid) {
     let project
     try {
       project = await dispatch(
@@ -18,7 +18,7 @@ export const actions: ActionTree<projectState, RootState> = {
         {
           action: api.get,
           serviceName,
-          uuid: id
+          uuid: uuid
         },
         { root }
       )
@@ -48,10 +48,7 @@ export const actions: ActionTree<projectState, RootState> = {
 
     projects = projects.map((project: any, index: number) => {
       return {
-        ...project,
-        id: index,
-        description:
-          'Turns out semicolon-less style is easier and safer in TS because most gotcha edge cases are type invalid as well.'
+        ...project
       }
     })
 
