@@ -22,7 +22,7 @@ export interface Package {
   cdn_base_url: string
   filename: string
   storage_location: string
-  project_id: number
+  project: string
   size: number
   created_by: number
   created_at: string
@@ -57,7 +57,7 @@ export class PackageModel {
       filename: '',
       cdn_base_url: '',
       storage_location: '',
-      project_id: 0,
+      project: '',
       size: 0,
       created_by: 0,
       created_at: '',
