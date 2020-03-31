@@ -77,7 +77,7 @@ export default createComponent({
   methods: {
     async handleDownload(packageData) {
       const source = await this.downloadPackage({
-        projectId: packageData.project_id,
+        projectId: packageData.project,
         packageId: packageData.uuid
       })
       this.forceFileDownload.trigger({ source, name: packageData.filename })
