@@ -88,7 +88,9 @@ export class JobModel {
   static initialState() {
     return {
       uuid: '',
+      short_uuid: '',
       created: '',
+      modified: '',
       name: '',
       status: ''
     }
