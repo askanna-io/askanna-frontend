@@ -8,8 +8,10 @@ export interface jobData {
 }
 
 interface Job {
-  id: number
   uuid: string
+  short_uuid: string
+  created: string
+  modified: string
   name: string
   status: string
 }
@@ -85,8 +87,10 @@ export class JobModel {
 
   static initialState() {
     return {
-      id: 0,
       uuid: '',
+      short_uuid: '',
+      created: '',
+      modified: '',
       name: '',
       status: ''
     }

@@ -6,8 +6,11 @@ export interface ProjectData {
 }
 
 interface Project {
-  id: number
   uuid: string
+  created: string
+  modified: string
+  description: string
+  short_uuid: string
   name: string
   status: string
   flows: any[]
@@ -40,8 +43,11 @@ export class ProjectModel {
 
   static initialState() {
     return {
-      id: 0,
       uuid: '',
+      short_uuid: '',
+      created: '',
+      modified: '',
+      description: '',
       name: '',
       status: '',
       flows: []

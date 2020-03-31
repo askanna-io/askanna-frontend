@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto h-100" :elevation="hover ? 16 : 2" :to="`/workspace/project/${project.id}/activity`">
+  <v-card class="mx-auto h-100" :elevation="hover ? 16 : 2" :to="`/workspace/project/${project.short_uuid}/activity`">
     <v-card-title>
       <v-icon large left>
         mdi-semantic-web
@@ -24,7 +24,7 @@
           size="35"
           color="grey "
           :hover="hover"
-          :to="`/workspace/project/${project.id}`"
+          :to="`/workspace/project/${project.short_uuid}`"
         >
           <img src="https://randomuser.me/api/portraits/men/81.jpg" />
         </v-avatar>
@@ -35,8 +35,9 @@
 
 <script lang="ts">
 interface Project {
+  uuid: string
   name: string
-  id: string
+  short_uuid: string
   description: string
   lastRunOn: string
 }
