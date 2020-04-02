@@ -2,16 +2,27 @@ export interface projectState extends ProjectState {}
 
 export interface ProjectState {
   project: Project
-  projects: []
+  projects: {
+    count: 0
+    results: []
+  }
   projectJobs: []
+  query: {
+    limit: 10
+    offset: 0
+  }
 }
 
 interface Project {
-  id: number
   uuid: string
+  short_uuid: string
   name: string
   status: string
   flows: any[]
+  created: string
+  modified: string
+  title: string
+  description: string
 }
 
 export const PROJECT_STORE = 'project'
@@ -45,11 +56,15 @@ export class ProjectModel {
 
   static initialState() {
     return {
-      id: 0,
       uuid: '',
+      short_uuid: '',
       name: '',
       status: '',
-      flows: []
+      created: '',
+      modified: '',
+      flows: [],
+      title: '',
+      description: ''
     }
   }
 }

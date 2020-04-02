@@ -172,7 +172,7 @@ export const actions: ActionTree<jobState, RootState> = {
         rootTypes.apiService,
         {
           action: api.runs,
-          method: 'post',
+          method: 'get',
           serviceName,
           uuid: id
         },

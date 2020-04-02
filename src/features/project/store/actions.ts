@@ -30,14 +30,15 @@ export const actions: ActionTree<projectState, RootState> = {
     commit(mutation.SET_PROJECT, project)
   },
 
-  async [action.getProjects]({ commit, dispatch }) {
+  async [action.getProjects]({ state, commit, dispatch }) {
     let projects
     try {
       projects = await dispatch(
         rootTypes.apiService,
         {
           action: api.list,
-          serviceName
+          serviceName,
+          params: state.query
         },
         { root }
       )
@@ -45,15 +46,6 @@ export const actions: ActionTree<projectState, RootState> = {
       logger.error('Error on load projects  in getProjects action.\nError: ', e)
       return
     }
-
-    projects = projects.map((project: any, index: number) => {
-      return {
-        ...project,
-        id: index,
-        description:
-          'Turns out semicolon-less style is easier and safer in TS because most gotcha edge cases are type invalid as well.'
-      }
-    })
 
     commit(mutation.SET_PROJECTS, projects)
   },

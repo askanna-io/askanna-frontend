@@ -178,7 +178,7 @@ export default createComponent({
       if (!value) return
       this.currentJob = item
 
-      await this.getRunsJob(item.id)
+      await this.getRunsJob(item.short_uuid)
 
       this.loading = false
     },

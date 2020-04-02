@@ -134,6 +134,10 @@ export default {
                       }
                     },
                     {
+                      path: 'version',
+                      redirect: { name: 'workspace-project-packages' }
+                    },
+                    {
                       path: 'version/:versionId',
                       component: () =>
                         import(

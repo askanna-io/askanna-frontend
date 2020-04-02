@@ -11,6 +11,8 @@
           </v-breadcrumbs-item>
         </template>
       </v-breadcrumbs>
+      <v-divider />
+
       <v-toolbar dense flat>
         <v-btn icon small @click="handleBack">
           <v-icon>mdi-arrow-left</v-icon>

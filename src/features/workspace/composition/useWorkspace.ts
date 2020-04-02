@@ -1,21 +1,20 @@
 import { SetupContext } from '@vue/composition-api'
 import { onBeforeMount } from '@vue/composition-api'
-import usePackagesStore from './usePackagesStore'
+import useWorkSpaceStore from './useWorkSpaceStore'
 import useFetchData from '@/core/composition/useFetchData'
 
 export default function(context: SetupContext) {
-  const packagesStore: any = usePackagesStore()
+  const workspaceStore: any = useWorkSpaceStore()
   const fetchData = useFetchData()
 
   onBeforeMount(() => {
-    packagesStore.resetStore()
-    const { projectId } = context.root.$route.params
+    const { workspaceId } = context.root.$route.params
 
-    fetchData(context, packagesStore.getProjectPackages(projectId))
+    if (workspaceId) fetchData(context, workspaceStore.getWorkspace(workspaceId))
   })
 
   return {
-    ...packagesStore,
+    ...workspaceStore,
     fetchData
   }
 }

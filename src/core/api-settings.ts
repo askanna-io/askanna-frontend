@@ -66,6 +66,12 @@ export const api: ApiSettings = {
       stop: id => `job/${id}/stop/`,
       result: id => `job/${id}/result/`,
       runs: id => `job/${id}/runs/`
+    },
+
+    workspace: {
+      get: id => `workspace/${id}/`,
+      list: () => `workspace/`,
+      projects: id => `workspace/${id}/projects/`
     }
   }
 }

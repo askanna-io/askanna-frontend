@@ -10,6 +10,7 @@ import { createComponent, onBeforeMount } from '@vue/composition-api'
 import TheJobs from '@jobs/views/TheJobs'
 
 import useProjectStore from '../../../composition/useProjectStore'
+import useQuery from '@/core/composition/useQuery'
 
 export default createComponent({
   name: 'RunsCode',
@@ -21,10 +22,11 @@ export default createComponent({
   setup(props, context) {
     const projectStore = useProjectStore()
     const { projectId } = context.root.$route.params
+    const query = useQuery()
 
     onBeforeMount(() => {
       projectStore.resetProjectJobs()
-      projectStore.getProjectJobs(projectId)
+      projectStore.getProjectJobs(projectId, query.params)
     })
 
     return {
