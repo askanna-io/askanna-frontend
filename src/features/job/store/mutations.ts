@@ -15,7 +15,11 @@ export const mutations: MutationTree<jobState> = {
     state.result = data
   },
 
-  [type.SET_RUN_JOB](state, data) {
+  [type.SET_JOB_RUN](state, data) {
+    state.jobRun = data
+  },
+
+  [type.SET_JOB_RUNS](state, data) {
     state.runs = data
   },
 
@@ -25,5 +29,9 @@ export const mutations: MutationTree<jobState> = {
 
   [type.mutation.SET_RESULT_MODAL](state) {
     state.openJobRunResult = true
+  },
+
+  [type.SET_JOB_RUN_PAYLOAD](state, data) {
+    state.jobRunPayload = data
   }
 }

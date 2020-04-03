@@ -99,10 +99,16 @@
 import { createNamespacedHelpers } from 'vuex'
 import { logout } from '@/core/store/actionTypes'
 import { AUTH_STORE } from '@/core/store/storeTypes'
+import { createComponent } from '@vue/composition-api'
+import useTitle from '@/core/composition/useTitle'
 
 const { mapActions } = createNamespacedHelpers(AUTH_STORE)
-export default {
+export default createComponent({
   name: 'dashboard',
+
+  setup(props, context) {
+    useTitle(context)
+  },
 
   data: () => ({
     mobileMenu: false,
@@ -143,7 +149,7 @@ export default {
       logout
     })
   }
-}
+})
 </script>
 <style scoped>
 .logo {

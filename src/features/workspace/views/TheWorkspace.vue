@@ -68,13 +68,13 @@
             <v-row v-if="!state.projectView">
               <v-col v-for="item in props.items" :key="item.name" cols="12" sm="6" md="6" lg="4">
                 <v-hover v-slot:default="{ hover }" open-delay="200">
-                  <workspace-project-card-item :project="item" :hover="hover" :to="{ path: '/' }" />
+                  <workspace-project-card-item :project="item" :workspaceName="workspace.title" :hover="hover" />
                 </v-hover>
               </v-col>
             </v-row>
             <div v-if="state.projectView">
               <div v-for="item in props.items" :key="item.name">
-                <workspace-project-list-item :project="item" cols="12" />
+                <workspace-project-list-item :project="item" :workspaceName="workspace.title" cols="12" />
                 <v-divider />
               </div>
             </div>

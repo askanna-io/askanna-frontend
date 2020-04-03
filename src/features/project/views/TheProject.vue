@@ -33,7 +33,12 @@
       <v-tabs v-model="currentTab" left align-with-title>
         <v-tabs-slider color="primary" />
 
-        <v-tab v-for="tab of projectTools" ripple :key="tab.id" :to="{ name: tab.to }">
+        <v-tab
+          v-for="tab of projectTools"
+          ripple
+          :key="tab.id"
+          :to="{ name: tab.to, params: { title: `${tab.name} - ${project.name}` } }"
+        >
           {{ tab.name }}
         </v-tab>
       </v-tabs>

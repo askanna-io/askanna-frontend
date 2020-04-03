@@ -8,7 +8,9 @@ export const state: jobState = {
   job: new JobModel().state,
   result: '',
   runs: [],
-  openJobRunResult: false
+  openJobRunResult: false,
+  jobRun: {},
+  jobRunPayload: {}
 }
 
 const namespaced: boolean = true

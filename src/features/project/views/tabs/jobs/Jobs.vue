@@ -1,7 +1,7 @@
 <template>
   <v-card flat class="px-3 mt-2 br-none" outlined>
     <v-skeleton-loader ref="skeleton" :type="'table-row'" :loading="!projectJobs.length">
-      <the-jobs :data="projectJobs" /> </v-skeleton-loader
+      <the-jobs :jobList="projectJobs" /> </v-skeleton-loader
   ></v-card>
 </template>
 

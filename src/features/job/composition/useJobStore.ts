@@ -3,7 +3,13 @@ import { JOB_STORE, action } from '../store/types'
 
 export default function() {
   const state = {
-    ...useState(JOB_STORE, { job: 'job', result: 'result', runs: 'runs' })
+    ...useState(JOB_STORE, {
+      job: 'job',
+      result: 'result',
+      runs: 'runs',
+      jobRun: 'jobRun',
+      jobRunPayload: 'jobRunPayload'
+    })
   }
 
   const actions = {

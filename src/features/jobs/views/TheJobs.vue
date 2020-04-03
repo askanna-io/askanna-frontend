@@ -3,12 +3,13 @@
     <v-col cols="12" class="pa-0">
       <v-data-table
         :headers="headers"
-        :items="data"
+        :items="jobList"
         fixed-header
         class="job-table scrollbar"
         single-expand
         :expanded.sync="expanded"
         :height="calcHeight"
+        item-key="short_uuid"
         @item-expanded="handleExpand"
         show-expand
       >
@@ -56,11 +57,11 @@
         </template>
         <template v-slot:item.actions="{ item }">
           <v-chip-group outlined v-model="selection" mandatory>
-            <v-chip outlined label class="askaanna-chip-status" color="success" @click="startJob(item.id)">
+            <v-chip outlined label class="askaanna-chip-status" color="success" @click="startJob(item.short_uuid)">
               <v-avatar left><v-icon>mdi-play</v-icon></v-avatar
               >start</v-chip
             >
-            <v-chip outlined label color="error" @click="stopJob(item.id)"
+            <v-chip outlined label color="error" @click="stopJob(item.short_uuid)"
               >stop<v-avatar right><v-icon>mdi-stop</v-icon></v-avatar></v-chip
             >
           </v-chip-group>
@@ -73,7 +74,6 @@
 <script>
 import { createComponent } from '@vue/composition-api'
 
-import useJobs from '../composition/useJobs'
 import { useWindowSize } from '@u3u/vue-hooks'
 import useJobStore from '../../job/composition/useJobStore'
 import useMoment from '@/core/composition/useMoment.js'
@@ -82,7 +82,7 @@ export default createComponent({
   name: 'TheJobs',
 
   props: {
-    data: {
+    jobList: {
       type: Array,
       default: () => []
     }
@@ -90,13 +90,11 @@ export default createComponent({
 
   setup(props, context) {
     const jobStore = useJobStore()
-    const jobs = useJobs()
     const moment = useMoment(context)
     const { height } = useWindowSize()
 
     return {
       height,
-      ...jobs,
       ...moment,
       ...jobStore
     }
@@ -106,7 +104,6 @@ export default createComponent({
     return {
       currentJob: null,
       loading: true,
-      openD: false,
       jobResults: {
         name: '',
         runtime: '',

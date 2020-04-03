@@ -5,6 +5,8 @@ export interface jobData {
   result: string
   runs: JobRun[]
   openJobRunResult: boolean
+  jobRun: any
+  jobRunPayload: any
 }
 
 interface Job {
@@ -40,11 +42,13 @@ export const action = {
   resetJob: 'resetJob',
   startJob: 'startJob',
   updateJob: 'updateJob',
+  getJobRun: 'getJobRun',
   removeJob: 'removeJob',
   resultJob: 'resultJob',
   resetStore: 'resetStore',
   getJobInfo: 'getJobInfo',
   getRunsJob: 'getRunsJob',
+  getJobRunPayload: 'getJobRunPayload',
   showJobRunResult: 'showJobRunResult',
   closeResultModal: 'closeResultModal'
 }
@@ -69,8 +73,10 @@ export const getJobInfo = 'getJobInfo'
 //mutations
 export const SET_JOB = 'SET_JOB'
 export const UPDATE_JOB = 'UPDATE_JOB'
-export const SET_RUN_JOB = 'SET_RUN_JOB'
+export const SET_JOB_RUN = 'SET_JOB_RUN'
+export const SET_JOB_RUNS = 'SET_JOB_RUNS'
 export const UPDATE_JOB_RESULT = 'UPDATE_JOB_RESULT'
+export const SET_JOB_RUN_PAYLOAD = 'SET_JOB_RUN_PAYLOAD'
 
 export class JobModel {
   private _state: Job
