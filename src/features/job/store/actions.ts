@@ -165,35 +165,6 @@ export const actions: ActionTree<jobState, RootState> = {
     commit(type.UPDATE_JOB_RESULT, result.result!)
   },
 
-  async [type.action.getRunsJob]({ commit, dispatch }, id) {
-    let runs: JobRun[]
-    try {
-      runs = await dispatch(
-        rootTypes.apiService,
-        {
-          action: api.runs,
-          method: 'get',
-          serviceName,
-          uuid: id
-        },
-        { root }
-      )
-    } catch (e) {
-      logger.error('Error on runs job  in getRunsJob action.\nError: ', e)
-
-      return
-    }
-
-    runs = runs.sort((a, b) => {
-      const dateA = new Date(a.created)
-      const dateB = new Date(b.created)
-
-      return dateB.getTime() - dateA.getTime()
-    })
-
-    commit(type.SET_JOB_RUNS, runs)
-  },
-
   async [type.action.getJobInfo]({ dispatch }, uuid) {
     let info = {}
     try {
@@ -218,55 +189,5 @@ export const actions: ActionTree<jobState, RootState> = {
 
   async [type.action.resetStore]({ commit }) {
     commit(type.UPDATE_JOB_RESULT, '')
-  },
-
-  [type.action.showJobRunResult]({ commit }, params) {
-    commit(type.mutation.SET_RESULT_MODAL, params)
-  },
-  [type.action.closeResultModal]({ commit }) {
-    commit(type.mutation.CLOSE_RESULT_MODAL)
-  },
-
-  async [type.action.getJobRun]({ dispatch, commit }, uuid) {
-    let jobRun = {}
-    try {
-      jobRun = await dispatch(
-        rootTypes.apiService,
-        {
-          action: api.getJobRun,
-          serviceName,
-          uuid
-        },
-        { root }
-      )
-    } catch (e) {
-      logger.error('Error on jobRun job  in getJobRun action.\nError: ', e)
-
-      return
-    }
-
-    commit(type.SET_JOB_RUN, jobRun)
-  },
-
-  async [type.action.getJobRunPayload]({ dispatch, commit }, uuid) {
-    console.log(uuid)
-    let jobRunPayload = {}
-    try {
-      jobRunPayload = await dispatch(
-        rootTypes.apiService,
-        {
-          action: api.getJobRunPayload,
-          serviceName,
-          uuid
-        },
-        { root }
-      )
-    } catch (e) {
-      logger.error('Error on jobRunPayload job  in getJobRunPayload action.\nError: ', e)
-
-      return
-    }
-
-    commit(type.SET_JOB_RUN_PAYLOAD, jobRunPayload)
   }
 }

@@ -6,7 +6,6 @@ export default function(context: SetupContext) {
 
   const getTitle = function() {
     const { title } = context.root.$route.params
-    console.log(context.root.$route)
     document.title = title ? `${title} | ${defaultTitle}` : defaultTitle
   }
 

@@ -6,11 +6,7 @@ import { jobState, JOB_STORE, JobModel } from './types'
 
 export const state: jobState = {
   job: new JobModel().state,
-  result: '',
-  runs: [],
-  openJobRunResult: false,
-  jobRun: {},
-  jobRunPayload: {}
+  result: ''
 }
 
 const namespaced: boolean = true

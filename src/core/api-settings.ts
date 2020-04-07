@@ -67,7 +67,7 @@ export const api: ApiSettings = {
       result: id => `job/${id}/result/`,
       runs: id => `job/${id}/runs/`,
       getJobRun: id => `jobrun/${id}/`,
-      getJobRunPayload: ({ jobRunShortId, payloadUuid }) => `jobrun/${jobRunShortId}/payload/${payloadUuid}`
+      getJobRunPayload: ({ jobRunShortId, payloadUuid }) => `jobrun/${jobRunShortId}/payload/${payloadUuid}/`
     },
     jobrun: {
       get: id => `jobrun/${id}/`

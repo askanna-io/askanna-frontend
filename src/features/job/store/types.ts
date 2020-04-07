@@ -3,10 +3,6 @@ export interface jobState extends jobData {}
 export interface jobData {
   job: Job
   result: string
-  runs: JobRun[]
-  openJobRunResult: boolean
-  jobRun: any
-  jobRunPayload: any
 }
 
 interface Job {
@@ -14,20 +10,6 @@ interface Job {
   uuid: string
   name: string
   status: string
-}
-
-export interface JobRun {
-  uuid: string
-  payload: {
-    duration: number
-  }
-  status: string
-  runtime: number
-  memory: number
-  return_payload: string
-  stdout: any
-  created: string
-  finished: string
 }
 
 export const JOB_STORE = 'job'
@@ -46,11 +28,7 @@ export const action = {
   removeJob: 'removeJob',
   resultJob: 'resultJob',
   resetStore: 'resetStore',
-  getJobInfo: 'getJobInfo',
-  getRunsJob: 'getRunsJob',
-  getJobRunPayload: 'getJobRunPayload',
-  showJobRunResult: 'showJobRunResult',
-  closeResultModal: 'closeResultModal'
+  getJobInfo: 'getJobInfo'
 }
 
 // mutations
@@ -73,10 +51,6 @@ export const getJobInfo = 'getJobInfo'
 //mutations
 export const SET_JOB = 'SET_JOB'
 export const UPDATE_JOB = 'UPDATE_JOB'
-export const SET_JOB_RUN = 'SET_JOB_RUN'
-export const SET_JOB_RUNS = 'SET_JOB_RUNS'
-export const UPDATE_JOB_RESULT = 'UPDATE_JOB_RESULT'
-export const SET_JOB_RUN_PAYLOAD = 'SET_JOB_RUN_PAYLOAD'
 
 export class JobModel {
   private _state: Job

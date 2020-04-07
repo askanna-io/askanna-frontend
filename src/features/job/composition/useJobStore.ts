@@ -5,10 +5,7 @@ export default function() {
   const state = {
     ...useState(JOB_STORE, {
       job: 'job',
-      result: 'result',
-      runs: 'runs',
-      jobRun: 'jobRun',
-      jobRunPayload: 'jobRunPayload'
+      result: 'result'
     })
   }
 

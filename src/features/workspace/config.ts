@@ -1,7 +1,15 @@
 export default {
   paths: [
     {
-      path: '/workspace',
+      path: '/user',
+      component: () => import(/* webpackChunkName: "user" */ '../jobrun/views/JobRun.vue'),
+      name: 'user',
+      meta: {
+        breadcrumb: 'user'
+      }
+    },
+    {
+      path: '/:workspace',
       component: () => import(/* webpackChunkName: "workspace-index" */ './views/index.vue'),
       meta: {
         breadcrumb: 'Dashboard'
@@ -66,7 +74,7 @@ export default {
                       path: ':jobRunId',
                       component: () =>
                         import(
-                          /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid" */ '@job/views/JobRun.vue'
+                          /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid" */ '@jobrun/views/JobRun.vue'
                         ),
                       name: 'workspace-project-jobs-name-uuid',
                       meta: {

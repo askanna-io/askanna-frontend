@@ -18,9 +18,7 @@
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
 
-        <v-toolbar-title
-          >{{ currentPath.name }} <span class="caption">{{ currentPath.size }} Bytes</span></v-toolbar-title
-        >
+        <div>{{ currentPath.name }} {{ currentPath.size }} Bytes</div>
 
         <v-spacer></v-spacer>
         <v-tooltip bottom>
