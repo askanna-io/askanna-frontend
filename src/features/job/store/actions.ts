@@ -4,7 +4,7 @@ import * as rootTypes from '@/core/store/actionTypes'
 import { logger } from '@/core/plugins/logger'
 
 import { ActionTree } from 'vuex'
-import { jobState, JobRun, JOB_STORE } from './types'
+import { jobState, JOB_STORE } from './types'
 
 const root = true
 const serviceName = JOB_STORE
@@ -162,7 +162,7 @@ export const actions: ActionTree<jobState, RootState> = {
       return
     }
 
-    commit(type.UPDATE_JOB_RESULT, result.result!)
+    commit(type.mutation.UPDATE_JOB_RESULT, result.result!)
   },
 
   async [type.action.getJobInfo]({ dispatch }, uuid) {
@@ -185,9 +185,5 @@ export const actions: ActionTree<jobState, RootState> = {
     }
 
     return info
-  },
-
-  async [type.action.resetStore]({ commit }) {
-    commit(type.UPDATE_JOB_RESULT, '')
   }
 }

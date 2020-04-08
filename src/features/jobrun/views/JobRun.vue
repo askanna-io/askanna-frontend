@@ -40,7 +40,7 @@
       </v-list>
 
       <v-expansion-panels focusable tile>
-        <v-expansion-panel>
+        <v-expansion-panel @click.stop="handleDownload(jobRun)">
           <v-expansion-panel-header>Input</v-expansion-panel-header>
           <v-expansion-panel-content>
             <v-flex pt-2>
@@ -48,7 +48,7 @@
                 <v-avatar left><v-icon>mdi-cloud-download</v-icon></v-avatar
                 >Download Json</v-chip
               >
-              {{ jobRunPayload }}
+              <job-run-pay-load :file="JSON.stringify(jobRunPayload)" />
             </v-flex>
           </v-expansion-panel-content>
         </v-expansion-panel>
@@ -79,47 +79,53 @@
 <script>
 import { createComponent, onBeforeMount, computed, watch } from '@vue/composition-api'
 
-import useJobStore from '@job/composition/useJobStore'
 import useMoment from '@/core/composition/useMoment.js'
+import useJobRunStore from '../composition/useJobRunStore'
 import useFetchData from '@/core/composition/useFetchData'
 import useJobRunResults from '@jobs/composition/useJobRunResults'
 import useProjectStore from '@project/composition/useProjectStore'
 
+import JobRunPayLoad from '../components/JobRunPayLoad'
+
 export default createComponent({
   name: 'JobRun',
 
+  components: {
+    JobRunPayLoad
+  },
+
   setup(props, context) {
-    const jobStore = useJobStore()
     const fetchData = useFetchData()
     const moment = useMoment(context)
+    const jobRunStore = useJobRunStore()
     const projectStore = useProjectStore()
     const jobRunResult = useJobRunResults()
 
     const { jobName, jobRunId } = context.root.$route.params
-
     const currentJob = computed(() => projectStore.projectJobs.value.find(job => job.name === jobName))
 
     onBeforeMount(async () => {
       projectStore.resetProjectJobs()
+      jobRunStore.resetStore()
       const { jobName, jobRunId, projectId } = context.root.$route.params
 
-      jobStore.getJobRun(jobRunId)
+      jobRunStore.getJobRun(jobRunId)
 
       await fetchData(context, [projectStore.getProjectJobs(projectId)])
     })
 
     watch(currentJob, (val, prevCount) => {
       if (!val) return
-      jobStore.getRunsJob(val.short_uuid)
+      jobRunStore.getRunsJob(val.short_uuid)
     })
 
     const handleDownload = item => {
-      jobStore.getJobRunPayload({ jobRunShortId: item.short_uuid, payloadUuid: item.payload.uuid })
+      jobRunStore.getJobRunPayload({ jobRunShortId: item.short_uuid, payloadUuid: item.payload.uuid })
     }
 
     return {
-      ...jobStore,
       ...moment,
+      ...jobRunStore,
       ...jobRunResult,
       jobName,
       jobRunId,

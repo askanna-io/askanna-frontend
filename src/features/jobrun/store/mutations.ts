@@ -1,5 +1,5 @@
 import { MutationTree } from 'vuex'
-import { jobRunState } from './types'
+import { JobRunModel, jobRunState } from './types'
 import * as type from './types'
 
 export const mutations: MutationTree<jobRunState> = {
@@ -21,5 +21,11 @@ export const mutations: MutationTree<jobRunState> = {
 
   [type.SET_JOB_RUN_PAYLOAD](state, data) {
     state.jobRunPayload = data
+  },
+
+  [type.mutation.UPDATE_JOB_RUN_STORE](state) {
+    state.runs = []
+    state.jobRun = new JobRunModel().state
+    state.jobRunPayload = {}
   }
 }

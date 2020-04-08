@@ -33,6 +33,7 @@ export const action = {
 
 // mutations
 export const mutation = {
+  UPDATE_JOB_RESULT: 'UPDATE_JOB_RESULT',
   SET_RESULT_MODAL: 'SET_RESULT_MODAL',
   CLOSE_RESULT_MODAL: 'CLOSE_RESULT_MODAL'
 }

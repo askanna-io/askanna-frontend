@@ -2,12 +2,12 @@ import { Module } from 'vuex'
 import { getters } from './getters'
 import { actions } from './actions'
 import { mutations } from './mutations'
-import { jobRunState, JOB_RUN_STORE } from './types'
+import { jobRunState, JOB_RUN_STORE, JobRunModel } from './types'
 
 export const state: jobRunState = {
   runs: [],
   openJobRunResult: false,
-  jobRun: {},
+  jobRun: new JobRunModel().state,
   jobRunPayload: {}
 }
 

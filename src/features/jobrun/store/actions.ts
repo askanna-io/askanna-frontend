@@ -41,7 +41,7 @@ export const actions: ActionTree<jobRunState, RootState> = {
   },
 
   async [type.action.resetStore]({ commit }) {
-    commit(type.UPDATE_JOB_RESULT, '')
+    commit(type.mutation.UPDATE_JOB_RUN_STORE)
   },
 
   [type.action.showJobRunResult]({ commit }, params) {

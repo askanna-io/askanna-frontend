@@ -5,6 +5,7 @@
     "@core/*": ["core/*"],
     "@job/*": ["features/job/*"],
     "@jobs/*": ["features/jobs/*"],
+    "@jobrun/*": ["features/jobrun/*"],
     "@project/*": ["features/project/*"],
     "@package/*": ["features/package/*"],
     "@packages/*": ["features/packages/*"]

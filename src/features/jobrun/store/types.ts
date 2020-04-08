@@ -3,7 +3,7 @@ export interface jobRunState extends jobRubData {}
 export interface jobRubData {
   runs: JobRun[]
   openJobRunResult: boolean
-  jobRun: any
+  jobRun: JobRun
   jobRunPayload: any
 }
 
@@ -19,6 +19,19 @@ export interface JobRun {
   stdout: any
   created: string
   finished: string
+  version: {
+    name: string
+    uuid: string
+  }
+  runner: {
+    name: string
+  }
+  owner: {
+    name: string
+  }
+  trigger: {
+    name: string
+  }
 }
 
 export const JOB_RUN_STORE = 'jobrun'
@@ -36,7 +49,8 @@ export const action = {
 // mutations
 export const mutation = {
   SET_RESULT_MODAL: 'SET_RESULT_MODAL',
-  CLOSE_RESULT_MODAL: 'CLOSE_RESULT_MODAL'
+  CLOSE_RESULT_MODAL: 'CLOSE_RESULT_MODAL',
+  UPDATE_JOB_RUN_STORE: 'UPDATE_JOB_RUN_STORE'
 }
 
 //mutations
@@ -44,3 +58,44 @@ export const SET_JOB_RUN = 'SET_JOB_RUN'
 export const SET_JOB_RUNS = 'SET_JOB_RUNS'
 export const UPDATE_JOB_RESULT = 'UPDATE_JOB_RESULT'
 export const SET_JOB_RUN_PAYLOAD = 'SET_JOB_RUN_PAYLOAD'
+
+export class JobRunModel {
+  private _state: JobRun
+
+  constructor() {
+    this._state = JobRunModel.initialState()
+  }
+
+  get state() {
+    return this._state
+  }
+
+  static initialState() {
+    return {
+      uuid: '',
+      payload: {
+        duration: 0
+      },
+      status: '',
+      runtime: 0,
+      memory: 0,
+      return_payload: '',
+      stdout: '',
+      created: '',
+      finished: '',
+      version: {
+        name: '',
+        uuid: ''
+      },
+      runner: {
+        name: ''
+      },
+      owner: {
+        name: ''
+      },
+      trigger: {
+        name: ''
+      }
+    }
+  }
+}

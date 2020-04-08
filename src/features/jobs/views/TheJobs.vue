@@ -76,6 +76,8 @@ import { createComponent } from '@vue/composition-api'
 
 import { useWindowSize } from '@u3u/vue-hooks'
 import useJobStore from '../../job/composition/useJobStore'
+import useJobRunStore from '../../jobrun/composition/useJobRunStore'
+
 import useMoment from '@/core/composition/useMoment.js'
 
 export default createComponent({
@@ -90,13 +92,15 @@ export default createComponent({
 
   setup(props, context) {
     const jobStore = useJobStore()
+    const jobRunStore = useJobRunStore()
     const moment = useMoment(context)
     const { height } = useWindowSize()
 
     return {
       height,
       ...moment,
-      ...jobStore
+      ...jobStore,
+      ...jobRunStore
     }
   },
 
