@@ -55,4 +55,14 @@ export default class App extends Vue {
   background-color: #6a4580 !important;
   border: 2px solid #555555 !important;
 }
+
+.prism-editor-wrapper code.language-js {
+  font-size: 0.875rem !important;
+}
+
+.prism-editor-wrapper .prism-editor__line-numbers,
+.prism-editor-wrapper .prism-editor__line-number {
+  font-size: 0.875rem !important;
+  line-height: 21px !important;
+}
 </style>

@@ -67,5 +67,9 @@ export const actions: ActionTree<PackagesState, RootState> = {
     }
 
     return packageSource
+  },
+
+  async [type.resetStore]({ commit }) {
+    commit(type.RESET_STORE)
   }
 }

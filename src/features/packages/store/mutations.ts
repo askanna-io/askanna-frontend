@@ -11,5 +11,10 @@ export const mutations: MutationTree<PackagesState> = {
 
     state.projectPackages = [projectPackages]
     state.projectPackageHistory = data
+  },
+
+  [type.RESET_STORE](state) {
+    state.projectPackages = []
+    state.projectPackageHistory = []
   }
 }

@@ -3,12 +3,13 @@
     <v-col cols="12" class="pa-0">
       <v-data-table
         :headers="headers"
-        :items="list"
+        :items="jobList"
         fixed-header
         class="job-table scrollbar"
         single-expand
         :expanded.sync="expanded"
         :height="calcHeight"
+        item-key="short_uuid"
         @item-expanded="handleExpand"
         show-expand
       >
@@ -25,20 +26,22 @@
                 class="job-sub-table"
                 @page-count="pageCount = $event"
               >
-                <template v-slot:item.info="{ item }">
-                  <v-btn @click="handleJobInfo(item)" class="ma-2" large color="teal" icon>
-                    <v-icon>mdi-information-outline</v-icon>
-                  </v-btn>
-                </template>
-                <template v-slot:item.status="{ item }">
-                  <ask-anna-chip-status :status="item.status" />
-                </template>
-
-                <template v-slot:item.runtime="{ item }"> {{ seconds(item.runtime) }} </template>
-                <template v-slot:item.timing="{ item }">
-                  <b>Started:</b> &nbsp;{{ $moment(item.created).format(' Do MMMM YYYY, h:mm:ss a') }} <br />
-                  <b>Finished:</b> &nbsp;{{ $moment(item.finished).format(' Do MMMM YYYY, h:mm:ss a') }}<br />
-                  <b>Duration:</b> &nbsp;{{ runTimeHours(item.created, item.finished) }} seconds<br />
+                <template v-slot:item="{ item, index }">
+                  <tr @click="handleClickOnRow(item)">
+                    <td class="text-start">#{{ index }}</td>
+                    <td class="text-start">
+                      <ask-anna-chip-status :status="item.status" />
+                    </td>
+                    <td class="text-start">{{ seconds(item.runtime) }}</td>
+                    <td class="text-start">
+                      <b>Started:</b> &nbsp;{{ $moment(item.created).format(' Do MMMM YYYY, h:mm:ss a') }} <br />
+                      <b>Finished:</b> &nbsp;{{ $moment(item.finished).format(' Do MMMM YYYY, h:mm:ss a') }}<br />
+                      <b>Duration:</b> &nbsp;{{ runTimeHours(item.created, item.finished) }} seconds<br />
+                    </td>
+                    <td class="text-start">
+                      {{ item.memory }}
+                    </td>
+                  </tr>
                 </template>
               </v-data-table>
             </v-skeleton-loader>
@@ -54,17 +57,16 @@
         </template>
         <template v-slot:item.actions="{ item }">
           <v-chip-group outlined v-model="selection" mandatory>
-            <v-chip outlined label class="askaanna-chip-status" color="success" @click="startJob(item.id)">
+            <v-chip outlined label class="askaanna-chip-status" color="success" @click="startJob(item.short_uuid)">
               <v-avatar left><v-icon>mdi-play</v-icon></v-avatar
               >start</v-chip
             >
-            <v-chip outlined label color="error" @click="stopJob(item.id)"
+            <v-chip outlined label color="error" @click="stopJob(item.short_uuid)"
               >stop<v-avatar right><v-icon>mdi-stop</v-icon></v-avatar></v-chip
             >
           </v-chip-group>
         </template>
       </v-data-table>
-      <job-run-results :item="jobResults" />
     </v-col>
   </v-row>
 </template>
@@ -72,32 +74,33 @@
 <script>
 import { createComponent } from '@vue/composition-api'
 
-import useJobs from '../composition/useJobs'
 import { useWindowSize } from '@u3u/vue-hooks'
-import useJob from '../../job/composition/useJob'
-import useMoment from '@/core/composition/useMoment.js'
-import useJobRunResults from '../composition/useJobRunResults'
+import useJobStore from '../../job/composition/useJobStore'
+import useJobRunStore from '../../jobrun/composition/useJobRunStore'
 
-import JobRunResults from '../components/JobRunResults'
+import useMoment from '@/core/composition/useMoment.js'
 
 export default createComponent({
   name: 'TheJobs',
 
-  components: { JobRunResults },
+  props: {
+    jobList: {
+      type: Array,
+      default: () => []
+    }
+  },
 
   setup(props, context) {
-    const job = useJob()
-    const jobs = useJobs()
+    const jobStore = useJobStore()
+    const jobRunStore = useJobRunStore()
     const moment = useMoment(context)
     const { height } = useWindowSize()
-    const jobRunResult = useJobRunResults()
 
     return {
       height,
-      ...job,
-      ...jobs,
       ...moment,
-      ...jobRunResult
+      ...jobStore,
+      ...jobRunStore
     }
   },
 
@@ -105,7 +108,6 @@ export default createComponent({
     return {
       currentJob: null,
       loading: true,
-      openD: false,
       jobResults: {
         name: '',
         runtime: '',
@@ -133,8 +135,7 @@ export default createComponent({
 
       headers2: [
         {
-          text: 'Information',
-          align: 'start',
+          text: 'Run',
           sortable: false,
           value: 'info'
         },
@@ -177,11 +178,19 @@ export default createComponent({
       this.loading = true
       if (!value) return
       this.currentJob = item
-      await this.getRunsJob(item.id)
+
+      await this.getRunsJob(item.short_uuid)
+
       this.loading = false
     },
     onStick(data) {
       this.sticked = data.sticked
+    },
+    handleClickOnRow(item) {
+      this.$router.push({
+        name: 'workspace-project-jobs-name-uuid',
+        params: { ...this.$route.params, jobRunId: item.uuid, jobName: this.currentJob.name || 'jobname' }
+      })
     }
   }
 })

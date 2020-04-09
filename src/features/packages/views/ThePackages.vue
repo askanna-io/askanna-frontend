@@ -1,9 +1,18 @@
 <template>
   <v-row align="center" justify="center">
     <v-col cols="12" class="pt-0">
-      <v-data-table :headers="headers" :items="projectPackages" @click:row="handleClickRow" fixed-header class="j21">
+      <v-data-table
+        :headers="headers"
+        :hide-default-header="!projectPackages.length"
+        :hide-default-footer="!projectPackages.length"
+        :items="projectPackages"
+        @click:row="handleClickRow"
+        fixed-header
+        class="j21"
+      >
         <template v-slot:top>
           <v-subheader>Packages</v-subheader>
+          <v-divider />
         </template>
 
         <template v-slot:item.uuid="{ item }">
@@ -31,6 +40,12 @@
               </v-list-item>
             </v-list>
           </v-menu>
+        </template>
+        <template v-slot:no-data>
+          <v-icon :size="25" left>
+            mdi-package-down
+          </v-icon>
+          You don't have packages yet.
         </template>
       </v-data-table>
     </v-col>
@@ -88,10 +103,10 @@ export default createComponent({
         params: { projectId: project_id, packageId: uuid, versionId: '1' }
       })
     },
-    handleClickRow({ project_id, uuid }) {
+    handleClickRow({ uuid }) {
       this.$router.push({
         name: 'workspace-project-packages-uuid-version-uuid',
-        params: { projectId: project_id, packageId: uuid, versionId: '1' }
+        params: { projectId: this.$route.params.projectId, packageId: uuid, versionId: '1' }
       })
     }
   }
