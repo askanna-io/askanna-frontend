@@ -4,7 +4,7 @@ import * as rootTypes from '@/core/store/actionTypes'
 import { logger } from '@/core/plugins/logger'
 
 import { ActionTree } from 'vuex'
-import { jobRunState, JobRun, JOB_RUN_STORE } from './types'
+import { jobRunState, JobRun, JOB_RUN_STORE, stateType } from './types'
 
 const root = true
 const serviceName = JOB_RUN_STORE
@@ -73,6 +73,8 @@ export const actions: ActionTree<jobRunState, RootState> = {
   },
 
   async [type.action.getJobRunPayload]({ dispatch, commit }, uuid) {
+    commit(type.mutation.SET_LOADING, { name: stateType.payLoadLoading, value: true })
+
     let jobRunPayload = {}
     try {
       jobRunPayload = await dispatch(
@@ -89,7 +91,7 @@ export const actions: ActionTree<jobRunState, RootState> = {
 
       return
     }
-
-    commit(type.SET_JOB_RUN_PAYLOAD, jobRunPayload)
+    commit(type.SET_JOB_RUN_PAYLOAD, JSON.stringify(jobRunPayload, null, 2))
+    commit(type.mutation.SET_LOADING, { name: stateType.payLoadLoading, value: false })
   }
 }

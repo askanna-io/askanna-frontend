@@ -40,15 +40,22 @@
       </v-list>
 
       <v-expansion-panels focusable tile>
-        <v-expansion-panel @click.stop="handleDownload(jobRun)">
+        <v-expansion-panel>
           <v-expansion-panel-header>Input</v-expansion-panel-header>
           <v-expansion-panel-content>
             <v-flex pt-2>
-              <v-chip outlined label color="primary" @click.stop="handleDownload(jobRun)">
-                <v-avatar left><v-icon>mdi-cloud-download</v-icon></v-avatar
-                >Download Json</v-chip
+              <v-btn
+                outlined
+                :loading="payLoadLoading"
+                :disabled="payLoadLoading"
+                label
+                color="primary"
+                @click.stop="handleDownload(jobRun)"
               >
-              <job-run-pay-load :file="JSON.stringify(jobRunPayload)" />
+                <v-icon left>mdi-cloud-download</v-icon>
+                Download Json</v-btn
+              >
+              <job-run-pay-load :file="jobRunPayload" />
             </v-flex>
           </v-expansion-panel-content>
         </v-expansion-panel>
@@ -84,6 +91,7 @@ import useJobRunStore from '../composition/useJobRunStore'
 import useFetchData from '@/core/composition/useFetchData'
 import useJobRunResults from '@jobs/composition/useJobRunResults'
 import useProjectStore from '@project/composition/useProjectStore'
+import useForceFileDownload from '@/core/composition/useForceFileDownload'
 
 import JobRunPayLoad from '../components/JobRunPayLoad'
 
@@ -100,6 +108,7 @@ export default createComponent({
     const jobRunStore = useJobRunStore()
     const projectStore = useProjectStore()
     const jobRunResult = useJobRunResults()
+    const forceFileDownload = useForceFileDownload()
 
     const { jobName, jobRunId } = context.root.$route.params
     const currentJob = computed(() => projectStore.projectJobs.value.find(job => job.name === jobName))
@@ -119,8 +128,10 @@ export default createComponent({
       jobRunStore.getRunsJob(val.short_uuid)
     })
 
-    const handleDownload = item => {
-      jobRunStore.getJobRunPayload({ jobRunShortId: item.short_uuid, payloadUuid: item.payload.uuid })
+    const handleDownload = async item => {
+      await jobRunStore.getJobRunPayload({ jobRunShortId: item.short_uuid, payloadUuid: item.payload.uuid })
+
+      forceFileDownload.trigger({ source: jobRunStore.jobRunPayload.value, name: `payload-${item.payload.uuid}.json` })
     }
 
     return {

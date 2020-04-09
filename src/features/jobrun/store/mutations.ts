@@ -1,6 +1,7 @@
 import { MutationTree } from 'vuex'
 import { JobRunModel, jobRunState } from './types'
 import * as type from './types'
+import { set } from 'lodash'
 
 export const mutations: MutationTree<jobRunState> = {
   [type.SET_JOB_RUN](state, data) {
@@ -26,6 +27,10 @@ export const mutations: MutationTree<jobRunState> = {
   [type.mutation.UPDATE_JOB_RUN_STORE](state) {
     state.runs = []
     state.jobRun = new JobRunModel().state
-    state.jobRunPayload = {}
+    state.jobRunPayload = ''
+  },
+
+  [type.mutation.SET_LOADING](state, { name, value }) {
+    set(state, name, value)
   }
 }

@@ -4,7 +4,8 @@ export interface jobRubData {
   runs: JobRun[]
   openJobRunResult: boolean
   jobRun: JobRun
-  jobRunPayload: any
+  jobRunPayload: string
+  payLoadLoading: Boolean
 }
 
 export interface JobRun {
@@ -48,6 +49,7 @@ export const action = {
 
 // mutations
 export const mutation = {
+  SET_LOADING: 'SET_LOADING',
   SET_RESULT_MODAL: 'SET_RESULT_MODAL',
   CLOSE_RESULT_MODAL: 'CLOSE_RESULT_MODAL',
   UPDATE_JOB_RUN_STORE: 'UPDATE_JOB_RUN_STORE'
@@ -58,6 +60,10 @@ export const SET_JOB_RUN = 'SET_JOB_RUN'
 export const SET_JOB_RUNS = 'SET_JOB_RUNS'
 export const UPDATE_JOB_RESULT = 'UPDATE_JOB_RESULT'
 export const SET_JOB_RUN_PAYLOAD = 'SET_JOB_RUN_PAYLOAD'
+
+export const stateType = {
+  payLoadLoading: 'payLoadLoading'
+}
 
 export class JobRunModel {
   private _state: JobRun

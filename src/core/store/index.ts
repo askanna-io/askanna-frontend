@@ -7,6 +7,7 @@ import createPersistedState from 'vuex-persistedstate'
 
 // find all store modules from features and core folders
 const stores: any = {}
+const persistedStores = []
 const featureModules = require.context('@/features', true, /store\/index$/)
 const moduleKeys = featureModules.keys()
 
@@ -14,6 +15,7 @@ for (const modulePath of moduleKeys) {
   const storeModule = featureModules(modulePath)
 
   stores[storeModule.name] = storeModule[storeModule.name]
+  persistedStores.push(storeModule.name)
 }
 
 const coreModules = require.context('@/core/components', true, /store\/index$/)
@@ -22,12 +24,13 @@ const coreModuleKeys = coreModules.keys()
 for (const modulePath of coreModuleKeys) {
   const storeModule = coreModules(modulePath)
   stores[storeModule.name] = storeModule[storeModule.name]
+  persistedStores.push(storeModule.name)
 }
 
 Vue.use(Vuex)
 
 const store: StoreOptions<RootState> = {
-  plugins: [createPersistedState()],
+  plugins: [createPersistedState({ paths: persistedStores.filter(store => store !== 'jobrun') })],
   modules: { ...stores },
   strict: process.env.NODE_ENV !== 'production',
   state: {
