@@ -33,7 +33,12 @@
       <v-tabs v-model="currentTab" left align-with-title>
         <v-tabs-slider color="primary" />
 
-        <v-tab v-for="tab of projectTools" ripple :key="tab.id" :to="{ name: tab.to }">
+        <v-tab
+          v-for="tab of projectTools"
+          ripple
+          :key="tab.id"
+          :to="{ name: tab.to, params: { title: `${tab.name} - ${project.name}` } }"
+        >
           {{ tab.name }}
         </v-tab>
       </v-tabs>
@@ -71,7 +76,8 @@ export default {
 
   setup(props, context) {
     const project = useProject(context)
-    const breadcrumbs = useBreadcrumbs(context, { start: 0, end: 3 })
+    const end = context.root.$route.name.indexOf('jobs-name') >= 1 ? 5 : 3
+    const breadcrumbs = useBreadcrumbs(context, { start: 0, end })
 
     return { ...project, breadcrumbs }
   },

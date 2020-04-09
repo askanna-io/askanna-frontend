@@ -4,8 +4,14 @@
     "baseUrl": ".",
     "paths": {
       "core/*": [".src/core/*"],
-      "features/*": [".src/features/*"],
-      "public/*": ["./public/*"]
+      "public/*": ["./public/*"],
+      "@job/*": [".src/features/job"],
+      "@jobs/*": [".src/features/jobs"],
+      "@jobrun/*": [".src/features/jobrun"],
+      "@project/*": [".src/features/project"],
+      "@package/*": [".src/features/package"],
+      "@packages/*": [".src/features/packages"],
+      "@features/*": [".src/features/*"]
     }
   }
 }

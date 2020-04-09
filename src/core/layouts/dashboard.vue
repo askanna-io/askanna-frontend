@@ -35,7 +35,7 @@
             </v-list>
           </v-navigation-drawer>
           <div md="auto" sm="12" text-sm-center>
-            <img alt="AskAnna logo" src="@/assets/logo.png" class="logo" />
+            <img alt="AskAnna logo" src="@/assets/logo.svg" class="logo" />
           </div>
           <div class="text-sm-center ml-sm-6 ml-md-0 d-none d-sm-flex">
             <v-flex>
@@ -99,10 +99,16 @@
 import { createNamespacedHelpers } from 'vuex'
 import { logout } from '@/core/store/actionTypes'
 import { AUTH_STORE } from '@/core/store/storeTypes'
+import { createComponent } from '@vue/composition-api'
+import useTitle from '@/core/composition/useTitle'
 
 const { mapActions } = createNamespacedHelpers(AUTH_STORE)
-export default {
+export default createComponent({
   name: 'dashboard',
+
+  setup(props, context) {
+    useTitle(context)
+  },
 
   data: () => ({
     mobileMenu: false,
@@ -143,11 +149,11 @@ export default {
       logout
     })
   }
-}
+})
 </script>
 <style scoped>
 .logo {
-  height: 27px;
+  height: 57px;
 }
 .logo.--mobile {
   height: 67px;

@@ -1,5 +1,12 @@
 <template>
-  <v-card class="mx-auto h-100" :elevation="hover ? 16 : 2" :to="`/workspace/project/${project.short_uuid}/activity`">
+  <v-card
+    class="mx-auto h-100"
+    :elevation="hover ? 16 : 2"
+    :to="{
+      name: 'workspace-project-activity',
+      params: { title: `${project.name} - ${workspaceName}`, projectId: project.short_uuid }
+    }"
+  >
     <v-card-title>
       <v-icon large left>
         mdi-semantic-web
@@ -39,7 +46,6 @@ interface Project {
   name: string
   short_uuid: string
   description: string
-  lastRunOn: string
 }
 import { Component, Vue, Prop } from 'vue-property-decorator'
 
@@ -47,6 +53,9 @@ import { Component, Vue, Prop } from 'vue-property-decorator'
 export default class WorkspaceProjectCardItem extends Vue {
   @Prop({ required: true })
   public project!: Project
+
+  @Prop({ required: true })
+  public workspaceName!: ''
 
   @Prop({ required: false })
   public hover!: boolean

@@ -1,46 +1,37 @@
 <template>
-  <v-dialog v-model="openVmodel" width="500">
-    <v-card>
-      <v-card-title class="headline grey lighten-2 text-white" primary-title> Job name: {{ item.name }} </v-card-title>
-      <v-card-text class="pt-2">
-        <v-simple-table height="300px" dark>
-          <template v-slot:default>
-            <tbody>
-              <tr>
-                <td>Timing</td>
-                <td>{{ runTimeHours(item.created, item.finished) }}</td>
-              </tr>
-              <tr>
-                <td>CPU time</td>
-                <td>{{ item.runtime }}</td>
-              </tr>
-              <tr>
-                <td>Memory</td>
-                <td>{{ item.memory }}</td>
-              </tr>
-              <tr>
-                <td>Variables</td>
-                <td>none</td>
-              </tr>
-              <tr>
-                <td>Result</td>
-                <td>{{ item.return_payload }}</td>
-              </tr>
-            </tbody>
-          </template>
-        </v-simple-table>
-      </v-card-text>
+  <v-card>
+    <v-card-title class="headline grey lighten-2 text-white" primary-title> Job name: {{ item.name }} </v-card-title>
+    <v-card-text class="pt-2">
+      <v-simple-table height="300px" dark>
+        <template v-slot:default>
+          <tbody>
+            <tr>
+              <td>Timing</td>
+              <td>{{ runTimeHours(item.created, item.finished) }}</td>
+            </tr>
+            <tr>
+              <td>CPU time</td>
+              <td>{{ item.runtime }}</td>
+            </tr>
+            <tr>
+              <td>Memory</td>
+              <td>{{ item.memory }}</td>
+            </tr>
+            <tr>
+              <td>Variables</td>
+              <td>none</td>
+            </tr>
+            <tr>
+              <td>Result</td>
+              <td>{{ item.return_payload }}</td>
+            </tr>
+          </tbody>
+        </template>
+      </v-simple-table>
+    </v-card-text>
 
-      <v-divider></v-divider>
-
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="primary" text @click="openVmodel = false">
-          Close
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+    <v-divider></v-divider>
+  </v-card>
 </template>
 
 <script>

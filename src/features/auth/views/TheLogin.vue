@@ -1,7 +1,7 @@
 <template>
   <v-row align="center" justify="center" class="login-wrapper">
     <v-col cols="6" xl="2" md="4" sm="6">
-      <img alt="AskAnna logo" src="@/assets/logo.png" class="logo" />
+      <img alt="AskAnna logo" src="@/assets/logo.svg" class="logo" />
       <v-expansion-panels flat dark class="login-expansion" v-model="panel">
         <v-expansion-panel :key="0" active-class="colored-border">
           <v-expansion-panel-header v-slot="{ open }">

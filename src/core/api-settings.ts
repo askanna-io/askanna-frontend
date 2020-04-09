@@ -41,6 +41,7 @@ export const api: ApiSettings = {
     project: {
       get: id => `project/${id}/`,
       list: () => `project/`,
+      jobs: id => `project/${id}/jobs/`,
       packages: id => `project/${id}/packages/`
     },
     package: {
@@ -64,7 +65,21 @@ export const api: ApiSettings = {
       start: id => `job/${id}/start/`,
       stop: id => `job/${id}/stop/`,
       result: id => `job/${id}/result/`,
-      runs: id => `job/${id}/runs/`
+      runs: id => `job/${id}/runs/`,
+      getJobRun: id => `jobrun/${id}/`,
+      getJobRunPayload: ({ jobRunShortId, payloadUuid }) => `jobrun/${jobRunShortId}/payload/${payloadUuid}/`
+    },
+    jobrun: {
+      get: id => `jobrun/${id}/`,
+      runs: id => `job/${id}/runs/`,
+      getJobRun: id => `jobrun/${id}/`,
+      getJobRunPayload: ({ jobRunShortId, payloadUuid }) => `jobrun/${jobRunShortId}/payload/${payloadUuid}/`
+    },
+
+    workspace: {
+      get: id => `workspace/${id}/`,
+      list: () => `workspace/`,
+      projects: id => `workspace/${id}/projects/`
     }
   }
 }
