@@ -1,12 +1,12 @@
 import { computed } from '@vue/composition-api'
-import { action } from '@/features/job/store/types'
+import { action } from '@/features/jobrun/store/types'
 import { useState, useActions } from '@u3u/vue-hooks'
 
 const { showJobRunResult, closeResultModal } = action
 
 export default function() {
   const state = {
-    ...useState('job', { openJobRunResult: 'openJobRunResult' })
+    ...useState('jobrun', { openJobRunResult: 'openJobRunResult' })
   }
 
   const openVmodel = computed({

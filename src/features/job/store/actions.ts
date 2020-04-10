@@ -4,7 +4,7 @@ import * as rootTypes from '@/core/store/actionTypes'
 import { logger } from '@/core/plugins/logger'
 
 import { ActionTree } from 'vuex'
-import { jobState, JobRun, JOB_STORE } from './types'
+import { jobState, JOB_STORE } from './types'
 
 const root = true
 const serviceName = JOB_STORE
@@ -162,39 +162,10 @@ export const actions: ActionTree<jobState, RootState> = {
       return
     }
 
-    commit(type.UPDATE_JOB_RESULT, result.result!)
+    commit(type.mutation.UPDATE_JOB_RESULT, result.result!)
   },
 
-  async [type.action.getRunsJob]({ commit, dispatch }, id) {
-    let runs: JobRun[]
-    try {
-      runs = await dispatch(
-        rootTypes.apiService,
-        {
-          action: api.runs,
-          method: 'post',
-          serviceName,
-          uuid: id
-        },
-        { root }
-      )
-    } catch (e) {
-      logger.error('Error on runs job  in getRunsJob action.\nError: ', e)
-
-      return
-    }
-
-    runs = runs.sort((a, b) => {
-      const dateA = new Date(a.created)
-      const dateB = new Date(b.created)
-
-      return dateB.getTime() - dateA.getTime()
-    })
-
-    commit(type.SET_RUN_JOB, runs)
-  },
-
-  async [type.action.getJobInfo]({ dispatch }, id) {
+  async [type.action.getJobInfo]({ dispatch }, uuid) {
     let info = {}
     try {
       info = await dispatch(
@@ -203,7 +174,7 @@ export const actions: ActionTree<jobState, RootState> = {
           action: api.info,
           method: 'post',
           serviceName,
-          uuid: id
+          uuid
         },
         { root }
       )
@@ -214,16 +185,5 @@ export const actions: ActionTree<jobState, RootState> = {
     }
 
     return info
-  },
-
-  async [type.action.resetStore]({ commit }) {
-    commit(type.UPDATE_JOB_RESULT, '')
-  },
-
-  [type.action.showJobRunResult]({ commit }, params) {
-    commit(type.mutation.SET_RESULT_MODAL, params)
-  },
-  [type.action.closeResultModal]({ commit }) {
-    commit(type.mutation.CLOSE_RESULT_MODAL)
   }
 }

@@ -1,16 +1,28 @@
-export interface projectState extends ProjectData {}
+export interface projectState extends ProjectState {}
 
-export interface ProjectData {
+export interface ProjectState {
   project: Project
-  projects: []
+  projects: {
+    count: 0
+    results: []
+  }
+  projectJobs: []
+  query: {
+    limit: 10
+    offset: 0
+  }
 }
 
 interface Project {
-  id: number
   uuid: string
+  short_uuid: string
   name: string
   status: string
   flows: any[]
+  created: string
+  modified: string
+  title: string
+  description: string
 }
 
 export const PROJECT_STORE = 'project'
@@ -18,13 +30,17 @@ export const PROJECT_STORE = 'project'
 export const action = {
   addProject: 'addProject',
   getProject: 'getProject',
-  getProjects: 'getProjects'
+  getProjects: 'getProjects',
+  getProjectJobs: 'getProjectJobs',
+  resetProjectJobs: 'resetProjectJobs'
 }
 
 export const mutation = {
   SET_PROJECT: 'SET_PROJECT',
   SET_PROJECTS: 'SET_PROJECTS',
-  UPDATE_ROJECT: 'UPDATE_ROJECT'
+  UPDATE_ROJECT: 'UPDATE_ROJECT',
+  SET_PROJECT_JOBS: 'SET_PROJECT_JOBS',
+  RESET_PORJECT_JOBS: 'RESET_PORJECT_JOBS'
 }
 
 export class ProjectModel {
@@ -40,11 +56,15 @@ export class ProjectModel {
 
   static initialState() {
     return {
-      id: 0,
       uuid: '',
+      short_uuid: '',
       name: '',
       status: '',
-      flows: []
+      created: '',
+      modified: '',
+      flows: [],
+      title: '',
+      description: ''
     }
   }
 }

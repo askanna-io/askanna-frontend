@@ -10,7 +10,7 @@ const serviceName = PROJECT_STORE
 const api = apiStringify(serviceName)
 
 export const actions: ActionTree<projectState, RootState> = {
-  async [action.getProject]({ commit, dispatch }, id) {
+  async [action.getProject]({ commit, dispatch }, uuid) {
     let project
     try {
       project = await dispatch(
@@ -18,7 +18,7 @@ export const actions: ActionTree<projectState, RootState> = {
         {
           action: api.get,
           serviceName,
-          uuid: id
+          uuid: uuid
         },
         { root }
       )
@@ -30,14 +30,15 @@ export const actions: ActionTree<projectState, RootState> = {
     commit(mutation.SET_PROJECT, project)
   },
 
-  async [action.getProjects]({ commit, dispatch }) {
+  async [action.getProjects]({ state, commit, dispatch }) {
     let projects
     try {
       projects = await dispatch(
         rootTypes.apiService,
         {
           action: api.list,
-          serviceName
+          serviceName,
+          params: state.query
         },
         { root }
       )
@@ -46,15 +47,30 @@ export const actions: ActionTree<projectState, RootState> = {
       return
     }
 
-    projects = projects.map((project: any, index: number) => {
-      return {
-        ...project,
-        id: index,
-        description:
-          'Turns out semicolon-less style is easier and safer in TS because most gotcha edge cases are type invalid as well.'
-      }
-    })
-
     commit(mutation.SET_PROJECTS, projects)
+  },
+
+  async [action.getProjectJobs]({ commit, dispatch }, uuid) {
+    let jobs
+    try {
+      jobs = await dispatch(
+        rootTypes.apiService,
+        {
+          action: api.jobs,
+          serviceName,
+          uuid
+        },
+        { root }
+      )
+    } catch (e) {
+      logger.error('Error on load project jobs in getProjectJobs action.\nError: ', e)
+      return
+    }
+
+    commit(mutation.SET_PROJECT_JOBS, jobs)
+  },
+
+  async [action.resetProjectJobs]({ commit }) {
+    commit(mutation.RESET_PORJECT_JOBS)
   }
 }

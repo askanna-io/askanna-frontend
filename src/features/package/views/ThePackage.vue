@@ -30,6 +30,7 @@
               </v-breadcrumbs-item>
             </template>
           </v-breadcrumbs>
+          <v-divider />
         </template>
         <template v-slot:item.type="{ item }">
           <v-icon v-if="item.is_dir">
@@ -53,7 +54,7 @@ import usePackage from '../composition/usePackage'
 import { onBeforeMount } from '@vue/composition-api'
 import { createComponent } from '@vue/composition-api'
 import useMoment from '@/core/composition/useMoment.js'
-import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
+import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
 
 import TheFile from './TheFile'
 
@@ -65,7 +66,7 @@ export default createComponent({
   setup(props, context) {
     const moment = useMoment(context)
     const packageData = usePackage()
-    const breadcrumbs = useBreadcrumbs(context, { start: 3, subRoutes: true })
+    const breadcrumbs = usePackageBreadcrumbs(context)
     const { height } = useWindowSize()
 
     onBeforeMount(() => {

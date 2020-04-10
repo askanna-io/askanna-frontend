@@ -6,7 +6,15 @@ import { projectState, PROJECT_STORE, ProjectModel } from './types'
 
 export const state: projectState = {
   project: new ProjectModel().state,
-  projects: []
+  projects: {
+    count: 0,
+    results: []
+  },
+  projectJobs: [],
+  query: {
+    limit: 10,
+    offset: 0
+  }
 }
 
 const namespaced: boolean = true

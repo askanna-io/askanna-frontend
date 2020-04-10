@@ -8,6 +8,7 @@ export default function(context: SetupContext) {
   const fetchData = useFetchData()
 
   onBeforeMount(() => {
+    packagesStore.resetStore()
     const { projectId } = context.root.$route.params
 
     fetchData(context, packagesStore.getProjectPackages(projectId))

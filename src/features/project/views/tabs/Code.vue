@@ -11,10 +11,6 @@ export default {
 
   components: {
     ThePackages
-  },
-
-  data() {
-    return {}
   }
 }
 </script>

@@ -1,5 +1,5 @@
 import { useState, useActions } from '@u3u/vue-hooks'
-import { PACKAGES_STORE, getProjectPackages, downloadPackage } from '../store/types'
+import { PACKAGES_STORE, getProjectPackages, downloadPackage, resetStore } from '../store/types'
 
 export default function() {
   const state = {
@@ -7,7 +7,7 @@ export default function() {
   }
 
   const actions = {
-    ...useActions(PACKAGES_STORE, [getProjectPackages, downloadPackage])
+    ...useActions(PACKAGES_STORE, [getProjectPackages, downloadPackage, resetStore])
   }
 
   return {
