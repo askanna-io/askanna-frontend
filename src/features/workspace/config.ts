@@ -61,14 +61,13 @@ export default {
                   }
                 },
                 {
-                  path: ':jobName',
+                  path: ':jobId',
                   component: () =>
-                    import(
-                      /* webpackChunkName: "workspace-project-uuid-jobs-name-index" */ '../project/views/tabs/jobs/name/index.vue'
-                    ),
+                    import(/* webpackChunkName: "workspace-project-uuid-jobs-id" */ '@job/views/TheJob.vue'),
                   meta: {
-                    breadcrumb: ':jobName'
+                    breadcrumb: ':jobId'
                   },
+                  name: 'workspace-project-jobId',
                   children: [
                     {
                       path: ':jobRunId',

@@ -11,6 +11,7 @@
         :height="calcHeight"
         item-key="short_uuid"
         @item-expanded="handleExpand"
+        @click:row="handleJobClick"
         show-expand
       >
         <template v-slot:expanded-item>
@@ -96,11 +97,20 @@ export default createComponent({
     const moment = useMoment(context)
     const { height } = useWindowSize()
 
+    const handleJobClick = item => {
+      console.log(item)
+      context.root.$router.push({
+        name: 'workspace-project-jobId',
+        params: { ...context.root.$route.params, jobId: item.short_uuid || 'jobname' }
+      })
+    }
+
     return {
       height,
       ...moment,
       ...jobStore,
-      ...jobRunStore
+      ...jobRunStore,
+      handleJobClick
     }
   },
 

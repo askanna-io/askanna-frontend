@@ -185,5 +185,9 @@ export const actions: ActionTree<jobState, RootState> = {
     }
 
     return info
+  },
+
+  async [type.action.resetStore]({ commit }) {
+    commit(type.mutation.RESET_JOB_STORE)
   }
 }

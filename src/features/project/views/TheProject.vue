@@ -41,6 +41,25 @@
         >
           {{ tab.name }}
         </v-tab>
+
+        <v-menu v-if="true" bottom right>
+          <template v-slot:activator="{ on }">
+            <v-btn text class="align-self-center mr-4" v-on="on">
+              PROJECTS MENU
+              <v-icon right>mdi-menu-down</v-icon>
+            </v-btn>
+          </template>
+
+          <v-list class="grey lighten-3">
+            <v-list-item
+              v-for="tab in projectTools"
+              :key="tab.id"
+              :to="{ name: tab.to, params: { title: `${tab.name} - ${project.name}` } }"
+            >
+              {{ tab.name }}
+            </v-list-item>
+          </v-list>
+        </v-menu>
       </v-tabs>
 
       <v-spacer />

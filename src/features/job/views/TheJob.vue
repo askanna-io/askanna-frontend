@@ -49,14 +49,14 @@ export default createComponent({
     const jobStore = useJobStore()
 
     onBeforeMount(() => {
-      useJobStore.resetStore()
-      const { id } = context.root.$route.params
+      jobStore.resetStore()
+      const { jobId } = context.root.$route.params
 
-      useJobStore.getJob(id)
+      jobStore.getJob(jobId)
     })
 
     return {
-      ...useJobStore
+      ...jobStore
     }
   },
 
