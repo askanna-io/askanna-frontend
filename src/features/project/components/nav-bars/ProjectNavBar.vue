@@ -1,7 +1,9 @@
 <script>
+import { createComponent } from '@vue/composition-api'
+import JobNavBar from './JobNavBar'
 import DefaultBar from './DefaultBar'
 
-export default {
+export default createComponent({
   name: 'ProjectNavBar',
 
   functional: true,
@@ -9,7 +11,7 @@ export default {
   props: {
     routeName: {
       type: [Number, String],
-      default: 'orders'
+      default: 'workspace-project-activity'
     }
   },
   render: function(h, context) {
@@ -17,8 +19,8 @@ export default {
       const route = context.props.routeName
 
       switch (true) {
-        case route === 'job':
-          return JobNabBar
+        case route === 'workspace-project-jobId':
+          return JobNavBar
 
         case route.indexOf('job-uuid') !== -1:
           return JobNabBar
@@ -30,5 +32,5 @@ export default {
 
     return h(appropriateBarComponent(), context.data, context.children)
   }
-}
+})
 </script>

@@ -26,12 +26,20 @@ export default {
         {
           path: 'project/:projectId',
           redirect: { name: 'workspace-project-activity' },
-          component: () => import(/* webpackChunkName: "workspace-add" */ '../project/views/TheProject.vue'),
-          name: 'workspace-project',
+          component: () => import(/* webpackChunkName: "workspace-project" */ '../project/views/TheProject.vue'),
           meta: {
             breadcrumb: 'Project - #:projectId'
           },
           children: [
+            {
+              path: '',
+              name: 'workspace-project',
+              component: () =>
+                import(/* webpackChunkName: "workspace-project-uuid-activity" */ '../project/views/TheProject.vue'),
+              meta: {
+                breadcrumb: 'Project - #:projectId'
+              }
+            },
             {
               path: 'activity',
               component: () =>

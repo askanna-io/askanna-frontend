@@ -98,7 +98,6 @@ export default createComponent({
     const { height } = useWindowSize()
 
     const handleJobClick = item => {
-      console.log(item)
       context.root.$router.push({
         name: 'workspace-project-jobId',
         params: { ...context.root.$route.params, jobId: item.short_uuid || 'jobname' }
