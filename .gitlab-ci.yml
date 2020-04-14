@@ -30,7 +30,7 @@ build_docker:
   except:
     - beta
 
-build_docker:
+build_docker_beta:
   image: docker:git
   stage: build
   tags:
