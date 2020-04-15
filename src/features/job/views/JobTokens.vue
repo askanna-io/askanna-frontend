@@ -1,5 +1,7 @@
 <template>
-  <v-card class="mx-auto" flat>asda </v-card>
+  <v-card class="mx-auto" flat>
+    JobTokens
+  </v-card>
 </template>
 
 <script>
@@ -7,7 +9,7 @@ import { onBeforeMount, createComponent } from '@vue/composition-api'
 import useJobStore from '../composition/useJobStore'
 
 export default createComponent({
-  name: 'TheJob',
+  name: 'JobTokens',
 
   setup(rops, context) {
     const jobStore = useJobStore()
@@ -21,12 +23,6 @@ export default createComponent({
 
     return {
       ...jobStore
-    }
-  },
-
-  data() {
-    return {
-      selection: 2
     }
   }
 })

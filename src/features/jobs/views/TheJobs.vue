@@ -17,34 +17,12 @@
         <template v-slot:expanded-item>
           <td :colspan="8" class="pa-0">
             <v-skeleton-loader ref="skeleton" :type="'table-row'" :loading="loading">
-              <v-data-table
-                fixed-header
-                :page.sync="page"
-                :headers="headers2"
+              <job-run
                 :items="runs"
                 :height="calcSubHeight"
-                :options="{ itemsPerPage: 5 }"
-                class="job-sub-table"
-                @page-count="pageCount = $event"
-              >
-                <template v-slot:item="{ item, index }">
-                  <tr @click="handleClickOnRow(item)">
-                    <td class="text-start">#{{ index }}</td>
-                    <td class="text-start">
-                      <ask-anna-chip-status :status="item.status" />
-                    </td>
-                    <td class="text-start">{{ seconds(item.runtime) }}</td>
-                    <td class="text-start">
-                      <b>Started:</b> &nbsp;{{ $moment(item.created).format(' Do MMMM YYYY, h:mm:ss a') }} <br />
-                      <b>Finished:</b> &nbsp;{{ $moment(item.finished).format(' Do MMMM YYYY, h:mm:ss a') }}<br />
-                      <b>Duration:</b> &nbsp;{{ runTimeHours(item.created, item.finished) }} seconds<br />
-                    </td>
-                    <td class="text-start">
-                      {{ item.memory }}
-                    </td>
-                  </tr>
-                </template>
-              </v-data-table>
+                :tableClass="'job-sub-table'"
+                @handleClickOnRow="handleClickOnRow"
+              />
             </v-skeleton-loader>
           </td>
         </template>
@@ -78,11 +56,16 @@ import { createComponent } from '@vue/composition-api'
 import { useWindowSize } from '@u3u/vue-hooks'
 import useJobStore from '../../job/composition/useJobStore'
 import useJobRunStore from '../../jobrun/composition/useJobRunStore'
+import JobRun from '@jobrun/views/JobRun'
 
 import useMoment from '@/core/composition/useMoment.js'
 
 export default createComponent({
   name: 'TheJobs',
+
+  components: {
+    JobRun
+  },
 
   props: {
     jobList: {
@@ -99,7 +82,7 @@ export default createComponent({
 
     const handleJobClick = item => {
       context.root.$router.push({
-        name: 'workspace-project-jobId',
+        name: 'workspace-project-job-overiew',
         params: { ...context.root.$route.params, jobId: item.short_uuid || 'jobname' }
       })
     }
@@ -198,7 +181,7 @@ export default createComponent({
     handleClickOnRow(item) {
       this.$router.push({
         name: 'workspace-project-jobs-name-uuid',
-        params: { ...this.$route.params, jobRunId: item.uuid, jobName: this.currentJob.name || 'jobname' }
+        params: { ...this.$route.params, jobRunId: item.uuid, jobId: this.currentJob.short_uuid || 'jobname' }
       })
     }
   }

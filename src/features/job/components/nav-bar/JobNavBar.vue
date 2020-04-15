@@ -38,18 +38,15 @@
     <v-divider />
 
     <v-card-title>
-      <v-icon large left>
-        mdi-play-box
-      </v-icon>
       <span class="title font-weight-light">Job: {{ job.name }}</span>
       <v-tabs v-model="currentTab" left align-with-title>
         <v-tabs-slider color="primary" />
 
         <v-tab
           v-for="tab of jobTools"
-          ripple
           :key="tab.id"
-          :to="{ name: tab.to, params: { title: `${tab.name} - ${job.name}` } }"
+          ripple
+          :to="{ name: tab.to, params: { title: `${tab.name} - ${project.name}` } }"
         >
           {{ tab.name }}
         </v-tab>
@@ -110,23 +107,23 @@ export default createComponent({
       {
         id: 0,
         name: 'Overview',
-        to: 'job-overview'
+        to: 'workspace-project-job-overiew'
       },
       {
         id: 1,
         name: 'Runs',
-        to: 'job-runs'
+        to: 'workspace-project-job-jobruns'
       },
       {
         id: 2,
         name: 'Variables & data',
-        to: 'job-variables'
+        to: 'workspace-project-job-variables'
       },
 
       {
         id: 3,
         name: 'Tokens',
-        to: 'job-tokens'
+        to: 'workspace-project-job-tokens'
       }
     ]
 

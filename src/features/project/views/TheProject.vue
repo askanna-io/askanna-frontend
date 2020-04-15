@@ -19,7 +19,7 @@ export default {
   setup(props, context) {
     const project = useProject(context)
     const jobEnd = context.root.$route.name.indexOf('jobs-name') >= 1 ? 5 : 3
-    const end = context.root.$route.name === 'workspace-project-jobId' ? 6 : jobEnd
+    const end = context.root.$route.name === 'workspace-project-job-overiew' ? 6 : jobEnd
     const projectBreadcrumbs = useBreadcrumbs(context, { start: 0, end })
     const routeName = context.root.$route.name
 
