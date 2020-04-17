@@ -34,6 +34,7 @@ export default {
             {
               path: '',
               name: 'workspace-project',
+              redirect: { name: 'workspace-project-activity' },
               component: () =>
                 import(/* webpackChunkName: "workspace-project-uuid-activity" */ '../project/views/TheProject.vue'),
               meta: {
@@ -90,7 +91,7 @@ export default {
                     {
                       path: 'runs',
                       component: () =>
-                        import(/* webpackChunkName: "workspace-project-job-jobruns" */ '@job/views/JobOverview.vue'),
+                        import(/* webpackChunkName: "workspace-project-job-jobruns" */ '@job/views/TheJobRuns.vue'),
                       name: 'workspace-project-job-jobruns',
                       meta: {
                         breadcrumb: 'Job run'

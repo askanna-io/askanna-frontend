@@ -1,5 +1,8 @@
 <template>
   <v-card class="mx-auto" flat>
+    da
+    <prism-editor :code="'dasd das adsdd as da'" line-numbers />
+
     <v-expansion-panels focusable tile>
       <v-expansion-panel>
         <v-expansion-panel-header>Description</v-expansion-panel-header>
@@ -57,11 +60,17 @@
 </template>
 
 <script>
+import PrismEditor from 'vue-prism-editor'
+
 import { onBeforeMount, createComponent } from '@vue/composition-api'
 import useJobStore from '../composition/useJobStore'
 
 export default createComponent({
   name: 'JobOverview',
+
+  components: {
+    PrismEditor
+  },
 
   setup(rops, context) {
     const jobStore = useJobStore()

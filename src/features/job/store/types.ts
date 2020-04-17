@@ -29,12 +29,14 @@ export const action = {
   getJobRun: 'getJobRun',
   removeJob: 'removeJob',
   resultJob: 'resultJob',
+  changeJob: 'changeJob',
   resetStore: 'resetStore',
   getJobInfo: 'getJobInfo'
 }
 
 // mutations
 export const mutation = {
+  CHANGE_JOB: 'CHANGE_JOB',
   RESET_JOB_STORE: 'RESET_JOB_STORE',
   SET_RESULT_MODAL: 'SET_RESULT_MODAL',
   UPDATE_JOB_RESULT: 'UPDATE_JOB_RESULT',

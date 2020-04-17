@@ -17,6 +17,8 @@
           </v-btn>
         </template>
         <v-list>
+          <v-flex mx-3><h4>Projects menu:</h4></v-flex>
+          <v-divider />
           <v-list-item
             v-for="tab in projectTools"
             :key="tab.id"

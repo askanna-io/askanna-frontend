@@ -17,7 +17,7 @@
         <template v-slot:expanded-item>
           <td :colspan="8" class="pa-0">
             <v-skeleton-loader ref="skeleton" :type="'table-row'" :loading="loading">
-              <job-run
+              <job-runs
                 :items="runs"
                 :height="calcSubHeight"
                 :tableClass="'job-sub-table'"
@@ -36,11 +36,11 @@
         </template>
         <template v-slot:item.actions="{ item }">
           <v-chip-group outlined v-model="selection" mandatory>
-            <v-chip outlined label class="askaanna-chip-status" color="success" @click="startJob(item.short_uuid)">
+            <v-chip outlined label class="askaanna-chip-status" color="success" @click.stop="startJob(item.short_uuid)">
               <v-avatar left><v-icon>mdi-play</v-icon></v-avatar
               >start</v-chip
             >
-            <v-chip outlined label color="error" @click="stopJob(item.short_uuid)"
+            <v-chip outlined label color="error" @click.stop="stopJob(item.short_uuid)"
               >stop<v-avatar right><v-icon>mdi-stop</v-icon></v-avatar></v-chip
             >
           </v-chip-group>
@@ -56,7 +56,7 @@ import { createComponent } from '@vue/composition-api'
 import { useWindowSize } from '@u3u/vue-hooks'
 import useJobStore from '../../job/composition/useJobStore'
 import useJobRunStore from '../../jobrun/composition/useJobRunStore'
-import JobRun from '@jobrun/views/JobRun'
+import JobRuns from '@jobrun/components/JobRuns'
 
 import useMoment from '@/core/composition/useMoment.js'
 
@@ -64,7 +64,7 @@ export default createComponent({
   name: 'TheJobs',
 
   components: {
-    JobRun
+    JobRuns
   },
 
   props: {
