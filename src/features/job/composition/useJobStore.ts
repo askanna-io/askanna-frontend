@@ -14,7 +14,6 @@ export default function() {
   }
 
   return {
-    open,
     ...state,
     ...actions
   }

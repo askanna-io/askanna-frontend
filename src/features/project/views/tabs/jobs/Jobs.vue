@@ -1,22 +1,25 @@
 <template>
   <v-card flat class="px-3 mt-2 br-none" outlined>
     <v-skeleton-loader ref="skeleton" :type="'table-row'" :loading="!projectJobs.length">
-      <the-jobs :jobList="projectJobs" /> </v-skeleton-loader
+      <v-row align="center" justify="center">
+        <v-col cols="12" class="pa-0">
+          <jobs-list :jobList="projectJobs" />
+        </v-col>
+      </v-row> </v-skeleton-loader
   ></v-card>
 </template>
 
 <script>
-import { createComponent, onBeforeMount } from '@vue/composition-api'
-import TheJobs from '@jobs/views/TheJobs'
-
-import useProjectStore from '../../../composition/useProjectStore'
+import JobsList from '@jobs/components/JobsList'
 import useQuery from '@/core/composition/useQuery'
+import useProjectStore from '../../../composition/useProjectStore'
+import { defineComponent, onBeforeMount } from '@vue/composition-api'
 
-export default createComponent({
+export default defineComponent({
   name: 'RunsCode',
 
   components: {
-    TheJobs
+    JobsList
   },
 
   setup(props, context) {

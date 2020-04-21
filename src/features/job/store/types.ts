@@ -7,11 +7,13 @@ export interface jobData {
 
 interface Job {
   uuid: string
-  short_uuid: string
+  name: string
+  title: string
+  status: string
   created: string
   modified: string
-  name: string
-  status: string
+  short_uuid: string
+  description: string
 }
 
 export const JOB_STORE = 'job'
@@ -29,14 +31,17 @@ export const action = {
   getJobRun: 'getJobRun',
   removeJob: 'removeJob',
   resultJob: 'resultJob',
+  changeJob: 'changeJob',
   resetStore: 'resetStore',
   getJobInfo: 'getJobInfo'
 }
 
 // mutations
 export const mutation = {
-  UPDATE_JOB_RESULT: 'UPDATE_JOB_RESULT',
+  CHANGE_JOB: 'CHANGE_JOB',
+  RESET_JOB_STORE: 'RESET_JOB_STORE',
   SET_RESULT_MODAL: 'SET_RESULT_MODAL',
+  UPDATE_JOB_RESULT: 'UPDATE_JOB_RESULT',
   CLOSE_RESULT_MODAL: 'CLOSE_RESULT_MODAL'
 }
 
@@ -69,11 +74,13 @@ export class JobModel {
   static initialState() {
     return {
       uuid: '',
-      short_uuid: '',
+      name: '',
+      title: '',
+      status: '',
       created: '',
       modified: '',
-      name: '',
-      status: ''
+      short_uuid: '',
+      description: ''
     }
   }
 }

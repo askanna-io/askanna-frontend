@@ -6,11 +6,9 @@
 </template>
 
 <script>
-export default {
-  name: 'RunsCode',
+import { defineComponent } from '@vue/composition-api'
 
-  data() {
-    return {}
-  }
-}
+export default defineComponent({
+  name: 'RunsCode'
+})
 </script>

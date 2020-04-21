@@ -20,10 +20,10 @@
 </template>
 
 <script>
-import { createComponent } from '@vue/composition-api'
+import { defineComponent } from '@vue/composition-api'
 import useAuthStore from '../composition/useAuthStore'
 
-export default createComponent({
+export default defineComponent({
   name: 'TheSignIn',
 
   data: () => ({

@@ -8,9 +8,9 @@
 </template>
 
 <script>
-import { reactive, computed, createComponent } from '@vue/composition-api'
+import { reactive, computed, defineComponent } from '@vue/composition-api'
 
-export default createComponent({
+export default defineComponent({
   name: 'AskAnnaChipStatus',
 
   props: {

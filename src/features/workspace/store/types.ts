@@ -20,6 +20,9 @@ export interface WorkspaceState {
   }
   workspacesLoading: Boolean
   workspaceProjectsLoading: Boolean
+  workspaceSettings: {
+    projectView: Number
+  }
 }
 
 interface Workspace {
@@ -38,6 +41,7 @@ export const WORKSPACE_STORE = 'workspace'
 export const action = {
   getWorkspace: 'getWorkspace',
   getWorkspaces: 'getWorkspaces',
+  changeSettings: 'changeSettings',
   getWorkpaceProjects: 'getWorkpaceProjects'
 }
 
@@ -45,6 +49,7 @@ export const mutation = {
   SET_LOADING: 'SET_LOADING',
   SET_WORKSPACE: 'SET_WORKSPACE',
   SET_WORKSPACES: 'SET_WORKSPACES',
+  UPDATE_SETTINGS: 'UPDATE_SETTINGS',
   SET_WORKSPACE_PROJECTS: 'SET_WORKSPACE_PROJECTS'
 }
 

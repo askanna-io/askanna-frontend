@@ -77,7 +77,7 @@
 </template>
 
 <script>
-import { createComponent, onBeforeMount, computed, watch } from '@vue/composition-api'
+import { defineComponent, onBeforeMount, computed, watch } from '@vue/composition-api'
 
 import useJobStore from '@job/composition/useJobStore'
 import useMoment from '@/core/composition/useMoment.js'
@@ -85,7 +85,7 @@ import useFetchData from '@/core/composition/useFetchData'
 import useJobRunResults from '@jobs/composition/useJobRunResults'
 import useProjectStore from '@project/composition/useProjectStore'
 
-export default createComponent({
+export default defineComponent({
   name: 'JobRun',
 
   setup(props, context) {

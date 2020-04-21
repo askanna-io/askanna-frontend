@@ -33,16 +33,16 @@
       <v-btn :disabled="!isFormValid" color="primary" class="mr-4" @click="handleLogin">
         Sign in
       </v-btn>
-      <v-checkbox dense label="Remember me" />
+      <v-checkbox v-if="isNotBeta" dense label="Remember me" />
     </v-form>
   </div>
 </template>
 
 <script>
-import { createComponent } from '@vue/composition-api'
+import { defineComponent } from '@vue/composition-api'
 import useAuthStore from '../composition/useAuthStore'
 
-export default createComponent({
+export default defineComponent({
   name: 'TheSignIn',
 
   data: () => ({

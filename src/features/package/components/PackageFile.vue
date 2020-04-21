@@ -45,12 +45,12 @@
 
 <script>
 import PrismEditor from 'vue-prism-editor'
-import { createComponent } from '@vue/composition-api'
+import { defineComponent } from '@vue/composition-api'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
 
-export default createComponent({
-  name: 'TheFile',
+export default defineComponent({
+  name: 'PackageFile',
 
   components: {
     PrismEditor

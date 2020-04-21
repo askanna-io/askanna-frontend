@@ -23,7 +23,10 @@ export const state: workspaceState = {
     offset: 0
   },
   workspacesLoading: true,
-  workspaceProjectsLoading: true
+  workspaceProjectsLoading: true,
+  workspaceSettings: {
+    projectView: 0
+  }
 }
 
 const namespaced: boolean = true

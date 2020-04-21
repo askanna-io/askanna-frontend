@@ -5,12 +5,14 @@
 </template>
 
 <script>
-import ThePackages from '@/features/packages/views/ThePackages'
-export default {
+import ThePackages from '@packages/views/ThePackages'
+import { defineComponent } from '@vue/composition-api'
+
+export default defineComponent({
   name: 'Code',
 
   components: {
     ThePackages
   }
-}
+})
 </script>

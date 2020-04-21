@@ -12,11 +12,11 @@
 
 <script>
 import PrismEditor from 'vue-prism-editor'
-import { reactive, computed, createComponent } from '@vue/composition-api'
+import { reactive, computed, defineComponent } from '@vue/composition-api'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
 
-export default createComponent({
+export default defineComponent({
   name: 'JobRunPayLoad',
 
   components: {

@@ -7,7 +7,8 @@ export default function() {
       ...stateType,
       workspace: 'workspace',
       workspaces: 'workspaces',
-      workspaceProjects: 'workspaceProjects'
+      workspaceProjects: 'workspaceProjects',
+      workspaceSettings: 'workspaceSettings'
     })
   }
 

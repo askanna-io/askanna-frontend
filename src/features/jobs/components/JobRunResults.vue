@@ -35,11 +35,11 @@
 </template>
 
 <script>
-import { createComponent } from '@vue/composition-api'
+import { defineComponent } from '@vue/composition-api'
 import useMoment from '@/core/composition/useMoment.js'
 import useJobRunResults from '../composition/useJobRunResults'
 
-export default createComponent({
+export default defineComponent({
   name: 'JobRunResults',
 
   props: {

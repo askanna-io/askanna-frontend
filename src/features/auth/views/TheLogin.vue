@@ -17,7 +17,7 @@
           </v-expansion-panel-content>
         </v-expansion-panel>
 
-        <v-expansion-panel :key="1" active-class="colored-border">
+        <v-expansion-panel v-if="isNotBeta" :key="1" active-class="colored-border">
           <v-expansion-panel-header v-slot="{ open }">
             <v-row no-gutters>
               <v-col cols="4" :class="{ 'primary--text': open }">Sign up</v-col>
@@ -42,8 +42,9 @@
 <script>
 import TheSignUp from '../components/TheSignUp'
 import TheSignIn from '../components/TheSignIn'
+import { ref, defineComponent } from '@vue/composition-api'
 
-export default {
+export default defineComponent({
   name: 'Login',
 
   components: {
@@ -51,12 +52,14 @@ export default {
     TheSignUp
   },
 
-  data: () => ({
-    panel: 0
-  }),
+  setup() {
+    const panel = ref(0)
 
-  methods: {}
-}
+    return {
+      panel
+    }
+  }
+})
 </script>
 <style scoped>
 .login-wrapper {
@@ -65,8 +68,7 @@ export default {
   background-size: cover;
 }
 .logo {
-  height: 54px;
-  padding-left: 10px;
+  height: 74px;
   margin-bottom: 6px;
 }
 .login-expansion .v-expansion-panel {

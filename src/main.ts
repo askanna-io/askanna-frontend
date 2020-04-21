@@ -4,7 +4,9 @@ import './core/components'
 import VueAxios from 'vue-axios'
 import hooks from '@u3u/vue-hooks'
 import { app, router, store } from './core'
+import Beta from '@/core/plugins/beta'
 import Logger from '@/core/plugins/logger'
+
 import vuetify from '@/core/plugins/vuetify'
 import VueCompositionApi from '@vue/composition-api'
 import validationRules from '@/core/plugins/validationRules'
@@ -20,6 +22,8 @@ Vue.use(VueClipboard)
 // register globally
 import Sticky from 'vue-sticky-directive'
 Vue.use(Sticky)
+Vue.use(hooks)
+Vue.use(Beta)
 Vue.use(hooks)
 Vue.use(Logger)
 
