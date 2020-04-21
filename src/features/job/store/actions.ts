@@ -185,5 +185,40 @@ export const actions: ActionTree<jobState, RootState> = {
     }
 
     return info
+  },
+
+  async [type.updateJob]({ state: { job }, commit, dispatch }) {
+    let updatedJob
+    try {
+      updatedJob = await dispatch(
+        rootTypes.apiService,
+        {
+          action: api.update,
+          method: 'put',
+          serviceName,
+          uuid: job.short_uuid,
+          data: {
+            name: job.name,
+            title: job.title,
+            description: job.description
+          }
+        },
+        { root }
+      )
+      logger.success('Job was updated')
+    } catch (e) {
+      logger.error('Error on update job  in updateJob action.\nError: ', e)
+      return
+    }
+
+    commit(type.UPDATE_JOB, updatedJob)
+  },
+
+  async [type.action.resetStore]({ commit }) {
+    commit(type.mutation.RESET_JOB_STORE)
+  },
+
+  async [type.action.changeJob]({ commit }, data) {
+    commit(type.UPDATE_JOB, data)
   }
 }

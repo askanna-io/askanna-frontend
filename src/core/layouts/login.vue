@@ -3,28 +3,32 @@
     <v-content>
       <v-container fluid py-0>
         <router-view />
-        <span class="version">Build version:&nbsp;{{ version }}</span>
+        <span v-if="isNotBeta" class="version">Build version:&nbsp;{{ version }}</span>
       </v-container>
       <the-snack-bar />
     </v-content>
   </v-app>
 </template>
 <script>
-export default {
+import { onBeforeUnmount, defineComponent } from '@vue/composition-api'
+
+export default defineComponent({
   name: 'Login',
 
-  data: () => ({
-    version: process.env.VERSION
-  }),
-  created() {
+  setup() {
     const html = document.getElementsByTagName('html')[0]
     html.classList.add('login-layout')
-  },
-  beforeDestroy() {
-    const html = document.getElementsByTagName('html')[0]
-    html.classList.remove('login-layout')
+
+    onBeforeUnmount(() => {
+      const html = document.getElementsByTagName('html')[0]
+      html.classList.remove('login-layout')
+    })
+
+    return {
+      version: process.env.VERSION
+    }
   }
-}
+})
 </script>
 
 <style>

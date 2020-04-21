@@ -5,10 +5,10 @@
 </template>
 
 <script>
-import { reactive, computed, createComponent } from '@vue/composition-api'
+import { reactive, computed, defineComponent } from '@vue/composition-api'
 import useMoment from '@/core/composition/useMoment.js'
 
-export default createComponent({
+export default defineComponent({
   name: 'AskAnnaAlertStatus',
 
   props: {

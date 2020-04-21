@@ -1,5 +1,4 @@
-import { watch } from '@vue/composition-api'
-import { SetupContext } from '@vue/composition-api'
+import { watch, SetupContext } from '@vue/composition-api'
 
 export default function(context: SetupContext) {
   let breadcrumbs: any = []

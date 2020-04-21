@@ -80,5 +80,9 @@ export const actions: ActionTree<workspaceState, RootState> = {
 
     commit(mutation.SET_WORKSPACE_PROJECTS, projects)
     delay(() => commit(mutation.SET_LOADING, { name: stateType.workspaceProjectsLoading, value: false }), 350, 'later')
+  },
+
+  async [action.changeSettings]({ commit }, data) {
+    commit(mutation.UPDATE_SETTINGS, data)
   }
 }

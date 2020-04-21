@@ -26,13 +26,13 @@
 </template>
 
 <script>
-import { createComponent } from '@vue/composition-api'
+import { defineComponent } from '@vue/composition-api'
 import usePackages from '../../packages/composition/usePackages'
 import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
 
 import useMoment from '@/core/composition/useMoment.js'
 
-export default createComponent({
+export default defineComponent({
   name: 'ThePackages',
 
   setup(props, context) {

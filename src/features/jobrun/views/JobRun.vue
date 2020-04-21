@@ -16,7 +16,7 @@
           <v-list-item-title
             >Job:
             <v-chip small outlined label :to="{ name: 'workspace' }">
-              {{ jobName }}
+              {{ job.name }}
             </v-chip></v-list-item-title
           >
           <v-list-item-title class="text-left">
@@ -84,10 +84,12 @@
 </template>
 
 <script>
-import { createComponent, onBeforeMount, computed, watch } from '@vue/composition-api'
+import { defineComponent, onBeforeMount, computed, watch } from '@vue/composition-api'
 
 import useMoment from '@/core/composition/useMoment.js'
+import useJobStore from '@job/composition/useJobStore'
 import useJobRunStore from '../composition/useJobRunStore'
+
 import useFetchData from '@/core/composition/useFetchData'
 import useJobRunResults from '@jobs/composition/useJobRunResults'
 import useProjectStore from '@project/composition/useProjectStore'
@@ -95,7 +97,7 @@ import useForceFileDownload from '@/core/composition/useForceFileDownload'
 
 import JobRunPayLoad from '../components/JobRunPayLoad'
 
-export default createComponent({
+export default defineComponent({
   name: 'JobRun',
 
   components: {
@@ -103,6 +105,7 @@ export default createComponent({
   },
 
   setup(props, context) {
+    const jobStore = useJobStore()
     const fetchData = useFetchData()
     const moment = useMoment(context)
     const jobRunStore = useJobRunStore()
@@ -110,22 +113,18 @@ export default createComponent({
     const jobRunResult = useJobRunResults()
     const forceFileDownload = useForceFileDownload()
 
-    const { jobName, jobRunId } = context.root.$route.params
+    const { jobId, jobRunId } = context.root.$route.params
     const currentJob = computed(() => projectStore.projectJobs.value.find(job => job.name === jobName))
 
     onBeforeMount(async () => {
       projectStore.resetProjectJobs()
       jobRunStore.resetStore()
-      const { jobName, jobRunId, projectId } = context.root.$route.params
+      const { jobId, jobRunId, projectId } = context.root.$route.params
 
+      jobStore.getJob(jobId)
       jobRunStore.getJobRun(jobRunId)
 
       await fetchData(context, [projectStore.getProjectJobs(projectId)])
-    })
-
-    watch(currentJob, (val, prevCount) => {
-      if (!val) return
-      jobRunStore.getRunsJob(val.short_uuid)
     })
 
     const handleDownload = async item => {
@@ -136,9 +135,9 @@ export default createComponent({
 
     return {
       ...moment,
+      ...jobStore,
       ...jobRunStore,
       ...jobRunResult,
-      jobName,
       jobRunId,
       handleDownload
     }

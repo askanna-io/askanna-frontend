@@ -17,10 +17,10 @@
 <script>
 import { snackbar } from './store'
 import useSnackBar from './useSnackBar'
-import { createComponent } from '@vue/composition-api'
+import { defineComponent } from '@vue/composition-api'
 const snackbarStore = 'snackbarStore'
 
-export default createComponent({
+export default defineComponent({
   name: 'TheSnackBar',
 
   setup(props, context) {
