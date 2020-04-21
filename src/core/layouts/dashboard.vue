@@ -35,7 +35,9 @@
             </v-list>
           </v-navigation-drawer>
           <div md="auto" sm="12" text-sm-center>
-            <img alt="AskAnna logo" src="@/assets/logo.svg" class="logo" />
+            <a href="/">
+              <img alt="AskAnna logo" src="@/assets/logo.svg" class="logo" />
+            </a>
           </div>
           <div class="text-sm-center ml-sm-6 ml-md-0 d-none d-sm-flex">
             <v-flex>
@@ -60,7 +62,7 @@
             </v-flex>
           </div>
           <div class="text-right hidden-sm-and-down">
-            <span>Build version:&nbsp;{{ version }}</span>
+            <span v-if="isNotBeta">Build version:&nbsp;{{ version }}</span>
             <v-menu transition="slide-y-transition">
               <template v-slot:activator="{ on }">
                 <v-btn icon v-on="on">
@@ -69,7 +71,7 @@
               </template>
 
               <v-list>
-                <v-list-item>
+                <v-list-item v-if="isNotBeta">
                   <v-list-item-title>Settings</v-list-item-title>
                 </v-list-item>
                 <v-list-item>
@@ -90,7 +92,7 @@
     </v-content>
 
     <v-footer app>
-      <span>&copy; AskAnna 2020</span> <v-spacer /> <span>Build version:&nbsp;{{ version }}</span>
+      <span>&copy; AskAnna 2020</span> <v-spacer /> <span v-if="isNotBeta">Build version:&nbsp;{{ version }}</span>
     </v-footer>
   </v-app>
 </template>
@@ -98,57 +100,32 @@
 <script>
 import { createNamespacedHelpers } from 'vuex'
 import { logout } from '@/core/store/actionTypes'
-import { AUTH_STORE } from '@/core/store/storeTypes'
-import { createComponent } from '@vue/composition-api'
 import useTitle from '@/core/composition/useTitle'
+import { AUTH_STORE } from '@/core/store/storeTypes'
+import { defineComponent } from '@vue/composition-api'
+import useAuthStore from '../../features/auth/composition/useAuthStore'
 
 const { mapActions } = createNamespacedHelpers(AUTH_STORE)
-export default createComponent({
+export default defineComponent({
   name: 'dashboard',
 
   setup(props, context) {
     useTitle(context)
+    const authStore = useAuthStore()
+
+    const logout = () => authStore.logout()
+
+    return {
+      logout
+    }
   },
 
   data: () => ({
     mobileMenu: false,
     version: process.env.VERSION,
-    project: '',
-    fav: true,
-    menu: false,
     menu2: false,
-    message: false,
-    hints: true,
-    drawer: false,
-    miniVariant: false,
-    projectsList: [
-      { icon: 'far fa-folder', iconClass: 'grey lighten-1 white--text', title: 'uiprototype', subtitle: 'AskAnna' },
-      {
-        icon: 'far fa-folder',
-        iconClass: 'grey lighten-1 white--text',
-        title: 'askanna-frontend',
-        subtitle: 'AskAnna'
-      },
-      {
-        icon: 'far fa-folder',
-        iconClass: 'grey lighten-1 white--text',
-        title: 'Git Lab Issue Reporter',
-        subtitle: ' Andrii Shapovalov'
-      }
-    ],
-    projects: [
-      { text: 'Your projects', icon: 'fas fa-project-diagram' },
-      { text: 'Shared projects', icon: 'mdi-account' },
-      { text: 'Conversions', icon: 'mdi-flag' }
-    ],
     items: [{ title: 'Workspace', name: 'workspace', icon: 'mdi-view-dashboard' }]
-  }),
-
-  methods: {
-    ...mapActions({
-      logout
-    })
-  }
+  })
 })
 </script>
 <style scoped>

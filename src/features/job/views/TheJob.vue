@@ -3,10 +3,10 @@
 </template>
 
 <script>
-import { onBeforeMount, createComponent } from '@vue/composition-api'
+import { onBeforeMount, defineComponent } from '@vue/composition-api'
 import useJobStore from '../composition/useJobStore'
 
-export default createComponent({
+export default defineComponent({
   name: 'TheJob',
 
   setup(rops, context) {

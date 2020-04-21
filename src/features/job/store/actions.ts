@@ -197,7 +197,11 @@ export const actions: ActionTree<jobState, RootState> = {
           method: 'put',
           serviceName,
           uuid: job.short_uuid,
-          data: job
+          data: {
+            name: job.name,
+            title: job.title,
+            description: job.description
+          }
         },
         { root }
       )

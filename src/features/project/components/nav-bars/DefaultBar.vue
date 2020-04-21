@@ -20,26 +20,27 @@
     </v-card-text>
     <v-divider />
     <v-toolbar
-      color="white"
-      class="br-r5 ma-3"
       dense
-      :flat="!sticked"
-      on-stick="onStick"
-      sticky-container
+      color="white"
       v-sticky="true"
+      sticky-container
+      class="br-r5 ma-3"
+      on-stick="onStick"
       sticky-offset="{top: 52, bottom: 10}"
+      :flat="!sticked"
     >
       <v-tabs v-model="currentTab" left align-with-title>
         <v-tabs-slider color="primary" />
-
-        <v-tab
-          v-for="tab of projectTools"
-          ripple
-          :key="tab.id"
-          :to="{ name: tab.to, params: { title: `${tab.name} - ${project.name}` } }"
-        >
-          {{ tab.name }}
-        </v-tab>
+        <template v-for="tab of projectTools">
+          <v-tab
+            v-if="tab.show"
+            ripple
+            :key="tab.id"
+            :to="{ name: tab.to, params: { title: `${tab.name} - ${project.name}` } }"
+          >
+            {{ tab.name }}
+          </v-tab>
+        </template>
       </v-tabs>
 
       <v-spacer />
@@ -47,10 +48,10 @@
   </div>
 </template>
 <script>
-import { createComponent, onBeforeMount, computed, watch, ref } from '@vue/composition-api'
 import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
+import { defineComponent, onBeforeMount, computed, watch, ref } from '@vue/composition-api'
 
-export default createComponent({
+export default defineComponent({
   name: 'DefaultBar',
 
   props: {
@@ -76,23 +77,27 @@ export default createComponent({
       {
         id: 0,
         name: 'Activity',
-        to: 'workspace-project-activity'
+        to: 'workspace-project-activity',
+        show: context.root.isNotBeta
       },
       {
         id: 1,
         name: 'Code',
-        to: 'workspace-project-packages'
+        to: 'workspace-project-packages',
+        show: !context.root.isNotBeta
       },
       {
         id: 2,
         name: 'Jobs',
-        to: 'workspace-project-jobs'
+        to: 'workspace-project-jobs',
+        show: !context.root.isNotBeta
       },
 
       {
         id: 3,
         name: 'Documentation',
-        to: 'workspace-project-documentation'
+        to: 'workspace-project-documentation',
+        show: !context.root.isNotBeta
       }
     ]
 

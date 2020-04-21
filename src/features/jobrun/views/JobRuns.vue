@@ -1,146 +1,84 @@
 <template>
-  <v-card flat>
-    <v-card-title>Job run #{{ jobRunId }}</v-card-title>
-    <v-divider />
-
-    <v-skeleton-loader ref="skeleton" :type="'table-row'" :loading="!jobRun">
-      <v-list class="transparent" max-width="650px" v-if="jobRun">
-        <v-list-item>
-          <v-list-item-title>Status: <ask-anna-chip-status :status="jobRun.status" /> </v-list-item-title>
-          <v-list-item-title class="text-left">
-            Duratation: &nbsp;{{ runTimeHours(jobRun.created, jobRun.finished) }} seconds
-          </v-list-item-title>
-        </v-list-item>
-
-        <v-list-item>
-          <v-list-item-title
-            >Job:
-            <v-chip small outlined label :to="{ name: 'workspace' }">
-              {{ jobName }}
-            </v-chip></v-list-item-title
-          >
-          <v-list-item-title class="text-left">
-            CPU: 10%
-          </v-list-item-title>
-        </v-list-item>
-
-        <v-list-item>
-          <v-list-item-title>Version: {{ jobRun.version.name }}: #{{ jobRun.version.uuid }}</v-list-item-title>
-          <v-list-item-title class="text-left"> Runner/worker: {{ jobRun.runner.name }} </v-list-item-title>
-        </v-list-item>
-
-        <v-list-item>
-          <v-list-item-title>By: {{ jobRun.owner.name }}</v-list-item-title>
-          <v-list-item-title class="text-left"> Trigger: {{ jobRun.trigger.name }} </v-list-item-title>
-        </v-list-item>
-
-        <v-list-item>
-          <v-list-item-title>Memory: {{ jobRun.memory }}MB</v-list-item-title>
-        </v-list-item>
-      </v-list>
-
-      <v-expansion-panels focusable tile>
-        <v-expansion-panel>
-          <v-expansion-panel-header>Input</v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <v-flex pt-2>
-              <v-btn
-                outlined
-                :loading="payLoadLoading"
-                :disabled="payLoadLoading"
-                label
-                color="primary"
-                @click.stop="handleDownload(jobRun)"
-              >
-                <v-icon left>mdi-cloud-download</v-icon>
-                Download Json</v-btn
-              >
-              <job-run-pay-load :file="jobRunPayload" />
-            </v-flex>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-
-        <v-expansion-panel>
-          <v-expansion-panel-header>Result</v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <v-list class="transparent" max-width="450px">
-              <v-list-item>
-                <v-list-item-title>Result:</v-list-item-title>
-                <v-list-item-title class="text-left">
-                  {{ jobRun.return_payload }}
-                </v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-
-        <v-expansion-panel>
-          <v-expansion-panel-header>Log</v-expansion-panel-header>
-          <v-expansion-panel-content> </v-expansion-panel-content>
-        </v-expansion-panel>
-      </v-expansion-panels>
-    </v-skeleton-loader>
-  </v-card>
+  <v-data-table
+    fixed-header
+    :page.sync="page"
+    :headers="headers"
+    :items="items"
+    :height="height"
+    :options="{ itemsPerPage: 5 }"
+    :class="tableClass"
+    @page-count="pageCount = $event"
+  >
+    <template v-slot:item="{ item, index }">
+      <tr @click="handleClickOnRow(item)">
+        <td class="text-start">#{{ index }}</td>
+        <td class="text-start">
+          <ask-anna-chip-status :status="item.status" />
+        </td>
+        <td class="text-start">{{ seconds(item.runtime) }}</td>
+        <td class="text-start">
+          <b>Started:</b> &nbsp;{{ $moment(item.created).format(' Do MMMM YYYY, h:mm:ss a') }} <br />
+          <b>Finished:</b> &nbsp;{{ $moment(item.finished).format(' Do MMMM YYYY, h:mm:ss a') }}<br />
+          <b>Duration:</b> &nbsp;{{ runTimeHours(item.created, item.finished) }} seconds<br />
+        </td>
+        <td class="text-start">
+          {{ item.memory }}
+        </td>
+      </tr>
+    </template>
+  </v-data-table>
 </template>
 
 <script>
-import { createComponent, onBeforeMount, computed, watch } from '@vue/composition-api'
-
 import useMoment from '@/core/composition/useMoment.js'
-import useJobRunStore from '../composition/useJobRunStore'
-import useFetchData from '@/core/composition/useFetchData'
-import useJobRunResults from '@jobs/composition/useJobRunResults'
-import useProjectStore from '@project/composition/useProjectStore'
-import useForceFileDownload from '@/core/composition/useForceFileDownload'
+import { ref, defineComponent, onBeforeMount, computed, watch } from '@vue/composition-api'
 
-import JobRunPayLoad from '../components/JobRunPayLoad'
-
-export default createComponent({
+export default defineComponent({
   name: 'JobRuns',
 
-  components: {
-    JobRunPayLoad
+  props: {
+    items: {
+      type: Array,
+      default: () => []
+    },
+    height: {
+      type: Number,
+      default: () => 300
+    },
+    page: {
+      type: Number,
+      default: () => 0
+    },
+
+    tableClass: {
+      type: String,
+      default: () => ''
+    }
   },
 
   setup(props, context) {
-    const fetchData = useFetchData()
     const moment = useMoment(context)
-    const jobRunStore = useJobRunStore()
-    const projectStore = useProjectStore()
-    const jobRunResult = useJobRunResults()
-    const forceFileDownload = useForceFileDownload()
 
-    const { jobName, jobRunId } = context.root.$route.params
-    const currentJob = computed(() => projectStore.projectJobs.value.find(job => job.name === jobName))
+    const headers = [
+      {
+        text: 'Run',
+        sortable: false,
+        value: 'info'
+      },
+      { text: 'Status', value: 'status' },
+      { text: 'Timing', value: 'timing' },
+      { text: 'CPU time  (h:m:s)', value: 'runtime' },
+      { text: 'Memory used', value: 'memory' }
+    ]
 
-    onBeforeMount(async () => {
-      projectStore.resetProjectJobs()
-      jobRunStore.resetStore()
-      const { jobName, jobRunId, projectId } = context.root.$route.params
+    const pageCount = ref(0)
 
-      jobRunStore.getJobRun(jobRunId)
-
-      await fetchData(context, [projectStore.getProjectJobs(projectId)])
-    })
-
-    watch(currentJob, (val, prevCount) => {
-      if (!val) return
-      jobRunStore.getRunsJob(val.short_uuid)
-    })
-
-    const handleDownload = async item => {
-      await jobRunStore.getJobRunPayload({ jobRunShortId: item.short_uuid, payloadUuid: item.payload.uuid })
-
-      forceFileDownload.trigger({ source: jobRunStore.jobRunPayload.value, name: `payload-${item.payload.uuid}.json` })
-    }
-
+    const handleClickOnRow = value => context.emit('handleClickOnRow', value)
     return {
       ...moment,
-      ...jobRunStore,
-      ...jobRunResult,
-      jobName,
-      jobRunId,
-      handleDownload
+      headers,
+      pageCount,
+      handleClickOnRow
     }
   }
 })

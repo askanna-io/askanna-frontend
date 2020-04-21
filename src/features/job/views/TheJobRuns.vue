@@ -10,12 +10,12 @@
 </template>
 
 <script>
-import { onBeforeMount, createComponent, computed } from '@vue/composition-api'
+import { onBeforeMount, defineComponent, computed } from '@vue/composition-api'
 import useJobStore from '../composition/useJobStore'
 import JobRuns from '@jobrun/components/JobRuns'
 import useJobRunStore from '@jobrun/composition/useJobRunStore'
 
-export default createComponent({
+export default defineComponent({
   name: 'TheJobRuns',
 
   components: {
@@ -27,7 +27,6 @@ export default createComponent({
     const jobRunStore = useJobRunStore()
 
     onBeforeMount(() => {
-      console.log('ads')
       jobStore.resetStore()
       const { jobId } = context.root.$route.params
 

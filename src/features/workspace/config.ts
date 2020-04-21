@@ -34,7 +34,7 @@ export default {
             {
               path: '',
               name: 'workspace-project',
-              redirect: { name: 'workspace-project-activity' },
+              redirect: { name: 'workspace-project-packages' },
               component: () =>
                 import(/* webpackChunkName: "workspace-project-uuid-activity" */ '../project/views/TheProject.vue'),
               meta: {

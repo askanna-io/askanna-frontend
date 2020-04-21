@@ -62,10 +62,10 @@
 <script>
 import PrismEditor from 'vue-prism-editor'
 
-import { onBeforeMount, createComponent } from '@vue/composition-api'
+import { onBeforeMount, defineComponent } from '@vue/composition-api'
 import useJobStore from '../composition/useJobStore'
 
-export default createComponent({
+export default defineComponent({
   name: 'JobOverview',
 
   components: {

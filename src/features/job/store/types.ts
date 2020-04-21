@@ -7,11 +7,13 @@ export interface jobData {
 
 interface Job {
   uuid: string
-  short_uuid: string
+  name: string
+  title: string
+  status: string
   created: string
   modified: string
-  name: string
-  status: string
+  short_uuid: string
+  description: string
 }
 
 export const JOB_STORE = 'job'
@@ -72,11 +74,13 @@ export class JobModel {
   static initialState() {
     return {
       uuid: '',
-      short_uuid: '',
+      name: '',
+      title: '',
+      status: '',
       created: '',
       modified: '',
-      name: '',
-      status: ''
+      short_uuid: '',
+      description: ''
     }
   }
 }

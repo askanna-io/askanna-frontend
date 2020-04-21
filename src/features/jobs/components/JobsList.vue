@@ -1,67 +1,62 @@
 <template>
-  <v-row align="center" justify="center">
-    <v-col cols="12" class="pa-0">
-      <v-data-table
-        :headers="headers"
-        :items="jobList"
-        fixed-header
-        class="job-table scrollbar"
-        single-expand
-        :expanded.sync="expanded"
-        :height="calcHeight"
-        item-key="short_uuid"
-        @item-expanded="handleExpand"
-        @click:row="handleJobClick"
-        show-expand
-      >
-        <template v-slot:expanded-item>
-          <td :colspan="8" class="pa-0">
-            <v-skeleton-loader ref="skeleton" :type="'table-row'" :loading="loading">
-              <job-runs
-                :items="runs"
-                :height="calcSubHeight"
-                :tableClass="'job-sub-table'"
-                @handleClickOnRow="handleClickOnRow"
-              />
-            </v-skeleton-loader>
-          </td>
-        </template>
+  <v-data-table
+    show-expand
+    fixed-header
+    single-expand
+    item-key="short_uuid"
+    class="job-table scrollbar"
+    :items="jobList"
+    :height="calcHeight"
+    :expanded.sync="expanded"
+    :headers="JobsListHeaders"
+    @item-expanded="handleExpand"
+    @click:row="handleJobClick"
+  >
+    <template v-slot:expanded-item>
+      <td :colspan="8" class="pa-0">
+        <v-skeleton-loader ref="skeleton" :type="'table-row'" :loading="loading">
+          <job-runs
+            :items="runs"
+            :height="calcSubHeight"
+            :tableClass="'job-sub-table'"
+            @handleClickOnRow="handleClickOnRow"
+          />
+        </v-skeleton-loader>
+      </td>
+    </template>
 
-        <template v-slot:item.uuid>
-          NPOBP
-        </template>
+    <template v-slot:item.uuid>
+      NPOBP
+    </template>
 
-        <template v-slot:item.status="{ item }">
-          <ask-anna-alert-status :statusData="item.status && item.status.lastrun" />
-        </template>
-        <template v-slot:item.actions="{ item }">
-          <v-chip-group outlined v-model="selection" mandatory>
-            <v-chip outlined label class="askaanna-chip-status" color="success" @click.stop="startJob(item.short_uuid)">
-              <v-avatar left><v-icon>mdi-play</v-icon></v-avatar
-              >start</v-chip
-            >
-            <v-chip outlined label color="error" @click.stop="stopJob(item.short_uuid)"
-              >stop<v-avatar right><v-icon>mdi-stop</v-icon></v-avatar></v-chip
-            >
-          </v-chip-group>
-        </template>
-      </v-data-table>
-    </v-col>
-  </v-row>
+    <template v-slot:item.status="{ item }">
+      <ask-anna-alert-status :statusData="item.status && item.status.lastrun" />
+    </template>
+    <template v-slot:item.actions="{ item }">
+      <v-chip-group outlined v-model="selection" mandatory>
+        <v-chip outlined label class="askaanna-chip-status" color="success" @click.stop="startJob(item.short_uuid)">
+          <v-avatar left><v-icon>mdi-play</v-icon></v-avatar
+          >start</v-chip
+        >
+        <v-chip outlined label color="error" @click.stop="stopJob(item.short_uuid)"
+          >stop<v-avatar right><v-icon>mdi-stop</v-icon></v-avatar></v-chip
+        >
+      </v-chip-group>
+    </template>
+  </v-data-table>
 </template>
 
 <script>
-import { createComponent } from '@vue/composition-api'
-
+import { JobsListHeaders } from '../utils/index'
 import { useWindowSize } from '@u3u/vue-hooks'
+import JobRuns from '@jobrun/components/JobRuns'
+import { defineComponent } from '@vue/composition-api'
+import useMoment from '@/core/composition/useMoment.js'
 import useJobStore from '../../job/composition/useJobStore'
 import useJobRunStore from '../../jobrun/composition/useJobRunStore'
-import JobRuns from '@jobrun/components/JobRuns'
 
-import useMoment from '@/core/composition/useMoment.js'
-
-export default createComponent({
-  name: 'TheJobs',
+export default defineComponent({
+  name: 'JobList',
 
   components: {
     JobRuns
@@ -76,9 +71,9 @@ export default createComponent({
 
   setup(props, context) {
     const jobStore = useJobStore()
-    const jobRunStore = useJobRunStore()
     const moment = useMoment(context)
     const { height } = useWindowSize()
+    const jobRunStore = useJobRunStore()
 
     const handleJobClick = item => {
       context.root.$router.push({
@@ -92,6 +87,7 @@ export default createComponent({
       ...moment,
       ...jobStore,
       ...jobRunStore,
+      JobsListHeaders,
       handleJobClick
     }
   },
@@ -123,18 +119,6 @@ export default createComponent({
         { text: 'Runs', value: 'uuid' },
         { text: 'Status', value: 'status' },
         { text: 'Actions', value: 'actions' }
-      ],
-
-      headers2: [
-        {
-          text: 'Run',
-          sortable: false,
-          value: 'info'
-        },
-        { text: 'Status', value: 'status' },
-        { text: 'Timing', value: 'timing' },
-        { text: 'CPU time  (h:m:s)', value: 'runtime' },
-        { text: 'Memory used', value: 'memory' }
       ]
     }
   },
@@ -189,6 +173,9 @@ export default createComponent({
 </script>
 
 <style>
+.job-table tr {
+  cursor: pointer;
+}
 .job-sub-table .v-data-table__wrapper tr th {
   z-index: 1;
 }

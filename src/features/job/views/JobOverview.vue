@@ -11,11 +11,11 @@
 </template>
 
 <script>
-import { onBeforeMount, createComponent, onBeforeDestroy } from '@vue/composition-api'
+import { onBeforeMount, defineComponent, onBeforeDestroy } from '@vue/composition-api'
 import useJobStore from '../composition/useJobStore'
 import JobDescription from '../components/JobDescription'
 
-export default createComponent({
+export default defineComponent({
   name: 'JobOverview',
 
   components: {

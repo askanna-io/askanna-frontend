@@ -1,9 +1,9 @@
 <script>
-import { createComponent } from '@vue/composition-api'
-import JobNavBar from '@job/components/nav-bar/JobNavBar'
+import JobNavBar from './JobNavBar'
 import DefaultBar from './DefaultBar'
+import { defineComponent } from '@vue/composition-api'
 
-export default createComponent({
+export default defineComponent({
   name: 'ProjectNavBar',
 
   functional: true,

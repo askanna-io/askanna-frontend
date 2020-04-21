@@ -1,33 +1,25 @@
 <template>
   <div>
     <v-toolbar
-      color="white"
-      class="br-r5 ma-3"
       dense
-      :flat="!sticked"
-      on-stick="onStick"
-      sticky-container
+      color="white"
       v-sticky="true"
+      sticky-container
+      class="br-r5 ma-3"
+      on-stick="onStick"
       sticky-offset="{top: 52, bottom: 10}"
+      :flat="!sticked"
     >
-      <v-menu>
-        <template v-slot:activator="{ on }">
-          <v-btn text icon class="align-self-center mr-4" v-on="on">
-            <v-icon>mdi-menu</v-icon>
-          </v-btn>
-        </template>
-        <v-list>
-          <v-flex mx-3><h4>Projects menu:</h4></v-flex>
-          <v-divider />
-          <v-list-item
-            v-for="tab in projectTools"
-            :key="tab.id"
-            :to="{ name: tab.to, params: { title: `${tab.name} - ${project.name}` } }"
-          >
-            {{ tab.name }}
-          </v-list-item>
-        </v-list>
-      </v-menu>
+      <v-btn
+        text
+        icon
+        class="align-self-center mr-4"
+        :color="(isShowProjectBar && 'primary') || ''"
+        @click="isShowProjectBar = !isShowProjectBar"
+      >
+        <v-icon>mdi-menu</v-icon>
+      </v-btn>
+
       <v-breadcrumbs :items="breadcrumbs">
         <template v-slot:item="{ item }">
           <v-breadcrumbs-item :to="item.to" exact>
@@ -37,6 +29,24 @@
       </v-breadcrumbs>
       <v-spacer />
     </v-toolbar>
+    <v-divider />
+    <v-slide-y-transition>
+      <v-toolbar v-if="isShowProjectBar" dense color="white" class="br-r5 ma-3" flat transition="slide-y-transition">
+        <v-tabs left align-with-title>
+          <v-tabs-slider color="primary" optional />
+          <template v-for="tab of projectTools">
+            <v-tab
+              v-if="tab.show"
+              ripple
+              :key="tab.id"
+              :to="{ name: tab.to, params: { title: `${tab.name} - ${project.name}` } }"
+            >
+              {{ tab.name }}
+            </v-tab>
+          </template>
+        </v-tabs>
+      </v-toolbar>
+    </v-slide-y-transition>
     <v-divider />
 
     <v-card-title>
@@ -57,13 +67,21 @@
   </div>
 </template>
 <script>
-import { createComponent, onBeforeMount, computed, watch, ref } from '@vue/composition-api'
 import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
+import { defineComponent, onBeforeMount, computed, watch, ref } from '@vue/composition-api'
 
-export default createComponent({
+export default defineComponent({
   name: 'JobNavBar',
 
   props: {
+    job: {
+      type: Object,
+      default: function() {
+        return {
+          name: ''
+        }
+      }
+    },
     project: {
       type: Object,
       default: function() {
@@ -75,8 +93,10 @@ export default createComponent({
   },
 
   setup(props, context) {
+    const currentProjectTab = ref('')
+    const isShowProjectBar = ref(false)
     const end = context.root.$route.name.indexOf('jobs-name') >= 1 ? 5 : 3
-    const breadcrumbs = useBreadcrumbs(context, { start: 1, end: 5 })
+    const breadcrumbs = useBreadcrumbs(context, { start: 0, end: 5 })
 
     let sticked = ref(false)
 
@@ -84,23 +104,27 @@ export default createComponent({
       {
         id: 0,
         name: 'Activity',
-        to: 'workspace-project-activity'
+        to: 'workspace-project-activity',
+        show: context.root.isNotBeta
       },
       {
         id: 1,
         name: 'Code',
-        to: 'workspace-project-packages'
+        to: 'workspace-project-packages',
+        show: !context.root.isNotBeta
       },
       {
         id: 2,
         name: 'Jobs',
-        to: 'workspace-project-jobs'
+        to: 'workspace-project-jobs',
+        show: !context.root.isNotBeta
       },
 
       {
         id: 3,
         name: 'Documentation',
-        to: 'workspace-project-documentation'
+        to: 'workspace-project-documentation',
+        show: !context.root.isNotBeta
       }
     ]
 
@@ -132,12 +156,15 @@ export default createComponent({
     const onStick = data => {
       sticked = data.sticked
     }
-
-    const job = {
-      name: 'test'
+    return {
+      sticked,
+      jobTools,
+      currentTab,
+      breadcrumbs,
+      isShowProjectBar,
+      currentProjectTab,
+      projectTools: projectTools.filter(item => item.show)
     }
-
-    return { job, breadcrumbs, sticked, projectTools, currentTab, jobTools }
   }
 })
 </script>

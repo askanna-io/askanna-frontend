@@ -1,12 +1,12 @@
 <template>
   <v-data-table
     fixed-header
-    :page.sync="page"
-    :headers="headers"
     :items="items"
     :height="height"
-    :options="{ itemsPerPage: 5 }"
+    :page.sync="page"
+    :headers="headers"
     :class="tableClass"
+    :options="{ itemsPerPage: 5 }"
     @page-count="pageCount = $event"
   >
     <template v-slot:item="{ item, index }">
@@ -30,10 +30,10 @@
 </template>
 
 <script>
-import { createComponent, onBeforeMount, computed, watch } from '@vue/composition-api'
 import useMoment from '@/core/composition/useMoment.js'
+import { ref, defineComponent, onBeforeMount, computed, watch } from '@vue/composition-api'
 
-export default createComponent({
+export default defineComponent({
   name: 'JobRuns',
 
   props: {
@@ -49,10 +49,7 @@ export default createComponent({
       type: Number,
       default: () => 0
     },
-    pageCount: {
-      type: Number,
-      default: () => 0
-    },
+
     tableClass: {
       type: String,
       default: () => ''
@@ -61,6 +58,7 @@ export default createComponent({
 
   setup(props, context) {
     const moment = useMoment(context)
+    const pageCount = ref(0)
 
     const headers = [
       {
@@ -78,6 +76,7 @@ export default createComponent({
     return {
       ...moment,
       headers,
+      pageCount,
       handleClickOnRow
     }
   }
