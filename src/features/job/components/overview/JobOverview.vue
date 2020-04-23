@@ -1,6 +1,5 @@
 <template>
   <v-card class="mx-auto" flat>
-    da
     <prism-editor :code="'dasd das adsdd as da'" line-numbers />
 
     <v-expansion-panels focusable tile>
