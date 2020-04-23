@@ -4,7 +4,6 @@
       dense
       color="white"
       v-sticky="true"
-      sticky-container
       class="br-r5 ma-3"
       on-stick="onStick"
       sticky-offset="{top: 52, bottom: 10}"
@@ -158,6 +157,7 @@ export default defineComponent({
     }
     return {
       sticked,
+      onStick,
       jobTools,
       currentTab,
       breadcrumbs,
