@@ -15,7 +15,7 @@
           class="px-2"
           persistent-hint
           hint="Click to copy"
-          value="Grocery delivery"
+          value="workspaceName/projectName/jobName"
         />
       </v-col>
     </v-row>
@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import JobRunPortal from './overview/jobrunning/JobRunPortal'
+import JobRunPortal from './jobrunning/JobRunPortal'
 import { ref, onBeforeMount, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
