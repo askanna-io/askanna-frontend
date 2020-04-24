@@ -5,8 +5,8 @@
 </template>
 
 <script>
-import { onBeforeMount, defineComponent } from '@vue/composition-api'
 import useJobStore from '../composition/useJobStore'
+import { onBeforeMount, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'JobVariables',

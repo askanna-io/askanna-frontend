@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto" outlined>
+  <v-card class="mx-auto" outlined sticky-container>
     <project-nav-bar :job="job" :project="project" :routeName="routeName" :projectBreadcrumbs="projectBreadcrumbs" />
     <router-view />
   </v-card>

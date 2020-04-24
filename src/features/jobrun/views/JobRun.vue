@@ -7,15 +7,13 @@
       <v-list class="transparent" max-width="650px" v-if="jobRun">
         <v-list-item>
           <v-list-item-title>Status: <ask-anna-chip-status :status="jobRun.status" /> </v-list-item-title>
-          <v-list-item-title class="text-left">
-            Duratation: &nbsp;{{ runTimeHours(jobRun.created, jobRun.finished) }} seconds
-          </v-list-item-title>
+          <v-list-item-title class="text-left"> Duratation: &nbsp;{{ jobRun.runtime }} seconds </v-list-item-title>
         </v-list-item>
 
         <v-list-item>
           <v-list-item-title
             >Job:
-            <v-chip small outlined label :to="{ name: 'workspace' }">
+            <v-chip small outlined label :to="{ name: 'workspace-project-job-overiew' }">
               {{ job.name }}
             </v-chip></v-list-item-title
           >
@@ -74,7 +72,7 @@
           </v-expansion-panel-content>
         </v-expansion-panel>
 
-        <v-expansion-panel>
+        <v-expansion-panel v-if="isNotBeta">
           <v-expansion-panel-header>Log</v-expansion-panel-header>
           <v-expansion-panel-content> </v-expansion-panel-content>
         </v-expansion-panel>
