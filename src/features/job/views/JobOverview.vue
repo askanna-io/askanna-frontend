@@ -7,18 +7,29 @@
       @onSave="handleOnJobSave"
       @onChangeDescription="handleChangeDescription"
     />
+    <v-divider />
+    <job-definition :job="job" />
+    <v-divider />
+
+    <job-running />
   </v-card>
 </template>
 
 <script>
-import { onBeforeMount, defineComponent, onBeforeDestroy } from '@vue/composition-api'
 import useJobStore from '../composition/useJobStore'
-import JobDescription from '../components/JobDescription'
+import JobRunning from '../components/overview/JobRunning'
+import JobDefinition from '../components/overview/JobDefinition'
+
+import JobDescription from '../components/overview/JobDescription'
+
+import { onBeforeMount, defineComponent, onBeforeDestroy } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'JobOverview',
 
   components: {
+    JobRunning,
+    JobDefinition,
     JobDescription
   },
 
