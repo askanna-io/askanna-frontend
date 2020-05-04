@@ -15,7 +15,6 @@ const apiString = apiStringify(serviceName)
 
 export const actions: ActionTree<AuthState, RootState> = {
   async [ac.login]({ commit, dispatch }, { username, password }) {
-    console.log('login')
     const url = api.url() + api.auth.login()
 
     axios.defaults.xsrfCookieName = 'csrftoken'
