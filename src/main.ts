@@ -3,13 +3,14 @@ import axios from 'axios'
 import './core/components'
 import VueAxios from 'vue-axios'
 import hooks from '@u3u/vue-hooks'
-import { app, router, store } from './core'
 import Beta from '@/core/plugins/beta'
 import Logger from '@/core/plugins/logger'
+import { app, router, store } from './core'
+
+import { makeServer } from './server/index'
 
 import vuetify from '@/core/plugins/vuetify'
 import VueCompositionApi from '@vue/composition-api'
-import validationRules from '@/core/plugins/validationRules'
 
 import 'prismjs'
 import 'prismjs/themes/prism-tomorrow.css'
@@ -27,7 +28,6 @@ Vue.use(Beta)
 Vue.use(hooks)
 Vue.use(Logger)
 
-Vue.use(validationRules)
 Vue.use(VueCompositionApi)
 Vue.use(require('vue-moment'))
 Vue.config.productionTip = false
@@ -51,7 +51,7 @@ $axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
 
 // add token to request if exist
 $axios.interceptors.request.use(
-  function(config) {
+  function (config) {
     const token = localStorage.getItem('token')
 
     if (token != null) {
@@ -61,16 +61,16 @@ $axios.interceptors.request.use(
     return config
   },
 
-  function(err) {
+  function (err) {
     return Promise.reject(err)
   }
 )
 
 // for each response check status
 $axios.interceptors.response.use(
-  config => config,
+  (config) => config,
 
-  err => {
+  (err) => {
     if (err.response && err.response.status === 401) {
       router.push({ name: 'login' })
     }
@@ -81,12 +81,16 @@ $axios.interceptors.response.use(
 
 Vue.use(VueAxios, $axios)
 
+if (process.env.NODE_ENV === 'development') {
+  makeServer()
+}
+
 //init app instance
 new Vue({
   router,
   store,
   vuetify,
-  render: h => h(app)
+  render: (h) => h(app)
 }).$mount('#app')
 
 export { $axios }

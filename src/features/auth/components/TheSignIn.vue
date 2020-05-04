@@ -2,35 +2,25 @@
   <div>
     <v-form
       v-if="!isSuccesLogedIn"
-      ref="loginForm"
+      ref="loginFormRef"
       v-model="isFormValid"
       lazy-validation
       @keyup.native.enter="handleLogin"
-      @submit="handleLogin"
+      @submit.stop="handleLogin"
     >
+      <v-text-field v-model="username" validate-on-blur autocomplete="off" dark label="Username" required />
       <v-text-field
-        v-model="formData.username"
-        validate-on-blur
-        autofocus
-        autocomplete="off"
-        dark
-        :rules="[RULE.min('Must be at least 3 characters long', 3), RULE.required('Username is required')]"
-        label="Username"
-        required
-      />
-      <v-text-field
-        v-model="formData.password"
+        v-model="password"
         dark
         :append-icon="isShowPassword ? 'far fa-eye' : 'fas fa-eye-slash'"
-        :rules="[RULE.min('Must be at least 8 characters long', 8), RULE.required('Username is required')]"
         :type="isShowPassword ? 'text' : 'password'"
         name="input-10-1"
         label="Password"
         counter
         @click:append="isShowPassword = !isShowPassword"
       />
-      <input type="password" style="display:none" browserAutocomplete="new-password" autocomplete="new-password" />
-      <v-btn :disabled="!isFormValid" color="primary" class="mr-4" @click="handleLogin">
+      <input type="password" style="display: none;" browserAutocomplete="new-password" autocomplete="new-password" />
+      <v-btn :disabled="!isFormValid" color="primary" class="mr-4" @click.stop="handleLogin">
         Sign in
       </v-btn>
       <v-checkbox v-if="isNotBeta" dense label="Remember me" />
@@ -38,45 +28,58 @@
   </div>
 </template>
 
-<script>
-import { defineComponent } from '@vue/composition-api'
+<script lang="ts">
+// :rules="[RULES.min('Must be at least 3 characters long', 3), RULES.required('Username is required')]"
 import useAuthStore from '../composition/useAuthStore'
+import useValidationRules from '@/core/composition/useValidationRules'
+import { ref, reactive, computed, defineComponent, onMounted, toRefs } from '@vue/composition-api'
+
+type VForm = Vue & {
+  reset: () => void
+  validate: () => boolean
+  resetValidation: () => void
+}
 
 export default defineComponent({
   name: 'TheSignIn',
 
-  data: () => ({
-    expand: false,
-    formData: {
-      password: '',
-      username: ''
-    },
-    isFormValid: false,
-    isShowPassword: false,
-    isSuccesLogedIn: false
-  }),
-
   setup(rops, context) {
     const authStore = useAuthStore()
+    const RULES = useValidationRules()
 
-    return {
-      ...authStore
-    }
-  },
+    const username = ref('')
+    const password = ref('')
+    const expand = ref(false)
 
-  methods: {
-    async handleLogin() {
-      if (!this.$refs.loginForm.validate()) {
+    const isFormValid = ref(false)
+    const isShowPassword = ref(false)
+    const isSuccesLogedIn = ref(false)
+    const loginFormRef = ref(context.root.$refs.loginFormRef)
+    const loginForm = computed(() => loginFormRef.value as VForm)
+
+    const handleLogin = () => {
+      if (!loginForm.value.validate()) {
         return
       }
+      authStore.login({ username: username.value, password: password.value })
+    }
 
-      this.login({ ...this.formData })
-    },
-    reset() {
-      this.$refs.loginForm.reset()
-    },
-    resetValidation() {
-      this.$refs.loginForm.resetValidation()
+    const reset = () => loginForm.value.reset()
+    const resetValidation = () => loginForm.value.resetValidation()
+
+    return {
+      ...authStore,
+      RULES,
+      username,
+      password,
+      loginForm,
+      isFormValid,
+      loginFormRef,
+      isShowPassword,
+      isSuccesLogedIn,
+      reset,
+      handleLogin,
+      resetValidation
     }
   }
 })
