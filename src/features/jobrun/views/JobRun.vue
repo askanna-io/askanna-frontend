@@ -4,102 +4,47 @@
     <v-divider />
 
     <v-skeleton-loader ref="skeleton" :type="'table-row'" :loading="!jobRun">
-      <v-list class="transparent" max-width="650px" v-if="jobRun">
-        <v-list-item>
-          <v-list-item-title>Status: <ask-anna-chip-status :status="jobRun.status" /> </v-list-item-title>
-          <v-list-item-title class="text-left"> Duratation: &nbsp;{{ jobRun.runtime }} seconds </v-list-item-title>
-        </v-list-item>
-
-        <v-list-item>
-          <v-list-item-title
-            >Job:
-            <v-chip small outlined label :to="{ name: 'workspace-project-job-overiew' }">
-              {{ job.name }}
-            </v-chip></v-list-item-title
-          >
-          <v-list-item-title class="text-left">
-            CPU: 10%
-          </v-list-item-title>
-        </v-list-item>
-
-        <v-list-item>
-          <v-list-item-title>Version: {{ jobRun.version.name }}: #{{ jobRun.version.uuid }}</v-list-item-title>
-          <v-list-item-title class="text-left"> Runner/worker: {{ jobRun.runner.name }} </v-list-item-title>
-        </v-list-item>
-
-        <v-list-item>
-          <v-list-item-title>By: {{ jobRun.owner.name }}</v-list-item-title>
-          <v-list-item-title class="text-left"> Trigger: {{ jobRun.trigger.name }} </v-list-item-title>
-        </v-list-item>
-
-        <v-list-item>
-          <v-list-item-title>Memory: {{ jobRun.memory }}MB</v-list-item-title>
-        </v-list-item>
-      </v-list>
-
-      <v-expansion-panels focusable tile>
-        <v-expansion-panel>
-          <v-expansion-panel-header>Input</v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <v-flex pt-2>
-              <v-btn
-                outlined
-                :loading="payLoadLoading"
-                :disabled="payLoadLoading"
-                label
-                color="primary"
-                @click.stop="handleDownload(jobRun)"
-              >
-                <v-icon left>mdi-cloud-download</v-icon>
-                Download Json</v-btn
-              >
-              <job-run-pay-load :file="jobRunPayload" />
-            </v-flex>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-
-        <v-expansion-panel>
-          <v-expansion-panel-header>Result</v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <v-list class="transparent" max-width="450px">
-              <v-list-item>
-                <v-list-item-title>Result:</v-list-item-title>
-                <v-list-item-title class="text-left">
-                  {{ jobRun.return_payload }}
-                </v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-
-        <v-expansion-panel v-if="isNotBeta">
-          <v-expansion-panel-header>Log</v-expansion-panel-header>
-          <v-expansion-panel-content> </v-expansion-panel-content>
-        </v-expansion-panel>
+      <job-run-info :jobRun="jobRun" :jobName="job.name" />
+      <v-divider />
+      <job-run-input
+        :jobRun="jobRun"
+        :formatType="formatType"
+        :showPayload="showPayload"
+        :jobRunPayload="jobRunPayloadComputed"
+        @handleDownload="handleDownload"
+        @handleViewPayload="handleViewPayload"
+        @changeFormType="handleChangeFormType"
+      />
+      <v-expansion-panels>
+        <job-run-result :jobRun="jobRun" />
+        <job-run-log v-if="isNotBeta" :jobRun="jobRun" />
       </v-expansion-panels>
     </v-skeleton-loader>
   </v-card>
 </template>
 
 <script>
-import { defineComponent, onBeforeMount, computed, watch } from '@vue/composition-api'
+import { ref, defineComponent, onBeforeMount, computed, watch } from '@vue/composition-api'
+import JobRunLog from '../components/jobrun/JobRunLog'
+import JobRunInfo from '../components/jobrun/JobRunInfo'
+import JobRunInput from '../components/jobrun/JobRunInput'
+import JobRunResult from '../components/jobrun/JobRunResult'
 
-import useMoment from '@/core/composition/useMoment.js'
 import useJobStore from '@job/composition/useJobStore'
+import useMoment from '@/core/composition/useMoment.js'
 import useJobRunStore from '../composition/useJobRunStore'
-
 import useFetchData from '@/core/composition/useFetchData'
 import useJobRunResults from '@jobs/composition/useJobRunResults'
 import useProjectStore from '@project/composition/useProjectStore'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
 
-import JobRunPayLoad from '../components/JobRunPayLoad'
-
 export default defineComponent({
   name: 'JobRun',
 
   components: {
-    JobRunPayLoad
+    JobRunInfo,
+    JobRunInput,
+    JobRunResult
   },
 
   setup(props, context) {
@@ -111,12 +56,17 @@ export default defineComponent({
     const jobRunResult = useJobRunResults()
     const forceFileDownload = useForceFileDownload()
 
+    const formatType = ref()
+    const showPayload = ref(false)
+
     const { jobId, jobRunId } = context.root.$route.params
     const currentJob = computed(() => projectStore.projectJobs.value.find(job => job.name === jobName))
+    const jobRunPayloadComputed = computed(() => JSON.stringify(jobRunStore.jobRunPayload.value, null, 2))
 
     onBeforeMount(async () => {
-      projectStore.resetProjectJobs()
       jobRunStore.resetStore()
+      projectStore.resetProjectJobs()
+
       const { jobId, jobRunId, projectId } = context.root.$route.params
 
       jobStore.getJob(jobId)
@@ -125,10 +75,27 @@ export default defineComponent({
       await fetchData(context, [projectStore.getProjectJobs(projectId)])
     })
 
+    const handleChangeFormType = value => (formatType.value = value)
+
     const handleDownload = async item => {
       await jobRunStore.getJobRunPayload({ jobRunShortId: item.short_uuid, payloadUuid: item.payload.uuid })
 
-      forceFileDownload.trigger({ source: jobRunStore.jobRunPayload.value, name: `payload-${item.payload.uuid}.json` })
+      const formatOption = formatType.value === 'raw' ? null : 2
+      const jobRunPayload = JSON.stringify(jobRunStore.jobRunPayload.value, null, formatOption)
+
+      forceFileDownload.trigger({ source: jobRunPayload, name: `payload-${item.payload.uuid}.json` })
+
+      formatType.value = null
+    }
+
+    const handleViewPayload = async item => {
+      showPayload.value = !showPayload.value
+      if (!showPayload.value) return
+      if (!jobRunStore.jobRunPayload.value) {
+        await jobRunStore.getJobRunPayload({ jobRunShortId: item.short_uuid, payloadUuid: item.payload.uuid })
+      }
+
+      const jobRunPayload = JSON.stringify(jobRunStore.jobRunPayload.value, null, 2)
     }
 
     return {
@@ -137,7 +104,12 @@ export default defineComponent({
       ...jobRunStore,
       ...jobRunResult,
       jobRunId,
-      handleDownload
+      formatType,
+      showPayload,
+      handleDownload,
+      handleViewPayload,
+      handleChangeFormType,
+      jobRunPayloadComputed
     }
   }
 })

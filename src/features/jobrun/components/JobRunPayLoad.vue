@@ -1,8 +1,8 @@
 <template>
-  <v-row align="center" justify="center" v-if="true">
-    <v-col cols="12" class=" pb-0">
+  <v-row align="center" justify="center">
+    <v-col cols="12" class="pb-0 pt-0">
       <div class="page">
-        <div style="max-height: 420px" class="overflow-y-auto" id="scroll-target">
+        <div style="max-height: 420px;" class="overflow-y-auto" id="scroll-target">
           <prism-editor v-scroll:#scroll-target="onScroll" v-if="partFile" :code="partFile" readonly line-numbers />
         </div>
       </div>
@@ -45,10 +45,10 @@ export default defineComponent({
 
     const handleCopy = () => {
       context.root.$copyText(props.file).then(
-        function(e) {
+        function (e) {
           snackBar.showSnackBar({ message: 'Copied', color: 'success' })
         },
-        function(e) {
+        function (e) {
           snackBar.showSnackBar({ message: 'Can not copy', color: 'warning' })
         }
       )
