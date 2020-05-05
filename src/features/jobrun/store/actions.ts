@@ -91,7 +91,7 @@ export const actions: ActionTree<jobRunState, RootState> = {
 
       return
     }
-    commit(type.SET_JOB_RUN_PAYLOAD, JSON.stringify(jobRunPayload, null, 2))
+    commit(type.SET_JOB_RUN_PAYLOAD, jobRunPayload)
     commit(type.mutation.SET_LOADING, { name: stateType.payLoadLoading, value: false })
   }
 }

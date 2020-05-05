@@ -65,4 +65,8 @@ export default class App extends Vue {
   font-size: 0.875rem !important;
   line-height: 21px !important;
 }
+
+.cursor--pointer {
+  cursor: pointer;
+}
 </style>
