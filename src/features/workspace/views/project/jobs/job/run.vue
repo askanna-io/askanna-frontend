@@ -66,21 +66,19 @@ export default defineComponent({
       {
         id: 0,
         name: 'Input',
-        component: 'JobRunInput',
         show: !context.root.isNotBeta,
         to: 'workspace-project-jobs-name-uuid-input'
       },
       {
         id: 1,
         name: 'Result',
-        component: 'JobRunResult',
         show: !context.root.isNotBeta,
         to: 'workspace-project-jobs-name-uuid-result'
       }
     ]
-    const currentTab = ref('workspace-project-activity')
     const { jobId, jobRunId } = context.root.$route.params
     const jobRun = computed(() => jobRunStore.jobRun.value)
+    const currentTab = ref('workspace-project-jobs-name-uuid-input')
 
     return {
       tabs,
