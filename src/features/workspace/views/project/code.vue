@@ -9,7 +9,7 @@ import ThePackages from '@packages/views/ThePackages'
 import { defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
-  name: 'Code',
+  name: 'code',
 
   components: {
     ThePackages

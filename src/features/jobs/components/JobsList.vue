@@ -47,8 +47,8 @@
 </template>
 
 <script>
-import { JobsListHeaders } from '../utils/index'
 import { useWindowSize } from '@u3u/vue-hooks'
+import { JobsListHeaders } from '../utils/index'
 import JobRuns from '@jobrun/components/JobRuns'
 import { defineComponent } from '@vue/composition-api'
 import useMoment from '@/core/composition/useMoment.js'

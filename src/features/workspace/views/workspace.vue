@@ -18,7 +18,7 @@ import WorkspaceProjectList from '../components/workspace/WorkspaceProjectList.v
 import { watch, computed, reactive, onBeforeMount, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
-  name: 'TheWorkspace',
+  name: 'workspace',
 
   components: { WorkspaceProjectList, WorkspaceToolbar },
 

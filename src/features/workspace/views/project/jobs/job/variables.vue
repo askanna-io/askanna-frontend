@@ -1,16 +1,14 @@
 <template>
   <v-card class="mx-auto" flat>
-    JobTokens
+    JobVariables
   </v-card>
 </template>
 
 <script>
+import useJobStore from '@job/composition/useJobStore'
 import { onBeforeMount, defineComponent } from '@vue/composition-api'
-import useJobStore from '../composition/useJobStore'
 
 export default defineComponent({
-  name: 'JobTokens',
-
   setup(rops, context) {
     const jobStore = useJobStore()
 

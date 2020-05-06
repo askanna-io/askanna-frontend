@@ -11,14 +11,12 @@
 </template>
 
 <script>
-import usePackages from '../composition/usePackages'
 import { defineComponent } from '@vue/composition-api'
-import PackageList from '../components/PackageList.vue'
+import usePackages from '@packages/composition/usePackages'
+import PackageList from '@packages/components/PackageList.vue'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
 
 export default defineComponent({
-  name: 'ThePackages',
-
   components: { PackageList },
 
   setup(props, context) {
