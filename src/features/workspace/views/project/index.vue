@@ -6,14 +6,14 @@
 </template>
 
 <script>
-import useProject from '../composition/useProject'
+import useProject from '@project/composition/useProject'
 import { defineComponent } from '@vue/composition-api'
 import useJobStore from '@job/composition/useJobStore'
 import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
-import ProjectNavBar from '../components/nav-bars/ProjectNavBar'
+import ProjectNavBar from '@project/components/nav-bars/ProjectNavBar'
 
 export default defineComponent({
-  name: 'TheProject',
+  name: 'index',
 
   components: { ProjectNavBar },
 

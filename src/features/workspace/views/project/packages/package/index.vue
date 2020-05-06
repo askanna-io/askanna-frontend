@@ -22,17 +22,15 @@
 
 <script>
 import { useWindowSize } from '@u3u/vue-hooks'
-import PackageFile from '../components/PackageFile'
-import PackageTree from '../components/PackageTree'
-import { headers, FileIcons } from '../utils/index'
 import { defineComponent } from '@vue/composition-api'
-import usePackageStore from '../composition/usePackageStore'
+import PackageFile from '@package/components/PackageFile'
+import PackageTree from '@package/components/PackageTree'
+import { headers, FileIcons } from '@package/utils/index'
 import { onBeforeMount, computed } from '@vue/composition-api'
+import usePackageStore from '@package/composition/usePackageStore'
 import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
 
 export default defineComponent({
-  name: 'ThePackage',
-
   components: { PackageFile, PackageTree },
 
   setup(props, context) {

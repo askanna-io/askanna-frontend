@@ -58,7 +58,7 @@ export default defineComponent({
 
   props: {
     file: String,
-    fileSource: Blob,
+    fileSource: String | Blob,
     breadcrumbs: {
       type: Array,
       default: () => []
@@ -77,10 +77,10 @@ export default defineComponent({
 
     const handleCopy = () => {
       context.root.$copyText(props.file).then(
-        function(e) {
+        function (e) {
           snackBar.showSnackBar({ message: 'Copied', color: 'success' })
         },
-        function(e) {
+        function (e) {
           snackBar.showSnackBar({ message: 'Can not copy', color: 'warning' })
         }
       )

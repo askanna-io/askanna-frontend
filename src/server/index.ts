@@ -14,6 +14,7 @@ export function makeServer({ environment = 'development' } = {}) {
     },
     routes() {
       this.passthrough()
+      this.passthrough('https://cdn-api.askanna.eu/**')
 
       this.namespace = '/v1'
       this.urlPrefix = apiUrl
@@ -28,6 +29,7 @@ export function makeServer({ environment = 'development' } = {}) {
       this.passthrough()
       this.passthrough(apiUrl)
       this.passthrough(`${apiUrl}/rest-auth/login/`)
+      this.passthrough('https://cdn-api.askanna.eu/files/blob/**')
     }
   })
 

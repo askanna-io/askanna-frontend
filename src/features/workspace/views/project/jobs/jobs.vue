@@ -12,11 +12,11 @@
 <script>
 import JobsList from '@jobs/components/JobsList'
 import useQuery from '@/core/composition/useQuery'
-import useProjectStore from '../../../composition/useProjectStore'
+import useProjectStore from '@project/composition/useProjectStore'
 import { defineComponent, onBeforeMount } from '@vue/composition-api'
 
 export default defineComponent({
-  name: 'RunsCode',
+  name: 'jobs',
 
   components: {
     JobsList
@@ -33,7 +33,7 @@ export default defineComponent({
     })
 
     return {
-      ...projectStore
+      projectJobs: projectStore.projectJobs.value
     }
   }
 })

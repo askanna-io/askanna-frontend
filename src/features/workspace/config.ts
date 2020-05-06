@@ -1,14 +1,6 @@
 export default {
   paths: [
     {
-      path: '/user',
-      component: () => import(/* webpackChunkName: "user" */ '../jobrun/views/JobRun.vue'),
-      name: 'user',
-      meta: {
-        breadcrumb: 'user'
-      }
-    },
-    {
       path: '/:workspace',
       component: () => import(/* webpackChunkName: "workspace-index" */ './views/index.vue'),
       meta: {
@@ -17,7 +9,7 @@ export default {
       children: [
         {
           path: '',
-          component: () => import(/* webpackChunkName: "workspace" */ './views/TheWorkspace.vue'),
+          component: () => import(/* webpackChunkName: "workspace" */ './views/workspace.vue'),
           name: 'workspace',
           meta: {
             breadcrumb: 'Workspace'
@@ -26,7 +18,7 @@ export default {
         {
           path: 'project/:projectId',
           redirect: { name: 'workspace-project-activity' },
-          component: () => import(/* webpackChunkName: "workspace-project" */ '../project/views/TheProject.vue'),
+          component: () => import(/* webpackChunkName: "workspace-project" */ './views/project/index.vue'),
           meta: {
             breadcrumb: 'Project - #:projectId'
           },
@@ -36,7 +28,7 @@ export default {
               name: 'workspace-project',
               redirect: { name: 'workspace-project-packages' },
               component: () =>
-                import(/* webpackChunkName: "workspace-project-uuid-activity" */ '../project/views/TheProject.vue'),
+                import(/* webpackChunkName: "workspace-project-uuid-activity" */ './views/project/index.vue'),
               meta: {
                 breadcrumb: 'Project - #:projectId'
               }
@@ -44,7 +36,7 @@ export default {
             {
               path: 'activity',
               component: () =>
-                import(/* webpackChunkName: "workspace-project-uuid-activity" */ '../project/views/tabs/Activity.vue'),
+                import(/* webpackChunkName: "workspace-project-uuid-activity" */ './views/project/activity.vue'),
               name: 'workspace-project-activity',
               meta: {
                 breadcrumb: 'Activity'
@@ -53,9 +45,7 @@ export default {
             {
               path: 'jobs',
               component: () =>
-                import(
-                  /* webpackChunkName: "workspace-project-uuid-jobs-index" */ '../project/views/tabs/jobs/index.vue'
-                ),
+                import(/* webpackChunkName: "workspace-project-uuid-jobs-index" */ './views/project/jobs/index.vue'),
               meta: {
                 breadcrumb: 'Jobs'
               },
@@ -63,7 +53,7 @@ export default {
                 {
                   path: '',
                   component: () =>
-                    import(/* webpackChunkName: "workspace-project-uuid-jobs" */ '../project/views/tabs/jobs/Jobs.vue'),
+                    import(/* webpackChunkName: "workspace-project-uuid-jobs" */ './views/project/jobs/jobs.vue'),
                   name: 'workspace-project-jobs',
                   meta: {
                     breadcrumb: 'Packages'
@@ -74,7 +64,9 @@ export default {
                   redirect: { name: 'workspace-project-job-overiew' },
 
                   component: () =>
-                    import(/* webpackChunkName: "workspace-project-uuid-jobs-id" */ '@job/views/index.vue'),
+                    import(
+                      /* webpackChunkName: "workspace-project-uuid-jobs-id" */ './views/project/jobs/job/index.vue'
+                    ),
                   meta: {
                     breadcrumb: ':jobId'
                   },
@@ -82,7 +74,9 @@ export default {
                     {
                       path: 'overview',
                       component: () =>
-                        import(/* webpackChunkName: "workspace-project-job-overiew" */ '@job/views/JobOverview.vue'),
+                        import(
+                          /* webpackChunkName: "workspace-project-job-overiew" */ './views/project/jobs/job/overview.vue'
+                        ),
                       name: 'workspace-project-job-overiew',
                       meta: {
                         breadcrumb: 'Overview'
@@ -91,7 +85,9 @@ export default {
                     {
                       path: 'runs',
                       component: () =>
-                        import(/* webpackChunkName: "workspace-project-job-jobruns" */ '@job/views/TheJobRuns.vue'),
+                        import(
+                          /* webpackChunkName: "workspace-project-job-runs" */ './views/project/jobs/job/runs.vue'
+                        ),
                       name: 'workspace-project-job-jobruns',
                       meta: {
                         breadcrumb: 'Job run'
@@ -100,7 +96,9 @@ export default {
                     {
                       path: 'variables',
                       component: () =>
-                        import(/* webpackChunkName: "workspace-project-job-variables" */ '@job/views/JobVariables.vue'),
+                        import(
+                          /* webpackChunkName: "workspace-project-job-variables" */ './views/project/jobs/job/variables.vue'
+                        ),
                       name: 'workspace-project-job-variables',
                       meta: {
                         breadcrumb: 'Variables'
@@ -109,7 +107,9 @@ export default {
                     {
                       path: 'tokens',
                       component: () =>
-                        import(/* webpackChunkName: "workspace-project-job-tokens" */ '@job/views/JobTokens.vue'),
+                        import(
+                          /* webpackChunkName: "workspace-project-job-tokens" */ './views/project/jobs/job/tokens.vue'
+                        ),
                       name: 'workspace-project-job-tokens',
                       meta: {
                         breadcrumb: 'Tokens'
@@ -119,12 +119,30 @@ export default {
                       path: ':jobRunId',
                       component: () =>
                         import(
-                          /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid" */ '@jobrun/views/JobRun.vue'
+                          /* webpackChunkName: "workspace-project-uuid-jobs-name-run" */ './views/project/jobs/job/run.vue'
                         ),
                       name: 'workspace-project-jobs-name-uuid',
                       meta: {
                         breadcrumb: 'Job run - #:jobRunId'
-                      }
+                      },
+                      children: [
+                        {
+                          path: '',
+                          component: () =>
+                            import(
+                              /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-input" */ './views/project/jobs/job/jobrun/input.vue'
+                            ),
+                          name: 'workspace-project-jobs-name-uuid-input'
+                        },
+                        {
+                          path: 'result',
+                          component: () =>
+                            import(
+                              /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-result" */ './views/project/jobs/job/jobrun/result.vue'
+                            ),
+                          name: 'workspace-project-jobs-name-uuid-result'
+                        }
+                      ]
                     }
                   ]
                 }
@@ -134,7 +152,7 @@ export default {
               path: 'documentation',
               component: () =>
                 import(
-                  /* webpackChunkName: "workspace-project-uuid-documentation" */ '../project/views/tabs/Documentation.vue'
+                  /* webpackChunkName: "workspace-project-uuid-documentation" */ './views/project/documentation.vue'
                 ),
               name: 'workspace-project-documentation',
               meta: {
@@ -144,7 +162,7 @@ export default {
             {
               path: 'packages',
               component: () =>
-                import(/* webpackChunkName: "workspace-project-packages-index" */ '../packages/views/index.vue'),
+                import(/* webpackChunkName: "workspace-project-packages-index" */ './views/project/packages.vue'),
               meta: {
                 breadcrumb: 'Packages'
               },
@@ -152,7 +170,7 @@ export default {
                 {
                   path: '',
                   component: () =>
-                    import(/* webpackChunkName: "workspace-project-packages" */ '../packages/views/ThePackages.vue'),
+                    import(/* webpackChunkName: "workspace-project-packages" */ './views/project/packages/index.vue'),
                   name: 'workspace-project-packages',
                   meta: {
                     breadcrumb: 'Packages'
@@ -161,14 +179,16 @@ export default {
                 {
                   path: ':packageId',
                   component: () =>
-                    import(/* webpackChunkName: "workspace-project-packages-uuid" */ '../package/views/index.vue'),
+                    import(
+                      /* webpackChunkName: "workspace-project-packages-uuid" */ './views/project/packages/package.vue'
+                    ),
 
                   children: [
                     {
                       path: '',
                       component: () =>
                         import(
-                          /* webpackChunkName: "workspace-project-packages-uuid" */ '../package/views/ThePackage.vue'
+                          /* webpackChunkName: "workspace-project-packages-uuid" */ './views/project/packages/package/index.vue'
                         ),
                       name: 'workspace-project-packages-uuid',
                       meta: {
@@ -179,7 +199,7 @@ export default {
                       path: 'history',
                       component: () =>
                         import(
-                          /* webpackChunkName: "workspace-project-uuid-packages-uuid-history" */ '../package/views/ThePackageHistory.vue'
+                          /* webpackChunkName: "workspace-project-uuid-packages-uuid-history" */ './views/project/packages/package/history.vue'
                         ),
                       name: 'workspace-project-packages-uuid-history',
                       meta: {
@@ -194,7 +214,7 @@ export default {
                       path: 'version/:versionId',
                       component: () =>
                         import(
-                          /* webpackChunkName: "workspace-project-uuid-packages-uuid-version" */ '../package/views/ThePackage.vue'
+                          /* webpackChunkName: "workspace-project-uuid-packages-uuid-version" */ './views/project/packages/package/index.vue'
                         ),
                       name: 'workspace-project-packages-uuid-version-uuid',
                       meta: {
@@ -205,7 +225,7 @@ export default {
                           path: ':folderName(.*)',
                           component: () =>
                             import(
-                              /* webpackChunkName: "workspace-project-uuid-packages-uuid-version-name" */ '../package/views/ThePackage.vue'
+                              /* webpackChunkName: "workspace-project-uuid-packages-uuid-version-name" */ './views/project/packages/package/index.vue'
                             ),
                           name: 'workspace-project-packages-uuid-version-uuid-name-folder',
                           meta: {

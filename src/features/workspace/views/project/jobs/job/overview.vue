@@ -16,17 +16,14 @@
 </template>
 
 <script>
-import useJobStore from '../composition/useJobStore'
-import JobRunning from '../components/overview/JobRunning'
-import JobDefinition from '../components/overview/JobDefinition'
-
-import JobDescription from '../components/overview/JobDescription'
+import useJobStore from '@job/composition/useJobStore'
+import JobRunning from '@job/components/overview/JobRunning'
+import JobDefinition from '@job/components/overview/JobDefinition'
+import JobDescription from '@job/components/overview/JobDescription'
 
 import { onBeforeMount, defineComponent, onBeforeDestroy } from '@vue/composition-api'
 
 export default defineComponent({
-  name: 'JobOverview',
-
   components: {
     JobRunning,
     JobDefinition,
@@ -50,12 +47,6 @@ export default defineComponent({
       ...jobStore,
       handleOnJobSave,
       handleChangeDescription
-    }
-  },
-
-  data() {
-    return {
-      selection: 2
     }
   }
 })
