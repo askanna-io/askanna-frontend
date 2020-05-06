@@ -117,6 +117,8 @@ export default {
                     },
                     {
                       path: ':jobRunId',
+                      redirect: { name: 'workspace-project-jobs-name-uuid-input' },
+
                       component: () =>
                         import(
                           /* webpackChunkName: "workspace-project-uuid-jobs-name-run" */ './views/project/jobs/job/run.vue'
