@@ -10,14 +10,12 @@
 </template>
 
 <script>
-import { onBeforeMount, defineComponent, computed } from '@vue/composition-api'
-import useJobStore from '../composition/useJobStore'
 import JobRuns from '@jobrun/components/JobRuns'
+import useJobStore from '@job/composition/useJobStore'
 import useJobRunStore from '@jobrun/composition/useJobRunStore'
+import { onBeforeMount, defineComponent, computed } from '@vue/composition-api'
 
 export default defineComponent({
-  name: 'TheJobRuns',
-
   components: {
     JobRuns
   },

@@ -1,14 +1,12 @@
 <template>
-  <div>
-    <v-toolbar dense flat>
+  <div class="px-4">
+    <v-toolbar dense flat color="grey lighten-3">
       <v-flex class="d-flex">
-        <div class="cursor--pointer mr-auto d-flex" @click="handleViewPayload(jobRun)">
-          <div class="pa-3">
-            Input
-          </div>
+        <div class="mr-auto d-flex align-center" @click="handleViewPayload">
+          <v-btn x-small>Show preview</v-btn>
         </div>
         <div>
-          <v-btn-toggle v-model="formatTypeComputed" dense @change="handleDownload(jobRun)">
+          <v-btn-toggle v-model="formatType" dense @change="handleDownload">
             <v-tooltip top>
               <template v-slot:activator="{ on }">
                 <v-btn value="raw" v-on="on">
@@ -40,16 +38,18 @@
         </div>
       </v-flex>
     </v-toolbar>
-    <v-divider />
     <v-expand-transition>
       <v-flex v-if="showPayload">
-        <job-run-pay-load :file="jobRunPayload" />
+        <job-run-pay-load :file="jobRunPayloadComputed" />
       </v-flex>
     </v-expand-transition>
   </div>
 </template>
-<script lang="ts">
+<script>
 import { JobRun } from '../../store/types'
+import useJobRunStore from '../../composition/useJobRunStore'
+import useForceFileDownload from '@/core/composition/useForceFileDownload'
+
 import JobRunPayLoad from '../JobRunPayLoad.vue'
 import { ref, computed, defineComponent } from '@vue/composition-api'
 
@@ -60,41 +60,51 @@ export default defineComponent({
     JobRunPayLoad
   },
 
-  props: {
-    jobRun: {
-      type: Object as () => JobRun
-    },
-    formatType: {
-      type: String,
-      default: ''
-    },
-    showPayload: {
-      type: Boolean,
-      default: false
-    },
-    jobRunPayload: {
-      type: String,
-      default: ''
-    }
-  },
-
   setup(props, context) {
-    const handleDownload = (item: JobRun) => context.emit('handleDownload', item)
-    const handleViewPayload = (item: JobRun) => context.emit('handleViewPayload', item)
+    const jobRunStore = useJobRunStore()
+    const forceFileDownload = useForceFileDownload()
 
-    const formatTypeComputed = computed({
-      get: () => {
-        return props.formatType
-      },
-      set: value => {
-        context.emit('changeFormType', value)
+    const formatType = ref()
+    const showPayload = ref(false)
+    const jobRunPayloadComputed = computed(() => JSON.stringify(jobRunStore.jobRunPayload.value, null, 2))
+
+    const handleDownload = async () => {
+      const {
+        short_uuid,
+        payload: { uuid }
+      } = jobRunStore.jobRun.value
+      await jobRunStore.getJobRunPayload({ jobRunShortId: short_uuid, payloadUuid: uuid })
+
+      const formatOption = formatType.value === 'raw' ? null : 2
+      const jobRunPayload = JSON.stringify(jobRunStore.jobRunPayload.value, null, formatOption)
+
+      forceFileDownload.trigger({ source: jobRunPayload, name: `payload-${uuid}.json` })
+
+      formatType.value = null
+    }
+
+    const handleViewPayload = async () => {
+      const {
+        short_uuid,
+        payload: { uuid }
+      } = jobRunStore.jobRun.value
+
+      showPayload.value = !showPayload.value
+      if (!showPayload.value) return
+      if (!jobRunStore.jobRunPayload.value) {
+        await jobRunStore.getJobRunPayload({ jobRunShortId: short_uuid, payloadUuid: uuid })
       }
-    })
+
+      const jobRunPayload = JSON.stringify(jobRunStore.jobRunPayload.value, null, 2)
+    }
 
     return {
+      formatType,
+      showPayload,
       handleDownload,
       handleViewPayload,
-      formatTypeComputed
+      jobRunPayloadComputed,
+      jobRun: jobRunStore.jobRun.value
     }
   }
 })

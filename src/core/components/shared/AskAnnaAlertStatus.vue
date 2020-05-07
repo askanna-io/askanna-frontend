@@ -5,8 +5,8 @@
 </template>
 
 <script>
-import { reactive, computed, defineComponent } from '@vue/composition-api'
 import useMoment from '@/core/composition/useMoment.js'
+import { reactive, computed, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'AskAnnaAlertStatus',
@@ -14,7 +14,7 @@ export default defineComponent({
   props: {
     statusData: {
       type: Object,
-      default: function() {
+      default: function () {
         return {
           status: 'UNDIFENED',
           runtime: 0,
@@ -54,21 +54,13 @@ export default defineComponent({
       SUBMITTED: 'mdi-progress-check'
     })
 
-    const status = props.statusData.status ? props.statusData.status : 'UNDIFENED'
+    const status = computed(() => (props.statusData.status ? props.statusData.status : 'UNDIFENED'))
 
-    const statusColor = computed(() => {
-      return ALERT_COLORS[status]
-    })
+    const statusIcon = computed(() => ALERT_ICONS[status.value])
+    const statusColor = computed(() => ALERT_COLORS[status.value])
+    const statusValue = computed(() => ALERT_VALUES[status.value])
 
-    const statusValue = computed(() => {
-      return ALERT_VALUES[status]
-    })
-
-    const statusIcon = computed(() => {
-      return ALERT_ICONS[status]
-    })
-
-    return { statusColor, statusValue, statusIcon, ...moment }
+    return { statusColor, statusValue, statusIcon, ago: moment.ago }
   }
 })
 </script>

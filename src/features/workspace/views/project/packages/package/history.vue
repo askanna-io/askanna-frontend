@@ -27,47 +27,40 @@
 
 <script>
 import { defineComponent } from '@vue/composition-api'
-import usePackages from '../../packages/composition/usePackages'
+import useMoment from '@/core/composition/useMoment.js'
+import usePackages from '@packages/composition/usePackages'
 import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
 
-import useMoment from '@/core/composition/useMoment.js'
-
 export default defineComponent({
-  name: 'ThePackages',
-
   setup(props, context) {
     const moment = useMoment(context)
     const packages = usePackages(context)
     const breadcrumbs = useBreadcrumbs(context, { start: 2 })
 
-    return {
-      ...moment,
-      ...packages,
-      breadcrumbs
-    }
-  },
+    const headers = [
+      {
+        text: 'Name',
+        align: 'left',
+        value: 'filename'
+      },
+      { text: 'Created', value: 'created_at' },
+      { text: '', value: 'uuid', sortable: false },
+      { text: '', value: 'menu' }
+    ]
 
-  data() {
-    return {
-      headers: [
-        {
-          text: 'Name',
-          align: 'left',
-          value: 'filename'
-        },
-        { text: 'Created', value: 'created_at' },
-        { text: '', value: 'uuid', sortable: false },
-        { text: '', value: 'menu' }
-      ]
-    }
-  },
-
-  methods: {
-    handleClickRow({ project_id, uuid, versionId }) {
-      this.$router.push({
+    const handleClickRow = item => {
+      context.root.$router.push({
         name: 'workspace-project-packages-uuid-version-uuid',
         params: { projectId: project_id, packageId: uuid, versionId }
       })
+    }
+
+    return {
+      ...moment,
+      ...packages,
+      headers,
+      breadcrumbs,
+      handleClickRow
     }
   }
 })

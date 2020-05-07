@@ -1,5 +1,5 @@
 <template>
-  <v-list class="transparent" max-width="650px" v-if="jobRun">
+  <v-list class="transparent" max-width="650px">
     <v-list-item>
       <v-list-item-title>Status: <ask-anna-chip-status :status="jobRun.status" /> </v-list-item-title>
       <v-list-item-title class="text-left"> Duratation: &nbsp;{{ jobRun.runtime }} seconds </v-list-item-title>
