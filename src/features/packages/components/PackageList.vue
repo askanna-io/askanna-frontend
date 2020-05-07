@@ -94,7 +94,7 @@ export default defineComponent({
 
     const handleClickRow = ({ uuid }) => context.emit('handleClickRow', uuid)
     const handleDownload = async packageData => context.emit('handleDownload', packageData)
-    const handleHistory = ({ project_id, uuid }) => context.emit('handleHistory', { project_id, uuid })
+    const handleHistory = ({ uuid }) => context.emit('handleHistory', { uuid })
 
     return {
       ...moment,

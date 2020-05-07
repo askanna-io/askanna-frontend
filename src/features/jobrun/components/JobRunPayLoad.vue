@@ -12,8 +12,8 @@
 
 <script>
 import PrismEditor from 'vue-prism-editor'
-import { reactive, computed, defineComponent } from '@vue/composition-api'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
+import { reactive, computed, defineComponent } from '@vue/composition-api'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
 
 export default defineComponent({

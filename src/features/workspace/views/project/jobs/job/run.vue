@@ -4,7 +4,7 @@
     <v-divider />
 
     <v-skeleton-loader ref="skeleton" :type="'table-row'" :loading="!jobRun">
-      <job-run-info :jobRun="jobRun" :jobName="jobName" />
+      <job-run-info :jobRun="jobRun" :jobName="jobName" :jobId="jobId" />
       <v-divider />
 
       <v-row>
@@ -76,12 +76,14 @@ export default defineComponent({
         to: 'workspace-project-jobs-name-uuid-result'
       }
     ]
+
     const { jobId, jobRunId } = context.root.$route.params
     const jobRun = computed(() => jobRunStore.jobRun.value)
     const currentTab = ref('workspace-project-jobs-name-uuid-input')
 
     return {
       tabs,
+      jobId,
       jobRun,
       jobRunId,
       currentTab,
