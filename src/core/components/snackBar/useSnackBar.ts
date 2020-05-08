@@ -4,7 +4,7 @@ import { ac, snackbarStoreName } from './store/types'
 
 const { showSnackBar, closeSnackBar } = ac
 
-export default function() {
+export default function () {
   const state = {
     ...useState(snackbarStoreName, { snackbar: 'snackbar', open: 'snackbar.open' })
   }

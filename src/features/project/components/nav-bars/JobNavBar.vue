@@ -75,7 +75,7 @@ export default defineComponent({
   props: {
     job: {
       type: Object,
-      default: function() {
+      default: function () {
         return {
           name: ''
         }
@@ -83,7 +83,7 @@ export default defineComponent({
     },
     project: {
       type: Object,
-      default: function() {
+      default: function () {
         return {
           name: ''
         }

@@ -41,12 +41,12 @@
           </div>
           <div class="text-sm-center ml-sm-6 ml-md-0 d-none d-sm-flex">
             <v-flex>
-              <v-btn small dark class=" mx-1 white--text" text :to="{ name: 'workspace' }">
+              <v-btn small dark class="mx-1 white--text" text :to="{ name: 'workspace' }">
                 Workspace
               </v-btn>
               <v-menu v-model="menu2" :close-on-content-click="false" :nudge-width="200" offset-x>
                 <template v-slot:activator="{ on }">
-                  <v-btn icon v-on="on" class="d-md-none ">
+                  <v-btn icon v-on="on" class="d-md-none">
                     <v-icon>mdi-dots-vertical</v-icon>
                   </v-btn>
                 </template>

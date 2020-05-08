@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div :class="`d-flex align-start flex-column flex-wrap`">
+    <div :class="`d-flex align-start flex-column flex-wrap variables--wrapper`">
       <div v-for="(item, index) in variables" :key="index" class="ma-4">
         <component :key="index" :text="item.text" :value="item.value" :is="item.component" />
       </div>
@@ -11,6 +11,7 @@
 import JobRunInfoJob from './parts/JobRunInfoJob.vue'
 import JobRunInfoCode from './parts/JobRunInfoCode.vue'
 import JobRunInfoText from './parts/JobRunInfoText.vue'
+import useMoment from '@/core/composition/useMoment'
 import JobRunInfoStatus from './parts/JobRunInfoStatus.vue'
 
 import { JobRun, JobRunModel } from '../../store/types'
@@ -42,6 +43,8 @@ export default defineComponent({
   },
 
   setup(props, context) {
+    const moment = useMoment(context)
+
     const variables = computed(() => {
       const allVariables = [
         {
@@ -62,7 +65,7 @@ export default defineComponent({
 
         {
           text: 'Date',
-          value: '',
+          value: moment.$moment(props.jobRun.created).format(' Do MMMM YYYY, h:mm:ss a'),
           component: 'JobRunInfoText'
         },
         {
@@ -82,24 +85,24 @@ export default defineComponent({
         },
         {
           text: 'Duratation',
-          value: props.jobRun.runtime,
-          component: 'JobRunInfoText'
-        },
-        {
-          text: 'CPU',
           value: '',
           component: 'JobRunInfoText'
         },
         {
+          text: 'CPU',
+          value: Math.round((props.jobRun.runner.cpu_time + Number.EPSILON) * 100) / 100,
+          component: 'JobRunInfoText'
+        },
+        {
           text: 'Memory',
-          value: props.jobRun.memory,
+          value: `${props.jobRun.runner.memory_mib} MB`,
           component: 'JobRunInfoText'
         }
       ]
       interface VariableItem {
-        text: String
-        value: String | number
-        component: String
+        text: string
+        value: string | number
+        component: string
       }
 
       return allVariables.filter((item: VariableItem) => item.value)
@@ -119,3 +122,8 @@ export default defineComponent({
   }
 })
 </script>
+<style>
+.variables--wrapper {
+  max-height: 200px;
+}
+</style>

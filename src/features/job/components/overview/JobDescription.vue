@@ -159,7 +159,7 @@
       </div>
     </editor-menu-bar>
     <v-divider v-show="editable" class="mt-2" />
-    <editor-content class="ma-2 " :editor="editor" spellcheck="false" />
+    <editor-content class="ma-2" :editor="editor" spellcheck="false" />
 
     <v-card-actions>
       <v-btn v-if="editable" color="primary" @click="handleSave">

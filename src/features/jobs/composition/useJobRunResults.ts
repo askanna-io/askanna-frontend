@@ -4,7 +4,7 @@ import { useState, useActions } from '@u3u/vue-hooks'
 
 const { showJobRunResult, closeResultModal } = action
 
-export default function() {
+export default function () {
   const state = {
     ...useState('jobrun', { openJobRunResult: 'openJobRunResult' })
   }

@@ -27,7 +27,7 @@
 
 <script>
 import { defineComponent } from '@vue/composition-api'
-import useMoment from '@/core/composition/useMoment.js'
+import useMoment from '@/core/composition/useMoment'
 import usePackages from '@packages/composition/usePackages'
 import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
 

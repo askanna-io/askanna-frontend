@@ -50,7 +50,7 @@
 
 <script>
 import { defineComponent } from '@vue/composition-api'
-import useMoment from '@/core/composition/useMoment.js'
+import useMoment from '@/core/composition/useMoment'
 
 export default defineComponent({
   name: 'PackageList',
