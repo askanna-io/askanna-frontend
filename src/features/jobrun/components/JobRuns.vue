@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import useMoment from '@/core/composition/useMoment.js'
+import useMoment from '@/core/composition/useMoment'
 import { ref, defineComponent, onBeforeMount, computed, watch } from '@vue/composition-api'
 
 export default defineComponent({

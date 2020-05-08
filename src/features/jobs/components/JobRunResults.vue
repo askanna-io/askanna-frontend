@@ -36,7 +36,7 @@
 
 <script>
 import { defineComponent } from '@vue/composition-api'
-import useMoment from '@/core/composition/useMoment.js'
+import useMoment from '@/core/composition/useMoment'
 import useJobRunResults from '../composition/useJobRunResults'
 
 export default defineComponent({
@@ -45,7 +45,7 @@ export default defineComponent({
   props: {
     item: {
       type: Object,
-      default: function() {
+      default: function () {
         return {
           uuid: 'ae669cb3-b76d-43f7-9d52-3997d0592224',
           payload: {

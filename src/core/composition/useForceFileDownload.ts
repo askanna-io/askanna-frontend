@@ -1,4 +1,4 @@
-export default function() {
+export default function () {
   const trigger = ({ source = '', name = '' }) => {
     const url = window.URL.createObjectURL(
       new Blob([source], {

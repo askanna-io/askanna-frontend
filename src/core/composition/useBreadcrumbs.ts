@@ -1,9 +1,9 @@
 import { watch, SetupContext } from '@vue/composition-api'
 
-export default function(context: SetupContext, { start = 0, end = undefined }) {
+export default function (context: SetupContext, { start = 0, end = undefined }) {
   let breadcrumbs: any = []
 
-  const getBreadcrumbs = function() {
+  const getBreadcrumbs = function () {
     let isReachCurrent = false
 
     breadcrumbs = context.root.$route.matched
@@ -30,7 +30,7 @@ export default function(context: SetupContext, { start = 0, end = undefined }) {
 
   watch(
     () => context.root.$route,
-    function() {
+    function () {
       getBreadcrumbs()
     }
   )

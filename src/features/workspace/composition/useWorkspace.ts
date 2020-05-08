@@ -3,7 +3,7 @@ import { onBeforeMount } from '@vue/composition-api'
 import useWorkSpaceStore from './useWorkSpaceStore'
 import useFetchData from '@/core/composition/useFetchData'
 
-export default function(context: SetupContext) {
+export default function (context: SetupContext) {
   const workspaceStore: any = useWorkSpaceStore()
   const fetchData = useFetchData()
 

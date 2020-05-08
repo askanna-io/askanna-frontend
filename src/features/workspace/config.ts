@@ -117,13 +117,13 @@ export default {
                     },
                     {
                       path: ':jobRunId',
-                      redirect: { name: 'workspace-project-jobs-name-uuid-input' },
+                      name: 'workspace-project-jobs-job-jobrun',
+                      redirect: { name: 'workspace-project-jobs-job-jobrun-input' },
 
                       component: () =>
                         import(
                           /* webpackChunkName: "workspace-project-uuid-jobs-name-run" */ './views/project/jobs/job/run.vue'
                         ),
-                      name: 'workspace-project-jobs-name-uuid',
                       meta: {
                         breadcrumb: 'Job run - #:jobRunId'
                       },
@@ -134,7 +134,7 @@ export default {
                             import(
                               /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-input" */ './views/project/jobs/job/jobrun/input.vue'
                             ),
-                          name: 'workspace-project-jobs-name-uuid-input'
+                          name: 'workspace-project-jobs-job-jobrun-input'
                         },
                         {
                           path: 'result',
@@ -142,7 +142,7 @@ export default {
                             import(
                               /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-result" */ './views/project/jobs/job/jobrun/result.vue'
                             ),
-                          name: 'workspace-project-jobs-name-uuid-result'
+                          name: 'workspace-project-jobs-job-jobrun-result'
                         }
                       ]
                     }
