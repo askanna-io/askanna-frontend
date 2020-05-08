@@ -35,11 +35,9 @@
         </div>
       </v-flex>
     </v-toolbar>
-    <v-expand-transition>
-      <v-flex>
-        <job-run-pay-load :file="jobRunPayloadComputed" />
-      </v-flex>
-    </v-expand-transition>
+    <v-flex class="mb-4">
+      <job-run-pay-load :file="jobRunPayloadComputed" />
+    </v-flex>
   </div>
 </template>
 <script>
