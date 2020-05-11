@@ -36,7 +36,7 @@ export default defineComponent({
   setup(props, context) {
     const { height } = useWindowSize()
     const packageStore = usePackageStore()
-    const breadcrumbs = usePackageBreadcrumbs(context)
+    const breadcrumbs = []
 
     onBeforeMount(async () => {
       const { projectId, packageId, folderName } = context.root.$route.params

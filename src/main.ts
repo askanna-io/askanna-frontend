@@ -29,7 +29,6 @@ Vue.use(hooks)
 Vue.use(Logger)
 
 Vue.use(VueCompositionApi)
-Vue.use(require('vue-moment'))
 Vue.config.productionTip = false
 
 //check if the current user is authenticated
