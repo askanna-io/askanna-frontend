@@ -68,9 +68,9 @@ $axios.interceptors.request.use(
 
 // for each response check status
 $axios.interceptors.response.use(
-  (config) => config,
+  config => config,
 
-  (err) => {
+  err => {
     if (err.response && err.response.status === 401) {
       router.push({ name: 'login' })
     }
@@ -90,7 +90,7 @@ new Vue({
   router,
   store,
   vuetify,
-  render: (h) => h(app)
+  render: h => h(app)
 }).$mount('#app')
 
 export { $axios }

@@ -38,15 +38,15 @@
           <span>Copy file</span>
         </v-tooltip>
       </v-toolbar>
-      <prism-editor :code="file" readonly line-numbers />
+      <prism-editor :code="fileComputed" readonly line-numbers />
     </v-col>
   </v-row>
 </template>
 
 <script>
 import PrismEditor from 'vue-prism-editor'
-import { defineComponent } from '@vue/composition-api'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
+import { defineComponent, watch, computed } from '@vue/composition-api'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
 
 export default defineComponent({
@@ -73,6 +73,7 @@ export default defineComponent({
     const snackBar = useSnackBar()
     const forceFileDownload = useForceFileDownload()
 
+    const fileComputed = computed(() => props.file)
     const handleBack = () => context.root.$router.back(-1)
 
     const handleCopy = () => {
@@ -91,6 +92,7 @@ export default defineComponent({
     return {
       handleBack,
       handleCopy,
+      fileComputed,
       handleDownload
     }
   }

@@ -30,7 +30,7 @@ for (const modulePath of coreModuleKeys) {
 Vue.use(Vuex)
 
 const store: StoreOptions<RootState> = {
-  plugins: [createPersistedState({ paths: persistedStores.filter(store => store !== 'jobrun') })],
+  plugins: [createPersistedState({ paths: persistedStores.filter(store => store === 'auth') })],
   modules: { ...stores },
   strict: process.env.NODE_ENV !== 'production',
   state: {
