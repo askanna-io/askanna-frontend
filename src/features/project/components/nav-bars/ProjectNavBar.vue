@@ -1,6 +1,7 @@
 <script>
 import JobNavBar from './JobNavBar'
 import DefaultBar from './DefaultBar'
+import JobRunNavBar from './JobRunNavBar'
 import { defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
@@ -14,7 +15,7 @@ export default defineComponent({
       default: 'workspace-project-activity'
     }
   },
-  render: function(h, context) {
+  render: function (h, context) {
     function appropriateBarComponent() {
       const route = context.props.routeName
 
@@ -27,6 +28,9 @@ export default defineComponent({
 
         case route.indexOf('job-uuid') !== -1:
           return JobNabBar
+
+        case route.indexOf('workspace-project-jobs-job-jobrun') !== -1:
+          return JobRunNavBar
 
         default:
           return DefaultBar

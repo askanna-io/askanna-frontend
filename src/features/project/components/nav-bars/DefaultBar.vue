@@ -57,7 +57,7 @@ export default defineComponent({
   props: {
     project: {
       type: Object,
-      default: function() {
+      default: function () {
         return {
           name: ''
         }

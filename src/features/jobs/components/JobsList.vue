@@ -51,7 +51,7 @@ import { useWindowSize } from '@u3u/vue-hooks'
 import { JobsListHeaders } from '../utils/index'
 import JobRuns from '@jobrun/components/JobRuns'
 import { defineComponent } from '@vue/composition-api'
-import useMoment from '@/core/composition/useMoment.js'
+import useMoment from '@/core/composition/useMoment'
 import useJobStore from '../../job/composition/useJobStore'
 import useJobRunStore from '../../jobrun/composition/useJobRunStore'
 
@@ -164,8 +164,8 @@ export default defineComponent({
     },
     handleClickOnRow(item) {
       this.$router.push({
-        name: 'workspace-project-jobs-name-uuid',
-        params: { ...this.$route.params, jobRunId: item.uuid, jobId: this.currentJob.short_uuid || 'jobname' }
+        name: 'workspace-project-jobs-job-jobrun-input',
+        params: { ...this.$route.params, jobRunId: item.short_uuid, jobId: this.currentJob.short_uuid || 'jobname' }
       })
     }
   }

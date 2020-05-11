@@ -2,56 +2,51 @@
   <div class="px-4">
     <v-toolbar dense flat color="grey lighten-3">
       <v-flex class="d-flex">
-        <div class="mr-auto d-flex align-center" @click="handleViewPayload">
-          <v-btn x-small>Show preview</v-btn>
+        <div class="mr-auto d-flex align-center">
+          Payload
         </div>
         <div>
-          <v-btn-toggle v-model="formatType" dense @change="handleDownload">
-            <v-tooltip top>
-              <template v-slot:activator="{ on }">
-                <v-btn value="raw" v-on="on">
-                  <v-icon>mdi-cloud-download</v-icon>
-                </v-btn>
-              </template>
-              <span>Download raw</span>
-            </v-tooltip>
-            <v-tooltip top>
-              <template v-slot:activator="{ on }">
-                <v-btn value="formated" v-on="on">
-                  <v-icon>mdi-download</v-icon>
-                </v-btn>
-              </template>
-              <span>Download formated</span>
-            </v-tooltip>
-          </v-btn-toggle>
+          <v-tooltip top>
+            <template v-slot:activator="{ on }">
+              <v-btn small tile outlined v-on="on" color="secondary" class="mr-1" @click="handleDownload('raw')">
+                <v-icon color="secondary" left>mdi-download</v-icon>Raw
+              </v-btn>
+            </template>
+            <span>Download raw</span>
+          </v-tooltip>
 
-          <v-btn-toggle group class="pl-2" dense @change="handleViewPayload(jobRun)">
-            <v-tooltip top>
-              <template v-slot:activator="{ on }">
-                <v-btn value="raw" v-on="on">
-                  <v-icon>mdi-file-outline</v-icon>
-                </v-btn>
-              </template>
-              <span>View</span>
-            </v-tooltip>
-          </v-btn-toggle>
+          <v-tooltip top>
+            <template v-slot:activator="{ on }">
+              <v-btn v-on="on" small tile outlined color="secondary" class="mr-1" @click="handleDownload('formated')">
+                <v-icon color="secondary" left>mdi-download</v-icon>Formated
+              </v-btn>
+            </template>
+            <span>Download formated</span>
+          </v-tooltip>
+
+          <v-tooltip top>
+            <template v-slot:activator="{ on }">
+              <v-btn small v-on="on" tile outlined color="secondary" @click="handleCopy()">
+                <v-icon color="secondary">mdi-content-copy</v-icon>
+              </v-btn>
+            </template>
+            <span>View</span>
+          </v-tooltip>
         </div>
       </v-flex>
     </v-toolbar>
-    <v-expand-transition>
-      <v-flex v-if="showPayload">
-        <job-run-pay-load :file="jobRunPayloadComputed" />
-      </v-flex>
-    </v-expand-transition>
+    <v-flex class="mb-4">
+      <job-run-pay-load :file="jobRunPayloadComputed" />
+    </v-flex>
   </div>
 </template>
 <script>
 import { JobRun } from '../../store/types'
-import useJobRunStore from '../../composition/useJobRunStore'
-import useForceFileDownload from '@/core/composition/useForceFileDownload'
-
 import JobRunPayLoad from '../JobRunPayLoad.vue'
-import { ref, computed, defineComponent } from '@vue/composition-api'
+import useJobRunStore from '../../composition/useJobRunStore'
+import useSnackBar from '@/core/components/snackBar/useSnackBar'
+import useForceFileDownload from '@/core/composition/useForceFileDownload'
+import { ref, computed, onBeforeMount, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'JobRunInput',
@@ -61,26 +56,24 @@ export default defineComponent({
   },
 
   setup(props, context) {
+    const snackBar = useSnackBar()
     const jobRunStore = useJobRunStore()
     const forceFileDownload = useForceFileDownload()
 
-    const formatType = ref()
     const showPayload = ref(false)
     const jobRunPayloadComputed = computed(() => JSON.stringify(jobRunStore.jobRunPayload.value, null, 2))
 
-    const handleDownload = async () => {
+    const handleDownload = async formatType => {
       const {
         short_uuid,
         payload: { uuid }
       } = jobRunStore.jobRun.value
       await jobRunStore.getJobRunPayload({ jobRunShortId: short_uuid, payloadUuid: uuid })
 
-      const formatOption = formatType.value === 'raw' ? null : 2
+      const formatOption = formatType === 'raw' ? null : 2
       const jobRunPayload = JSON.stringify(jobRunStore.jobRunPayload.value, null, formatOption)
 
       forceFileDownload.trigger({ source: jobRunPayload, name: `payload-${uuid}.json` })
-
-      formatType.value = null
     }
 
     const handleViewPayload = async () => {
@@ -89,20 +82,25 @@ export default defineComponent({
         payload: { uuid }
       } = jobRunStore.jobRun.value
 
-      showPayload.value = !showPayload.value
-      if (!showPayload.value) return
       if (!jobRunStore.jobRunPayload.value) {
         await jobRunStore.getJobRunPayload({ jobRunShortId: short_uuid, payloadUuid: uuid })
       }
+    }
 
-      const jobRunPayload = JSON.stringify(jobRunStore.jobRunPayload.value, null, 2)
+    const handleCopy = () => {
+      context.root.$copyText(jobRunPayloadComputed.value).then(
+        function (e) {
+          snackBar.showSnackBar({ message: 'Copied', color: 'success' })
+        },
+        function (e) {
+          snackBar.showSnackBar({ message: 'Can not copy', color: 'warning' })
+        }
+      )
     }
 
     return {
-      formatType,
-      showPayload,
+      handleCopy,
       handleDownload,
-      handleViewPayload,
       jobRunPayloadComputed,
       jobRun: jobRunStore.jobRun.value
     }

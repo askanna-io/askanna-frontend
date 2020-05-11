@@ -11,8 +11,8 @@ export default function (context: SetupContext) {
     breadcrumbs = context.root.$route.path
       .split('/')
       .slice(6)
-      .filter((name) => name !== '')
-      .map((name) => {
+      .filter(name => name !== '')
+      .map(name => {
         currentPath = `${currentPath}/${name}`
         return {
           title: name,
