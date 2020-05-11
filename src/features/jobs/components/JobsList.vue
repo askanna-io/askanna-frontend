@@ -102,11 +102,7 @@ export default defineComponent({
         memory: '',
         return_payload: ''
       },
-      page: 1,
-      pageCount: 2,
-      itemsPerPage: 10,
       expanded: [],
-      singleExpand: false,
       selection: 2,
 
       headers: [

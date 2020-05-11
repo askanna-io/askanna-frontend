@@ -26,7 +26,7 @@ import { defineComponent } from '@vue/composition-api'
 import PackageFile from '@package/components/PackageFile'
 import PackageTree from '@package/components/PackageTree'
 import { headers, FileIcons } from '@package/utils/index'
-import { onBeforeMount, computed } from '@vue/composition-api'
+import { watch, onBeforeMount, computed } from '@vue/composition-api'
 import usePackageStore from '@package/composition/usePackageStore'
 import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
 
@@ -38,11 +38,10 @@ export default defineComponent({
     const packageStore = usePackageStore()
     const breadcrumbs = usePackageBreadcrumbs(context)
 
-    onBeforeMount(() => {
+    onBeforeMount(async () => {
       const { projectId, packageId, folderName } = context.root.$route.params
 
-      packageStore.getFileSource()
-      packageStore.getPackage({
+      await packageStore.getPackage({
         projectId,
         packageId,
         folderName
@@ -56,10 +55,6 @@ export default defineComponent({
       const pathArray = path.value.split('/')
       const fileName = pathArray.pop()
       const current = packageStore.packageData.value.files.find(item => item.name === fileName)
-
-      if (current && !current.is_dir && current.name !== '') {
-        packageStore.getFileSource(current.path)
-      }
 
       return current
     })
@@ -81,6 +76,13 @@ export default defineComponent({
       return parentPath ? [parentPath, ...tree] : tree
     })
 
+    watch(currentPath, (currentPath, prevPath) => {
+      const path = currentPath && !currentPath.is_dir && currentPath.name !== '' ? currentPath.path : ''
+      if (prevPath && path !== '' && path === prevPath.path) return
+
+      packageStore.getFileSource(path)
+    })
+
     const handleClickOnRow = async item => {
       const { projectId, packageId, versionId, folderName = '' } = context.root.$route.params
       let path = `/workspace/project/${projectId}/packages/${packageId}/version/${versionId}/${folderName}/${item.name}`
@@ -97,7 +99,8 @@ export default defineComponent({
     }
 
     return {
-      ...packageStore,
+      file: packageStore.file,
+      fileSource: packageStore.fileSource,
       treeView,
       FileIcons,
       calcHeight,
