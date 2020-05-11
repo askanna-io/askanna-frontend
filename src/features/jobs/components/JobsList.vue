@@ -102,11 +102,7 @@ export default defineComponent({
         memory: '',
         return_payload: ''
       },
-      page: 1,
-      pageCount: 2,
-      itemsPerPage: 10,
       expanded: [],
-      singleExpand: false,
       selection: 2,
 
       headers: [
@@ -165,7 +161,7 @@ export default defineComponent({
     handleClickOnRow(item) {
       this.$router.push({
         name: 'workspace-project-jobs-name-uuid',
-        params: { ...this.$route.params, jobRunId: item.uuid, jobId: this.currentJob.short_uuid || 'jobname' }
+        params: { ...this.$route.params, jobRunId: item.short_uuid, jobId: this.currentJob.short_uuid || 'jobname' }
       })
     }
   }
