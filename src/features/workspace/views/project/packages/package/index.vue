@@ -97,7 +97,8 @@ export default defineComponent({
     }
 
     return {
-      ...packageStore,
+      file: packageStore.file,
+      fileSource: packageStore.fileSource,
       treeView,
       FileIcons,
       calcHeight,
