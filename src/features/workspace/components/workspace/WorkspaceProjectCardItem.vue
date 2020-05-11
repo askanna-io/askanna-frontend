@@ -27,7 +27,7 @@
         <v-hover v-slot:default="{ hover }" open-delay="200" v-for="n in 5" :key="n">
           <v-avatar
             :class="`elevation-${hover ? 16 : 2}`"
-            class="mx-auto  transition-swing"
+            class="mx-auto transition-swing"
             size="35"
             color="grey "
             :hover="hover"

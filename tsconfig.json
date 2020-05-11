@@ -34,7 +34,7 @@
     "src/**/*.vue",
     "tests/**/*.ts",
     "tests/**/*.tsx",
-    "src/core/composition/useMoment.js",
+    "src/core/composition/useMoment.ts",
     "src/server/index.js"
   ],
   "exclude": ["node_modules"]

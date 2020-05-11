@@ -25,7 +25,12 @@ export interface JobRun {
     uuid: string
   }
   runner: {
+    cpu_cores: number
+    cpu_time: number
+    job_status: number
+    memory_mib: number
     name: string
+    uuid: string
   }
   owner: {
     name: string
@@ -94,7 +99,12 @@ export class JobRunModel {
         uuid: ''
       },
       runner: {
-        name: ''
+        cpu_cores: 0,
+        cpu_time: 0,
+        job_status: 0,
+        memory_mib: 0,
+        name: '',
+        uuid: ''
       },
       owner: {
         name: ''

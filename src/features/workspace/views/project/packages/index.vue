@@ -37,10 +37,11 @@ export default defineComponent({
       forceFileDownload.trigger({ source, name: packageData.filename })
     }
 
-    const handleHistory = ({ project_id, uuid }) => {
+    const handleHistory = ({ uuid }) => {
+      const { projectId } = context.root.$route.params
       context.root.$router.push({
         name: 'workspace-project-packages-uuid-history',
-        params: { projectId: project_id, packageId: uuid, versionId: '1' }
+        params: { projectId, packageId: uuid, versionId: '1' }
       })
     }
 

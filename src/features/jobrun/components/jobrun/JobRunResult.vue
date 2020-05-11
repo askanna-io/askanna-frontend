@@ -16,7 +16,7 @@ import useJobRunStore from '../../composition/useJobRunStore'
 export default defineComponent({
   name: 'JobRunResult',
 
-  setup(context, props) {
+  setup(props, context) {
     const jobRunStore = useJobRunStore()
     const returnPayload = computed(() => jobRunStore.jobRun.value.return_payload)
 

@@ -42,7 +42,7 @@ export default defineComponent({
 
     const handleClickOnRow = item => {
       context.root.$router.push({
-        name: 'workspace-project-jobs-name-uuid',
+        name: 'workspace-project-jobs-job-jobrun',
         params: { ...context.root.$route.params, jobRunId: item.short_uuid }
       })
     }

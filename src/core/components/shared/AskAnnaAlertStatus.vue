@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import useMoment from '@/core/composition/useMoment.js'
+import useMoment from '@/core/composition/useMoment'
 import { reactive, computed, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({

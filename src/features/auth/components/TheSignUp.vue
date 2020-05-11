@@ -12,7 +12,7 @@
       counter
       @click:append="isShowPassword = !isShowPassword"
     />
-    <input type="password" style="display:none" browserAutocomplete="new-password" autocomplete="new-password" />
+    <input type="password" style="display: none;" browserAutocomplete="new-password" autocomplete="new-password" />
     <v-btn :disabled="!isFormValid" color="primary" class="mr-4" @click="handleLogin">
       Sign up
     </v-btn>

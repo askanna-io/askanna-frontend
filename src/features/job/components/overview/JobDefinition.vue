@@ -21,7 +21,7 @@ export default defineComponent({
   props: {
     job: {
       type: Object,
-      default: function() {
+      default: function () {
         return {
           env_variables: ''
         }
