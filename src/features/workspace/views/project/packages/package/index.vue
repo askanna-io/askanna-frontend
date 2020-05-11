@@ -80,7 +80,7 @@ export default defineComponent({
       const path = currentPath && !currentPath.is_dir && currentPath.name !== '' ? currentPath.path : ''
       if (prevPath && path !== '' && path === prevPath.path) return
 
-      await packageStore.getFileSource(path)
+      // await packageStore.getFileSource(path)
     })
 
     const handleClickOnRow = async item => {
