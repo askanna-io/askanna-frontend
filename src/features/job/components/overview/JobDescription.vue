@@ -162,17 +162,14 @@
     <editor-content class="ma-2" :editor="editor" spellcheck="false" />
 
     <v-card-actions>
-      <v-btn v-if="editable" color="primary" @click="handleSave">
-        Save
-        <v-icon right dark>mdi-content-save</v-icon>
+      <v-btn v-if="editable" small outlined color="primary" @click="handleSave">
+        <v-icon left dark>mdi-content-save</v-icon>Save
       </v-btn>
-      <v-btn v-if="editable" color="secondary" @click="handleClear">
-        Clear
-        <v-icon right dark>mdi-delete-forever-outline</v-icon>
+      <v-btn v-if="editable" small outlined color="secondary" @click="handleClear">
+        <v-icon left dark>mdi-delete-forever-outline</v-icon>Clear
       </v-btn>
-      <v-btn v-if="!editable" color="primary" @click="handleEdit">
-        Edit
-        <v-icon right dark>mdi-file-edit-outline</v-icon>
+      <v-btn v-if="!editable" small outlined color="primary" @click="handleEdit">
+        <v-icon left dark>mdi-file-edit-outline</v-icon>Edit
       </v-btn>
     </v-card-actions>
   </v-card>
