@@ -28,7 +28,6 @@
       </v-breadcrumbs>
       <v-spacer />
     </v-toolbar>
-    <v-divider />
     <v-slide-y-transition>
       <v-toolbar v-if="isShowProjectBar" dense color="white" class="br-r5 ma-3" flat transition="slide-y-transition">
         <v-tabs left align-with-title v-model="currentJobTab">
@@ -75,11 +74,11 @@
   </div>
 </template>
 <script>
-import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
 import useJobStore from '@job/composition/useJobStore'
 import useMoment from '@/core/composition/useMoment'
 import useFetchData from '@/core/composition/useFetchData'
 import JobRunInfo from '@jobrun/components/jobrun/JobRunInfo'
+import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
 import useJobRunStore from '@jobrun/composition/useJobRunStore'
 import useJobRunResults from '@jobs/composition/useJobRunResults'
 import useProjectStore from '@project/composition/useProjectStore'

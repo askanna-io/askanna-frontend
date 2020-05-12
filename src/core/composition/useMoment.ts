@@ -1,8 +1,7 @@
 import { SetupContext } from '@vue/composition-api'
+import moment from 'moment'
 
 export default function (context: SetupContext) {
-  const moment = context.root.$moment
-
   const runTimeHours = function (startTime: string, endTime: string) {
     return moment.duration(moment(endTime).diff(moment(startTime))).asSeconds()
   }

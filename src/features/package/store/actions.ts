@@ -49,7 +49,7 @@ export const actions: ActionTree<PackageState, RootState> = {
       return
     }
 
-    const file = await fileSource
+    const file = await fileSource.text()
 
     commit(type.SET_FILE, { file, fileSource })
   }

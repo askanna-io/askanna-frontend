@@ -13,9 +13,6 @@ export function makeServer({ environment = 'development' } = {}) {
       server.create('user', { id: 'Alice', name: 'ASDA' })
     },
     routes() {
-      this.passthrough()
-      this.passthrough('https://cdn-api.askanna.eu/**')
-
       this.namespace = '/v1'
       this.urlPrefix = apiUrl
       this.timing = 400
@@ -29,7 +26,7 @@ export function makeServer({ environment = 'development' } = {}) {
       this.passthrough()
       this.passthrough(apiUrl)
       this.passthrough(`${apiUrl}/rest-auth/login/`)
-      this.passthrough('https://cdn-api.askanna.eu/files/blob/**')
+      this.passthrough('https://cdn-api.askanna.eu/**')
     }
   })
 

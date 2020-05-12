@@ -76,11 +76,11 @@ export default defineComponent({
       return parentPath ? [parentPath, ...tree] : tree
     })
 
-    watch(currentPath, (currentPath, prevPath) => {
+    watch(currentPath, async (currentPath, prevPath) => {
       const path = currentPath && !currentPath.is_dir && currentPath.name !== '' ? currentPath.path : ''
       if (prevPath && path !== '' && path === prevPath.path) return
 
-      packageStore.getFileSource(path)
+      await packageStore.getFileSource(path)
     })
 
     const handleClickOnRow = async item => {

@@ -1,9 +1,9 @@
 import { watch, SetupContext } from '@vue/composition-api'
 
-export default function (context: SetupContext) {
+export default (context: SetupContext) => {
   let breadcrumbs: any = []
 
-  const getBreadcrumbs = function () {
+  const getBreadcrumbs = () => {
     const beforeFolderPath = context.root.$route.path.split('/').slice(0, 6).join('/')
 
     let currentPath = beforeFolderPath
@@ -24,7 +24,7 @@ export default function (context: SetupContext) {
 
   watch(
     () => context.root.$route,
-    function () {
+    () => {
       getBreadcrumbs()
     }
   )
