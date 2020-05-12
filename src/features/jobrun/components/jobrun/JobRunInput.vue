@@ -1,6 +1,6 @@
 <template>
   <div class="px-4">
-    <v-toolbar dense flat color="grey lighten-3">
+    <v-toolbar dense flat color="grey lighten-3" class="br-r4">
       <v-flex class="d-flex">
         <div class="mr-auto d-flex align-center">
           Payload
@@ -8,7 +8,7 @@
         <div>
           <v-tooltip top>
             <template v-slot:activator="{ on }">
-              <v-btn small tile outlined v-on="on" color="secondary" class="mr-1" @click="handleDownload('raw')">
+              <v-btn small outlined v-on="on" color="secondary" class="mr-1" @click="handleDownload('raw')">
                 <v-icon color="secondary" left>mdi-download</v-icon>Raw
               </v-btn>
             </template>
@@ -17,7 +17,7 @@
 
           <v-tooltip top>
             <template v-slot:activator="{ on }">
-              <v-btn v-on="on" small tile outlined color="secondary" class="mr-1" @click="handleDownload('formated')">
+              <v-btn v-on="on" small outlined color="secondary" class="mr-1" @click="handleDownload('formated')">
                 <v-icon color="secondary" left>mdi-download</v-icon>Formated
               </v-btn>
             </template>
@@ -26,7 +26,7 @@
 
           <v-tooltip top>
             <template v-slot:activator="{ on }">
-              <v-btn small v-on="on" tile outlined color="secondary" @click="handleCopy()">
+              <v-btn small v-on="on" outlined color="secondary" @click="handleCopy()">
                 <v-icon color="secondary">mdi-content-copy</v-icon>
               </v-btn>
             </template>
@@ -36,7 +36,9 @@
       </v-flex>
     </v-toolbar>
     <v-flex class="mb-4">
-      <job-run-pay-load :file="jobRunPayloadComputed" />
+      <v-skeleton-loader :loading="loading" transition="transition" height="94" type="list-item-two-line">
+        <job-run-pay-load :file="jobRunPayloadComputed" />
+      </v-skeleton-loader>
     </v-flex>
   </div>
 </template>
@@ -61,7 +63,10 @@ export default defineComponent({
     const forceFileDownload = useForceFileDownload()
 
     const showPayload = ref(false)
+
     const jobRunPayloadComputed = computed(() => JSON.stringify(jobRunStore.jobRunPayload.value, null, 2))
+
+    const loading = computed(() => jobRunStore.jobRunPayload.value === '')
 
     const handleDownload = async formatType => {
       const {
@@ -85,6 +90,7 @@ export default defineComponent({
       if (!jobRunStore.jobRunPayload.value) {
         await jobRunStore.getJobRunPayload({ jobRunShortId: short_uuid, payloadUuid: uuid })
       }
+      loading.value = false
     }
 
     const handleCopy = () => {
@@ -99,6 +105,7 @@ export default defineComponent({
     }
 
     return {
+      loading,
       handleCopy,
       handleDownload,
       jobRunPayloadComputed,
