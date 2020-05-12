@@ -30,6 +30,9 @@ export default class App extends Vue {
 .br-r5 {
   border-radius: 5px !important;
 }
+.br-r4 {
+  border-radius: 4px !important;
+}
 
 .br-none {
   border: none !important;
@@ -55,7 +58,10 @@ export default class App extends Vue {
   background-color: #6a4580 !important;
   border: 2px solid #555555 !important;
 }
-
+.prism-editor-wrapper {
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
 .prism-editor-wrapper code.language-js {
   font-size: 0.875rem !important;
 }
