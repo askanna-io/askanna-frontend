@@ -80,9 +80,9 @@ $axios.interceptors.response.use(
 
 Vue.use(VueAxios, $axios)
 
-if (process.env.NODE_ENV === 'development') {
+/* if (process.env.NODE_ENV === 'development') {
   makeServer()
-}
+} */
 
 //init app instance
 new Vue({
