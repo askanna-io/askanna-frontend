@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar app clipped-left dark color="primary">
+    <v-app-bar app clipped-left dark color="primary" dense>
       <v-app-bar-nav-icon @click.stop="mobileMenu = !mobileMenu" class="hidden-sm-and-up" />
       <v-container fluid>
         <div
