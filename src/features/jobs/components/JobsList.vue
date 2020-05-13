@@ -128,7 +128,6 @@ export default defineComponent({
       }
     },
     calcHeight() {
-      console.log(this.height)
       return this.height - 450
     },
     calcSubHeight() {
