@@ -6,7 +6,6 @@
     item-key="short_uuid"
     class="job-table scrollbar"
     :items="jobList"
-    :height="calcHeight"
     :expanded.sync="expanded"
     :headers="JobsListHeaders"
     @item-expanded="handleExpand"
