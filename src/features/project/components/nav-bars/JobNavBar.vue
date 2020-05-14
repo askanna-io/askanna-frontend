@@ -28,49 +28,26 @@
       </v-breadcrumbs>
       <v-spacer />
     </v-toolbar>
-    <v-divider />
     <v-slide-y-transition>
-      <v-toolbar v-if="isShowProjectBar" dense color="white" class="br-r5 ma-3" flat transition="slide-y-transition">
-        <v-tabs left align-with-title>
-          <v-tabs-slider color="primary" optional />
-          <template v-for="tab of projectTools">
-            <v-tab
-              v-if="tab.show"
-              ripple
-              :key="tab.id"
-              :to="{ name: tab.to, params: { title: `${tab.name} - ${project.name}` } }"
-            >
-              {{ tab.name }}
-            </v-tab>
-          </template>
-        </v-tabs>
-      </v-toolbar>
+      <div v-if="isShowProjectBar">
+        <v-divider />
+        <project-tool-bar :projectName="project.name" />
+      </div>
     </v-slide-y-transition>
     <v-divider />
-
-    <v-card-title>
-      <span class="title font-weight-light">Job: {{ job.name }}</span>
-      <v-tabs v-model="currentTab" left align-with-title>
-        <v-tabs-slider color="primary" />
-
-        <v-tab
-          v-for="tab of jobTools"
-          :key="tab.id"
-          ripple
-          :to="{ name: tab.to, params: { title: `${tab.name} - ${project.name}` } }"
-        >
-          {{ tab.name }}
-        </v-tab>
-      </v-tabs>
-    </v-card-title>
+    <job-tool-bar :jobName="job.name" :projectName="project.name" />
   </div>
 </template>
 <script>
 import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
+import JobToolBar from './parts/JobToolBar'
+import ProjectToolBar from './parts/ProjectToolBar'
 import { defineComponent, onBeforeMount, computed, watch, ref } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'JobNavBar',
+
+  components: { JobToolBar, ProjectToolBar },
 
   props: {
     job: {
@@ -99,71 +76,15 @@ export default defineComponent({
 
     let sticked = ref(false)
 
-    const projectTools = [
-      {
-        id: 0,
-        name: 'Activity',
-        to: 'workspace-project-activity',
-        show: context.root.isNotBeta
-      },
-      {
-        id: 1,
-        name: 'Code',
-        to: 'workspace-project-packages',
-        show: !context.root.isNotBeta
-      },
-      {
-        id: 2,
-        name: 'Jobs',
-        to: 'workspace-project-jobs',
-        show: !context.root.isNotBeta
-      },
-
-      {
-        id: 3,
-        name: 'Documentation',
-        to: 'workspace-project-documentation',
-        show: !context.root.isNotBeta
-      }
-    ]
-
-    const currentTab = ref('job-overview')
-    const jobTools = [
-      {
-        id: 0,
-        name: 'Overview',
-        to: 'workspace-project-job-overiew'
-      },
-      {
-        id: 1,
-        name: 'Runs',
-        to: 'workspace-project-job-jobruns'
-      },
-      {
-        id: 2,
-        name: 'Variables & data',
-        to: 'workspace-project-job-variables'
-      },
-
-      {
-        id: 3,
-        name: 'Tokens',
-        to: 'workspace-project-job-tokens'
-      }
-    ]
-
     const onStick = data => {
       sticked = data.sticked
     }
     return {
       sticked,
       onStick,
-      jobTools,
-      currentTab,
       breadcrumbs,
       isShowProjectBar,
-      currentProjectTab,
-      projectTools: projectTools.filter(item => item.show)
+      currentProjectTab
     }
   }
 })

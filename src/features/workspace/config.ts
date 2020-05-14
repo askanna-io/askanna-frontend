@@ -91,7 +91,40 @@ export default {
                       name: 'workspace-project-job-jobruns',
                       meta: {
                         breadcrumb: 'Job run'
-                      }
+                      },
+                      children: [
+                        {
+                          path: ':jobRunId',
+                          name: 'workspace-project-jobs-job-jobrun',
+                          redirect: { name: 'workspace-project-jobs-job-jobrun-input' },
+
+                          component: () =>
+                            import(
+                              /* webpackChunkName: "workspace-project-uuid-jobs-name-run" */ './views/project/jobs/job/run.vue'
+                            ),
+                          meta: {
+                            breadcrumb: 'Job run - #:jobRunId'
+                          },
+                          children: [
+                            {
+                              path: '',
+                              component: () =>
+                                import(
+                                  /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-input" */ './views/project/jobs/job/jobrun/input.vue'
+                                ),
+                              name: 'workspace-project-jobs-job-jobrun-input'
+                            },
+                            {
+                              path: 'result',
+                              component: () =>
+                                import(
+                                  /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-result" */ './views/project/jobs/job/jobrun/result.vue'
+                                ),
+                              name: 'workspace-project-jobs-job-jobrun-result'
+                            }
+                          ]
+                        }
+                      ]
                     },
                     {
                       path: 'variables',
@@ -114,37 +147,6 @@ export default {
                       meta: {
                         breadcrumb: 'Tokens'
                       }
-                    },
-                    {
-                      path: ':jobRunId',
-                      name: 'workspace-project-jobs-job-jobrun',
-                      redirect: { name: 'workspace-project-jobs-job-jobrun-input' },
-
-                      component: () =>
-                        import(
-                          /* webpackChunkName: "workspace-project-uuid-jobs-name-run" */ './views/project/jobs/job/run.vue'
-                        ),
-                      meta: {
-                        breadcrumb: 'Job run - #:jobRunId'
-                      },
-                      children: [
-                        {
-                          path: '',
-                          component: () =>
-                            import(
-                              /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-input" */ './views/project/jobs/job/jobrun/input.vue'
-                            ),
-                          name: 'workspace-project-jobs-job-jobrun-input'
-                        },
-                        {
-                          path: 'result',
-                          component: () =>
-                            import(
-                              /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-result" */ './views/project/jobs/job/jobrun/result.vue'
-                            ),
-                          name: 'workspace-project-jobs-job-jobrun-result'
-                        }
-                      ]
                     }
                   ]
                 }

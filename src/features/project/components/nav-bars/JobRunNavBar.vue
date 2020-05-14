@@ -29,21 +29,12 @@
       <v-spacer />
     </v-toolbar>
     <v-slide-y-transition>
-      <v-toolbar v-if="isShowProjectBar" dense color="white" class="br-r5 ma-3" flat transition="slide-y-transition">
-        <v-tabs left align-with-title v-model="currentJobTab">
-          <v-tabs-slider color="primary" optional />
-          <template v-for="tab of jobTools">
-            <v-tab
-              v-if="tab.show"
-              ripple
-              :key="tab.id"
-              :to="{ name: tab.to, params: { title: `${tab.name} - ${project.name}` } }"
-            >
-              {{ tab.name }}
-            </v-tab>
-          </template>
-        </v-tabs>
-      </v-toolbar>
+      <div v-if="isShowProjectBar">
+        <v-divider />
+        <project-tool-bar :projectName="project.name" />
+        <v-divider />
+        <job-tool-bar :jobName="jobName" :projectName="project.name" />
+      </div>
     </v-slide-y-transition>
     <v-divider />
 
@@ -82,13 +73,18 @@ import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
 import useJobRunStore from '@jobrun/composition/useJobRunStore'
 import useJobRunResults from '@jobs/composition/useJobRunResults'
 import useProjectStore from '@project/composition/useProjectStore'
+
+import JobToolBar from './parts/JobToolBar'
+import ProjectToolBar from './parts/ProjectToolBar'
 import { defineComponent, onBeforeMount, computed, watch, ref } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'JobRunNavBar',
 
   components: {
-    JobRunInfo
+    JobToolBar,
+    JobRunInfo,
+    ProjectToolBar
   },
 
   props: {
@@ -134,35 +130,6 @@ export default defineComponent({
 
     let sticked = ref(false)
 
-    const currentJobTab = ref('workspace-project-job-jobruns')
-    const jobTools = [
-      {
-        id: 0,
-        name: 'Overview',
-        to: 'workspace-project-job-overiew',
-        show: !context.root.isNotBeta
-      },
-      {
-        id: 1,
-        name: 'Runs',
-        to: 'workspace-project-job-jobruns',
-        show: !context.root.isNotBeta
-      },
-      {
-        id: 2,
-        name: 'Variables & data',
-        to: 'workspace-project-job-variables',
-        show: !context.root.isNotBeta
-      },
-
-      {
-        id: 3,
-        name: 'Tokens',
-        to: 'workspace-project-job-tokens',
-        show: !context.root.isNotBeta
-      }
-    ]
-
     const currentJobRunTab = ref('workspace-project-jobs-job-jobrun-input')
     const jobRunTabs = [
       {
@@ -202,10 +169,8 @@ export default defineComponent({
       onStick,
       jobRunTabs,
       breadcrumbs,
-      currentJobTab,
       isShowProjectBar,
       currentJobRunTab,
-      jobTools: jobTools.filter(item => item.show),
 
       jobId,
       jobRun,
