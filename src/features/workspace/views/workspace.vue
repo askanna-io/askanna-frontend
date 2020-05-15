@@ -13,7 +13,7 @@
 </template>
 <script>
 import useQuery from '@/core/composition/useQuery'
-import useWorkspaceStore from '../composition/useWorkspaceStore'
+import useWorkspaceStore from '../composition/useWorkSpaceStore'
 import WorkspaceProjectList from '../components/workspace/WorkspaceProjectList.vue'
 import { watch, computed, reactive, onBeforeMount, defineComponent } from '@vue/composition-api'
 

@@ -1,5 +1,5 @@
 import { onBeforeMount, SetupContext } from '@vue/composition-api'
-import useWorkspaceStore from './useWorkspaceStore'
+import useWorkspaceStore from './useWorkSpaceStore'
 import useFetchData from '@/core/composition/useFetchData'
 
 export default function (context: SetupContext) {

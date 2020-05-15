@@ -43,7 +43,7 @@
   </v-toolbar>
 </template>
 <script>
-import useWorkspaceStore from '../../composition/useWorkspaceStore'
+import useWorkspaceStore from '../../composition/useWorkSpaceStore'
 import { watch, computed, reactive, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
