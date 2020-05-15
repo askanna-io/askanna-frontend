@@ -1,10 +1,10 @@
 import { SetupContext } from '@vue/composition-api'
 import { onBeforeMount } from '@vue/composition-api'
-import useWorkSpaceStore from './useWorkSpaceStore'
+import useWorkspaceStore from './useWorkspaceStore'
 import useFetchData from '@/core/composition/useFetchData'
 
 export default function (context: SetupContext) {
-  const workspaceStore: any = useWorkSpaceStore()
+  const workspaceStore: any = useWorkspaceStore()
   const fetchData = useFetchData()
 
   onBeforeMount(() => {

@@ -2,7 +2,7 @@
   <v-skeleton-loader ref="skeleton" :type="'table-row'" :loading="loading">
     <v-data-iterator :items="items" hide-default-footer>
       <template v-slot:header>
-        <workspace-toolbar />
+        <workspace-toolbar :title="'Askanna'" />
       </template>
       <template v-slot:default="props">
         <v-skeleton-loader ref="skeleton" :loading="loading" :transition="'scale-transition'" :type="'table-row'">

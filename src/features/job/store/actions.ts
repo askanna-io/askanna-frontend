@@ -24,7 +24,7 @@ export const actions: ActionTree<jobState, RootState> = {
         { root }
       )
     } catch (e) {
-      logger.error('Error on load job  in getJob action.\nError: ', e)
+      logger(commit).error('Error on load job  in getJob action.\nError: ', e)
       return
     }
 
@@ -44,9 +44,9 @@ export const actions: ActionTree<jobState, RootState> = {
         },
         { root }
       )
-      logger.success('Job was started')
+      logger(commit).success('Job was started')
     } catch (e) {
-      logger.error('Error on start job  in startJob action.\nError: ', e)
+      logger(commit).error('Error on start job  in startJob action.\nError: ', e)
       return
     }
 
@@ -66,9 +66,9 @@ export const actions: ActionTree<jobState, RootState> = {
         },
         { root }
       )
-      logger.userDanger('Job was stoped')
+      logger(commit).userDanger('Job was stoped')
     } catch (e) {
-      logger.error('Error on stop job  in stopJob action.\nError: ', e)
+      logger(commit).error('Error on stop job  in stopJob action.\nError: ', e)
 
       return
     }
@@ -90,7 +90,7 @@ export const actions: ActionTree<jobState, RootState> = {
         { root }
       )
     } catch (e) {
-      logger.error('Error on pause job  in pauseJob action.\nError: ', e)
+      logger(commit).error('Error on pause job  in pauseJob action.\nError: ', e)
 
       return
     }
@@ -111,9 +111,9 @@ export const actions: ActionTree<jobState, RootState> = {
         },
         { root }
       )
-      logger.userWarning('Job was reseted')
+      logger(commit).userWarning('Job was reseted')
     } catch (e) {
-      logger.error('Error on reset job  in resetJob action.\nError: ', e)
+      logger(commit).error('Error on reset job  in resetJob action.\nError: ', e)
 
       return
     }
@@ -135,7 +135,7 @@ export const actions: ActionTree<jobState, RootState> = {
         { root }
       )
     } catch (e) {
-      logger.error('Error on kill job  in killJob action.\nError: ', e)
+      logger(commit).error('Error on kill job  in killJob action.\nError: ', e)
 
       return
     }
@@ -157,7 +157,7 @@ export const actions: ActionTree<jobState, RootState> = {
         { root }
       )
     } catch (e) {
-      logger.error('Error on result job  in resultJob action.\nError: ', e)
+      logger(commit).error('Error on result job  in resultJob action.\nError: ', e)
 
       return
     }
@@ -165,7 +165,7 @@ export const actions: ActionTree<jobState, RootState> = {
     commit(type.mutation.UPDATE_JOB_RESULT, result.result!)
   },
 
-  async [type.action.getJobInfo]({ dispatch }, uuid) {
+  async [type.action.getJobInfo]({ dispatch, commit }, uuid) {
     let info = {}
     try {
       info = await dispatch(
@@ -179,7 +179,7 @@ export const actions: ActionTree<jobState, RootState> = {
         { root }
       )
     } catch (e) {
-      logger.error('Error on info job  in getJobInfo action.\nError: ', e)
+      logger(commit).error('Error on info job  in getJobInfo action.\nError: ', e)
 
       return
     }
@@ -205,9 +205,9 @@ export const actions: ActionTree<jobState, RootState> = {
         },
         { root }
       )
-      logger.success('Job was updated')
+      logger(commit).success('Job was updated')
     } catch (e) {
-      logger.error('Error on update job  in updateJob action.\nError: ', e)
+      logger(commit).error('Error on update job  in updateJob action.\nError: ', e)
       return
     }
 

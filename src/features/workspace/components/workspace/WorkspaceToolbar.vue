@@ -1,6 +1,6 @@
 <template>
   <v-toolbar color="grey lighten-4" flat dense class="br-r5">
-    <v-toolbar-title> {{ workspaces.results[0].title }}</v-toolbar-title>
+    <v-toolbar-title> {{ title }}</v-toolbar-title>
     <v-spacer />
     <v-spacer />
     <v-spacer />
@@ -10,9 +10,16 @@
       Create Project
     </v-btn>
 
-    <v-menu v-if="isNotBeta" v-model="state.menu" :close-on-content-click="false" :nudge-width="200" offset-x>
+    <v-menu
+      v-model="menu"
+      class="workspace-menu"
+      data-test="workspace-menu"
+      :close-on-content-click="false"
+      :nudge-width="200"
+      offset-x
+    >
       <template v-slot:activator="{ on }">
-        <v-btn icon v-on="on">
+        <v-btn icon v-on="on" data-test="workspace-menu-activate-btn">
           <v-icon>mdi-dots-vertical</v-icon>
         </v-btn>
       </template>
@@ -21,12 +28,12 @@
         <v-card-subtitle>Workspace settings</v-card-subtitle>
         <v-card-subtitle>Project view</v-card-subtitle>
         <v-card-text>
-          <v-btn-toggle v-model="projectView" mandatory>
+          <v-btn-toggle @change="handleChangeProjectView" mandatory>
             <v-btn>
               <v-icon>mdi-card-bulleted-outline</v-icon>
             </v-btn>
 
-            <v-btn>
+            <v-btn data-test="view-list">
               <v-icon>mdi-format-align-justify</v-icon>
             </v-btn>
           </v-btn-toggle>
@@ -36,14 +43,21 @@
   </v-toolbar>
 </template>
 <script>
-import useWorkSpaceStore from '../../composition/useWorkSpaceStore'
+import useWorkspaceStore from '../../composition/useWorkspaceStore'
 import { watch, computed, reactive, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'WorkspaceToolbar',
 
+  props: {
+    title: {
+      type: String,
+      default: ''
+    }
+  },
+
   setup(props, context) {
-    const workSpaceStore = useWorkSpaceStore()
+    const workSpaceStore = useWorkspaceStore()
 
     const state = reactive({
       menu: false
@@ -58,20 +72,12 @@ export default defineComponent({
       }
     })
 
-    const projectView = computed({
-      get: () => {
-        return workSpaceStore.workspaceSettings.value.projectView
-      },
-      set: projectView => {
-        workSpaceStore.changeSettings({ projectView })
-      }
-    })
+    const handleChangeProjectView = projectView => workSpaceStore.changeSettings({ projectView })
 
     return {
-      state,
-      projectView,
+      menu: state.menu,
       workspaceVmodel,
-      ...workSpaceStore
+      handleChangeProjectView
     }
   }
 })

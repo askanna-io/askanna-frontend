@@ -23,7 +23,6 @@ Vue.use(VueClipboard)
 // register globally
 import Sticky from 'vue-sticky-directive'
 Vue.use(Sticky)
-Vue.use(hooks)
 Vue.use(Beta)
 Vue.use(hooks)
 Vue.use(Logger)

@@ -17,7 +17,7 @@ describe('TheSignIn.vue', () => {
     vuetify = new Vuetify()
     localVue.use(VueRouter)
 
-    wrapper = shallowMount<Vue>(TheSignIn, {
+    wrapper = mount<Vue>(TheSignIn, {
       router,
       vuetify,
       localVue,
