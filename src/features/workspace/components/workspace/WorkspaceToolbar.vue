@@ -57,7 +57,7 @@ export default defineComponent({
   },
 
   setup(props, context) {
-    const workSpaceStore = useWorkspaceStore()
+    const workspaceStore = useWorkspaceStore()
 
     const state = reactive({
       menu: false
@@ -65,14 +65,14 @@ export default defineComponent({
 
     const workspaceVmodel = computed({
       get: () => {
-        return workSpaceStore.workspace.value.uuid
+        return workspaceStore.workspace.value.uuid
       },
       set: uuid => {
-        workSpaceStore.getWorkspace(uuid)
+        workspaceStore.getWorkspace(uuid)
       }
     })
 
-    const handleChangeProjectView = projectView => workSpaceStore.changeSettings({ projectView })
+    const handleChangeProjectView = projectView => workspaceStore.changeSettings({ projectView })
 
     return {
       menu: state.menu,

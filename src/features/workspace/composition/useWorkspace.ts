@@ -1,5 +1,4 @@
-import { SetupContext } from '@vue/composition-api'
-import { onBeforeMount } from '@vue/composition-api'
+import { onBeforeMount, SetupContext } from '@vue/composition-api'
 import useWorkspaceStore from './useWorkspaceStore'
 import useFetchData from '@/core/composition/useFetchData'
 
