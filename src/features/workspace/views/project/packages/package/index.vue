@@ -84,15 +84,15 @@ export default defineComponent({
     })
 
     const handleClickOnRow = async item => {
-      const { projectId, packageId, versionId, folderName = '' } = context.root.$route.params
-      let path = `/workspace/project/${projectId}/packages/${packageId}/version/${versionId}/${folderName}/${item.name}`
+      const { workspaceId, projectId, packageId, versionId, folderName = '' } = context.root.$route.params
+      let path = `/${workspaceId}/project/${projectId}/packages/${packageId}/version/${versionId}/${folderName}/${item.name}`
 
       if (typeof item.path === 'undefined') {
-        path = `/workspace/project/${projectId}/packages/${packageId}/version/${versionId}`
+        path = `/${workspaceId}/project/${projectId}/packages/${packageId}/version/${versionId}`
       }
 
       if (item.is_dir) {
-        path = `/workspace/project/${projectId}/packages/${packageId}/version/${versionId}/${item.path}`
+        path = `/${workspaceId}/project/${projectId}/packages/${packageId}/version/${versionId}/${item.path}`
       }
 
       context.root.$router.push({ path })

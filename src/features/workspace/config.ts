@@ -1,7 +1,7 @@
 export default {
   paths: [
     {
-      path: '/:workspace',
+      path: '/:workspaceId',
       component: () => import(/* webpackChunkName: "workspace-index" */ './views/index.vue'),
       meta: {
         breadcrumb: 'Dashboard'
@@ -68,7 +68,7 @@ export default {
                       /* webpackChunkName: "workspace-project-uuid-jobs-id" */ './views/project/jobs/job/index.vue'
                     ),
                   meta: {
-                    breadcrumb: ':jobId'
+                    breadcrumb: 'Job - #:jobId'
                   },
                   children: [
                     {
@@ -86,41 +86,51 @@ export default {
                       path: 'runs',
                       component: () =>
                         import(
-                          /* webpackChunkName: "workspace-project-job-runs" */ './views/project/jobs/job/runs.vue'
+                          /* webpackChunkName: "workspace-project-job-runs-index" */ './views/project/jobs/job/jobruns/index.vue'
                         ),
-                      name: 'workspace-project-job-jobruns',
                       meta: {
-                        breadcrumb: 'Job run'
+                        breadcrumb: 'Job runs'
                       },
                       children: [
                         {
+                          path: '',
+                          component: () =>
+                            import(
+                              /* webpackChunkName: "workspace-project-job-runs" */ './views/project/jobs/job/jobruns/runs.vue'
+                            ),
+                          name: 'workspace-project-job-jobruns'
+                        },
+                        {
                           path: ':jobRunId',
                           name: 'workspace-project-jobs-job-jobrun',
-                          redirect: { name: 'workspace-project-jobs-job-jobrun-input' },
 
                           component: () =>
                             import(
-                              /* webpackChunkName: "workspace-project-uuid-jobs-name-run" */ './views/project/jobs/job/run.vue'
+                              /* webpackChunkName: "workspace-project-uuid-jobs-name-run" */ './views/project/jobs/job/jobruns/jobrun/index.vue'
                             ),
-                          meta: {
-                            breadcrumb: 'Job run - #:jobRunId'
-                          },
+
                           children: [
                             {
-                              path: '',
+                              path: 'input',
                               component: () =>
                                 import(
-                                  /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-input" */ './views/project/jobs/job/jobrun/input.vue'
+                                  /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-input" */ './views/project/jobs/job/jobruns/jobrun/input.vue'
                                 ),
-                              name: 'workspace-project-jobs-job-jobrun-input'
+                              name: 'workspace-project-jobs-job-jobrun-input',
+                              meta: {
+                                breadcrumb: 'Job run - #:jobRunId'
+                              }
                             },
                             {
                               path: 'result',
                               component: () =>
                                 import(
-                                  /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-result" */ './views/project/jobs/job/jobrun/result.vue'
+                                  /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-result" */ './views/project/jobs/job/jobruns/jobrun/result.vue'
                                 ),
-                              name: 'workspace-project-jobs-job-jobrun-result'
+                              name: 'workspace-project-jobs-job-jobrun-result',
+                              meta: {
+                                breadcrumb: 'Job run - #:jobRunId'
+                              }
                             }
                           ]
                         }

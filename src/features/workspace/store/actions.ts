@@ -29,7 +29,6 @@ export const actions: ActionTree<workspaceState, RootState> = {
     }
 
     commit(mutation.SET_WORKSPACE, workspace)
-    dispatch(action.getWorkpaceProjects, workspace.short_uuid)
   },
 
   async [action.getWorkspaces]({ state, commit, dispatch }) {

@@ -39,9 +39,9 @@
   </div>
 </template>
 <script>
-import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
 import JobToolBar from './parts/JobToolBar'
 import ProjectToolBar from './parts/ProjectToolBar'
+import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
 import { defineComponent, onBeforeMount, computed, watch, ref } from '@vue/composition-api'
 
 export default defineComponent({

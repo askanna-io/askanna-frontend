@@ -3,5 +3,26 @@
 </template>
 
 <script>
-export default {}
+import useWorkspaceStore from '../composition/useWorkSpaceStore'
+import { watch, computed, reactive, onBeforeMount, defineComponent } from '@vue/composition-api'
+
+export default defineComponent({
+  setup(props, context) {
+    const workspaceStore = useWorkspaceStore()
+
+    onBeforeMount(async () => {
+      if (!workspaceStore.workspaces.value.count) {
+        await workspaceStore.getWorkspaces()
+      }
+      let { workspaceId } = context.root.$route.params
+
+      if (workspaceId === 'workspace') {
+        workspaceId = workspaceStore.workspaces.value.results[0].short_uuid
+      }
+
+      workspaceStore.getWorkspace(workspaceId)
+      workspaceStore.getWorkpaceProjects(workspaceId)
+    })
+  }
+})
 </script>
