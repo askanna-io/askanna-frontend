@@ -26,18 +26,6 @@ export default defineComponent({
     const query = useQuery(context)
     const workspaceStore = useWorkspaceStore()
 
-    onBeforeMount(async () => {
-      await workspaceStore.getWorkspaces()
-      let workspace = workspaceStore.workspace.value
-
-      if (!workspace.short_uuid) {
-        ;[workspace] = workspaceStore.workspaces.value.results
-      }
-
-      workspaceStore.getWorkspace(workspace.short_uuid)
-      workspaceStore.getWorkpaceProjects(workspace.short_uuid)
-    })
-
     return {
       workspace: workspaceStore.workspace,
       workspaceProjects: workspaceStore.workspaceProjects,

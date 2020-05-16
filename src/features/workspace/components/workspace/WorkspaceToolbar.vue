@@ -63,20 +63,10 @@ export default defineComponent({
       menu: false
     })
 
-    const workspaceVmodel = computed({
-      get: () => {
-        return workspaceStore.workspace.value.uuid
-      },
-      set: uuid => {
-        workspaceStore.getWorkspace(uuid)
-      }
-    })
-
     const handleChangeProjectView = projectView => workspaceStore.changeSettings({ projectView })
 
     return {
       menu: state.menu,
-      workspaceVmodel,
       handleChangeProjectView
     }
   }

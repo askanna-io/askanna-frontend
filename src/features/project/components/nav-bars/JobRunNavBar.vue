@@ -126,7 +126,7 @@ export default defineComponent({
 
     const isShowProjectBar = ref(false)
     const end = context.root.$route.name.indexOf('jobs-name') >= 1 ? 5 : 3
-    const breadcrumbs = useBreadcrumbs(context, { start: 0, end: 5 })
+    const breadcrumbs = useBreadcrumbs(context, { start: 0, end: 7 })
 
     let sticked = ref(false)
 
