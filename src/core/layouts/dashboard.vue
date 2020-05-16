@@ -43,12 +43,17 @@
             <v-flex>
               <v-menu offset-y>
                 <template v-slot:activator="{ on }">
-                  <v-btn color="primary" small v-on="on">
+                  <v-btn small class="mx-1 white--text mx-1" input-value="1" text v-on="on" link tag="a">
                     Workspace
                   </v-btn>
                 </template>
                 <v-list>
-                  <v-list-item v-for="(item, index) in workspaces" :key="index" @click="handleChangeWorkspace(item)">
+                  <v-list-item
+                    v-for="(item, index) in workspaces"
+                    :key="index"
+                    exact
+                    @click="handleChangeWorkspace(item)"
+                  >
                     <v-list-item-title>{{ item.title }}</v-list-item-title>
                   </v-list-item>
                 </v-list>

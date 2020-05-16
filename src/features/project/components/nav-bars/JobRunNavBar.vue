@@ -39,7 +39,9 @@
     <v-divider />
 
     <v-card flat>
-      <v-card-title>Job run #{{ jobRunId }}</v-card-title>
+      <v-card-title>
+        <span class="title font-weight-light">Job run #{{ jobRunId }}</span></v-card-title
+      >
       <v-divider />
 
       <v-skeleton-loader ref="skeleton" :type="'table-row'" :loading="!jobRun">
@@ -124,6 +126,7 @@ export default defineComponent({
       await fetchData(context, [projectStore.getProjectJobs(projectId)])
     })
 
+    const jobName = computed(() => jobStore.job.value.name)
     const isShowProjectBar = ref(false)
     const end = context.root.$route.name.indexOf('jobs-name') >= 1 ? 5 : 3
     const breadcrumbs = useBreadcrumbs(context, { start: 0, end: 7 })
@@ -175,7 +178,7 @@ export default defineComponent({
       jobId,
       jobRun,
       jobRunId,
-      jobName: jobStore.job.value.name
+      jobName
     }
   }
 })
