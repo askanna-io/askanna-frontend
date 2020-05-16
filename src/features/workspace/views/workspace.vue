@@ -1,6 +1,7 @@
 <template>
   <div>
     <workspace-project-list
+      :workspaceUuid="workspace.uuid"
       :settings="workspaceSettings"
       :workspaceName="workspace.title"
       :items="workspaceProjects.results"
@@ -12,34 +13,36 @@
 </template>
 <script>
 import useQuery from '@/core/composition/useQuery'
-import useWorkSpaceStore from '../composition/useWorkSpaceStore'
-import WorkspaceToolbar from '../components/workspace/WorkspaceToolbar.vue'
+import useWorkspaceStore from '../composition/useWorkSpaceStore'
 import WorkspaceProjectList from '../components/workspace/WorkspaceProjectList.vue'
 import { watch, computed, reactive, onBeforeMount, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'workspace',
 
-  components: { WorkspaceProjectList, WorkspaceToolbar },
+  components: { WorkspaceProjectList },
 
   setup(props, context) {
     const query = useQuery(context)
-    const workSpaceStore = useWorkSpaceStore()
+    const workspaceStore = useWorkspaceStore()
 
     onBeforeMount(async () => {
-      await workSpaceStore.getWorkspaces()
-      let workspace = workSpaceStore.workspace.value
+      await workspaceStore.getWorkspaces()
+      let workspace = workspaceStore.workspace.value
 
       if (!workspace.short_uuid) {
-        ;[workspace] = workSpaceStore.workspaces.value.results
+        ;[workspace] = workspaceStore.workspaces.value.results
       }
 
-      workSpaceStore.getWorkspace(workspace.short_uuid)
-      workSpaceStore.getWorkpaceProjects(workspace.short_uuid)
+      workspaceStore.getWorkspace(workspace.short_uuid)
+      workspaceStore.getWorkpaceProjects(workspace.short_uuid)
     })
 
     return {
-      ...workSpaceStore
+      workspace: workspaceStore.workspace,
+      workspaceProjects: workspaceStore.workspaceProjects,
+      workspaceSettings: workspaceStore.workspaceSettings,
+      workspaceProjectsLoading: workspaceStore.workspaceProjectsLoading
     }
   }
 })

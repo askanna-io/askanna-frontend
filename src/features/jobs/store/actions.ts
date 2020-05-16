@@ -22,7 +22,7 @@ export const actions: ActionTree<JobsState, RootState> = {
         { root }
       )
     } catch (e) {
-      logger.error('Error on load jobs list items in getJobsList action.\nError: ', e)
+      logger(commit).error('Error on load jobs list items in getJobsList action.\nError: ', e)
       return
     }
     /*  // @TODO #1 refactore after implement job list on backend

@@ -25,7 +25,7 @@ export const actions: ActionTree<jobRunState, RootState> = {
         { root }
       )
     } catch (e) {
-      logger.error('Error on runs job  in getRunsJob action.\nError: ', e)
+      logger(commit).error('Error on runs job  in getRunsJob action.\nError: ', e)
 
       return
     }
@@ -64,7 +64,7 @@ export const actions: ActionTree<jobRunState, RootState> = {
         { root }
       )
     } catch (e) {
-      logger.error('Error on jobRun job  in getJobRun action.\nError: ', e)
+      logger(commit).error('Error on jobRun job  in getJobRun action.\nError: ', e)
 
       return
     }
@@ -87,7 +87,7 @@ export const actions: ActionTree<jobRunState, RootState> = {
         { root }
       )
     } catch (e) {
-      logger.error('Error on jobRunPayload job  in getJobRunPayload action.\nError: ', e)
+      logger(commit).error('Error on jobRunPayload job  in getJobRunPayload action.\nError: ', e)
 
       return
     }

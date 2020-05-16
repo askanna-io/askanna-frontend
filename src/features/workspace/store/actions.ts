@@ -24,7 +24,7 @@ export const actions: ActionTree<workspaceState, RootState> = {
         { root }
       )
     } catch (e) {
-      logger.error('Error on load workspaces  in getWorkspaces action.\nError: ', e)
+      logger(commit).error('Error on load workspaces  in getWorkspaces action.\nError: ', e)
       return
     }
 
@@ -46,7 +46,7 @@ export const actions: ActionTree<workspaceState, RootState> = {
         { root }
       )
     } catch (e) {
-      logger.error('Error on load workspaces  in getWorkspaces action.\nError: ', e)
+      logger(commit).error('Error on load workspaces  in getWorkspaces action.\nError: ', e)
       commit(mutation.SET_LOADING, { name: stateType.workspacesLoading, value: false })
 
       return
@@ -72,7 +72,7 @@ export const actions: ActionTree<workspaceState, RootState> = {
         { root }
       )
     } catch (e) {
-      logger.error('Error on load projects in getWorkpaceProjects action.\nError: ', e)
+      logger(commit).error('Error on load projects in getWorkpaceProjects action.\nError: ', e)
       commit(mutation.SET_LOADING, { name: stateType.workspaceProjectsLoading, value: false })
 
       return

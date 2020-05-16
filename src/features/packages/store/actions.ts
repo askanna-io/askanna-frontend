@@ -23,13 +23,13 @@ export const actions: ActionTree<PackagesState, RootState> = {
         { root }
       )
     } catch (e) {
-      logger.error('Error on load packages in getProjectPackages action.\nError: ', e)
+      logger(commit).error('Error on load packages in getProjectPackages action.\nError: ', e)
       return
     }
     commit(type.SET_PROJECT_PACKAGES, packages)
   },
 
-  async [type.getTargetPackage]({ dispatch }, uuid) {
+  async [type.getTargetPackage]({ dispatch, commit }, uuid) {
     let packageTarget
     try {
       packageTarget = await dispatch(
@@ -42,14 +42,14 @@ export const actions: ActionTree<PackagesState, RootState> = {
         { root }
       )
     } catch (e) {
-      logger.error('Error on load packageTarget in getTargetPackage action.\nError: ', e)
+      logger(commit).error('Error on load packageTarget in getTargetPackage action.\nError: ', e)
       return
     }
 
     return packageTarget?.target
   },
 
-  async [type.downloadPackage]({ dispatch }, uuid) {
+  async [type.downloadPackage]({ dispatch, commit }, uuid) {
     const url = await dispatch(type.getTargetPackage, uuid)
 
     let packageSource
@@ -62,7 +62,7 @@ export const actions: ActionTree<PackagesState, RootState> = {
         { root }
       )
     } catch (e) {
-      logger.error('Error on load packageSource in downloadPackage action.\nError: ', e)
+      logger(commit).error('Error on load packageSource in downloadPackage action.\nError: ', e)
       return
     }
 
