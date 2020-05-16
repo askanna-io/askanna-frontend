@@ -43,7 +43,17 @@
             <v-flex>
               <v-menu offset-y>
                 <template v-slot:activator="{ on }">
-                  <v-btn small class="mx-1 white--text mx-1" input-value="1" text v-on="on" link tag="a">
+                  <v-btn
+                    v-if="workspaces.length <= 1"
+                    small
+                    dark
+                    class="mx-1 white--text"
+                    text
+                    :to="{ name: 'workspace' }"
+                  >
+                    Workspace
+                  </v-btn>
+                  <v-btn v-else small class="mx-1 white--text mx-1" input-value="1" text v-on="on" link tag="a">
                     Workspace
                   </v-btn>
                 </template>
