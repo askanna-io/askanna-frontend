@@ -31,7 +31,7 @@
     <template v-slot:item.status="{ item }">
       <ask-anna-alert-status :statusData="item.status && item.status.lastrun" />
     </template>
-    <template v-slot:item.actions="{ item }">
+    <template v-slot:item.actions="{ item }" v-if="isNotBeta">
       <v-chip-group outlined v-model="selection" mandatory>
         <v-chip outlined label class="askaanna-chip-status" color="success" @click.stop="startJob(item.short_uuid)">
           <v-avatar left><v-icon>mdi-play</v-icon></v-avatar
@@ -102,19 +102,7 @@ export default defineComponent({
         return_payload: ''
       },
       expanded: [],
-      selection: 2,
-
-      headers: [
-        {
-          text: 'Name',
-          align: 'left',
-          sortable: false,
-          value: 'name'
-        },
-        { text: 'Runs', value: 'uuid' },
-        { text: 'Status', value: 'status' },
-        { text: 'Actions', value: 'actions' }
-      ]
+      selection: 2
     }
   },
 

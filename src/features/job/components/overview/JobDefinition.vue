@@ -7,7 +7,7 @@
     </v-row>
     <v-row>
       <v-col cols="6" sm="6"> <span>Function: </span>{{ job.function }}</v-col>
-      <v-col cols="6" sm="6"> <span>Environment: </span>{{ job.env_variables }}</v-col>
+      <v-col cols="6" sm="6"> <span>Environment: </span>{{ job.environment }}</v-col>
     </v-row>
   </v-container>
 </template>

@@ -1,5 +1,5 @@
 import _Vue from 'vue'
-import { Commit } from 'vuex'
+import store from '@/core/store'
 
 const LOGGER = {
   consoleLog: true,
@@ -11,50 +11,48 @@ const LOGGER = {
 const snackbarStore = 'snackbar'
 const setSnackBar = `${snackbarStore}/${'SET_SNACKBAR'}`
 
-export const logger = (commit: Commit) => {
-  return {
-    success: (message: any) => {
-      const timeout = 2000
-      commit(setSnackBar, {
+export const logger = {
+  success: (message: any) => {
+    const timeout = 2000
+    store.commit(setSnackBar, {
+      message,
+      timeout,
+      color: 'light-green'
+    })
+  },
+  authError: () => {
+    store.commit(setSnackBar, {
+      message: 'wrong_credentials',
+      color: 'deep-orange'
+    })
+  },
+  passResetSuccess: () => {
+    store.commit(setSnackBar, {
+      message: 'check_your_email',
+      color: 'light-green'
+    })
+  },
+  userWarning: (message: any) => {
+    store.commit(setSnackBar, { message, color: 'orange' })
+  },
+  userDanger: (message: any) => {
+    store.commit(setSnackBar, { message, color: 'amber darken-4' })
+  },
+  error: (errorHint: string, error: Error) => {
+    let message, timeout
+    if (LOGGER.snackBar) {
+      message = `${errorHint}\n ${error.message}`
+
+      store.commit(setSnackBar, {
         message,
         timeout,
-        color: 'light-green'
+        color: 'amber darken-4'
       })
-    },
-    authError: () => {
-      commit(setSnackBar, {
-        message: 'wrong_credentials',
-        color: 'deep-orange'
-      })
-    },
-    passResetSuccess: () => {
-      commit(setSnackBar, {
-        message: 'check_your_email',
-        color: 'light-green'
-      })
-    },
-    userWarning: (message: any) => {
-      commit(setSnackBar, { message, color: 'orange' })
-    },
-    userDanger: (message: any) => {
-      commit(setSnackBar, { message, color: 'amber darken-4' })
-    },
-    error: (errorHint: string, error: Error) => {
-      let message, timeout
-      if (LOGGER.snackBar) {
-        message = `${errorHint}\n ${error.message}`
+    }
 
-        commit(setSnackBar, {
-          message,
-          timeout,
-          color: 'amber darken-4'
-        })
-      }
-
-      if (LOGGER.consoleLog) {
-        // eslint-disable-next-line no-console
-        console.log(errorHint, error)
-      }
+    if (LOGGER.consoleLog) {
+      // eslint-disable-next-line no-console
+      console.log(errorHint, error)
     }
   }
 }

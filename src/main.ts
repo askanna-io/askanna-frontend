@@ -1,14 +1,13 @@
 import Vue from 'vue'
-import axios from 'axios'
 import './core/components'
 import VueAxios from 'vue-axios'
 import hooks from '@u3u/vue-hooks'
 import Beta from '@/core/plugins/beta'
+import $axios from '@/core/plugins/axios'
+import Sticky from 'vue-sticky-directive'
 import Logger from '@/core/plugins/logger'
 import { app, router, store } from './core'
-
 import { makeServer } from './server/index'
-
 import vuetify from '@/core/plugins/vuetify'
 import VueCompositionApi from '@vue/composition-api'
 
@@ -21,11 +20,10 @@ import VueClipboard from 'vue-clipboard2'
 Vue.use(VueClipboard)
 
 // register globally
-import Sticky from 'vue-sticky-directive'
-Vue.use(Sticky)
 Vue.use(Beta)
 Vue.use(hooks)
 Vue.use(Logger)
+Vue.use(Sticky)
 
 Vue.use(VueCompositionApi)
 Vue.config.productionTip = false
@@ -42,40 +40,6 @@ router.beforeEach((to, _, next) => {
     next()
   }
 })
-// create axios instance and set csrftoken for Django
-const $axios = axios.create()
-$axios.defaults.xsrfCookieName = 'csrftoken'
-$axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
-
-// add token to request if exist
-$axios.interceptors.request.use(
-  function (config) {
-    const token = localStorage.getItem('token')
-
-    if (token != null) {
-      config.headers.Authorization = `Token ${token}`
-    }
-
-    return config
-  },
-
-  function (err) {
-    return Promise.reject(err)
-  }
-)
-
-// for each response check status
-$axios.interceptors.response.use(
-  config => config,
-
-  err => {
-    if (err.response && err.response.status === 401) {
-      router.push({ name: 'login' })
-    }
-
-    return Promise.reject(err)
-  }
-)
 
 Vue.use(VueAxios, $axios)
 
@@ -90,5 +54,3 @@ new Vue({
   vuetify,
   render: h => h(app)
 }).$mount('#app')
-
-export { $axios }
