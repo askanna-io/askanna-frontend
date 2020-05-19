@@ -23,7 +23,7 @@ export const actions: ActionTree<PackageState, RootState> = {
         { root }
       )
     } catch (e) {
-      logger(commit).error('Error on load packageData in getPackage action.\nError: ', e)
+      logger.error('Error on load packageData in getPackage action.\nError: ', e)
 
       return
     }
@@ -45,7 +45,7 @@ export const actions: ActionTree<PackageState, RootState> = {
         { root }
       )
     } catch (e) {
-      logger(commit).error('Error on load fileSource in getFileSource action.\nError: ', e)
+      logger.error('Error on load fileSource in getFileSource action.\nError: ', e)
       return
     }
 

@@ -40,7 +40,7 @@
 
     <v-card flat>
       <v-card-title>
-        <span class="title font-weight-light">Job run #{{ jobRunId }}</span></v-card-title
+        <span class="title font-weight-light">Job run: #{{ jobRunId }}</span></v-card-title
       >
       <v-divider />
 

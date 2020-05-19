@@ -23,7 +23,7 @@ export const actions: ActionTree<projectState, RootState> = {
         { root }
       )
     } catch (e) {
-      logger(commit).error('Error on load project  in getProject action.\nError: ', e)
+      logger.error('Error on load project  in getProject action.\nError: ', e)
       return
     }
 
@@ -43,7 +43,7 @@ export const actions: ActionTree<projectState, RootState> = {
         { root }
       )
     } catch (e) {
-      logger(commit).error('Error on load projects  in getProjects action.\nError: ', e)
+      logger.error('Error on load projects  in getProjects action.\nError: ', e)
       return
     }
 
@@ -63,7 +63,7 @@ export const actions: ActionTree<projectState, RootState> = {
         { root }
       )
     } catch (e) {
-      logger(commit).error('Error on load project jobs in getProjectJobs action.\nError: ', e)
+      logger.error('Error on load project jobs in getProjectJobs action.\nError: ', e)
       return
     }
 

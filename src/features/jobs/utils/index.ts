@@ -6,6 +6,5 @@ export const JobsListHeaders = [
     value: 'name'
   },
   { text: 'Runs', value: 'uuid' },
-  { text: 'Status', value: 'status' },
-  { text: 'Actions', value: 'actions' }
+  { text: 'Status', value: 'status' }
 ]

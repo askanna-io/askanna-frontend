@@ -34,9 +34,11 @@
       </v-col>
       <v-col cols="12">
         <v-tabs-items v-model="currentTab">
-          <v-tab-item v-for="tab in tabs" :key="tab.name">
-            <component :is="tab.component" />
-          </v-tab-item>
+          <template v-for="tab in tabs">
+            <v-tab-item :key="tab.name" v-if="tab.show">
+              <component :is="tab.component" />
+            </v-tab-item>
+          </template>
         </v-tabs-items>
       </v-col>
     </v-row>
@@ -45,18 +47,20 @@
 
 <script>
 import JobRunPortal from './jobrunning/JobRunPortal'
+import JobRunCurl from './jobrunning/JobRunCurl'
 import { ref, onBeforeMount, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'JobRunnig',
 
   components: {
+    JobRunCurl,
     JobRunPortal
   },
 
   setup(rops, context) {
     const versions = ['package v1', 'package v2']
-    const currentTab = ref('workspace-project-activity')
+    const currentTab = ref('workspace-project-job-runnig-curl')
 
     const tabs = [
       {
@@ -64,11 +68,12 @@ export default defineComponent({
         name: 'Portal',
         component: 'JobRunPortal',
         to: 'workspace-project-job-runnig-portal',
-        show: !context.root.isNotBeta
+        show: context.root.isNotBeta
       },
       {
         id: 1,
         name: 'Curl',
+        component: 'JobRunCurl',
         to: 'workspace-project-job-runnig-curl',
         show: !context.root.isNotBeta
       }

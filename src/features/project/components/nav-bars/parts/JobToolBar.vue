@@ -3,15 +3,16 @@
     <span class="title font-weight-light">Job: {{ jobName }}</span>
     <v-tabs v-model="currentTab" left align-with-title>
       <v-tabs-slider color="primary" />
-
-      <v-tab
-        v-for="tab of jobTools"
-        :key="tab.id"
-        ripple
-        :to="{ name: tab.to, params: { title: `${tab.name} - ${projectName}` } }"
-      >
-        {{ tab.name }}
-      </v-tab>
+      <template v-for="tab of jobTools">
+        <v-tab
+          v-if="tab.show"
+          :key="tab.id"
+          ripple
+          :to="{ name: tab.to, params: { title: `${tab.name} - ${projectName}` } }"
+        >
+          {{ tab.name }}
+        </v-tab>
+      </template>
     </v-tabs>
   </v-card-title>
 </template>
@@ -38,22 +39,26 @@ export default defineComponent({
       {
         id: 0,
         name: 'Overview',
+        show: !context.root.isNotBeta,
         to: 'workspace-project-job-overiew'
       },
       {
         id: 1,
         name: 'Runs',
+        show: !context.root.isNotBeta,
         to: 'workspace-project-job-jobruns'
       },
       {
         id: 2,
         name: 'Variables & data',
+        show: context.root.isNotBeta,
         to: 'workspace-project-job-variables'
       },
 
       {
         id: 3,
         name: 'Tokens',
+        show: context.root.isNotBeta,
         to: 'workspace-project-job-tokens'
       }
     ]

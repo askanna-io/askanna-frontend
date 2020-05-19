@@ -23,7 +23,7 @@ export const actions: ActionTree<PackagesState, RootState> = {
         { root }
       )
     } catch (e) {
-      logger(commit).error('Error on load packages in getProjectPackages action.\nError: ', e)
+      logger.error('Error on load packages in getProjectPackages action.\nError: ', e)
       return
     }
     commit(type.SET_PROJECT_PACKAGES, packages)
@@ -42,7 +42,7 @@ export const actions: ActionTree<PackagesState, RootState> = {
         { root }
       )
     } catch (e) {
-      logger(commit).error('Error on load packageTarget in getTargetPackage action.\nError: ', e)
+      logger.error('Error on load packageTarget in getTargetPackage action.\nError: ', e)
       return
     }
 
@@ -62,7 +62,7 @@ export const actions: ActionTree<PackagesState, RootState> = {
         { root }
       )
     } catch (e) {
-      logger(commit).error('Error on load packageSource in downloadPackage action.\nError: ', e)
+      logger.error('Error on load packageSource in downloadPackage action.\nError: ', e)
       return
     }
 

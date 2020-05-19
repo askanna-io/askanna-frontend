@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { $axios } from '@/main'
+import $axios from '@/core/plugins/axios'
 import * as at from './actionTypes'
 import { api } from '../api-settings'
 import Vuex, { StoreOptions } from 'vuex'
