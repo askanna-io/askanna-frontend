@@ -40,7 +40,10 @@ export const actions: ActionTree<workspaceState, RootState> = {
         params: state.workspaceQuery
       })
     } catch (error) {
-      console.log(error)
+      dispatch(rootTypes.loggerError, {
+        errorHint: 'Error on load workspaces in getWorkspaces action.\nError: ',
+        error
+      })
 
       commit(mutation.SET_LOADING, { name: stateType.workspacesLoading, value: false })
 
