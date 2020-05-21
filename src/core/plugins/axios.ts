@@ -1,7 +1,7 @@
-import axios from 'axios'
+import axios, { AxiosRequestConfig } from 'axios'
 import router from '../router'
 // create axios instance and set csrftoken for Django
-const $axios = axios.create()
+const $axios = axios
 $axios.defaults.xsrfCookieName = 'csrftoken'
 $axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
 

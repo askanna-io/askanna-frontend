@@ -1,10 +1,11 @@
-import { createWrapper } from '../../utils/vueCreateComponent'
+import { createWrapper } from '../../utils/createComponent'
 import WorkspaceToolbar from '@/features/workspace/components/workspace/WorkspaceToolbar.vue'
 
 describe('WorkspaceToolbar.vue', () => {
   it('should render empty workspace title on load component', async () => {
     const { wrapper } = createWrapper(WorkspaceToolbar)
     expect(wrapper.find('.v-toolbar__title').text()).toBe('')
+    wrapper.destroy()
   })
 
   it('should render workspace title', async () => {
@@ -31,6 +32,7 @@ describe('WorkspaceToolbar.vue', () => {
       }
     )
     expect(wrapper.find('.v-toolbar__title').text()).toBe('Askanna')
+    wrapper.destroy()
   })
 
   it('should change workspace view to list on click menu settings', async () => {
@@ -48,5 +50,6 @@ describe('WorkspaceToolbar.vue', () => {
     expect(store.dispatch).toHaveBeenCalledWith('workspace/changeSettings', {
       projectView: 1
     })
+    wrapper.destroy()
   })
 })

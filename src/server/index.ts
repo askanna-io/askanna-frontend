@@ -1,26 +1,64 @@
-import { Model, Server } from 'miragejs'
+import jobs from './fixtures/jobs'
+import projects from './fixtures/projects'
+import workspaces from './fixtures/workspaces'
+import { Model, Server, Factory } from 'miragejs'
 
-export function makeServer({ environment = 'development' } = {}) {
+export function createServer({ environment = 'development' } = {}) {
   const apiUrl = `${process.env.VUE_APP_API_URL}:${process.env.VUE_APP_API_PORT}/`
 
   const server: Server = new Server({
     environment,
+    fixtures: {
+      jobs,
+      projects,
+      workspaces
+    },
     models: {
-      user: Model
+      workspace: Model,
+      workspaces: Model,
+      project: Model,
+      projects: Model,
+      jobs: Model
+    },
+    factories: {
+      workspace: Factory.extend({
+        title: 'Movie title'
+      })
     },
     seeds(server: Server) {
-      server.create('user', { id: 'Bob', name: 'ASDA' })
-      server.create('user', { id: 'Alice', name: 'ASDA' })
+      server.loadFixtures()
     },
     routes() {
       this.namespace = '/v1'
       this.urlPrefix = apiUrl
       this.timing = 400
 
-      this.get('/todos', () => {
-        return {
-          todos: [{ id: '1', text: 'Migrate to TypeScript', isDone: false }]
-        }
+      this.get('/workspace', (schema: any, request) => {
+        return schema.workspaces.all()
+      })
+
+      this.get('/workspace/:id', (schema, request) => {
+        let short_uuid = request.params.id
+        return schema.db.workspaces.findBy({ short_uuid })
+      })
+
+      this.get('/workspace/:id/projects', (schema, request) => {
+        let workspace = request.params.id
+
+        return schema.db.projects.where({ workspace })
+      })
+
+      this.get('/project', (schema: any) => {
+        return schema.projects.all()
+      })
+
+      this.get('/project/:id', (schema, request) => {
+        let short_uuid = request.params.id
+        return schema.db.projects.findBy({ short_uuid })
+      })
+
+      this.get('/project/:id/jobs', (schema: any) => {
+        return schema.jobs.all()
       })
 
       this.passthrough()

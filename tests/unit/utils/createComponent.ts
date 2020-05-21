@@ -1,46 +1,16 @@
 import Vue from 'vue'
-import Router from 'vue-router'
 import Vuetify from 'vuetify'
 
 import { shallowMount, createLocalVue, Wrapper, mount } from '@vue/test-utils'
 import CompositionApi from '@vue/composition-api'
 import hooks from '@u3u/vue-hooks'
-import { workspace } from '@/features/workspace/store'
-import workspaceConfig from '@/features/workspace/config'
 
-import Vuex, { StoreOptions } from 'vuex'
 import VueRouter from 'vue-router'
+import Vuex, { StoreOptions } from 'vuex'
 
-const createRouter = () => {
-  return new Router({
-    routes: [
-      ...workspaceConfig.paths,
-      {
-        path: '*',
-        redirect: '/login'
-      }
-    ],
-    mode: 'history',
-    base: process.env.BASE_URL
-  })
-}
+import createStore from './createStore'
+import createRouter from './createRouter'
 
-const createStore = (initialState: any) => {
-  const state = { ...workspace.state, ...initialState.state }
-  const moduleStore = { workspace: { ...workspace, state } }
-  const store: StoreOptions<RootState> = {
-    modules: { ...moduleStore },
-    state: {
-      version: '1.0.0',
-      loading: false
-    },
-
-    mutations: {},
-    actions: {}
-  }
-
-  return new Vuex.Store<RootState>(store)
-}
 Vue.use(Vuetify)
 
 export const createWrapper = (component: any, options = {}, initialState = {}) => {

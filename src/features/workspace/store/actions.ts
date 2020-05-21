@@ -1,8 +1,8 @@
-import { ActionTree } from 'vuex'
-import { logger } from '@/core/plugins/logger'
-import { apiStringify } from '@/core/api-settings'
-import * as rootTypes from '@/core/store/actionTypes'
 import { delay } from 'lodash'
+import { ActionTree } from 'vuex'
+import apiService from '@/core/services/apiService'
+import * as rootTypes from '@/core/store/actionTypes'
+import { apiStringify } from '@/core/services/api-settings'
 
 import { workspaceState, WORKSPACE_STORE, stateType, action, mutation } from './types'
 
@@ -14,17 +14,16 @@ export const actions: ActionTree<workspaceState, RootState> = {
   async [action.getWorkspace]({ commit, dispatch }, uuid) {
     let workspace
     try {
-      workspace = await dispatch(
-        rootTypes.apiService,
-        {
-          action: api.get,
-          serviceName,
-          uuid
-        },
-        { root }
-      )
-    } catch (e) {
-      logger.error('Error on load workspaces  in getWorkspaces action.\nError: ', e)
+      workspace = await apiService({
+        action: api.get,
+        serviceName,
+        uuid
+      })
+    } catch (error) {
+      dispatch(rootTypes.loggerError, {
+        errorHint: 'Error on load workspaces  in getWorkspaces action.\nError: ',
+        error
+      })
       return
     }
 
@@ -35,17 +34,14 @@ export const actions: ActionTree<workspaceState, RootState> = {
     commit(mutation.SET_LOADING, { name: stateType.workspacesLoading, value: true })
     let workspaces
     try {
-      workspaces = await dispatch(
-        rootTypes.apiService,
-        {
-          action: api.list,
-          serviceName,
-          params: state.workspaceQuery
-        },
-        { root }
-      )
-    } catch (e) {
-      logger.error('Error on load workspaces  in getWorkspaces action.\nError: ', e)
+      workspaces = await apiService({
+        action: api.list,
+        serviceName,
+        params: state.workspaceQuery
+      })
+    } catch (error) {
+      console.log(error)
+
       commit(mutation.SET_LOADING, { name: stateType.workspacesLoading, value: false })
 
       return
@@ -60,18 +56,17 @@ export const actions: ActionTree<workspaceState, RootState> = {
 
     let projects
     try {
-      projects = await dispatch(
-        rootTypes.apiService,
-        {
-          action: api.projects,
-          serviceName,
-          uuid,
-          params: state.workspaceProjectsQuery
-        },
-        { root }
-      )
-    } catch (e) {
-      logger.error('Error on load projects in getWorkpaceProjects action.\nError: ', e)
+      projects = await apiService({
+        action: api.projects,
+        serviceName,
+        uuid,
+        params: state.workspaceProjectsQuery
+      })
+    } catch (error) {
+      dispatch(rootTypes.loggerError, {
+        errorHint: 'Error on load projects in getWorkpaceProjects action.\nError: ',
+        error
+      })
       commit(mutation.SET_LOADING, { name: stateType.workspaceProjectsLoading, value: false })
 
       return

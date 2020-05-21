@@ -29,11 +29,14 @@ interface Workspace {
   uuid: string
   short_uuid: string
   name: string
-  status: string
+  status: number
   created: string
   modified: string
   title: string
   description: string
+  activate_date: string
+  deactivate_date: string | null
+  deleted: null
 }
 
 export const WORKSPACE_STORE = 'workspace'
@@ -74,11 +77,14 @@ export class WorkspaceModel {
       uuid: '',
       short_uuid: '',
       name: '',
-      status: '',
+      status: 1,
       created: '',
       modified: '',
       title: '',
-      description: ''
+      description: '',
+      activate_date: '',
+      deactivate_date: '',
+      deleted: null
     }
   }
 }

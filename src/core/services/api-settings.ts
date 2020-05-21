@@ -1,7 +1,7 @@
 type apiPoint<T> = { [key: string]: T }
 type apiUrl = (ids: apiUrlFunctionParams) => string
 type AuthApiUrl = () => string
-type apiUrlFunctionParams = {
+export type apiUrlFunctionParams = {
   [key: string]: string
 }
 
