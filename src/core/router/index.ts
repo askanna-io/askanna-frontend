@@ -1,20 +1,14 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import auth from '@/features/auth/config'
 
-const modules = require.context('@/features', true, /config.ts$/)
-const paths: any[] = []
-const moduleKeys = modules.keys()
-
-for (const modulePath of moduleKeys) {
-  const moduleRoutes = modules(modulePath).default
-
-  paths.push(...moduleRoutes.paths)
-}
+import workspace from '@/features/workspace/config'
 
 Vue.use(Router)
 export default new Router({
   routes: [
-    ...paths,
+    ...auth.paths,
+    ...workspace.paths,
     {
       path: '*',
       redirect: '/login'

@@ -1,11 +1,11 @@
 import { ActionTree } from 'vuex'
 import { logger } from '@/core/plugins/logger'
-import { apiStringify } from '@/core/api-settings'
+import { apiStringify } from '@/core/services/api-settings'
 import * as rootTypes from '@/core/store/actionTypes'
+import apiService from '@/core/services/apiService'
 
 import { projectState, PROJECT_STORE, action, mutation } from './types'
 
-const root = true
 const serviceName = PROJECT_STORE
 const api = apiStringify(serviceName)
 
@@ -13,17 +13,16 @@ export const actions: ActionTree<projectState, RootState> = {
   async [action.getProject]({ commit, dispatch }, uuid) {
     let project
     try {
-      project = await dispatch(
-        rootTypes.apiService,
-        {
-          action: api.get,
-          serviceName,
-          uuid: uuid
-        },
-        { root }
-      )
-    } catch (e) {
-      logger.error('Error on load project  in getProject action.\nError: ', e)
+      project = await apiService({
+        action: api.get,
+        serviceName,
+        uuid: uuid
+      })
+    } catch (error) {
+      dispatch(rootTypes.loggerError, {
+        errorHint: 'Error on load project  in getProject action.\nError:',
+        error
+      })
       return
     }
 
@@ -33,17 +32,16 @@ export const actions: ActionTree<projectState, RootState> = {
   async [action.getProjects]({ state, commit, dispatch }) {
     let projects
     try {
-      projects = await dispatch(
-        rootTypes.apiService,
-        {
-          action: api.list,
-          serviceName,
-          params: state.query
-        },
-        { root }
-      )
-    } catch (e) {
-      logger.error('Error on load projects  in getProjects action.\nError: ', e)
+      projects = await apiService({
+        action: api.list,
+        serviceName,
+        params: state.query
+      })
+    } catch (error) {
+      dispatch(rootTypes.loggerError, {
+        errorHint: 'Error on load projects in getProjects action.\nError:',
+        error
+      })
       return
     }
 
@@ -53,17 +51,16 @@ export const actions: ActionTree<projectState, RootState> = {
   async [action.getProjectJobs]({ commit, dispatch }, uuid) {
     let jobs
     try {
-      jobs = await dispatch(
-        rootTypes.apiService,
-        {
-          action: api.jobs,
-          serviceName,
-          uuid
-        },
-        { root }
-      )
-    } catch (e) {
-      logger.error('Error on load project jobs in getProjectJobs action.\nError: ', e)
+      jobs = await apiService({
+        action: api.jobs,
+        serviceName,
+        uuid
+      })
+    } catch (error) {
+      dispatch(rootTypes.loggerError, {
+        errorHint: 'Error on load project jobs in getProjectJobs action.\nError: ',
+        error
+      })
       return
     }
 

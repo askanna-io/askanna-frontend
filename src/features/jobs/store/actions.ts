@@ -2,7 +2,7 @@ import * as type from './types'
 import { ActionTree } from 'vuex'
 import { logger } from '@/core/plugins/logger'
 import { JobsState, JOBS_STORE } from './types'
-import { apiStringify } from '@/core/api-settings'
+import { apiStringify } from '@/core/services/api-settings'
 import * as rootTypes from '@/core/store/actionTypes'
 
 const root = true

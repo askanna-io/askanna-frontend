@@ -1,5 +1,5 @@
 import * as type from './types'
-import { apiStringify } from '@/core/api-settings'
+import { apiStringify } from '@/core/services/api-settings'
 import * as rootTypes from '@/core/store/actionTypes'
 import { logger } from '@/core/plugins/logger'
 

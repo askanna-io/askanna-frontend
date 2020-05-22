@@ -1,8 +1,9 @@
 import Vue from 'vue'
-import $axios from '@/core/plugins/axios'
 import * as at from './actionTypes'
-import { api } from '../api-settings'
+import { api } from '../services/api-settings'
+import $axios from '@/core/plugins/axios'
 import Vuex, { StoreOptions } from 'vuex'
+import { logger } from './logger'
 import createPersistedState from 'vuex-persistedstate'
 
 // find all store modules from features and core folders
@@ -31,7 +32,7 @@ Vue.use(Vuex)
 
 const store: StoreOptions<RootState> = {
   plugins: [createPersistedState({ paths: persistedStores.filter(store => store === 'auth') })],
-  modules: { ...stores },
+  modules: { ...stores, logger },
   strict: process.env.NODE_ENV !== 'production',
   state: {
     version: '1.0.0',

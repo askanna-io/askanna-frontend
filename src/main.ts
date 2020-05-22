@@ -7,7 +7,6 @@ import $axios from '@/core/plugins/axios'
 import Sticky from 'vue-sticky-directive'
 import Logger from '@/core/plugins/logger'
 import { app, router, store } from './core'
-import { makeServer } from './server/index'
 import vuetify from '@/core/plugins/vuetify'
 import VueCompositionApi from '@vue/composition-api'
 
@@ -42,10 +41,6 @@ router.beforeEach((to, _, next) => {
 })
 
 Vue.use(VueAxios, $axios)
-
-/* if (process.env.NODE_ENV === 'development') {
-  makeServer()
-} */
 
 //init app instance
 new Vue({

@@ -6,3 +6,6 @@ export const apiDownloadSerice = 'apiDownloadSerice'
 // auth
 export const login = 'login'
 export const logout = 'logout'
+
+// logger
+export const loggerError = 'logger/error'
