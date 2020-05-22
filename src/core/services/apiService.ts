@@ -32,7 +32,7 @@ const apiService = async ({
       responseType
     })
 
-    if (result.status === 200) {
+    if (result.status === 200 || result.status === 201) {
       return result.data
     } else {
       throw result

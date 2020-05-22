@@ -1,4 +1,5 @@
 import jobs from './fixtures/jobs'
+import jobruns from './fixtures/jobruns'
 import projects from './fixtures/projects'
 import workspaces from './fixtures/workspaces'
 import { Model, Server, Factory } from 'miragejs'
@@ -10,6 +11,7 @@ export function createServer({ environment = 'development' } = {}) {
     environment,
     fixtures: {
       jobs,
+      jobruns,
       projects,
       workspaces
     },
@@ -18,7 +20,8 @@ export function createServer({ environment = 'development' } = {}) {
       workspaces: Model,
       project: Model,
       projects: Model,
-      jobs: Model
+      jobs: Model,
+      jobruns: Model
     },
     factories: {
       workspace: Factory.extend({
@@ -59,6 +62,46 @@ export function createServer({ environment = 'development' } = {}) {
 
       this.get('/project/:id/jobs', (schema: any) => {
         return schema.jobs.all()
+      })
+
+      this.get('/job', (schema: any) => {
+        return schema.jobs.all()
+      })
+
+      this.get('/job/:id', (schema: any, request) => {
+        let short_uuid = request.params.id
+        return schema.db.jobs.findBy({ short_uuid })
+      })
+
+      this.post('/job/:id/start/', (schema: any, request) => {
+        let short_uuid = request.params.id
+        return schema.db.jobs.findBy({ short_uuid })
+      })
+
+      this.post('/job/:id/stop/', (schema: any, request) => {
+        let short_uuid = request.params.id
+        return schema.db.jobs.findBy({ short_uuid })
+      })
+
+      this.post('/job/:id/pause/', (schema: any, request) => {
+        let short_uuid = request.params.id
+        return schema.db.jobs.findBy({ short_uuid })
+      })
+
+      this.post('/job/:id/reset/', (schema: any, request) => {
+        let short_uuid = request.params.id
+        return schema.db.jobs.findBy({ short_uuid })
+      })
+
+      this.put('/job/:id', function (schema: any, request) {
+        let short_uuid = request.params.id
+        let job = schema.db.jobs.findBy({ short_uuid })
+
+        return { ...job, name: 'updated name', title: 'new titile', description: 'some job description' }
+      })
+
+      this.get('/job/:id/runs/', (schema: any) => {
+        return schema.jobruns.all()
       })
 
       this.passthrough()

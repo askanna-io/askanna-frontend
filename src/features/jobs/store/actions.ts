@@ -1,36 +1,28 @@
 import * as type from './types'
 import { ActionTree } from 'vuex'
-import { logger } from '@/core/plugins/logger'
 import { JobsState, JOBS_STORE } from './types'
-import { apiStringify } from '@/core/services/api-settings'
+import apiService from '@/core/services/apiService'
 import * as rootTypes from '@/core/store/actionTypes'
+import { apiStringify } from '@/core/services/api-settings'
 
-const root = true
 const serviceName = JOBS_STORE
 const api = apiStringify(serviceName)
 
 export const actions: ActionTree<JobsState, RootState> = {
-  async [type.getJobsList]({ commit, dispatch, state }) {
+  async [type.getJobsList]({ commit, dispatch }) {
     let list
     try {
-      list = await dispatch(
-        rootTypes.apiService,
-        {
-          action: api.list,
-          serviceName
-        },
-        { root }
-      )
-    } catch (e) {
-      logger.error('Error on load jobs list items in getJobsList action.\nError: ', e)
+      list = await apiService({
+        action: api.list,
+        serviceName
+      })
+    } catch (error) {
+      dispatch(rootTypes.loggerError, {
+        errorHint: 'Error on load jobs list items in getJobsList action.\nError: ',
+        error
+      })
       return
     }
-    /*  // @TODO #1 refactore after implement job list on backend
-    list.forEach(async (element: any, index: number) => {
-      const jobInfo = await dispatch(`job/getJobInfo`, element.uuid, { root })
-      const data = { ...element, status: jobInfo.status }
-
-      commit(type.UDPDATE_LIST, { data, index })
-    }) */
+    commit(type.SET_JOBS_LIST, list)
   }
 }
