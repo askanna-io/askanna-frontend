@@ -61,7 +61,7 @@ export default defineComponent({
       if (!loginForm.value.validate()) {
         return
       }
-      authStore.login({ username: username.value, password: password.value })
+      authStore.actions.login({ username: username.value, password: password.value })
     }
 
     const reset = () => loginForm.value.reset()

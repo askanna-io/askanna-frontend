@@ -213,7 +213,7 @@ export default defineComponent({
     const authStore = useAuthStore()
     const workspaceStore = useWorkspaceStore()
 
-    const logout = () => authStore.logout()
+    const logout = () => authStore.actions.logout()
     const xsOnly = ref(null)
     const workspaces = computed(() => workspaceStore.workspaces.value.results)
     const workspaceVmodel = computed({
