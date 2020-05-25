@@ -3,7 +3,7 @@
     <v-toolbar dense flat color="grey lighten-3" class="br-r4">
       <v-flex class="d-flex">
         <div class="mr-auto d-flex align-center">
-          Payload
+          Shell
         </div>
         <div>
           <v-tooltip top>
@@ -18,7 +18,7 @@
       </v-flex>
     </v-toolbar>
     <v-flex class="mb-4">
-      <prism-editor :code="curl" readonly line-numbers />
+      <prism-editor class="curl-code" :code="curl" readonly />
     </v-flex>
   </div>
 </template>
@@ -42,7 +42,11 @@ export default defineComponent({
     const authStore = useAuthStore()
     const { jobId } = context.root.$route.params
 
-    const curl = `curl -X POST \ -d '{"data": {"foo": "bar"}}' \ -H 'Content-Type: application/json' \ -H 'Authorization: Token ${authStore.authToken.value}' \ 'https://api.askanna.eu/v1/run/${jobId}'`
+    const curl = `curl -X POST \
+-d '{"data": {"foo": "bar"}}' \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Token ${authStore.authToken.value}' \
+'https://api.askanna.eu/v1/run/${jobId}'`
 
     const handleCopy = () => {
       context.root.$copyText(curl).then(
@@ -64,3 +68,8 @@ export default defineComponent({
   }
 })
 </script>
+<style>
+.curl-code code {
+  white-space: pre-wrap;
+}
+</style>
