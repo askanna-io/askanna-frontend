@@ -1,7 +1,9 @@
 import { delay } from 'lodash'
 import { ActionTree } from 'vuex'
+import { logger } from '@/core/plugins/logger'
 import apiService from '@/core/services/apiService'
 import * as rootTypes from '@/core/store/actionTypes'
+
 import { apiStringify } from '@/core/services/api-settings'
 
 import { workspaceState, WORKSPACE_STORE, stateType, action, mutation } from './types'
@@ -11,7 +13,7 @@ const serviceName = WORKSPACE_STORE
 const api = apiStringify(serviceName)
 
 export const actions: ActionTree<workspaceState, RootState> = {
-  async [action.getWorkspace]({ commit, dispatch }, uuid) {
+  async [action.getWorkspace]({ commit }, uuid) {
     let workspace
     try {
       workspace = await apiService({
@@ -20,17 +22,15 @@ export const actions: ActionTree<workspaceState, RootState> = {
         uuid
       })
     } catch (error) {
-      dispatch(rootTypes.loggerError, {
-        errorHint: 'Error on load workspaces  in getWorkspaces action.\nError: ',
-        error
-      })
+      logger.error(commit, 'Error on load workspaces  in getWorkspaces action.\nError: ', error)
+
       return
     }
 
     commit(mutation.SET_WORKSPACE, workspace)
   },
 
-  async [action.getWorkspaces]({ state, commit, dispatch }) {
+  async [action.getWorkspaces]({ state, commit }) {
     commit(mutation.SET_LOADING, { name: stateType.workspacesLoading, value: true })
     let workspaces
     try {
@@ -40,11 +40,7 @@ export const actions: ActionTree<workspaceState, RootState> = {
         params: state.workspaceQuery
       })
     } catch (error) {
-      dispatch(rootTypes.loggerError, {
-        errorHint: 'Error on load workspaces in getWorkspaces action.\nError: ',
-        error
-      })
-
+      logger.error(commit, 'Error on load workspaces in getWorkspaces action.\nError: ', error)
       commit(mutation.SET_LOADING, { name: stateType.workspacesLoading, value: false })
 
       return
@@ -66,10 +62,8 @@ export const actions: ActionTree<workspaceState, RootState> = {
         params: state.workspaceProjectsQuery
       })
     } catch (error) {
-      dispatch(rootTypes.loggerError, {
-        errorHint: 'Error on load projects in getWorkpaceProjects action.\nError: ',
-        error
-      })
+      logger.error(commit, 'Error on load projects in getWorkpaceProjects action.\nError: ', error)
+
       commit(mutation.SET_LOADING, { name: stateType.workspaceProjectsLoading, value: false })
 
       return

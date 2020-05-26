@@ -161,7 +161,7 @@
           </div>
           <div class="text-right hidden-sm-and-down">
             <span v-if="isNotBeta">Build version:&nbsp;{{ version }}</span>
-            <v-menu transition="slide-y-transition">
+            <v-menu transition="slide-y-transition" offset-y>
               <template v-slot:activator="{ on }">
                 <v-btn icon v-on="on">
                   <v-icon>fas fa-user</v-icon>
@@ -172,8 +172,8 @@
                 <v-list-item v-if="isNotBeta">
                   <v-list-item-title>Settings</v-list-item-title>
                 </v-list-item>
-                <v-list-item>
-                  <v-list-item-title @click="logout">Logout</v-list-item-title>
+                <v-list-item :key="'logout'" exact @click="logout">
+                  Logout
                 </v-list-item>
               </v-list>
             </v-menu>

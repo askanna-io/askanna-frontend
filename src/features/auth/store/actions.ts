@@ -6,15 +6,12 @@ import { AuthState } from './types'
 import { api } from '@/core/services/api-settings'
 import { apiStringify } from '@/core/services/api-settings'
 import { AUTH_STORE } from '@/core/store/storeTypes'
-import * as gbTypes from '@/core/store/actionTypes'
 import { logger } from '@/core/plugins/logger'
 
-const root = true
 const serviceName = AUTH_STORE
-const apiString = apiStringify(serviceName)
 
 export const actions: ActionTree<AuthState, RootState> = {
-  async [ac.login]({ commit, dispatch }, { username, password }) {
+  async [ac.login]({ commit }, { username, password }) {
     const url = api.url() + api.auth.login()
 
     axios.defaults.xsrfCookieName = 'csrftoken'
@@ -33,7 +30,7 @@ export const actions: ActionTree<AuthState, RootState> = {
 
       if ((error && error.response && error.response.status === 400) || error.statusCode === 400) {
         const message = error.response.data.non_field_errors[0]
-        dispatch(`snackbar/${gbTypes.ac.showSnackBar}`, { message }, { root })
+        logger.error(commit, 'Error on login action.\nError: ', message)
 
         return error
       }
@@ -45,17 +42,9 @@ export const actions: ActionTree<AuthState, RootState> = {
     }
   },
 
-  async [ac.logout]({ commit, dispatch }) {
+  async [ac.logout]({ commit }) {
     try {
-      await dispatch(
-        gbTypes.apiService,
-        {
-          action: apiString.logout,
-          method: 'post',
-          serviceName
-        },
-        { root }
-      )
+      await axios.post(api.url() + api.auth.logout({}))
     } catch (error) {
       router.push({ path: '/login' })
     }

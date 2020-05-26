@@ -42,10 +42,10 @@ export default defineComponent({
     const authStore = useAuthStore()
     const { jobId } = context.root.$route.params
 
-    const curl = `curl -X POST \
--d '{"data": {"foo": "bar"}}' \
--H 'Content-Type: application/json' \
--H 'Authorization: Token ${authStore.authToken.value}' \
+    const curl = `curl -X POST \\
+-d '{"data": {"foo": "bar"}}' \\
+-H 'Content-Type: application/json' \\
+-H 'Authorization: Token ${authStore.authToken.value}' \\
 'https://api.askanna.eu/v1/run/${jobId}'`
 
     const handleCopy = () => {

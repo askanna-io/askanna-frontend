@@ -10,7 +10,7 @@ $axios.interceptors.request.use(
   function (config) {
     const token = localStorage.getItem('token')
 
-    if (token != null) {
+    if (token) {
       config.headers.Authorization = `Token ${token}`
     }
 
@@ -29,6 +29,7 @@ $axios.interceptors.response.use(
   err => {
     if (err.response && err.response.status === 401) {
       router.push({ name: 'login' })
+      return
     }
 
     return Promise.reject(err)
