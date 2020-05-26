@@ -48,10 +48,10 @@ export default defineComponent({
       { text: '', value: 'menu' }
     ]
 
-    const handleClickRow = item => {
+    const handleClickRow = ({ uuid, versionId }) => {
       context.root.$router.push({
         name: 'workspace-project-packages-uuid-version-uuid',
-        params: { projectId: project_id, packageId: uuid, versionId }
+        params: { projectId: context.root.$route.params.projectId, packageId: uuid, versionId }
       })
     }
 

@@ -39,4 +39,39 @@ describe('jobrun actions', () => {
     await showJobRunResult({ commit })
     await expect(commit).toHaveBeenCalledWith('SET_RESULT_MODAL')
   })
+
+  it('could close result modal', async () => {
+    const commit = jest.fn()
+    const closeResultModal = actions.closeResultModal as Function
+
+    await closeResultModal({ commit })
+    await expect(commit).toHaveBeenCalledWith('CLOSE_RESULT_MODAL')
+  })
+
+  it('can GET /jobrun by short_uuid', async () => {
+    const uuid = '7Mbq-MLk3-BaV3-Pvye'
+
+    const commit = jest.fn()
+    const getJobRun = actions.getJobRun as Function
+    const jobRun = jobruns.find(jobrun => jobrun.short_uuid === uuid)
+
+    await getJobRun({ commit }, uuid)
+    await expect(commit).toHaveBeenCalledWith('SET_JOB_RUN', jobRun)
+  })
+
+  it('can GET /jobrun payload by short_uuid', async () => {
+    const uuid = '7Mbq-MLk3-BaV3-Pvye'
+
+    const commit = jest.fn()
+    const getJobRunPayload = actions.getJobRunPayload as Function
+    const jobRun = jobruns.find(jobrun => jobrun.short_uuid === uuid) || { payload: { uuid: '' } }
+
+    const payload = { duration: 3 }
+
+    await getJobRunPayload({ commit }, { jobRunShortId: uuid, payloadUuid: jobRun.payload.uuid })
+
+    await expect(commit).toHaveBeenCalledWith('SET_LOADING', { name: 'payLoadLoading', value: true })
+    await expect(commit).toHaveBeenCalledWith('SET_JOB_RUN_PAYLOAD', payload)
+    await expect(commit).toHaveBeenCalledWith('SET_LOADING', { name: 'payLoadLoading', value: false })
+  })
 })

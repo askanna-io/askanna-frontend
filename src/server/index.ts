@@ -1,5 +1,7 @@
 import jobs from './fixtures/jobs'
 import jobruns from './fixtures/jobruns'
+import payloads from './fixtures/payloads'
+import packages from './fixtures/packages'
 import projects from './fixtures/projects'
 import workspaces from './fixtures/workspaces'
 import { Model, Server, Factory } from 'miragejs'
@@ -12,6 +14,8 @@ export function createServer({ environment = 'development' } = {}) {
     fixtures: {
       jobs,
       jobruns,
+      packages,
+      payloads,
       projects,
       workspaces
     },
@@ -21,7 +25,11 @@ export function createServer({ environment = 'development' } = {}) {
       project: Model,
       projects: Model,
       jobs: Model,
-      jobruns: Model
+      jobruns: Model,
+      payloads: Model,
+      payload: Model,
+      packages: Model,
+      package: Model
     },
     factories: {
       workspace: Factory.extend({
@@ -64,6 +72,15 @@ export function createServer({ environment = 'development' } = {}) {
         return schema.jobs.all()
       })
 
+      this.get('/project/:id/packages/', (schema: any) => {
+        return schema.packages.all()
+      })
+
+      this.get('/project/:id/packages/:packageId/', (schema: any, request) => {
+        let uuid = request.params.packageId
+        return schema.db.packages.findBy({ uuid })
+      })
+
       this.get('/job', (schema: any) => {
         return schema.jobs.all()
       })
@@ -102,6 +119,20 @@ export function createServer({ environment = 'development' } = {}) {
 
       this.get('/job/:id/runs/', (schema: any) => {
         return schema.jobruns.all()
+      })
+
+      this.get('/jobrun/:id/', function (schema: any, request) {
+        let short_uuid = request.params.id
+        let jobrun = schema.db.jobruns.findBy({ short_uuid })
+
+        return jobrun
+      })
+
+      this.get('/jobrun/:jobRunShortId/payload/:payloadUuid/', function (schema: any, request) {
+        const { payloadUuid } = request.params
+        const payload = schema.db.payloads.findBy({ uuid: payloadUuid })
+
+        return payload.data
       })
 
       this.passthrough()

@@ -3,7 +3,7 @@ import { MutationTree } from 'vuex'
 import { File, PackageState } from './types'
 
 export const mutations: MutationTree<PackageState> = {
-  [type.SET_PACKAGE](state, { packageData: data, uuid: { folderName } }) {
+  [type.SET_PACKAGE](state, { packageData: data }) {
     const re = /(?:\.([^.]+))?$/
     const files = data.files.map((file: File) => {
       const fileExt = re.exec(file.name)

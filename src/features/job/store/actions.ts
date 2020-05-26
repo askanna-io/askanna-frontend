@@ -35,7 +35,6 @@ export const actions: ActionTree<jobState, RootState> = {
         uuid
       })
     } catch (e) {
-      console.log(e)
       logger.error(commit, 'Error on start job  in startJob action.\nError: ', e)
       return
     }

@@ -1,9 +1,7 @@
 import { Server } from 'miragejs'
 import { createServer } from '@/server'
-import { actions } from '@/features/job/store/actions'
-
 import jobs from '@/server/fixtures/jobs'
-import projects from '@/server/fixtures/projects'
+import { actions } from '@/features/job/store/actions'
 
 let server: Server
 
