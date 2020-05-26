@@ -14,40 +14,56 @@ const setSnackBar = `${snackbarStore}/${'SET_SNACKBAR'}`
 export const logger = {
   success: (commit: Commit, message: any) => {
     const timeout = 2000
-    commit(setSnackBar, {
-      message,
-      timeout,
-      color: 'light-green'
-    })
+    commit(
+      setSnackBar,
+      {
+        message,
+        timeout,
+        color: 'light-green'
+      },
+      { root: true }
+    )
   },
   authError: (commit: Commit) => {
-    commit(setSnackBar, {
-      message: 'wrong_credentials',
-      color: 'deep-orange'
-    })
+    commit(
+      setSnackBar,
+      {
+        message: 'wrong_credentials',
+        color: 'deep-orange'
+      },
+      { root: true }
+    )
   },
   passResetSuccess: (commit: Commit) => {
-    commit(setSnackBar, {
-      message: 'check_your_email',
-      color: 'light-green'
-    })
+    commit(
+      setSnackBar,
+      {
+        message: 'check_your_email',
+        color: 'light-green'
+      },
+      { root: true }
+    )
   },
   userWarning: (commit: Commit, message: any) => {
-    commit(setSnackBar, { message, color: 'orange' })
+    commit(setSnackBar, { message, color: 'orange' }, { root: true })
   },
   userDanger: (commit: Commit, message: any) => {
-    commit(setSnackBar, { message, color: 'amber darken-4' })
+    commit(setSnackBar, { message, color: 'amber darken-4' }, { root: true })
   },
   error: (commit: Commit, errorHint: string, error: Error) => {
     let message, timeout
     if (LOGGER.snackBar) {
       message = `${errorHint}\n ${error.message}`
 
-      commit(setSnackBar, {
-        message,
-        timeout,
-        color: 'amber darken-4'
-      })
+      commit(
+        setSnackBar,
+        {
+          message,
+          timeout,
+          color: 'amber darken-4'
+        },
+        { root: true }
+      )
     }
 
     if (LOGGER.consoleLog) {

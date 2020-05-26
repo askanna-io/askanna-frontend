@@ -11,6 +11,7 @@
     </v-btn>
 
     <v-menu
+      v-if="isNotBeta"
       v-model="menu"
       class="workspace-menu"
       data-test="workspace-menu"

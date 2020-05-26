@@ -30,6 +30,7 @@ Vue.config.productionTip = false
 //check if the current user is authenticated
 router.beforeEach((to, _, next) => {
   const token = window.localStorage.getItem('token')
+  console.log(token)
 
   if (!token && to.name !== 'login') {
     next('login')
