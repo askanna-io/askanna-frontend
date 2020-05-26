@@ -9,7 +9,13 @@ export const mutations: MutationTree<jobRunState> = {
   },
 
   [type.SET_JOB_RUNS](state, data) {
-    state.runs = data
+    const runs = data.sort((a: any, b: any) => {
+      const dateA = new Date(a.created)
+      const dateB = new Date(b.created)
+
+      return dateB.getTime() - dateA.getTime()
+    })
+    state.runs = runs
   },
 
   [type.mutation.CLOSE_RESULT_MODAL](state) {

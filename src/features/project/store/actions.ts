@@ -1,9 +1,7 @@
 import { ActionTree } from 'vuex'
-import { logger } from '@/core/plugins/logger'
-import { apiStringify } from '@/core/services/api-settings'
-import * as rootTypes from '@/core/store/actionTypes'
 import apiService from '@/core/services/apiService'
-
+import * as rootTypes from '@/core/store/actionTypes'
+import { apiStringify } from '@/core/services/api-settings'
 import { projectState, PROJECT_STORE, action, mutation } from './types'
 
 const serviceName = PROJECT_STORE

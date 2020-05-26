@@ -29,7 +29,7 @@ export const actions: ActionTree<AuthState, RootState> = {
 
       return data
     } catch (error) {
-      logger.error('Error on login action.\nError: ', error)
+      logger.error(commit, 'Error on login action.\nError: ', error)
 
       if ((error && error.response && error.response.status === 400) || error.statusCode === 400) {
         const message = error.response.data.non_field_errors[0]

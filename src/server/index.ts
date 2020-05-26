@@ -1,4 +1,7 @@
 import jobs from './fixtures/jobs'
+import jobruns from './fixtures/jobruns'
+import payloads from './fixtures/payloads'
+import packages from './fixtures/packages'
 import projects from './fixtures/projects'
 import workspaces from './fixtures/workspaces'
 import { Model, Server, Factory } from 'miragejs'
@@ -10,6 +13,9 @@ export function createServer({ environment = 'development' } = {}) {
     environment,
     fixtures: {
       jobs,
+      jobruns,
+      packages,
+      payloads,
       projects,
       workspaces
     },
@@ -18,7 +24,12 @@ export function createServer({ environment = 'development' } = {}) {
       workspaces: Model,
       project: Model,
       projects: Model,
-      jobs: Model
+      jobs: Model,
+      jobruns: Model,
+      payloads: Model,
+      payload: Model,
+      packages: Model,
+      package: Model
     },
     factories: {
       workspace: Factory.extend({
@@ -59,6 +70,69 @@ export function createServer({ environment = 'development' } = {}) {
 
       this.get('/project/:id/jobs', (schema: any) => {
         return schema.jobs.all()
+      })
+
+      this.get('/project/:id/packages/', (schema: any) => {
+        return schema.packages.all()
+      })
+
+      this.get('/project/:id/packages/:packageId/', (schema: any, request) => {
+        let uuid = request.params.packageId
+        return schema.db.packages.findBy({ uuid })
+      })
+
+      this.get('/job', (schema: any) => {
+        return schema.jobs.all()
+      })
+
+      this.get('/job/:id', (schema: any, request) => {
+        let short_uuid = request.params.id
+        return schema.db.jobs.findBy({ short_uuid })
+      })
+
+      this.post('/job/:id/start/', (schema: any, request) => {
+        let short_uuid = request.params.id
+        return schema.db.jobs.findBy({ short_uuid })
+      })
+
+      this.post('/job/:id/stop/', (schema: any, request) => {
+        let short_uuid = request.params.id
+        return schema.db.jobs.findBy({ short_uuid })
+      })
+
+      this.post('/job/:id/pause/', (schema: any, request) => {
+        let short_uuid = request.params.id
+        return schema.db.jobs.findBy({ short_uuid })
+      })
+
+      this.post('/job/:id/reset/', (schema: any, request) => {
+        let short_uuid = request.params.id
+        return schema.db.jobs.findBy({ short_uuid })
+      })
+
+      this.put('/job/:id', function (schema: any, request) {
+        let short_uuid = request.params.id
+        let job = schema.db.jobs.findBy({ short_uuid })
+
+        return { ...job, name: 'updated name', title: 'new titile', description: 'some job description' }
+      })
+
+      this.get('/job/:id/runs/', (schema: any) => {
+        return schema.jobruns.all()
+      })
+
+      this.get('/jobrun/:id/', function (schema: any, request) {
+        let short_uuid = request.params.id
+        let jobrun = schema.db.jobruns.findBy({ short_uuid })
+
+        return jobrun
+      })
+
+      this.get('/jobrun/:jobRunShortId/payload/:payloadUuid/', function (schema: any, request) {
+        const { payloadUuid } = request.params
+        const payload = schema.db.payloads.findBy({ uuid: payloadUuid })
+
+        return payload.data
       })
 
       this.passthrough()

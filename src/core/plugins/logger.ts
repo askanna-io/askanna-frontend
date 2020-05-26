@@ -1,5 +1,5 @@
 import _Vue from 'vue'
-import store from '@/core/store'
+import { Commit } from 'vuex'
 
 const LOGGER = {
   consoleLog: true,
@@ -12,38 +12,38 @@ const snackbarStore = 'snackbar'
 const setSnackBar = `${snackbarStore}/${'SET_SNACKBAR'}`
 
 export const logger = {
-  success: (message: any) => {
+  success: (commit: Commit, message: any) => {
     const timeout = 2000
-    store.commit(setSnackBar, {
+    commit(setSnackBar, {
       message,
       timeout,
       color: 'light-green'
     })
   },
-  authError: () => {
-    store.commit(setSnackBar, {
+  authError: (commit: Commit) => {
+    commit(setSnackBar, {
       message: 'wrong_credentials',
       color: 'deep-orange'
     })
   },
-  passResetSuccess: () => {
-    store.commit(setSnackBar, {
+  passResetSuccess: (commit: Commit) => {
+    commit(setSnackBar, {
       message: 'check_your_email',
       color: 'light-green'
     })
   },
-  userWarning: (message: any) => {
-    store.commit(setSnackBar, { message, color: 'orange' })
+  userWarning: (commit: Commit, message: any) => {
+    commit(setSnackBar, { message, color: 'orange' })
   },
-  userDanger: (message: any) => {
-    store.commit(setSnackBar, { message, color: 'amber darken-4' })
+  userDanger: (commit: Commit, message: any) => {
+    commit(setSnackBar, { message, color: 'amber darken-4' })
   },
-  error: (errorHint: string, error: Error) => {
+  error: (commit: Commit, errorHint: string, error: Error) => {
     let message, timeout
     if (LOGGER.snackBar) {
       message = `${errorHint}\n ${error.message}`
 
-      store.commit(setSnackBar, {
+      commit(setSnackBar, {
         message,
         timeout,
         color: 'amber darken-4'

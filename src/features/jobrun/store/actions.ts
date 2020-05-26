@@ -1,41 +1,28 @@
 import * as type from './types'
-import { apiStringify } from '@/core/services/api-settings'
-import * as rootTypes from '@/core/store/actionTypes'
-import { logger } from '@/core/plugins/logger'
-
 import { ActionTree } from 'vuex'
+import { logger } from '@/core/plugins/logger'
+import apiService from '@/core/services/apiService'
+import { apiStringify } from '@/core/services/api-settings'
 import { jobRunState, JobRun, JOB_RUN_STORE, stateType } from './types'
 
-const root = true
 const serviceName = JOB_RUN_STORE
 const api = apiStringify(serviceName)
 
 export const actions: ActionTree<jobRunState, RootState> = {
-  async [type.action.getRunsJob]({ commit, dispatch }, id) {
+  async [type.action.getRunsJob]({ commit }, uuid) {
     let runs: JobRun[]
     try {
-      runs = await dispatch(
-        rootTypes.apiService,
-        {
-          action: api.runs,
-          method: 'get',
-          serviceName,
-          uuid: id
-        },
-        { root }
-      )
+      runs = await apiService({
+        action: api.runs,
+        method: 'get',
+        serviceName,
+        uuid
+      })
     } catch (e) {
-      logger.error('Error on runs job  in getRunsJob action.\nError: ', e)
+      logger.error(commit, 'Error on runs job  in getRunsJob action.\nError: ', e)
 
       return
     }
-
-    runs = runs.sort((a, b) => {
-      const dateA = new Date(a.created)
-      const dateB = new Date(b.created)
-
-      return dateB.getTime() - dateA.getTime()
-    })
 
     commit(type.SET_JOB_RUNS, runs)
   },
@@ -44,27 +31,23 @@ export const actions: ActionTree<jobRunState, RootState> = {
     commit(type.mutation.UPDATE_JOB_RUN_STORE)
   },
 
-  [type.action.showJobRunResult]({ commit }, params) {
-    commit(type.mutation.SET_RESULT_MODAL, params)
+  [type.action.showJobRunResult]({ commit }) {
+    commit(type.mutation.SET_RESULT_MODAL)
   },
   [type.action.closeResultModal]({ commit }) {
     commit(type.mutation.CLOSE_RESULT_MODAL)
   },
 
-  async [type.action.getJobRun]({ dispatch, commit }, uuid) {
+  async [type.action.getJobRun]({ commit }, uuid) {
     let jobRun = {}
     try {
-      jobRun = await dispatch(
-        rootTypes.apiService,
-        {
-          action: api.getJobRun,
-          serviceName,
-          uuid
-        },
-        { root }
-      )
+      jobRun = await apiService({
+        action: api.getJobRun,
+        serviceName,
+        uuid
+      })
     } catch (e) {
-      logger.error('Error on jobRun job  in getJobRun action.\nError: ', e)
+      logger.error(commit, 'Error on jobRun job  in getJobRun action.\nError: ', e)
 
       return
     }
@@ -72,22 +55,18 @@ export const actions: ActionTree<jobRunState, RootState> = {
     commit(type.SET_JOB_RUN, jobRun)
   },
 
-  async [type.action.getJobRunPayload]({ dispatch, commit }, uuid) {
+  async [type.action.getJobRunPayload]({ commit }, uuid) {
     commit(type.mutation.SET_LOADING, { name: stateType.payLoadLoading, value: true })
 
     let jobRunPayload = {}
     try {
-      jobRunPayload = await dispatch(
-        rootTypes.apiService,
-        {
-          action: api.getJobRunPayload,
-          serviceName,
-          uuid
-        },
-        { root }
-      )
+      jobRunPayload = await apiService({
+        action: api.getJobRunPayload,
+        serviceName,
+        uuid
+      })
     } catch (e) {
-      logger.error('Error on jobRunPayload job  in getJobRunPayload action.\nError: ', e)
+      logger.error(commit, 'Error on jobRunPayload job  in getJobRunPayload action.\nError: ', e)
 
       return
     }
