@@ -18,7 +18,7 @@
       </v-flex>
     </v-toolbar>
     <v-flex class="mb-4">
-      <prism-editor class="curl-code" :code="curl" readonly />
+      <prism-editor class="curl-code" line-numbers :code="curl" readonly />
     </v-flex>
   </div>
 </template>
