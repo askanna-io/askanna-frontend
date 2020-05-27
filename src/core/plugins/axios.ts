@@ -34,7 +34,7 @@ $axios.interceptors.response.use(
       return
     }
 
-    return
+    return Promise.reject(err)
   }
 )
 
