@@ -1,6 +1,6 @@
 <template>
   <v-card-title>
-    <span class="title">Job {{ jobName }}</span>
+    <span class="font-weight-light">Job {{ jobName }}</span>
     <v-tabs v-model="currentTab" left align-with-title>
       <v-tabs-slider color="primary" />
       <template v-for="tab of jobTools">

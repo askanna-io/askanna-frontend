@@ -1,6 +1,6 @@
 <template>
   <v-card-title transition="slide-y-transition">
-    <span class="title">Project {{ projectName }}</span>
+    <span class="font-weight-light">Project {{ projectName }}</span>
     <v-tabs left align-with-title>
       <v-tabs-slider color="primary" optional />
       <template v-for="tab of projectTools">
