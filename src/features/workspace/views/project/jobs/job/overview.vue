@@ -1,12 +1,14 @@
 <template>
   <v-card class="mx-auto" flat>
-    <v-card-title>Description:</v-card-title>
+    <v-card-title>Description</v-card-title>
     <v-divider />
-    <job-description
-      :description="job.description"
-      @onSave="handleOnJobSave"
-      @onChangeDescription="handleChangeDescription"
-    />
+    <v-container class="ma-0 fluid">
+      <job-description
+        :description="job.description"
+        @onSave="handleOnJobSave"
+        @onChangeDescription="handleChangeDescription"
+      />
+    </v-container>
     <v-divider />
     <job-definition :job="job" />
     <v-divider />
