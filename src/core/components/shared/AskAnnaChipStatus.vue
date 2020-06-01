@@ -20,6 +20,7 @@ export default defineComponent({
   setup(props) {
     const COLORS = {
       SUCCESS: 'success',
+      COMPLETED: 'success',
       UNDIFENED: 'grey',
       FAILURE: 'error',
       PENDING: 'yellow darken-2',
@@ -29,6 +30,7 @@ export default defineComponent({
       UNDIFENED: 'mdi-do-not-disturb',
       FAILURE: 'mdi-alert-decagram-outline',
       SUCCESS: 'mdi-checkbox-marked-circle',
+      COMPLETED: 'mdi-checkbox-marked-circle',
       PENDING: 'mdi-progress-clock',
       SUBMITTED: 'mdi-progress-check'
     }
