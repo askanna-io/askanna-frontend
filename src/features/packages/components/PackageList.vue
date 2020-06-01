@@ -92,9 +92,9 @@ export default defineComponent({
       { text: '', value: 'menu' }
     ]
 
-    const handleClickRow = ({ uuid }) => context.emit('handleClickRow', uuid)
+    const handleClickRow = ({ short_uuid }) => context.emit('handleClickRow', short_uuid)
     const handleDownload = async packageData => context.emit('handleDownload', packageData)
-    const handleHistory = ({ uuid }) => context.emit('handleHistory', { uuid })
+    const handleHistory = ({ short_uuid }) => context.emit('handleHistory', short_uuid)
 
     return {
       ...moment,
