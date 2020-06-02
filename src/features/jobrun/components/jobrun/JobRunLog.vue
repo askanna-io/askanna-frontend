@@ -82,7 +82,7 @@ export default defineComponent({
     }
 
     const handleDownload = () =>
-      forceFileDownload.trigger({ source: logs.value, name: `${jobRunStore.jobRun.value.short_uuid}.logs.txt` })
+      forceFileDownload.trigger({ source: logs.value, name: `${jobRunStore.jobRun.value.short_uuid}_log.txt` })
     const onScroll = e => {}
 
     return {
