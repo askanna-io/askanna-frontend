@@ -1,20 +1,43 @@
 <template>
-  <v-row align="center" justify="center">
-    <v-col cols="12" class="pb-0 pt-0">
-      <div class="page">
-        <div style="max-height: 420px;" class="overflow-y-auto" id="scroll-target">
-          <prism-editor v-scroll:#scroll-target="onScroll" v-if="logs" :code="logs" readonly line-numbers />
+  <div class="px-4">
+    <v-toolbar dense flat color="grey lighten-3" class="br-r4">
+      <v-flex class="d-flex">
+        <div class="mr-auto d-flex align-center"></div>
+        <div>
+          <v-tooltip top>
+            <template v-slot:activator="{ on }">
+              <v-btn small outlined v-on="on" color="secondary" class="mr-1" @click="handleDownload()">
+                <v-icon color="secondary">mdi-download</v-icon>
+              </v-btn>
+            </template>
+            <span>Download</span>
+          </v-tooltip>
+
+          <v-tooltip top>
+            <template v-slot:activator="{ on }">
+              <v-btn small v-on="on" outlined color="secondary" @click="handleCopy()">
+                <v-icon color="secondary">mdi-content-copy</v-icon>
+              </v-btn>
+            </template>
+            <span>Copy</span>
+          </v-tooltip>
         </div>
-      </div>
-    </v-col>
-  </v-row>
+      </v-flex>
+    </v-toolbar>
+    <v-flex :style="scrollerStyles" class="mb-4 overflow-y-auto" id="scroll-target">
+      <v-skeleton-loader :loading="loading" transition="transition" height="94" type="list-item-two-line">
+        <prism-editor v-scroll:#scroll-target="onScroll" :code="logs" readonly line-numbers />
+      </v-skeleton-loader>
+    </v-flex>
+  </div>
 </template>
 
 <script>
 import PrismEditor from 'vue-prism-editor'
+import { useWindowSize } from '@u3u/vue-hooks'
 import useMoment from '@/core/composition/useMoment'
-import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
+import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
 import { reactive, computed, defineComponent } from '@vue/composition-api'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
 
@@ -25,35 +48,30 @@ export default defineComponent({
     PrismEditor
   },
 
-  props: {
-    file: String,
-    fileSource: Blob
-  },
-
   setup(props, context) {
     const snackBar = useSnackBar()
     const moment = useMoment(context)
+    const { height } = useWindowSize()
     const forceFileDownload = useForceFileDownload()
-
-    const state = reactive({
-      sliceStart: 0,
-      sliceEnd: 100000
-    })
 
     const jobRunStore = useJobRunStore()
     const logs = computed(() => {
       const reducer = (acc, cr) => {
-        acc = acc + `${moment.$moment(cr[1]).format(' Do MMMM YYYY, h:mm:ss a')} ${cr[2]} \n `
+        acc = acc + `${cr[2]} \n`
         return acc
       }
       const result = jobRunStore.jobRun.value.stdout.length ? jobRunStore.jobRun.value.stdout.reduce(reducer, ``) : ''
       return result
     })
 
-    const handleBack = () => context.root.$router.back(-1)
+    const maxHeight = computed(() => height.value - 570)
+    const scrollerStyles = computed(() => {
+      return { 'max-height': `${maxHeight.value}px` }
+    })
+    const loading = computed(() => jobRunStore.jobRun.value.stdout.length === 0)
 
     const handleCopy = () => {
-      context.root.$copyText(props.file).then(
+      context.root.$copyText(logs.value).then(
         function (e) {
           snackBar.showSnackBar({ message: 'Copied', color: 'success' })
         },
@@ -63,57 +81,18 @@ export default defineComponent({
       )
     }
 
-    const handleDownload = () => forceFileDownload.trigger({ source: props.file, name: 'test' })
+    const handleDownload = () =>
+      forceFileDownload.trigger({ source: logs.value, name: `${jobRunStore.jobRun.value.short_uuid}.logs.txt` })
     const onScroll = e => {}
 
     return {
       logs,
-      state,
+      loading,
       onScroll,
-      handleBack,
       handleCopy,
+      scrollerStyles,
       handleDownload
     }
   }
 })
 </script>
-<style>
-.prism-editor-wrapper .language-js {
-  box-shadow: none;
-}
-.big-json {
-  max-height: 300px;
-  overflow: hidden;
-}
-
-.scroll {
-  height: 300px;
-  width: 40px;
-  overflow-y: scroll;
-  display: inline-block;
-}
-
-.scroll .inner {
-  height: 300%;
-  width: 100%;
-  content: '.';
-}
-.scroll.--simple::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-.scroll.--simple::-webkit-scrollbar-track {
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0.1);
-}
-.scroll.--simple::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0.2);
-}
-.scroll.--simple::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.4);
-}
-.scroll.--simple::-webkit-scrollbar-thumb:active {
-  background: rgba(0, 0, 0, 0.9);
-}
-</style>
