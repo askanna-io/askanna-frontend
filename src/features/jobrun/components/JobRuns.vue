@@ -13,18 +13,20 @@
       <tr @click="handleClickOnRow(item)">
         <td class="text-start">
           <v-tooltip top>
-            <template v-slot:activator="{ on }">
-              <v-btn text small v-on="on">#{{ item.short_uuid.slice(0, 4) }}</v-btn>
+            <template v-slot:activator="{ on, value }">
+              <div v-on="on">
+                <v-btn class="px-0" text small>#{{ item.short_uuid.slice(0, 4) }}</v-btn>
+                <v-tooltip right>
+                  <template v-slot:activator="{ on }">
+                    <v-btn icon text x-small v-on="on" v-show="value" @click.stop="handleCopy(item.short_uuid)"
+                      ><v-icon>mdi-content-copy</v-icon></v-btn
+                    >
+                  </template>
+                  <span>Copy run UUID</span>
+                </v-tooltip>
+              </div>
             </template>
             <span>{{ item.short_uuid }}</span>
-          </v-tooltip>
-          <v-tooltip top>
-            <template v-slot:activator="{ on }">
-              <v-btn icon text x-small v-on="on" @click.stop="handleCopy(item.short_uuid)"
-                ><v-icon>mdi-content-copy</v-icon></v-btn
-              >
-            </template>
-            <span>Copy jobrun short_uuid</span>
           </v-tooltip>
         </td>
         <td class="text-start">
@@ -78,12 +80,13 @@ export default defineComponent({
     const moment = useMoment(context)
 
     const pageCount = ref(0)
-
+    const show = ref(false)
     const headers = [
       {
         text: 'Run',
         sortable: false,
-        value: 'info'
+        value: 'info',
+        width: '10%'
       },
       { text: 'Status', value: 'status' },
       { text: 'Timing', value: 'timing' },
