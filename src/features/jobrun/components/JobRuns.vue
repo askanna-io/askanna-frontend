@@ -80,7 +80,6 @@ export default defineComponent({
     const moment = useMoment(context)
 
     const pageCount = ref(0)
-    const show = ref(false)
     const headers = [
       {
         text: 'Run',
