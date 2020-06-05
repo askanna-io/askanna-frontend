@@ -1,5 +1,5 @@
 <template>
-  <v-chip class="ma-2 askaanna-chip-status" small label outlined :color="statusColor">
+  <v-chip class="askaanna-chip-status" small label outlined :color="statusColor">
     <v-avatar left>
       <v-icon small>{{ statusIcon }}</v-icon>
     </v-avatar>
