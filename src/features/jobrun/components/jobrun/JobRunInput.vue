@@ -30,7 +30,7 @@
                 <v-icon color="secondary">mdi-content-copy</v-icon>
               </v-btn>
             </template>
-            <span>View</span>
+            <span>Copy</span>
           </v-tooltip>
         </div>
       </v-flex>

@@ -188,10 +188,6 @@
       </v-container>
       <the-snack-bar />
     </v-content>
-
-    <v-footer app>
-      <span>&copy; AskAnna 2020</span> <v-spacer /> <span v-if="isNotBeta">Build version:&nbsp;{{ version }}</span>
-    </v-footer>
   </v-app>
 </template>
 

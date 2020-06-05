@@ -17,7 +17,7 @@ export interface JobRun {
   runtime: number
   memory: number
   return_payload: string
-  stdout: any
+  stdout: any[]
   created: string
   finished: string
   version: {
@@ -91,7 +91,7 @@ export class JobRunModel {
       runtime: 0,
       memory: 0,
       return_payload: '',
-      stdout: '',
+      stdout: [],
       created: '',
       finished: '',
       version: {
