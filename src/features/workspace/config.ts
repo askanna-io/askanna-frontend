@@ -131,6 +131,17 @@ export default {
                               meta: {
                                 breadcrumb: 'Job run - #:jobRunId'
                               }
+                            },
+                            {
+                              path: 'log',
+                              component: () =>
+                                import(
+                                  /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-log" */ './views/project/jobs/job/jobruns/jobrun/log.vue'
+                                ),
+                              name: 'workspace-project-jobs-job-jobrun-log',
+                              meta: {
+                                breadcrumb: 'Job run - #:jobRunId'
+                              }
                             }
                           ]
                         }

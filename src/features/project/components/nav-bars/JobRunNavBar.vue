@@ -146,6 +146,12 @@ export default defineComponent({
         name: 'Result',
         show: !context.root.isNotBeta,
         to: 'workspace-project-jobs-job-jobrun-result'
+      },
+      {
+        id: 2,
+        name: 'Log',
+        show: !context.root.isNotBeta,
+        to: 'workspace-project-jobs-job-jobrun-log'
       }
     ]
 

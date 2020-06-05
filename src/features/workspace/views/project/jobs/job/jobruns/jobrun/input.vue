@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import JobRunInput from '@jobrun/components/jobrun/JobRunInput'
+import JobRunInput from '@/features/jobrun/components/jobrun/JobRunInput.vue'
 export default {
   components: { JobRunInput }
 }
