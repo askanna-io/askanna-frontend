@@ -27,7 +27,7 @@ import PackageFile from '@package/components/PackageFile'
 import PackageTree from '@package/components/PackageTree'
 import { headers, FileIcons } from '@package/utils/index'
 import { watch, onBeforeMount, computed } from '@vue/composition-api'
-import usePackageStore from '@package/composition/usePackageStore'
+import usePackageStore from '@/features/package/composition/usePackageStore'
 import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
 
 export default defineComponent({

@@ -23,25 +23,25 @@ export default defineComponent({
     const packages = usePackages(context)
     const forceFileDownload = useForceFileDownload()
 
-    const handleClickRow = uuid =>
+    const handleClickRow = packageId =>
       context.root.$router.push({
         name: 'workspace-project-packages-uuid-version-uuid',
-        params: { projectId: context.root.$route.params.projectId, packageId: uuid, versionId: '1' }
+        params: { projectId: context.root.$route.params.projectId, packageId, versionId: '1' }
       })
 
     const handleDownload = async packageData => {
       const source = await packages.downloadPackage({
         projectId: packageData.project,
-        packageId: packageData.uuid
+        packageId: packageData.short_uuid
       })
       forceFileDownload.trigger({ source, name: packageData.filename })
     }
 
-    const handleHistory = ({ uuid }) => {
+    const handleHistory = packageId => {
       const { projectId } = context.root.$route.params
       context.root.$router.push({
         name: 'workspace-project-packages-uuid-history',
-        params: { projectId, packageId: uuid, versionId: '1' }
+        params: { projectId, packageId, versionId: '1' }
       })
     }
 
