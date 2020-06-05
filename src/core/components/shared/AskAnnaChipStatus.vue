@@ -21,20 +21,20 @@ export default defineComponent({
     const COLORS = {
       SUCCESS: 'success',
       COMPLETED: 'success',
-      UNDIFENED: 'grey',
+      UNDEFINED: 'grey',
       FAILURE: 'error',
       PENDING: 'yellow darken-2',
       SUBMITTED: 'amber lighten-1'
     }
     const ICONS = {
-      UNDIFENED: 'mdi-do-not-disturb',
+      UNDEFINED: 'mdi-do-not-disturb',
       FAILURE: 'mdi-alert-decagram-outline',
       SUCCESS: 'mdi-checkbox-marked-circle',
       COMPLETED: 'mdi-checkbox-marked-circle',
       PENDING: 'mdi-progress-clock',
       SUBMITTED: 'mdi-progress-check'
     }
-    const status = computed(() => (props.status ? props.status : 'UNDIFENED'))
+    const status = computed(() => (props.status ? props.status : 'UNDEFINED'))
 
     const statusIcon = computed(() => ICONS[status.value])
     const statusColor = computed(() => COLORS[status.value])
