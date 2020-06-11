@@ -11,8 +11,8 @@
 import JobRunInfoJob from './parts/JobRunInfoJob.vue'
 import JobRunInfoCode from './parts/JobRunInfoCode.vue'
 import JobRunInfoText from './parts/JobRunInfoText.vue'
-import useMoment from '@/core/composition/useMoment'
 import JobRunInfoStatus from './parts/JobRunInfoStatus.vue'
+import useMoment from '@/core/composition/useMoment'
 
 import { JobRun, JobRunModel } from '../../store/types'
 import { computed, defineComponent } from '@vue/composition-api'
@@ -75,7 +75,7 @@ export default defineComponent({
         },
         {
           text: 'Trigger',
-          value: props.jobRun.trigger.name,
+          value: 'API' || props.jobRun.trigger.name,
           component: 'JobRunInfoText'
         },
         {
@@ -89,15 +89,20 @@ export default defineComponent({
           component: 'JobRunInfoText'
         },
         {
-          text: 'CPU',
-          value: Math.round((props.jobRun.runner.cpu_time + Number.EPSILON) * 100) / 100,
+          text: props.jobRun.runner.cpu_cores > 1 ? 'CPUs' : 'CPU',
+          value: props.jobRun.runner.cpu_cores,
           component: 'JobRunInfoText'
         },
         {
+          text: 'CPU time',
+          value: calcCPUTime(props.jobRun.runner.cpu_time),
+          component: 'JobRunInfoText'
+        }
+        /*{
           text: 'Memory',
           value: `${props.jobRun.runner.memory_mib} MB`,
           component: 'JobRunInfoText'
-        }
+        }*/
       ]
       interface VariableItem {
         text: string
@@ -113,6 +118,13 @@ export default defineComponent({
         name: 'workspace-project-job-overiew',
         params: { ...context.root.$route.params }
       })
+    }
+
+    const calcCPUTime = (time: number) => {
+      let elapsed_runtime = moment.$moment.duration(time, 'seconds')
+      let display_time = moment.$moment.utc(elapsed_runtime.asMilliseconds()).format('HH:mm:ss')
+
+      return display_time
     }
 
     return {
