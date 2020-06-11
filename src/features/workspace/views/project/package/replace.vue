@@ -121,8 +121,6 @@ export default defineComponent({
     })
 
     onMounted(() => {
-      console.log('component is mounted!')
-
       r.value = new Resumablejs({
         target: '/echo/json/',
         query: {},
@@ -133,7 +131,6 @@ export default defineComponent({
         chunkSize: 1 * 1024 * 1024
       })
 
-      console.log(browseButton.value)
       r.value.assignBrowse(browseButton.value)
       r.value.assignDrop(draggable.value)
     })
@@ -252,15 +249,10 @@ export default defineComponent({
     }
 
     const onBeforeDelete = fileRecord => {
-      console.log(fileRecord)
       var i = fileRecordsForUpload.value.indexOf(fileRecord)
-      console.log(i)
       if (i !== -1) {
-        console.log('asds12')
         fileRecordsForUpload.value = fileRecordsForUpload.value.splice(i, 1)
-        console.log(fileRecordsForUpload)
       } else {
-        console.log('asd')
         if (confirm('Are you sure you want to delete?')) {
           context.root.$refs.vueFileAgent.deleteFileRecord(fileRecord) // will trigger 'delete' event
         }

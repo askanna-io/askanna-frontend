@@ -53,7 +53,6 @@ export const actions: ActionTree<PackageState, RootState> = {
   },
 
   async [type.uploadPackage]({ commit }, data) {
-    console.log(data)
     let packageData
     try {
       packageData = await apiService({

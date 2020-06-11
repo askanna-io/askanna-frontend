@@ -160,7 +160,7 @@ export default defineComponent({
 
     const handleReplace = () => (showReplaceSection.value = true)
 
-    const uploadFiles = () => console.log('uploadFiles')
+    const uploadFiles = () => ''
 
     const fileRecords = ref([])
     const fileRecordsForUpload = ref([])
@@ -171,15 +171,10 @@ export default defineComponent({
     }
 
     const onBeforeDelete = fileRecord => {
-      console.log(fileRecord)
       var i = fileRecordsForUpload.value.indexOf(fileRecord)
-      console.log(i)
       if (i !== -1) {
-        console.log('asds12')
         fileRecordsForUpload.value = fileRecordsForUpload.value.splice(i, 1)
-        console.log(fileRecordsForUpload)
       } else {
-        console.log('asd')
         if (confirm('Are you sure you want to delete?')) {
           context.root.$refs.vueFileAgent.deleteFileRecord(fileRecord) // will trigger 'delete' event
         }
