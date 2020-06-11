@@ -35,6 +35,7 @@ export const PACKAGE_STORE = 'packageStore'
 // actions
 export const getPackage = 'getPackage'
 export const getFileSource = 'getFileSource'
+export const uploadPackage = 'uploadPackage'
 
 //mutations
 export const SET_PACKAGE = 'SET_PACKAGE'

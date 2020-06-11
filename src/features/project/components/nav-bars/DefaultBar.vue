@@ -36,7 +36,7 @@
             v-if="tab.show"
             ripple
             :key="tab.id"
-            :to="{ name: tab.to, params: { title: `${tab.name} - ${project.name}` } }"
+            :to="{ name: tab.to, params: { title: `${tab.name} - ${project.name}`, ...routerParams } }"
           >
             {{ tab.name }}
           </v-tab>
@@ -83,7 +83,7 @@ export default defineComponent({
       {
         id: 1,
         name: 'Code',
-        to: 'workspace-project-packages',
+        to: 'workspace-project-package',
         show: !context.root.isNotBeta
       },
       {
@@ -105,7 +105,7 @@ export default defineComponent({
       sticked = data.sticked
     }
 
-    return { sticked, projectTools, currentTab }
+    return { sticked, projectTools, currentTab, routerParams: context.root.$route.params }
   }
 })
 </script>

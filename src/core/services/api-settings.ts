@@ -45,12 +45,14 @@ export const api: ApiSettings = {
       packages: id => `project/${id}/packages/`
     },
     package: {
-      get: ({ projectId, packageId }) => `project/${projectId}/packages/${packageId}/`
+      get: ({ projectId, packageId }) => `project/${projectId}/packages/${packageId}/`,
+      uploadPackage: () => 'package/'
     },
     packages: {
       list: () => `project/`,
       projectPackages: id => `project/${id}/packages/`,
       getDownloadLink: ({ projectId, packageId }) => `project/${projectId}/packages/${packageId}/download/`
+
       //getDownloadLink: ({ projectId, packageId }) => 'project/1/packages/45d1816c-4973-4db1-b909-a4a2a6cda9b4/download/'
     },
     job: {
@@ -79,7 +81,8 @@ export const api: ApiSettings = {
     workspace: {
       get: id => `workspace/${id}/`,
       list: () => `workspace/`,
-      projects: id => `workspace/${id}/projects/`
+      projects: id => `workspace/${id}/projects/`,
+      getProjectPackages: id => `project/${id}/packages/`
     }
   }
 }

@@ -68,6 +68,16 @@ export const actions: ActionTree<workspaceState, RootState> = {
 
       return
     }
+    projects.results.forEach(async (project: any) => {
+      const packages = await apiService({
+        action: api.getProjectPackages,
+        serviceName,
+        uuid: project.short_uuid
+      })
+
+      project.packages = packages
+      project.lastPackage = packages.length ? packages[0] : { short_uuid: '' }
+    })
 
     commit(mutation.SET_WORKSPACE_PROJECTS, projects)
     delay(() => commit(mutation.SET_LOADING, { name: stateType.workspaceProjectsLoading, value: false }), 350, 'later')

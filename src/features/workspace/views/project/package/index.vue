@@ -47,8 +47,8 @@
 
 <script>
 import { useWindowSize } from '@u3u/vue-hooks'
-import useForceFileDownload from '@/core/composition/useForceFileDownload'
 import usePackages from '@packages/composition/usePackages'
+import useForceFileDownload from '@/core/composition/useForceFileDownload'
 
 import { defineComponent } from '@vue/composition-api'
 import PackageFile from '@package/components/PackageFile'
@@ -116,14 +116,14 @@ export default defineComponent({
 
     const handleClickOnRow = async item => {
       const { workspaceId, projectId, packageId, versionId, folderName = '' } = context.root.$route.params
-      let path = `/${workspaceId}/project/${projectId}/packages/${packageId}/version/${versionId}/${folderName}/${item.name}`
+      let path = `/${workspaceId}/project/${projectId}/${packageId}/version/${versionId}/${folderName}/${item.name}`
 
       if (typeof item.path === 'undefined') {
-        path = `/${workspaceId}/project/${projectId}/packages/${packageId}/version/${versionId}`
+        path = `/${workspaceId}/project/${projectId}/${packageId}/version/${versionId}`
       }
 
       if (item.is_dir) {
-        path = `/${workspaceId}/project/${projectId}/packages/${packageId}/version/${versionId}/${item.path}`
+        path = `/${workspaceId}/project/${projectId}/${packageId}/version/${versionId}/${item.path}`
       }
 
       context.root.$router.push({ path })
@@ -132,7 +132,7 @@ export default defineComponent({
     const handleHistory = () => {
       const { projectId, packageId } = context.root.$route.params
       context.root.$router.push({
-        name: 'workspace-project-packages-uuid-history',
+        name: 'workspace-project-package-history',
         params: { projectId, packageId, versionId: '1' }
       })
     }
@@ -148,7 +148,7 @@ export default defineComponent({
 
     const handleReplace = () =>
       context.root.$router.push({
-        name: 'workspace-project-packages-uuid-replace',
+        name: 'workspace-project-package-replace',
         params: { ...context.root.$route.params }
       })
 

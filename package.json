@@ -1,6 +1,6 @@
 {
   "name": "askanna-frontend",
-  "version": "0.1.66",
+  "version": "0.1.71",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -22,12 +22,15 @@
     "miragejs": "0.1.40",
     "moment": "^2.26.0",
     "prismjs": "1.20.0",
+    "resumablejs": "^1.1.0",
     "tiptap": "1.27.1",
     "tiptap-extensions": "1.29.1",
+    "tus-js-client": "^2.1.1",
     "vue": "2.6.11",
     "vue-axios": "2.1.5",
     "vue-class-component": "7.2.3",
     "vue-clipboard2": "0.3.1",
+    "vue-file-agent": "^1.7.3",
     "vue-prism-editor": "0.6.1",
     "vue-property-decorator": "8.4.2",
     "vue-router": "3.1.6",

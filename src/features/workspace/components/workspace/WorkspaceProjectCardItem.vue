@@ -3,8 +3,12 @@
     class="mx-auto h-100"
     :elevation="hover ? 16 : 2"
     :to="{
-      name: 'workspace-project-packages',
-      params: { title: `${project.name} - ${workspaceName}`, projectId: project.short_uuid }
+      name: 'workspace-project-package',
+      params: {
+        title: `${project.name} - ${workspaceName}`,
+        projectId: project.short_uuid,
+        packageId: project.lastPackage.short_uuid
+      }
     }"
   >
     <v-card-title>
@@ -48,6 +52,8 @@ interface Project {
   name: string
   short_uuid: string
   description: string
+  packages: any[]
+  lastPackage: any
 }
 import { Component, Vue, Prop } from 'vue-property-decorator'
 

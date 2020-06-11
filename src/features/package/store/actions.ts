@@ -50,5 +50,23 @@ export const actions: ActionTree<PackageState, RootState> = {
     const file = await fileSource.text()
 
     commit(type.SET_FILE, { file, fileSource })
+  },
+
+  async [type.uploadPackage]({ commit }, data) {
+    console.log(data)
+    let packageData
+    try {
+      packageData = await apiService({
+        action: api.uploadPackage,
+        method: 'post',
+        serviceName,
+        data
+      })
+    } catch (e) {
+      logger.error(commit, 'Error on upload package in uploadPackage action.\nError: ', e)
+
+      return
+    }
+    return packageData
   }
 }

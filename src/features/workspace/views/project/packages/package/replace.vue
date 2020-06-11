@@ -1,45 +1,55 @@
 <template>
   <v-row align="center" justify="center">
     <v-col cols="12" class="pt-0 pb-0">
-      <package-file
-        v-if="file"
-        :file="file"
-        :fileSource="fileSource"
-        :breadcrumbs="breadcrumbs"
-        :currentPath="currentPath"
-      />
-      <div class="px-4" v-else>
+      <div class="px-4">
         <v-toolbar dense flat color="grey lighten-3" class="br-r4">
           <v-flex class="d-flex">
             <div class="mr-auto d-flex align-center">
-              <v-tooltip top>
-                <template v-slot:activator="{ on }">
-                  <div v-on="on">Package #{{ packageId.slice(0, 4) }}</div>
-                </template>
-                <span>{{ packageId }}</span>
-              </v-tooltip>
-            </div>
-            <div>
-              <v-btn small outlined color="secondary" class="mr-1" @click="handleDownload()">
-                <v-icon color="secondary" left>mdi-download</v-icon>Download
-              </v-btn>
-
-              <v-btn small outlined color="secondary" class="mr-1" @click="handleReplace()">
-                <v-icon color="secondary" left>mdi-folder-move</v-icon>Replace
-              </v-btn>
-
-              <v-btn small outlined color="secondary" @click="handleHistory()">
-                <v-icon color="secondary">mdi-history</v-icon>History
-              </v-btn>
+              REPLACE THIS CODE PACKAGE
             </div>
           </v-flex>
         </v-toolbar>
-        <package-tree
-          :items="treeView"
-          :height="calcHeight"
-          :breadcrumbs="breadcrumbs"
-          @clickOnRow="handleClickOnRow"
-        />
+        <v-card class="my-2" outlined>
+          <v-card-text
+            >If you want to replace this code package, you are in the right place. Below you can find instructions on
+            how you can use the AskAnna CLI (add link) to push a new version of the code to this project. Also, you can
+            drag & drop a (zip) file to this screen. You can upload a single file, or make a zip file of your local
+            directory and upload this zip file.
+          </v-card-text>
+        </v-card>
+
+        <div>
+          <VueFileAgent
+            ref="vueFileAgent"
+            :theme="'list'"
+            :multiple="true"
+            :deletable="true"
+            :meta="true"
+            :accept="'image/*,.zip'"
+            :maxSize="'100MB'"
+            :maxFiles="14"
+            :helpText="'Choose  zip files'"
+            :errorText="{
+              type: 'Invalid file type. Only images or zip Allowed',
+              size: 'Files should not exceed 10MB in size'
+            }"
+            @select="filesSelected($event)"
+            @beforedelete="onBeforeDelete($event)"
+            @delete="fileDeleted($event)"
+            v-model="fileRecords"
+          />
+
+          <v-btn
+            :disabled="!fileRecordsForUpload.length"
+            small
+            outlined
+            color="primary"
+            class="my-2"
+            @click="uploadFiles()"
+          >
+            <v-icon color="primary" left>mdi-upload</v-icon>Upload {{ fileRecordsForUpload.length }} files
+          </v-btn>
+        </div>
       </div>
     </v-col>
   </v-row>
@@ -69,6 +79,8 @@ export default defineComponent({
     const breadcrumbs = usePackageBreadcrumbs(context)
     const forceFileDownload = useForceFileDownload()
 
+    const showReplaceSection = ref(false)
+
     onBeforeMount(async () => {
       const { projectId, packageId, folderName } = context.root.$route.params
 
@@ -79,7 +91,7 @@ export default defineComponent({
       })
     })
 
-    const calcHeight = computed(() => height.value - 420)
+    const calcHeight = computed(() => height.value - 450)
     const path = computed(() => context.root.$route.params.folderName || '/')
 
     const currentPath = computed(() => {
@@ -146,11 +158,33 @@ export default defineComponent({
       forceFileDownload.trigger({ source, name: packageData.filename })
     }
 
-    const handleReplace = () =>
-      context.root.$router.push({
-        name: 'workspace-project-packages-uuid-replace',
-        params: { ...context.root.$route.params }
-      })
+    const handleReplace = () => (showReplaceSection.value = true)
+
+    const uploadFiles = () => console.log('uploadFiles')
+
+    const fileRecords = ref([])
+    const fileRecordsForUpload = ref([])
+
+    const filesSelected = fileRecordsNewlySelected => {
+      const validFileRecords = fileRecordsNewlySelected.filter(fileRecord => !fileRecord.error)
+      fileRecordsForUpload.value = fileRecordsForUpload.value.concat(validFileRecords)
+    }
+
+    const onBeforeDelete = fileRecord => {
+      console.log(fileRecord)
+      var i = fileRecordsForUpload.value.indexOf(fileRecord)
+      console.log(i)
+      if (i !== -1) {
+        console.log('asds12')
+        fileRecordsForUpload.value = fileRecordsForUpload.value.splice(i, 1)
+        console.log(fileRecordsForUpload)
+      } else {
+        console.log('asd')
+        if (confirm('Are you sure you want to delete?')) {
+          context.root.$refs.vueFileAgent.deleteFileRecord(fileRecord) // will trigger 'delete' event
+        }
+      }
+    }
 
     return {
       packageId: context.root.$route.params.packageId,
@@ -160,11 +194,18 @@ export default defineComponent({
       FileIcons,
       calcHeight,
       breadcrumbs,
+      showReplaceSection,
       currentPath,
       handleReplace,
       handleHistory,
       handleDownload,
-      handleClickOnRow
+      handleClickOnRow,
+
+      fileRecords,
+      onBeforeDelete,
+      filesSelected,
+      fileRecordsForUpload,
+      uploadFiles
     }
   }
 })

@@ -3,21 +3,24 @@ import './core/components'
 import VueAxios from 'vue-axios'
 import hooks from '@u3u/vue-hooks'
 import Beta from '@/core/plugins/beta'
+import VueFileAgent from 'vue-file-agent'
+import * as tus from 'tus-js-client'
+import { plugins } from 'vue-file-agent'
+import VueClipboard from 'vue-clipboard2'
 import $axios from '@/core/plugins/axios'
 import Sticky from 'vue-sticky-directive'
 import Logger from '@/core/plugins/logger'
 import { app, router, store } from './core'
 import vuetify from '@/core/plugins/vuetify'
+import 'vue-file-agent/dist/vue-file-agent.css'
 import VueCompositionApi from '@vue/composition-api'
 
 import 'prismjs'
 import 'prismjs/themes/prism-tomorrow.css'
 import 'vue-prism-editor/dist/VuePrismEditor.css'
-
-import VueClipboard from 'vue-clipboard2'
-
+plugins.tus = tus
 Vue.use(VueClipboard)
-
+Vue.use(VueFileAgent)
 // register globally
 Vue.use(Beta)
 Vue.use(hooks)
