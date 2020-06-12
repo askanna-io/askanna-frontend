@@ -32,14 +32,10 @@
         <td class="text-start">
           <ask-anna-chip-status :status="item.status" />
         </td>
-        <td class="text-start">{{ seconds(item.runtime) }}</td>
         <td class="text-start">
           <b>Started:</b> &nbsp;{{ $moment(item.created).format(' Do MMMM YYYY, h:mm:ss a') }} <br />
           <b>Finished:</b> &nbsp;{{ $moment(item.finished).format(' Do MMMM YYYY, h:mm:ss a') }}<br />
           <b>Duration:</b> &nbsp;{{ runTimeHours(item.created, item.finished) }} seconds<br />
-        </td>
-        <td class="text-start">
-          {{ item.memory }}
         </td>
       </tr>
     </template>
@@ -88,9 +84,7 @@ export default defineComponent({
         width: '10%'
       },
       { text: 'Status', value: 'status' },
-      { text: 'Timing', value: 'timing' },
-      { text: 'CPU time  (h:m:s)', value: 'runtime' },
-      { text: 'Memory used', value: 'memory' }
+      { text: 'Timing', value: 'runtime' }
     ]
 
     const handleClickOnRow = value => context.emit('handleClickOnRow', value)
