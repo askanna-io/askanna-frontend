@@ -15,7 +15,7 @@
 import useQuery from '@/core/composition/useQuery'
 import useWorkspaceStore from '../composition/useWorkSpaceStore'
 import WorkspaceProjectList from '../components/workspace/WorkspaceProjectList.vue'
-import { watch, computed, reactive, onBeforeMount, defineComponent } from '@vue/composition-api'
+import { defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'workspace',

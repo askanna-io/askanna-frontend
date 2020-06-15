@@ -4,8 +4,6 @@ import VueAxios from 'vue-axios'
 import hooks from '@u3u/vue-hooks'
 import Beta from '@/core/plugins/beta'
 import VueFileAgent from 'vue-file-agent'
-import * as tus from 'tus-js-client'
-import { plugins } from 'vue-file-agent'
 import VueClipboard from 'vue-clipboard2'
 import $axios from '@/core/plugins/axios'
 import Sticky from 'vue-sticky-directive'
@@ -18,7 +16,6 @@ import VueCompositionApi from '@vue/composition-api'
 import 'prismjs'
 import 'prismjs/themes/prism-tomorrow.css'
 import 'vue-prism-editor/dist/VuePrismEditor.css'
-plugins.tus = tus
 Vue.use(VueClipboard)
 Vue.use(VueFileAgent)
 // register globally

@@ -4,7 +4,7 @@
 
 <script>
 import useWorkspaceStore from '../composition/useWorkSpaceStore'
-import { watch, computed, reactive, onBeforeMount, defineComponent } from '@vue/composition-api'
+import { computed, reactive, onBeforeMount, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   setup(props, context) {
