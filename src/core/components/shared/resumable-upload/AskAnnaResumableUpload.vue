@@ -1,13 +1,18 @@
 <template>
-  <v-row no-gutters class="upload" ref="uploadContainer">
+  <v-row no-gutters class="upload mb-2" ref="uploadContainer">
     <v-col cols="12">
       <div ref="draggable" class="is-sortable-disabled is-drag-valid theme-list">
-        <div class="grid-block-wrapper vue-file-agent file-input-wrapper has-multiple">
+        <div ref="browseButton" class="grid-block-wrapper vue-file-agent file-input-wrapper has-multiple">
           <canvas style="position: fixed; visibility: hidden; z-index: -3;"></canvas>
           <div transitionduration="300" pressdelay="0" helperclass="active-sorting-item">
             <div>
-              <file-preview v-for="(file, index) in fileRecordsForUpload" :fileData="file" :key="index" />
-              <div ref="browseButton" class="file-preview-wrapper grid-box-item grid-block file-preview-new">
+              <file-preview
+                v-for="(resumableFile, index) in fileRecordsForUpload"
+                :resumableFile="resumableFile"
+                :key="index"
+                @deleteFile="handleDeleteFile"
+              />
+              <div class="file-preview-wrapper grid-box-item grid-block file-preview-new">
                 <span class="file-preview"
                   ><span style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
                     ><svg viewBox="0 0 1000 1000">
@@ -20,23 +25,26 @@
               </div>
             </div>
           </div>
-          <input title="" type="file" multiple="multiple" accept="image/*,.zip" class="file-input" />
         </div>
       </div>
-
-      <div ref="results" class="panel"></div>
-
       <v-btn
         ref="uploadFiles"
         class="my-2"
-        :disabled="!fileRecordsForUpload.length"
+        :disabled="fileRecordsForUpload && !fileRecordsForUpload.length"
         small
         outlined
-        @click="uploadFiles()"
+        @click="handleConfirmUpload"
         color="secondary"
       >
         <v-icon color="secondary" left>mdi-upload</v-icon>Upload
       </v-btn>
+      <confirm-dialog
+        v-if="showConfirmation"
+        :progress="progress"
+        :isUploadStart="isUploadStart"
+        :isUploadFinish="isUploadFinish"
+        @uploadFiles="uploadFiles"
+      />
     </v-col>
   </v-row>
 </template>
@@ -44,12 +52,14 @@
 <script>
 import Resumablejs from 'resumablejs'
 import FilePreview from './FilePreview.vue'
+import ConfirmDialog from './ConfirmDialog.vue'
+
 import { ref, watch, reactive, computed, defineComponent, onMounted } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'AskAnnaResumableUpload',
 
-  components: { FilePreview },
+  components: { FilePreview, ConfirmDialog },
 
   props: {
     statusData: {
@@ -65,17 +75,23 @@ export default defineComponent({
           finished: ''
         }
       }
+    },
+    getTarget: {
+      type: Function,
+      default: () => ''
     }
   },
 
   setup(props, context) {
     const r = ref(null)
-    const results = ref(null)
     const draggable = ref(null)
-    const uploadFile = ref(null)
-    const uploadContainer = ref(null)
     const browseButton = ref(null)
-    const nothingToUpload = ref(null)
+    const uploadContainer = ref(null)
+
+    const progress = ref(0)
+    const isUploadStart = ref(false)
+    const isUploadFinish = ref(false)
+    const showConfirmation = ref(false)
 
     const token = localStorage.getItem('token')
     const uploadHeaders = { Authorization: `Token ${token}` }
@@ -84,8 +100,9 @@ export default defineComponent({
       r.value = new Resumablejs({
         target: getTarget,
         query: {},
-        maxChunkRetries: 2,
-        maxFiles: 3,
+        maxChunkRetries: 3,
+        maxFiles: 1,
+        fileType: ['zip'],
         prioritizeFirstAndLastChunk: true,
         simultaneousUploads: 4,
         chunkSize: 1 * 1024 * 1024,
@@ -93,47 +110,69 @@ export default defineComponent({
       })
     })
 
+    const fileRecordsForUpload = computed(() => r.value && r.value.files)
+
+    watch(fileRecordsForUpload, async fileRecordsForUpload => {
+      console.log(fileRecordsForUpload)
+    })
+
     watch(uploadContainer, async uploadContainer => {
       if (!uploadContainer) return
-      r.value.on('filesAdded', function (file, event) {
-        console.log('filesAdded')
-      })
 
       r.value.on('fileAdded', function (file, event) {
         event.preventDefault()
-        console.log('fileAdded')
       })
-      r.value.on('uploadStart', function (file, event) {})
 
       r.value.on('uploadStart', function () {
-        console.log('uploadStart')
+        isUploadStart.value = true
       })
-      console.log(browseButton)
-      r.value.assignDrop(draggable.value)
+
+      r.value.on('fileProgress', file => (progress.value = Math.floor(file.progress() * 100)))
+
+      r.value.on('complete', function () {
+        isUploadFinish.value = true
+      })
+
       r.value.assignBrowse(browseButton.value)
+      r.value.assignDrop(draggable.value)
     })
 
     const getTarget = async () => {
-      const { projectId, packageId } = context.root.$route.params
       const [fileMetaData] = r.value.files
-      const packageData = await packageStore.uploadPackage({
-        project: 'f1e2144a-87f9-4936-8562-4304c51332ea',
-        filename: fileMetaData.file.name,
-        size: fileMetaData.file.size
-      })
-      return `https://api.askanna.eu/v1/package/${packageData.uuid}/packagechunk/`
+      const url = await props.getTarget(fileMetaData)
+
+      return url
     }
 
-    const fileRecordsForUpload = computed(() => r.value && r.value.files)
+    const handleConfirmUpload = () => {
+      showConfirmation.value = true
+    }
+
     const uploadFiles = async () => {
-      console.log('uploadFiles')
-      const { projectId, packageId } = context.root.$route.params
       const [fileMetaData] = r.value.files
 
       r.value.upload()
     }
 
-    return { draggable, results, browseButton, uploadContainer, fileRecordsForUpload }
+    const handleDeleteFile = uniqueIdentifier => {
+      const file = r.value.getFromUniqueIdentifier(uniqueIdentifier)
+
+      r.value.removeFile(file)
+    }
+
+    return {
+      progress,
+      draggable,
+      uploadFiles,
+      browseButton,
+      isUploadStart,
+      isUploadFinish,
+      uploadContainer,
+      showConfirmation,
+      handleConfirmUpload,
+      fileRecordsForUpload,
+      handleDeleteFile
+    }
   }
 })
 </script>

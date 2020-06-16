@@ -2,15 +2,15 @@
   <div class="file-preview-wrapper grid-box-item grid-block grid-box-enter-to">
     <div class="file-preview-wrapper-zip file-preview-wrapper-other file-category-archive is-deletable">
       <span class="file-preview other-preview" style="background-color: rgb(186, 131, 34);"
-        ><span class="file-preview-overlay"></span><span class="file-ext">{{ fileData.type }}</span
-        ><span class="file-size">{{ fileData.size }} KB</span
-        ><span class="file-delete"
+        ><span class="file-preview-overlay"></span><span class="file-ext">{{ resumableFile.file.type }}</span
+        ><span class="file-size">{{ resumableFile.file.size }} KB</span
+        ><span class="file-delete" @click.stop="handleDeleteFile"
           ><svg viewBox="0 0 24 24">
             <path
               d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
             ></path></svg></span
         ><span class="file-name"
-          ><span class="file-name-text">{{ fileData.name }}</span></span
+          ><span class="file-name-text">{{ resumableFile.file.name }}</span></span
         ><span class="file-progress"><span class="file-progress-bar" style="width: 0%;"></span></span
         ><span class="file-icon"
           ><svg viewBox="0 0 100 100">
@@ -29,7 +29,7 @@ export default defineComponent({
   name: 'FilePreview',
 
   props: {
-    fileData: {
+    resumableFile: {
       type: Object,
       default: function () {
         return {
@@ -42,7 +42,9 @@ export default defineComponent({
   },
 
   setup(props, context) {
-    return {}
+    const handleDeleteFile = () => context.emit('deleteFile', props.resumableFile.uniqueIdentifier)
+
+    return { handleDeleteFile }
   }
 })
 </script>

@@ -18,14 +18,13 @@
           </v-card-text>
         </v-card>
 
-        <ask-anna-resumable-upload />
+        <ask-anna-resumable-upload :getTarget="getTarget" />
       </div>
     </v-col>
   </v-row>
 </template>
 
 <script>
-import AskAnnaResumableUpload from '@/core/components/shared/resumable-upload/AskAnnaResumableUpload'
 import { useWindowSize } from '@u3u/vue-hooks'
 import usePackages from '@packages/composition/usePackages'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
@@ -34,9 +33,10 @@ import { defineComponent } from '@vue/composition-api'
 import PackageFile from '@package/components/PackageFile'
 import PackageTree from '@package/components/PackageTree'
 import { headers } from '@package/utils/index'
-import { ref, watch, onBeforeMount, onMounted, computed } from '@vue/composition-api'
 import usePackageStore from '@/features/package/composition/usePackageStore'
 import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
+import { ref, watch, onBeforeMount, onMounted, computed } from '@vue/composition-api'
+import AskAnnaResumableUpload from '@/core/components/shared/resumable-upload/AskAnnaResumableUpload'
 
 import { plugins } from 'vue-file-agent'
 
@@ -74,10 +74,20 @@ export default defineComponent({
       await packageStore.getFileSource(path)
     })
 
+    const getTarget = async fileMetaData => {
+      const packageData = await packageStore.uploadPackage({
+        project: 'f1e2144a-87f9-4936-8562-4304c51332ea',
+        filename: fileMetaData.file.name,
+        size: fileMetaData.file.size
+      })
+      return `https://api.askanna.eu/v1/package/${packageData.uuid}/packagechunk/`
+    }
+
     return {
       packageId: context.root.$route.params.packageId,
       file: packageStore.file,
-      fileSource: packageStore.fileSource
+      fileSource: packageStore.fileSource,
+      getTarget
     }
   }
 })
