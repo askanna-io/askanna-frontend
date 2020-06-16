@@ -50,7 +50,7 @@
 import useMoment from '@/core/composition/useMoment'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
 
-import { ref, defineComponent, onBeforeMount, computed, watch } from '@vue/composition-api'
+import { ref, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'JobRuns',

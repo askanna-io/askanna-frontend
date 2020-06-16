@@ -25,9 +25,18 @@
       </v-flex>
     </v-toolbar>
     <v-flex :style="scrollerStyles" class="mb-4 overflow-y-auto" id="scroll-target">
-      <v-skeleton-loader :loading="loading" transition="transition" height="94" type="list-item-two-line">
+      <v-skeleton-loader
+        v-if="!logNoAvailable"
+        :loading="loading"
+        transition="transition"
+        height="94"
+        type="list-item-two-line"
+      >
         <prism-editor v-scroll:#scroll-target="onScroll" :code="logs" readonly line-numbers />
       </v-skeleton-loader>
+      <v-alert v-if="logNoAvailable" class="my-2" dense outlined type="warning" border="left">
+        No log entries are available for this job run
+      </v-alert>
     </v-flex>
   </div>
 </template>
@@ -56,6 +65,8 @@ export default defineComponent({
 
     const jobRunStore = useJobRunStore()
     const logs = computed(() => {
+      if (!jobRunStore.jobRun.value.stdout) return ''
+
       const reducer = (acc, cr) => {
         acc = acc + `${cr[2]} \n`
         return acc
@@ -68,7 +79,9 @@ export default defineComponent({
     const scrollerStyles = computed(() => {
       return { 'max-height': `${maxHeight.value}px` }
     })
-    const loading = computed(() => jobRunStore.jobRun.value.stdout.length === 0)
+    const loading = computed(() => jobRunStore.jobRun.value.stdout && jobRunStore.jobRun.value.stdout.length === 0)
+
+    const logNoAvailable = computed(() => jobRunStore.jobRun.value.stdout === null)
 
     const handleCopy = () => {
       context.root.$copyText(logs.value).then(
@@ -90,6 +103,7 @@ export default defineComponent({
       loading,
       onScroll,
       handleCopy,
+      logNoAvailable,
       scrollerStyles,
       handleDownload
     }

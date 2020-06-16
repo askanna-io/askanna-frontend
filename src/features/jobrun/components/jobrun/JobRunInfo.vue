@@ -12,6 +12,7 @@ import JobRunInfoJob from './parts/JobRunInfoJob.vue'
 import JobRunInfoCode from './parts/JobRunInfoCode.vue'
 import JobRunInfoText from './parts/JobRunInfoText.vue'
 import JobRunInfoStatus from './parts/JobRunInfoStatus.vue'
+import JobRunInfoPackage from './parts/JobRunInfoPackage.vue'
 import useMoment from '@/core/composition/useMoment'
 
 import { JobRun, JobRunModel } from '../../store/types'
@@ -24,7 +25,8 @@ export default defineComponent({
     JobRunInfoJob,
     JobRunInfoText,
     JobRunInfoCode,
-    JobRunInfoStatus
+    JobRunInfoStatus,
+    JobRunInfoPackage
   },
 
   props: {
@@ -56,6 +58,11 @@ export default defineComponent({
           text: 'Job',
           value: props.jobName,
           component: 'JobRunInfoJob'
+        },
+        {
+          text: 'Package',
+          value: props.jobRun.package.uuid,
+          component: 'JobRunInfoPackage'
         },
         {
           text: 'Code',
@@ -90,7 +97,7 @@ export default defineComponent({
         },
         {
           text: props.jobRun.runner.cpu_cores > 1 ? 'CPUs' : 'CPU',
-          value: props.jobRun.runner.cpu_cores,
+          value: `#${props.jobRun.runner.cpu_cores}`,
           component: 'JobRunInfoText'
         },
         {

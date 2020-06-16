@@ -115,15 +115,20 @@ export default defineComponent({
     const projectStore = useProjectStore()
 
     onBeforeMount(async () => {
-      jobRunStore.resetStore()
-      projectStore.resetProjectJobs()
-
       const { jobId, jobRunId, projectId } = context.root.$route.params
 
-      jobStore.getJob(jobId)
-      await jobRunStore.getJobRun(jobRunId)
-      await handleViewPayload()
-      await fetchData(context, [projectStore.getProjectJobs(projectId)])
+      if (jobStore.job.value.short_uuid !== jobId) {
+        projectStore.resetProjectJobs()
+        await fetchData(context, [projectStore.getProjectJobs(projectId)])
+
+        jobStore.getJob(jobId)
+      }
+      if (jobRunStore.jobRun.value.short_uuid !== jobRunId) {
+        jobRunStore.resetStore()
+
+        await jobRunStore.getJobRun(jobRunId)
+        await handleViewPayload()
+      }
     })
 
     const jobName = computed(() => jobStore.job.value.name)
