@@ -20,6 +20,10 @@
             </template>
           </v-breadcrumbs>
         </template>
+
+        <template v-slot:item.created="{ item }">
+          {{ $moment(item.created).format(' Do MMMM YYYY, h:mm:ss a') }}
+        </template>
       </v-data-table>
     </v-col>
   </v-row>
@@ -43,9 +47,8 @@ export default defineComponent({
         align: 'left',
         value: 'filename'
       },
-      { text: 'Created', value: 'created_at' },
-      { text: '', value: 'uuid', sortable: false },
-      { text: '', value: 'menu' }
+      { text: 'Created', value: 'created' },
+      { text: 'Uuid', value: 'short_uuid', sortable: false }
     ]
 
     const handleClickRow = ({ uuid, versionId }) => {
