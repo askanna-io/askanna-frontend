@@ -20,8 +20,8 @@
       >
     </template>
 
-    <template v-slot:item.created_at="{ item }">
-      {{ $moment(item.created_at).format(' Do MMMM YYYY, h:mm:ss a') }}
+    <template v-slot:item.created="{ item }">
+      {{ $moment(item.created).format(' Do MMMM YYYY, h:mm:ss a') }}
     </template>
 
     <template v-slot:item.menu="{ item }">
@@ -87,7 +87,7 @@ export default defineComponent({
         align: 'left',
         value: 'filename'
       },
-      { text: 'Created', value: 'created_at' },
+      { text: 'Created', value: 'created' },
       { text: '', value: 'uuid', sortable: false },
       { text: '', value: 'menu' }
     ]
