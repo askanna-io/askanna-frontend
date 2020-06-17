@@ -97,7 +97,7 @@ export default defineComponent({
         },
         {
           text: props.jobRun.runner.cpu_cores > 1 ? 'CPUs' : 'CPU',
-          value: `#${props.jobRun.runner.cpu_cores}`,
+          value: props.jobRun.runner.cpu_cores,
           component: 'JobRunInfoText'
         },
         {
