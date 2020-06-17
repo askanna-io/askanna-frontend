@@ -51,10 +51,10 @@ export default defineComponent({
       { text: 'Uuid', value: 'short_uuid', sortable: false }
     ]
 
-    const handleClickRow = ({ uuid, versionId }) => {
+    const handleClickRow = ({ short_uuid, versionId }) => {
       context.root.$router.push({
         name: 'workspace-project-packages-uuid-version-uuid',
-        params: { projectId: context.root.$route.params.projectId, packageId: uuid, versionId }
+        params: { projectId: context.root.$route.params.projectId, packageId: short_uuid, versionId }
       })
     }
 
