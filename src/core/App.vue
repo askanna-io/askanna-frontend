@@ -75,4 +75,8 @@ export default class App extends Vue {
 .cursor--pointer {
   cursor: pointer;
 }
+
+.text--capitalize {
+  text-transform: capitalize !important;
+}
 </style>

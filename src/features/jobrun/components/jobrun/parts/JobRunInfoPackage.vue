@@ -2,7 +2,18 @@
   <v-tooltip top>
     <template v-slot:activator="{ on }">
       <div v-on="on">
-        {{ text }}:<v-btn class="px-0" text small @click="handleGotoPackage"> #{{ value.slice(0, 4) }}</v-btn>
+        {{ text }}:<v-btn
+          color="primary"
+          class="px-0"
+          text
+          small
+          :to="{
+            name: 'workspace-project-packages-uuid-version-uuid',
+            params: { ...$route.params, packageId: value, versionId: 1 }
+          }"
+        >
+          #{{ value.slice(0, 4) }}</v-btn
+        >
       </div>
     </template>
     <span>{{ value }}</span>
@@ -22,19 +33,6 @@ export default defineComponent({
     value: {
       type: String,
       default: ''
-    }
-  },
-
-  setup(props, context) {
-    const handleGotoPackage = () => {
-      context.root.$router.push({
-        name: 'workspace-project-packages-uuid-version-uuid',
-        params: { ...context.root.$route.params, packageId: props.value, versionId: 1 }
-      })
-    }
-
-    return {
-      handleGotoPackage
     }
   }
 })
