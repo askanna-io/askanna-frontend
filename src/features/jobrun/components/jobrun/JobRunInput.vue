@@ -71,7 +71,7 @@ export default defineComponent({
     const handleDownload = async formatType => {
       const {
         short_uuid,
-        payload: { uuid }
+        payload: { short_uuid: uuid }
       } = jobRunStore.jobRun.value
       await jobRunStore.getJobRunPayload({ jobRunShortId: short_uuid, payloadUuid: uuid })
 
@@ -84,9 +84,8 @@ export default defineComponent({
     const handleViewPayload = async () => {
       const {
         short_uuid,
-        payload: { uuid }
+        payload: { short_uuid: uuid }
       } = jobRunStore.jobRun.value
-
       if (!jobRunStore.jobRunPayload.value) {
         await jobRunStore.getJobRunPayload({ jobRunShortId: short_uuid, payloadUuid: uuid })
       }

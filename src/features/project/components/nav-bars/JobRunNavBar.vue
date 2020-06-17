@@ -170,7 +170,7 @@ export default defineComponent({
     const handleViewPayload = async () => {
       const {
         short_uuid,
-        payload: { uuid }
+        payload: { short_uuid: uuid }
       } = jobRunStore.jobRun.value
 
       if (!jobRunStore.jobRunPayload.value) {
