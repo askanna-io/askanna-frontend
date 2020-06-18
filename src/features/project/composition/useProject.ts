@@ -1,7 +1,6 @@
-import { SetupContext } from '@vue/composition-api'
-import { onBeforeMount } from '@vue/composition-api'
 import useProjectStore from './useProjectStore'
 import useFetchData from '@/core/composition/useFetchData'
+import { SetupContext, onBeforeMount } from '@vue/composition-api'
 
 export default function (context: SetupContext) {
   const projectStore: any = useProjectStore()
@@ -10,7 +9,9 @@ export default function (context: SetupContext) {
   onBeforeMount(() => {
     const { projectId } = context.root.$route.params
 
-    if (projectId) fetchData(context, projectStore.getProject(projectId))
+    if (projectId && projectId !== projectStore.project.value.short_uuid) {
+      fetchData(context, projectStore.getProject(projectId))
+    }
   })
 
   return {

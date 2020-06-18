@@ -48,7 +48,7 @@ import JobRunPayLoad from '../JobRunPayLoad.vue'
 import useJobRunStore from '../../composition/useJobRunStore'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
-import { ref, computed, onBeforeMount, defineComponent } from '@vue/composition-api'
+import { ref, computed, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'JobRunInput',
@@ -71,7 +71,7 @@ export default defineComponent({
     const handleDownload = async formatType => {
       const {
         short_uuid,
-        payload: { uuid }
+        payload: { short_uuid: uuid }
       } = jobRunStore.jobRun.value
       await jobRunStore.getJobRunPayload({ jobRunShortId: short_uuid, payloadUuid: uuid })
 
@@ -84,9 +84,8 @@ export default defineComponent({
     const handleViewPayload = async () => {
       const {
         short_uuid,
-        payload: { uuid }
+        payload: { short_uuid: uuid }
       } = jobRunStore.jobRun.value
-
       if (!jobRunStore.jobRunPayload.value) {
         await jobRunStore.getJobRunPayload({ jobRunShortId: short_uuid, payloadUuid: uuid })
       }

@@ -24,6 +24,11 @@ export interface JobRun {
     name: string
     uuid: string
   }
+  package: {
+    name: string
+    uuid: string
+    short_uuid: string
+  }
   runner: {
     cpu_cores: number
     cpu_time: number
@@ -97,6 +102,11 @@ export class JobRunModel {
       version: {
         name: '',
         uuid: ''
+      },
+      package: {
+        name: '',
+        uuid: '',
+        short_uuid: ''
       },
       runner: {
         cpu_cores: 0,
