@@ -9,7 +9,8 @@ export const state: jobRunState = {
   openJobRunResult: false,
   jobRun: new JobRunModel().state,
   jobRunPayload: '',
-  payLoadLoading: false
+  payLoadLoading: false,
+  jobRunResult: ''
 }
 
 const namespaced: boolean = true

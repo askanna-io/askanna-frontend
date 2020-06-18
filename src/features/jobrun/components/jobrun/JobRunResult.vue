@@ -3,25 +3,31 @@
     <v-list-item>
       <v-list-item-title>Result:</v-list-item-title>
       <v-list-item-title class="text-left">
-        {{ returnPayload }}
+        {{ jobRunResult }}
       </v-list-item-title>
     </v-list-item>
   </v-list>
 </template>
 <script>
 import { JobRun } from '../../store/types'
-import { computed, defineComponent } from '@vue/composition-api'
 import useJobRunStore from '../../composition/useJobRunStore'
+import { computed, defineComponent, onBeforeMount } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'JobRunResult',
 
   setup(props, context) {
     const jobRunStore = useJobRunStore()
-    const returnPayload = computed(() => jobRunStore.jobRun.value.return_payload)
+    const jobRunResult = computed(() => jobRunStore.jobRunResult.value)
+
+    onBeforeMount(async () => {
+      const { jobRunId } = context.root.$route.params
+
+      jobRunStore.getJobRunResult(jobRunId)
+    })
 
     return {
-      returnPayload
+      jobRunResult
     }
   }
 })
