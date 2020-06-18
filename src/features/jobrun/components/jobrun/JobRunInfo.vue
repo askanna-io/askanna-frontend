@@ -60,7 +60,7 @@ export default defineComponent({
           component: 'JobRunInfoJob'
         },
         {
-          text: 'Package',
+          text: 'Code',
           value: props.jobRun.package.short_uuid,
           component: 'JobRunInfoPackage'
         },
