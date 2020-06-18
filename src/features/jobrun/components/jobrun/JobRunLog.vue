@@ -75,7 +75,7 @@ export default defineComponent({
       return result
     })
 
-    const maxHeight = computed(() => height.value - 570)
+    const maxHeight = computed(() => height.value - 270)
     const scrollerStyles = computed(() => {
       return { 'max-height': `${maxHeight.value}px` }
     })

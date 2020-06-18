@@ -6,7 +6,9 @@ export interface jobRubData {
   jobRun: JobRun
   jobRunPayload: string
   payLoadLoading: Boolean
-  jobRunResult: any
+  jobRunResult: {
+    data: any
+  }
 }
 
 export interface JobRun {

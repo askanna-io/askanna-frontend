@@ -20,12 +20,12 @@ interface FuaturesApi {
   [featureApi: string]: (uuid: string) => void | string
 }
 
-const apiUrl = process.env.VUE_APP_API_URL
+const apiUrl = 'https://beta-api.askanna.eu'
 const apiPort = process.env.VUE_APP_API_PORT
 
 export const api: ApiSettings = {
-  url: () => `${apiUrl}:${apiPort}/`,
-  apiUrl: () => `${apiUrl}:${apiPort}/v1/`,
+  url: () => `${apiUrl}/`,
+  apiUrl: () => `${apiUrl}/v1/`,
   // auth api
   auth: {
     login: () => `rest-auth/login/`,
@@ -73,6 +73,7 @@ export const api: ApiSettings = {
       get: id => `jobrun/${id}/`,
       runs: id => `job/${id}/runs/`,
       getJobRun: id => `jobrun/${id}/`,
+      getJobRunResult: id => `result/1f88-v07O-qrTE-NFdE`,
       getJobRunPayload: ({ jobRunShortId, payloadUuid }) => `jobrun/${jobRunShortId}/payload/${payloadUuid}/`
     },
 
@@ -80,6 +81,10 @@ export const api: ApiSettings = {
       get: id => `workspace/${id}/`,
       list: () => `workspace/`,
       projects: id => `workspace/${id}/projects/`
+    },
+
+    result: {
+      get: id => `result/${id}/`
     }
   }
 }

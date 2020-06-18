@@ -30,6 +30,10 @@ export const mutations: MutationTree<jobRunState> = {
     state.jobRunPayload = data
   },
 
+  [type.SET_JOB_RUN_RESULT](state, data) {
+    state.jobRunResult = data
+  },
+
   [type.mutation.UPDATE_JOB_RUN_STORE](state) {
     state.runs = []
     state.jobRun = new JobRunModel().state
