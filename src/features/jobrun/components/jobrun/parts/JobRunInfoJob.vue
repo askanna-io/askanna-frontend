@@ -2,7 +2,7 @@
   <div>
     {{ text }}:<v-btn
       color="primary"
-      class="px-0 text--capitalize"
+      class="px-0 text--capitalize text-body-1"
       text
       small
       :to="{

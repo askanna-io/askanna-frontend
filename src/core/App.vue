@@ -79,4 +79,7 @@ export default class App extends Vue {
 .text--capitalize {
   text-transform: capitalize !important;
 }
+.text-body-1 {
+  font-size: 16px !important;
+}
 </style>

@@ -4,7 +4,7 @@
       <div v-on="on">
         {{ text }}:<v-btn
           color="primary"
-          class="px-0"
+          class="px-0 text-body-1"
           text
           small
           :to="{
