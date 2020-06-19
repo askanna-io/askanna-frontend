@@ -34,7 +34,7 @@
       >
         <prism-editor v-scroll:#scroll-target="onScroll" :code="logs" readonly line-numbers />
       </v-skeleton-loader>
-      <v-alert v-if="logNoAvailable" class="my-2" dense outlined type="warning" border="left">
+      <v-alert v-if="logNoAvailable" class="my-2" dense outlined color="grey">
         No log entries are available for this job run
       </v-alert>
     </v-flex>
