@@ -97,16 +97,14 @@ export default defineComponent({
     const forceFileDownload = useForceFileDownload()
 
     const jobRunResult = computed(() => jobRunStore.jobRunResult.value)
-
     const jobRunResultRaw = computed(() => JSON.stringify(jobRunResult.value))
     const jobRunResultFormated = computed(() => JSON.stringify(jobRunResult.value, null, 2))
-
     const jobRunResultForView = computed(() => {
       return jobRunResultFormated.value.slice(0, 100000)
     })
 
     const loading = computed(() => jobRunStore.resultLoading.value)
-    const isJobRunResultEmpty = computed(() => !jobRunResult.value === 0 && !loading.value)
+    const isJobRunResultEmpty = computed(() => !jobRunResult.value && !loading.value)
 
     onBeforeMount(async () => {
       const { jobRunId } = context.root.$route.params
