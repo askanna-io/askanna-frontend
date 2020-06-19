@@ -6,16 +6,48 @@
         <div>
           <v-tooltip top>
             <template v-slot:activator="{ on }">
-              <v-btn small outlined v-on="on" color="secondary" class="mr-1" @click="handleDownload()">
-                <v-icon color="secondary">mdi-download</v-icon>
+              <v-btn
+                small
+                :disabled="loading || isJobRunResultEmpty"
+                outlined
+                v-on="on"
+                color="secondary"
+                class="mr-1"
+                @click="handleDownload('raw')"
+              >
+                <v-icon color="secondary" left>mdi-download</v-icon>Raw
               </v-btn>
             </template>
-            <span>Download</span>
+            <span>Download raw</span>
           </v-tooltip>
 
           <v-tooltip top>
             <template v-slot:activator="{ on }">
-              <v-btn small v-on="on" outlined color="secondary" @click="handleCopy()">
+              <v-btn
+                v-on="on"
+                :disabled="loading || isJobRunResultEmpty"
+                small
+                outlined
+                color="secondary"
+                class="mr-1"
+                @click="handleDownload('formated')"
+              >
+                <v-icon color="secondary" left>mdi-download</v-icon>Formated
+              </v-btn>
+            </template>
+            <span>Download formated</span>
+          </v-tooltip>
+
+          <v-tooltip top>
+            <template v-slot:activator="{ on }">
+              <v-btn
+                small
+                v-on="on"
+                :disabled="loading || isJobRunResultEmpty"
+                outlined
+                color="secondary"
+                @click="handleCopy()"
+              >
                 <v-icon color="secondary">mdi-content-copy</v-icon>
               </v-btn>
             </template>
@@ -26,17 +58,17 @@
     </v-toolbar>
     <v-flex :style="scrollerStyles" class="mb-4 overflow-y-auto" id="scroll-target">
       <v-skeleton-loader
-        v-if="!resultNoAvailable"
+        v-if="!isJobRunResultEmpty"
         :loading="loading"
         transition="transition"
         height="94"
         type="list-item-two-line"
       >
-        <prism-editor v-scroll:#scroll-target="onScroll" :code="jobRunResult" readonly line-numbers />
+        <prism-editor v-scroll:#scroll-target="onScroll" :code="jobRunResultForView" readonly line-numbers />
       </v-skeleton-loader>
 
-      <v-alert v-if="resultNoAvailable" class="my-2" dense outlined type="warning" border="left">
-        No log entries are available for this job run
+      <v-alert v-if="isJobRunResultEmpty" class="my-2" dense outlined type="warning" border="left">
+        There is no result available for this run
       </v-alert>
     </v-flex>
   </div>
@@ -45,6 +77,7 @@
 import PrismEditor from 'vue-prism-editor'
 import { JobRun } from '../../store/types'
 import { useWindowSize } from '@u3u/vue-hooks'
+import useSnackBar from '@/core/components/snackBar/useSnackBar'
 
 import useJobRunStore from '../../composition/useJobRunStore'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
@@ -57,23 +90,29 @@ export default defineComponent({
   components: { PrismEditor },
 
   setup(props, context) {
+    const snackBar = useSnackBar()
+
     const { height } = useWindowSize()
     const jobRunStore = useJobRunStore()
     const forceFileDownload = useForceFileDownload()
 
     const jobRunResult = computed(() => {
-      if (!jobRunStore.jobRunResult.value.data) return ''
+      if (!jobRunStore.jobRunResult.value || !jobRunStore.jobRunResult.value.data) return ''
 
-      const result = jobRunStore.jobRunResult.value.data.length
-        ? JSON.stringify(jobRunStore.jobRunResult.value.data, null, 2)
-        : ''
+      const result = jobRunStore.jobRunResult.value.data.length ? jobRunStore.jobRunResult.value.data : ''
+
       return result
     })
 
-    const loading = computed(
-      () => jobRunStore.jobRunResult.value.data && jobRunStore.jobRunResult.value.data.length === 0
-    )
-    const resultNoAvailable = computed(() => jobRunStore.jobRunResult.value === null)
+    const jobRunResultRaw = computed(() => JSON.stringify(jobRunResult.value))
+    const jobRunResultFormated = computed(() => JSON.stringify(jobRunResult.value, null, 2))
+
+    const jobRunResultForView = computed(() => {
+      return jobRunResultFormated.value.slice(0, 100000)
+    })
+
+    const loading = computed(() => jobRunStore.resultLoading.value)
+    const isJobRunResultEmpty = computed(() => jobRunResult.value.length === 0 && !loading.value)
 
     onBeforeMount(async () => {
       const { jobRunId } = context.root.$route.params
@@ -86,8 +125,14 @@ export default defineComponent({
       return { 'max-height': `${maxHeight.value}px` }
     })
 
+    const handleDownload = async formatType => {
+      const source = formatType === 'raw' ? jobRunResultRaw.value : jobRunResultFormated.value
+
+      forceFileDownload.trigger({ source, name: `${jobRunStore.jobRun.value.short_uuid}_result.txt` })
+    }
+
     const handleCopy = () => {
-      context.root.$copyText(jobRunResult.value).then(
+      context.root.$copyText(jobRunResultRaw.value).then(
         function (e) {
           snackBar.showSnackBar({ message: 'Copied', color: 'success' })
         },
@@ -97,19 +142,13 @@ export default defineComponent({
       )
     }
 
-    const handleDownload = () =>
-      forceFileDownload.trigger({
-        source: jobRunResult.value,
-        name: `${jobRunStore.jobRun.value.short_uuid}_result.txt`
-      })
-
     const onScroll = e => {}
 
     return {
       loading,
-      resultNoAvailable,
-      jobRunResult,
+      jobRunResultForView,
       scrollerStyles,
+      isJobRunResultEmpty,
 
       onScroll,
       handleCopy,

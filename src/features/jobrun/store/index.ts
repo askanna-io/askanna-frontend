@@ -9,6 +9,8 @@ export const state: jobRunState = {
   openJobRunResult: false,
   jobRun: new JobRunModel().state,
   jobRunPayload: '',
+  jobRunLoading: false,
+  resultLoading: false,
   payLoadLoading: false,
   jobRunResult: {
     data: []

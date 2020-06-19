@@ -39,6 +39,8 @@ export const actions: ActionTree<jobRunState, RootState> = {
   },
 
   async [type.action.getJobRun]({ commit }, uuid) {
+    commit(type.mutation.SET_LOADING, { name: stateType.jobRunLoading, value: true })
+
     let jobRun = {}
     try {
       jobRun = await apiService({
@@ -53,6 +55,7 @@ export const actions: ActionTree<jobRunState, RootState> = {
     }
 
     commit(type.SET_JOB_RUN, jobRun)
+    commit(type.mutation.SET_LOADING, { name: stateType.jobRunLoading, value: false })
   },
 
   async [type.action.getJobRunPayload]({ commit }, uuid) {
@@ -75,7 +78,7 @@ export const actions: ActionTree<jobRunState, RootState> = {
   },
 
   async [type.action.getJobRunResult]({ commit }, uuid) {
-    commit(type.mutation.SET_LOADING, { name: stateType.payLoadLoading, value: true })
+    commit(type.mutation.SET_LOADING, { name: stateType.resultLoading, value: true })
 
     let jobRunResult = {}
     try {
@@ -90,6 +93,6 @@ export const actions: ActionTree<jobRunState, RootState> = {
       return
     }
     commit(type.SET_JOB_RUN_RESULT, jobRunResult)
-    commit(type.mutation.SET_LOADING, { name: stateType.payLoadLoading, value: false })
+    commit(type.mutation.SET_LOADING, { name: stateType.resultLoading, value: false })
   }
 }

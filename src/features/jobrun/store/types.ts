@@ -5,6 +5,8 @@ export interface jobRubData {
   openJobRunResult: boolean
   jobRun: JobRun
   jobRunPayload: string
+  jobRunLoading: Boolean
+  resultLoading: Boolean
   payLoadLoading: Boolean
   jobRunResult: {
     data: any
@@ -77,6 +79,8 @@ export const SET_JOB_RUN_RESULT = 'SET_JOB_RUN_RESULT'
 export const SET_JOB_RUN_PAYLOAD = 'SET_JOB_RUN_PAYLOAD'
 
 export const stateType = {
+  jobRunLoading: 'jobRunLoading',
+  resultLoading: 'resultLoading',
   payLoadLoading: 'payLoadLoading'
 }
 
