@@ -8,9 +8,7 @@ export interface jobRubData {
   jobRunLoading: Boolean
   resultLoading: Boolean
   payLoadLoading: Boolean
-  jobRunResult: {
-    data: any
-  }
+  jobRunResult: any
 }
 
 export interface JobRun {

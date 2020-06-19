@@ -68,8 +68,8 @@
       >
         <job-run-pay-load :file="jobRunPayloadComputed" />
       </v-skeleton-loader>
-      <v-alert v-if="isJobRunPayloadEmpty" class="my-2" dense outlined type="warning" border="left">
-        There is no payload available for this run
+      <v-alert v-if="isJobRunPayloadEmpty" class="my-2" color="grey" dense outlined>
+        There is no payload available for this run.
       </v-alert>
     </v-flex>
   </div>

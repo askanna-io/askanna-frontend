@@ -12,9 +12,7 @@ export const state: jobRunState = {
   jobRunLoading: false,
   resultLoading: false,
   payLoadLoading: false,
-  jobRunResult: {
-    data: []
-  }
+  jobRunResult: null
 }
 
 const namespaced: boolean = true

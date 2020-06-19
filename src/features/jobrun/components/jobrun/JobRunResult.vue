@@ -67,8 +67,8 @@
         <prism-editor v-scroll:#scroll-target="onScroll" :code="jobRunResultForView" readonly line-numbers />
       </v-skeleton-loader>
 
-      <v-alert v-if="isJobRunResultEmpty" class="my-2" dense outlined type="warning" border="left">
-        There is no result available for this run
+      <v-alert v-if="isJobRunResultEmpty" class="my-2" dense outlined color="grey">
+        There is no result available for this run.
       </v-alert>
     </v-flex>
   </div>
@@ -96,13 +96,7 @@ export default defineComponent({
     const jobRunStore = useJobRunStore()
     const forceFileDownload = useForceFileDownload()
 
-    const jobRunResult = computed(() => {
-      if (!jobRunStore.jobRunResult.value || !jobRunStore.jobRunResult.value.data) return ''
-
-      const result = jobRunStore.jobRunResult.value.data.length ? jobRunStore.jobRunResult.value.data : ''
-
-      return result
-    })
+    const jobRunResult = computed(() => jobRunStore.jobRunResult.value)
 
     const jobRunResultRaw = computed(() => JSON.stringify(jobRunResult.value))
     const jobRunResultFormated = computed(() => JSON.stringify(jobRunResult.value, null, 2))
@@ -112,7 +106,7 @@ export default defineComponent({
     })
 
     const loading = computed(() => jobRunStore.resultLoading.value)
-    const isJobRunResultEmpty = computed(() => jobRunResult.value.length === 0 && !loading.value)
+    const isJobRunResultEmpty = computed(() => !jobRunResult.value === 0 && !loading.value)
 
     onBeforeMount(async () => {
       const { jobRunId } = context.root.$route.params
@@ -128,7 +122,7 @@ export default defineComponent({
     const handleDownload = async formatType => {
       const source = formatType === 'raw' ? jobRunResultRaw.value : jobRunResultFormated.value
 
-      forceFileDownload.trigger({ source, name: `${jobRunStore.jobRun.value.short_uuid}_result.txt` })
+      forceFileDownload.trigger({ source, name: `${jobRunStore.jobRun.value.short_uuid}-result.json` })
     }
 
     const handleCopy = () => {
