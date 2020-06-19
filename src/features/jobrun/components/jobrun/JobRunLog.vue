@@ -6,7 +6,15 @@
         <div>
           <v-tooltip top>
             <template v-slot:activator="{ on }">
-              <v-btn small outlined v-on="on" color="secondary" class="mr-1" @click="handleDownload()">
+              <v-btn
+                v-on="on"
+                :disabled="loading || logNoAvailable"
+                small
+                outlined
+                color="secondary"
+                class="mr-1"
+                @click="handleDownload()"
+              >
                 <v-icon color="secondary">mdi-download</v-icon>
               </v-btn>
             </template>
@@ -15,7 +23,14 @@
 
           <v-tooltip top>
             <template v-slot:activator="{ on }">
-              <v-btn small v-on="on" outlined color="secondary" @click="handleCopy()">
+              <v-btn
+                v-on="on"
+                :disabled="loading || logNoAvailable"
+                small
+                outlined
+                color="secondary"
+                @click="handleCopy()"
+              >
                 <v-icon color="secondary">mdi-content-copy</v-icon>
               </v-btn>
             </template>
