@@ -102,7 +102,7 @@ export default defineComponent({
         jobRunStore.jobRunPayload.value.constructor === Object
     )
 
-    const loading = computed(() => jobRunStore.jobRunLoading.value)
+    const loading = computed(() => jobRunStore.payLoadLoading.value)
 
     const handleDownload = async formatType => {
       const {
