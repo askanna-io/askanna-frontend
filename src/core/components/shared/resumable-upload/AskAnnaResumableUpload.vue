@@ -50,9 +50,9 @@
 </template>
 
 <script>
-import Resumablejs from 'resumablejs'
 import FilePreview from './FilePreview.vue'
 import ConfirmDialog from './ConfirmDialog.vue'
+import Resumablejs from '@/core/plugins/resumable.js'
 
 import { ref, watch, reactive, computed, defineComponent, onMounted } from '@vue/composition-api'
 
@@ -112,9 +112,7 @@ export default defineComponent({
 
     const fileRecordsForUpload = computed(() => r.value && r.value.files)
 
-    watch(fileRecordsForUpload, async fileRecordsForUpload => {
-      console.log(fileRecordsForUpload)
-    })
+    watch(fileRecordsForUpload, async fileRecordsForUpload => {})
 
     watch(uploadContainer, async uploadContainer => {
       if (!uploadContainer) return

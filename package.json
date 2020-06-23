@@ -22,7 +22,6 @@
     "miragejs": "0.1.40",
     "moment": "^2.26.0",
     "prismjs": "1.20.0",
-    "resumablejs": "https://github.com/ashxdev/resumable.js",
     "tiptap": "1.27.1",
     "tiptap-extensions": "1.29.1",
     "vue": "2.6.11",
