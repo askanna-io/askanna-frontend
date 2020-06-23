@@ -11,8 +11,7 @@ export default function () {
       jobRunPayload: 'jobRunPayload',
       jobRunLoading: 'jobRunLoading',
       resultLoading: 'resultLoading',
-      payLoadLoading: 'payLoadLoading',
-      ...stateType
+      payLoadLoading: 'payLoadLoading'
     })
   }
 

@@ -80,7 +80,7 @@ import JobRunPayLoad from './JobRunPayLoad.vue'
 import useJobRunStore from '../../composition/useJobRunStore'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
-import { ref, computed, defineComponent } from '@vue/composition-api'
+import { ref, computed, onBeforeMount, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'JobRunInput',
@@ -94,15 +94,10 @@ export default defineComponent({
     const jobRunStore = useJobRunStore()
     const forceFileDownload = useForceFileDownload()
 
-    const jobRunPayloadComputed = computed(() => JSON.stringify(jobRunStore.jobRunPayload.value, null, 2))
-
-    const isJobRunPayloadEmpty = computed(
-      () =>
-        Object.keys(jobRunStore.jobRunPayload.value).length === 0 &&
-        jobRunStore.jobRunPayload.value.constructor === Object
-    )
-
     const loading = computed(() => jobRunStore.payLoadLoading.value)
+    const jobRunPayload = computed(() => jobRunStore.jobRunPayload.value)
+    const jobRunPayloadComputed = computed(() => JSON.stringify(jobRunStore.jobRunPayload.value, null, 2))
+    const isJobRunPayloadEmpty = computed(() => !jobRunPayload.value && !loading.value)
 
     const handleDownload = async formatType => {
       const {
@@ -112,9 +107,9 @@ export default defineComponent({
       await jobRunStore.getJobRunPayload({ jobRunShortId: short_uuid, payloadUuid: uuid })
 
       const formatOption = formatType === 'raw' ? null : 2
-      const jobRunPayload = JSON.stringify(jobRunStore.jobRunPayload.value, null, formatOption)
+      const jrPayload = JSON.stringify(jobRunPayload.value, null, formatOption)
 
-      forceFileDownload.trigger({ source: jobRunPayload, name: `payload-${uuid}.json` })
+      forceFileDownload.trigger({ source: jrPayload, name: `payload-${uuid}.json` })
     }
 
     const handleCopy = () => {

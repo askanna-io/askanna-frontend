@@ -4,7 +4,7 @@ export interface jobRubData {
   runs: JobRun[]
   openJobRunResult: boolean
   jobRun: JobRun
-  jobRunPayload: string
+  jobRunPayload: string | null
   jobRunLoading: Boolean
   resultLoading: Boolean
   payLoadLoading: Boolean
@@ -53,6 +53,7 @@ export const JOB_RUN_STORE = 'jobrun'
 // actions
 export const action = {
   getJobRun: 'getJobRun',
+  setLoading: 'setLoading',
   resetStore: 'resetStore',
   getRunsJob: 'getRunsJob',
   getJobRunResult: 'getJobRunResult',

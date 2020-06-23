@@ -36,8 +36,12 @@ export const mutations: MutationTree<jobRunState> = {
 
   [type.mutation.UPDATE_JOB_RUN_STORE](state) {
     state.runs = []
+    state.jobRunResult = null
+    state.jobRunPayload = null
+    state.jobRunLoading = true
+    state.resultLoading = true
+    state.payLoadLoading = true
     state.jobRun = new JobRunModel().state
-    state.jobRunPayload = ''
   },
 
   [type.mutation.SET_LOADING](state, { name, value }) {
