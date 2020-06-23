@@ -92,5 +92,9 @@ export const actions: ActionTree<jobRunState, RootState> = {
     }
     commit(type.SET_JOB_RUN_RESULT, jobRunResult)
     commit(type.mutation.SET_LOADING, { name: stateType.resultLoading, value: false })
+  },
+
+  async [type.action.setLoading]({ commit }, data) {
+    commit(type.mutation.SET_LOADING, data)
   }
 }

@@ -8,10 +8,10 @@ export const state: jobRunState = {
   runs: [],
   openJobRunResult: false,
   jobRun: new JobRunModel().state,
-  jobRunPayload: '',
-  jobRunLoading: false,
-  resultLoading: false,
-  payLoadLoading: false,
+  jobRunPayload: null,
+  jobRunLoading: true,
+  resultLoading: true,
+  payLoadLoading: true,
   jobRunResult: null
 }
 
