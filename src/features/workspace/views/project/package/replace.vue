@@ -38,8 +38,6 @@ import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
 import { ref, watch, onBeforeMount, onMounted, computed } from '@vue/composition-api'
 import AskAnnaResumableUpload from '@/core/components/shared/resumable-upload/AskAnnaResumableUpload'
 
-import { plugins } from 'vue-file-agent'
-
 export default defineComponent({
   components: { PackageFile, PackageTree, AskAnnaResumableUpload },
 

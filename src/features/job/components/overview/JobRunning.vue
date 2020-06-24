@@ -48,7 +48,7 @@
 <script>
 import JobRunPortal from './jobrunning/JobRunPortal'
 import JobRunCurl from './jobrunning/JobRunCurl'
-import { ref, onBeforeMount, defineComponent } from '@vue/composition-api'
+import { ref, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'JobRunnig',

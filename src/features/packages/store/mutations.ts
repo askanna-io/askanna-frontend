@@ -12,7 +12,7 @@ export const mutations: MutationTree<PackagesState> = {
     data = data.map((el: Package, versionId: number) => {
       return { ...el, versionId }
     })
-    const projectPackages = data.pop()
+    const [projectPackages] = data.slice(0, 1)
 
     state.projectPackages = [projectPackages]
     state.projectPackageHistory = data

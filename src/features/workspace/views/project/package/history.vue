@@ -20,14 +20,17 @@
             </template>
           </v-breadcrumbs>
         </template>
+        <template v-slot:item.created="{ item }">
+          {{ $moment(item.created).format(' Do MMMM YYYY, h:mm:ss a') }}
+        </template>
       </v-data-table>
     </v-col>
   </v-row>
 </template>
 
 <script>
-import { defineComponent } from '@vue/composition-api'
 import useMoment from '@/core/composition/useMoment'
+import { defineComponent } from '@vue/composition-api'
 import usePackages from '@packages/composition/usePackages'
 import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
 
@@ -43,9 +46,8 @@ export default defineComponent({
         align: 'left',
         value: 'filename'
       },
-      { text: 'Created', value: 'created_at' },
-      { text: '', value: 'uuid', sortable: false },
-      { text: '', value: 'menu' }
+      { text: 'Created', value: 'created' },
+      { text: 'Uuid', value: 'short_uuid', sortable: false }
     ]
 
     const handleClickRow = ({ short_uuid, versionId }) => {

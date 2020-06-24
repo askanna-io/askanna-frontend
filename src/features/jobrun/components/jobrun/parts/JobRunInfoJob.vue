@@ -1,6 +1,17 @@
 <template>
   <div>
-    {{ text }}: <a @click="handleGotoJob"> {{ value }}</a>
+    {{ text }}:<v-btn
+      color="primary"
+      class="px-0 text--capitalize text-body-1"
+      text
+      small
+      :to="{
+        name: 'workspace-project-job-overiew',
+        params: { ...$route.params }
+      }"
+    >
+      {{ value }}</v-btn
+    >
   </div>
 </template>
 <script>
@@ -17,19 +28,6 @@ export default defineComponent({
     value: {
       type: String,
       default: ''
-    }
-  },
-
-  setup(props, context) {
-    const handleGotoJob = () => {
-      context.root.$router.push({
-        name: 'workspace-project-job-overiew',
-        params: { ...context.root.$route.params }
-      })
-    }
-
-    return {
-      handleGotoJob
     }
   }
 })

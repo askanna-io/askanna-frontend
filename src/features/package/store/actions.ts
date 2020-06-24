@@ -67,5 +67,23 @@ export const actions: ActionTree<PackageState, RootState> = {
       return
     }
     return packageData
+  },
+
+  async [type.finishUpload]({ commit }, { uuid, data }) {
+    let result
+    try {
+      result = await apiService({
+        action: api.finishUpload,
+        method: 'post',
+        serviceName,
+        uuid,
+        data
+      })
+    } catch (e) {
+      logger.error(commit, 'Error on finish upload package in finishUpload action.\nError: ', e)
+
+      return
+    }
+    return result
   }
 }

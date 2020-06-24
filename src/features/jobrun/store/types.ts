@@ -4,8 +4,11 @@ export interface jobRubData {
   runs: JobRun[]
   openJobRunResult: boolean
   jobRun: JobRun
-  jobRunPayload: string
+  jobRunPayload: string | null
+  jobRunLoading: Boolean
+  resultLoading: Boolean
   payLoadLoading: Boolean
+  jobRunResult: any
 }
 
 export interface JobRun {
@@ -23,6 +26,11 @@ export interface JobRun {
   version: {
     name: string
     uuid: string
+  }
+  package: {
+    name: string
+    uuid: string
+    short_uuid: string
   }
   runner: {
     cpu_cores: number
@@ -45,8 +53,10 @@ export const JOB_RUN_STORE = 'jobrun'
 // actions
 export const action = {
   getJobRun: 'getJobRun',
+  setLoading: 'setLoading',
   resetStore: 'resetStore',
   getRunsJob: 'getRunsJob',
+  getJobRunResult: 'getJobRunResult',
   getJobRunPayload: 'getJobRunPayload',
   showJobRunResult: 'showJobRunResult',
   closeResultModal: 'closeResultModal'
@@ -64,9 +74,12 @@ export const mutation = {
 export const SET_JOB_RUN = 'SET_JOB_RUN'
 export const SET_JOB_RUNS = 'SET_JOB_RUNS'
 export const UPDATE_JOB_RESULT = 'UPDATE_JOB_RESULT'
+export const SET_JOB_RUN_RESULT = 'SET_JOB_RUN_RESULT'
 export const SET_JOB_RUN_PAYLOAD = 'SET_JOB_RUN_PAYLOAD'
 
 export const stateType = {
+  jobRunLoading: 'jobRunLoading',
+  resultLoading: 'resultLoading',
   payLoadLoading: 'payLoadLoading'
 }
 
@@ -97,6 +110,11 @@ export class JobRunModel {
       version: {
         name: '',
         uuid: ''
+      },
+      package: {
+        name: '',
+        uuid: '',
+        short_uuid: ''
       },
       runner: {
         cpu_cores: 0,

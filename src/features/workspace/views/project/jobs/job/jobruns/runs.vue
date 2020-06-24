@@ -26,6 +26,7 @@ export default defineComponent({
 
     onBeforeMount(() => {
       jobStore.resetStore()
+      jobRunStore.resetStore()
       const { jobId } = context.root.$route.params
 
       jobStore.getJob(jobId)

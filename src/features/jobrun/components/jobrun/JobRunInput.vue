@@ -8,7 +8,15 @@
         <div>
           <v-tooltip top>
             <template v-slot:activator="{ on }">
-              <v-btn small outlined v-on="on" color="secondary" class="mr-1" @click="handleDownload('raw')">
+              <v-btn
+                small
+                :disabled="loading || isJobRunPayloadEmpty"
+                outlined
+                v-on="on"
+                color="secondary"
+                class="mr-1"
+                @click="handleDownload('raw')"
+              >
                 <v-icon color="secondary" left>mdi-download</v-icon>Raw
               </v-btn>
             </template>
@@ -17,7 +25,15 @@
 
           <v-tooltip top>
             <template v-slot:activator="{ on }">
-              <v-btn v-on="on" small outlined color="secondary" class="mr-1" @click="handleDownload('formated')">
+              <v-btn
+                v-on="on"
+                :disabled="loading || isJobRunPayloadEmpty"
+                small
+                outlined
+                color="secondary"
+                class="mr-1"
+                @click="handleDownload('formated')"
+              >
                 <v-icon color="secondary" left>mdi-download</v-icon>Formated
               </v-btn>
             </template>
@@ -26,7 +42,14 @@
 
           <v-tooltip top>
             <template v-slot:activator="{ on }">
-              <v-btn small v-on="on" outlined color="secondary" @click="handleCopy()">
+              <v-btn
+                v-on="on"
+                small
+                :disabled="loading || isJobRunPayloadEmpty"
+                outlined
+                color="secondary"
+                @click="handleCopy()"
+              >
                 <v-icon color="secondary">mdi-content-copy</v-icon>
               </v-btn>
             </template>
@@ -36,15 +59,24 @@
       </v-flex>
     </v-toolbar>
     <v-flex class="mb-4">
-      <v-skeleton-loader :loading="loading" transition="transition" height="94" type="list-item-two-line">
+      <v-skeleton-loader
+        v-if="!isJobRunPayloadEmpty"
+        :loading="loading"
+        transition="transition"
+        height="94"
+        type="list-item-two-line"
+      >
         <job-run-pay-load :file="jobRunPayloadComputed" />
       </v-skeleton-loader>
+      <v-alert v-if="isJobRunPayloadEmpty" class="my-2" color="grey" dense outlined>
+        There is no payload available for this run.
+      </v-alert>
     </v-flex>
   </div>
 </template>
 <script>
 import { JobRun } from '../../store/types'
-import JobRunPayLoad from '../JobRunPayLoad.vue'
+import JobRunPayLoad from './JobRunPayLoad.vue'
 import useJobRunStore from '../../composition/useJobRunStore'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
@@ -62,35 +94,22 @@ export default defineComponent({
     const jobRunStore = useJobRunStore()
     const forceFileDownload = useForceFileDownload()
 
-    const showPayload = ref(false)
-
+    const loading = computed(() => jobRunStore.payLoadLoading.value)
+    const jobRunPayload = computed(() => jobRunStore.jobRunPayload.value)
     const jobRunPayloadComputed = computed(() => JSON.stringify(jobRunStore.jobRunPayload.value, null, 2))
-
-    const loading = computed(() => jobRunStore.jobRunPayload.value === '')
+    const isJobRunPayloadEmpty = computed(() => !jobRunPayload.value && !loading.value)
 
     const handleDownload = async formatType => {
       const {
         short_uuid,
-        payload: { uuid }
+        payload: { short_uuid: uuid }
       } = jobRunStore.jobRun.value
       await jobRunStore.getJobRunPayload({ jobRunShortId: short_uuid, payloadUuid: uuid })
 
       const formatOption = formatType === 'raw' ? null : 2
-      const jobRunPayload = JSON.stringify(jobRunStore.jobRunPayload.value, null, formatOption)
+      const jrPayload = JSON.stringify(jobRunPayload.value, null, formatOption)
 
-      forceFileDownload.trigger({ source: jobRunPayload, name: `payload-${uuid}.json` })
-    }
-
-    const handleViewPayload = async () => {
-      const {
-        short_uuid,
-        payload: { uuid }
-      } = jobRunStore.jobRun.value
-
-      if (!jobRunStore.jobRunPayload.value) {
-        await jobRunStore.getJobRunPayload({ jobRunShortId: short_uuid, payloadUuid: uuid })
-      }
-      loading.value = false
+      forceFileDownload.trigger({ source: jrPayload, name: `payload-${uuid}.json` })
     }
 
     const handleCopy = () => {
@@ -108,6 +127,7 @@ export default defineComponent({
       loading,
       handleCopy,
       handleDownload,
+      isJobRunPayloadEmpty,
       jobRunPayloadComputed,
       jobRun: jobRunStore.jobRun.value
     }

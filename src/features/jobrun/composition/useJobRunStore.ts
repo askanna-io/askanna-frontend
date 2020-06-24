@@ -6,8 +6,12 @@ export default function () {
     ...useState(JOB_RUN_STORE, {
       runs: 'runs',
       jobRun: 'jobRun',
+      logLoading: 'logLoading',
+      jobRunResult: 'jobRunResult',
       jobRunPayload: 'jobRunPayload',
-      ...stateType
+      jobRunLoading: 'jobRunLoading',
+      resultLoading: 'resultLoading',
+      payLoadLoading: 'payLoadLoading'
     })
   }
 

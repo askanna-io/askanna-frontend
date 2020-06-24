@@ -46,7 +46,8 @@ export const api: ApiSettings = {
     },
     package: {
       get: ({ projectId, packageId }) => `project/${projectId}/packages/${packageId}/`,
-      uploadPackage: () => 'package/'
+      uploadPackage: () => 'package/',
+      finishUpload: packageId => `package/${packageId}/finish_upload/`
     },
     packages: {
       list: () => `project/`,
@@ -75,6 +76,7 @@ export const api: ApiSettings = {
       get: id => `jobrun/${id}/`,
       runs: id => `job/${id}/runs/`,
       getJobRun: id => `jobrun/${id}/`,
+      getJobRunResult: id => `result/${id}`,
       getJobRunPayload: ({ jobRunShortId, payloadUuid }) => `jobrun/${jobRunShortId}/payload/${payloadUuid}/`
     },
 
@@ -83,6 +85,10 @@ export const api: ApiSettings = {
       list: () => `workspace/`,
       projects: id => `workspace/${id}/projects/`,
       getProjectPackages: id => `project/${id}/packages/`
+    },
+
+    result: {
+      get: id => `result/${id}/`
     }
   }
 }

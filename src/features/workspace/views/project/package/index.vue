@@ -24,7 +24,14 @@
                 <v-icon color="secondary" left>mdi-download</v-icon>Download
               </v-btn>
 
-              <v-btn small outlined color="secondary" class="mr-1" @click="handleReplace()">
+              <v-btn
+                small
+                outlined
+                :class="{ 'replace-active': isRaplace }"
+                color="secondary"
+                class="mr-1"
+                @click="handleReplace()"
+              >
                 <v-icon color="secondary" left>mdi-folder-move</v-icon>Replace
               </v-btn>
 
@@ -34,6 +41,16 @@
             </div>
           </v-flex>
         </v-toolbar>
+        <v-expand-transition>
+          <ask-anna-resumable-upload
+            v-if="isRaplace"
+            class="py-2"
+            :id="packageId"
+            :getTarget="getTarget"
+            :finishUpload="finishUpload"
+          />
+        </v-expand-transition>
+
         <package-tree
           :items="treeView"
           :height="calcHeight"
@@ -59,7 +76,13 @@ import usePackageStore from '@/features/package/composition/usePackageStore'
 import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
 
 export default defineComponent({
-  components: { PackageFile, PackageTree },
+  name: 'Package',
+
+  components: {
+    PackageFile,
+    PackageTree,
+    AskAnnaResumableUpload: () => import('@/core/components/shared/resumable-upload/AskAnnaResumableUpload')
+  },
 
   setup(props, context) {
     const { height } = useWindowSize()
@@ -68,6 +91,8 @@ export default defineComponent({
 
     const breadcrumbs = usePackageBreadcrumbs(context)
     const forceFileDownload = useForceFileDownload()
+
+    const isRaplace = ref(false)
 
     onBeforeMount(async () => {
       const { projectId, packageId, folderName } = context.root.$route.params
@@ -146,11 +171,19 @@ export default defineComponent({
       forceFileDownload.trigger({ source, name: packageData.filename })
     }
 
-    const handleReplace = () =>
-      context.root.$router.push({
-        name: 'workspace-project-package-replace',
-        params: { ...context.root.$route.params }
+    const handleReplace = () => (isRaplace.value = !isRaplace.value)
+
+    const getTarget = async fileMetaData => {
+      const packageData = await packageStore.uploadPackage({
+        project: 'f1e2144a-87f9-4936-8562-4304c51332ea',
+        filename: fileMetaData.file.name,
+        size: fileMetaData.file.size
       })
+
+      return `https://api.askanna.eu/v1/package/${packageData.uuid}/packagechunk/`
+    }
+
+    const finishUpload = packageStore.finishUpload
 
     return {
       packageId: context.root.$route.params.packageId,
@@ -159,8 +192,11 @@ export default defineComponent({
       treeView,
       FileIcons,
       calcHeight,
+      getTarget,
+      finishUpload,
       breadcrumbs,
       currentPath,
+      isRaplace,
       handleReplace,
       handleHistory,
       handleDownload,
@@ -169,3 +205,9 @@ export default defineComponent({
   }
 })
 </script>
+<style>
+.replace-active {
+  background-color: grey;
+  color: white;
+}
+</style>

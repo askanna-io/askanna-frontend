@@ -20,6 +20,8 @@ export default defineComponent({
         workspaceId = workspaceStore.workspaces.value.results[0].short_uuid
       }
 
+      if (workspaceStore.workspace.value.short_uuid === workspaceId) return
+
       workspaceStore.getWorkspace(workspaceId)
       workspaceStore.getWorkpaceProjects(workspaceId)
     })

@@ -76,7 +76,15 @@ export default defineComponent({
         }
       }
     },
+    id: {
+      type: String,
+      default: () => ''
+    },
     getTarget: {
+      type: Function,
+      default: () => ''
+    },
+    finishUpload: {
       type: Function,
       default: () => ''
     }
@@ -127,7 +135,21 @@ export default defineComponent({
 
       r.value.on('fileProgress', file => (progress.value = Math.floor(file.progress() * 100)))
 
-      r.value.on('complete', function () {
+      r.value.on('complete', async function () {
+        const [fileMetaData] = r.value.files
+        const data = {
+          resumableChunkSize: 1024 * 1024,
+          resumableTotalSize: fileMetaData.file.size,
+          resumableType: 'application/zip',
+          resumableIdentifier: fileMetaData.file.uniqueIdentifier,
+          resumableFilename: fileMetaData.relativePath,
+          resumableRelativePath: fileMetaData.relativePath,
+          resumableTotalChunks: fileMetaData.chunks.length,
+          resumableChunkNumber: 1,
+          resumableCurrentChunkSize: 1
+        }
+
+        const result = await props.finishUpload({ uuid: props.id, data })
         isUploadFinish.value = true
       })
 

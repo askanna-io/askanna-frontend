@@ -34,12 +34,13 @@ export const PACKAGE_STORE = 'packageStore'
 
 // actions
 export const getPackage = 'getPackage'
+export const finishUpload = 'finishUpload'
 export const getFileSource = 'getFileSource'
 export const uploadPackage = 'uploadPackage'
 
 //mutations
-export const SET_PACKAGE = 'SET_PACKAGE'
 export const SET_FILE = 'SET_FILE'
+export const SET_PACKAGE = 'SET_PACKAGE'
 
 export class PackageModel {
   private _state: Package

@@ -34,12 +34,21 @@ export default defineComponent({
       PENDING: 'mdi-progress-clock',
       SUBMITTED: 'mdi-progress-check'
     }
+    const TEXTS = {
+      SUCCESS: 'Succeeded',
+      COMPLETED: 'Succeeded',
+      UNDEFINED: 'Undefined',
+      FAILURE: 'Failure',
+      PENDING: 'Pending',
+      SUBMITTED: 'Submitted'
+    }
     const status = computed(() => (props.status ? props.status : 'UNDEFINED'))
 
     const statusIcon = computed(() => ICONS[status.value])
     const statusColor = computed(() => COLORS[status.value])
+    const statusValue = computed(() => TEXTS[status.value])
 
-    return { statusColor, statusIcon, statusValue: status }
+    return { statusColor, statusIcon, statusValue }
   }
 })
 </script>
