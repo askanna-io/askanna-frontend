@@ -73,7 +73,7 @@ export default defineComponent({
     })
 
     const getTarget = async fileMetaData => {
-      const packageData = await packageStore.uploadPackage({
+      const packageData = await packageStore.registerPackage({
         project: 'f1e2144a-87f9-4936-8562-4304c51332ea',
         filename: fileMetaData.file.name,
         size: fileMetaData.file.size

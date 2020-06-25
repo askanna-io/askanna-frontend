@@ -46,7 +46,9 @@ export const api: ApiSettings = {
     },
     package: {
       get: ({ projectId, packageId }) => `project/${projectId}/packages/${packageId}/`,
-      uploadPackage: () => 'package/',
+      registerPackage: () => 'package/',
+      registerChunkPackage: packageId => `package/${packageId}/packagechunk/`,
+      uploadChunkPackage: ({ chunkId, packageId }) => `package/${packageId}/packagechunk/${chunkId}/chunk/`,
       finishUpload: packageId => `package/${packageId}/finish_upload/`
     },
     packages: {

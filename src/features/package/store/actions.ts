@@ -52,21 +52,54 @@ export const actions: ActionTree<PackageState, RootState> = {
     commit(type.SET_FILE, { file, fileSource })
   },
 
-  async [type.uploadPackage]({ commit }, data) {
+  async [type.registerPackage]({ commit }, data) {
     let packageData
     try {
       packageData = await apiService({
-        action: api.uploadPackage,
+        action: api.registerPackage,
         method: 'post',
         serviceName,
         data
       })
     } catch (e) {
-      logger.error(commit, 'Error on upload package in uploadPackage action.\nError: ', e)
+      logger.error(commit, 'Error on upload package in registerPackage action.\nError: ', e)
 
       return
     }
     return packageData
+  },
+
+  async [type.registerChunkPackage]({ commit }, { uuid, data }) {
+    let result
+    try {
+      result = await apiService({
+        action: api.registerChunkPackage,
+        method: 'post',
+        serviceName,
+        uuid,
+        data
+      })
+    } catch (e) {
+      logger.error(commit, 'Error on finish register chunck package in registerChunkPackage action.\nError: ', e)
+    }
+
+    return result
+  },
+
+  async [type.uploadChunkPackage]({ commit }, { uuid, data }) {
+    let result
+    try {
+      result = await apiService({
+        action: api.uploadChunkPackage,
+        method: 'post',
+        serviceName,
+        uuid,
+        data
+      })
+    } catch (e) {
+      logger.error(commit, 'Error on finish upload chunck package in uploadChunkPackage action.\nError: ', e)
+    }
+    return result
   },
 
   async [type.finishUpload]({ commit }, { uuid, data }) {

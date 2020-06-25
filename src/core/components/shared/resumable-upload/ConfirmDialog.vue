@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { ref, reactive, computed, defineComponent } from '@vue/composition-api'
+import { ref, watch, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'ConfirmDialog',
@@ -53,6 +53,10 @@ export default defineComponent({
     const dialog = ref(true)
 
     const uploadFiles = () => context.emit('uploadFiles')
+
+    watch(dialog, async dialog => {
+      if (!dialog) context.emit('confirmationClosed')
+    })
 
     return { dialog, uploadFiles }
   }

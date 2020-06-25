@@ -1,5 +1,13 @@
 import { useState, useActions } from '@u3u/vue-hooks'
-import { PACKAGE_STORE, getPackage, getFileSource, uploadPackage, finishUpload } from '../store/types'
+import {
+  PACKAGE_STORE,
+  getPackage,
+  getFileSource,
+  registerPackage,
+  registerChunkPackage,
+  uploadChunkPackage,
+  finishUpload
+} from '../store/types'
 
 export default function () {
   const state = {
@@ -7,7 +15,14 @@ export default function () {
   }
 
   const actions = {
-    ...useActions(PACKAGE_STORE, [getPackage, getFileSource, uploadPackage, finishUpload])
+    ...useActions(PACKAGE_STORE, [
+      getPackage,
+      getFileSource,
+      registerPackage,
+      registerChunkPackage,
+      uploadChunkPackage,
+      finishUpload
+    ])
   }
 
   return {

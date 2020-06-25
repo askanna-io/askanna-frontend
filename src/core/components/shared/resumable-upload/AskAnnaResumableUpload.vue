@@ -44,6 +44,7 @@
         :isUploadStart="isUploadStart"
         :isUploadFinish="isUploadFinish"
         @uploadFiles="uploadFiles"
+        @confirmationClosed="handleConfirmationClosed"
       />
     </v-col>
   </v-row>
@@ -53,6 +54,7 @@
 import FilePreview from './FilePreview.vue'
 import ConfirmDialog from './ConfirmDialog.vue'
 import Resumablejs from '@/core/plugins/resumable.js'
+import usePackageStore from '@/features/package/composition/usePackageStore'
 
 import { ref, watch, reactive, computed, defineComponent, onMounted } from '@vue/composition-api'
 
@@ -91,6 +93,8 @@ export default defineComponent({
   },
 
   setup(props, context) {
+    const packageStore = usePackageStore()
+
     const r = ref(null)
     const draggable = ref(null)
     const browseButton = ref(null)
@@ -107,7 +111,6 @@ export default defineComponent({
     onMounted(async () => {
       r.value = new Resumablejs({
         target: getTarget,
-        query: {},
         maxChunkRetries: 3,
         maxFiles: 1,
         fileType: ['zip'],
@@ -135,7 +138,7 @@ export default defineComponent({
 
       r.value.on('fileProgress', file => (progress.value = Math.floor(file.progress() * 100)))
 
-      r.value.on('complete', async function () {
+      r.value.on('complete1', async function () {
         const [fileMetaData] = r.value.files
         const data = {
           resumableChunkSize: 1024 * 1024,
@@ -149,7 +152,7 @@ export default defineComponent({
           resumableCurrentChunkSize: 1
         }
 
-        const result = await props.finishUpload({ uuid: props.id, data })
+        // const result = await props.finishUpload({ uuid: props.newUuid, data })
         isUploadFinish.value = true
       })
 
@@ -168,16 +171,98 @@ export default defineComponent({
       showConfirmation.value = true
     }
 
+    const registerPackage = async fileMetaData => {
+      const packageData = await packageStore.registerPackage({
+        project: 'f1e2144a-87f9-4936-8562-4304c51332ea',
+        filename: fileMetaData.file.name,
+        size: fileMetaData.file.size
+      })
+
+      return packageData
+    }
+
+    const registerChunkPackage = async ({ size, index, isLastChunk, uuid, short_uuid }) => {
+      const registerChunk = await packageStore.registerChunkPackage({
+        uuid: short_uuid,
+        data: {
+          filename: index + 1,
+          size,
+          file_no: index + 1,
+          is_last: isLastChunk,
+          package: uuid
+        }
+      })
+
+      return registerChunk
+    }
+
+    const uploadChunkPackage = async ({ chunkId, packageId, index, fileMetaData }) => {
+      const registerChunk = await packageStore.uploadChunkPackage({
+        uuid: { chunkId, packageId },
+        data: {
+          resumableChunkSize: 1024 * 1024,
+          resumableTotalSize: fileMetaData.file.size,
+          resumableType: 'application/zip',
+          resumableIdentifier: fileMetaData.file.uniqueIdentifier,
+          resumableFilename: fileMetaData.relativePath,
+          resumableRelativePath: fileMetaData.relativePath,
+          resumableTotalChunks: fileMetaData.chunks.length,
+          resumableChunkNumber: index,
+          resumableCurrentChunkSize: fileMetaData.resumableObj.getSize()
+        }
+      })
+
+      return registerChunk
+    }
+
     const uploadFiles = async () => {
       const [fileMetaData] = r.value.files
+      const { uuid, short_uuid } = await registerPackage(fileMetaData)
 
-      r.value.upload()
+      const data = {
+        resumableChunkSize: 1024 * 1024,
+        resumableTotalSize: fileMetaData.file.size,
+        resumableType: 'application/zip',
+        resumableIdentifier: fileMetaData.file.uniqueIdentifier,
+        resumableFilename: fileMetaData.relativePath,
+        resumableRelativePath: fileMetaData.relativePath,
+        resumableTotalChunks: fileMetaData.chunks.length,
+        resumableChunkNumber: 1,
+        resumableCurrentChunkSize: 1
+      }
+
+      fileMetaData.chunks.forEach(async (chunk, index) => {
+        const isLastChunk = index + 1 === fileMetaData.chunks.length
+        const registerChunk = await registerChunkPackage({
+          index,
+          uuid,
+          short_uuid,
+          isLastChunk,
+          size: chunk.fileObjSize
+        })
+
+        const resultUploadChunk = await uploadChunkPackage({
+          index,
+          fileMetaData,
+          packageId: short_uuid,
+          chunkId: registerChunk.uuid
+        })
+
+        if (!resultUploadChunk) return
+
+        const result = await packageStore.finishUpload({ uuid: short_uuid, data })
+        isUploadFinish.value = true
+      })
     }
 
     const handleDeleteFile = uniqueIdentifier => {
       const file = r.value.getFromUniqueIdentifier(uniqueIdentifier)
 
       r.value.removeFile(file)
+    }
+
+    const handleConfirmationClosed = () => {
+      showConfirmation.value = false
     }
 
     return {
@@ -191,7 +276,8 @@ export default defineComponent({
       showConfirmation,
       handleConfirmUpload,
       fileRecordsForUpload,
-      handleDeleteFile
+      handleDeleteFile,
+      handleConfirmationClosed
     }
   }
 })

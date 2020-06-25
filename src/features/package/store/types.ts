@@ -36,7 +36,9 @@ export const PACKAGE_STORE = 'packageStore'
 export const getPackage = 'getPackage'
 export const finishUpload = 'finishUpload'
 export const getFileSource = 'getFileSource'
-export const uploadPackage = 'uploadPackage'
+export const registerPackage = 'registerPackage'
+export const uploadChunkPackage = 'uploadChunkPackage'
+export const registerChunkPackage = 'registerChunkPackage'
 
 //mutations
 export const SET_FILE = 'SET_FILE'
