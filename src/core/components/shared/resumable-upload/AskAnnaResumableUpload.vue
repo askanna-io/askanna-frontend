@@ -68,7 +68,7 @@ export default defineComponent({
       type: Object,
       default: function () {
         return {
-          status: 'UNDIFENED',
+          status: 'UNDEFINED',
           runtime: 0,
           memory: 0,
           return_payload: null,
@@ -186,7 +186,7 @@ export default defineComponent({
         uuid: short_uuid,
         data: {
           filename: index + 1,
-          size,
+          size: size,
           file_no: index + 1,
           is_last: isLastChunk,
           package: uuid
