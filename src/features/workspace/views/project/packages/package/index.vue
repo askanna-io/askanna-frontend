@@ -48,7 +48,7 @@ export default defineComponent({
       })
     })
 
-    const calcHeight = computed(() => height.value - 450)
+    const calcHeight = computed(() => height.value - 380)
     const path = computed(() => context.root.$route.params.folderName || '/')
 
     const currentPath = computed(() => {
