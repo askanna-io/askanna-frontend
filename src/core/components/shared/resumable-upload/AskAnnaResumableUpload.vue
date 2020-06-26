@@ -2,7 +2,10 @@
   <v-row no-gutters class="upload mb-2" ref="uploadContainer">
     <v-col cols="12">
       <div ref="draggable" class="is-sortable-disabled is-drag-valid theme-list">
-        <div ref="browseButton" class="grid-block-wrapper vue-file-agent file-input-wrapper has-multiple">
+        <div
+          ref="browseButton"
+          class="grid-block-wrapper vue-file-agent file-input-wrapper has-multiple"
+        >
           <canvas style="position: fixed; visibility: hidden; z-index: -3;"></canvas>
           <div transitionduration="300" pressdelay="0" helperclass="active-sorting-item">
             <div>
@@ -13,15 +16,16 @@
                 @deleteFile="handleDeleteFile"
               />
               <div class="file-preview-wrapper grid-box-item grid-block file-preview-new">
-                <span class="file-preview"
-                  ><span style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
-                    ><svg viewBox="0 0 1000 1000">
+                <span class="file-preview">
+                  <span style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;">
+                    <svg viewBox="0 0 1000 1000">
                       <path
                         d="M745,353c-5.6,0-11.3,0.2-17.2,0.7C687.4,237.3,577.8,157,451,157c-162.1,0-294,131.9-294,294c0,2.1,0,4.1,0,6.2C72.6,479,10,555.8,10,647c0,108.1,87.9,196,196,196h245V618.3l-63.4,63.4c-9.6,9.6-22.1,14.4-34.6,14.4s-25.1-4.8-34.6-14.4c-19.2-19.2-19.2-50.1,0-69.3l147-147c4.6-4.6,9.9-8.1,16-10.6c12-4.9,25.5-4.9,37.4,0c6,2.5,11.4,6.1,16,10.6l147,147c19.2,19.2,19.2,50.1,0,69.3c-9.6,9.6-22.1,14.4-34.6,14.4s-25.1-4.8-34.6-14.4L549,618.3V843h196c135.1,0,245-109.9,245-245S880.1,353,745,353z"
-                      ></path></svg
-                    ><span class="help-text">Choose zip files</span></span
-                  ></span
-                >
+                      />
+                    </svg>
+                    <span class="help-text">Choose zip files</span>
+                  </span>
+                </span>
               </div>
             </div>
           </div>
@@ -196,7 +200,7 @@ export default defineComponent({
       return registerChunk
     }
 
-    const uploadChunkPackage = async ({ chunkId, packageId, index, fileMetaData }) => {
+    const uploadChunkPackage = async ({ chunkId, packageId, index, fileMetaData, chunkBlob }) => {
       const registerChunk = await packageStore.uploadChunkPackage({
         uuid: { chunkId, packageId },
         data: {
@@ -209,6 +213,9 @@ export default defineComponent({
           resumableTotalChunks: fileMetaData.chunks.length,
           resumableChunkNumber: index,
           resumableCurrentChunkSize: fileMetaData.resumableObj.getSize()
+        },
+        files: {
+          file: chunkBlob
         }
       })
 
@@ -241,11 +248,18 @@ export default defineComponent({
           size: chunk.fileObjSize
         })
 
+        const chunkBlob = chunk.fileObj.file['slice'](
+          chunk.startByte, 
+          chunk.endByte, 
+          chunk.getOpt('setChunkTypeFromFile') ? chunk.fileObj.file.type : ""
+        )
+
         const resultUploadChunk = await uploadChunkPackage({
           index,
           fileMetaData,
           packageId: short_uuid,
-          chunkId: registerChunk.uuid
+          chunkId: registerChunk.uuid,
+          chunkBlob: chunkBlob
         })
 
         if (!resultUploadChunk) return
