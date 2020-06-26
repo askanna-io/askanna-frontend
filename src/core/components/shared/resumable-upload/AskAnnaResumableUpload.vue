@@ -248,7 +248,9 @@ export default defineComponent({
           size: chunk.fileObjSize
         })
 
-        const chunkBlob = chunk.fileObj.file['slice'](
+        const slice_func = (chunk.fileObj.file.slice ? 'slice' : (chunk.fileObj.file.mozSlice ? 'mozSlice' : (chunk.fileObj.file.webkitSlice ? 'webkitSlice' : 'slice')));
+
+        const chunkBlob = chunk.fileObj.file[slice_func](
           chunk.startByte, 
           chunk.endByte, 
           chunk.getOpt('setChunkTypeFromFile') ? chunk.fileObj.file.type : ""
