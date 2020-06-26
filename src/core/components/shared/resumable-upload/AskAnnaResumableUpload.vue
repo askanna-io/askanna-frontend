@@ -212,9 +212,7 @@ export default defineComponent({
           resumableRelativePath: fileMetaData.relativePath,
           resumableTotalChunks: fileMetaData.chunks.length,
           resumableChunkNumber: index,
-          resumableCurrentChunkSize: fileMetaData.resumableObj.getSize()
-        },
-        files: {
+          resumableCurrentChunkSize: fileMetaData.resumableObj.getSize(),
           file: chunkBlob
         }
       })
@@ -253,7 +251,7 @@ export default defineComponent({
         const chunkBlob = chunk.fileObj.file[slice_func](
           chunk.startByte, 
           chunk.endByte, 
-          chunk.getOpt('setChunkTypeFromFile') ? chunk.fileObj.file.type : ""
+          chunk.getOpt('setChunkTypeFromFile') ? chunk.fileObj.file.type : "application/zip"
         )
 
         const resultUploadChunk = await uploadChunkPackage({
@@ -265,10 +263,10 @@ export default defineComponent({
         })
 
         if (!resultUploadChunk) return
-
-        const result = await packageStore.finishUpload({ uuid: short_uuid, data })
-        isUploadFinish.value = true
       })
+
+      const result = await packageStore.finishUpload({ uuid: short_uuid, data })
+      isUploadFinish.value = true
     }
 
     const handleDeleteFile = uniqueIdentifier => {

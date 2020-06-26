@@ -88,13 +88,23 @@ export const actions: ActionTree<PackageState, RootState> = {
 
   async [type.uploadChunkPackage]({ commit }, { uuid, data }) {
     let result
+
+    // convert the data to formdata for proper file upload
+    let formData = new FormData()
+    Object.entries(data).forEach(entry => {
+      formData.append(entry[0], entry[1])
+    })
+
     try {
       result = await apiService({
         action: api.uploadChunkPackage,
         method: 'post',
         serviceName,
         uuid,
-        data
+        data: formData,
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
       })
     } catch (e) {
       logger.error(commit, 'Error on finish upload chunck package in uploadChunkPackage action.\nError: ', e)
@@ -104,13 +114,20 @@ export const actions: ActionTree<PackageState, RootState> = {
 
   async [type.finishUpload]({ commit }, { uuid, data }) {
     let result
+    // convert the data to formdata for proper file upload
+    console.log(data)
+    let formData = new FormData()
+    Object.entries(data).forEach(entry => {
+      formData.append(entry[0], entry[1])
+    })
+
     try {
       result = await apiService({
         action: api.finishUpload,
         method: 'post',
         serviceName,
         uuid,
-        data
+        data: formData
       })
     } catch (e) {
       logger.error(commit, 'Error on finish upload package in finishUpload action.\nError: ', e)
