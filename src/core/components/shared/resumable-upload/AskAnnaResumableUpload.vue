@@ -246,6 +246,8 @@ export default defineComponent({
           size: chunk.fileObjSize
         })
 
+        // ideally we use `chunk.send()`, but we need to configure the `getTarget`
+
         const slice_func = (chunk.fileObj.file.slice ? 'slice' : (chunk.fileObj.file.mozSlice ? 'mozSlice' : (chunk.fileObj.file.webkitSlice ? 'webkitSlice' : 'slice')));
 
         const chunkBlob = chunk.fileObj.file[slice_func](
