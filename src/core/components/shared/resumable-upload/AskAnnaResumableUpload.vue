@@ -2,10 +2,7 @@
   <v-row no-gutters class="upload mb-2" ref="uploadContainer">
     <v-col cols="12">
       <div ref="draggable" class="is-sortable-disabled is-drag-valid theme-list">
-        <div
-          ref="browseButton"
-          class="grid-block-wrapper vue-file-agent file-input-wrapper has-multiple"
-        >
+        <div ref="browseButton" class="grid-block-wrapper vue-file-agent file-input-wrapper has-multiple">
           <canvas style="position: fixed; visibility: hidden; z-index: -3;"></canvas>
           <div transitionduration="300" pressdelay="0" helperclass="active-sorting-item">
             <div>
@@ -86,10 +83,6 @@ export default defineComponent({
       type: String,
       default: () => ''
     },
-    getTarget: {
-      type: Function,
-      default: () => ''
-    },
     finishUpload: {
       type: Function,
       default: () => ''
@@ -109,12 +102,27 @@ export default defineComponent({
     const isUploadFinish = ref(false)
     const showConfirmation = ref(false)
 
+    const currentChunkData = ref({
+      uuid: '',
+      short_uuid: '',
+      index: 0,
+      isLastChunk: false
+    })
+
+    const currentPackageData = ref({
+      uuid: '',
+      short_uuid: ''
+    })
+
     const token = localStorage.getItem('token')
     const uploadHeaders = { Authorization: `Token ${token}` }
 
     onMounted(async () => {
       r.value = new Resumablejs({
         target: getTarget,
+        testChunks: false,
+        testMethod: 'POST',
+        preprocess: preprocess,
         maxChunkRetries: 3,
         maxFiles: 1,
         fileType: ['zip'],
@@ -127,13 +135,14 @@ export default defineComponent({
 
     const fileRecordsForUpload = computed(() => r.value && r.value.files)
 
-    watch(fileRecordsForUpload, async fileRecordsForUpload => {})
-
     watch(uploadContainer, async uploadContainer => {
       if (!uploadContainer) return
 
-      r.value.on('fileAdded', function (file, event) {
+      r.value.on('fileAdded', async function (r, event) {
         event.preventDefault()
+
+        const { uuid, short_uuid } = await handleRegisterPackage(r.file)
+        currentPackageData.value = { uuid, short_uuid }
       })
 
       r.value.on('uploadStart', function () {
@@ -142,22 +151,8 @@ export default defineComponent({
 
       r.value.on('fileProgress', file => (progress.value = Math.floor(file.progress() * 100)))
 
-      r.value.on('complete1', async function () {
-        const [fileMetaData] = r.value.files
-        const data = {
-          resumableChunkSize: 1024 * 1024,
-          resumableTotalSize: fileMetaData.file.size,
-          resumableType: 'application/zip',
-          resumableIdentifier: fileMetaData.file.uniqueIdentifier,
-          resumableFilename: fileMetaData.relativePath,
-          resumableRelativePath: fileMetaData.relativePath,
-          resumableTotalChunks: fileMetaData.chunks.length,
-          resumableChunkNumber: 1,
-          resumableCurrentChunkSize: 1
-        }
-
-        // const result = await props.finishUpload({ uuid: props.newUuid, data })
-        isUploadFinish.value = true
+      r.value.on('fileSuccess', async file => {
+        handleFinishUpload(file)
       })
 
       r.value.assignBrowse(browseButton.value)
@@ -165,33 +160,43 @@ export default defineComponent({
     })
 
     const getTarget = async () => {
-      const [fileMetaData] = r.value.files
-      const url = await props.getTarget(fileMetaData)
+      const { uuid } = currentChunkData.value
+      const { short_uuid } = currentPackageData.value
+      const url = `https://api.askanna.eu/v1/package/${short_uuid}/packagechunk/${uuid}/chunk/`
 
       return url
+    }
+
+    const preprocess = async r => {
+      const { uuid } = await handleRegisterChunkPackage(r)
+      currentChunkData.value = { uuid }
+      r.preprocessFinished()
     }
 
     const handleConfirmUpload = () => {
       showConfirmation.value = true
     }
 
-    const registerPackage = async fileMetaData => {
+    const handleRegisterPackage = async file => {
       const packageData = await packageStore.registerPackage({
         project: 'f1e2144a-87f9-4936-8562-4304c51332ea',
-        filename: fileMetaData.file.name,
-        size: fileMetaData.file.size
+        filename: file.name,
+        size: file.size
       })
 
       return packageData
     }
 
-    const registerChunkPackage = async ({ size, index, isLastChunk, uuid, short_uuid }) => {
+    const handleRegisterChunkPackage = async r => {
+      const { uuid, short_uuid } = currentPackageData.value
+      const isLastChunk = r.offset + 1 === r.fileObj.chunks.length
+
       const registerChunk = await packageStore.registerChunkPackage({
         uuid: short_uuid,
         data: {
-          filename: index + 1,
-          size: size,
-          file_no: index + 1,
+          filename: r.offset + 1,
+          size: r.fileObjSize,
+          file_no: r.offset + 1,
           is_last: isLastChunk,
           package: uuid
         }
@@ -200,75 +205,28 @@ export default defineComponent({
       return registerChunk
     }
 
-    const uploadChunkPackage = async ({ chunkId, packageId, index, fileMetaData, chunkBlob }) => {
-      const registerChunk = await packageStore.uploadChunkPackage({
-        uuid: { chunkId, packageId },
-        data: {
-          resumableChunkSize: 1024 * 1024,
-          resumableTotalSize: fileMetaData.file.size,
-          resumableType: 'application/zip',
-          resumableIdentifier: fileMetaData.file.uniqueIdentifier,
-          resumableFilename: fileMetaData.relativePath,
-          resumableRelativePath: fileMetaData.relativePath,
-          resumableTotalChunks: fileMetaData.chunks.length,
-          resumableChunkNumber: index,
-          resumableCurrentChunkSize: fileMetaData.resumableObj.getSize(),
-          file: chunkBlob
-        }
-      })
-
-      return registerChunk
-    }
-
-    const uploadFiles = async () => {
-      const [fileMetaData] = r.value.files
-      const { uuid, short_uuid } = await registerPackage(fileMetaData)
+    const handleFinishUpload = async r => {
+      const { short_uuid } = currentPackageData.value
 
       const data = {
         resumableChunkSize: 1024 * 1024,
-        resumableTotalSize: fileMetaData.file.size,
+        resumableTotalSize: r.file.size,
         resumableType: 'application/zip',
-        resumableIdentifier: fileMetaData.file.uniqueIdentifier,
-        resumableFilename: fileMetaData.relativePath,
-        resumableRelativePath: fileMetaData.relativePath,
-        resumableTotalChunks: fileMetaData.chunks.length,
+        resumableIdentifier: r.file.uniqueIdentifier,
+        resumableFilename: r.relativePath,
+        resumableRelativePath: r.relativePath,
+        resumableTotalChunks: r.chunks.length,
         resumableChunkNumber: 1,
         resumableCurrentChunkSize: 1
       }
 
-      fileMetaData.chunks.forEach(async (chunk, index) => {
-        const isLastChunk = index + 1 === fileMetaData.chunks.length
-        const registerChunk = await registerChunkPackage({
-          index,
-          uuid,
-          short_uuid,
-          isLastChunk,
-          size: chunk.fileObjSize
-        })
-
-        // ideally we use `chunk.send()`, but we need to configure the `getTarget`
-
-        const slice_func = (chunk.fileObj.file.slice ? 'slice' : (chunk.fileObj.file.mozSlice ? 'mozSlice' : (chunk.fileObj.file.webkitSlice ? 'webkitSlice' : 'slice')));
-
-        const chunkBlob = chunk.fileObj.file[slice_func](
-          chunk.startByte, 
-          chunk.endByte, 
-          chunk.getOpt('setChunkTypeFromFile') ? chunk.fileObj.file.type : "application/zip"
-        )
-
-        const resultUploadChunk = await uploadChunkPackage({
-          index,
-          fileMetaData,
-          packageId: short_uuid,
-          chunkId: registerChunk.uuid,
-          chunkBlob: chunkBlob
-        })
-
-        if (!resultUploadChunk) return
-      })
-
       const result = await packageStore.finishUpload({ uuid: short_uuid, data })
+
       isUploadFinish.value = true
+    }
+
+    const uploadFiles = async () => {
+      r.value.upload()
     }
 
     const handleDeleteFile = uniqueIdentifier => {

@@ -653,7 +653,7 @@
         $.preprocessState = 2
         $.upload()
       }
-      $.upload = function () {
+      $.upload = async function () {
         var found = false
         if ($.isPaused() === false) {
           var preprocess = $.getOpt('preprocessFile')
@@ -661,7 +661,7 @@
             switch ($.preprocessState) {
               case 0:
                 $.preprocessState = 1
-                preprocess($)
+                await preprocess($)
                 return true
               case 1:
                 return true
@@ -795,13 +795,13 @@
       }
 
       // send() uploads the actual data in a POST call
-      $.send = function () {
+      $.send = async function () {
         var preprocess = $.getOpt('preprocess')
         if (typeof preprocess === 'function') {
           switch ($.preprocessState) {
             case 0:
               $.preprocessState = 1
-              preprocess($)
+              await preprocess($)
               return
             case 1:
               return
@@ -926,7 +926,7 @@
           }
         }
 
-        var target = $h.getTarget('upload', params)
+        var target = await $h.getTarget('upload', params)
         var method = $.getOpt('uploadMethod')
 
         $.xhr.open(method, target)
