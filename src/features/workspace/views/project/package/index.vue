@@ -42,13 +42,7 @@
           </v-flex>
         </v-toolbar>
         <v-expand-transition>
-          <ask-anna-resumable-upload
-            v-if="isRaplace"
-            class="py-2"
-            :id="packageId"
-            :getTarget="getTarget"
-            :finishUpload="finishUpload"
-          />
+          <ask-anna-resumable-upload v-if="isRaplace" class="py-2" :id="packageId" :finishUpload="finishUpload" />
         </v-expand-transition>
 
         <package-tree
@@ -173,16 +167,6 @@ export default defineComponent({
 
     const handleReplace = () => (isRaplace.value = !isRaplace.value)
 
-    const getTarget = async fileMetaData => {
-      const packageData = await packageStore.registerPackage({
-        project: 'f1e2144a-87f9-4936-8562-4304c51332ea',
-        filename: fileMetaData.file.name,
-        size: fileMetaData.file.size
-      })
-
-      return packageData
-    }
-
     const finishUpload = packageStore.finishUpload
 
     return {
@@ -192,7 +176,6 @@ export default defineComponent({
       treeView,
       FileIcons,
       calcHeight,
-      getTarget,
       finishUpload,
       breadcrumbs,
       currentPath,

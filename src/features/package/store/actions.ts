@@ -90,9 +90,11 @@ export const actions: ActionTree<PackageState, RootState> = {
     let result
     // convert the data to formdata for proper file upload
     let formData = new FormData()
-    Object.entries(data).forEach(entry => {
-      formData.append(entry[0], entry[1])
-    })
+
+    type CalType = (name: any, value: any) => void
+    const callback: CalType = ([name, value]) => formData.append(name, value)
+
+    Object.entries(data).forEach(callback)
 
     try {
       result = await apiService({
