@@ -81,7 +81,7 @@ export default defineComponent({
   components: {
     PackageFile,
     PackageTree,
-    ResumableUpload: () => import('@/features/package/components/resumable-upload/ResumableUpload')
+    ResumableUpload: () => import('@/features/package/components/resumable-upload/ResumableUpload.vue')
   },
 
   setup(props, context) {
