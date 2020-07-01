@@ -17,8 +17,6 @@
             directory and upload this zip file.
           </v-card-text>
         </v-card>
-
-        <ask-anna-resumable-upload :getTarget="getTarget" />
       </div>
     </v-col>
   </v-row>
@@ -36,10 +34,9 @@ import { headers } from '@package/utils/index'
 import usePackageStore from '@/features/package/composition/usePackageStore'
 import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
 import { ref, watch, onBeforeMount, onMounted, computed } from '@vue/composition-api'
-import AskAnnaResumableUpload from '@/core/components/shared/resumable-upload/AskAnnaResumableUpload'
 
 export default defineComponent({
-  components: { PackageFile, PackageTree, AskAnnaResumableUpload },
+  components: { PackageFile, PackageTree },
 
   setup(props, context) {
     const packageStore = usePackageStore()

@@ -20,6 +20,7 @@ interface FuaturesApi {
   [featureApi: string]: (uuid: string) => void | string
 }
 
+export const url = process.env.VUE_APP_URL
 const apiUrl = process.env.VUE_APP_API_URL
 const apiPort = process.env.VUE_APP_API_PORT
 

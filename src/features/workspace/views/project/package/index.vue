@@ -42,7 +42,13 @@
           </v-flex>
         </v-toolbar>
         <v-expand-transition>
-          <ask-anna-resumable-upload v-if="isRaplace" class="py-2" :id="packageId" :finishUpload="finishUpload" />
+          <resumable-upload
+            v-if="isRaplace"
+            @cancelUpload="handleReplace"
+            class="py-2"
+            :id="packageId"
+            :finishUpload="finishUpload"
+          />
         </v-expand-transition>
 
         <package-tree
@@ -75,7 +81,7 @@ export default defineComponent({
   components: {
     PackageFile,
     PackageTree,
-    AskAnnaResumableUpload: () => import('@/core/components/shared/resumable-upload/AskAnnaResumableUpload')
+    ResumableUpload: () => import('@/features/package/components/resumable-upload/ResumableUpload')
   },
 
   setup(props, context) {
