@@ -178,6 +178,14 @@ export default {
           }
         },
         {
+          path: 'new-project',
+          component: () => import(/* webpackChunkName: "workspace-new-project" */ './views/new-project.vue'),
+          name: 'workspace-new-project',
+          meta: {
+            breadcrumb: 'Workspace - #:workspaceId'
+          }
+        },
+        {
           path: 'project/:projectId',
           component: () => import(/* webpackChunkName: "workspace-project" */ './views/project/index.vue'),
           meta: {
