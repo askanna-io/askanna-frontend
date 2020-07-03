@@ -66,7 +66,7 @@ export default defineComponent({
         value: 'filename'
       },
       { text: 'Created', value: 'created' },
-      { text: 'Uuid', value: 'short_uuid', sortable: false },
+      { text: 'Package short UUID', value: 'short_uuid', sortable: false },
       { text: '', value: 'uuid', sortable: false }
     ]
 
