@@ -47,6 +47,7 @@
       throttleProgressCallbacks: 0.5,
       query: {},
       headers: {},
+      preupload: null,
       preprocess: null,
       preprocessFile: null,
       method: 'multipart',
@@ -654,6 +655,7 @@
         $.upload()
       }
       $.upload = async function () {
+        console.log('upload')
         var found = false
         if ($.isPaused() === false) {
           var preprocess = $.getOpt('preprocessFile')
@@ -1152,7 +1154,11 @@
       })
       return uploading
     }
-    $.upload = function () {
+    $.upload = async function () {
+      console.log('uploadStart')
+      const preupload = $.getOpt('preupload')
+      await preupload()
+      console.log('adte')
       // Make sure we don't start too many uploads at once
       if ($.isUploading()) return
       // Kick off the queue

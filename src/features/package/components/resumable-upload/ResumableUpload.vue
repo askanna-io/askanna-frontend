@@ -126,11 +126,11 @@ export default defineComponent({
         target: getTarget,
         testChunks: false,
         testMethod: 'POST',
+        preupload: preupload,
         preprocess: preprocess,
         maxChunkRetries: 3,
         maxFiles: 1,
         fileType: ['zip'],
-        prioritizeFirstAndLastChunk: true,
         simultaneousUploads: 4,
         chunkSize: 1 * 1024 * 1024,
         headers: uploadHeaders
@@ -175,6 +175,13 @@ export default defineComponent({
       r.preprocessFinished()
     }
 
+    const preupload = async () => {
+      const { uuid, short_uuid } = await handleRegisterPackage(file.value)
+
+      currentPackageData.value = { uuid, short_uuid }
+      isPackageRegister.value = true
+    }
+
     const handleConfirmUpload = () => {
       showConfirmation.value = true
     }
@@ -190,12 +197,6 @@ export default defineComponent({
     }
 
     const handleRegisterChunkPackage = async r => {
-      if (!isPackageRegister.value) {
-        const { uuid, short_uuid } = await handleRegisterPackage(file.value)
-
-        currentPackageData.value = { uuid, short_uuid }
-        isPackageRegister.value = true
-      }
       const { uuid, short_uuid } = currentPackageData.value
       const isLastChunk = r.offset + 1 === r.fileObj.chunks.length
 
