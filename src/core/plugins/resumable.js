@@ -655,7 +655,6 @@
         $.upload()
       }
       $.upload = async function () {
-        console.log('upload')
         var found = false
         if ($.isPaused() === false) {
           var preprocess = $.getOpt('preprocessFile')
@@ -1155,10 +1154,12 @@
       return uploading
     }
     $.upload = async function () {
-      console.log('uploadStart')
+      // preupload function: call once before start upload
       const preupload = $.getOpt('preupload')
-      await preupload()
-      console.log('adte')
+      if (typeof preupload === 'function') {
+        await preupload()
+      }
+
       // Make sure we don't start too many uploads at once
       if ($.isUploading()) return
       // Kick off the queue
