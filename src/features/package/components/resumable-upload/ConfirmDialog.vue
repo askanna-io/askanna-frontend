@@ -13,7 +13,7 @@
           @click="uploadFiles"
           color="secondary"
         >
-          <v-icon color="secondary" left>mdi-upload</v-icon> Yes, I want to replace the code
+          <v-icon color="secondary" left>mdi-upload</v-icon>I want to upload this file
         </v-btn>
 
         <v-progress-linear v-if="isUploadStart && !isUploadFinish" :buffer-value="progress" stream color="cyan" />

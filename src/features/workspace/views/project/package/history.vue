@@ -5,23 +5,33 @@
         fixed-header
         :headers="headers"
         :items="projectPackageHistory"
-        class="job-table scrollbar"
+        class="job-table scrollbar cursor--pointer"
         @click:row="handleClickRow"
       >
         <template v-slot:top>
-          <v-breadcrumbs :items="breadcrumbs">
-            <template v-slot:divider>
-              <v-icon>mdi-chevron-right</v-icon>
+          <package-toolbar :breadcrumbs="breadcrumbs">
+            <template v-slot:left>
+              <v-tooltip top>
+                <template v-slot:activator="{ on }">
+                  <div v-on="on">
+                    <a @click="handeBackToPackageRoot"
+                      >Package #{{ packageId.slice(0, 4) }}<v-icon small>mdi-chevron-right</v-icon></a
+                    >
+                  </div>
+                </template>
+                <span>{{ packageId }}</span>
+              </v-tooltip>
             </template>
-            <template v-slot:item="{ item }">
-              <v-breadcrumbs-item :to="item.to" exact>
-                {{ item.title }}
-              </v-breadcrumbs-item>
-            </template>
-          </v-breadcrumbs>
+          </package-toolbar>
         </template>
         <template v-slot:item.created="{ item }">
           {{ $moment(item.created).format(' Do MMMM YYYY, h:mm:ss a') }}
+        </template>
+        <template v-slot:item.uuid="{ item }">
+          <v-chip class="btn--hover" outlined label color="secondary" @click.stop="handleDownload(item)">
+            <v-avatar left><v-icon>mdi-cloud-download</v-icon></v-avatar
+            >Download</v-chip
+          >
         </template>
       </v-data-table>
     </v-col>
@@ -33,12 +43,21 @@ import useMoment from '@/core/composition/useMoment'
 import { defineComponent } from '@vue/composition-api'
 import usePackages from '@packages/composition/usePackages'
 import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
+import PackageToolbar from '@/features/package/components/PackageToolbar'
+import useForceFileDownload from '@/core/composition/useForceFileDownload'
 
 export default defineComponent({
+  name: 'history',
+
+  components: {
+    PackageToolbar
+  },
+
   setup(props, context) {
     const moment = useMoment(context)
     const packages = usePackages(context)
-    const breadcrumbs = useBreadcrumbs(context, { start: 2 })
+    const forceFileDownload = useForceFileDownload()
+    const breadcrumbs = useBreadcrumbs(context, { start: 3 })
 
     const headers = [
       {
@@ -47,7 +66,8 @@ export default defineComponent({
         value: 'filename'
       },
       { text: 'Created', value: 'created' },
-      { text: 'Uuid', value: 'short_uuid', sortable: false }
+      { text: 'Uuid', value: 'short_uuid', sortable: false },
+      { text: '', value: 'uuid', sortable: false }
     ]
 
     const handleClickRow = ({ short_uuid, versionId }) => {
@@ -57,12 +77,31 @@ export default defineComponent({
       })
     }
 
+    const handleDownload = async packageData => {
+      const source = await packages.downloadPackage({
+        projectId: packageData.project,
+        packageId: packageData.short_uuid
+      })
+      forceFileDownload.trigger({ source, name: packageData.filename })
+    }
+
+    const handeBackToPackageRoot = () => {
+      const { workspaceId, projectId, packageId } = context.root.$route.params
+      context.root.$router.push({
+        name: 'workspace-project-package',
+        params: { workspaceId, projectId, packageId }
+      })
+    }
+
     return {
       ...moment,
       ...packages,
       headers,
       breadcrumbs,
-      handleClickRow
+      handleClickRow,
+      handleDownload,
+      handeBackToPackageRoot,
+      packageId: context.root.$route.params.packageId
     }
   }
 })

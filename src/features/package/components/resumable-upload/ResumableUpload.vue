@@ -88,10 +88,6 @@ export default defineComponent({
     id: {
       type: String,
       default: () => ''
-    },
-    finishUpload: {
-      type: Function,
-      default: () => ''
     }
   },
 
@@ -103,10 +99,12 @@ export default defineComponent({
     const browseButton = ref(null)
     const uploadContainer = ref(null)
 
+    const file = ref(null)
     const progress = ref(0)
     const isUploadStart = ref(false)
     const isUploadFinish = ref(false)
     const showConfirmation = ref(false)
+    const isPackageRegister = ref(false)
 
     const currentChunkData = ref({
       uuid: ''
@@ -146,9 +144,7 @@ export default defineComponent({
 
       r.value.on('fileAdded', async function (r, event) {
         event.preventDefault()
-
-        const { uuid, short_uuid } = await handleRegisterPackage(r.file)
-        currentPackageData.value = { uuid, short_uuid }
+        file.value = r.file
       })
 
       r.value.on('uploadStart', function () {
@@ -194,6 +190,12 @@ export default defineComponent({
     }
 
     const handleRegisterChunkPackage = async r => {
+      if (!isPackageRegister.value) {
+        const { uuid, short_uuid } = await handleRegisterPackage(file.value)
+
+        currentPackageData.value = { uuid, short_uuid }
+        isPackageRegister.value = true
+      }
       const { uuid, short_uuid } = currentPackageData.value
       const isLastChunk = r.offset + 1 === r.fileObj.chunks.length
 
@@ -239,10 +241,16 @@ export default defineComponent({
       const file = r.value.getFromUniqueIdentifier(uniqueIdentifier)
 
       r.value.removeFile(file)
+      isPackageRegister.value = false
     }
 
     const handleConfirmationClosed = () => {
       showConfirmation.value = false
+
+      if (!isUploadStart.value) {
+        return
+      }
+
       context.root.$router.push({
         name: 'workspace-project-package',
         params: {

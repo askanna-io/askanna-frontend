@@ -1,18 +1,6 @@
 <template>
   <v-row align="center" justify="center">
     <v-col cols="12" class="pt-0 pb-0">
-      <v-breadcrumbs :items="breadcrumbs">
-        <template v-slot:divider>
-          <v-icon>mdi-chevron-right</v-icon>
-        </template>
-        <template v-slot:item="{ item }">
-          <v-breadcrumbs-item :to="item.to" exact>
-            {{ item.title }}
-          </v-breadcrumbs-item>
-        </template>
-      </v-breadcrumbs>
-      <v-divider />
-
       <v-toolbar dense flat>
         <v-btn icon small @click="handleBack">
           <v-icon>mdi-arrow-left</v-icon>

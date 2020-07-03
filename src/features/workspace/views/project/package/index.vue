@@ -1,77 +1,60 @@
 <template>
   <v-row align="center" justify="center">
     <v-col cols="12" class="pt-0 pb-0">
-      <package-file
-        v-if="file"
-        :file="file"
-        :fileSource="fileSource"
-        :breadcrumbs="breadcrumbs"
-        :currentPath="currentPath"
-      />
-      <div class="px-4" v-else>
-        <v-toolbar dense flat color="grey lighten-3" class="br-r4">
-          <v-flex class="d-flex">
-            <div class="mr-auto d-flex align-center">
-              <v-tooltip top>
-                <template v-slot:activator="{ on }">
-                  <div v-on="on">Package #{{ packageId.slice(0, 4) }}</div>
-                </template>
-                <span>{{ packageId }}</span>
-              </v-tooltip>
-            </div>
-            <div>
-              <v-btn small outlined color="secondary" class="mr-1" @click="handleDownload()">
-                <v-icon color="secondary" left>mdi-download</v-icon>Download
-              </v-btn>
+      <package-toolbar :breadcrumbs="breadcrumbs">
+        <template v-slot:left>
+          <v-tooltip top>
+            <template v-slot:activator="{ on }">
+              <div v-on="on">
+                <a v-if="file" @click="handeBackToPackageRoot"
+                  >Package #{{ packageId.slice(0, 4) }}<v-icon small>mdi-chevron-right</v-icon></a
+                >
+                <span v-else> Package #{{ packageId.slice(0, 4) }}</span>
+              </div>
+            </template>
+            <span>{{ packageId }}</span>
+          </v-tooltip>
+        </template>
+        <template v-slot:rigth>
+          <v-btn small outlined color="secondary" class="mr-1 btn--hover" @click="handleDownload()">
+            <v-icon color="secondary" left>mdi-download</v-icon>Download
+          </v-btn>
+          <v-btn
+            small
+            outlined
+            :class="{ 'replace-active': isRaplace }"
+            color="secondary"
+            class="mr-1 btn--hover"
+            @click="handleReplace()"
+          >
+            <v-icon color="secondary" left>mdi-folder-move</v-icon>Replace
+          </v-btn>
 
-              <v-btn
-                small
-                outlined
-                :class="{ 'replace-active': isRaplace }"
-                color="secondary"
-                class="mr-1"
-                @click="handleReplace()"
-              >
-                <v-icon color="secondary" left>mdi-folder-move</v-icon>Replace
-              </v-btn>
+          <v-btn small outlined color="secondary" class="btn--hover" @click="handleHistory()">
+            <v-icon color="secondary">mdi-history</v-icon>History
+          </v-btn>
+        </template>
+      </package-toolbar>
 
-              <v-btn small outlined color="secondary" @click="handleHistory()">
-                <v-icon color="secondary">mdi-history</v-icon>History
-              </v-btn>
-            </div>
-          </v-flex>
-        </v-toolbar>
-        <v-expand-transition>
-          <resumable-upload
-            v-if="isRaplace"
-            @cancelUpload="handleReplace"
-            class="py-2"
-            :id="packageId"
-            :finishUpload="finishUpload"
-          />
-        </v-expand-transition>
-
-        <package-tree
-          :items="treeView"
-          :height="calcHeight"
-          :breadcrumbs="breadcrumbs"
-          @clickOnRow="handleClickOnRow"
-        />
-      </div>
+      <v-expand-transition>
+        <resumable-upload v-if="isRaplace" @cancelUpload="handleReplace" class="py-2 px-4" :id="packageId" />
+      </v-expand-transition>
+      <package-file v-if="file" :file="file" :fileSource="fileSource" :currentPath="currentPath" />
+      <package-tree v-else :items="treeView" :height="calcHeight" @clickOnRow="handleClickOnRow" />
     </v-col>
   </v-row>
 </template>
 
 <script>
 import { useWindowSize } from '@u3u/vue-hooks'
-import usePackages from '@packages/composition/usePackages'
-import useForceFileDownload from '@/core/composition/useForceFileDownload'
-
 import { defineComponent } from '@vue/composition-api'
 import PackageFile from '@package/components/PackageFile'
 import PackageTree from '@package/components/PackageTree'
 import { headers, FileIcons } from '@package/utils/index'
+import usePackages from '@packages/composition/usePackages'
+import PackageToolbar from '@/features/package/components/PackageToolbar'
 import { ref, watch, onBeforeMount, computed } from '@vue/composition-api'
+import useForceFileDownload from '@/core/composition/useForceFileDownload'
 import usePackageStore from '@/features/package/composition/usePackageStore'
 import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
 
@@ -81,18 +64,19 @@ export default defineComponent({
   components: {
     PackageFile,
     PackageTree,
+    PackageToolbar,
     ResumableUpload: () => import('@/features/package/components/resumable-upload/ResumableUpload.vue')
   },
 
   setup(props, context) {
     const { height } = useWindowSize()
-    const packageStore = usePackageStore()
     const packages = usePackages(context)
-
-    const breadcrumbs = usePackageBreadcrumbs(context)
+    const packageStore = usePackageStore()
     const forceFileDownload = useForceFileDownload()
+    const breadcrumbs = usePackageBreadcrumbs(context)
 
     const isRaplace = ref(false)
+    const file = ref(packageStore.file)
 
     onBeforeMount(async () => {
       const { projectId, packageId, folderName } = context.root.$route.params
@@ -104,7 +88,7 @@ export default defineComponent({
       })
     })
 
-    const calcHeight = computed(() => height.value - 430)
+    const calcHeight = computed(() => height.value - 370)
     const path = computed(() => context.root.$route.params.folderName || '/')
 
     const currentPath = computed(() => {
@@ -140,8 +124,12 @@ export default defineComponent({
     })
 
     const handleClickOnRow = async item => {
-      const { workspaceId, projectId, packageId, versionId, folderName = '' } = context.root.$route.params
+      const { workspaceId, projectId, packageId, versionId = 0, folderName = '' } = context.root.$route.params
+
       let path = `/${workspaceId}/project/${projectId}/${packageId}/version/${versionId}/${folderName}/${item.name}`
+      if (item.parent === '/') {
+        path = `/${workspaceId}/project/${projectId}/${packageId}/version/${versionId}/${item.name}`
+      }
 
       if (typeof item.path === 'undefined') {
         path = `/${workspaceId}/project/${projectId}/${packageId}/version/${versionId}`
@@ -173,23 +161,29 @@ export default defineComponent({
 
     const handleReplace = () => (isRaplace.value = !isRaplace.value)
 
-    const finishUpload = packageStore.finishUpload
+    const handeBackToPackageRoot = () => {
+      const { workspaceId, projectId, packageId } = context.root.$route.params
+      context.root.$router.push({
+        name: 'workspace-project-package',
+        params: { workspaceId, projectId, packageId }
+      })
+    }
 
     return {
-      packageId: context.root.$route.params.packageId,
       file: packageStore.file,
       fileSource: packageStore.fileSource,
+      packageId: context.root.$route.params.packageId,
       treeView,
       FileIcons,
+      isRaplace,
       calcHeight,
-      finishUpload,
       breadcrumbs,
       currentPath,
-      isRaplace,
       handleReplace,
       handleHistory,
       handleDownload,
-      handleClickOnRow
+      handleClickOnRow,
+      handeBackToPackageRoot
     }
   }
 })

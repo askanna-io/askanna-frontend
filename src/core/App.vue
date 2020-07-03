@@ -82,4 +82,15 @@ export default class App extends Vue {
 .text-body-1 {
   font-size: 16px !important;
 }
+
+.v-chip.v-chip--clickable.btn--hover:hover,
+.v-btn.btn--hover:hover {
+  color: #6a4580 !important;
+  border: 1px solid #6a4580 !important;
+  border-color: #6a4580 !important;
+}
+.btn--hover:hover .v-avatar .v-avatar--left,
+.v-btn.btn--hover:hover i::before {
+  color: #6a4580 !important;
+}
 </style>

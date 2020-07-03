@@ -2,7 +2,7 @@ export const FileIcons = {
   html: 'mdi-language-html5',
   js: 'mdi-nodejs',
   json: 'mdi-json',
-  md: 'mdi-markdown',
+  md: 'mdi-language-markdown',
   pdf: 'mdi-file-pdf',
   png: 'mdi-file-image',
   txt: 'mdi-file-document-outline',
@@ -16,7 +16,6 @@ export const FileIcons = {
   ini: 'mdi-file-cog-outline',
   bat: 'mdi-file-cog-outline'
 }
-
 export const headers = [
   {
     text: '',

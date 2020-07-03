@@ -71,15 +71,6 @@ const packageRoutes = [
     }
   },
   {
-    path: 'replace',
-    component: () =>
-      import(/* webpackChunkName: "workspace-project-package-replace" */ './views/project/package/replace.vue'),
-    name: 'workspace-project-package-replace',
-    meta: {
-      breadcrumb: 'Replace'
-    }
-  },
-  {
     path: 'version',
     redirect: { name: 'workspace-project-packages' }
   },
