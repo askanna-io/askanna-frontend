@@ -61,6 +61,7 @@ import ReplaceInfo from './ReplaceInfo.vue'
 import ConfirmDialog from './ConfirmDialog.vue'
 
 import Resumablejs from '@/core/plugins/resumable.js'
+import useUploadStatus from '@/core/components/uploadStatus/useUploadStatus'
 import usePackageStore from '@/features/package/composition/usePackageStore'
 
 import { ref, watch, reactive, computed, defineComponent, onMounted } from '@vue/composition-api'
@@ -93,6 +94,7 @@ export default defineComponent({
 
   setup(props, context) {
     const packageStore = usePackageStore()
+    const uploadStatus = useUploadStatus()
 
     const r = ref(null)
     const draggable = ref(null)
@@ -151,7 +153,18 @@ export default defineComponent({
         isUploadStart.value = true
       })
 
-      r.value.on('fileProgress', file => (progress.value = Math.floor(file.progress() * 100)))
+      r.value.on('fileProgress', file => {
+        const prg = Math.floor(file.progress() * 100)
+
+        progress.value = prg
+        uploadStatus.setUpload({
+          id: file.uniqueIdentifier,
+          name: file.fileName,
+          progress: prg,
+          projectId: projectShortUuid,
+          packageId: currentPackageData.value.short_uuid
+        })
+      })
 
       r.value.on('fileSuccess', async file => {
         handleFinishUpload(file)
@@ -232,33 +245,48 @@ export default defineComponent({
       const result = await packageStore.finishUpload({ uuid: short_uuid, data })
 
       isUploadFinish.value = true
+      isUploadStart.value = false
+      isPackageRegister.value = false
     }
 
     const uploadFiles = async () => {
+      uploadStatus.addUpload({
+        id: file.value.uniqueIdentifier,
+        progress: 0,
+        projectId: projectShortUuid,
+        packageId: currentPackageData.value.short_uuid
+      })
+
       r.value.upload()
+      handleConfirmationClosed()
     }
 
     const handleDeleteFile = uniqueIdentifier => {
       const file = r.value.getFromUniqueIdentifier(uniqueIdentifier)
 
       r.value.removeFile(file)
+      isUploadStart.value = false
       isPackageRegister.value = false
     }
 
     const handleConfirmationClosed = () => {
+      isUploadStart.value = false
       showConfirmation.value = false
+      isPackageRegister.value = false
 
       if (!isUploadStart.value) {
         return
       }
+      console.log(file.value)
+      handleDeleteFile(file.value.uniqueIdentifier)
 
-      context.root.$router.push({
+      /*   context.root.$router.push({
         name: 'workspace-project-package',
         params: {
           projectId: projectShortUuid,
           packageId: currentPackageData.value.short_uuid
         }
-      })
+      }) */
     }
 
     const handleCancel = () => context.emit('cancelUpload')

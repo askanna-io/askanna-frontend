@@ -5,6 +5,7 @@ export const FileIcons = {
   md: 'mdi-language-markdown',
   pdf: 'mdi-file-pdf',
   png: 'mdi-file-image',
+  jpg: 'mdi-file-image',
   txt: 'mdi-file-document-outline',
   yml: 'mdi-file-document-outline',
   rst: 'mdi-file-document-outline',
