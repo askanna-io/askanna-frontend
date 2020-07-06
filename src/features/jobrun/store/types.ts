@@ -8,7 +8,9 @@ export interface jobRubData {
   jobRunLoading: Boolean
   resultLoading: Boolean
   payLoadLoading: Boolean
+  jobRunlogLoading: Boolean
   jobRunResult: any
+  jobRunLog: any[]
 }
 
 export interface JobRun {
@@ -56,6 +58,7 @@ export const action = {
   setLoading: 'setLoading',
   resetStore: 'resetStore',
   getRunsJob: 'getRunsJob',
+  getJobRunLog: 'getJobRunLog',
   getJobRunResult: 'getJobRunResult',
   getJobRunPayload: 'getJobRunPayload',
   showJobRunResult: 'showJobRunResult',
@@ -73,6 +76,7 @@ export const mutation = {
 //mutations
 export const SET_JOB_RUN = 'SET_JOB_RUN'
 export const SET_JOB_RUNS = 'SET_JOB_RUNS'
+export const SET_JOB_RUN_LOG = 'SET_JOB_RUN_LOG'
 export const UPDATE_JOB_RESULT = 'UPDATE_JOB_RESULT'
 export const SET_JOB_RUN_RESULT = 'SET_JOB_RUN_RESULT'
 export const SET_JOB_RUN_PAYLOAD = 'SET_JOB_RUN_PAYLOAD'
@@ -80,7 +84,8 @@ export const SET_JOB_RUN_PAYLOAD = 'SET_JOB_RUN_PAYLOAD'
 export const stateType = {
   jobRunLoading: 'jobRunLoading',
   resultLoading: 'resultLoading',
-  payLoadLoading: 'payLoadLoading'
+  payLoadLoading: 'payLoadLoading',
+  jobRunlogLoading: 'jobRunlogLoading'
 }
 
 export class JobRunModel {
