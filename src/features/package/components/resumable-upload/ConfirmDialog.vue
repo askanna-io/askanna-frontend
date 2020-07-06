@@ -17,7 +17,9 @@
         </v-btn>
 
         <v-progress-linear v-if="isUploadStart && !isUploadFinish" :buffer-value="progress" stream color="cyan" />
-        <v-alert v-if="isUploadFinish" outlined dense type="success">Finish uploading package</v-alert>
+        <v-alert v-if="isUploadFinish" outlined dense type="success"
+          >Upload was started in backgorun process, fell free to use AskAnna.</v-alert
+        >
       </v-card-text>
       <v-card-actions>
         <v-btn color="primary" text @click="dialog = false">

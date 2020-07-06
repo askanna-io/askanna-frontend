@@ -160,6 +160,9 @@
             </v-flex>
           </div>
           <div class="text-right hidden-sm-and-down">
+            <v-btn @click="handleShowHideUploadStatus" icon :color="colorStatus">
+              <v-icon>mdi-timelapse</v-icon>
+            </v-btn>
             <span v-if="isNotBeta">Build version:&nbsp;{{ version }}</span>
             <v-menu transition="slide-y-transition" offset-y>
               <template v-slot:activator="{ on }">
@@ -177,9 +180,6 @@
                 </v-list-item>
               </v-list>
             </v-menu>
-            <v-btn @click="handleShowHideUploadStatus" icon :color="colorStatus">
-              <v-icon>mdi-timelapse</v-icon>
-            </v-btn>
           </div>
         </div>
       </v-container>

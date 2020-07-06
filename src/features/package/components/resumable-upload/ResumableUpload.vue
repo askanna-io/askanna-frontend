@@ -18,20 +18,14 @@
         </div>
       </div>
       <span ref="browseButton">
-        <v-btn
-          class="my-2 mr-2"
-          v-if="fileRecordsForUpload && !fileRecordsForUpload.length"
-          small
-          outlined
-          color="secondary"
-        >
+        <v-btn class="my-2 mr-2" v-if="!isFileAdded" small outlined color="secondary">
           <v-icon color="secondary" left>mdi-upload</v-icon>Browse
         </v-btn>
       </span>
       <span ref="uploadFiles">
         <v-btn
           class="my-2 mr-2"
-          v-if="fileRecordsForUpload && fileRecordsForUpload.length"
+          v-if="isFileAdded && fileRecordsForUpload && fileRecordsForUpload.length"
           small
           outlined
           @click="handleConfirmUpload"
@@ -103,6 +97,7 @@ export default defineComponent({
 
     const file = ref(null)
     const progress = ref(0)
+    const isFileAdded = ref(false)
     const isUploadStart = ref(false)
     const isUploadFinish = ref(false)
     const showConfirmation = ref(false)
@@ -147,9 +142,14 @@ export default defineComponent({
       r.value.on('fileAdded', async function (r, event) {
         event.preventDefault()
         file.value = r.file
+        isFileAdded.value = true
+        isUploadStart.value = false
+        isUploadFinish.value = false
+        showConfirmation.value = false
       })
 
       r.value.on('uploadStart', function () {
+        isFileAdded.value = false
         isUploadStart.value = true
       })
 
@@ -265,20 +265,20 @@ export default defineComponent({
       const file = r.value.getFromUniqueIdentifier(uniqueIdentifier)
 
       r.value.removeFile(file)
+      isFileAdded.value = false
       isUploadStart.value = false
+      isUploadFinish.value = false
+      showConfirmation.value = false
       isPackageRegister.value = false
     }
 
     const handleConfirmationClosed = () => {
+      isFileAdded.value = false
       isUploadStart.value = false
+      isUploadFinish.value = false
       showConfirmation.value = false
       isPackageRegister.value = false
-
-      if (!isUploadStart.value) {
-        return
-      }
-      console.log(file.value)
-      handleDeleteFile(file.value.uniqueIdentifier)
+      // handleDeleteFile(file.value.uniqueIdentifier)
 
       /*   context.root.$router.push({
         name: 'workspace-project-package',
@@ -295,6 +295,7 @@ export default defineComponent({
       progress,
       draggable,
       uploadFiles,
+      isFileAdded,
       browseButton,
       handleCancel,
       isUploadStart,

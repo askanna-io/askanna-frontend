@@ -1,5 +1,5 @@
 <template>
-  <div class="file-preview-wrapper grid-box-item grid-block grid-box-enter-to">
+  <div v-if="!isUploadStart" class="file-preview-wrapper grid-box-item grid-block grid-box-enter-to">
     <div class="file-preview-wrapper-zip file-preview-wrapper-other file-category-archive is-deletable">
       <span class="file-preview other-preview" style="background-color: rgb(186, 131, 34);"
         ><span class="file-preview-overlay"></span><span class="file-ext">{{ resumableFile.file.type }}</span
@@ -29,6 +29,10 @@ export default defineComponent({
   name: 'FilePreview',
 
   props: {
+    isUploadStart: {
+      type: Boolean,
+      default: false
+    },
     resumableFile: {
       type: Object,
       default: function () {
