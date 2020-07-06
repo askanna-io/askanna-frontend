@@ -62,7 +62,7 @@ import { useWindowSize } from '@u3u/vue-hooks'
 import useMoment from '@/core/composition/useMoment'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
 import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
-import { reactive, computed, defineComponent } from '@vue/composition-api'
+import { reactive, computed, onBeforeMount, defineComponent } from '@vue/composition-api'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
 
 export default defineComponent({
@@ -76,17 +76,24 @@ export default defineComponent({
     const snackBar = useSnackBar()
     const moment = useMoment(context)
     const { height } = useWindowSize()
+    const jobRunStore = useJobRunStore()
     const forceFileDownload = useForceFileDownload()
 
-    const jobRunStore = useJobRunStore()
+    onBeforeMount(async () => {
+      const { jobRunId } = context.root.$route.params
+
+      jobRunStore.getJobRunLog(jobRunId)
+    })
+
     const logs = computed(() => {
-      if (!jobRunStore.jobRun.value.stdout) return ''
+      if (!jobRunStore.jobRunLog.value) return ''
 
       const reducer = (acc, cr) => {
         acc = acc + `${cr[2]} \n`
         return acc
       }
-      const result = jobRunStore.jobRun.value.stdout.length ? jobRunStore.jobRun.value.stdout.reduce(reducer, ``) : ''
+      const result = jobRunStore.jobRunLog.value.length ? jobRunStore.jobRunLog.value.reduce(reducer, ``) : ''
+
       return result
     })
 
@@ -94,9 +101,8 @@ export default defineComponent({
     const scrollerStyles = computed(() => {
       return { 'max-height': `${maxHeight.value}px` }
     })
-    const loading = computed(() => jobRunStore.jobRun.value.stdout && jobRunStore.jobRun.value.stdout.length === 0)
-
-    const logNoAvailable = computed(() => jobRunStore.jobRun.value.stdout === null)
+    const loading = computed(() => jobRunStore.jobRunlogLoading.value)
+    const logNoAvailable = computed(() => jobRunStore.jobRunLog.value === null && !loading.value)
 
     const handleCopy = () => {
       context.root.$copyText(logs.value).then(
