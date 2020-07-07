@@ -27,7 +27,7 @@
       <v-divider class="mb-1" />
 
       <template v-if="snackbar.message">{{ snackbar.message }}</template>
-      <div v-for="item in uploads" v-bind:key="item.id">
+      <div v-for="(item, index) in uploads" v-bind:key="item.id + index">
         <small
           ><v-btn
             x-small

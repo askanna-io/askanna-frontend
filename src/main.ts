@@ -13,6 +13,10 @@ import vuetify from '@/core/plugins/vuetify'
 import 'vue-file-agent/dist/vue-file-agent.css'
 import VueCompositionApi from '@vue/composition-api'
 
+import VueKinesis from 'vue-kinesis'
+
+Vue.use(VueKinesis)
+
 import 'prismjs'
 import 'prismjs/themes/prism-tomorrow.css'
 import 'vue-prism-editor/dist/VuePrismEditor.css'

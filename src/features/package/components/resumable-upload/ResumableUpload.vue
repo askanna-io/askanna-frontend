@@ -9,8 +9,9 @@
             <div>
               <file-preview
                 v-for="(resumableFile, index) in fileRecordsForUpload"
+                :isUploadStart="isUploadStart"
                 :resumableFile="resumableFile"
-                :key="index"
+                :key="index + getIndex()"
                 @deleteFile="handleDeleteFile"
               />
             </div>
@@ -125,6 +126,7 @@ export default defineComponent({
         testMethod: 'POST',
         preupload: preupload,
         preprocess: preprocess,
+        generateUniqueIdentifier: generateUniqueIdentifier,
         maxChunkRetries: 3,
         maxFiles: 1,
         fileType: ['zip'],
@@ -141,6 +143,8 @@ export default defineComponent({
 
       r.value.on('fileAdded', async function (r, event) {
         event.preventDefault()
+        r.file['systemId'] = getIndex()
+        console.log(r.file)
         file.value = r.file
         isFileAdded.value = true
         isUploadStart.value = false
@@ -157,6 +161,7 @@ export default defineComponent({
         const prg = Math.floor(file.progress() * 100)
 
         progress.value = prg
+        console.log(file)
         uploadStatus.setUpload({
           id: file.uniqueIdentifier,
           name: file.fileName,
@@ -194,6 +199,8 @@ export default defineComponent({
       currentPackageData.value = { uuid, short_uuid }
       isPackageRegister.value = true
     }
+
+    const generateUniqueIdentifier = file => `${file.name}.${Date.now()}`
 
     const handleConfirmUpload = () => {
       showConfirmation.value = true
@@ -251,7 +258,7 @@ export default defineComponent({
 
     const uploadFiles = async () => {
       uploadStatus.addUpload({
-        id: file.value.uniqueIdentifier,
+        id: file.uniqueIdentifier,
         progress: 0,
         projectId: projectShortUuid,
         packageId: currentPackageData.value.short_uuid
@@ -291,6 +298,8 @@ export default defineComponent({
 
     const handleCancel = () => context.emit('cancelUpload')
 
+    const getIndex = () => Date.now()
+
     return {
       progress,
       draggable,
@@ -306,6 +315,7 @@ export default defineComponent({
       handleConfirmUpload,
       fileRecordsForUpload,
       handleDeleteFile,
+      getIndex,
       handleConfirmationClosed
     }
   }

@@ -20,10 +20,22 @@ export const actions: ActionTree<PackageState, RootState> = {
         uuid
       })
     } catch (e) {
+      if (e.response && e.response.status === 500) {
+        commit(type.SET_PROCESSING_LIST, uuid)
+        commit(type.SET_PACKAGE, {
+          packageData: {
+            files: []
+          }
+        })
+
+        return
+      }
       logger.error(commit, 'Error on load packageData in getPackage action.\nError: ', e)
 
       return
     }
+
+    commit(type.REMOVE_FROM_PROCESSING_LIST, uuid)
     commit(type.SET_PACKAGE, { packageData })
   },
 

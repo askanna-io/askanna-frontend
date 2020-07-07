@@ -4,6 +4,7 @@ export interface PackageData {
   packageData?: Package
   file: string
   fileSource: Blob
+  processingList: any[]
 }
 
 export interface File {
@@ -43,6 +44,8 @@ export const registerChunkPackage = 'registerChunkPackage'
 //mutations
 export const SET_FILE = 'SET_FILE'
 export const SET_PACKAGE = 'SET_PACKAGE'
+export const SET_PROCESSING_LIST = 'SET_PROCESSING_LIST'
+export const REMOVE_FROM_PROCESSING_LIST = 'REMOVE_FROM_PROCESSING_LIST'
 
 export class PackageModel {
   private _state: Package

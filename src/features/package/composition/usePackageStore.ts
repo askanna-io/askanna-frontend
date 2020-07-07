@@ -11,7 +11,12 @@ import {
 
 export default function () {
   const state = {
-    ...useState(PACKAGE_STORE, { packageData: 'packageData', file: 'file', fileSource: 'fileSource' })
+    ...useState(PACKAGE_STORE, {
+      file: 'file',
+      fileSource: 'fileSource',
+      packageData: 'packageData',
+      processingList: 'processingList'
+    })
   }
 
   const actions = {

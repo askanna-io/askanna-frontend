@@ -39,8 +39,13 @@
       <v-expand-transition>
         <resumable-upload v-if="isRaplace" @cancelUpload="handleReplace" class="py-2 px-4" :id="packageId" />
       </v-expand-transition>
-      <package-file v-if="file" :file="file" :fileSource="fileSource" :currentPath="currentPath" />
-      <package-tree v-else :items="treeView" :height="calcHeight" @clickOnRow="handleClickOnRow" />
+      <template v-if="isProcessing">
+        <package-processing />
+      </template>
+      <template v-else>
+        <package-file v-if="file" :file="file" :fileSource="fileSource" :currentPath="currentPath" />
+        <package-tree v-else :items="treeView" :height="calcHeight" @clickOnRow="handleClickOnRow" />
+      </template>
     </v-col>
   </v-row>
 </template>
@@ -53,7 +58,7 @@ import PackageTree from '@package/components/PackageTree'
 import { headers, FileIcons } from '@package/utils/index'
 import usePackages from '@packages/composition/usePackages'
 import PackageToolbar from '@/features/package/components/PackageToolbar'
-import { ref, watch, onBeforeMount, computed } from '@vue/composition-api'
+import { ref, watch, onBeforeMount, onUnmounted, computed } from '@vue/composition-api'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
 import usePackageStore from '@/features/package/composition/usePackageStore'
 import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
@@ -65,6 +70,7 @@ export default defineComponent({
     PackageFile,
     PackageTree,
     PackageToolbar,
+    PackageProcessing: () => import('@/features/package/components/PackageProcessing.vue'),
     ResumableUpload: () => import('@/features/package/components/resumable-upload/ResumableUpload.vue')
   },
 
@@ -75,21 +81,43 @@ export default defineComponent({
     const forceFileDownload = useForceFileDownload()
     const breadcrumbs = usePackageBreadcrumbs(context)
 
+    const polling = ref(null)
     const isRaplace = ref(false)
     const file = ref(packageStore.file)
+    const { workspaceId, projectId, packageId, versionId = 0, folderName = '' } = context.root.$route.params
 
     onBeforeMount(async () => {
-      const { projectId, packageId, folderName } = context.root.$route.params
+      await getPackage()
+      pollData()
+    })
 
+    onUnmounted(() => {
+      clearInterval(polling.value)
+    })
+
+    const getPackage = async () =>
       await packageStore.getPackage({
         projectId,
         packageId,
         folderName
       })
-    })
+
+    const pollData = () => {
+      polling.value = setInterval(async () => {
+        await getPackage()
+        checkProcessing()
+      }, 10000)
+    }
+
+    const checkProcessing = () => {
+      if (!isProcessing.value) {
+        clearInterval(polling.value)
+      }
+    }
 
     const calcHeight = computed(() => height.value - 370)
     const path = computed(() => context.root.$route.params.folderName || '/')
+    const isProcessing = computed(() => packageStore.processingList.value.find(item => item.packageId === packageId))
 
     const currentPath = computed(() => {
       const pathArray = path.value.split('/')
@@ -124,8 +152,6 @@ export default defineComponent({
     })
 
     const handleClickOnRow = async item => {
-      const { workspaceId, projectId, packageId, versionId = 0, folderName = '' } = context.root.$route.params
-
       let path = `/${workspaceId}/project/${projectId}/${packageId}/version/${versionId}/${folderName}/${item.name}`
       if (item.parent === '/') {
         path = `/${workspaceId}/project/${projectId}/${packageId}/version/${versionId}/${item.name}`
@@ -143,7 +169,6 @@ export default defineComponent({
     }
 
     const handleHistory = () => {
-      const { projectId, packageId } = context.root.$route.params
       context.root.$router.push({
         name: 'workspace-project-package-history',
         params: { projectId, packageId, versionId: '1' }
@@ -162,7 +187,6 @@ export default defineComponent({
     const handleReplace = () => (isRaplace.value = !isRaplace.value)
 
     const handeBackToPackageRoot = () => {
-      const { workspaceId, projectId, packageId } = context.root.$route.params
       context.root.$router.push({
         name: 'workspace-project-package',
         params: { workspaceId, projectId, packageId }
@@ -172,13 +196,14 @@ export default defineComponent({
     return {
       file: packageStore.file,
       fileSource: packageStore.fileSource,
-      packageId: context.root.$route.params.packageId,
       treeView,
+      packageId,
       FileIcons,
       isRaplace,
       calcHeight,
       breadcrumbs,
       currentPath,
+      isProcessing,
       handleReplace,
       handleHistory,
       handleDownload,
