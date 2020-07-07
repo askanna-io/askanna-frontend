@@ -144,7 +144,6 @@ export default defineComponent({
       r.value.on('fileAdded', async function (r, event) {
         event.preventDefault()
         r.file['systemId'] = getIndex()
-        console.log(r.file)
         file.value = r.file
         isFileAdded.value = true
         isUploadStart.value = false
@@ -161,7 +160,6 @@ export default defineComponent({
         const prg = Math.floor(file.progress() * 100)
 
         progress.value = prg
-        console.log(file)
         uploadStatus.setUpload({
           id: file.uniqueIdentifier,
           name: file.fileName,
