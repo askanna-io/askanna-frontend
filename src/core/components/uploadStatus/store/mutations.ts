@@ -31,13 +31,10 @@ export const mutations: MutationTree<UploadStatusState> = {
       ...data,
       open: true
     }
-    console.log(item)
     state.uploads.push(item)
   },
 
   [mt.SET_UPLOAD](state, data) {
-    console.log(data)
-
     const index = state.uploads.findIndex(item => item.id === data.id)
     const item = state.uploads[index]
 
