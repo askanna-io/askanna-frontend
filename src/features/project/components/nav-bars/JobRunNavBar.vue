@@ -1,43 +1,35 @@
 <template>
   <div>
-    <v-toolbar
-      dense
-      color="white"
-      v-sticky="true"
-      class="br-r5 ma-3"
-      on-stick="onStick"
-      :sticky-margin-width="23"
-      sticky-offset="{top: 52, bottom: 10}"
-      :flat="!sticked"
-    >
-      <v-btn
-        v-if="!sticked"
-        text
-        icon
-        class="align-self-center mr-4"
-        :color="(isShowProjectBar && 'primary') || ''"
-        @click="isShowProjectBar = !isShowProjectBar"
-      >
-        <v-icon>mdi-menu</v-icon>
-      </v-btn>
+    <div v-sticky="true" on-stick="onStick" :sticky-margin-width="0" sticky-offset="{top: 52, bottom: 10}">
+      <v-toolbar dense color="white" class="br-r5 ma-3" :flat="!sticked">
+        <v-btn
+          text
+          icon
+          class="align-self-center mr-4"
+          :color="(isShowProjectBar && 'primary') || ''"
+          @click="isShowProjectBar = !isShowProjectBar"
+        >
+          <v-icon>mdi-menu</v-icon>
+        </v-btn>
 
-      <v-breadcrumbs :items="breadcrumbs">
-        <template v-slot:item="{ item }">
-          <v-breadcrumbs-item :to="item.to" exact>
-            {{ item.title }}
-          </v-breadcrumbs-item>
-        </template>
-      </v-breadcrumbs>
-      <v-spacer />
-    </v-toolbar>
-    <v-slide-y-transition>
-      <div v-if="isShowProjectBar">
-        <v-divider />
-        <project-tool-bar :projectName="project.name" />
-        <v-divider />
-        <job-tool-bar :jobName="jobName" :projectName="project.name" />
-      </div>
-    </v-slide-y-transition>
+        <v-breadcrumbs :items="breadcrumbs">
+          <template v-slot:item="{ item }">
+            <v-breadcrumbs-item :to="item.to" exact>
+              {{ item.title }}
+            </v-breadcrumbs-item>
+          </template>
+        </v-breadcrumbs>
+        <v-spacer />
+      </v-toolbar>
+      <v-slide-y-transition>
+        <v-card v-show="isShowProjectBar" :flat="!sticked" :class="{ 'ma-3': sticked }">
+          <v-divider />
+          <project-tool-bar :projectName="project.name" />
+          <v-divider />
+          <job-tool-bar :jobName="jobName" :projectName="project.name" />
+        </v-card>
+      </v-slide-y-transition>
+    </div>
     <v-divider />
 
     <v-card flat>
