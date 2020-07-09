@@ -1,12 +1,25 @@
 <template>
   <div>
-    <v-breadcrumbs :items="projectBreadcrumbs">
-      <template v-slot:item="{ item }">
-        <v-breadcrumbs-item :to="item.to" exact>
-          {{ item.title }}
-        </v-breadcrumbs-item>
-      </template>
-    </v-breadcrumbs>
+    <v-toolbar
+      ref="refToolbar"
+      dense
+      color="white"
+      v-sticky="true"
+      class="br-r5 ma-3"
+      on-stick="onStick"
+      :sticky-margin-width="23"
+      sticky-offset="{top: 52, bottom: 10}"
+      :flat="!sticked"
+    >
+      <v-breadcrumbs :items="projectBreadcrumbs">
+        <template v-slot:item="{ item }">
+          <v-breadcrumbs-item :to="item.to" exact>
+            {{ item.title }}
+          </v-breadcrumbs-item>
+        </template>
+      </v-breadcrumbs>
+    </v-toolbar>
+
     <v-divider />
     <v-card-title>
       <v-icon large left>
@@ -19,16 +32,7 @@
       {{ project.description }}
     </v-card-text>
     <v-divider />
-    <v-toolbar
-      dense
-      color="white"
-      v-sticky="true"
-      sticky-container
-      class="br-r5 ma-3"
-      on-stick="onStick"
-      sticky-offset="{top: 52, bottom: 10}"
-      :flat="!sticked"
-    >
+    <v-toolbar dense color="white" flat class="br-r5 ma-3">
       <v-tabs v-model="currentTab" left align-with-title>
         <v-tabs-slider color="primary" />
         <template v-for="tab of projectTools">
@@ -48,8 +52,8 @@
   </div>
 </template>
 <script>
+import { ref, defineComponent } from '@vue/composition-api'
 import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
-import { defineComponent, ref } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'DefaultBar',
@@ -71,6 +75,7 @@ export default defineComponent({
 
   setup(props, context) {
     let sticked = ref(false)
+    const refToolbar = ref(null)
 
     const currentTab = ref('workspace-project-activity')
     const projectTools = [
@@ -102,10 +107,10 @@ export default defineComponent({
     ]
 
     const onStick = data => {
-      sticked = data.sticked
+      sticked.value = data.sticked
     }
 
-    return { sticked, projectTools, currentTab }
+    return { sticked, onStick, refToolbar, projectTools, currentTab }
   }
 })
 </script>

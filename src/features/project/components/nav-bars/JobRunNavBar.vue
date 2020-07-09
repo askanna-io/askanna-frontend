@@ -6,10 +6,12 @@
       v-sticky="true"
       class="br-r5 ma-3"
       on-stick="onStick"
+      :sticky-margin-width="23"
       sticky-offset="{top: 52, bottom: 10}"
       :flat="!sticked"
     >
       <v-btn
+        v-if="!sticked"
         text
         icon
         class="align-self-center mr-4"
@@ -161,7 +163,7 @@ export default defineComponent({
     ]
 
     const onStick = data => {
-      sticked = data.sticked
+      sticked.value = data.sticked
     }
 
     const { jobId, jobRunId } = context.root.$route.params
