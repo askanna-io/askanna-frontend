@@ -50,7 +50,15 @@ export default defineComponent({
     })
 
     const calcHeight = computed(() => height.value - 380)
-    const path = computed(() => context.root.$route.params.folderName || '/')
+    const path = computed(() => {
+      const folderName = context.root.$route.params.folderName || '/'
+      if (folderName === '/') return folderName
+
+      const isRootPath = folderName.indexOf('/')
+      const tmpPath = isRootPath === 0 ? folderName.slice(1) : folderName
+
+      return tmpPath
+    })
 
     const currentPath = computed(() => {
       const pathArray = path.value.split('/')
@@ -58,6 +66,7 @@ export default defineComponent({
       const current = packageStore.packageData.value.files.find(
         item => item.name === fileName && item.path === path.value
       )
+
       return current
     })
 
