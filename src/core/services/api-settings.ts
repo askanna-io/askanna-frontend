@@ -24,8 +24,8 @@ const apiUrl = process.env.VUE_APP_API_URL
 const apiPort = process.env.VUE_APP_API_PORT
 
 export const api: ApiSettings = {
-  url: () => `https://beta-api.askanna.eu/`,
-  apiUrl: () => `https://beta-api.askanna.eu/v1/`,
+  url: () => `${apiUrl}:${apiPort}/`,
+  apiUrl: () => `${apiUrl}:${apiPort}/v1/`,
   // auth api
   auth: {
     login: () => `rest-auth/login/`,
