@@ -93,4 +93,9 @@ export default class App extends Vue {
 .v-btn.btn--hover:hover i::before {
   color: #6a4580 !important;
 }
+
+.v-application code {
+  color: #6a4580 !important;
+  background-color: #eee !important;
+}
 </style>

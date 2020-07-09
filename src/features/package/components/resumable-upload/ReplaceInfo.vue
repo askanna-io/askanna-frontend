@@ -6,7 +6,16 @@
       <div class="text--primary">
         <p>
           If you want to replace this code package, you are in the right place. Below you can find instructions on how
-          you can use the AskAnna CLI (add link) to push a new version of the code to this project.
+          you can use the AskAnna CLI (<code class="px-2 mr-2 text-primary">{{ cliInstall }}</code>
+          <v-tooltip top>
+            <template v-slot:activator="{ on }">
+              <v-btn x-small v-on="on" outlined color="secondary" @click.stop="handleCopyCLIInstall()">
+                <v-icon small color="secondary">mdi-content-copy</v-icon>
+              </v-btn>
+            </template>
+            <span>Copy</span>
+          </v-tooltip>
+          ) to push a new version of the code to this project.
         </p>
         <p>
           Also, you can drag &amp; drop a (zip) file to this screen. You can upload a single file, or make a zip file of
@@ -14,8 +23,16 @@
         </p>
         <div>COMMAND LINE INSTRUCTIONS</div>
         <p>
-          If you have installed the AskAnna CLI { add link / or if you click on it show a popup with install CLI
-          instruction }, you can use the command line interface.
+          If you have installed the AskAnna CLI (<code class="px-2 mr-2 text-primary">{{ cliInstall }}</code>
+          <v-tooltip top>
+            <template v-slot:activator="{ on }">
+              <v-btn x-small v-on="on" outlined color="secondary" @click.stop="handleCopyCLIInstall()">
+                <v-icon small color="secondary">mdi-content-copy</v-icon>
+              </v-btn>
+            </template>
+            <span>Copy</span>
+          </v-tooltip>
+          ), you can use the command line interface.
         </p>
         <p>
           Probably you already have an `askanna.yml` file in your local directory. If not, create one. The AskAnna CLI
@@ -26,7 +43,7 @@
           In the `askanna.yml`, you add the next line. Adding this line is the only configuration you need to do.
         </p>
         <p>
-          <code class="px-2 mr-2">project: {{ projectUrl }}</code>
+          <code class="px-2 mr-2 text-primary">{{ projectUrl }}</code>
           <v-tooltip top>
             <template v-slot:activator="{ on }">
               <v-btn x-small v-on="on" outlined color="secondary" @click.stop="handleCopyProjectSettings()">
@@ -71,10 +88,18 @@ export default defineComponent({
   setup(props, context) {
     const snackBar = useSnackBar()
 
-    const projectUrl = ref(`${url}/${props.projectShortUuid}`)
+    const projectUrl = ref(`push-target: ${url}/${props.projectShortUuid}`)
+    const cliInstall = 'pip install askanna'
 
     const handleCopyProjectSettings = () => {
       context.root.$copyText(projectUrl.value).then(
+        () => snackBar.showSnackBar({ message: 'Copied', color: 'success' }),
+        () => snackBar.showSnackBar({ message: 'Can not copy', color: 'warning' })
+      )
+    }
+
+    const handleCopyCLIInstall = () => {
+      context.root.$copyText(cliInstall).then(
         () => snackBar.showSnackBar({ message: 'Copied', color: 'success' }),
         () => snackBar.showSnackBar({ message: 'Can not copy', color: 'warning' })
       )
@@ -89,7 +114,9 @@ export default defineComponent({
 
     return {
       projectUrl,
+      cliInstall,
       handleCopyComand,
+      handleCopyCLIInstall,
       handleCopyProjectSettings
     }
   }
