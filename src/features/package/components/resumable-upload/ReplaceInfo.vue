@@ -9,7 +9,7 @@
           you can use the AskAnna CLI (<code class="px-2 mr-2 text-primary">{{ cliInstall }}</code>
           <v-tooltip top>
             <template v-slot:activator="{ on }">
-              <v-btn x-small v-on="on" outlined color="secondary" @click.stop="handleCopyCLIInstall()">
+              <v-btn x-small v-on="on" outlined color="secondary" @click.stop="handleCopy(cliInstall)">
                 <v-icon small color="secondary">mdi-content-copy</v-icon>
               </v-btn>
             </template>
@@ -26,7 +26,7 @@
           If you have installed the AskAnna CLI (<code class="px-2 mr-2 text-primary">{{ cliInstall }}</code>
           <v-tooltip top>
             <template v-slot:activator="{ on }">
-              <v-btn x-small v-on="on" outlined color="secondary" @click.stop="handleCopyCLIInstall()">
+              <v-btn x-small v-on="on" outlined color="secondary" @click.stop="handleCopy(cliInstall)">
                 <v-icon small color="secondary">mdi-content-copy</v-icon>
               </v-btn>
             </template>
@@ -46,7 +46,7 @@
           <code class="px-2 mr-2 text-primary">{{ projectUrl }}</code>
           <v-tooltip top>
             <template v-slot:activator="{ on }">
-              <v-btn x-small v-on="on" outlined color="secondary" @click.stop="handleCopyProjectSettings()">
+              <v-btn x-small v-on="on" outlined color="secondary" @click.stop="handleCopy(projectUrl)">
                 <v-icon small color="secondary">mdi-content-copy</v-icon>
               </v-btn>
             </template>
@@ -54,12 +54,21 @@
           </v-tooltip>
         </p>
         <p>
-          In your terminal, make sure you are in one of the project directories. Now you can run `askanna push` [copy
-          button] and follow the instructions in the terminal. If you don’t want to confirm that you want to replace the
-          current package version, you can use <code class="px-2 mr-2">askanna push -f</code>
+          In your terminal, make sure you are in one of the project directories. Now you can run
+          <code class="px-2 mr-2">{{ askannaPush }}</code>
           <v-tooltip top>
             <template v-slot:activator="{ on }">
-              <v-btn v-on="on" x-small outlined color="secondary" @click.stop="handleCopyComand()">
+              <v-btn v-on="on" x-small outlined color="secondary" @click.stop="handleCopy(askannaPush)">
+                <v-icon small color="secondary">mdi-content-copy</v-icon>
+              </v-btn>
+            </template>
+            <span>Copy</span>
+          </v-tooltip>
+          and follow the instructions in the terminal. If you don’t want to confirm that you want to replace the current
+          package version, you can use <code class="px-2 mr-2">{{ askannaPushForce }}</code>
+          <v-tooltip top>
+            <template v-slot:activator="{ on }">
+              <v-btn v-on="on" x-small outlined color="secondary" @click.stop="handleCopy(askannaPushForce)">
                 <v-icon small color="secondary">mdi-content-copy</v-icon>
               </v-btn>
             </template>
@@ -90,23 +99,11 @@ export default defineComponent({
 
     const projectUrl = ref(`push-target: ${url}/${props.projectShortUuid}`)
     const cliInstall = 'pip install askanna'
+    const askannaPush = 'askanna push'
+    const askannaPushForce = 'askanna push -f'
 
-    const handleCopyProjectSettings = () => {
-      context.root.$copyText(projectUrl.value).then(
-        () => snackBar.showSnackBar({ message: 'Copied', color: 'success' }),
-        () => snackBar.showSnackBar({ message: 'Can not copy', color: 'warning' })
-      )
-    }
-
-    const handleCopyCLIInstall = () => {
-      context.root.$copyText(cliInstall).then(
-        () => snackBar.showSnackBar({ message: 'Copied', color: 'success' }),
-        () => snackBar.showSnackBar({ message: 'Can not copy', color: 'warning' })
-      )
-    }
-
-    const handleCopyComand = () => {
-      context.root.$copyText('askanna push -f').then(
+    const handleCopy = text => {
+      context.root.$copyText(text).then(
         () => snackBar.showSnackBar({ message: 'Copied', color: 'success' }),
         () => snackBar.showSnackBar({ message: 'Can not copy', color: 'warning' })
       )
@@ -115,9 +112,9 @@ export default defineComponent({
     return {
       projectUrl,
       cliInstall,
-      handleCopyComand,
-      handleCopyCLIInstall,
-      handleCopyProjectSettings
+      handleCopy,
+      askannaPush,
+      askannaPushForce
     }
   }
 })
