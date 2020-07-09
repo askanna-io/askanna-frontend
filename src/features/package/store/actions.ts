@@ -30,6 +30,7 @@ export const actions: ActionTree<PackageState, RootState> = {
   async [type.getFileSource]({ dispatch, state, commit }, path) {
     if (!path) return commit(type.SET_FILE, '')
     if (!state.packageData) return commit(type.SET_FILE, '')
+    commit(type.RESET_FILE_FILESOURCE)
 
     const url = `${state.packageData.cdn_base_url}/${path}`
 
@@ -50,5 +51,9 @@ export const actions: ActionTree<PackageState, RootState> = {
     const file = await fileSource.text()
 
     commit(type.SET_FILE, { file, fileSource })
+  },
+
+  async [type.resetFile]({ commit }) {
+    commit(type.RESET_FILE_FILESOURCE)
   }
 }

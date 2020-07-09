@@ -18,5 +18,10 @@ export const mutations: MutationTree<PackageState> = {
   [type.SET_FILE](state, { file, fileSource }) {
     state.file = file
     state.fileSource = fileSource
+  },
+
+  [type.RESET_FILE_FILESOURCE](state) {
+    state.file = ''
+    state.fileSource = new Blob()
   }
 }

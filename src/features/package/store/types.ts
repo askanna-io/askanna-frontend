@@ -33,12 +33,14 @@ export const packageServiceName = 'package'
 export const PACKAGE_STORE = 'packageStore'
 
 // actions
+export const resetFile = 'resetFile'
 export const getPackage = 'getPackage'
 export const getFileSource = 'getFileSource'
 
 //mutations
-export const SET_PACKAGE = 'SET_PACKAGE'
 export const SET_FILE = 'SET_FILE'
+export const SET_PACKAGE = 'SET_PACKAGE'
+export const RESET_FILE_FILESOURCE = 'RESET_FILE_FILESOURCE'
 
 export class PackageModel {
   private _state: Package
