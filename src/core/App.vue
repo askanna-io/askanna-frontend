@@ -27,6 +27,9 @@ export default class App extends Vue {
 }
 </script>
 <style>
+.askanna-breadcrumbs a {
+  font-size: 14px;
+}
 .br-r5 {
   border-radius: 5px !important;
 }
