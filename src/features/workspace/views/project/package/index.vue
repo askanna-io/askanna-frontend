@@ -149,10 +149,8 @@ export default defineComponent({
     })
 
     watch(currentPath, async (currentPath, prevPath) => {
-      console.log(context.root.$route)
       const path = currentPath && !currentPath.is_dir && currentPath.name !== '' ? currentPath.path : ''
       if (prevPath && path !== '' && path === prevPath.path) return
-      console.log(currentPath)
       await packageStore.getFileSource(path)
     })
 
