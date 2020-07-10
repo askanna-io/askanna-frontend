@@ -37,9 +37,7 @@
         <template v-slot:item.created="{ item }">
           {{ $moment(item.created).format(' Do MMMM YYYY, h:mm:ss a') }}
         </template>
-        <template v-slot:item.created_by="{ item }">
-          {{ item.name }}
-        </template>
+        <template v-slot:item.created_by="{ item }"> {{ item.created_by.name }} </template>
         <template v-slot:item.uuid="{ item }">
           <v-btn outlined label small class="btn--hover" color="secondary" @click.stop="handleDownload(item)">
             <v-icon left>mdi-cloud-download</v-icon>
