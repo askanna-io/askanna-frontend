@@ -34,8 +34,11 @@ Vue.config.productionTip = false
 //check if the current user is authenticated
 router.beforeEach((to, _, next) => {
   const token = window.localStorage.getItem('token')
+  const backAfterUrl = window.localStorage.getItem('back_after_login')
 
   if (!token && to.name !== 'login') {
+    window.localStorage.setItem('back_after_login', window.location.href)
+
     next('login')
   } else if (token && to.name === 'login') {
     next('/workspace')
