@@ -1,5 +1,5 @@
 <template>
-  <v-toolbar dense flat color="grey lighten-3" class="br-r4">
+  <v-toolbar dense flat class="br-r4 rounded-0 br-t-b br-color-grey">
     <v-flex class="d-flex">
       <div class="mr-auto d-flex align-center">
         <slot name="left" />
