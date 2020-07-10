@@ -1,24 +1,16 @@
 <template>
   <div>
-    <v-toolbar
-      ref="refToolbar"
-      dense
-      color="white"
-      v-sticky="true"
-      class="br-r5 ma-3"
-      on-stick="onStick"
-      :sticky-margin-width="23"
-      sticky-offset="{top: 52, bottom: 10}"
-      :flat="!sticked"
-    >
-      <v-breadcrumbs :items="projectBreadcrumbs">
-        <template v-slot:item="{ item }">
-          <v-breadcrumbs-item :to="item.to" exact>
-            {{ item.title }}
-          </v-breadcrumbs-item>
-        </template>
-      </v-breadcrumbs>
-    </v-toolbar>
+    <div v-sticky="true" on-stick="onStick" sticky-offset="{top: 52, bottom: 10}">
+      <v-toolbar ref="refToolbar" dense color="white" class="br-r5 ma-3" :flat="!sticked">
+        <v-breadcrumbs :items="projectBreadcrumbs">
+          <template v-slot:item="{ item }">
+            <v-breadcrumbs-item :to="item.to" exact>
+              {{ item.title }}
+            </v-breadcrumbs-item>
+          </template>
+        </v-breadcrumbs>
+      </v-toolbar>
+    </div>
 
     <v-divider />
     <v-card-title>
