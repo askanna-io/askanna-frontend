@@ -97,7 +97,7 @@ export default defineComponent({
   setup(props, context) {
     const snackBar = useSnackBar()
 
-    const projectUrl = ref(`push-target: ${url}/${props.projectShortUuid}`)
+    const projectUrl = ref(`push-target: ${url}/project/${props.projectShortUuid}`)
     const cliInstall = 'pip install askanna'
     const askannaPush = 'askanna push'
     const askannaPushForce = 'askanna push -f'
