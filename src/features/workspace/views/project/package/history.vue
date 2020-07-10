@@ -27,6 +27,9 @@
         <template v-slot:item.created="{ item }">
           {{ $moment(item.created).format(' Do MMMM YYYY, h:mm:ss a') }}
         </template>
+        <template v-slot:item.created_by="{ item }">
+          {{ item.name }}
+        </template>
         <template v-slot:item.uuid="{ item }">
           <v-chip class="btn--hover" outlined label color="secondary" @click.stop="handleDownload(item)">
             <v-avatar left><v-icon>mdi-cloud-download</v-icon></v-avatar
@@ -66,6 +69,7 @@ export default defineComponent({
         value: 'filename'
       },
       { text: 'Created', value: 'created' },
+      { text: 'By', value: 'created_by' },
       { text: 'Package short UUID', value: 'short_uuid', sortable: false },
       { text: '', value: 'uuid', sortable: false }
     ]
@@ -79,7 +83,7 @@ export default defineComponent({
 
     const handleDownload = async packageData => {
       const source = await packages.downloadPackage({
-        projectId: packageData.project,
+        projectId: packageData.project.short_uuid,
         packageId: packageData.short_uuid
       })
       forceFileDownload.trigger({ source, name: packageData.filename })
