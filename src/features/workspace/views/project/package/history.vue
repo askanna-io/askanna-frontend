@@ -24,6 +24,16 @@
             </template>
           </package-toolbar>
         </template>
+        <template v-slot:item.short_uuid="{ item }">
+          <v-tooltip top>
+            <template v-slot:activator="{ on }">
+              <div v-on="on">
+                <v-btn class="px-0" text small>#{{ item.short_uuid.slice(0, 4) }}</v-btn>
+              </div>
+            </template>
+            <span>{{ item.short_uuid }}</span>
+          </v-tooltip>
+        </template>
         <template v-slot:item.created="{ item }">
           {{ $moment(item.created).format(' Do MMMM YYYY, h:mm:ss a') }}
         </template>
@@ -31,10 +41,10 @@
           {{ item.name }}
         </template>
         <template v-slot:item.uuid="{ item }">
-          <v-chip class="btn--hover" outlined label color="secondary" @click.stop="handleDownload(item)">
-            <v-avatar left><v-icon>mdi-cloud-download</v-icon></v-avatar
-            >Download</v-chip
-          >
+          <v-btn outlined label small class="btn--hover" color="secondary" @click.stop="handleDownload(item)">
+            <v-icon left>mdi-cloud-download</v-icon>
+            Download
+          </v-btn>
         </template>
       </v-data-table>
     </v-col>
@@ -63,14 +73,14 @@ export default defineComponent({
     const breadcrumbs = useBreadcrumbs(context, { start: 3 })
 
     const headers = [
+      { text: 'UUID', value: 'short_uuid', sortable: false },
+      { text: 'Date created', value: 'created' },
+      { text: 'By', value: 'created_by' },
       {
         text: 'Name',
         align: 'left',
         value: 'filename'
       },
-      { text: 'Created', value: 'created' },
-      { text: 'By', value: 'created_by' },
-      { text: 'Package short UUID', value: 'short_uuid', sortable: false },
       { text: '', value: 'uuid', sortable: false }
     ]
 
