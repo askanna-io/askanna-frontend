@@ -9,7 +9,7 @@
                 <a v-if="file" @click="handeBackToPackageRoot"
                   >Package #{{ packageId.slice(0, 4) }}<v-icon small>mdi-chevron-right</v-icon></a
                 >
-                <span v-else> Package #{{ packageId.slice(0, 4) }}</span>
+                <span class="text-body-2" v-else> Package #{{ packageId.slice(0, 4) }}</span>
               </div>
             </template>
             <span>{{ packageId }}</span>
