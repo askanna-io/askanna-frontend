@@ -15,24 +15,28 @@
             <span>{{ packageId }}</span>
           </v-tooltip>
         </template>
-        <template v-slot:rigth v-if="!file">
-          <v-btn small outlined color="secondary" class="mr-1 btn--hover" @click="handleDownload()">
-            <v-icon color="secondary" left>mdi-download</v-icon>Download
-          </v-btn>
-          <v-btn
-            small
-            outlined
-            :class="{ 'replace-active': isRaplace }"
-            color="secondary"
-            class="mr-1 btn--hover"
-            @click="handleReplace()"
-          >
-            <v-icon color="secondary" left>mdi-folder-move</v-icon>Replace
-          </v-btn>
+        <template v-slot:rigth>
+          <v-slide-y-transition>
+            <div v-if="!file">
+              <v-btn small outlined color="secondary" class="mr-1 btn--hover" @click="handleDownload()">
+                <v-icon color="secondary" left>mdi-download</v-icon>Download
+              </v-btn>
+              <v-btn
+                small
+                outlined
+                :class="{ 'replace-active': isRaplace }"
+                color="secondary"
+                class="mr-1 btn--hover"
+                @click="handleReplace()"
+              >
+                <v-icon color="secondary" left>mdi-folder-move</v-icon>Replace
+              </v-btn>
 
-          <v-btn small outlined color="secondary" class="btn--hover" @click="handleHistory()">
-            <v-icon color="secondary">mdi-history</v-icon>History
-          </v-btn>
+              <v-btn small outlined color="secondary" class="btn--hover" @click="handleHistory()">
+                <v-icon color="secondary">mdi-history</v-icon>History
+              </v-btn>
+            </div>
+          </v-slide-y-transition>
         </template>
       </package-toolbar>
 
@@ -145,9 +149,10 @@ export default defineComponent({
     })
 
     watch(currentPath, async (currentPath, prevPath) => {
+      console.log(context.root.$route)
       const path = currentPath && !currentPath.is_dir && currentPath.name !== '' ? currentPath.path : ''
       if (prevPath && path !== '' && path === prevPath.path) return
-
+      console.log(currentPath)
       await packageStore.getFileSource(path)
     })
 
