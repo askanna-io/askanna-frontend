@@ -15,7 +15,7 @@
             <span>{{ packageId }}</span>
           </v-tooltip>
         </template>
-        <template v-slot:rigth>
+        <template v-slot:rigth v-if="!file">
           <v-btn small outlined color="secondary" class="mr-1 btn--hover" @click="handleDownload()">
             <v-icon color="secondary" left>mdi-download</v-icon>Download
           </v-btn>
