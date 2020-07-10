@@ -37,9 +37,12 @@ router.beforeEach((to, _, next) => {
   const backAfterUrl = window.localStorage.getItem('back_after_login')
 
   if (!token && to.name !== 'login') {
-    window.localStorage.setItem('back_after_login', window.location.href)
-
+    window.localStorage.setItem('back_after_login', window.location.pathname)
     next('login')
+  } else if (token && backAfterUrl) {
+    window.localStorage.setItem('back_after_login', '')
+
+    next(backAfterUrl)
   } else if (token && to.name === 'login') {
     next('/workspace')
   } else {
