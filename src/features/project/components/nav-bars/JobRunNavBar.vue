@@ -23,7 +23,7 @@
       </v-toolbar>
       <v-slide-y-transition>
         <v-card v-show="isShowProjectBar" :flat="!sticked" :class="{ 'ma-3': sticked }">
-          <v-divider />
+          <v-divider v-if="!sticked" />
           <project-tool-bar :projectName="project.name" />
           <v-divider />
           <job-tool-bar :jobName="jobName" :projectName="project.name" />

@@ -22,13 +22,14 @@
         <v-spacer />
       </v-toolbar>
       <v-card :flat="!sticked" :class="{ 'ma-3': sticked }">
+        <v-divider v-if="!sticked" />
+
         <v-slide-y-transition>
           <div v-show="isShowProjectBar">
-            <v-divider />
             <project-tool-bar :projectName="project.name" />
+            <v-divider />
           </div>
         </v-slide-y-transition>
-        <v-divider />
         <job-tool-bar :jobName="job.name" :projectName="project.name" />
       </v-card>
     </div>
