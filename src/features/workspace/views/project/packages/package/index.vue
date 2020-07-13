@@ -39,6 +39,7 @@ export default defineComponent({
     const breadcrumbs = usePackageBreadcrumbs(context)
 
     onBeforeMount(async () => {
+      packageStore.resetFile()
       const { projectId, packageId, folderName } = context.root.$route.params
 
       await packageStore.getPackage({
@@ -49,12 +50,22 @@ export default defineComponent({
     })
 
     const calcHeight = computed(() => height.value - 380)
-    const path = computed(() => context.root.$route.params.folderName || '/')
+    const path = computed(() => {
+      const folderName = context.root.$route.params.folderName || '/'
+      if (folderName === '/') return folderName
+
+      const isRootPath = folderName.indexOf('/')
+      const tmpPath = isRootPath === 0 ? folderName.slice(1) : folderName
+
+      return tmpPath
+    })
 
     const currentPath = computed(() => {
       const pathArray = path.value.split('/')
       const fileName = pathArray.pop()
-      const current = packageStore.packageData.value.files.find(item => item.name === fileName)
+      const current = packageStore.packageData.value.files.find(
+        item => item.name === fileName && item.path === path.value
+      )
 
       return current
     })
