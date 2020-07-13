@@ -66,7 +66,6 @@ export const actions: ActionTree<workspaceState, RootState> = {
     }
     const results = await Promise.all(
       map(projects.results, async (project: any) => {
-        console.log(project)
         const packages = await apiService({
           action: api.getProjectPackages,
           serviceName,
@@ -75,7 +74,6 @@ export const actions: ActionTree<workspaceState, RootState> = {
 
         project.packages = packages
         project.lastPackage = packages.length ? packages[0] : { short_uuid: '' }
-        console.log('1')
 
         return project
       })
