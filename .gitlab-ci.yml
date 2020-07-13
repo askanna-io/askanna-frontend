@@ -9,7 +9,7 @@ stages:
 build_dist:
   image: node:lts-alpine
   tags:
-    - normal
+    - kubernetes
   script:
     - npm ci
     - npm run build
@@ -18,7 +18,7 @@ build_docker:
   image: docker:git
   stage: build
   tags:
-    - normal
+    - docker
   variables:
     DOCKER_TLS_CERTDIR: ""
   services:
@@ -34,7 +34,7 @@ build_docker_beta:
   image: docker:git
   stage: build
   tags:
-    - normal
+    - docker
   variables:
     DOCKER_TLS_CERTDIR: ""
   services:
@@ -58,7 +58,7 @@ stop_review:
   when: manual
   allow_failure: true
   tags:
-    - normal
+    - kubernetes
   script:
     - curl -X POST -F token=${DEPLOY_TOKEN} -F ref=master -F variables[product]=frontend -F variables[branch]=${CI_COMMIT_REF_SLUG} -F variables[action]=undeploy -F variables[slug]=${CI_ENVIRONMENT_SLUG} ${TRIGGER_URL}
   except:
@@ -70,7 +70,7 @@ stop_review:
   image: curlimages/curl
   stage: deploy
   tags:
-    - normal
+    - kubernetes
   script:
     - curl -X POST -F token=${DEPLOY_TOKEN} -F ref=master -F variables[product]=frontend -F variables[branch]=${CI_COMMIT_REF_SLUG} -F variables[action]=deploy -F variables[slug]=${CI_ENVIRONMENT_SLUG} ${TRIGGER_URL}
 
