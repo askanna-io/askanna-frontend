@@ -6,7 +6,7 @@
           <v-tooltip top>
             <template v-slot:activator="{ on }">
               <div v-on="on">
-                <a v-if="file" @click="handeBackToPackageRoot"
+                <a v-if="file" @click="handeBackToPackageRoot" class="text-body-2"
                   >Package #{{ packageId.slice(0, 4) }}<v-icon small>mdi-chevron-right</v-icon></a
                 >
                 <span class="text-body-2" v-else> Package #{{ packageId.slice(0, 4) }}</span>
