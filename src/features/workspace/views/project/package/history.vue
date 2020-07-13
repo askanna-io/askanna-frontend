@@ -35,7 +35,7 @@
                       ><v-icon>mdi-content-copy</v-icon></v-btn
                     >
                   </template>
-                  <span>Copy run UUID</span>
+                  <span>Copy package UUID</span>
                 </v-tooltip>
               </div>
             </template>
