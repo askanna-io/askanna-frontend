@@ -3,7 +3,7 @@
     <v-col cols="12">
       <div ref="draggable" @click.stop class="is-sortable-disabled is-drag-valid theme-list drop-zone">
         <div class="grid-block-wrapper vue-file-agent file-input-wrapper has-multiple">
-          <replace-info :projectShortUuid="projectShortUuid" />
+          <replace-info :projectShortUuid="projectShortUuid" :workspaceId="workspaceId" />
           <canvas style="position: fixed; visibility: hidden; z-index: -3;"></canvas>
           <div transitionduration="300" pressdelay="0" helperclass="active-sorting-item">
             <div>
@@ -54,7 +54,6 @@
 import FilePreview from './FilePreview.vue'
 import ReplaceInfo from './ReplaceInfo.vue'
 import ConfirmDialog from './ConfirmDialog.vue'
-
 import Resumablejs from '@/core/plugins/resumable.js'
 import useUploadStatus from '@/core/components/uploadStatus/useUploadStatus'
 import usePackageStore from '@/features/package/composition/usePackageStore'
@@ -112,7 +111,7 @@ export default defineComponent({
       short_uuid: ''
     })
 
-    const { projectId: projectShortUuid } = context.root.$route.params
+    const { projectId: projectShortUuid, workspaceId } = context.root.$route.params
 
     const projectUuid = computed(() => packageStore.packageData.value.project)
 
@@ -302,6 +301,7 @@ export default defineComponent({
       progress,
       draggable,
       uploadFiles,
+      workspaceId,
       isFileAdded,
       browseButton,
       handleCancel,

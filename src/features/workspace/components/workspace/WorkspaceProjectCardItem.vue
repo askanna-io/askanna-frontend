@@ -45,29 +45,37 @@
   </v-card>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from '@vue/composition-api'
-interface Project {
-  uuid: string
-  name: string
-  short_uuid: string
-  description: string
-  packages: any[]
-  lastPackage: any
-}
-import { Component, Vue, Prop } from 'vue-property-decorator'
+<script>
+import { defineComponent } from '@vue/composition-api'
 
-@Component
-export default class WorkspaceProjectCardItem extends Vue {
-  @Prop({ required: true })
-  public project!: Project
+export default defineComponent({
+  name: 'WorkspaceProjectCardItem',
 
-  @Prop({ required: true })
-  public workspaceName!: ''
-
-  @Prop({ required: false })
-  public hover!: boolean
-}
+  props: {
+    project: {
+      type: Object,
+      default: function () {
+        return {
+          status: 'UNDIFENED',
+          runtime: 0,
+          memory: 0,
+          return_payload: null,
+          stdout: null,
+          created: '',
+          finished: ''
+        }
+      }
+    },
+    workspaceName: {
+      type: String,
+      default: () => ''
+    },
+    hover: {
+      type: Boolean,
+      default: false
+    }
+  }
+})
 </script>
 <style scoped>
 .h-100 {
