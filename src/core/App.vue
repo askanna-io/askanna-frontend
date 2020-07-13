@@ -27,6 +27,9 @@ export default class App extends Vue {
 }
 </script>
 <style>
+.w-min-110 {
+  min-width: 110px;
+}
 .br-a {
   border: 1px solid;
 }
