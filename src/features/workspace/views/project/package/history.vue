@@ -45,7 +45,7 @@
         <template v-slot:item.created="{ item }">
           {{ $moment(item.created).format(' Do MMMM YYYY, h:mm:ss a') }}
         </template>
-        <template v-slot:item.created_by="{ item }"> {{ item.created_by.name }} </template>
+        <template v-slot:item.created_by="{ item }">{{ item.created_by.name }}</template>
         <template v-slot:item.uuid="{ item }">
           <v-btn outlined label small class="btn--hover" color="secondary" @click.stop="handleDownload(item)">
             <v-icon left>mdi-download</v-icon>
@@ -81,16 +81,30 @@ export default defineComponent({
     const forceFileDownload = useForceFileDownload()
     const breadcrumbs = useBreadcrumbs(context, { start: 3 })
 
+    const sortBy = (a, b) => {
+      const nameA = a.name.toUpperCase()
+      const nameB = b.name.toUpperCase()
+      if (nameA < nameB) {
+        return -1
+      }
+      if (nameA > nameB) {
+        return 1
+      }
+
+      return 0
+    }
+
     const headers = [
       { text: 'UUID', value: 'short_uuid', sortable: false, class: 'w-min-110' },
-      { text: 'Date created', value: 'created' },
-      { text: 'By', value: 'created_by' },
+      { text: 'Date created', value: 'created', width: '25%' },
+      { text: 'By', value: 'created_by', sort: sortBy, width: '25%' },
       {
         text: 'Name',
         align: 'left',
-        value: 'filename'
+        value: 'filename',
+        width: '45%'
       },
-      { text: '', value: 'uuid', sortable: false }
+      { text: '', value: 'uuid', sortable: false, width: '20px' }
     ]
 
     const handleClickRow = ({ short_uuid, versionId }) => {
