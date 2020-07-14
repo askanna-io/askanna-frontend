@@ -18,8 +18,8 @@
           ) to push a new version of the code to this project.
         </p>
         <p>
-          Also, you can drag &amp; drop a (zip) file to this screen. You can upload a single file, or make a zip file of
-          your local directory and upload this zip file.
+          Also, you can drag &amp; drop a zip file to this screen. You can make a zip file of your local directory and
+          upload this file to AskAnna.
         </p>
         <div>COMMAND LINE INSTRUCTIONS</div>
         <p>
