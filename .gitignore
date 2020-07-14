@@ -27,4 +27,5 @@ package-lock.json
 *.sw?
 
 package-lock.json
+
 /src/core/services/api-settings-1.ts
