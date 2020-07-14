@@ -4,27 +4,8 @@
       class="pr-3"
       :value="resumableFile.file"
       color="deep-purple accent-4"
-      counter
-      label="Package"
-      placeholder="Select your package"
+      label="Replace code by:"
       outlined
-      @click:clear="handleDeleteFile"
-      :show-size="1000"
-    >
-      <template v-slot:selection="{ index, text }">
-        <v-chip color="primary" dark label small>
-          {{ text }}
-        </v-chip>
-      </template>
-    </v-file-input>
-
-    <v-file-input
-      class="pa-3"
-      :value="resumableFile.file"
-      color="primary"
-      label="Package"
-      placeholder="Select your package"
-      prepend-icon=""
       @click:clear="handleDeleteFile"
       :show-size="1000"
     >
