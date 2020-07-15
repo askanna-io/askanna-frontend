@@ -161,7 +161,7 @@
           </div>
           <div class="text-right hidden-sm-and-down">
             <v-btn @click="handleShowHideUploadStatus" icon :color="colorStatus">
-              <v-icon>mdi-timelapse</v-icon>
+              <v-icon>{{ iconStatus }}</v-icon>
             </v-btn>
             <span v-if="isNotBeta">Build version:&nbsp;{{ version }}</span>
             <v-menu transition="slide-y-transition" offset-y>
@@ -243,11 +243,13 @@ export default defineComponent({
     }
 
     const colorStatus = computed(() => (uploadStatus.snackbar.value.open ? 'white' : 'grey'))
+    const iconStatus = computed(() => (uploadStatus.uploads.value.length ? 'mdi-timelapse' : 'mdi-circle-slice-8 '))
 
     return {
       logout,
       onResize,
       workspaces,
+      iconStatus,
       colorStatus,
       handleShowHideUploadStatus,
       handleChangeWorkspace

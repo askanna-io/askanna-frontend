@@ -27,7 +27,6 @@ export default class App extends Vue {
 }
 </script>
 <style>
-<<<<<<< src/core/App.vue
 .askanna-breadcrumbs a {
   font-size: 14px;
 }

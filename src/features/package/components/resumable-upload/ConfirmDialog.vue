@@ -2,28 +2,16 @@
   <v-dialog v-model="dialog" max-width="500px">
     <v-card>
       <v-card-title>
-        Confirm replace the code
+        Please confirm that you want to replace the code
       </v-card-title>
       <v-card-text>
-        <v-btn
-          v-if="!isUploadStart && !isUploadFinish"
-          class="my-2"
-          small
-          outlined
-          @click="uploadFiles"
-          color="secondary"
-        >
-          <v-icon color="secondary" left>mdi-upload</v-icon>I want to upload this file
+        <v-btn class="my-2" small outlined @click="handleStartUpload" color="primary">
+          <v-icon color="primary" left>mdi-upload</v-icon>Yes, I want to replace the code
         </v-btn>
-
-        <v-progress-linear v-if="isUploadStart && !isUploadFinish" :buffer-value="progress" stream color="cyan" />
-        <v-alert v-if="isUploadFinish" outlined dense type="success"
-          >Upload was started in backgorun process, fell free to use AskAnna.</v-alert
-        >
       </v-card-text>
       <v-card-actions>
-        <v-btn color="primary" text @click="dialog = false">
-          Close
+        <v-btn color="secondary" class="ml-4" small outlined text @click="dialog = true">
+          <v-icon color="secondary" left>mdi-close</v-icon>No, I don't want to replace the code
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -36,31 +24,16 @@ import { ref, watch, defineComponent } from '@vue/composition-api'
 export default defineComponent({
   name: 'ConfirmDialog',
 
-  props: {
-    progress: {
-      type: Number,
-      default: 0
-    },
-    isUploadStart: {
-      type: Boolean,
-      default: false
-    },
-    isUploadFinish: {
-      type: Boolean,
-      default: false
-    }
-  },
-
   setup(props, context) {
     const dialog = ref(true)
 
-    const uploadFiles = () => context.emit('uploadFiles')
+    const handleStartUpload = () => context.emit('uploadStarted')
 
     watch(dialog, async dialog => {
       if (!dialog) context.emit('confirmationClosed')
     })
 
-    return { dialog, uploadFiles }
+    return { dialog, handleStartUpload }
   }
 })
 </script>

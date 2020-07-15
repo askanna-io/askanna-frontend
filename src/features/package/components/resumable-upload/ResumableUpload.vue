@@ -9,7 +9,7 @@
             <div>
               <file-preview
                 v-for="(resumableFile, index) in fileRecordsForUpload"
-                :isUploadStart="isUploadStart"
+                :isUploadStart="isFileAdded"
                 :resumableFile="resumableFile"
                 :key="index + getIndex()"
                 @deleteFile="handleDeleteFile"
@@ -23,7 +23,7 @@
           <v-icon color="secondary" left>mdi-upload</v-icon>Browse
         </v-btn>
       </span>
-      <span ref="uploadFiles">
+      <span>
         <v-btn
           class="my-2 mr-2"
           v-if="isFileAdded && fileRecordsForUpload && fileRecordsForUpload.length"
@@ -40,10 +40,13 @@
       </v-btn>
       <confirm-dialog
         v-if="showConfirmation"
+        @uploadStarted="handleStartUpload"
+        @confirmationClosed="handleConfirmationClosed"
+      />
+      <upload-process-dialod
+        v-if="isUploadStart"
         :progress="progress"
-        :isUploadStart="isUploadStart"
         :isUploadFinish="isUploadFinish"
-        @uploadFiles="uploadFiles"
         @confirmationClosed="handleConfirmationClosed"
       />
     </v-col>
@@ -54,6 +57,8 @@
 import FilePreview from './FilePreview.vue'
 import ReplaceInfo from './ReplaceInfo.vue'
 import ConfirmDialog from './ConfirmDialog.vue'
+import UploadProcessDialod from './UploadProcessDialod.vue'
+
 import Resumablejs from '@/core/plugins/resumable.js'
 import useUploadStatus from '@/core/components/uploadStatus/useUploadStatus'
 import usePackageStore from '@/features/package/composition/usePackageStore'
@@ -63,7 +68,7 @@ import { ref, watch, reactive, computed, defineComponent, onMounted } from '@vue
 export default defineComponent({
   name: 'ResumableUpload',
 
-  components: { ReplaceInfo, FilePreview, ConfirmDialog },
+  components: { ReplaceInfo, FilePreview, ConfirmDialog, UploadProcessDialod },
 
   props: {
     statusData: {
@@ -249,11 +254,11 @@ export default defineComponent({
       const result = await packageStore.finishUpload({ uuid: short_uuid, data })
 
       isUploadFinish.value = true
-      isUploadStart.value = false
+      // isUploadStart.value = false
       isPackageRegister.value = false
     }
 
-    const uploadFiles = async () => {
+    const handleStartUpload = async () => {
       uploadStatus.addUpload({
         id: file.uniqueIdentifier,
         progress: 0,
@@ -262,7 +267,8 @@ export default defineComponent({
       })
 
       r.value.upload()
-      handleConfirmationClosed()
+      showConfirmation.value = false
+      isUploadStart.value = true
     }
 
     const handleDeleteFile = uniqueIdentifier => {
@@ -282,25 +288,14 @@ export default defineComponent({
       isUploadFinish.value = false
       showConfirmation.value = false
       isPackageRegister.value = false
-      // handleDeleteFile(file.value.uniqueIdentifier)
-
-      /*   context.root.$router.push({
-        name: 'workspace-project-package',
-        params: {
-          projectId: projectShortUuid,
-          packageId: currentPackageData.value.short_uuid
-        }
-      }) */
     }
 
     const handleCancel = () => context.emit('cancelUpload')
-
     const getIndex = () => Date.now()
 
     return {
       progress,
       draggable,
-      uploadFiles,
       workspaceId,
       isFileAdded,
       browseButton,
@@ -310,6 +305,7 @@ export default defineComponent({
       uploadContainer,
       projectShortUuid,
       showConfirmation,
+      handleStartUpload,
       handleConfirmUpload,
       fileRecordsForUpload,
       handleDeleteFile,
