@@ -66,11 +66,18 @@
           </v-tooltip>
         </template>
         <template v-slot:item.uuid="{ item }">
-          <v-btn outlined label small class="btn--hover" color="secondary" @click.stop="handleDownload(item)">
-            <v-icon :left="$vuetify.breakpoint.name !== 'sm'">mdi-download</v-icon>
+          <v-tooltip top>
+            <template v-slot:activator="{ on }">
+              <div v-on="on">
+                <v-btn outlined label small class="btn--hover" color="secondary" @click.stop="handleDownload(item)">
+                  <v-icon :left="$vuetify.breakpoint.name !== 'sm'">mdi-download</v-icon>
 
-            <span class="hidden-sm-only"> Download</span>
-          </v-btn>
+                  <span class="hidden-sm-only">Download</span>
+                </v-btn>
+              </div>
+            </template>
+            <span>Download</span>
+          </v-tooltip>
         </template>
       </v-data-table>
     </v-col>
