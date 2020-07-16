@@ -35,12 +35,14 @@
           ), you can use the command line interface.
         </p>
         <p>
-          Probably you already have an `askanna.yml` file in your local directory. If not, create one. The AskAnna CLI
-          will look for this file. The directory where you put the `askanna.yml` file is the main directory. Every
-          content in this directory, including subdirectories, will be pushed to AskAnna.
+          Probably you already have an <span class="font-italic">askanna.yml</span> file in your local directory. If
+          not, create one. The AskAnna CLI will look for this file. The directory where you put the
+          <span class="font-italic">askanna.yml</span> file is the main directory. Every content in this directory,
+          including subdirectories, will be pushed to AskAnna.
         </p>
         <p>
-          In the `askanna.yml`, you add the next line. Adding this line is the only configuration you need to do.
+          In the <span class="font-italic">askanna.yml</span>, you add the next line. Adding this line is the only
+          configuration you need to do.
         </p>
         <p>
           <code class="px-2 mr-2 text-primary">{{ projectUrl }}</code>
