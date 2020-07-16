@@ -10,7 +10,7 @@
         </v-btn>
       </v-card-text>
       <v-card-actions>
-        <v-btn color="secondary" class="ml-4" small outlined text @click="dialog = true">
+        <v-btn color="secondary" class="ml-4" small outlined text @click="handleCancelStartUpload">
           <v-icon color="secondary" left>mdi-close</v-icon>No, I don't want to replace the code
         </v-btn>
       </v-card-actions>
@@ -28,12 +28,12 @@ export default defineComponent({
     const dialog = ref(true)
 
     const handleStartUpload = () => context.emit('uploadStarted')
+    const handleCancelStartUpload = () => {
+      context.emit('cancelUploadStarted')
+      dialog.value = false
+    }
 
-    watch(dialog, async dialog => {
-      if (!dialog) context.emit('confirmationClosed')
-    })
-
-    return { dialog, handleStartUpload }
+    return { dialog, handleStartUpload, handleCancelStartUpload }
   }
 })
 </script>

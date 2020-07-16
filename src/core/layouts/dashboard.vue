@@ -242,15 +242,12 @@ export default defineComponent({
       uploadStatus.showHideSnackBar()
     }
 
-    const colorStatus = computed(() => (uploadStatus.snackbar.value.open ? 'white' : 'grey'))
-    const iconStatus = computed(() => (uploadStatus.uploads.value.length ? 'mdi-timelapse' : 'mdi-circle-slice-8 '))
-
     return {
       logout,
       onResize,
       workspaces,
-      iconStatus,
-      colorStatus,
+      iconStatus: uploadStatus.iconStatus,
+      colorStatus: uploadStatus.colorStatus,
       handleShowHideUploadStatus,
       handleChangeWorkspace
     }

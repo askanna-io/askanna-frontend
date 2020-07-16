@@ -41,11 +41,13 @@
       <confirm-dialog
         v-if="showConfirmation"
         @uploadStarted="handleStartUpload"
-        @confirmationClosed="handleConfirmationClosed"
+        @cancelUploadStarted="handleCancelUploadStarted"
       />
       <upload-process-dialod
         v-if="isUploadStart"
         :progress="progress"
+        :projectId="projectShortUuid"
+        :packageId="packageShortUuid"
         :isUploadFinish="isUploadFinish"
         @confirmationClosed="handleConfirmationClosed"
       />
@@ -116,6 +118,8 @@ export default defineComponent({
       short_uuid: ''
     })
 
+    const packageShortUuid = computed(() => currentPackageData.value.short_uuid)
+
     const { projectId: projectShortUuid, workspaceId } = context.root.$route.params
 
     const projectUuid = computed(() => packageStore.packageData.value.project)
@@ -167,8 +171,10 @@ export default defineComponent({
         uploadStatus.setUpload({
           id: file.uniqueIdentifier,
           name: file.fileName,
+          isComplete: file.isComplete(),
           progress: prg,
           projectId: projectShortUuid,
+
           packageId: currentPackageData.value.short_uuid
         })
       })
@@ -212,7 +218,9 @@ export default defineComponent({
       const packageData = await packageStore.registerPackage({
         project: projectUuid.value,
         filename: file.name,
-        size: file.size
+        size: file.size,
+        title: file.name,
+        description: file.name
       })
 
       return packageData
@@ -262,6 +270,7 @@ export default defineComponent({
       uploadStatus.addUpload({
         id: file.uniqueIdentifier,
         progress: 0,
+        isComplete: false,
         projectId: projectShortUuid,
         packageId: currentPackageData.value.short_uuid
       })
@@ -290,6 +299,10 @@ export default defineComponent({
       isPackageRegister.value = false
     }
 
+    const handleCancelUploadStarted = () => {
+      showConfirmation.value = false
+    }
+
     const handleCancel = () => context.emit('cancelUpload')
     const getIndex = () => Date.now()
 
@@ -304,9 +317,11 @@ export default defineComponent({
       isUploadFinish,
       uploadContainer,
       projectShortUuid,
+      packageShortUuid,
       showConfirmation,
       handleStartUpload,
       handleConfirmUpload,
+      handleCancelUploadStarted,
       fileRecordsForUpload,
       handleDeleteFile,
       getIndex,
