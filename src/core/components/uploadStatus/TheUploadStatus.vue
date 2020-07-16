@@ -18,7 +18,7 @@
             Close
           </v-btn>
         </div>
-        <div>
+        <div v-show="isUploadListNotEmpty">
           <v-btn dark x-small text @click="clearSnackBar">
             Clear
           </v-btn>
@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { defineComponent } from '@vue/composition-api'
+import { computed, defineComponent } from '@vue/composition-api'
 import useUploadStatus from './useUploadStatus'
 
 export default defineComponent({
@@ -60,8 +60,11 @@ export default defineComponent({
   setup(props, context) {
     const state = useUploadStatus()
 
+    const isUploadListNotEmpty = computed(() => state.uploads.value.length)
+
     return {
-      ...state
+      ...state,
+      isUploadListNotEmpty
     }
   }
 })

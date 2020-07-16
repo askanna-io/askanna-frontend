@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="isUploadStart">
     <v-file-input
       class="pr-3"
       :value="resumableFile.file"
