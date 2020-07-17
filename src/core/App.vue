@@ -34,6 +34,9 @@ export default class App extends Vue {
 .w-min-210 {
   min-width: 210px !important;
 }
+.askanna-breadcrumbs a {
+  font-size: 14px;
+}
 .br-a {
   border: 1px solid;
 }

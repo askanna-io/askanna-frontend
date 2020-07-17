@@ -22,14 +22,12 @@ export const mutations: MutationTree<UploadStatusState> = {
   [mt.ADD_UPLOAD](state, data) {
     state.snackbar = {
       ...state.snackbar,
-      open: true,
       message: ''
     }
 
     const item = {
       ...state.snackbar,
-      ...data,
-      open: true
+      ...data
     }
     state.uploads.push(item)
   },

@@ -18,12 +18,14 @@ export default defineComponent({
 
       if (workspaceId === 'workspace') {
         workspaceId = workspaceStore.workspaces.value.results[0].short_uuid
+        context.root.$router.push({ path: `/${workspaceId}` })
+        return
       }
 
       if (workspaceStore.workspace.value.short_uuid === workspaceId) return
 
-      workspaceStore.getWorkspace(workspaceId)
-      workspaceStore.getWorkpaceProjects(workspaceId)
+      await workspaceStore.getWorkspace(workspaceId)
+      await workspaceStore.getWorkpaceProjects(workspaceId)
     })
   }
 })

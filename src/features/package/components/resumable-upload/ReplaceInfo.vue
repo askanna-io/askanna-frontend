@@ -18,8 +18,8 @@
           ) to push a new version of the code to this project.
         </p>
         <p>
-          Also, you can drag &amp; drop a (zip) file to this screen. You can upload a single file, or make a zip file of
-          your local directory and upload this zip file.
+          Also, you can drag &amp; drop a zip file to this screen. You can make a zip file of your local directory and
+          upload this file to AskAnna.
         </p>
         <div>COMMAND LINE INSTRUCTIONS</div>
         <p>
@@ -35,12 +35,14 @@
           ), you can use the command line interface.
         </p>
         <p>
-          Probably you already have an `askanna.yml` file in your local directory. If not, create one. The AskAnna CLI
-          will look for this file. The directory where you put the `askanna.yml` file is the main directory. Every
-          content in this directory, including subdirectories, will be pushed to AskAnna.
+          Probably you already have an <span class="font-italic">askanna.yml</span> file in your local directory. If
+          not, create one. The AskAnna CLI will look for this file. The directory where you put the
+          <span class="font-italic">askanna.yml</span> file is the main directory. Every content in this directory,
+          including subdirectories, will be pushed to AskAnna.
         </p>
         <p>
-          In the `askanna.yml`, you add the next line. Adding this line is the only configuration you need to do.
+          In the <span class="font-italic">askanna.yml</span>, you add the next line. Adding this line is the only
+          configuration you need to do.
         </p>
         <p>
           <code class="px-2 mr-2 text-primary">{{ projectUrl }}</code>
@@ -91,13 +93,17 @@ export default defineComponent({
     projectShortUuid: {
       type: String,
       default: () => ''
+    },
+    workspaceId: {
+      type: String,
+      default: () => ''
     }
   },
 
   setup(props, context) {
     const snackBar = useSnackBar()
 
-    const projectUrl = ref(`push-target: ${url}/project/${props.projectShortUuid}`)
+    const projectUrl = ref(`push-target: ${url}/${props.workspaceId}/project/${props.projectShortUuid}`)
     const cliInstall = 'pip install askanna'
     const askannaPush = 'askanna push'
     const askannaPushForce = 'askanna push -f'
