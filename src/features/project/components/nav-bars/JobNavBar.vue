@@ -25,12 +25,12 @@
         <v-divider v-if="!sticked" />
 
         <v-slide-y-transition>
-          <div v-show="isShowProjectBar">
+          <div v-if="isShowProjectBar">
             <project-tool-bar :projectName="project.name" />
             <v-divider />
+            <job-tool-bar :jobName="job.name" :projectName="project.name" />
           </div>
         </v-slide-y-transition>
-        <job-tool-bar :jobName="job.name" :projectName="project.name" />
       </v-card>
     </div>
   </div>
