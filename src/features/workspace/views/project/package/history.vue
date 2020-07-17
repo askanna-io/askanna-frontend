@@ -24,6 +24,16 @@
             </template>
           </package-toolbar>
         </template>
+        <template v-slot:item.filename="{ item }">
+          <v-tooltip top>
+            <template v-slot:activator="{ on }">
+              <div v-on="on">
+                {{ slicedText(item.filename, maxLength) }}
+              </div>
+            </template>
+            <span>{{ item.filename }}</span>
+          </v-tooltip>
+        </template>
         <template v-slot:item.short_uuid="{ item }">
           <v-tooltip top>
             <template v-slot:activator="{ on, value }">
@@ -45,7 +55,16 @@
         <template v-slot:item.created="{ item }">
           {{ $moment(item.created).format(' Do MMMM YYYY, h:mm:ss a') }}
         </template>
-        <template v-slot:item.created_by="{ item }">{{ item.created_by.name }}</template>
+        <template v-slot:item.created_by="{ item }">
+          <v-tooltip top>
+            <template v-slot:activator="{ on }">
+              <div v-on="on">
+                {{ slicedText(item.created_by.name, maxLength) }}
+              </div>
+            </template>
+            <span>{{ item.created_by.name }}</span>
+          </v-tooltip>
+        </template>
         <template v-slot:item.description="{ item }">
           <v-tooltip top>
             <template v-slot:activator="{ on, value }">
@@ -53,9 +72,7 @@
                 {{ item.description.slice(0, 80) }}
                 <v-tooltip right>
                   <template v-slot:activator="{ on }">
-                    <v-btn icon text x-small v-on="on" v-show="value" 
-                      ></v-btn
-                    >
+                    <v-btn icon text x-small v-on="on" v-show="value"></v-btn>
                   </template>
                 </v-tooltip>
               </div>
@@ -64,10 +81,18 @@
           </v-tooltip>
         </template>
         <template v-slot:item.uuid="{ item }">
-          <v-btn outlined label small class="btn--hover" color="secondary" @click.stop="handleDownload(item)">
-            <v-icon left>mdi-download</v-icon>
-            Download
-          </v-btn>
+          <v-tooltip top>
+            <template v-slot:activator="{ on }">
+              <div v-on="on">
+                <v-btn outlined label small class="btn--hover" color="secondary" @click.stop="handleDownload(item)">
+                  <v-icon :left="$vuetify.breakpoint.name !== 'sm'">mdi-download</v-icon>
+
+                  <span class="hidden-sm-only">Download</span>
+                </v-btn>
+              </div>
+            </template>
+            <span>Download</span>
+          </v-tooltip>
         </template>
       </v-data-table>
     </v-col>
@@ -75,9 +100,11 @@
 </template>
 
 <script>
+import { useWindowSize } from '@u3u/vue-hooks'
 import useMoment from '@/core/composition/useMoment'
-import { defineComponent } from '@vue/composition-api'
+import { computed, defineComponent } from '@vue/composition-api'
 import usePackages from '@packages/composition/usePackages'
+import useSlicedText from '@/core/composition/useSlicedText'
 import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
 import PackageToolbar from '@/features/package/components/PackageToolbar'
@@ -93,6 +120,8 @@ export default defineComponent({
   setup(props, context) {
     const snackBar = useSnackBar()
     const moment = useMoment(context)
+    const slicedText = useSlicedText()
+    const { width } = useWindowSize()
 
     const packages = usePackages(context)
     const forceFileDownload = useForceFileDownload()
@@ -112,16 +141,17 @@ export default defineComponent({
     }
 
     const headers = [
-      { text: 'UUID', value: 'short_uuid', sortable: false, class: 'w-min-110' },
-      { text: 'Date created', value: 'created', width: '25%' },
-      { text: 'By', value: 'created_by', sort: sortBy, width: '10%' },
+      { text: 'UUID', value: 'short_uuid', sortable: false, class: 'w-min-110', width: '10%' },
+      { text: 'Date created', value: 'created', class: 'w-min-210', width: '10%' },
+      { text: 'By', value: 'created_by', sort: sortBy, class: 'w-min-110', width: '10%' },
       {
         text: 'Description',
         align: 'left',
         value: 'description',
-        width: '60%'
+        width: '60%',
+        class: 'w-max-110'
       },
-      { text: '', value: 'uuid', sortable: false, width: '20px' }
+      { text: '', value: 'uuid', sortable: false, class: 'w-min-110', width: '10%' }
     ]
 
     const handleClickRow = ({ short_uuid, versionId }) => {
@@ -158,12 +188,25 @@ export default defineComponent({
       )
     }
 
+    const maxLength = computed(() => {
+      switch (context.root.$vuetify.breakpoint.name) {
+        case 'xs':
+          return 40 - (550 - width.value) / 12
+        case 'sm':
+          return 30 - (841 - width.value) / 15
+        default:
+          1000
+      }
+    })
+
     return {
       ...moment,
       ...packages,
       headers,
+      slicedText,
       breadcrumbs,
       handleCopy,
+      maxLength,
       handleClickRow,
       handleDownload,
       handeBackToPackageRoot,
