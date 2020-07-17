@@ -2,6 +2,15 @@
   <div>
     <div v-sticky="true" on-stick="onStick" sticky-offset="{top: 52, bottom: 10}">
       <v-toolbar ref="refToolbar" dense color="white" class="br-r5 ma-3" :flat="!sticked">
+        <v-btn
+          text
+          icon
+          class="align-self-center mr-4"
+          :color="(isShowProjectBar && 'primary') || ''"
+          @click="isShowProjectBar = !isShowProjectBar"
+        >
+          <v-icon>mdi-menu</v-icon>
+        </v-btn>
         <v-breadcrumbs :items="projectBreadcrumbs">
           <template v-slot:item="{ item }">
             <v-breadcrumbs-item :to="item.to" exact>
@@ -10,6 +19,25 @@
           </template>
         </v-breadcrumbs>
       </v-toolbar>
+      <v-card v-if="sticked && isShowProjectBar" :class="{ 'ma-3': sticked }">
+        <v-toolbar dense color="white" flat class="br-r5 ma-3">
+          <v-tabs v-model="currentTab" left align-with-title>
+            <v-tabs-slider color="primary" />
+            <template v-for="tab of projectTools">
+              <v-tab
+                v-if="tab.show"
+                ripple
+                :key="tab.id"
+                :to="{ name: tab.to, params: { title: `${tab.name} - ${project.name}` } }"
+              >
+                {{ tab.name }}
+              </v-tab>
+            </template>
+          </v-tabs>
+
+          <v-spacer />
+        </v-toolbar>
+      </v-card>
     </div>
 
     <v-divider />
@@ -24,23 +52,29 @@
       {{ project.description }}
     </v-card-text>
     <v-divider />
-    <v-toolbar dense color="white" flat class="br-r5 ma-3">
-      <v-tabs v-model="currentTab" left align-with-title>
-        <v-tabs-slider color="primary" />
-        <template v-for="tab of projectTools">
-          <v-tab
-            v-if="tab.show"
-            ripple
-            :key="tab.id"
-            :to="{ name: tab.to, params: { title: `${tab.name} - ${project.name}` } }"
-          >
-            {{ tab.name }}
-          </v-tab>
-        </template>
-      </v-tabs>
+    <v-card :flat="!sticked" :class="{ 'ma-3': sticked }">
+      <v-slide-y-transition>
+        <div v-if="isShowProjectBar && !sticked">
+          <v-toolbar dense color="white" flat class="br-r5 ma-3">
+            <v-tabs v-model="currentTab" left align-with-title>
+              <v-tabs-slider color="primary" />
+              <template v-for="tab of projectTools">
+                <v-tab
+                  v-if="tab.show"
+                  ripple
+                  :key="tab.id"
+                  :to="{ name: tab.to, params: { title: `${tab.name} - ${project.name}` } }"
+                >
+                  {{ tab.name }}
+                </v-tab>
+              </template>
+            </v-tabs>
 
-      <v-spacer />
-    </v-toolbar>
+            <v-spacer />
+          </v-toolbar>
+        </div>
+      </v-slide-y-transition>
+    </v-card>
   </div>
 </template>
 <script>
@@ -68,6 +102,7 @@ export default defineComponent({
   setup(props, context) {
     let sticked = ref(false)
     const refToolbar = ref(null)
+    const isShowProjectBar = ref(false)
 
     const currentTab = ref('workspace-project-activity')
     const projectTools = [
@@ -102,7 +137,7 @@ export default defineComponent({
       sticked.value = data.sticked
     }
 
-    return { sticked, onStick, refToolbar, projectTools, currentTab }
+    return { sticked, onStick, refToolbar, projectTools, currentTab, isShowProjectBar }
   }
 })
 </script>
