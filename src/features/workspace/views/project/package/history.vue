@@ -46,6 +46,23 @@
           {{ $moment(item.created).format(' Do MMMM YYYY, h:mm:ss a') }}
         </template>
         <template v-slot:item.created_by="{ item }">{{ item.created_by.name }}</template>
+        <template v-slot:item.description="{ item }">
+          <v-tooltip top>
+            <template v-slot:activator="{ on, value }">
+              <div v-on="on">
+                {{ item.description.slice(0, 80) }}
+                <v-tooltip right>
+                  <template v-slot:activator="{ on }">
+                    <v-btn icon text x-small v-on="on" v-show="value" 
+                      ></v-btn
+                    >
+                  </template>
+                </v-tooltip>
+              </div>
+            </template>
+            <span>{{ item.description }}</span>
+          </v-tooltip>
+        </template>
         <template v-slot:item.uuid="{ item }">
           <v-btn outlined label small class="btn--hover" color="secondary" @click.stop="handleDownload(item)">
             <v-icon left>mdi-download</v-icon>
@@ -97,12 +114,12 @@ export default defineComponent({
     const headers = [
       { text: 'UUID', value: 'short_uuid', sortable: false, class: 'w-min-110' },
       { text: 'Date created', value: 'created', width: '25%' },
-      { text: 'By', value: 'created_by', sort: sortBy, width: '25%' },
+      { text: 'By', value: 'created_by', sort: sortBy, width: '10%' },
       {
-        text: 'Name',
+        text: 'Description',
         align: 'left',
-        value: 'filename',
-        width: '45%'
+        value: 'description',
+        width: '60%'
       },
       { text: '', value: 'uuid', sortable: false, width: '20px' }
     ]
