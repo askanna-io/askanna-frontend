@@ -27,6 +27,13 @@ export default class App extends Vue {
 }
 </script>
 <style>
+.w-min-110 {
+  min-width: 110px !important;
+}
+
+.w-min-210 {
+  min-width: 210px !important;
+}
 .askanna-breadcrumbs a {
   font-size: 14px;
 }
