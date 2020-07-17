@@ -69,7 +69,7 @@
           <v-tooltip top>
             <template v-slot:activator="{ on, value }">
               <div v-on="on">
-                {{ item.description.slice(0, 80) }}
+                {{ item.description.slice(0, 80) }} <span v-if="item.description.length > 80">...</span>
                 <v-tooltip right>
                   <template v-slot:activator="{ on }">
                     <v-btn icon text x-small v-on="on" v-show="value"></v-btn>
