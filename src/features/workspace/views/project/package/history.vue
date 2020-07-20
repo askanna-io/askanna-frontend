@@ -65,6 +65,21 @@
             <span>{{ item.created_by.name }}</span>
           </v-tooltip>
         </template>
+        <template v-slot:item.description="{ item }">
+          <v-tooltip top>
+            <template v-slot:activator="{ on, value }">
+              <div v-on="on">
+                {{ item.description.slice(0, 80) }} <span v-if="item.description.length > 80">...</span>
+                <v-tooltip right>
+                  <template v-slot:activator="{ on }">
+                    <v-btn icon text x-small v-on="on" v-show="value"></v-btn>
+                  </template>
+                </v-tooltip>
+              </div>
+            </template>
+            <span>{{ item.description }}</span>
+          </v-tooltip>
+        </template>
         <template v-slot:item.uuid="{ item }">
           <v-tooltip top>
             <template v-slot:activator="{ on }">
@@ -130,10 +145,10 @@ export default defineComponent({
       { text: 'Date created', value: 'created', class: 'w-min-210', width: '10%' },
       { text: 'By', value: 'created_by', sort: sortBy, class: 'w-min-110', width: '10%' },
       {
-        text: 'Name',
+        text: 'Description',
         align: 'left',
-        value: 'filename',
-        width: '30%',
+        value: 'description',
+        width: '60%',
         class: 'w-max-110'
       },
       { text: '', value: 'uuid', sortable: false, class: 'w-min-110', width: '10%' }
