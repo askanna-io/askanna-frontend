@@ -14,6 +14,9 @@ export const state: projectState = {
   query: {
     limit: 10,
     offset: 0
+  },
+  menu: {
+    isShowProjectBar: true
   }
 }
 

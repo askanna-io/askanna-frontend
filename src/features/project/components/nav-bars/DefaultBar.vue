@@ -7,7 +7,7 @@
           icon
           class="align-self-center mr-4"
           :color="(isShowProjectBar && 'primary') || ''"
-          @click="isShowProjectBar = !isShowProjectBar"
+          @click="handleShowProjectBar"
         >
           <v-icon>mdi-menu</v-icon>
         </v-btn>
@@ -96,13 +96,20 @@ export default defineComponent({
     projectBreadcrumbs: {
       type: Array,
       default: []
+    },
+    isShowProjectBar: {
+      type: Boolean,
+      default: true
+    },
+    handleShowProjectBar: {
+      type: Function,
+      default: () => {}
     }
   },
 
   setup(props, context) {
     let sticked = ref(false)
     const refToolbar = ref(null)
-    const isShowProjectBar = ref(false)
 
     const currentTab = ref('workspace-project-activity')
     const projectTools = [
@@ -137,7 +144,7 @@ export default defineComponent({
       sticked.value = data.sticked
     }
 
-    return { sticked, onStick, refToolbar, projectTools, currentTab, isShowProjectBar }
+    return { sticked, onStick, refToolbar, projectTools, currentTab }
   }
 })
 </script>

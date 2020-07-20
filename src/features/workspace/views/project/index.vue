@@ -1,6 +1,13 @@
 <template>
   <v-card class="mx-auto" outlined sticky-container>
-    <project-nav-bar :job="job" :project="project" :routeName="routeName" :projectBreadcrumbs="projectBreadcrumbs" />
+    <project-nav-bar
+      :job="job"
+      :isShowProjectBar="menu.isShowProjectBar"
+      :handleShowProjectBar="handleShowProjectBar"
+      :project="project"
+      :routeName="routeName"
+      :projectBreadcrumbs="projectBreadcrumbs"
+    />
     <router-view />
   </v-card>
 </template>
@@ -25,7 +32,10 @@ export default defineComponent({
     const end = context.root.$route.name === 'workspace-project-job-overiew' ? 6 : jobEnd
     const projectBreadcrumbs = useBreadcrumbs(context, { start: 0, end })
 
-    return { ...project, ...jobStore, routeName, projectBreadcrumbs }
+    const handleShowProjectBar = () =>
+      project.setMenu({ name: 'menu.isShowProjectBar', value: !project.menu.value.isShowProjectBar })
+
+    return { ...project, ...jobStore, routeName, projectBreadcrumbs, handleShowProjectBar }
   }
 })
 </script>

@@ -11,6 +11,9 @@ export interface ProjectState {
     limit: 10
     offset: 0
   }
+  menu: {
+    isShowProjectBar: boolean
+  }
 }
 
 interface Project {
@@ -28,6 +31,7 @@ interface Project {
 export const PROJECT_STORE = 'project'
 
 export const action = {
+  setMenu: 'setMenu',
   addProject: 'addProject',
   getProject: 'getProject',
   getProjects: 'getProjects',
@@ -36,6 +40,7 @@ export const action = {
 }
 
 export const mutation = {
+  SET_MENU: 'SET_MENU',
   SET_PROJECT: 'SET_PROJECT',
   SET_PROJECTS: 'SET_PROJECTS',
   UPDATE_ROJECT: 'UPDATE_ROJECT',

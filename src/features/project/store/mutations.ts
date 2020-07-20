@@ -1,3 +1,4 @@
+import { set } from 'lodash'
 import { mutation } from './types'
 import { MutationTree } from 'vuex'
 import { projectState } from './types'
@@ -14,5 +15,9 @@ export const mutations: MutationTree<projectState> = {
   },
   [mutation.RESET_PORJECT_JOBS](state) {
     state.projectJobs = []
+  },
+
+  [mutation.SET_MENU](state, { name = 'menu.isShowProjectBar', value }) {
+    set(state, name, value)
   }
 }
