@@ -1,13 +1,35 @@
 import { useState, useActions } from '@u3u/vue-hooks'
-import { PACKAGE_STORE, getPackage, getFileSource, resetFile } from '../store/types'
+import {
+  PACKAGE_STORE,
+  getPackage,
+  getFileSource,
+  registerPackage,
+  registerChunkPackage,
+  uploadChunkPackage,
+  finishUpload,
+  resetFile
+} from '../store/types'
 
 export default function () {
   const state = {
-    ...useState(PACKAGE_STORE, { packageData: 'packageData', file: 'file', fileSource: 'fileSource' })
+    ...useState(PACKAGE_STORE, {
+      file: 'file',
+      fileSource: 'fileSource',
+      packageData: 'packageData',
+      processingList: 'processingList'
+    })
   }
 
   const actions = {
-    ...useActions(PACKAGE_STORE, [getPackage, getFileSource, resetFile])
+    ...useActions(PACKAGE_STORE, [
+      getPackage,
+      getFileSource,
+      registerPackage,
+      registerChunkPackage,
+      uploadChunkPackage,
+      finishUpload,
+      resetFile
+    ])
   }
 
   return {

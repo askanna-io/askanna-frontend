@@ -8,25 +8,53 @@
         :breadcrumbs="breadcrumbs"
         :currentPath="currentPath"
       />
+      <div class="px-4" v-else>
+        <v-toolbar dense flat color="grey lighten-3" class="br-r4">
+          <v-flex class="d-flex">
+            <div class="mr-auto d-flex align-center">
+              <v-tooltip top>
+                <template v-slot:activator="{ on }">
+                  <div v-on="on">Package #{{ packageId.slice(0, 4) }}</div>
+                </template>
+                <span>{{ packageId }}</span>
+              </v-tooltip>
+            </div>
+            <div>
+              <v-btn small outlined color="secondary" class="mr-1" @click="handleDownload()">
+                <v-icon color="secondary" left>mdi-download</v-icon>Download
+              </v-btn>
 
-      <package-tree
-        v-else
-        :items="treeView"
-        :height="calcHeight"
-        :breadcrumbs="breadcrumbs"
-        @clickOnRow="handleClickOnRow"
-      />
+              <v-btn small outlined color="secondary" class="mr-1" @click="handleReplace()">
+                <v-icon color="secondary" left>mdi-folder-move</v-icon>Replace
+              </v-btn>
+
+              <v-btn small outlined color="secondary" @click="handleHistory()">
+                <v-icon color="secondary">mdi-history</v-icon>History
+              </v-btn>
+            </div>
+          </v-flex>
+        </v-toolbar>
+        <package-tree
+          :items="treeView"
+          :height="calcHeight"
+          :breadcrumbs="breadcrumbs"
+          @clickOnRow="handleClickOnRow"
+        />
+      </div>
     </v-col>
   </v-row>
 </template>
 
 <script>
 import { useWindowSize } from '@u3u/vue-hooks'
+import useForceFileDownload from '@/core/composition/useForceFileDownload'
+import usePackages from '@packages/composition/usePackages'
+
 import { defineComponent } from '@vue/composition-api'
 import PackageFile from '@package/components/PackageFile'
 import PackageTree from '@package/components/PackageTree'
 import { headers, FileIcons } from '@package/utils/index'
-import { watch, onBeforeMount, computed } from '@vue/composition-api'
+import { ref, watch, onBeforeMount, computed } from '@vue/composition-api'
 import usePackageStore from '@/features/package/composition/usePackageStore'
 import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
 
@@ -36,7 +64,10 @@ export default defineComponent({
   setup(props, context) {
     const { height } = useWindowSize()
     const packageStore = usePackageStore()
+    const packages = usePackages(context)
+
     const breadcrumbs = usePackageBreadcrumbs(context)
+    const forceFileDownload = useForceFileDownload()
 
     onBeforeMount(async () => {
       packageStore.resetFile()
@@ -49,7 +80,7 @@ export default defineComponent({
       })
     })
 
-    const calcHeight = computed(() => height.value - 380)
+    const calcHeight = computed(() => height.value - 420)
     const path = computed(() => {
       const folderName = context.root.$route.params.folderName || '/'
       if (folderName === '/') return folderName
@@ -109,7 +140,31 @@ export default defineComponent({
       context.root.$router.push({ path })
     }
 
+    const handleHistory = () => {
+      const { projectId, packageId } = context.root.$route.params
+      context.root.$router.push({
+        name: 'workspace-project-packages-uuid-history',
+        params: { projectId, packageId, versionId: '1' }
+      })
+    }
+
+    const handleDownload = async () => {
+      const packageData = packageStore.packageData.value
+      const source = await packages.downloadPackage({
+        projectId: packageData.project,
+        packageId: packageData.short_uuid
+      })
+      forceFileDownload.trigger({ source, name: packageData.filename })
+    }
+
+    const handleReplace = () =>
+      context.root.$router.push({
+        name: 'workspace-project-packages-uuid-replace',
+        params: { ...context.root.$route.params }
+      })
+
     return {
+      packageId: context.root.$route.params.packageId,
       file: packageStore.file,
       fileSource: packageStore.fileSource,
       treeView,
@@ -117,6 +172,9 @@ export default defineComponent({
       calcHeight,
       breadcrumbs,
       currentPath,
+      handleReplace,
+      handleHistory,
+      handleDownload,
       handleClickOnRow
     }
   }

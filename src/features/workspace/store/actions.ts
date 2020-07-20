@@ -1,14 +1,10 @@
-import { delay } from 'lodash'
+import { delay, map } from 'lodash'
 import { ActionTree } from 'vuex'
 import { logger } from '@/core/plugins/logger'
 import apiService from '@/core/services/apiService'
-import * as rootTypes from '@/core/store/actionTypes'
-
 import { apiStringify } from '@/core/services/api-settings'
-
 import { workspaceState, WORKSPACE_STORE, stateType, action, mutation } from './types'
 
-const root = true
 const serviceName = WORKSPACE_STORE
 const api = apiStringify(serviceName)
 
@@ -68,8 +64,22 @@ export const actions: ActionTree<workspaceState, RootState> = {
 
       return
     }
+    const results = await Promise.all(
+      map(projects.results, async (project: any) => {
+        const packages = await apiService({
+          action: api.getProjectPackages,
+          serviceName,
+          uuid: project.short_uuid
+        })
 
-    commit(mutation.SET_WORKSPACE_PROJECTS, projects)
+        project.packages = packages
+        project.lastPackage = packages.length ? packages[0] : { short_uuid: '' }
+
+        return project
+      })
+    )
+
+    commit(mutation.SET_WORKSPACE_PROJECTS, { results, count: results.length })
     delay(() => commit(mutation.SET_LOADING, { name: stateType.workspaceProjectsLoading, value: false }), 350, 'later')
   },
 

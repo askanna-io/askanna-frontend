@@ -27,6 +27,29 @@ export default class App extends Vue {
 }
 </script>
 <style>
+.v-application--is-ltr .v-data-table--fixed-header.askanna-table .v-data-footer {
+  margin-right: 0 !important;
+}
+.w-min-110 {
+  min-width: 110px !important;
+}
+
+.w-min-210 {
+  min-width: 210px !important;
+}
+.askanna-breadcrumbs a {
+  font-size: 14px;
+}
+.br-a {
+  border: 1px solid;
+}
+.br-t-b {
+  border-top: 1px solid;
+  border-bottom: 1px solid;
+}
+.br-color-grey {
+  border-color: #e0e0e0 !important;
+}
 .br-r5 {
   border-radius: 5px !important;
 }
@@ -81,5 +104,21 @@ export default class App extends Vue {
 }
 .text-body-1 {
   font-size: 16px !important;
+}
+
+.v-chip.v-chip--clickable.btn--hover:hover,
+.v-btn.btn--hover:hover {
+  color: #6a4580 !important;
+  border: 1px solid #6a4580 !important;
+  border-color: #6a4580 !important;
+}
+.btn--hover:hover .v-avatar .v-avatar--left,
+.v-btn.btn--hover:hover i::before {
+  color: #6a4580 !important;
+}
+
+.v-application code {
+  color: #6a4580 !important;
+  background-color: #eee !important;
 }
 </style>

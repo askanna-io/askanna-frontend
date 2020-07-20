@@ -4,13 +4,13 @@ export default (context: SetupContext) => {
   let breadcrumbs: any = []
 
   const getBreadcrumbs = () => {
-    const beforeFolderPath = context.root.$route.path.split('/').slice(0, 6).join('/')
+    const beforeFolderPath = context.root.$route.path.split('/').slice(0, 7).join('/')
 
     let currentPath = beforeFolderPath
 
     breadcrumbs = context.root.$route.path
       .split('/')
-      .slice(6)
+      .slice(7)
       .filter(name => name !== '')
       .map(name => {
         currentPath = `${currentPath}/${name}`

@@ -1,18 +1,6 @@
 <template>
   <v-row align="center" justify="center">
     <v-col cols="12" class="pt-0 pb-0">
-      <v-breadcrumbs :items="breadcrumbs">
-        <template v-slot:divider>
-          <v-icon>mdi-chevron-right</v-icon>
-        </template>
-        <template v-slot:item="{ item }">
-          <v-breadcrumbs-item :to="item.to" exact>
-            {{ item.title }}
-          </v-breadcrumbs-item>
-        </template>
-      </v-breadcrumbs>
-      <v-divider />
-
       <v-toolbar dense flat>
         <v-btn icon small @click="handleBack">
           <v-icon>mdi-arrow-left</v-icon>
@@ -21,22 +9,12 @@
         <div>{{ currentPath.name }} {{ currentPath.size }} Bytes</div>
 
         <v-spacer></v-spacer>
-        <v-tooltip bottom>
-          <template v-slot:activator="{ on }">
-            <v-btn icon @click="handleDownload" v-on="on">
-              <v-icon>mdi-file-download </v-icon>
-            </v-btn>
-          </template>
-          <span>Download file</span>
-        </v-tooltip>
-        <v-tooltip bottom>
-          <template v-slot:activator="{ on }">
-            <v-btn icon @click="handleCopy" v-on="on">
-              <v-icon>mdi-content-copy</v-icon>
-            </v-btn>
-          </template>
-          <span>Copy file</span>
-        </v-tooltip>
+        <v-btn small outlined color="secondary" class="mr-1 btn--hover" @click="handleDownload">
+          <v-icon color="secondary" left>mdi-download</v-icon>Download file
+        </v-btn>
+        <v-btn small outlined color="secondary" class="mr-1 btn--hover" @click="handleCopy">
+          <v-icon color="secondary" left>mdi-content-copy</v-icon>Copy file
+        </v-btn>
       </v-toolbar>
       <prism-editor :code="fileComputed" readonly line-numbers />
     </v-col>
