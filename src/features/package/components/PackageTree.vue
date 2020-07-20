@@ -6,22 +6,9 @@
     :options="{ itemsPerPage: -1 }"
     fixed-header
     hide-default-footer
-    class="job-table scrollbar"
+    class="job-table scrollbar cursor--pointer"
     @click:row="clickOnRow"
   >
-    <template v-slot:top>
-      <v-breadcrumbs :items="breadcrumbs">
-        <template v-slot:divider>
-          <v-icon>mdi-chevron-right</v-icon>
-        </template>
-        <template v-slot:item="{ item }">
-          <v-breadcrumbs-item :to="item.to" exact>
-            {{ item.title }}
-          </v-breadcrumbs-item>
-        </template>
-      </v-breadcrumbs>
-      <v-divider />
-    </template>
     <template v-slot:item.type="{ item }">
       <v-icon v-if="item.is_dir">
         mdi-folder
@@ -52,10 +39,6 @@ export default defineComponent({
     height: {
       type: Number,
       default: 300
-    },
-    breadcrumbs: {
-      type: Array,
-      default: () => []
     }
   },
 

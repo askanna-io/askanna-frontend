@@ -25,7 +25,7 @@ export default defineComponent({
 
     const handleClickRow = packageId =>
       context.root.$router.push({
-        name: 'workspace-project-packages-uuid-version-uuid',
+        name: 'workspace-project-package',
         params: { projectId: context.root.$route.params.projectId, packageId, versionId: '1' }
       })
 
@@ -40,7 +40,7 @@ export default defineComponent({
     const handleHistory = packageId => {
       const { projectId } = context.root.$route.params
       context.root.$router.push({
-        name: 'workspace-project-packages-uuid-history',
+        name: 'workspace-project-package-history',
         params: { projectId, packageId, versionId: '1' }
       })
     }

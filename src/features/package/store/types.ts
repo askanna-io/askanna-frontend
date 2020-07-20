@@ -4,6 +4,7 @@ export interface PackageData {
   packageData?: Package
   file: string
   fileSource: Blob
+  processingList: any[]
 }
 
 export interface File {
@@ -35,12 +36,18 @@ export const PACKAGE_STORE = 'packageStore'
 // actions
 export const resetFile = 'resetFile'
 export const getPackage = 'getPackage'
+export const finishUpload = 'finishUpload'
 export const getFileSource = 'getFileSource'
+export const registerPackage = 'registerPackage'
+export const uploadChunkPackage = 'uploadChunkPackage'
+export const registerChunkPackage = 'registerChunkPackage'
 
 //mutations
 export const SET_FILE = 'SET_FILE'
 export const SET_PACKAGE = 'SET_PACKAGE'
 export const RESET_FILE_FILESOURCE = 'RESET_FILE_FILESOURCE'
+export const SET_PROCESSING_LIST = 'SET_PROCESSING_LIST'
+export const REMOVE_FROM_PROCESSING_LIST = 'REMOVE_FROM_PROCESSING_LIST'
 
 export class PackageModel {
   private _state: Package

@@ -25,8 +25,8 @@ const apiUrl = process.env.VUE_APP_API_URL
 const apiPort = process.env.VUE_APP_API_PORT
 
 export const api: ApiSettings = {
-  url: () => `${apiUrl}:${apiPort}/`,
-  apiUrl: () => `${apiUrl}:${apiPort}/v1/`,
+  url: () => `https://beta-api.askanna.eu/`,
+  apiUrl: () => `https://beta-api.askanna.eu/v1/`,
   // auth api
   auth: {
     login: () => `rest-auth/login/`,
@@ -80,7 +80,6 @@ export const api: ApiSettings = {
       runs: id => `job/${id}/runs/`,
       getJobRun: id => `jobrun/${id}/`,
       getJobRunResult: id => `result/${id}`,
-      getJobRunLog: id => `jobrun/${id}/log`,
       getJobRunPayload: ({ jobRunShortId, payloadUuid }) => `jobrun/${jobRunShortId}/payload/${payloadUuid}/`
     },
 

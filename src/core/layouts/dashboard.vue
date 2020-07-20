@@ -160,6 +160,9 @@
             </v-flex>
           </div>
           <div class="text-right hidden-sm-and-down">
+            <v-btn @click="handleShowHideUploadStatus" icon :color="colorStatus">
+              <v-icon>{{ iconStatus }}</v-icon>
+            </v-btn>
             <span v-if="isNotBeta">Build version:&nbsp;{{ version }}</span>
             <v-menu transition="slide-y-transition" offset-y>
               <template v-slot:activator="{ on }">
@@ -187,26 +190,33 @@
         <router-view />
       </v-container>
       <the-snack-bar />
+      <the-upload-status />
     </v-content>
   </v-app>
 </template>
 
 <script>
+import TheUploadStatus from '@/core/components/uploadStatus/TheUploadStatus'
+import useUploadStatus from '@/core/components/uploadStatus/useUploadStatus'
+
 import { createNamespacedHelpers } from 'vuex'
 import { logout } from '@/core/store/actionTypes'
 import useTitle from '@/core/composition/useTitle'
 import { AUTH_STORE } from '@/core/store/storeTypes'
 import { ref, computed, defineComponent } from '@vue/composition-api'
-import useWorkspaceStore from '../../features/workspace/composition/useWorkSpaceStore'
 import useAuthStore from '../../features/auth/composition/useAuthStore'
+import useWorkspaceStore from '../../features/workspace/composition/useWorkSpaceStore'
 
 const { mapActions } = createNamespacedHelpers(AUTH_STORE)
 export default defineComponent({
   name: 'dashboard',
 
+  components: { TheUploadStatus },
+
   setup(props, context) {
     useTitle(context)
     const authStore = useAuthStore()
+    const uploadStatus = useUploadStatus()
     const workspaceStore = useWorkspaceStore()
 
     const logout = () => authStore.actions.logout()
@@ -228,10 +238,17 @@ export default defineComponent({
       xsOnly.value = context.root.$vuetify.breakpoint.xlOnly || context.root.$vuetify.breakpoint.mdAndDown
     }
 
+    const handleShowHideUploadStatus = () => {
+      uploadStatus.showHideSnackBar()
+    }
+
     return {
       logout,
       onResize,
       workspaces,
+      iconStatus: uploadStatus.iconStatus,
+      colorStatus: uploadStatus.colorStatus,
+      handleShowHideUploadStatus,
       handleChangeWorkspace
     }
   },

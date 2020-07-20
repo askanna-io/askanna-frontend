@@ -45,7 +45,7 @@
 </template>
 <script>
 import useWorkspaceStore from '../../composition/useWorkSpaceStore'
-import { watch, computed, reactive, defineComponent } from '@vue/composition-api'
+import { reactive, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'WorkspaceToolbar',
