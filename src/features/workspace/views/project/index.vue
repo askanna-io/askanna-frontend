@@ -21,7 +21,6 @@ export default defineComponent({
     const project = useProject(context)
     const jobStore = useJobStore(context)
     const routeName = context.root.$route.name
-    console.log(routeName)
     const jobEnd = context.root.$route.name.indexOf('jobs-name') >= 1 ? 5 : 3
     const end = context.root.$route.name === 'workspace-project-job-overiew' ? 6 : jobEnd
     const projectBreadcrumbs = useBreadcrumbs(context, { start: 0, end })
