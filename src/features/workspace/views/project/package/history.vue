@@ -5,7 +5,7 @@
         fixed-header
         :headers="headers"
         :items="projectPackageHistory"
-        class="job-table scrollbar cursor--pointer"
+        class="job-table askanna-table scrollbar cursor--pointer"
         @click:row="handleClickRow"
       >
         <template v-slot:top>

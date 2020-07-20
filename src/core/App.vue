@@ -27,6 +27,9 @@ export default class App extends Vue {
 }
 </script>
 <style>
+.v-application--is-ltr .v-data-table--fixed-header.askanna-table .v-data-footer {
+  margin-right: 0 !important;
+}
 .w-min-110 {
   min-width: 110px !important;
 }
