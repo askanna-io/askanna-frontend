@@ -78,7 +78,7 @@ export default class App extends Vue {
 }
 
 .scrollbar::-webkit-scrollbar-thumb {
-  background-color: #6a4580 !important;
+  background-color: #5d3eb2 !important;
   border: 2px solid #555555 !important;
 }
 .prism-editor-wrapper {
@@ -108,17 +108,17 @@ export default class App extends Vue {
 
 .v-chip.v-chip--clickable.btn--hover:hover,
 .v-btn.btn--hover:hover {
-  color: #6a4580 !important;
-  border: 1px solid #6a4580 !important;
-  border-color: #6a4580 !important;
+  color: #5d3eb2 !important;
+  border: 1px solid #5d3eb2 !important;
+  border-color: #5d3eb2 !important;
 }
 .btn--hover:hover .v-avatar .v-avatar--left,
 .v-btn.btn--hover:hover i::before {
-  color: #6a4580 !important;
+  color: #5d3eb2 !important;
 }
 
 .v-application code {
-  color: #6a4580 !important;
+  color: #5d3eb2 !important;
   background-color: #eee !important;
 }
 </style>

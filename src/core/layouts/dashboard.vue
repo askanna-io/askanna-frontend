@@ -289,7 +289,7 @@ export default defineComponent({
 </script>
 <style scoped>
 .logo {
-  height: 57px;
+  height: 30px;
 }
 .logo.--mobile {
   height: 67px;

@@ -1,9 +1,9 @@
 <template>
   <v-row align="center" justify="center" class="login-wrapper">
-    <v-col cols="6" xl="2" md="4" sm="6">
+    <v-col cols="6" xl="2" md="4" sm="6" class="rounded">
       <img alt="AskAnna logo" src="@/assets/logo.svg" class="logo" />
       <v-expansion-panels flat dark class="login-expansion" v-model="panel">
-        <v-expansion-panel :key="0" active-class="colored-border">
+        <v-expansion-panel :key="0" active-class="colored-border" class="white--text">
           <v-expansion-panel-header v-slot="{ open }">
             <v-row no-gutters>
               <v-col cols="4" :class="{ 'primary--text': open }">Sign in</v-col>
@@ -64,7 +64,7 @@ export default defineComponent({
 <style scoped>
 .login-wrapper {
   height: 100vh;
-  background-image: url('~@/assets/bg/askanna-bg-01.png');
+  background-image: url('~@/assets/bg/askanna-bg-01.svg');
   background-size: cover;
 }
 .logo {
