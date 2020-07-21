@@ -2,8 +2,8 @@
   <v-row align="center" justify="center" class="login-wrapper">
     <v-col cols="6" xl="2" md="4" sm="6" class="rounded">
       <img alt="AskAnna logo" src="@/assets/logo.svg" class="logo" />
-      <v-expansion-panels flat dark class="login-expansion" v-model="panel">
-        <v-expansion-panel :key="0" active-class="colored-border" class="white--text">
+      <v-expansion-panels class="login-expansion" v-model="panel">
+        <v-expansion-panel :key="0" active-class="colored-border" class="white--text white">
           <v-expansion-panel-header v-slot="{ open }">
             <v-row no-gutters>
               <v-col cols="4" :class="{ 'primary--text': open }">Sign in</v-col>
@@ -72,7 +72,6 @@ export default defineComponent({
   margin-bottom: 6px;
 }
 .login-expansion .v-expansion-panel {
-  background: transparent !important;
 }
 .colored-border {
   border: 1px solid;

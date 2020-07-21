@@ -34,7 +34,7 @@
               </v-list-item>
             </v-list>
           </v-navigation-drawer>
-          <div md="auto" sm="12" text-sm-center>
+          <div class="pt-1" md="auto" sm="12" text-sm-center>
             <a href="/">
               <img alt="AskAnna logo" src="@/assets/logo.svg" class="logo" />
             </a>
