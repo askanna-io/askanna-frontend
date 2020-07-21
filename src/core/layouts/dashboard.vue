@@ -34,7 +34,7 @@
               </v-list-item>
             </v-list>
           </v-navigation-drawer>
-          <div md="auto" sm="12" text-sm-center>
+          <div class="pt-1" md="auto" sm="12" text-sm-center>
             <a href="/">
               <img alt="AskAnna logo" src="@/assets/logo.svg" class="logo" />
             </a>
@@ -289,7 +289,7 @@ export default defineComponent({
 </script>
 <style scoped>
 .logo {
-  height: 57px;
+  height: 30px;
 }
 .logo.--mobile {
   height: 67px;
