@@ -47,6 +47,8 @@ export const actions: ActionTree<projectState, RootState> = {
   },
 
   async [action.getProjectJobs]({ commit, dispatch }, uuid) {
+    commit(mutation.SET_LOADING, { name: 'jobsLoading', value: true })
+
     let jobs
     try {
       jobs = await apiService({
@@ -55,6 +57,8 @@ export const actions: ActionTree<projectState, RootState> = {
         uuid
       })
     } catch (error) {
+      commit(mutation.SET_LOADING, { name: 'jobsLoading', value: false })
+
       dispatch(rootTypes.loggerError, {
         errorHint: 'Error on load project jobs in getProjectJobs action.\nError: ',
         error
@@ -63,6 +67,7 @@ export const actions: ActionTree<projectState, RootState> = {
     }
 
     commit(mutation.SET_PROJECT_JOBS, jobs)
+    commit(mutation.SET_LOADING, { name: 'jobsLoading', value: false })
   },
 
   async [action.resetProjectJobs]({ commit }) {

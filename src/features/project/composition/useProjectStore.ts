@@ -3,7 +3,12 @@ import { PROJECT_STORE, action } from '../store/types'
 
 export default function () {
   const state = {
-    ...useState(PROJECT_STORE, { project: 'project', projects: 'projects', projectJobs: 'projectJobs' })
+    ...useState(PROJECT_STORE, {
+      project: 'project',
+      projects: 'projects',
+      projectJobs: 'projectJobs',
+      jobsLoading: 'jobsLoading'
+    })
   }
 
   const actions = {

@@ -10,6 +10,8 @@ const api = apiStringify(serviceName)
 
 export const actions: ActionTree<JobsState, RootState> = {
   async [type.getJobsList]({ commit, dispatch }) {
+    commit(type.SET_LOADING, { name: 'jobsLoading', value: true })
+
     let list
     try {
       list = await apiService({
@@ -17,6 +19,8 @@ export const actions: ActionTree<JobsState, RootState> = {
         serviceName
       })
     } catch (error) {
+      commit(type.SET_LOADING, { name: 'jobsLoading', value: false })
+
       dispatch(rootTypes.loggerError, {
         errorHint: 'Error on load jobs list items in getJobsList action.\nError: ',
         error
@@ -24,5 +28,6 @@ export const actions: ActionTree<JobsState, RootState> = {
       return
     }
     commit(type.SET_JOBS_LIST, list)
+    commit(type.SET_LOADING, { name: 'jobsLoading', value: false })
   }
 }

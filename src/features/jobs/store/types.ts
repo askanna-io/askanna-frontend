@@ -2,6 +2,7 @@ export interface JobsState extends jobsData {}
 
 export interface jobsData {
   list: JobItem[]
+  jobsLoading: Boolean
 }
 
 export interface JobItem {
@@ -33,5 +34,6 @@ export const getJobsList = 'getJobsList'
 export const getProjecJobs = 'getProjecJobs'
 
 //mutations
+export const SET_LOADING = 'SET_LOADING'
 export const SET_JOBS_LIST = 'SET_JOBS_LIST'
 export const UDPDATE_LIST = 'UDPDATE_LIST'

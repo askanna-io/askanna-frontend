@@ -1,6 +1,6 @@
 <template>
   <v-card flat class="px-3 mt-2 br-none" outlined>
-    <v-skeleton-loader ref="skeleton" :type="'table-row'" :loading="!projectJobs.length">
+    <v-skeleton-loader ref="skeleton" :type="'table-row'" :loading="jobsLoading">
       <v-row align="center" justify="center">
         <v-col cols="12" class="pa-0">
           <jobs-list :jobList="projectJobs" />
@@ -35,7 +35,8 @@ export default defineComponent({
     const projectJobs = computed(() => projectStore.projectJobs.value)
 
     return {
-      projectJobs
+      projectJobs,
+      jobsLoading: projectStore.jobsLoading
     }
   }
 })
