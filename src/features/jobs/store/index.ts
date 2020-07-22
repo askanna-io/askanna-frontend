@@ -5,7 +5,8 @@ import { mutations } from './mutations'
 import { JobsState, JOBS_STORE } from './types'
 
 export const state: JobsState = {
-  list: []
+  list: [],
+  jobsLoading: true
 }
 
 const namespaced: boolean = true

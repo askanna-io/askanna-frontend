@@ -3,7 +3,7 @@ import { JOBS_STORE, getJobsList } from '../store/types'
 
 export default function () {
   const state = {
-    ...useState(JOBS_STORE, { list: 'list' })
+    ...useState(JOBS_STORE, { list: 'list', jobsLoading: 'jobsLoading' })
   }
 
   const actions = {

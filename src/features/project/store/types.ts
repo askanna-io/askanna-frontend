@@ -11,6 +11,7 @@ export interface ProjectState {
     limit: 10
     offset: 0
   }
+  jobsLoading: Boolean
 }
 
 interface Project {
@@ -36,6 +37,7 @@ export const action = {
 }
 
 export const mutation = {
+  SET_LOADING: 'SET_LOADING',
   SET_PROJECT: 'SET_PROJECT',
   SET_PROJECTS: 'SET_PROJECTS',
   UPDATE_ROJECT: 'UPDATE_ROJECT',
