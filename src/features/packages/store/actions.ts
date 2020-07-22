@@ -13,6 +13,8 @@ const api = apiStringify(serviceName)
 
 export const actions: ActionTree<PackagesState, RootState> = {
   async [type.getProjectPackages]({ commit }, uuid) {
+    commit(type.SET_LOADING, { name: 'loadingPackages', value: true })
+
     let packages
     try {
       packages = await apiService({
@@ -21,10 +23,13 @@ export const actions: ActionTree<PackagesState, RootState> = {
         uuid
       })
     } catch (e) {
+      commit(type.SET_LOADING, { name: 'loadingPackages', value: false })
+
       logger.error(commit, 'Error on load packages in getProjectPackages action.\nError: ', e)
       return
     }
     commit(type.SET_PROJECT_PACKAGES, packages)
+    commit(type.SET_LOADING, { name: 'loadingPackages', value: false })
   },
 
   async [type.getTargetPackage]({ commit }, uuid) {

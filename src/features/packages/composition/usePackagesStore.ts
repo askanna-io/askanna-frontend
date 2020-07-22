@@ -3,7 +3,11 @@ import { PACKAGES_STORE, getProjectPackages, downloadPackage, resetStore } from 
 
 export default function () {
   const state = {
-    ...useState(PACKAGES_STORE, { projectPackages: 'projectPackages', projectPackageHistory: 'projectPackageHistory' })
+    ...useState(PACKAGES_STORE, {
+      projectPackages: 'projectPackages',
+      projectPackageHistory: 'projectPackageHistory',
+      loadingPackages: 'loadingPackages'
+    })
   }
 
   const actions = {

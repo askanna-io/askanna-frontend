@@ -1,3 +1,4 @@
+import { set } from 'lodash'
 import * as type from './types'
 import { MutationTree } from 'vuex'
 import { Package, PackagesState } from './types'
@@ -14,12 +15,16 @@ export const mutations: MutationTree<PackagesState> = {
     })
     const [projectPackages] = data.slice(0, 1)
 
-    state.projectPackages = [projectPackages]
+    state.projectPackages = projectPackages
     state.projectPackageHistory = data
   },
 
   [type.RESET_STORE](state) {
     state.projectPackages = []
     state.projectPackageHistory = []
+  },
+
+  [type.SET_LOADING](state, { name, value }) {
+    set(state, name, value)
   }
 }

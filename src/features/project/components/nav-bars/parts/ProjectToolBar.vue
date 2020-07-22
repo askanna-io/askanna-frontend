@@ -40,7 +40,7 @@ export default defineComponent({
       {
         id: 1,
         name: 'Code',
-        to: 'workspace-project-packages',
+        to: 'workspace-project-code',
         show: !context.root.isNotBeta
       },
       {

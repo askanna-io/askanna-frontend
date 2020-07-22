@@ -6,7 +6,8 @@ import { PackagesState, PACKAGES_STORE } from './types'
 
 export const state: PackagesState = {
   projectPackages: [],
-  projectPackageHistory: []
+  projectPackageHistory: [],
+  loadingPackages: true
 }
 
 const namespaced: boolean = true

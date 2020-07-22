@@ -17,27 +17,25 @@ export default defineComponent({
     onBeforeMount(async () => {
       const { name } = context.root.$route
 
-      if (name === 'workspace-project-code') {
-        let { packageId, projectId } = context.root.$route.params
+      let { packageId, projectId } = context.root.$route.params
 
-        if (!packageId) {
-          await packagesStore.getProjectPackages(projectId)
-          const lastPackage = packagesStore.projectPackages.value
-            ? packagesStore.projectPackages.value
-            : { short_uuid: '' }
+      if (!packageId) {
+        await packagesStore.getProjectPackages(projectId)
+        const lastPackage = packagesStore.projectPackages.value
+          ? packagesStore.projectPackages.value
+          : { short_uuid: '' }
 
-          packageId = lastPackage.short_uuid
-        }
-        loading.value = false
-
-        context.root.$router.push({
-          name: 'workspace-project-package',
-          params: {
-            projectId,
-            packageId
-          }
-        })
+        packageId = lastPackage.short_uuid
       }
+      loading.value = false
+
+      context.root.$router.push({
+        name: 'workspace-project-code-package-history',
+        params: {
+          projectId,
+          packageId
+        }
+      })
     })
 
     onUnmounted(() => {
