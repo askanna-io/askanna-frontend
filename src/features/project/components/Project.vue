@@ -4,7 +4,7 @@
       <v-container fluid>
         <v-row>
           <v-col cols="4">
-            <v-text-field label="Project name" outlined dense></v-text-field>
+            <v-text-field autofocus label="Project name" outlined dense></v-text-field>
           </v-col>
         </v-row>
         <v-row>
@@ -20,7 +20,6 @@
             <v-textarea outlined :rows="3" label="Project description (optional)" value="" />
           </v-col>
         </v-row>
-
         <v-row>
           <v-col cols="12">
             <v-card class="px-2" flat outlined>
@@ -54,10 +53,10 @@
         </v-row>
         <v-row>
           <v-col cols="6">
-            <v-btn class="ma-2" outlined color="primary" :to="{ path: '/workspace/project/1' }">
-              Create project
+            <v-btn small outlined text color="secondary" class="ma-2 btn--hover" :to="{ path: '/workspace/project/1' }">
+              Create
             </v-btn>
-            <v-btn class="ma-2" outlined color="secondary" :to="{ path: '/workspace' }">
+            <v-btn small outlined text color="secondary" class="ma-2 btn--hover" :to="{ path: '/workspace' }">
               Cancel
             </v-btn>
           </v-col>

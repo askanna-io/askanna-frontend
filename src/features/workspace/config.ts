@@ -182,7 +182,7 @@ export default {
           component: () => import(/* webpackChunkName: "workspace-new-project" */ './views/new-project.vue'),
           name: 'workspace-new-project',
           meta: {
-            breadcrumb: 'Workspace - #:workspaceId'
+            breadcrumb: 'New project - #:workspaceId'
           }
         },
         {

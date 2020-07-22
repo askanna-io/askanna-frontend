@@ -1,9 +1,9 @@
 <template>
   <v-card class="mx-auto" outlined>
-    <v-breadcrumbs :items="items">
+    <v-breadcrumbs :items="breadcrumbs">
       <template v-slot:item="{ item }">
-        <v-breadcrumbs-item :to="item.to" :disabled="item.disabled">
-          {{ item.text.toUpperCase() }}
+        <v-breadcrumbs-item :to="item.to" exact>
+          {{ item.title }}
         </v-breadcrumbs-item>
       </template>
     </v-breadcrumbs>
@@ -37,6 +37,8 @@
 </template>
 
 <script>
+import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
+
 import useProject from '@/features/project/composition/useProject'
 import Project from '@/features/project/components/Project'
 import { computed, reactive, onBeforeMount, defineComponent } from '@vue/composition-api'
@@ -48,6 +50,7 @@ export default defineComponent({
 
   setup(props, context) {
     const project = useProject(context)
+    const breadcrumbs = useBreadcrumbs(context, { start: 0, end: 3 })
 
     return {
       stickedVal: false,
@@ -59,23 +62,7 @@ export default defineComponent({
         description:
           'Turns out semicolon-less style is easier and safer in TS because most gotcha edge cases are type invalid as well.'
       },
-      items: [
-        {
-          text: 'Dashboard',
-          disabled: false,
-          to: '/'
-        },
-        {
-          text: 'Workspaces',
-          disabled: false,
-          to: '/workspace/index'
-        },
-        {
-          text: 'Create new project',
-          disabled: true,
-          to: ''
-        }
-      ],
+      breadcrumbs,
       currentTab: 0,
       projectTools: [
         {
