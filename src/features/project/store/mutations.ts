@@ -18,5 +18,8 @@ export const mutations: MutationTree<projectState> = {
   },
   [mutation.SET_LOADING](state, { name, value }) {
     set(state, name, value)
+  },
+  [mutation.SET_LAST_PACKAGE](state, data) {
+    state.lastPackage = data
   }
 }

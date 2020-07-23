@@ -7,7 +7,8 @@ export default function () {
       project: 'project',
       projects: 'projects',
       projectJobs: 'projectJobs',
-      jobsLoading: 'jobsLoading'
+      jobsLoading: 'jobsLoading',
+      lastPackage: 'lastPackage'
     })
   }
 
