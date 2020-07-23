@@ -5,6 +5,7 @@
     single-expand
     item-key="short_uuid"
     class="job-table scrollbar"
+    no-data-text="For this project, there are no jobs configured."
     :items="jobList"
     :expanded.sync="expanded"
     :headers="JobsListHeaders"
