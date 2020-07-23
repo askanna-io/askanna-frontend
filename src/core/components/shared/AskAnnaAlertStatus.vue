@@ -1,6 +1,6 @@
 <template>
   <v-alert text outlined dense :color="statusColor" :icon="statusIcon" :height="32" class="mb-0 askanna-alert">
-    Last status: {{ statusValue }} ({{ ago(statusData.finished) }})
+    Last status: {{ statusValue }} ({{ ago(statusData.created) }})
   </v-alert>
 </template>
 

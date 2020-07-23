@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import JobsList from '@jobs/components/JobsList'
+import JobsList from '@/features/jobs/components/JobsList'
 import useQuery from '@/core/composition/useQuery'
 import useProjectStore from '@project/composition/useProjectStore'
 import { computed, defineComponent, onBeforeMount } from '@vue/composition-api'

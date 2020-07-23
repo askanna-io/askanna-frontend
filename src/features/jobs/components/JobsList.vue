@@ -25,12 +25,12 @@
       </td>
     </template>
 
-    <template v-slot:item.uuid>
-      NPOBP
+    <template v-slot:item.uuid="{ item }">
+      {{ item.runs.count }}
     </template>
 
     <template v-slot:item.status="{ item }">
-      <ask-anna-alert-status :statusData="item.status && item.status.lastrun" />
+      <ask-anna-alert-status :statusData="item.runs.status" />
     </template>
     <template v-slot:item.actions="{ item }" v-if="isNotBeta">
       <v-chip-group outlined v-model="selection" mandatory>
