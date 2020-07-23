@@ -6,7 +6,7 @@
           <v-tooltip top>
             <template v-slot:activator="{ on }">
               <div v-on="on">
-                <a v-if="file" @click="handeBackToPackageRoot" class="text-body-2"
+                <a v-if="currentPath" @click="handeBackToPackageRoot" class="text-body-2"
                   >Package #{{ packageId.slice(0, 4) }}<v-icon small>mdi-chevron-right</v-icon></a
                 >
                 <span class="text-body-2" v-else> Package #{{ packageId.slice(0, 4) }}</span>
@@ -87,7 +87,7 @@ export default defineComponent({
     const polling = ref(null)
     const isRaplace = ref(false)
     const file = ref(packageStore.file)
-    const { workspaceId, projectId, packageId, versionId = 0, folderName = '' } = context.root.$route.params
+    const { workspaceId, projectId, packageId, folderName = '' } = context.root.$route.params
 
     onBeforeMount(async () => {
       await getPackage()
@@ -149,22 +149,23 @@ export default defineComponent({
 
     watch(currentPath, async (currentPath, prevPath) => {
       const path = currentPath && !currentPath.is_dir && currentPath.name !== '' ? currentPath.path : ''
+
       if (prevPath && path !== '' && path === prevPath.path) return
       await packageStore.getFileSource(path)
     })
 
     const handleClickOnRow = async item => {
-      let path = `/${workspaceId}/project/${projectId}/code/${packageId}/version/${versionId}/${folderName}/${item.name}`
+      let path = `/${workspaceId}/project/${projectId}/code/${packageId}/${folderName}/${item.name}`
       if (item.parent === '/') {
-        path = `/${workspaceId}/project/${projectId}/code/${packageId}/version/${versionId}/${item.name}`
+        path = `/${workspaceId}/project/${projectId}/code/${packageId}/${item.name}`
       }
 
       if (typeof item.path === 'undefined') {
-        path = `/${workspaceId}/project/${projectId}/code/${packageId}/version/${versionId}`
+        path = `/${workspaceId}/project/${projectId}/code/${packageId}`
       }
 
       if (item.is_dir) {
-        path = `/${workspaceId}/project/${projectId}/code/${packageId}/version/${versionId}/${item.path}`
+        path = `/${workspaceId}/project/${projectId}/code/${packageId}/${item.path}`
       }
 
       context.root.$router.push({ path })
@@ -173,7 +174,7 @@ export default defineComponent({
     const handleHistory = () => {
       context.root.$router.push({
         name: 'workspace-project-code-package-history',
-        params: { projectId, packageId, versionId: '1' }
+        params: { projectId, packageId }
       })
     }
 
