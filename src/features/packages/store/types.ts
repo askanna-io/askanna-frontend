@@ -3,6 +3,7 @@ export interface PackagesState extends Packages {}
 export interface Packages {
   projectPackages: Package[]
   projectPackageHistory: Package[]
+  loadingPackages: Boolean
 }
 
 export interface Package {
@@ -24,5 +25,6 @@ export const downloadPackage = 'downloadPackage'
 export const getTargetPackage = 'getTargetPackage'
 
 //mutations
+export const SET_LOADING = 'SET_LOADING'
 export const RESET_STORE = 'RESET_STORE'
 export const SET_PROJECT_PACKAGES = 'SET_PROJECT_PACKAGES'

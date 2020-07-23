@@ -8,8 +8,8 @@
           text
           small
           :to="{
-            name: 'workspace-project-packages-uuid-version-uuid',
-            params: { ...$route.params, packageId: value, versionId: 1 }
+            name: 'workspace-project-package',
+            params: { ...$route.params, packageId: value }
           }"
         >
           #{{ value.slice(0, 4) }}</v-btn

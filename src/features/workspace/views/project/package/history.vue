@@ -156,8 +156,8 @@ export default defineComponent({
 
     const handleClickRow = ({ short_uuid, versionId }) => {
       context.root.$router.push({
-        name: 'workspace-project-package-version',
-        params: { projectId: context.root.$route.params.projectId, packageId: short_uuid, versionId }
+        name: 'workspace-project-package-folder',
+        params: { projectId: context.root.$route.params.projectId, packageId: short_uuid, versionId, folderName: '' }
       })
     }
 

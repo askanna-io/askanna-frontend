@@ -54,42 +54,37 @@ const jobRun = [
 
 const packageRoutes = [
   {
-    path: '',
-    component: () => import(/* webpackChunkName: "workspace-project-package" */ './views/project/package/index.vue'),
-    name: 'workspace-project-package',
-    meta: {
-      breadcrumb: 'Packages - #:packageId'
-    }
-  },
-  {
-    path: 'history',
+    path: ':packageId',
     component: () =>
-      import(/* webpackChunkName: "workspace-project-package-history" */ './views/project/package/history.vue'),
-    name: 'workspace-project-package-history',
+      import(/* webpackChunkName: "workspace-project-package-uuid" */ './views/project/package/index.vue'),
+    name: 'workspace-project-package-index',
     meta: {
-      breadcrumb: 'History'
-    }
-  },
-  {
-    path: 'version',
-    redirect: { name: 'workspace-project-packages' }
-  },
-  {
-    path: 'version/:versionId',
-    component: () =>
-      import(/* webpackChunkName: "workspace-project-package-version" */ './views/project/package/index.vue'),
-    name: 'workspace-project-package-version',
-    meta: {
-      breadcrumb: 'Version - #:versionId'
+      breadcrumb: 'Code - #:packageId'
     },
     children: [
       {
-        path: ':folderName(.*)',
+        path: '',
+        name: 'workspace-project-package',
+
+        component: () => import(/* webpackChunkName: "workspace-project-package" */ './views/project/package/uuid.vue'),
+        children: []
+      },
+      {
+        path: 'history',
         component: () =>
           import(
-            /* webpackChunkName: "workspace-project-packages-version-name" */ './views/project/packages/package/index.vue'
+            /* webpackChunkName: "workspace-project-code-package-history" */ './views/project/package/history.vue'
           ),
-        name: 'workspace-project-packages-version-name-folder',
+        name: 'workspace-project-code-package-history',
+        meta: {
+          breadcrumb: 'History'
+        }
+      },
+      {
+        path: ':folderName(.*)',
+        component: () =>
+          import(/* webpackChunkName: "workspace-project-package-folder" */ './views/project/package/uuid.vue'),
+        name: 'workspace-project-package-folder',
         meta: {
           breadcrumb: ':folderName'
         },
@@ -183,11 +178,12 @@ export default {
           meta: {
             breadcrumb: 'Project - #:projectId'
           },
+
           children: [
             {
               path: '',
               name: 'workspace-project',
-              redirect: { name: 'workspace-project-packages' },
+              redirect: { name: 'workspace-project-code' },
 
               component: () =>
                 import(/* webpackChunkName: "workspace-project-uuid-activity" */ './views/project/index.vue'),
@@ -225,21 +221,21 @@ export default {
               }
             },
             {
-              name: 'workspace-project-packages',
-              path: 'packages',
+              path: 'code/history',
               component: () =>
-                import(/* webpackChunkName: "workspace-project-packages-index" */ './views/project/packages/index.vue'),
+                import(
+                  /* webpackChunkName: "workspace-project-package-history" */ './views/project/package/code-history.vue'
+                ),
+              name: 'workspace-project-package-history',
               meta: {
-                breadcrumb: 'Packages'
+                breadcrumb: 'History'
               }
             },
             {
-              path: ':packageId',
+              path: 'code',
+              name: 'workspace-project-code',
               component: () =>
-                import(/* webpackChunkName: "workspace-project-package-index" */ './views/project/package.vue'),
-              meta: {
-                breadcrumb: 'Package - #:packageId'
-              },
+                import(/* webpackChunkName: "workspace-project-package" */ './views/project/package.vue'),
               children: packageRoutes
             }
           ]
