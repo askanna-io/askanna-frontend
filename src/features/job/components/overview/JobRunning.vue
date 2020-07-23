@@ -1,6 +1,6 @@
 <template>
   <v-card class="mx-auto" flat>
-    <v-card-title>Runnig the job</v-card-title>
+    <v-card-title>Running the job</v-card-title>
     <v-row v-if="isNotBeta">
       <v-col cols="12" sm="4">
         <v-select :items="versions" class="px-2" dense outlined persistent-hint label="Version" hint="Select package" />
