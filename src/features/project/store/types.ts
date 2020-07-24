@@ -12,7 +12,9 @@ export interface ProjectState {
     offset: 0
   }
   menu: {
+    isSticked: boolean
     isShowProjectBar: boolean
+    sticked: boolean
   }
 }
 

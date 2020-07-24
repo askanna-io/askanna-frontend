@@ -2,15 +2,6 @@
   <div>
     <div v-sticky="true" on-stick="onStick" sticky-offset="{top: 52, bottom: 10}">
       <v-toolbar v-if="sticked" ref="refToolbar" dense color="white" class="br-r5 ma-3" :flat="!sticked">
-        <v-btn
-          text
-          icon
-          class="align-self-center mr-4"
-          :color="(isShowProjectBar && 'primary') || ''"
-          @click="handleShowProjectBar"
-        >
-          <v-icon>mdi-menu</v-icon>
-        </v-btn>
         <v-breadcrumbs v-if="sticked" :items="projectBreadcrumbs">
           <template v-slot:item="{ item }">
             <v-breadcrumbs-item :to="item.to" exact>
@@ -19,7 +10,7 @@
           </template>
         </v-breadcrumbs>
       </v-toolbar>
-      <v-card v-if="isShowProjectBar && sticked" :class="{ 'ma-3': sticked }">
+      <v-card v-if="sticked" :class="{ 'ma-3': sticked }">
         <v-toolbar dense color="white" flat class="br-r5 ma-3">
           <v-tabs v-model="currentTab" left align-with-title>
             <v-tabs-slider color="primary" />
@@ -100,14 +91,21 @@ export default defineComponent({
       type: Boolean,
       default: false
     },
+    sticked: {
+      type: Boolean,
+      default: false
+    },
     handleShowProjectBar: {
+      type: Function,
+      default: () => {}
+    },
+    handleOnStick: {
       type: Function,
       default: () => {}
     }
   },
 
   setup(props, context) {
-    let sticked = ref(false)
     const refToolbar = ref(null)
 
     const currentTab = ref('workspace-project-activity')
@@ -139,11 +137,9 @@ export default defineComponent({
       }
     ]
 
-    const onStick = data => {
-      sticked.value = data.sticked
-    }
+    const onStick = data => props.handleOnStick(data.sticked)
 
-    return { sticked, onStick, refToolbar, projectTools, currentTab }
+    return { onStick, refToolbar, projectTools, currentTab }
   }
 })
 </script>

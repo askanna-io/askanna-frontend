@@ -2,6 +2,8 @@
   <v-app>
     <v-app-bar app clipped-left dark color="primary" dense>
       <v-app-bar-nav-icon @click.stop="mobileMenu = !mobileMenu" class="hidden-sm-and-up" />
+      <v-app-bar-nav-icon v-if="menu.isSticked" @click.stop="stickedVM = !stickedVM" />
+
       <v-container fluid>
         <div
           class="d-flex justify-space-between justify-sm-center align-center justify-md-space-between"
@@ -34,7 +36,7 @@
               </v-list-item>
             </v-list>
           </v-navigation-drawer>
-          <div md="auto" sm="12" text-sm-center>
+          <div md="auto" sm="21" text-sm-center>
             <a href="/">
               <img alt="AskAnna logo" src="@/assets/logo.svg" class="logo" />
             </a>
@@ -192,6 +194,8 @@
 </template>
 
 <script>
+import useProject from '@project/composition/useProject'
+
 import { createNamespacedHelpers } from 'vuex'
 import { logout } from '@/core/store/actionTypes'
 import useTitle from '@/core/composition/useTitle'
@@ -207,6 +211,8 @@ export default defineComponent({
   setup(props, context) {
     useTitle(context)
     const authStore = useAuthStore()
+    const project = useProject(context)
+
     const workspaceStore = useWorkspaceStore()
 
     const logout = () => authStore.actions.logout()
@@ -229,6 +235,7 @@ export default defineComponent({
     }
 
     return {
+      ...project,
       logout,
       onResize,
       workspaces,

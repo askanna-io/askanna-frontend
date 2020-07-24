@@ -2,7 +2,9 @@
   <v-card class="mx-auto" outlined sticky-container>
     <project-nav-bar
       :job="job"
+      :sticked="menu.sticked"
       :isShowProjectBar="menu.isShowProjectBar"
+      :handleOnStick="handleOnStick"
       :handleShowProjectBar="handleShowProjectBar"
       :project="project"
       :routeName="routeName"
@@ -35,7 +37,12 @@ export default defineComponent({
     const handleShowProjectBar = () =>
       project.setMenu({ name: 'menu.isShowProjectBar', value: !project.menu.value.isShowProjectBar })
 
-    return { ...project, ...jobStore, routeName, projectBreadcrumbs, handleShowProjectBar }
+    const handleOnStick = value => {
+      project.setMenu({ name: 'menu.isSticked', value })
+      if (!value) project.setMenu({ name: 'menu.sticked', value: false })
+    }
+
+    return { ...project, ...jobStore, routeName, projectBreadcrumbs, handleShowProjectBar, handleOnStick }
   }
 })
 </script>

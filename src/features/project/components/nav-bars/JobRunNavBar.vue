@@ -1,17 +1,7 @@
 <template>
   <div :class="{ 'mb-3': sticked }">
     <div v-sticky="true" on-stick="onStick" :sticky-margin-width="0" sticky-offset="{top: 52, bottom: 10}">
-      <v-toolbar dense color="white" class="br-r5 ma-3" :flat="!sticked">
-        <v-btn
-          text
-          icon
-          class="align-self-center mr-4"
-          :color="(isShowProjectBar && 'primary') || ''"
-          @click="isShowProjectBar = !isShowProjectBar"
-        >
-          <v-icon>mdi-menu</v-icon>
-        </v-btn>
-
+      <v-toolbar v-if="sticked" dense color="white" class="br-r5 ma-3" :flat="!sticked">
         <v-breadcrumbs :items="breadcrumbs">
           <template v-slot:item="{ item }">
             <v-breadcrumbs-item :to="item.to" exact>
@@ -22,7 +12,7 @@
         <v-spacer />
       </v-toolbar>
       <v-slide-y-transition>
-        <v-card v-if="isShowProjectBar" :flat="!sticked" :class="{ 'ma-3': sticked }">
+        <v-card v-if="sticked" :flat="!sticked" :class="{ 'ma-3': sticked }">
           <v-divider v-if="!sticked" />
           <project-tool-bar :projectName="project.name" />
           <v-divider />
@@ -96,6 +86,15 @@ export default defineComponent({
           name: ''
         }
       }
+    },
+    sticked: {
+      type: Boolean,
+      default: false
+    },
+
+    handleOnStick: {
+      type: Function,
+      default: () => {}
     }
   },
 
@@ -127,11 +126,7 @@ export default defineComponent({
     const end = context.root.$route.name.indexOf('jobs-name') >= 1 ? 5 : 3
     const breadcrumbs = useBreadcrumbs(context, { start: 0, end: 7 })
 
-    let sticked = ref(false)
-
-    const onStick = data => {
-      sticked.value = data.sticked
-    }
+    const onStick = data => props.handleOnStick(data.sticked)
 
     const { jobId, jobRunId } = context.root.$route.params
     const jobRun = computed(() => jobRunStore.jobRun.value)
@@ -148,7 +143,6 @@ export default defineComponent({
     }
 
     return {
-      sticked,
       onStick,
       breadcrumbs,
       isShowProjectBar,
