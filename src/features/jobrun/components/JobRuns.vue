@@ -34,7 +34,6 @@
         </td>
         <td class="text-start">
           <b>Started:</b> &nbsp;{{ $moment(item.created).format(' Do MMMM YYYY, h:mm:ss a') }} <br />
-          <b>Finished:</b> &nbsp;{{ showFinished(item) }}<br />
           <b>Duration:</b> &nbsp;{{ calculateDuration(item) }}<br />
         </td>
       </tr>
@@ -100,12 +99,6 @@ export default defineComponent({
       )
     }
 
-    const showFinished = item => {
-      if (['COMPLETED', 'SUCCESS', 'FAILURE', 'FAILED'].indexOf(item.status) !== -1) {
-        return moment.$moment(item.modified).format(' Do MMMM YYYY, h:mm:ss a')
-      }
-    }
-
     const calculateDuration = item => {
       const currentTime = new Date().toTimeString()
       if (['PENDING', 'IN_PROGRESS', 'SUBMITTED'].indexOf(item.status) !== -1) {
@@ -123,7 +116,6 @@ export default defineComponent({
       headers,
       pageCount,
       handleCopy,
-      showFinished,
       handleClickOnRow,
       calculateDuration
     }
