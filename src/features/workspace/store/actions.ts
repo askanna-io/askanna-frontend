@@ -69,11 +69,15 @@ export const actions: ActionTree<workspaceState, RootState> = {
         const packages = await apiService({
           action: api.getProjectPackages,
           serviceName,
-          uuid: project.short_uuid
+          uuid: project.short_uuid,
+          params: {
+            limit: 1,
+            offset: 0
+          }
         })
 
         project.packages = packages
-        project.lastPackage = packages.length ? packages[0] : { short_uuid: '' }
+        project.lastPackage = packages.results.length ? packages.results[0] : { short_uuid: '' }
 
         return project
       })

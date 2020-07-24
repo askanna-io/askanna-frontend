@@ -12,6 +12,7 @@ export interface ProjectState {
     offset: 0
   }
   jobsLoading: Boolean
+  lastPackage: any
 }
 
 interface Project {
@@ -33,6 +34,7 @@ export const action = {
   getProject: 'getProject',
   getProjects: 'getProjects',
   getProjectJobs: 'getProjectJobs',
+  getLastPackage: 'getLastPackage',
   resetProjectJobs: 'resetProjectJobs'
 }
 
@@ -41,6 +43,7 @@ export const mutation = {
   SET_PROJECT: 'SET_PROJECT',
   SET_PROJECTS: 'SET_PROJECTS',
   UPDATE_ROJECT: 'UPDATE_ROJECT',
+  SET_LAST_PACKAGE: 'SET_LAST_PACKAGE',
   SET_PROJECT_JOBS: 'SET_PROJECT_JOBS',
   RESET_PORJECT_JOBS: 'RESET_PORJECT_JOBS'
 }

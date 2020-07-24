@@ -1,7 +1,9 @@
 import { ActionTree } from 'vuex'
+import { logger } from '@/core/plugins/logger'
 import apiService from '@/core/services/apiService'
 import * as rootTypes from '@/core/store/actionTypes'
 import { apiStringify } from '@/core/services/api-settings'
+
 import { projectState, PROJECT_STORE, action, mutation } from './types'
 
 const serviceName = PROJECT_STORE
@@ -72,5 +74,28 @@ export const actions: ActionTree<projectState, RootState> = {
 
   async [action.resetProjectJobs]({ commit }) {
     commit(mutation.RESET_PORJECT_JOBS)
+  },
+
+  async [action.getLastPackage]({ commit }, uuid) {
+    let packages
+    let packageData = { short_uuid: '' }
+    try {
+      packages = await apiService({
+        action: api.packages,
+        serviceName,
+        uuid,
+        params: {
+          limit: 1,
+          offset: 0
+        }
+      })
+      packageData = packages && packages.results && packages.results ? packages.results[0] : null
+    } catch (e) {
+      logger.error(commit, 'Error on load packageData in getLastPackage action.\nError: ', e)
+
+      return
+    }
+
+    commit(mutation.SET_LAST_PACKAGE, packageData)
   }
 }
