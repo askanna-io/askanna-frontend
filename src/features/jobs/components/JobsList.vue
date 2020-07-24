@@ -12,9 +12,9 @@
     @item-expanded="handleExpand"
     @click:row="handleJobClick"
   >
-    <template v-slot:expanded-item>
+    <template v-slot:expanded-item="{ item }">
       <td :colspan="8" class="pa-0">
-        <v-skeleton-loader ref="skeleton" :type="'table-row'" :loading="loading">
+        <v-skeleton-loader v-if="item.runs.count" ref="skeleton" :type="'table-row'" :loading="loading">
           <job-runs
             :items="runs"
             :height="calcSubHeight"
@@ -22,6 +22,7 @@
             @handleClickOnRow="handleClickOnRow"
           />
         </v-skeleton-loader>
+        <div v-else class="ma-2 text-center">No runs yet</div>
       </td>
     </template>
 
@@ -136,7 +137,7 @@ export default defineComponent({
     },
     async handleExpand({ item, value }) {
       this.loading = true
-      if (!value) return
+      if (!value || !item.runs.count) return
       this.currentJob = item
 
       await this.getRunsJob(item.short_uuid)

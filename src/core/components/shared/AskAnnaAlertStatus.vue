@@ -1,6 +1,6 @@
 <template>
   <v-alert text outlined dense :color="statusColor" :icon="statusIcon" :height="32" class="mb-0 askanna-alert">
-    Last status: {{ statusValue }} ({{ ago(statusData.created) }})
+    Last status: {{ statusValue }} {{ statusData.created && `(${ago(statusData.created)})` }}
   </v-alert>
 </template>
 
@@ -31,34 +31,45 @@ export default defineComponent({
   setup(props, context) {
     const moment = useMoment(context)
 
-    const ALERT_COLORS = reactive({
+    const COLORS = {
+      NOT_RUNS: 'grey',
       SUCCESS: 'success',
+      COMPLETED: 'success',
+      UNDEFINED: 'grey',
       FAILURE: 'error',
-      UNDIFENED: 'grey',
-      PENDING: 'yellow darken-2',
-      SUBMITTED: 'amber lighten-1'
-    })
-    const ALERT_VALUES = reactive({
-      SUCCESS: 'success',
-      UNDIFENED: 'undefined',
-      FAILURE: 'failure',
-      PENDING: 'pending',
-      SUBMITTED: 'submitted'
-    })
-
-    const ALERT_ICONS = reactive({
-      SUCCESS: 'mdi-check-circle',
-      UNDIFENED: 'mdi-do-not-disturb',
-      FAILURE: 'mdi-alert-decagram-outline',
+      FAILED: 'error',
+      IN_PROGRESS: 'yellow darken-2',
+      SUBMITTED: 'amber lighten-1',
+      PENDING: 'blue lighten-3'
+    }
+    const ICONS = {
+      NOT_RUNS: 'mdi-do-not-disturb',
+      UNDEFINED: 'mdi-do-not-disturb',
+      FAILURE: 'mdi-alert-circle-outline',
+      FAILED: 'mdi-alert-circle-outline',
+      SUCCESS: 'mdi-checkbox-marked-circle',
+      COMPLETED: 'mdi-checkbox-marked-circle',
       PENDING: 'mdi-progress-clock',
-      SUBMITTED: 'mdi-progress-check'
-    })
+      SUBMITTED: 'mdi-progress-check',
+      IN_PROGRESS: 'mdi-progress-clock'
+    }
+    const TEXTS = {
+      NOT_RUNS: 'No runs yet',
+      SUCCESS: 'Succeeded',
+      COMPLETED: 'Succeeded',
+      UNDEFINED: 'Undefined',
+      FAILURE: 'Failure',
+      FAILED: 'Failure',
+      PENDING: 'Pending',
+      SUBMITTED: 'Submitted',
+      IN_PROGRESS: 'In progress'
+    }
 
     const status = computed(() => (props.statusData.status ? props.statusData.status : 'UNDIFENED'))
 
-    const statusIcon = computed(() => ALERT_ICONS[status.value])
-    const statusColor = computed(() => ALERT_COLORS[status.value])
-    const statusValue = computed(() => ALERT_VALUES[status.value])
+    const statusIcon = computed(() => ICONS[status.value])
+    const statusColor = computed(() => COLORS[status.value])
+    const statusValue = computed(() => TEXTS[status.value])
 
     return { statusColor, statusValue, statusIcon, ago: moment.ago }
   }

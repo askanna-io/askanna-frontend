@@ -67,7 +67,7 @@ export const actions: ActionTree<projectState, RootState> = {
       return
     }
 
-    const results = await Promise.all(
+    await Promise.all(
       map(jobs, async (job: any) => {
         const runs = await apiService({
           action: api.getLastJobRun,
@@ -78,8 +78,7 @@ export const actions: ActionTree<projectState, RootState> = {
             offset: 0
           }
         })
-        const run =
-          runs && runs.results.length ? runs.results[0] : { status: { status: 'UNDIFENED', created: '' }, data: '' }
+        const run = runs && runs.results.length ? runs.results[0] : { status: 'NOT_RUNS', created: '' }
         job.runs = { count: runs.count, status: { status: run.status, created: run.created } }
 
         return job
