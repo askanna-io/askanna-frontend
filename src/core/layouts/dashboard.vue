@@ -2,7 +2,7 @@
   <v-app>
     <v-app-bar app clipped-left dark color="primary" dense>
       <v-app-bar-nav-icon @click.stop="mobileMenu = !mobileMenu" class="hidden-sm-and-up" />
-      <v-app-bar-nav-icon v-if="menu.isSticked" @click.stop="stickedVM = !stickedVM" />
+      <v-app-bar-nav-icon v-if="isSticked" @click.stop="stickedVM = !stickedVM" />
 
       <v-container fluid>
         <div
@@ -226,6 +226,8 @@ export default defineComponent({
         workspaceStore.getWorkspace(uuid)
       }
     })
+
+    const isSticked = computed(() => project.menu.value.isSticked)
     const handleChangeWorkspace = ({ short_uuid }) => {
       context.root.$router.push({ path: `/${short_uuid}`, params: { workspace: short_uuid } })
     }
@@ -235,6 +237,7 @@ export default defineComponent({
     }
 
     return {
+      isSticked,
       ...project,
       logout,
       onResize,

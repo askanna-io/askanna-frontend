@@ -137,7 +137,9 @@ export default defineComponent({
       }
     ]
 
-    const onStick = data => props.handleOnStick(data.sticked)
+    const onStick = data => {
+      props.handleOnStick(data.sticked)
+    }
 
     return { onStick, refToolbar, projectTools, currentTab }
   }
