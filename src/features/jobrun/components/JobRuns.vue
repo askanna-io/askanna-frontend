@@ -32,14 +32,9 @@
         <td class="text-start">
           <ask-anna-chip-status :status="item.status" />
         </td>
-        <td class="text-start">{{ seconds(item.runtime) }}</td>
         <td class="text-start">
           <b>Started:</b> &nbsp;{{ $moment(item.created).format(' Do MMMM YYYY, h:mm:ss a') }} <br />
-          <b>Finished:</b> &nbsp;{{ $moment(item.finished).format(' Do MMMM YYYY, h:mm:ss a') }}<br />
-          <b>Duration:</b> &nbsp;{{ runTimeHours(item.created, item.finished) }} seconds<br />
-        </td>
-        <td class="text-start">
-          {{ item.memory }}
+          <b>Duration:</b> &nbsp;{{ calculateDuration(item) }}<br />
         </td>
       </tr>
     </template>
@@ -88,9 +83,7 @@ export default defineComponent({
         width: '10%'
       },
       { text: 'Status', value: 'status' },
-      { text: 'Timing', value: 'timing' },
-      { text: 'CPU time  (h:m:s)', value: 'runtime' },
-      { text: 'Memory used', value: 'memory' }
+      { text: 'Timing', value: 'runtime' }
     ]
 
     const handleClickOnRow = value => context.emit('handleClickOnRow', value)
@@ -106,12 +99,25 @@ export default defineComponent({
       )
     }
 
+    const calculateDuration = item => {
+      const currentTime = new Date().toTimeString()
+      if (['PENDING', 'IN_PROGRESS', 'SUBMITTED'].indexOf(item.status) !== -1) {
+        return moment.duratioHumanize(item.created, moment.$moment())
+      }
+
+      if (['COMPLETED', 'SUCCESS', 'FAILURE', 'FAILED'].indexOf(item.status) !== -1) {
+        return moment.duratioHumanize(item.created, item.modified)
+      }
+      return ''
+    }
+
     return {
       ...moment,
       headers,
       pageCount,
       handleCopy,
-      handleClickOnRow
+      handleClickOnRow,
+      calculateDuration
     }
   }
 })

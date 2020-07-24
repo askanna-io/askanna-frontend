@@ -71,7 +71,7 @@ export default defineComponent({
         },
 
         {
-          text: 'Date',
+          text: 'Start date',
           value: moment.$moment(props.jobRun.created).format(' Do MMMM YYYY, h:mm:ss a'),
           component: 'JobRunInfoText'
         },
@@ -86,30 +86,20 @@ export default defineComponent({
           component: 'JobRunInfoText'
         },
         {
-          text: 'Environment',
-          value: props.jobRun.runner.name,
+          text: 'Duration',
+          value: calculateDuration(props.jobRun),
           component: 'JobRunInfoText'
         },
         {
-          text: 'Duratation',
-          value: '',
+          text: 'Environment',
+          value: props.jobRun.runner.name,
           component: 'JobRunInfoText'
         },
         {
           text: props.jobRun.runner.cpu_cores > 1 ? 'CPUs' : 'CPU',
           value: props.jobRun.runner.cpu_cores,
           component: 'JobRunInfoText'
-        },
-        {
-          text: 'CPU time',
-          value: calcCPUTime(props.jobRun.runner.cpu_time),
-          component: 'JobRunInfoText'
         }
-        /*{
-          text: 'Memory',
-          value: `${props.jobRun.runner.memory_mib} MB`,
-          component: 'JobRunInfoText'
-        }*/
       ]
       interface VariableItem {
         text: string
@@ -132,6 +122,19 @@ export default defineComponent({
       let display_time = moment.$moment.utc(elapsed_runtime.asMilliseconds()).format('HH:mm:ss')
 
       return display_time
+    }
+
+    const calculateDuration = (item: any) => {
+      const currentTime = new Date().toTimeString()
+      if (['PENDING', 'IN_PROGRESS', 'SUBMITTED'].indexOf(item.status) !== -1) {
+        return moment.duratioHumanize(item.created, moment.$moment().toString())
+      }
+
+      if (['COMPLETED', 'SUCCESS', 'FAILURE', 'FAILED'].indexOf(item.status) !== -1) {
+        return moment.duratioHumanize(item.created, item.modified)
+      }
+
+      return ''
     }
 
     return {
