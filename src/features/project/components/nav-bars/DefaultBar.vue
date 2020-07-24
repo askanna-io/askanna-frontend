@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-sticky="true" on-stick="onStick" sticky-offset="{top: 52, bottom: 10}">
-      <v-toolbar ref="refToolbar" dense color="white" class="br-r5 ma-3" :flat="!sticked">
+      <v-toolbar v-if="sticked" ref="refToolbar" dense color="white" class="br-r5 ma-3" :flat="!sticked">
         <v-btn
           text
           icon
@@ -11,7 +11,7 @@
         >
           <v-icon>mdi-menu</v-icon>
         </v-btn>
-        <v-breadcrumbs :items="projectBreadcrumbs">
+        <v-breadcrumbs v-if="sticked" :items="projectBreadcrumbs">
           <template v-slot:item="{ item }">
             <v-breadcrumbs-item :to="item.to" exact>
               {{ item.title }}
@@ -19,7 +19,7 @@
           </template>
         </v-breadcrumbs>
       </v-toolbar>
-      <v-card v-if="sticked && isShowProjectBar" :class="{ 'ma-3': sticked }">
+      <v-card v-if="isShowProjectBar && sticked" :class="{ 'ma-3': sticked }">
         <v-toolbar dense color="white" flat class="br-r5 ma-3">
           <v-tabs v-model="currentTab" left align-with-title>
             <v-tabs-slider color="primary" />
@@ -34,7 +34,6 @@
               </v-tab>
             </template>
           </v-tabs>
-
           <v-spacer />
         </v-toolbar>
       </v-card>
@@ -54,7 +53,7 @@
     <v-divider />
     <v-card :flat="!sticked" :class="{ 'ma-3': sticked }">
       <v-slide-y-transition>
-        <div v-if="isShowProjectBar && !sticked">
+        <div v-if="!sticked">
           <v-toolbar dense color="white" flat class="br-r5 ma-3">
             <v-tabs v-model="currentTab" left align-with-title>
               <v-tabs-slider color="primary" />
@@ -99,7 +98,7 @@ export default defineComponent({
     },
     isShowProjectBar: {
       type: Boolean,
-      default: true
+      default: false
     },
     handleShowProjectBar: {
       type: Function,

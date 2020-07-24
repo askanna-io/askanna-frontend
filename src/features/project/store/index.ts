@@ -16,7 +16,7 @@ export const state: projectState = {
     offset: 0
   },
   menu: {
-    isShowProjectBar: true
+    isShowProjectBar: false
   }
 }
 

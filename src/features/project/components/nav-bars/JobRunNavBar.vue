@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="{ 'mb-3': sticked }">
     <div v-sticky="true" on-stick="onStick" :sticky-margin-width="0" sticky-offset="{top: 52, bottom: 10}">
       <v-toolbar dense color="white" class="br-r5 ma-3" :flat="!sticked">
         <v-btn
@@ -27,15 +27,17 @@
           <project-tool-bar :projectName="project.name" />
           <v-divider />
           <job-tool-bar :jobName="jobName" :projectName="project.name" />
+          <v-divider v-if="sticked" />
+          <job-run-tool-bar v-if="sticked" :jobRunId="jobRunId" />
         </v-card>
       </v-slide-y-transition>
     </div>
     <v-divider />
 
     <v-card flat>
-      <v-card-title>
-        <span class="title font-weight-light">Job run: #{{ jobRunId }}</span></v-card-title
-      >
+      <v-card-title v-if="!sticked">
+        <span class="title font-weight-light">Job run: #{{ jobRunId }}</span>
+      </v-card-title>
       <v-divider />
 
       <v-skeleton-loader ref="skeleton" :type="'table-row'" :loading="!jobRun">
@@ -43,18 +45,11 @@
         <v-divider />
 
         <v-row>
-          <v-col cols="12">
-            <v-toolbar dense color="white" class="br-r5" flat transition="slide-y-transition">
-              <v-tabs v-model="currentJobRunTab" left align-with-title>
-                <v-tabs-slider color="primary" />
-                <template v-for="tab of jobRunTabs">
-                  <v-tab v-if="tab.show" ripple :key="tab.id" :to="{ name: tab.to }">
-                    {{ tab.name }}
-                  </v-tab>
-                </template>
-              </v-tabs>
-            </v-toolbar>
-          </v-col>
+          <v-slide-y-transition>
+            <v-col cols="12" v-if="!sticked">
+              <job-run-tool-bar :showTitle="false" />
+            </v-col>
+          </v-slide-y-transition>
         </v-row>
       </v-skeleton-loader>
     </v-card>
@@ -71,6 +66,7 @@ import useJobRunResults from '@jobs/composition/useJobRunResults'
 import useProjectStore from '@project/composition/useProjectStore'
 
 import JobToolBar from './parts/JobToolBar'
+import JobRunToolBar from './parts/JobRunToolBar'
 import ProjectToolBar from './parts/ProjectToolBar'
 import { defineComponent, onBeforeMount, computed, watch, ref } from '@vue/composition-api'
 
@@ -80,6 +76,7 @@ export default defineComponent({
   components: {
     JobToolBar,
     JobRunInfo,
+    JobRunToolBar,
     ProjectToolBar
   },
 
@@ -132,28 +129,6 @@ export default defineComponent({
 
     let sticked = ref(false)
 
-    const currentJobRunTab = ref('workspace-project-jobs-job-jobrun-input')
-    const jobRunTabs = [
-      {
-        id: 0,
-        name: 'Input',
-        show: !context.root.isNotBeta,
-        to: 'workspace-project-jobs-job-jobrun-input'
-      },
-      {
-        id: 1,
-        name: 'Result',
-        show: !context.root.isNotBeta,
-        to: 'workspace-project-jobs-job-jobrun-result'
-      },
-      {
-        id: 2,
-        name: 'Log',
-        show: !context.root.isNotBeta,
-        to: 'workspace-project-jobs-job-jobrun-log'
-      }
-    ]
-
     const onStick = data => {
       sticked.value = data.sticked
     }
@@ -175,10 +150,8 @@ export default defineComponent({
     return {
       sticked,
       onStick,
-      jobRunTabs,
       breadcrumbs,
       isShowProjectBar,
-      currentJobRunTab,
 
       jobId,
       jobRun,
