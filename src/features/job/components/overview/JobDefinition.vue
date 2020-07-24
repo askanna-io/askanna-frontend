@@ -8,7 +8,7 @@
           <v-tooltip top>
             <template v-slot:activator="{ on }">
               <span v-on="on">
-                <a v-if="lastPackage && lastPackage.short_uuid" @click="handleGoToCode" class="text-body-2"
+                <a v-if="lastPackage && lastPackage.short_uuid" @click="handleGoToCode" class="text-body-1"
                   >#{{ lastPackage.short_uuid.slice(0, 4) }}</a
                 >
               </span>
