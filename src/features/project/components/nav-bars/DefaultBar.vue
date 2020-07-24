@@ -96,7 +96,7 @@ export default defineComponent({
         id: 3,
         name: 'Documentation',
         to: 'workspace-project-documentation',
-        show: !context.root.isNotBeta
+        show: context.root.isNotBeta
       }
     ]
 
