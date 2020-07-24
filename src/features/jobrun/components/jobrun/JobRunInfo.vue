@@ -87,7 +87,7 @@ export default defineComponent({
         },
         {
           text: 'Duration',
-          value: calcCPUTime(props.jobRun.runner.cpu_time),
+          value: calculateDuration(props.jobRun),
           component: 'JobRunInfoText'
         },
         {
@@ -122,6 +122,19 @@ export default defineComponent({
       let display_time = moment.$moment.utc(elapsed_runtime.asMilliseconds()).format('HH:mm:ss')
 
       return display_time
+    }
+
+    const calculateDuration = (item: any) => {
+      const currentTime = new Date().toTimeString()
+      if (['PENDING', 'IN_PROGRESS', 'SUBMITTED'].indexOf(item.status) !== -1) {
+        return moment.duratioHumanize(item.created, moment.$moment().toString())
+      }
+
+      if (['COMPLETED', 'SUCCESS', 'FAILURE', 'FAILED'].indexOf(item.status) !== -1) {
+        return moment.duratioHumanize(item.created, item.modified)
+      }
+
+      return ''
     }
 
     return {

@@ -34,8 +34,8 @@
         </td>
         <td class="text-start">
           <b>Started:</b> &nbsp;{{ $moment(item.created).format(' Do MMMM YYYY, h:mm:ss a') }} <br />
-          <b>Finished:</b> &nbsp;{{ $moment(item.finished).format(' Do MMMM YYYY, h:mm:ss a') }}<br />
-          <b>Duration:</b> &nbsp;{{ runTimeHours(item.created, item.finished) }} seconds<br />
+          <b>Finished:</b> &nbsp;{{ showFinished(item) }}<br />
+          <b>Duration:</b> &nbsp;{{ calculateDuration(item) }}<br />
         </td>
       </tr>
     </template>
@@ -100,12 +100,32 @@ export default defineComponent({
       )
     }
 
+    const showFinished = item => {
+      if (['COMPLETED', 'SUCCESS', 'FAILURE', 'FAILED'].indexOf(item.status) !== -1) {
+        return moment.$moment(item.modified).format(' Do MMMM YYYY, h:mm:ss a')
+      }
+    }
+
+    const calculateDuration = item => {
+      const currentTime = new Date().toTimeString()
+      if (['PENDING', 'IN_PROGRESS', 'SUBMITTED'].indexOf(item.status) !== -1) {
+        return moment.duratioHumanize(item.created, moment.$moment())
+      }
+
+      if (['COMPLETED', 'SUCCESS', 'FAILURE', 'FAILED'].indexOf(item.status) !== -1) {
+        return moment.duratioHumanize(item.created, item.modified)
+      }
+      return ''
+    }
+
     return {
       ...moment,
       headers,
       pageCount,
       handleCopy,
-      handleClickOnRow
+      showFinished,
+      handleClickOnRow,
+      calculateDuration
     }
   }
 })
