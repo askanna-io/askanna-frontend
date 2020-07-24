@@ -16,7 +16,16 @@
       </template>
       <v-card>
         <v-col cols="12">
-          <v-text-field autofocus @keyup.enter="menu = false" small dense hide-details outlined label="Project name" />
+          <v-text-field
+            v-model="projectName"
+            autofocus
+            @keyup.enter="menu = false"
+            small
+            dense
+            hide-details
+            outlined
+            label="Project name"
+          />
         </v-col>
         <v-card-actions>
           <v-btn small outlined text color="secondary" class="mr-1 btn--hover" @click="menu = false">
@@ -34,11 +43,14 @@
 
 <script>
 import { reactive, defineComponent } from '@vue/composition-api'
+import useProjectStore from '@/features/project/composition/useProjectStore'
 
 export default defineComponent({
   name: 'CreateProjectPopup',
 
   setup(props, context) {
+    const projectStore = useProjectStore()
+
     const handleMoreOptions = () =>
       context.root.$router.push({
         name: 'workspace-new-project',
@@ -46,6 +58,7 @@ export default defineComponent({
       })
 
     return {
+      projectName: projectStore.projectName,
       menu: false,
       handleMoreOptions
     }
