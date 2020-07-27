@@ -65,7 +65,7 @@ export default defineComponent({
       IN_PROGRESS: 'In progress'
     }
 
-    const status = computed(() => (props.statusData.status ? props.statusData.status : 'UNDIFENED'))
+    const status = computed(() => (props.statusData.status ? props.statusData.status : 'UNDEFINED'))
 
     const statusIcon = computed(() => ICONS[status.value])
     const statusColor = computed(() => COLORS[status.value])
