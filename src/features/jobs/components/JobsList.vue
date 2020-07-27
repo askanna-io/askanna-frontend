@@ -12,9 +12,9 @@
     @item-expanded="handleExpand"
     @click:row="handleJobClick"
   >
-    <template v-slot:expanded-item>
+    <template v-slot:expanded-item="{ item }">
       <td :colspan="8" class="pa-0">
-        <v-skeleton-loader ref="skeleton" :type="'table-row'" :loading="loading">
+        <v-skeleton-loader v-if="item.runs.count" ref="skeleton" :type="'table-row'" :loading="loading">
           <job-runs
             :items="runs"
             :height="calcSubHeight"
@@ -22,15 +22,16 @@
             @handleClickOnRow="handleClickOnRow"
           />
         </v-skeleton-loader>
+        <div v-else class="ma-2 text-center">No runs yet</div>
       </td>
     </template>
 
-    <template v-slot:item.uuid>
-      NPOBP
+    <template v-slot:item.uuid="{ item }">
+      {{ item.runs.count }}
     </template>
 
     <template v-slot:item.status="{ item }">
-      <ask-anna-alert-status :statusData="item.status && item.status.lastrun" />
+      <ask-anna-alert-status :statusData="item.runs.status" />
     </template>
     <template v-slot:item.actions="{ item }" v-if="isNotBeta">
       <v-chip-group outlined v-model="selection" mandatory>
@@ -136,7 +137,7 @@ export default defineComponent({
     },
     async handleExpand({ item, value }) {
       this.loading = true
-      if (!value) return
+      if (!value || !item.runs.count) return
       this.currentJob = item
 
       await this.getRunsJob(item.short_uuid)

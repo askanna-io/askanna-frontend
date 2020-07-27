@@ -1,3 +1,4 @@
+import { map } from 'lodash'
 import { ActionTree } from 'vuex'
 import { logger } from '@/core/plugins/logger'
 import apiService from '@/core/services/apiService'
@@ -67,6 +68,24 @@ export const actions: ActionTree<projectState, RootState> = {
       })
       return
     }
+
+    await Promise.all(
+      map(jobs, async (job: any) => {
+        const runs = await apiService({
+          action: api.getLastJobRun,
+          serviceName,
+          uuid: job.short_uuid,
+          params: {
+            limit: 1,
+            offset: 0
+          }
+        })
+        const run = runs && runs.results.length ? runs.results[0] : { status: 'NOT_RUNS', created: '' }
+        job.runs = { count: runs.count, status: { status: run.status, created: run.created } }
+
+        return job
+      })
+    )
 
     commit(mutation.SET_PROJECT_JOBS, jobs)
     commit(mutation.SET_LOADING, { name: 'jobsLoading', value: false })
