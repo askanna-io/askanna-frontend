@@ -19,7 +19,7 @@
           <v-text-field
             v-model="projectName"
             autofocus
-            @keyup.enter="menu = false"
+            @keyup.enter="handlerCreateProject"
             small
             dense
             hide-details
@@ -28,7 +28,7 @@
           />
         </v-col>
         <v-card-actions>
-          <v-btn small outlined text color="secondary" class="mr-1 btn--hover" @click="menu = false">
+          <v-btn small outlined text color="secondary" class="mr-1 btn--hover" @click="handlerCreateProject">
             Create
           </v-btn>
           <v-btn small outlined text color="secondary" class="mr-1 btn--hover" @click="handleMoreOptions">
@@ -57,8 +57,11 @@ export default defineComponent({
         params: { workspaceId: context.root.$route.params.workspaceId }
       })
 
+    const handlerCreateProject = () => projectStore.createProject()
+
     return {
       projectName: projectStore.projectName,
+      handlerCreateProject,
       menu: false,
       handleMoreOptions
     }
