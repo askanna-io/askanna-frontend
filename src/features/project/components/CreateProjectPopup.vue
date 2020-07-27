@@ -9,8 +9,8 @@
       offset-y
     >
       <template v-slot:activator="{ on, attrs }">
-        <v-btn v-bind="attrs" v-on="on" small rounded color="primary" class="mr-3">
-          <v-icon left>mdi-plus</v-icon>
+        <v-btn v-bind="attrs" v-on="on" small rounded class="mr-3">
+          <v-icon color="primary" left>mdi-plus</v-icon>
           Create Project
         </v-btn>
       </template>
@@ -34,7 +34,7 @@
           <v-btn small outlined text color="secondary" class="mr-1 btn--hover" @click="handleMoreOptions">
             More options
           </v-btn>
-          <v-btn small text class="mr-1" @click="menu = false">Cancel</v-btn>
+          <v-btn small outlined text class="mr-1" @click="menu = false">Cancel</v-btn>
         </v-card-actions>
       </v-card>
     </v-menu>
