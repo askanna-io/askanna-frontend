@@ -21,5 +21,8 @@ export const mutations: MutationTree<projectState> = {
   },
   [mutation.SET_LAST_PACKAGE](state, data) {
     state.lastPackage = data
+  },
+  [mutation.SET_MENU](state, { name = 'menu.isShowProjectBar', value }) {
+    set(state, name, value)
   }
 }

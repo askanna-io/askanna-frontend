@@ -16,7 +16,12 @@ export const state: projectState = {
     offset: 0
   },
   jobsLoading: true,
-  lastPackage: null
+  lastPackage: null,
+  menu: {
+    isSticked: true,
+    isShowProjectBar: false,
+    sticked: false
+  }
 }
 
 const namespaced: boolean = true
