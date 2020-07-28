@@ -2,7 +2,7 @@
   <v-app>
     <v-app-bar app clipped-left dark color="primary" dense>
       <v-app-bar-nav-icon @click.stop="mobileMenu = !mobileMenu" class="hidden-sm-and-up" />
-      <v-app-bar-nav-icon v-if="isSticked" @click.stop="stickedVM = !stickedVM" />
+      <v-app-bar-nav-icon @click.stop="stickedVM = !stickedVM" />
 
       <v-container fluid>
         <div

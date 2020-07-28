@@ -35,11 +35,9 @@
         <v-divider />
 
         <v-row>
-          <v-slide-y-transition>
-            <v-col cols="12" v-if="!sticked">
-              <job-run-tool-bar :showTitle="false" />
-            </v-col>
-          </v-slide-y-transition>
+          <v-col cols="12" v-if="!sticked">
+            <job-run-tool-bar :showTitle="false" />
+          </v-col>
         </v-row>
       </v-skeleton-loader>
     </v-card>
