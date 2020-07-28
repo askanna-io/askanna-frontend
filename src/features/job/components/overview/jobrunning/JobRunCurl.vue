@@ -25,7 +25,7 @@
 
 <script>
 import PrismEditor from 'vue-prism-editor'
-import { url } from '@/core/services/api-settings'
+import { apiUrl } from '@/core/services/api-settings'
 import { defineComponent } from '@vue/composition-api'
 import useJobStore from '@job/composition/useJobStore'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
@@ -47,7 +47,7 @@ export default defineComponent({
 -d '{"data": {"foo": "bar"}}' \\
 -H 'Content-Type: application/json' \\
 -H 'Authorization: Token ${authStore.authToken.value}' \\
-'${url}/v1/run/${jobId}'`
+'${apiUrl}/v1/run/${jobId}'`
 
     const handleCopy = () => {
       context.root.$copyText(curl).then(
