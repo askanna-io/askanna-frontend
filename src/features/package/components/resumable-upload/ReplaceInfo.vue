@@ -32,7 +32,7 @@
             </template>
             <span>Copy</span>
           </v-tooltip>
-          ), you can use the command line interface.
+          ), you can use the command line interface as well.
         </p>
         <p>
           Probably you already have an <span class="font-italic">askanna.yml</span> file in your local directory. If
@@ -77,6 +77,18 @@
             <span>Copy</span>
           </v-tooltip>
         </p>
+        <p>
+          Optionally you can add a description to the version you push via
+          <code class="px-2 mr-2">{{ askannaPushWithMessage }}</code>
+          <v-tooltip top>
+            <template v-slot:activator="{ on }">
+              <v-btn v-on="on" x-small outlined color="secondary" @click.stop="handleCopy(askannaPushWithMessage)">
+                <v-icon small color="secondary">mdi-content-copy</v-icon>
+              </v-btn>
+            </template>
+            <span>Copy</span>
+          </v-tooltip>
+        </p>
       </div>
     </v-card-text>
   </v-card>
@@ -107,6 +119,7 @@ export default defineComponent({
     const cliInstall = 'pip install askanna'
     const askannaPush = 'askanna push'
     const askannaPushForce = 'askanna push -f'
+    const askannaPushWithMessage = 'askanna push -m "a description"'
 
     const handleCopy = text => {
       context.root.$copyText(text).then(
@@ -120,7 +133,8 @@ export default defineComponent({
       cliInstall,
       handleCopy,
       askannaPush,
-      askannaPushForce
+      askannaPushForce,
+      askannaPushWithMessage
     }
   }
 })
