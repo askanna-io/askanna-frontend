@@ -13,6 +13,7 @@ export interface ProjectState {
   }
   createProject: {
     name: string
+    workspace: string
   }
 }
 
@@ -36,6 +37,7 @@ export const action = {
   getProject: 'getProject',
   getProjects: 'getProjects',
   createProject: 'createProject',
+  updateProject: 'updateProject',
   getProjectJobs: 'getProjectJobs',
   resetProjectJobs: 'resetProjectJobs'
 }

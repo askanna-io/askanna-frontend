@@ -16,7 +16,8 @@ export const state: projectState = {
     offset: 0
   },
   createProject: {
-    name: ''
+    name: 'Put test',
+    workspace: '3Cpy-QMzd-MVko-1rDQ'
   }
 }
 

@@ -195,10 +195,9 @@ export default {
             {
               path: '',
               name: 'workspace-project',
-              redirect: { name: 'workspace-project-packages' },
 
               component: () =>
-                import(/* webpackChunkName: "workspace-project-uuid-activity" */ './views/project/index.vue'),
+                import(/* webpackChunkName: "workspace-project-uuid-activity" */ './views/project/uuid-project.vue'),
               meta: {
                 breadcrumb: 'Project - #:projectId'
               }

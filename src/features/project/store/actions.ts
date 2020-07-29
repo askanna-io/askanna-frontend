@@ -89,6 +89,27 @@ export const actions: ActionTree<projectState, RootState> = {
     commit(mutation.UPDATE_PROJECTS, project)
   },
 
+  async [action.updateProject]({ commit, dispatch, state }, uuid) {
+    let project
+    try {
+      project = await apiService({
+        action: api.update,
+        method: 'put',
+        serviceName,
+        uuid: '7MQT-6309-9g3t-R5QR',
+        data: state.createProject
+      })
+    } catch (error) {
+      dispatch(rootTypes.loggerError, {
+        errorHint: 'Error on create project in createProject action.\nError:',
+        error
+      })
+      return
+    }
+
+    commit(mutation.UPDATE_PROJECTS, project)
+  },
+
   [action.setProject]({ commit }, data) {
     commit(mutation.SET_PROJECT_DATA, data)
   }
