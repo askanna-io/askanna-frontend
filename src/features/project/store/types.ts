@@ -13,7 +13,6 @@ export interface ProjectState {
   }
   createProject: {
     name: string
-    workspace: string
   }
 }
 
@@ -49,6 +48,7 @@ export const mutation = {
   UPDATE_PROJECTS: 'UPDATE_PROJECTS',
   SET_PROJECT_DATA: 'SET_PROJECT_DATA',
   SET_PROJECT_JOBS: 'SET_PROJECT_JOBS',
+  RESET_PROJECT_DATA: 'RESET_PROJECT_DATA',
   RESET_PORJECT_JOBS: 'RESET_PORJECT_JOBS'
 }
 

@@ -1,6 +1,6 @@
 <template>
   <v-skeleton-loader ref="skeleton" :type="'table-row'" :loading="loading">
-    <v-data-iterator :items="items" hide-default-footer>
+    <v-data-iterator :items="items" hide-default-footer disable-pagination>
       <template v-slot:header>
         <workspace-toolbar :title="workspaceName" />
       </template>

@@ -17,10 +17,17 @@ export const mutations: MutationTree<projectState> = {
     state.projectJobs = []
   },
   [mutation.UPDATE_PROJECTS](state, data) {
-    state.projects.results.push(data)
-    state.projects.count = state.projects.count + 1
+    state.projects = {
+      count: state.projects.count + 1,
+      results: state.projects.results.concat(data)
+    }
   },
   [mutation.SET_PROJECT_DATA](state, { name, value }) {
     set(state, `createProject.${name}`, value)
+  },
+  [mutation.RESET_PROJECT_DATA](state) {
+    state.createProject = {
+      name: ''
+    }
   }
 }

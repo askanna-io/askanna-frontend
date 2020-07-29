@@ -1,4 +1,5 @@
 import { ActionTree } from 'vuex'
+import { logger } from '@/core/plugins/logger'
 import apiService from '@/core/services/apiService'
 import * as rootTypes from '@/core/store/actionTypes'
 import { apiStringify } from '@/core/services/api-settings'
@@ -69,14 +70,19 @@ export const actions: ActionTree<projectState, RootState> = {
     commit(mutation.RESET_PORJECT_JOBS)
   },
 
-  async [action.createProject]({ commit, dispatch, state }) {
-    let project
+  async [action.createProject]({ commit, dispatch, state }, workspace) {
+    let project = {
+      name: 'test2'
+    }
     try {
       project = await apiService({
         action: api.create,
         method: 'post',
         serviceName,
-        data: state.createProject
+        data: {
+          name: state.createProject.name,
+          workspace
+        }
       })
     } catch (error) {
       dispatch(rootTypes.loggerError, {
@@ -85,8 +91,12 @@ export const actions: ActionTree<projectState, RootState> = {
       })
       return
     }
-
+    commit(mutation.RESET_PROJECT_DATA)
     commit(mutation.UPDATE_PROJECTS, project)
+    commit('workspace/UPDATE_PROJECTS', { ...project, short_uuid: '', lastPackage: { short_uuid: '' } }, { root: true })
+    logger.success(commit, `The project ${project.name} was started`)
+
+    return project
   },
 
   async [action.updateProject]({ commit, dispatch, state }, uuid) {

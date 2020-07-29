@@ -16,8 +16,13 @@ export const mutations: MutationTree<workspaceState> = {
   [mutation.SET_LOADING](state, { name, value }) {
     set(state, name, value)
   },
-
   [mutation.UPDATE_SETTINGS](state, data) {
     state.workspaceSettings = Object.assign({}, state.workspaceSettings, data)
+  },
+  [mutation.UPDATE_PROJECTS](state, data) {
+    state.workspaceProjects = {
+      count: state.workspaceProjects.count + 1,
+      results: state.workspaceProjects.results.concat(data)
+    }
   }
 }

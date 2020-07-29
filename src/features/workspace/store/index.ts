@@ -19,7 +19,7 @@ export const state: workspaceState = {
     offset: 0
   },
   workspaceProjectsQuery: {
-    limit: 10,
+    limit: 20,
     offset: 0
   },
   workspacesLoading: true,

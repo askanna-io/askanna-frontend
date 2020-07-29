@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import { reactive, defineComponent } from '@vue/composition-api'
+import { ref, defineComponent } from '@vue/composition-api'
 import useProjectStore from '@/features/project/composition/useProjectStore'
 
 export default defineComponent({
@@ -50,6 +50,7 @@ export default defineComponent({
 
   setup(props, context) {
     const projectStore = useProjectStore()
+    const menu = ref(false)
 
     const handleMoreOptions = () =>
       context.root.$router.push({
@@ -57,12 +58,15 @@ export default defineComponent({
         params: { workspaceId: context.root.$route.params.workspaceId }
       })
 
-    const handlerCreateProject = () => projectStore.createProject()
+    const handlerCreateProject = async () => {
+      await projectStore.createProject(context.root.$route.params.workspaceId)
+      menu.value = false
+    }
 
     return {
+      menu,
       projectName: projectStore.projectName,
       handlerCreateProject,
-      menu: false,
       handleMoreOptions
     }
   }
