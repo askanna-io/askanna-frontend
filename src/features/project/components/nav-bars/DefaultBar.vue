@@ -13,19 +13,7 @@
       <v-card v-if="sticked" :class="{ 'ma-3': sticked }">
         <v-card-title transition="slide-y-transition">
           <v-toolbar dense color="white" flat class="br-r5">
-            <v-tabs v-model="currentTab" left align-with-title>
-              <v-tabs-slider color="primary" />
-              <template v-for="tab of projectTools">
-                <v-tab
-                  v-if="tab.show"
-                  ripple
-                  :key="tab.id"
-                  :to="{ name: tab.to, params: { title: `${tab.name} - ${project.name}` } }"
-                >
-                  {{ tab.name }}
-                </v-tab>
-              </template>
-            </v-tabs>
+            <project-menu :projectName="project.name" />
             <v-spacer />
           </v-toolbar>
         </v-card-title>
@@ -47,20 +35,7 @@
       <v-slide-y-transition>
         <div v-if="!sticked">
           <v-toolbar dense color="white" flat class="br-r5 ma-3">
-            <v-tabs v-model="currentTab" left align-with-title>
-              <v-tabs-slider color="primary" />
-              <template v-for="tab of projectTools">
-                <v-tab
-                  v-if="tab.show"
-                  ripple
-                  :key="tab.id"
-                  :to="{ name: tab.to, params: { title: `${tab.name} - ${project.name}`, ...routerParams } }"
-                >
-                  {{ tab.name }}
-                </v-tab>
-              </template>
-            </v-tabs>
-
+            <project-menu :projectName="project.name" />
             <v-spacer />
           </v-toolbar>
         </div>
@@ -69,11 +44,14 @@
   </div>
 </template>
 <script>
+import ProjectMenu from './parts/ProjectMenu'
 import { ref, defineComponent } from '@vue/composition-api'
 import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
 
 export default defineComponent({
   name: 'DefaultBar',
+
+  components: { ProjectMenu },
 
   props: {
     project: {
@@ -96,10 +74,6 @@ export default defineComponent({
       type: Boolean,
       default: false
     },
-    handleShowProjectBar: {
-      type: Function,
-      default: () => {}
-    },
     handleOnStick: {
       type: Function,
       default: () => {}
@@ -109,40 +83,11 @@ export default defineComponent({
   setup(props, context) {
     const refToolbar = ref(null)
 
-    const currentTab = ref('workspace-project-activity')
-    const projectTools = [
-      {
-        id: 0,
-        name: 'Activity',
-        to: 'workspace-project-activity',
-        show: context.root.isNotBeta
-      },
-      {
-        id: 1,
-        name: 'Code',
-        to: 'workspace-project-code',
-        show: !context.root.isNotBeta
-      },
-      {
-        id: 2,
-        name: 'Jobs',
-        to: 'workspace-project-jobs',
-        show: !context.root.isNotBeta
-      },
-
-      {
-        id: 3,
-        name: 'Documentation',
-        to: 'workspace-project-documentation',
-        show: context.root.isNotBeta
-      }
-    ]
-
     const onStick = data => {
       props.handleOnStick(data.sticked)
     }
 
-    return { onStick, refToolbar, projectTools, currentTab, routerParams: context.root.$route.params }
+    return { onStick, refToolbar, routerParams: context.root.$route.params }
   }
 })
 </script>
