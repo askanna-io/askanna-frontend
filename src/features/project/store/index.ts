@@ -16,7 +16,8 @@ export const state: projectState = {
     offset: 0
   },
   jobsLoading: true,
-  lastPackage: null
+  lastPackage: null,
+  projectsLoading: true
 }
 
 const namespaced: boolean = true

@@ -7,6 +7,7 @@
       :items="workspaceProjects.results"
       :loading="workspaceProjectsLoading"
     />
+
     <ask-anna-divider v-if="isNotBeta" text="Latest Activity" />
     <ask-anna-time-lines v-if="isNotBeta" text="Latest Activity" />
   </div>

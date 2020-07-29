@@ -13,6 +13,7 @@ export interface ProjectState {
   }
   jobsLoading: Boolean
   lastPackage: any
+  projectsLoading: Boolean
 }
 
 interface Project {

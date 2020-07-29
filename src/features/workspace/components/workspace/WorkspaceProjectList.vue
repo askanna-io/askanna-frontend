@@ -1,28 +1,26 @@
 <template>
-  <v-skeleton-loader ref="skeleton" :type="'table-row'" :loading="loading">
-    <v-data-iterator :items="items" hide-default-footer>
-      <template v-slot:header>
-        <workspace-toolbar :title="workspaceName" />
-      </template>
-      <template v-slot:default="props">
-        <v-skeleton-loader ref="skeleton" :loading="loading" :transition="'scale-transition'" :type="'table-row'">
-          <v-row v-if="!settings.projectView">
-            <v-col v-for="item in props.items" :key="item.name" cols="12" sm="6" md="6" lg="4">
-              <v-hover v-slot:default="{ hover }" open-delay="200">
-                <workspace-project-card-item :project="item" :workspaceName="workspaceName" :hover="hover" />
-              </v-hover>
-            </v-col>
-          </v-row>
-          <div v-if="settings.projectView">
-            <div v-for="item in props.items" :key="item.name">
-              <workspace-project-list-item :project="item" :workspaceName="workspaceName" cols="12" />
-              <v-divider />
-            </div>
+  <v-data-iterator :items="items" hide-default-footer :no-data-text="''">
+    <template v-slot:header>
+      <workspace-toolbar :title="workspaceName" />
+    </template>
+    <template v-slot:default="props">
+      <ask-anna-loading-progress :type="'table-row'" :loading="loading">
+        <v-row v-if="!settings.projectView">
+          <v-col v-for="item in props.items" :key="item.name" cols="12" sm="6" md="6" lg="4">
+            <v-hover v-slot:default="{ hover }" open-delay="200">
+              <workspace-project-card-item :project="item" :workspaceName="workspaceName" :hover="hover" />
+            </v-hover>
+          </v-col>
+        </v-row>
+        <div v-if="settings.projectView">
+          <div v-for="item in props.items" :key="item.name">
+            <workspace-project-list-item :project="item" :workspaceName="workspaceName" cols="12" />
+            <v-divider />
           </div>
-        </v-skeleton-loader>
-      </template>
-    </v-data-iterator>
-  </v-skeleton-loader>
+        </div>
+      </ask-anna-loading-progress>
+    </template>
+  </v-data-iterator>
 </template>
 <script>
 import { defineComponent } from '@vue/composition-api'
