@@ -5,7 +5,7 @@
       :settings="workspaceSettings"
       :workspaceName="workspace.title"
       :items="workspaceProjects.results"
-      :loading="workspaceProjectsLoading"
+      :loading="loading"
     />
 
     <ask-anna-divider v-if="isNotBeta" text="Latest Activity" />
@@ -14,7 +14,7 @@
 </template>
 <script>
 import useQuery from '@/core/composition/useQuery'
-import { defineComponent } from '@vue/composition-api'
+import { computed, defineComponent } from '@vue/composition-api'
 import useWorkspaceStore from '../composition/useWorkSpaceStore'
 import WorkspaceProjectList from '../components/workspace/WorkspaceProjectList.vue'
 
@@ -28,10 +28,10 @@ export default defineComponent({
     const workspaceStore = useWorkspaceStore()
 
     return {
+      loading: workspaceStore.workspaceProjectsLoading,
       workspace: workspaceStore.workspace,
       workspaceProjects: workspaceStore.workspaceProjects,
-      workspaceSettings: workspaceStore.workspaceSettings,
-      workspaceProjectsLoading: workspaceStore.workspaceProjectsLoading
+      workspaceSettings: workspaceStore.workspaceSettings
     }
   }
 })

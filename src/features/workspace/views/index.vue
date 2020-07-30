@@ -12,7 +12,7 @@ export default defineComponent({
 
     onBeforeMount(async () => {
       if (!workspaceStore.workspaces.value.count) {
-        await workspaceStore.getWorkspaces()
+        workspaceStore.getWorkspaces()
       }
       let { workspaceId } = context.root.$route.params
 
@@ -24,8 +24,8 @@ export default defineComponent({
 
       // if (workspaceStore.workspace.value.short_uuid === workspaceId) return
 
-      await workspaceStore.getWorkspace(workspaceId)
-      await workspaceStore.getWorkpaceProjects(workspaceId)
+      workspaceStore.getWorkspace(workspaceId)
+      workspaceStore.getWorkpaceProjects(workspaceId)
     })
   }
 })

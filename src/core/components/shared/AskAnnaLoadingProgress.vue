@@ -13,7 +13,8 @@
 </template>
 
 <script>
-import { watch, ref, defineComponent } from '@vue/composition-api'
+import { delay } from 'lodash'
+import { onUpdated, ref, watch, computed, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'AskAnnaLoadingProgress',
@@ -38,33 +39,51 @@ export default defineComponent({
     const interval = ref(0)
     const isLoading = ref(true)
     const loadingProgress = ref(0)
+    const loadingState = computed(() => props.loading)
 
     const startLoading = () => {
       clearInterval(interval.value)
       interval.value = setInterval(() => {
-        if (loadingProgress.value >= 100) {
-          if (props.loading) {
-            loadingProgress.value = 3
-          }
-          clearInterval(interval.value)
-          isLoading.value = false
-          loadingProgress.value = 0
-        }
+        if (!loadingState.value) {
+          loadingProgress.value = 100
+          stopLoading()
 
+          return
+        }
+        /*  if (loadingState.value) {
+          loadingProgress.value = 100
+          speed.value = 30
+        }
+        if (loadingProgress.value >= 100) {
+          if (loadingState.value) {
+            loadingProgress.value = 3
+          } else {
+            clearInterval(interval.value)
+            isLoading.value = false
+            loadingProgress.value = 0
+          }
+        } */
         loadingProgress.value += Math.random() * speed.value
       }, 100)
     }
 
-    watch(
-      () => props.loading,
-      (first, second) => {
-        if (first) {
-          startLoading()
-        } else {
-          speed.value = 200
-        }
+    const stopLoading = () => {
+      delay(
+        () => {
+          clearInterval(interval.value)
+          isLoading.value = false
+        },
+        350,
+        'later'
+      )
+    }
+
+    onUpdated(() => {
+      if (!props.loading) {
       }
-    )
+    })
+
+    startLoading()
 
     return { isLoading, loadingProgress }
   }

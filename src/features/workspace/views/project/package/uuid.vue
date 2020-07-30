@@ -61,7 +61,7 @@ import { defineComponent } from '@vue/composition-api'
 import PackageFile from '@package/components/PackageFile'
 import PackageTree from '@package/components/PackageTree'
 import { headers, FileIcons } from '@package/utils/index'
-import usePackages from '@packages/composition/usePackages'
+import usePackagesStore from '@/features/packages/composition/usePackagesStore'
 import PackageToolbar from '@/features/package/components/PackageToolbar'
 import { ref, watch, onBeforeMount, onUnmounted, computed } from '@vue/composition-api'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
@@ -81,8 +81,8 @@ export default defineComponent({
 
   setup(props, context) {
     const { height } = useWindowSize()
-    const packages = usePackages(context)
     const packageStore = usePackageStore()
+    const packagesStore = usePackagesStore(context)
     const forceFileDownload = useForceFileDownload()
     const breadcrumbs = usePackageBreadcrumbs(context)
 
@@ -182,7 +182,7 @@ export default defineComponent({
 
     const handleDownload = async () => {
       const packageData = packageStore.packageData.value
-      const source = await packages.downloadPackage({
+      const source = await packagesStore.downloadPackage({
         projectId: packageData.project,
         packageId: packageData.short_uuid
       })
