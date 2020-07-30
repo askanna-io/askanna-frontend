@@ -24,5 +24,19 @@ export const mutations: MutationTree<projectState> = {
   },
   [mutation.SET_MENU](state, { name = 'menu.isShowProjectBar', value }) {
     set(state, name, value)
+  },
+  [mutation.UPDATE_PROJECTS](state, data) {
+    state.projects = {
+      count: state.projects.count + 1,
+      results: state.projects.results.concat(data)
+    }
+  },
+  [mutation.SET_PROJECT_DATA](state, { name, value }) {
+    set(state, `createProject.${name}`, value)
+  },
+  [mutation.RESET_PROJECT_DATA](state) {
+    state.createProject = {
+      name: ''
+    }
   }
 }

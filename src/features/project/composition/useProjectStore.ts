@@ -10,13 +10,23 @@ export default function () {
       projects: 'projects',
       projectJobs: 'projectJobs',
       jobsLoading: 'jobsLoading',
-      lastPackage: 'lastPackage'
+      lastPackage: 'lastPackage',
+      createProject: 'createProject'
     })
   }
 
   const stickedVM = computed({
     get: () => state.menu.value.sticked,
     set: value => actions.setMenu({ name: 'menu.sticked', value })
+  })
+
+  const projectName = computed({
+    get: () => {
+      return state.createProject.value.name
+    },
+    set: value => {
+      actions.setProject({ name: 'name', value })
+    }
   })
 
   const actions = {
@@ -26,6 +36,7 @@ export default function () {
   return {
     stickedVM,
     ...state,
-    ...actions
+    ...actions,
+    projectName
   }
 }

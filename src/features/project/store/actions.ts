@@ -120,5 +120,58 @@ export const actions: ActionTree<projectState, RootState> = {
 
   async [action.setMenu]({ commit }, data) {
     commit(mutation.SET_MENU, data)
+  },
+
+  async [action.createProject]({ commit, dispatch, state }, workspace) {
+    let project = {
+      name: 'test2'
+    }
+    try {
+      project = await apiService({
+        action: api.create,
+        method: 'post',
+        serviceName,
+        data: {
+          name: state.createProject.name,
+          workspace
+        }
+      })
+    } catch (error) {
+      dispatch(rootTypes.loggerError, {
+        errorHint: 'Error on create project in createProject action.\nError:',
+        error
+      })
+      return
+    }
+    commit(mutation.RESET_PROJECT_DATA)
+    commit(mutation.UPDATE_PROJECTS, project)
+    commit('workspace/UPDATE_PROJECTS', { ...project, short_uuid: '', lastPackage: { short_uuid: '' } }, { root: true })
+    logger.success(commit, `The project ${project.name} is created`)
+    return project
+  },
+
+  async [action.updateProject]({ commit, dispatch, state }, uuid) {
+    let project
+    try {
+      project = await apiService({
+        action: api.update,
+        method: 'put',
+        serviceName,
+        uuid: '7MQT-6309-9g3t-R5QR',
+        data: state.createProject
+      })
+    } catch (error) {
+      dispatch(rootTypes.loggerError, {
+        errorHint: 'Error on create project in createProject action.\nError:',
+        error
+      })
+      return
+    }
+
+    commit(mutation.UPDATE_PROJECTS, project)
+  },
+
+  [action.setProject]({ commit }, data) {
+    commit(mutation.SET_PROJECT_DATA, data)
   }
 }

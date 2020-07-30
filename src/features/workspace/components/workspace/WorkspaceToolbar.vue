@@ -5,10 +5,8 @@
     <v-spacer />
     <v-spacer />
     <v-spacer />
-    <v-btn v-if="isNotBeta" small rounded color="primary" class="mr-3">
-      <v-icon left>mdi-plus</v-icon>
-      Create Project
-    </v-btn>
+
+    <create-project-popup />
 
     <v-menu
       v-if="isNotBeta"
@@ -44,6 +42,8 @@
   </v-toolbar>
 </template>
 <script>
+import CreateProjectPopup from '@/features/project/components/CreateProjectPopup'
+
 import useWorkspaceStore from '../../composition/useWorkSpaceStore'
 import { reactive, defineComponent } from '@vue/composition-api'
 
@@ -56,6 +56,8 @@ export default defineComponent({
       default: ''
     }
   },
+
+  components: { CreateProjectPopup },
 
   setup(props, context) {
     const workspaceStore = useWorkspaceStore()
