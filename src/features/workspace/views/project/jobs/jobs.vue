@@ -5,8 +5,9 @@
         <v-col cols="12" class="pa-0">
           <jobs-list :jobList="projectJobs" />
         </v-col>
-      </v-row> </v-skeleton-loader
-  ></v-card>
+      </v-row>
+    </v-skeleton-loader>
+  </v-card>
 </template>
 
 <script>
