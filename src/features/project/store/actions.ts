@@ -94,8 +94,7 @@ export const actions: ActionTree<projectState, RootState> = {
     commit(mutation.RESET_PROJECT_DATA)
     commit(mutation.UPDATE_PROJECTS, project)
     commit('workspace/UPDATE_PROJECTS', { ...project, short_uuid: '', lastPackage: { short_uuid: '' } }, { root: true })
-    logger.success(commit, `The project ${project.name} was started`)
-
+    logger.success(commit, `The project ${project.name} is created`)
     return project
   },
 
