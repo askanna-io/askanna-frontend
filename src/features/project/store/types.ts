@@ -11,9 +11,6 @@ export interface ProjectState {
     limit: number
     offset: number
   }
-  createProject: {
-    name: string
-  }
   jobsLoading: Boolean
   lastPackage: any
   menu: {
@@ -47,7 +44,10 @@ export const action = {
   updateProject: 'updateProject',
   getProjectJobs: 'getProjectJobs',
   getLastPackage: 'getLastPackage',
-  resetProjectJobs: 'resetProjectJobs'
+  resetProjectJobs: 'resetProjectJobs',
+  resetProjectData: 'resetProjectData',
+  createProjectFullWay: 'createProjectFullWay',
+  createProjectShortWay: 'createProjectShortWay'
 }
 
 export const mutation = {

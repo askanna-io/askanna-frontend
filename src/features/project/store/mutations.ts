@@ -1,7 +1,7 @@
 import { set } from 'lodash'
 import { mutation } from './types'
 import { MutationTree } from 'vuex'
-import { projectState } from './types'
+import { projectState, ProjectModel } from './types'
 
 export const mutations: MutationTree<projectState> = {
   [mutation.SET_PROJECT](state, data) {
@@ -31,12 +31,10 @@ export const mutations: MutationTree<projectState> = {
       results: state.projects.results.concat(data)
     }
   },
-  [mutation.SET_PROJECT_DATA](state, { name, value }) {
-    set(state, `createProject.${name}`, value)
+  [mutation.SET_PROJECT_DATA](state, { path, value }) {
+    set(state, `project.${path}`, value)
   },
   [mutation.RESET_PROJECT_DATA](state) {
-    state.createProject = {
-      name: ''
-    }
+    state.project = new ProjectModel().state
   }
 }

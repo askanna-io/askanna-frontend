@@ -7,14 +7,14 @@
       <template v-slot:default="props">
         <v-skeleton-loader ref="skeleton" :loading="loading" :transition="'scale-transition'" :type="'table-row'">
           <v-row v-if="!settings.projectView">
-            <v-col v-for="item in props.items" :key="item.name" cols="12" sm="6" md="6" lg="4">
+            <v-col v-for="item in props.items" :key="item.name + item.short_uuid" cols="12" sm="6" md="6" lg="4">
               <v-hover v-slot:default="{ hover }" open-delay="200">
                 <workspace-project-card-item :project="item" :workspaceName="workspaceName" :hover="hover" />
               </v-hover>
             </v-col>
           </v-row>
           <div v-if="settings.projectView">
-            <div v-for="item in props.items" :key="item.name">
+            <div v-for="item in props.items" :key="item.name + item.short_uuid">
               <workspace-project-list-item :project="item" :workspaceName="workspaceName" cols="12" />
               <v-divider />
             </div>

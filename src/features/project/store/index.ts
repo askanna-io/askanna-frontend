@@ -21,9 +21,6 @@ export const state: projectState = {
     isSticked: true,
     isShowProjectBar: false,
     sticked: false
-  },
-  createProject: {
-    name: ''
   }
 }
 

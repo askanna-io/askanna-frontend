@@ -34,7 +34,7 @@
           <v-btn small outlined text color="secondary" class="mr-1 btn--hover" @click="handleMoreOptions">
             More options
           </v-btn>
-          <v-btn small outlined text class="mr-1" @click="menu = false">Cancel</v-btn>
+          <v-btn small outlined text class="mr-1" @click="handleCancel">Cancel</v-btn>
         </v-card-actions>
       </v-card>
     </v-menu>
@@ -59,12 +59,18 @@ export default defineComponent({
       })
 
     const handlerCreateProject = async () => {
-      await projectStore.createProject(context.root.$route.params.workspaceId)
+      await projectStore.createProjectShortWay(context.root.$route.params.workspaceId)
+      menu.value = false
+    }
+
+    const handleCancel = () => {
+      projectStore.resetProjectData()
       menu.value = false
     }
 
     return {
       menu,
+      handleCancel,
       projectName: projectStore.projectName,
       handlerCreateProject,
       handleMoreOptions

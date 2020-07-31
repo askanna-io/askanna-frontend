@@ -6,6 +6,7 @@ import * as rootTypes from '@/core/store/actionTypes'
 import { apiStringify } from '@/core/services/api-settings'
 
 import { projectState, PROJECT_STORE, action, mutation } from './types'
+import projects from '@/server/fixtures/projects'
 
 const serviceName = PROJECT_STORE
 const api = apiStringify(serviceName)
@@ -122,31 +123,46 @@ export const actions: ActionTree<projectState, RootState> = {
     commit(mutation.SET_MENU, data)
   },
 
-  async [action.createProject]({ commit, dispatch, state }, workspace) {
-    let project = {
-      name: 'test2'
+  async [action.createProjectShortWay]({ dispatch, state }, workspace) {
+    const data = {
+      name: state.project.name,
+      workspace
     }
+    dispatch(action.createProject, data)
+  },
+
+  async [action.createProjectFullWay]({ dispatch, state }, workspace) {
+    const data = {
+      ...state.project,
+      workspace
+    }
+    const project = await dispatch(action.createProject, data)
+
+    return project
+  },
+
+  async [action.createProject]({ commit, dispatch }, data) {
+    let project
     try {
       project = await apiService({
         action: api.create,
         method: 'post',
         serviceName,
-        data: {
-          name: state.createProject.name,
-          workspace
-        }
+        data
       })
     } catch (error) {
       dispatch(rootTypes.loggerError, {
         errorHint: 'Error on create project in createProject action.\nError:',
         error
       })
-      return
+      return project
     }
     commit(mutation.RESET_PROJECT_DATA)
     commit(mutation.UPDATE_PROJECTS, project)
-    commit('workspace/UPDATE_PROJECTS', { ...project, short_uuid: '', lastPackage: { short_uuid: '' } }, { root: true })
+    commit('workspace/UPDATE_PROJECTS', { ...project, lastPackage: { short_uuid: 'no-package' } }, { root: true })
+
     logger.success(commit, `The project ${project.name} is created`)
+
     return project
   },
 
@@ -157,21 +173,25 @@ export const actions: ActionTree<projectState, RootState> = {
         action: api.update,
         method: 'put',
         serviceName,
-        uuid: '7MQT-6309-9g3t-R5QR',
-        data: state.createProject
+        uuid,
+        data: state.project
       })
     } catch (error) {
       dispatch(rootTypes.loggerError, {
-        errorHint: 'Error on create project in createProject action.\nError:',
+        errorHint: 'Error on update project in updateProject action.\nError:',
         error
       })
       return
     }
 
-    commit(mutation.UPDATE_PROJECTS, project)
+    commit(mutation.SET_PROJECT, project)
   },
 
   [action.setProject]({ commit }, data) {
     commit(mutation.SET_PROJECT_DATA, data)
+  },
+
+  async [action.resetProjectData]({ commit }) {
+    commit(mutation.RESET_PROJECT_DATA)
   }
 }

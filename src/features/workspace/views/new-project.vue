@@ -12,7 +12,7 @@
       <v-icon large left>
         mdi-semantic-web
       </v-icon>
-      <span class="title font-weight-light">New project</span>
+      <span class="title font-weight-light">Create a new project</span>
     </v-card-title>
 
     <v-card-text class="font-weight-bold">
@@ -32,15 +32,20 @@
     >
     <v-divider />
 
-    <project />
+    <project
+      :projectData="projectData"
+      @handleOnInput="handleOnInput"
+      @handleCreate="handleCreate"
+      @handleCancel="handleCancel"
+    />
   </v-card>
 </template>
 
 <script>
-import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
-
-import useProject from '@/features/project/composition/useProject'
 import Project from '@/features/project/components/Project'
+import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
+import useProjectStore from '@/features/project/composition/useProjectStore'
+import useWorkSpaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 import { computed, reactive, onBeforeMount, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
@@ -49,28 +54,44 @@ export default defineComponent({
   components: { Project },
 
   setup(props, context) {
-    const project = useProject(context)
-    const breadcrumbs = useBreadcrumbs(context, { start: 0, end: 3 })
+    const projectStore = useProjectStore(context)
+    const workSpaceStore = useWorkSpaceStore(context)
+
+    const breadcrumbs = computed(() => [
+      {
+        title: workSpaceStore.workspace.value.title,
+        to: `/${workSpaceStore.workspace.value.short_uuid}`,
+        disabled: false
+      },
+      {
+        title: 'Create new project',
+        to: '',
+        disabled: true
+      }
+    ])
+
+    const handleOnInput = data => projectStore.setProject(data)
+    const handleCreate = async data => {
+      const project = await projectStore.createProjectFullWay(context.root.$route.params.workspaceId)
+
+      if (project && project.short_uuid) {
+        context.root.$router.push({
+          name: 'workspace-project',
+          params: { projectId: project.short_uuid, workspaceId: project.workspace.short_uuid }
+        })
+      }
+    }
+    const handleCancel = data => {
+      projectStore.resetProjectData()
+      context.root.$router.go(-1)
+    }
 
     return {
-      stickedVal: false,
-      menu: false,
-      projectView: 0,
-      project: {
-        name: 'Project title 1',
-        id: 1,
-        description:
-          'Turns out semicolon-less style is easier and safer in TS because most gotcha edge cases are type invalid as well.'
-      },
-      breadcrumbs,
-      currentTab: 0,
-      projectTools: [
-        {
-          id: 0,
-          name: 'Blank project',
-          component: 'BlankProject'
-        }
-      ]
+      projectData: projectStore.project,
+      handleOnInput,
+      handleCreate,
+      handleCancel,
+      breadcrumbs
     }
   }
 })

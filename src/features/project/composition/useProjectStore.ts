@@ -10,8 +10,7 @@ export default function () {
       projects: 'projects',
       projectJobs: 'projectJobs',
       jobsLoading: 'jobsLoading',
-      lastPackage: 'lastPackage',
-      createProject: 'createProject'
+      lastPackage: 'lastPackage'
     })
   }
 
@@ -22,10 +21,10 @@ export default function () {
 
   const projectName = computed({
     get: () => {
-      return state.createProject.value.name
+      return state.project.value.name
     },
     set: value => {
-      actions.setProject({ name: 'name', value })
+      actions.setProject({ path: 'name', value })
     }
   })
 
