@@ -47,7 +47,7 @@ export default defineComponent({
 -d '{"data": {"foo": "bar"}}' \\
 -H 'Content-Type: application/json' \\
 -H 'Authorization: Token ${authStore.authToken.value}' \\
-'${apiUrl}/v1/run/${jobId}'`
+'${apiUrl}/v1/run/${jobId}/'`
 
     const handleCopy = () => {
       context.root.$copyText(curl).then(
