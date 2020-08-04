@@ -8,7 +8,8 @@ export const state: PackageState = {
   packageData: new PackageModel().state,
   file: '',
   fileSource: new Blob(),
-  processingList: []
+  processingList: [],
+  packageLoading: true
 }
 
 const namespaced: boolean = true

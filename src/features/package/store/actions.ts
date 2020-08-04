@@ -12,6 +12,8 @@ const api = apiStringify(serviceName)
 
 export const actions: ActionTree<PackageState, RootState> = {
   async [type.getPackage]({ commit }, uuid) {
+    commit(type.SET_LOADING, { name: 'packageLoading', value: true })
+
     let packageData
     try {
       packageData = await apiService({
@@ -30,6 +32,8 @@ export const actions: ActionTree<PackageState, RootState> = {
 
         return
       }
+      commit(type.SET_LOADING, { name: 'packageLoading', value: false })
+
       logger.error(commit, 'Error on load packageData in getPackage action.\nError: ', e)
 
       return
@@ -37,6 +41,7 @@ export const actions: ActionTree<PackageState, RootState> = {
 
     commit(type.REMOVE_FROM_PROCESSING_LIST, uuid)
     commit(type.SET_PACKAGE, { packageData })
+    commit(type.SET_LOADING, { name: 'packageLoading', value: false })
   },
 
   async [type.getFileSource]({ dispatch, state, commit }, path) {
