@@ -4,7 +4,7 @@
       <v-app-bar-nav-icon v-if="false" @click.stop="mobileMenu = !mobileMenu" class="hidden-sm-and-up" />
       <v-app-bar-nav-icon v-if="showAppBarIcon" @click.stop="stickedVM = !stickedVM" />
       <div v-else class="pl-9" />
-      <v-container fluid>
+      <v-container fluid class="pl-1  ">
         <div
           class="d-flex justify-space-between justify-sm-center align-center justify-md-space-between"
           justify="space-between"
@@ -37,7 +37,7 @@
             </v-list>
           </v-navigation-drawer>
           <div md="auto" sm="12" text-sm-center>
-            <v-btn :to="{ name: 'workspace', params: { ...$route.params } }" text color="transparent">
+            <v-btn class="pa-0" :to="{ name: 'workspace', params: { ...$route.params } }" text color="transparent">
               <img alt="AskAnna logo" src="@/assets/logo.svg" class="logo" />
             </v-btn>
           </div>
