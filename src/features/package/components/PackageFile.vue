@@ -16,7 +16,7 @@
           <v-icon color="secondary" left>mdi-content-copy</v-icon>Copy file
         </v-btn>
       </v-toolbar>
-      <prism-editor :code="fileComputed" readonly line-numbers />
+      <prism-editor :code="fileComputed" language="js" readonly line-numbers />
     </v-col>
   </v-row>
 </template>

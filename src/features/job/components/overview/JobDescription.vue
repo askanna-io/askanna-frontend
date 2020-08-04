@@ -300,6 +300,7 @@ export default {
 }
 
 .ask-anna--editor code {
+  padding-left: 0;
   font-family: monospace;
   background: none;
   color: #ffffff;
