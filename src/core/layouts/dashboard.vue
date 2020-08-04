@@ -1,9 +1,9 @@
 <template>
   <v-app>
     <v-app-bar app clipped-left dark color="primary" dense>
-      <v-app-bar-nav-icon @click.stop="mobileMenu = !mobileMenu" class="hidden-sm-and-up" />
-      <v-app-bar-nav-icon @click.stop="stickedVM = !stickedVM" />
-
+      <v-app-bar-nav-icon v-if="false" @click.stop="mobileMenu = !mobileMenu" class="hidden-sm-and-up" />
+      <v-app-bar-nav-icon v-if="showAppBarIcon" @click.stop="stickedVM = !stickedVM" />
+      <div v-else class="pl-9" />
       <v-container fluid>
         <div
           class="d-flex justify-space-between justify-sm-center align-center justify-md-space-between"
@@ -36,10 +36,10 @@
               </v-list-item>
             </v-list>
           </v-navigation-drawer>
-          <div class="pt-1" md="auto" sm="12" text-sm-center>
-            <a href="/">
+          <div md="auto" sm="12" text-sm-center>
+            <v-btn :to="{ name: 'workspace', params: { ...$route.params } }" text color="transparent">
               <img alt="AskAnna logo" src="@/assets/logo.svg" class="logo" />
-            </a>
+            </v-btn>
           </div>
           <div class="text-sm-center ml-sm-6 ml-md-0 d-none d-sm-flex">
             <v-flex>
@@ -235,7 +235,8 @@ export default defineComponent({
       }
     })
 
-    const isSticked = computed(() => project.menu.value.isSticked)
+    const showAppBarIcon = computed(() => context.root.$route.name !== 'workspace')
+
     const handleChangeWorkspace = ({ short_uuid }) => {
       context.root.$router.push({ path: `/${short_uuid}`, params: { workspace: short_uuid } })
     }
@@ -249,7 +250,7 @@ export default defineComponent({
     }
 
     return {
-      isSticked,
+      showAppBarIcon,
       ...project,
       logout,
       onResize,
