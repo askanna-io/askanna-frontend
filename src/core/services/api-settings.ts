@@ -44,7 +44,9 @@ export const api: ApiSettings = {
       list: () => `project/`,
       jobs: id => `project/${id}/jobs/`,
       packages: id => `project/${id}/packages/`,
-      getLastJobRun: id => `job/${id}/runs/`
+      getLastJobRun: id => `job/${id}/runs/`,
+      create: () => 'project/',
+      update: id => `project/${id}/`
     },
     package: {
       get: ({ projectId, packageId }) => `project/${projectId}/packages/${packageId}/`,

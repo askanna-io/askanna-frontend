@@ -87,9 +87,10 @@ export default defineComponent({
     const polling = ref(null)
     const isRaplace = ref(false)
     const file = ref(packageStore.file)
-    const { workspaceId, projectId, packageId, folderName = '' } = context.root.$route.params
+    const { workspaceId, projectId, packageId = 'no-package', folderName = '' } = context.root.$route.params
 
     onBeforeMount(async () => {
+      if (packageId === 'no-package') return
       await getPackage()
       pollData()
     })

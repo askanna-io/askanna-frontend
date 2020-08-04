@@ -3,13 +3,13 @@ export interface projectState extends ProjectState {}
 export interface ProjectState {
   project: Project
   projects: {
-    count: 0
-    results: []
+    count: number
+    results: any[]
   }
   projectJobs: []
   query: {
-    limit: 10
-    offset: 0
+    limit: number
+    offset: number
   }
   jobsLoading: Boolean
   lastPackage: any
@@ -36,12 +36,18 @@ export const PROJECT_STORE = 'project'
 
 export const action = {
   setMenu: 'setMenu',
+  setProject: 'setProject',
   addProject: 'addProject',
   getProject: 'getProject',
   getProjects: 'getProjects',
+  createProject: 'createProject',
+  updateProject: 'updateProject',
   getProjectJobs: 'getProjectJobs',
   getLastPackage: 'getLastPackage',
-  resetProjectJobs: 'resetProjectJobs'
+  resetProjectJobs: 'resetProjectJobs',
+  resetProjectData: 'resetProjectData',
+  createProjectFullWay: 'createProjectFullWay',
+  createProjectShortWay: 'createProjectShortWay'
 }
 
 export const mutation = {
@@ -51,7 +57,10 @@ export const mutation = {
   SET_PROJECTS: 'SET_PROJECTS',
   UPDATE_ROJECT: 'UPDATE_ROJECT',
   SET_LAST_PACKAGE: 'SET_LAST_PACKAGE',
+  UPDATE_PROJECTS: 'UPDATE_PROJECTS',
+  SET_PROJECT_DATA: 'SET_PROJECT_DATA',
   SET_PROJECT_JOBS: 'SET_PROJECT_JOBS',
+  RESET_PROJECT_DATA: 'RESET_PROJECT_DATA',
   RESET_PORJECT_JOBS: 'RESET_PORJECT_JOBS'
 }
 

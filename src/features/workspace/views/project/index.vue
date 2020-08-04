@@ -15,10 +15,10 @@
 </template>
 
 <script>
-import useProject from '@project/composition/useProject'
-import { defineComponent } from '@vue/composition-api'
 import useJobStore from '@job/composition/useJobStore'
+import useProject from '@project/composition/useProject'
 import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
+import { onUnmounted, defineComponent } from '@vue/composition-api'
 import ProjectNavBar from '@project/components/nav-bars/ProjectNavBar'
 
 export default defineComponent({
@@ -33,6 +33,10 @@ export default defineComponent({
     const jobEnd = context.root.$route.name.indexOf('jobs-name') >= 1 ? 5 : 3
     const end = context.root.$route.name === 'workspace-project-job-overiew' ? 6 : jobEnd
     const projectBreadcrumbs = useBreadcrumbs(context, { start: 0, end })
+
+    onUnmounted(() => {
+      project.resetProjectData()
+    })
 
     const handleShowProjectBar = () =>
       project.setMenu({ name: 'menu.isShowProjectBar', value: !project.menu.value.isShowProjectBar })

@@ -19,6 +19,15 @@ export default function () {
     set: value => actions.setMenu({ name: 'menu.sticked', value })
   })
 
+  const projectName = computed({
+    get: () => {
+      return state.project.value.name
+    },
+    set: value => {
+      actions.setProject({ path: 'name', value })
+    }
+  })
+
   const actions = {
     ...useActions(PROJECT_STORE, { ...action })
   }
@@ -26,6 +35,7 @@ export default function () {
   return {
     stickedVM,
     ...state,
-    ...actions
+    ...actions,
+    projectName
   }
 }
