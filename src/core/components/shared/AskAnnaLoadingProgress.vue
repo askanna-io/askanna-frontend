@@ -1,9 +1,9 @@
 <template>
   <div>
-    <v-card v-if="isLoading" outlined class="ma-2 my-4 pb-2">
+    <v-card v-if="isLoading" outlined class="pb-2" :class="{ 'ma-0 my-2': fullWidth, 'ma-2 my-4': !fullWidth }">
       <v-card-text class="text-center">
         <p class="mb-1">{{ loadingTitle }}</p>
-        <v-progress-linear color="primary" rounded :value="loadingProgress" class="mb-0" query></v-progress-linear>
+        <v-progress-linear color="primary" rounded :value="loadingProgress" class="mb-0" query />
       </v-card-text>
     </v-card>
     <v-expand-transition>
@@ -20,6 +20,10 @@ export default defineComponent({
   name: 'AskAnnaLoadingProgress',
 
   props: {
+    fullWidth: {
+      type: Boolean,
+      default: false
+    },
     loading: {
       type: Boolean,
       default: true
@@ -42,6 +46,7 @@ export default defineComponent({
     const loadingState = computed(() => props.loading)
 
     const startLoading = () => {
+      isLoading.value = true
       clearInterval(interval.value)
       interval.value = setInterval(() => {
         if (!loadingState.value) {
@@ -79,7 +84,8 @@ export default defineComponent({
     }
 
     onUpdated(() => {
-      if (!props.loading) {
+      if (loadingState.value && !isLoading.value) {
+        startLoading()
       }
     })
 

@@ -1,58 +1,60 @@
 <template>
-  <ask-anna-loading-progress :loading="packageLoading">
-    <v-row align="center" justify="center">
-      <v-col cols="12" class="pt-0 pb-0">
-        <package-toolbar :breadcrumbs="breadcrumbs">
-          <template v-slot:left>
-            <v-tooltip top>
-              <template v-slot:activator="{ on }">
-                <div v-on="on">
-                  <a v-if="currentPath" @click="handeBackToPackageRoot" class="text-body-2"
-                    >Package #{{ packageId.slice(0, 4) }}<v-icon small>mdi-chevron-right</v-icon></a
+  <v-card flat class="px-3 mt-2 br-none" outlined>
+    <ask-anna-loading-progress :loading="packageLoading">
+      <v-row align="center" justify="center">
+        <v-col cols="12" class="pa-0 pb-0">
+          <package-toolbar :breadcrumbs="breadcrumbs">
+            <template v-slot:left>
+              <v-tooltip top>
+                <template v-slot:activator="{ on }">
+                  <div v-on="on">
+                    <a v-if="currentPath" @click="handeBackToPackageRoot" class="text-body-2"
+                      >Package #{{ packageId.slice(0, 4) }}<v-icon small>mdi-chevron-right</v-icon></a
+                    >
+                    <span class="text-body-2" v-else> Package #{{ packageId.slice(0, 4) }}</span>
+                  </div>
+                </template>
+                <span>{{ packageId }}</span>
+              </v-tooltip>
+            </template>
+            <template v-slot:rigth>
+              <v-slide-y-transition>
+                <div v-if="!file">
+                  <v-btn small outlined color="secondary" class="mr-1 btn--hover" @click="handleDownload()">
+                    <v-icon color="secondary" left>mdi-download</v-icon>Download
+                  </v-btn>
+                  <v-btn
+                    small
+                    outlined
+                    :class="{ 'replace-active': isRaplace }"
+                    color="secondary"
+                    class="mr-1 btn--hover"
+                    @click="handleReplace()"
                   >
-                  <span class="text-body-2" v-else> Package #{{ packageId.slice(0, 4) }}</span>
-                </div>
-              </template>
-              <span>{{ packageId }}</span>
-            </v-tooltip>
-          </template>
-          <template v-slot:rigth>
-            <v-slide-y-transition>
-              <div v-if="!file">
-                <v-btn small outlined color="secondary" class="mr-1 btn--hover" @click="handleDownload()">
-                  <v-icon color="secondary" left>mdi-download</v-icon>Download
-                </v-btn>
-                <v-btn
-                  small
-                  outlined
-                  :class="{ 'replace-active': isRaplace }"
-                  color="secondary"
-                  class="mr-1 btn--hover"
-                  @click="handleReplace()"
-                >
-                  <v-icon color="secondary" left>mdi-folder-move</v-icon>Replace
-                </v-btn>
+                    <v-icon color="secondary" left>mdi-folder-move</v-icon>Replace
+                  </v-btn>
 
-                <v-btn small outlined color="secondary" class="btn--hover" @click="handleHistory()">
-                  <v-icon color="secondary">mdi-history</v-icon>History
-                </v-btn>
-              </div>
-            </v-slide-y-transition>
+                  <v-btn small outlined color="secondary" class="btn--hover" @click="handleHistory()">
+                    <v-icon color="secondary">mdi-history</v-icon>History
+                  </v-btn>
+                </div>
+              </v-slide-y-transition>
+            </template>
+          </package-toolbar>
+          <v-expand-transition>
+            <resumable-upload v-if="isRaplace" @cancelUpload="handleReplace" class="py-2 px-4" :id="packageId" />
+          </v-expand-transition>
+          <template v-if="isProcessing">
+            <package-processing />
           </template>
-        </package-toolbar>
-        <v-expand-transition>
-          <resumable-upload v-if="isRaplace" @cancelUpload="handleReplace" class="py-2 px-4" :id="packageId" />
-        </v-expand-transition>
-        <template v-if="isProcessing">
-          <package-processing />
-        </template>
-        <template v-else>
-          <package-file v-if="file" :file="file" :fileSource="fileSource" :currentPath="currentPath" />
-          <package-tree v-else :items="treeView" :height="calcHeight" @clickOnRow="handleClickOnRow" />
-        </template>
-      </v-col>
-    </v-row>
-  </ask-anna-loading-progress>
+          <template v-else>
+            <package-file v-if="file" :file="file" :fileSource="fileSource" :currentPath="currentPath" />
+            <package-tree v-else :items="treeView" :height="calcHeight" @clickOnRow="handleClickOnRow" />
+          </template>
+        </v-col>
+      </v-row>
+    </ask-anna-loading-progress>
+  </v-card>
 </template>
 
 <script>
