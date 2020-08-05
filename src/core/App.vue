@@ -85,14 +85,23 @@ export default class App extends Vue {
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
 }
+
+.prism-editor-wrapper .prism-editor__code.language-js {
+  padding-top: 10px !important;
+}
+.prism-editor__line-numbers {
+  padding-top: 11px !important;
+}
+
 .prism-editor-wrapper code.language-js {
   font-size: 0.875rem !important;
+  padding-left: 0 !important;
 }
 
 .prism-editor-wrapper .prism-editor__line-numbers,
 .prism-editor-wrapper .prism-editor__line-number {
-  font-size: 0.875rem !important;
-  line-height: 21px !important;
+  font-size: 14px !important;
+  line-height: 24px !important;
 }
 
 .cursor--pointer {
