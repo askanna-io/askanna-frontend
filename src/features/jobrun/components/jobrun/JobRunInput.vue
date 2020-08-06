@@ -59,18 +59,12 @@
       </v-flex>
     </v-toolbar>
     <v-flex class="mb-4">
-      <v-skeleton-loader
-        v-if="!isJobRunPayloadEmpty"
-        :loading="loading"
-        transition="transition"
-        height="94"
-        type="list-item-two-line"
-      >
-        <job-run-pay-load :file="jobRunPayloadComputed" />
-      </v-skeleton-loader>
-      <v-alert v-if="isJobRunPayloadEmpty" class="my-2" color="grey" dense outlined>
-        There is no payload available for this run.
-      </v-alert>
+      <ask-anna-loading-progress :type="'table-row'" :loading="loading" fullWidth>
+        <job-run-pay-load v-if="!isJobRunPayloadEmpty" :file="jobRunPayloadComputed" />
+        <v-alert v-if="isJobRunPayloadEmpty" class="my-2" color="grey" dense outlined>
+          There is no payload available for this run.
+        </v-alert>
+      </ask-anna-loading-progress>
     </v-flex>
   </div>
 </template>
@@ -81,12 +75,14 @@ import useJobRunStore from '../../composition/useJobRunStore'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
 import { ref, computed, onBeforeMount, defineComponent } from '@vue/composition-api'
+import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress'
 
 export default defineComponent({
   name: 'JobRunInput',
 
   components: {
-    JobRunPayLoad
+    JobRunPayLoad,
+    AskAnnaLoadingProgress
   },
 
   setup(props, context) {

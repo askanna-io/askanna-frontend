@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import JobRunResult from '@jobrun/components/jobrun/JobRunResult'
+import JobRunResult from '@/features/jobrun/components/jobrun/JobRunResult'
 export default {
   components: { JobRunResult }
 }

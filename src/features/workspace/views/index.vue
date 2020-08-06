@@ -12,7 +12,7 @@ export default defineComponent({
 
     onBeforeMount(async () => {
       if (!workspaceStore.workspaces.value.count) {
-        workspaceStore.getWorkspaces()
+        await workspaceStore.getWorkspaces()
       }
       let { workspaceId } = context.root.$route.params
 

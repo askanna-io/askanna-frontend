@@ -1,12 +1,13 @@
 <template>
   <v-card flat class="px-3 mt-2 br-none" outlined>
-    <v-skeleton-loader ref="skeleton" :type="'table-row'" :loading="jobsLoading">
+    <ask-anna-loading-progress :type="'table-row'" :loading="jobsLoading">
       <v-row align="center" justify="center">
         <v-col cols="12" class="pa-0">
           <jobs-list :jobList="projectJobs" />
         </v-col>
-      </v-row> </v-skeleton-loader
-  ></v-card>
+      </v-row>
+    </ask-anna-loading-progress>
+  </v-card>
 </template>
 
 <script>

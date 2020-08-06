@@ -40,18 +40,18 @@
       </v-flex>
     </v-toolbar>
     <v-flex :style="scrollerStyles" class="mb-4 overflow-y-auto" id="scroll-target">
-      <v-skeleton-loader
-        v-if="!logNoAvailable"
+      <ask-anna-loading-progress
         :loading="loading"
+        fullWidth
         transition="transition"
         height="94"
         type="list-item-two-line"
       >
-        <prism-editor v-scroll:#scroll-target="onScroll" :code="logs" readonly line-numbers />
-      </v-skeleton-loader>
-      <v-alert v-if="logNoAvailable" class="my-2" dense outlined color="grey">
-        No log entries are available for this job run.
-      </v-alert>
+        <prism-editor v-if="!logNoAvailable" v-scroll:#scroll-target="onScroll" :code="logs" readonly line-numbers />
+        <v-alert v-if="logNoAvailable" class="my-2" dense outlined color="grey">
+          No log entries are available for this job run.
+        </v-alert>
+      </ask-anna-loading-progress>
     </v-flex>
   </div>
 </template>
@@ -64,12 +64,14 @@ import useSnackBar from '@/core/components/snackBar/useSnackBar'
 import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
 import { reactive, computed, onBeforeMount, defineComponent } from '@vue/composition-api'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
+import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress'
 
 export default defineComponent({
   name: 'JobRunLog',
 
   components: {
-    PrismEditor
+    PrismEditor,
+    AskAnnaLoadingProgress
   },
 
   setup(props, context) {

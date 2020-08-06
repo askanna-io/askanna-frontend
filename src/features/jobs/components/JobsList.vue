@@ -14,14 +14,15 @@
   >
     <template v-slot:expanded-item="{ item }">
       <td :colspan="8" class="pa-0">
-        <v-skeleton-loader v-if="item.runs.count" ref="skeleton" :type="'table-row'" :loading="loading">
+        <ask-anna-loading-progress v-if="item.runs.count" :type="'table-row'" :loading="loading">
           <job-runs
             :items="runs"
             :height="calcSubHeight"
             :tableClass="'job-sub-table'"
             @handleClickOnRow="handleClickOnRow"
           />
-        </v-skeleton-loader>
+        </ask-anna-loading-progress>
+
         <div v-else class="ma-2 text-center">No runs yet</div>
       </td>
     </template>
@@ -51,16 +52,18 @@
 import { useWindowSize } from '@u3u/vue-hooks'
 import { JobsListHeaders } from '../utils/index'
 import JobRuns from '@jobrun/components/JobRuns'
-import { defineComponent } from '@vue/composition-api'
 import useMoment from '@/core/composition/useMoment'
 import useJobStore from '../../job/composition/useJobStore'
+import { ref, computed, defineComponent } from '@vue/composition-api'
 import useJobRunStore from '../../jobrun/composition/useJobRunStore'
+import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress'
 
 export default defineComponent({
   name: 'JobList',
 
   components: {
-    JobRuns
+    JobRuns,
+    AskAnnaLoadingProgress
   },
 
   props: {
@@ -76,6 +79,19 @@ export default defineComponent({
     const { height } = useWindowSize()
     const jobRunStore = useJobRunStore()
 
+    const expanded = ref([])
+    const selection = ref(2)
+    const loading = ref(true)
+    const currentJob = ref(true)
+
+    const calcSubHeight = computed(() => {
+      const rowHeight = 64
+      const countItems = jobRunStore.runs.value.length
+      const subRowHeiht = countItems >= 5 ? 368 : countItems * rowHeight + 70
+
+      return subRowHeiht
+    })
+
     const handleJobClick = item => {
       context.root.$router.push({
         name: 'workspace-project-job-overiew',
@@ -83,75 +99,39 @@ export default defineComponent({
       })
     }
 
+    const handleExpand = async ({ item, value }) => {
+      loading.value = true
+
+      currentJob.value = item
+
+      await jobRunStore.getRunsJob(item.short_uuid)
+      loading.value = false
+    }
+
+    const handleClickOnRow = item => {
+      context.root.$router.push({
+        name: 'workspace-project-jobs-job-jobrun-input',
+        params: {
+          ...context.root.$route.params,
+          jobRunId: item.short_uuid,
+          jobId: currentJob.value.short_uuid || 'jobname'
+        }
+      })
+    }
+
     return {
       height,
+      loading,
+      expanded,
+      selection,
+      calcSubHeight,
       ...moment,
       ...jobStore,
       ...jobRunStore,
       JobsListHeaders,
-      handleJobClick
-    }
-  },
-
-  data() {
-    return {
-      currentJob: null,
-      loading: true,
-      jobResults: {
-        name: '',
-        runtime: '',
-        memory: '',
-        return_payload: ''
-      },
-      expanded: [],
-      selection: 2
-    }
-  },
-
-  computed: {
-    sticked: {
-      get() {
-        return this.stickedVal
-      },
-      set(val) {
-        this.stickedVal = val
-      }
-    },
-    calcHeight() {
-      return this.height - 450
-    },
-    calcSubHeight() {
-      const countItems = this.runs.length
-      const rowHeight = 64
-      const subRowHeiht = countItems >= 5 ? 368 : countItems * rowHeight + 70
-
-      return subRowHeiht
-    }
-  },
-
-  methods: {
-    async handleJobInfo(jobResults) {
-      this.jobResults = { ...this.currentJob, ...jobResults }
-
-      this.showJobRunResult()
-    },
-    async handleExpand({ item, value }) {
-      this.loading = true
-      if (!value || !item.runs.count) return
-      this.currentJob = item
-
-      await this.getRunsJob(item.short_uuid)
-
-      this.loading = false
-    },
-    onStick(data) {
-      this.sticked = data.sticked
-    },
-    handleClickOnRow(item) {
-      this.$router.push({
-        name: 'workspace-project-jobs-job-jobrun-input',
-        params: { ...this.$route.params, jobRunId: item.short_uuid, jobId: this.currentJob.short_uuid || 'jobname' }
-      })
+      handleExpand,
+      handleJobClick,
+      handleClickOnRow
     }
   }
 })

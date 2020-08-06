@@ -116,5 +116,9 @@ export const actions: ActionTree<projectState, RootState> = {
     }
 
     commit(mutation.SET_LAST_PACKAGE, packageData)
+  },
+
+  async [action.setMenu]({ commit }, data) {
+    commit(mutation.SET_MENU, data)
   }
 }

@@ -17,6 +17,11 @@ export const state: projectState = {
   },
   jobsLoading: true,
   lastPackage: null,
+  menu: {
+    isSticked: true,
+    isShowProjectBar: false,
+    sticked: false
+  },
   projectsLoading: true
 }
 

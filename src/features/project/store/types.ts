@@ -13,6 +13,11 @@ export interface ProjectState {
   }
   jobsLoading: Boolean
   lastPackage: any
+  menu: {
+    isSticked: boolean
+    isShowProjectBar: boolean
+    sticked: boolean
+  }
   projectsLoading: Boolean
 }
 
@@ -31,6 +36,7 @@ interface Project {
 export const PROJECT_STORE = 'project'
 
 export const action = {
+  setMenu: 'setMenu',
   addProject: 'addProject',
   getProject: 'getProject',
   getProjects: 'getProjects',
@@ -41,6 +47,7 @@ export const action = {
 
 export const mutation = {
   SET_LOADING: 'SET_LOADING',
+  SET_MENU: 'SET_MENU',
   SET_PROJECT: 'SET_PROJECT',
   SET_PROJECTS: 'SET_PROJECTS',
   UPDATE_ROJECT: 'UPDATE_ROJECT',
