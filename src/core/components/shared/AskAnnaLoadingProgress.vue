@@ -3,7 +3,14 @@
     <v-card v-if="isLoading" outlined class="pb-2" :class="{ 'ma-0 my-2': fullWidth, 'ma-2 my-4': !fullWidth }">
       <v-card-text class="text-center">
         <p class="mb-1">{{ loadingTitle }}</p>
-        <v-progress-linear color="primary" rounded :value="loadingProgress" class="mb-0" query />
+
+        <v-progress-linear
+          color="primary"
+          class="mb-0"
+          :buffer-value="bufferValue"
+          :value="loadingProgress"
+          :reverse="indeterminate"
+        />
       </v-card-text>
     </v-card>
     <v-expand-transition>
@@ -14,7 +21,7 @@
 
 <script>
 import { delay } from 'lodash'
-import { onUpdated, ref, watch, computed, defineComponent } from '@vue/composition-api'
+import { onUpdated, ref, computed, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'AskAnnaLoadingProgress',
@@ -41,33 +48,34 @@ export default defineComponent({
   setup(props, context) {
     const speed = ref(10)
     const interval = ref(0)
+    const bufferValue = ref(100)
     const isLoading = ref(true)
     const loadingProgress = ref(0)
+    const indeterminate = ref(false)
     const loadingState = computed(() => props.loading)
 
     const startLoading = () => {
       isLoading.value = true
       clearInterval(interval.value)
+
       interval.value = setInterval(() => {
         if (!loadingState.value) {
+          // indeterminate.value = false
           loadingProgress.value = 100
+
           stopLoading()
 
           return
         }
-        /*  if (loadingState.value) {
-          loadingProgress.value = 100
-          speed.value = 30
-        }
-        if (loadingProgress.value >= 100) {
+
+        if (loadingProgress.value > 99) {
           if (loadingState.value) {
-            loadingProgress.value = 3
-          } else {
-            clearInterval(interval.value)
-            isLoading.value = false
-            loadingProgress.value = 0
+            indeterminate.value = !indeterminate.value
+            bufferValue.value = 0
+            loadingProgress.value = -10
           }
-        } */
+        } else {
+        }
         loadingProgress.value += Math.random() * speed.value
       }, 100)
     }
@@ -76,7 +84,10 @@ export default defineComponent({
       delay(
         () => {
           clearInterval(interval.value)
+          indeterminate.value = false
           isLoading.value = false
+          bufferValue.value = 100
+          loadingProgress.value = 0
         },
         350,
         'later'
@@ -85,13 +96,15 @@ export default defineComponent({
 
     onUpdated(() => {
       if (loadingState.value && !isLoading.value) {
+        indeterminate.value = false
+        bufferValue.value = 100
         startLoading()
       }
     })
 
     startLoading()
 
-    return { isLoading, loadingProgress }
+    return { bufferValue, indeterminate, isLoading, loadingProgress }
   }
 })
 </script>
