@@ -11,6 +11,7 @@ export default defineComponent({
     const workspaceStore = useWorkspaceStore()
 
     onBeforeMount(async () => {
+      workspaceStore.reset()
       if (!workspaceStore.workspaces.value.count) {
         await workspaceStore.getWorkspaces()
       }
@@ -25,7 +26,7 @@ export default defineComponent({
       // if (workspaceStore.workspace.value.short_uuid === workspaceId) return
 
       await workspaceStore.getWorkspace(workspaceId)
-      await workspaceStore.getWorkpaceProjects(workspaceId)
+      await workspaceStore.getInitialWorkpaceProjects(workspaceId)
     })
   }
 })

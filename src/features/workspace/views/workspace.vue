@@ -1,6 +1,7 @@
 <template>
   <div>
     <workspace-project-list
+      v-scroll="throttle(onScroll, 1000)"
       :workspaceUuid="workspace.uuid"
       :settings="workspaceSettings"
       :workspaceName="workspace.title"
@@ -12,6 +13,7 @@
   </div>
 </template>
 <script>
+import { throttle } from 'lodash'
 import useQuery from '@/core/composition/useQuery'
 import { defineComponent } from '@vue/composition-api'
 import useWorkspaceStore from '../composition/useWorkSpaceStore'
@@ -23,10 +25,18 @@ export default defineComponent({
   components: { WorkspaceProjectList },
 
   setup(props, context) {
-    const query = useQuery(context)
     const workspaceStore = useWorkspaceStore()
+    const query = useQuery(context, {
+      store: workspaceStore,
+      action: 'getWorkpaceProjects',
+      queryPath: 'workspaceProjectsQuery'
+    })
+
+    const onScroll = e => query.onScroll(e.target.documentElement.scrollTop)
 
     return {
+      throttle,
+      onScroll,
       workspace: workspaceStore.workspace,
       workspaceProjects: workspaceStore.workspaceProjects,
       workspaceSettings: workspaceStore.workspaceSettings,

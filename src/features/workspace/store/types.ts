@@ -17,6 +17,7 @@ export interface WorkspaceState {
   workspaceProjectsQuery: {
     limit: number
     offset: number
+    next: null | string
   }
   workspacesLoading: Boolean
   workspaceProjectsLoading: Boolean
@@ -42,13 +43,18 @@ interface Workspace {
 export const WORKSPACE_STORE = 'workspace'
 
 export const action = {
+  reset: 'reset',
+  setQuery: 'setQuery',
   getWorkspace: 'getWorkspace',
   getWorkspaces: 'getWorkspaces',
   changeSettings: 'changeSettings',
-  getWorkpaceProjects: 'getWorkpaceProjects'
+  getWorkpaceProjects: 'getWorkpaceProjects',
+  getInitialWorkpaceProjects: 'getInitialWorkpaceProjects'
 }
 
 export const mutation = {
+  RESET: 'RESET',
+  SET_QUERY: 'SET_QUERY',
   SET_LOADING: 'SET_LOADING',
   SET_WORKSPACE: 'SET_WORKSPACE',
   SET_WORKSPACES: 'SET_WORKSPACES',
