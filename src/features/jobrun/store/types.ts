@@ -10,7 +10,11 @@ export interface jobRubData {
   payLoadLoading: Boolean
   jobRunlogLoading: Boolean
   jobRunResult: any
-  jobRunLog: any[]
+  jobRunLog: {
+    count: number
+    next: null | string
+    results: any[]
+  }
 }
 
 export interface JobRun {
@@ -60,6 +64,7 @@ export const action = {
   getRunsJob: 'getRunsJob',
   getJobRunLog: 'getJobRunLog',
   getJobRunResult: 'getJobRunResult',
+  getInitJobRunLog: 'getInitJobRunLog',
   getJobRunPayload: 'getJobRunPayload',
   showJobRunResult: 'showJobRunResult',
   closeResultModal: 'closeResultModal'

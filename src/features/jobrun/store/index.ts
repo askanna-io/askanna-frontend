@@ -14,7 +14,11 @@ export const state: jobRunState = {
   payLoadLoading: true,
   jobRunlogLoading: true,
   jobRunResult: null,
-  jobRunLog: []
+  jobRunLog: {
+    count: 0,
+    next: null,
+    results: []
+  }
 }
 
 const namespaced: boolean = true
