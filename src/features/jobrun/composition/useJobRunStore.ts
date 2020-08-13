@@ -13,7 +13,8 @@ export default function () {
       jobRunLoading: 'jobRunLoading',
       resultLoading: 'resultLoading',
       payLoadLoading: 'payLoadLoading',
-      jobRunlogLoading: 'jobRunlogLoading'
+      jobRunlogLoading: 'jobRunlogLoading',
+      jobRunLogFullVersion: 'jobRunLogFullVersion'
     })
   }
 

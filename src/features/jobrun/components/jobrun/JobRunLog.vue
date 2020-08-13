@@ -110,6 +110,20 @@ export default defineComponent({
       return result
     })
 
+    const fullLog = computed(() => {
+      if (!jobRunStore.jobRunLogFullVersion.value) return ''
+
+      const reducer = (acc, cr) => {
+        acc = acc + `${cr[2]} \n`
+        return acc
+      }
+      const result = jobRunStore.jobRunLogFullVersion.value.length
+        ? jobRunStore.jobRunLogFullVersion.value.reduce(reducer, ``)
+        : ''
+
+      return result
+    })
+
     const maxHeight = computed(() => height.value - 270)
     const scrollerStyles = computed(() => {
       return { 'max-height': `${maxHeight.value}px` }
@@ -117,8 +131,9 @@ export default defineComponent({
     const loading = computed(() => jobRunStore.jobRunlogLoading.value)
     const logNoAvailable = computed(() => jobRunStore.jobRunLog.value.results === null && !loading.value)
 
-    const handleCopy = () => {
-      context.root.$copyText(logs.value).then(
+    const handleCopy = async () => {
+      await getFullJobRun()
+      context.root.$copyText(fullLog.value).then(
         function (e) {
           snackBar.showSnackBar({ message: 'Copied', color: 'success' })
         },
@@ -128,10 +143,18 @@ export default defineComponent({
       )
     }
 
-    const handleDownload = () =>
-      forceFileDownload.trigger({ source: logs.value, name: `${jobRunStore.jobRun.value.short_uuid}_log.txt` })
+    const handleDownload = async () => {
+      await getFullJobRun()
+
+      forceFileDownload.trigger({ source: fullLog.value, name: `${jobRunStore.jobRun.value.short_uuid}_log.txt` })
+    }
 
     const onScroll = e => query.onScroll(e.target.scrollTop)
+
+    const getFullJobRun = async () => {
+      if (fullLog.value) return
+      await jobRunStore.getFullVersionJobRunLog(jobRunId.value)
+    }
 
     return {
       logs,

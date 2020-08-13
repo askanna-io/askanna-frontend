@@ -15,6 +15,7 @@ export interface jobRubData {
     next: null | string
     results: any[]
   }
+  jobRunLogFullVersion: any[]
 }
 
 export interface JobRun {
@@ -67,7 +68,8 @@ export const action = {
   getInitJobRunLog: 'getInitJobRunLog',
   getJobRunPayload: 'getJobRunPayload',
   showJobRunResult: 'showJobRunResult',
-  closeResultModal: 'closeResultModal'
+  closeResultModal: 'closeResultModal',
+  getFullVersionJobRunLog: 'getFullVersionJobRunLog'
 }
 
 // mutations
@@ -85,6 +87,7 @@ export const SET_JOB_RUN_LOG = 'SET_JOB_RUN_LOG'
 export const UPDATE_JOB_RESULT = 'UPDATE_JOB_RESULT'
 export const SET_JOB_RUN_RESULT = 'SET_JOB_RUN_RESULT'
 export const SET_JOB_RUN_PAYLOAD = 'SET_JOB_RUN_PAYLOAD'
+export const SET_JOB_RUN_LOG_FULL_VERSION = 'SET_JOB_RUN_LOG_FULL_VERSION'
 
 export const stateType = {
   jobRunLoading: 'jobRunLoading',

@@ -18,7 +18,8 @@ export const state: jobRunState = {
     count: 0,
     next: null,
     results: []
-  }
+  },
+  jobRunLogFullVersion: []
 }
 
 const namespaced: boolean = true

@@ -125,5 +125,25 @@ export const actions: ActionTree<jobRunState, RootState> = {
       return
     }
     commit(type.SET_JOB_RUN_LOG, jobRunLog)
+  },
+
+  async [type.action.getFullVersionJobRunLog]({ commit }, uuid) {
+    let jobRunLog = {
+      next: 0,
+      count: 0,
+      results: []
+    }
+    try {
+      jobRunLog = await apiService({
+        action: api.getJobRunLog,
+        serviceName,
+        uuid
+      })
+    } catch (e) {
+      logger.error(commit, 'Error on jobrun log  in getJobRunLog action.\nError: ', e)
+
+      return
+    }
+    commit(type.SET_JOB_RUN_LOG_FULL_VERSION, jobRunLog)
   }
 }
