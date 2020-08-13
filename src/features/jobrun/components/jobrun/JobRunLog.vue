@@ -47,7 +47,7 @@
         height="94"
         type="list-item-two-line"
       >
-        <prism-editor v-scroll:#scroll-target="throttle(onScroll, 1000)" :code="logs" readonly line-numbers />
+        <the-highlight :value="logs" v-scroll:#scroll-target="throttle(onScroll, 1500)" />
       </v-skeleton-loader>
       <v-alert v-if="logNoAvailable" class="my-2" dense outlined color="grey">
         No log entries are available for this job run.
@@ -58,6 +58,7 @@
 
 <script>
 import { throttle } from 'lodash'
+import TheHighlight from '@/core/components/highlight/TheHighlight'
 import PrismEditor from 'vue-prism-editor'
 import { useWindowSize } from '@u3u/vue-hooks'
 import useQuery from '@/core/composition/useQuery'
@@ -71,7 +72,7 @@ export default defineComponent({
   name: 'JobRunLog',
 
   components: {
-    PrismEditor
+    TheHighlight
   },
 
   setup(props, context) {
@@ -91,8 +92,6 @@ export default defineComponent({
     const forceFileDownload = useForceFileDownload()
 
     onBeforeMount(async () => {
-      if (jobRunId.value === jobRunStore.jobRun.value.short_uuid) return
-
       jobRunStore.getInitJobRunLog({ uuid: jobRunId.value, params: { limit: 100, offset: 0 } })
     })
 
