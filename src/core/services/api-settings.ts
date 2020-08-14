@@ -25,8 +25,8 @@ export const apiUrl = process.env.VUE_APP_API_URL
 const apiPort = process.env.VUE_APP_API_PORT
 
 export const api: ApiSettings = {
-  url: () => `https://beta-api.askanna.eu/`,
-  apiUrl: () => `https://beta-api.askanna.eu/v1/`,
+  url: () => `${apiUrl}:${apiPort}/`,
+  apiUrl: () => `${apiUrl}:${apiPort}/v1/`,
   // auth api
   auth: {
     login: () => `rest-auth/login/`,
@@ -44,7 +44,10 @@ export const api: ApiSettings = {
       list: () => `project/`,
       jobs: id => `project/${id}/jobs/`,
       packages: id => `project/${id}/packages/`,
-      getLastJobRun: id => `job/${id}/runs/`
+      getLastJobRun: id => `job/${id}/runs/`,
+      create: () => 'project/',
+      update: id => `project/${id}/`,
+      templates: () => 'project_template/'
     },
     package: {
       get: ({ projectId, packageId }) => `project/${projectId}/packages/${packageId}/`,
@@ -80,8 +83,8 @@ export const api: ApiSettings = {
       get: id => `jobrun/${id}/`,
       runs: id => `job/${id}/runs/`,
       getJobRun: id => `jobrun/${id}/`,
-      getJobRunResult: id => `result/${id}/`,
-      getJobRunLog: id => `jobrun/${id}/log/`,
+      getJobRunResult: id => `result/${id}`,
+      getJobRunLog: id => `jobrun/${id}/log`,
       getJobRunPayload: ({ jobRunShortId, payloadUuid }) => `jobrun/${jobRunShortId}/payload/${payloadUuid}/`
     },
 
