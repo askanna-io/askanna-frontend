@@ -87,7 +87,7 @@ hue-6-2: #e6c07b
 }
 .ask-anna-highlight td.hljs-ln-code {
   padding-left: 10px;
-  white-space: nowrap;
+  white-space: pre;
 }
 
 .ask-anna-highlight code {
