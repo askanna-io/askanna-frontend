@@ -18,6 +18,18 @@ export interface ProjectState {
     isShowProjectBar: boolean
     sticked: boolean
   }
+  projectTemplates: ProjectTemplate[]
+}
+
+export interface ProjectTemplate {
+  created: string
+  deleted: null | string
+  modified: string
+  name: string
+  scope: any
+  short_uuid: string
+  template_location: string
+  uuid: string
 }
 
 interface Project {
@@ -30,6 +42,7 @@ interface Project {
   modified: string
   title: string
   description: string
+  template: string
 }
 
 export const PROJECT_STORE = 'project'
@@ -46,6 +59,7 @@ export const action = {
   getLastPackage: 'getLastPackage',
   resetProjectJobs: 'resetProjectJobs',
   resetProjectData: 'resetProjectData',
+  getProjectTemplates: 'getProjectTemplates',
   createProjectFullWay: 'createProjectFullWay',
   createProjectShortWay: 'createProjectShortWay'
 }
@@ -61,7 +75,8 @@ export const mutation = {
   SET_PROJECT_DATA: 'SET_PROJECT_DATA',
   SET_PROJECT_JOBS: 'SET_PROJECT_JOBS',
   RESET_PROJECT_DATA: 'RESET_PROJECT_DATA',
-  RESET_PORJECT_JOBS: 'RESET_PORJECT_JOBS'
+  RESET_PORJECT_JOBS: 'RESET_PORJECT_JOBS',
+  SET_PROJECT_TEMPLATES: 'SET_PROJECT_TEMPLATES'
 }
 
 export class ProjectModel {
@@ -85,7 +100,8 @@ export class ProjectModel {
       modified: '',
       flows: [],
       title: '',
-      description: ''
+      description: '',
+      template: ''
     }
   }
 }

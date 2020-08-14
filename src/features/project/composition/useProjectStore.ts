@@ -10,7 +10,8 @@ export default function () {
       projects: 'projects',
       projectJobs: 'projectJobs',
       jobsLoading: 'jobsLoading',
-      lastPackage: 'lastPackage'
+      lastPackage: 'lastPackage',
+      projectTemplates: 'projectTemplates'
     })
   }
 

@@ -17,23 +17,23 @@
 
     <v-card-text class="font-weight-bold">
       <p>
-        A project is where you house your files (repository), plan your work (issues), and publish your documentation
-        (wiki), among other things.
+        A project is where you can collaborate with your team, or yourself. You can house files, code, jobs, runs and
+        all (meta) data related to running your projects.
       </p>
       <p>
-        All features are enabled for blank projects, from templates, or when importing, but you can disable them
-        afterward in the project settings.
+        You can use a blank template, where we will only add the askanna.yml file for you. Or you can choose one of the
+        project templates that are available.
       </p>
       <p>
-        To only use CI/CD features for an external repository, choose CI/CD for external repo. Information about
-        additional Pages templates and how to install them can be found in our Pages getting started guide. Tip: You can
-        also create a project from the command line.
+        Tip: via the AskAnna CLI, you can also create projects using the command line. You can do this via `askanna
+        create "project name"` [COPY] and follow the instructions in your terminal.
       </p></v-card-text
     >
     <v-divider />
 
     <project
       :projectData="projectData"
+      :projectTemplates="projectTemplates"
       @handleOnInput="handleOnInput"
       @handleCreate="handleCreate"
       @handleCancel="handleCancel"
@@ -57,6 +57,10 @@ export default defineComponent({
     const projectStore = useProjectStore(context)
     const workSpaceStore = useWorkSpaceStore(context)
 
+    onBeforeMount(async () => {
+      projectStore.getProjectTemplates()
+    })
+
     const breadcrumbs = computed(() => [
       {
         title: workSpaceStore.workspace.value.title,
@@ -73,11 +77,10 @@ export default defineComponent({
     const handleOnInput = data => projectStore.setProject(data)
     const handleCreate = async data => {
       const project = await projectStore.createProjectFullWay(context.root.$route.params.workspaceId)
-
       if (project && project.short_uuid) {
         context.root.$router.push({
-          name: 'workspace-project',
-          params: { projectId: project.short_uuid, workspaceId: project.workspace.short_uuid }
+          name: 'workspace-project-package',
+          params: { projectId: project.short_uuid, workspaceId: project.workspace.short_uuid, packageId: 'no-package' }
         })
       }
     }
@@ -87,6 +90,7 @@ export default defineComponent({
     }
 
     return {
+      projectTemplates: projectStore.projectTemplates,
       projectData: projectStore.project,
       handleOnInput,
       handleCreate,

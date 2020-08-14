@@ -193,5 +193,19 @@ export const actions: ActionTree<projectState, RootState> = {
 
   async [action.resetProjectData]({ commit }) {
     commit(mutation.RESET_PROJECT_DATA)
+  },
+
+  async [action.getProjectTemplates]({ commit }) {
+    let projectTemplates
+    try {
+      projectTemplates = await apiService({
+        action: api.templates,
+        serviceName
+      })
+    } catch (error) {
+      return
+    }
+
+    commit(mutation.SET_PROJECT_TEMPLATES, projectTemplates)
   }
 }

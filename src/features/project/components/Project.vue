@@ -1,6 +1,6 @@
 <template>
   <v-card flat>
-    <v-form ref="newProjectForm" lazy-validation v-model="isFormValid">
+    <v-form ref="newProjectForm">
       <v-container fluid>
         <v-row>
           <v-col cols="4">
@@ -32,7 +32,7 @@
           <v-col class="d-flex" cols="4">
             <v-select
               v-model="template"
-              :items="templates"
+              :items="projectTemplates"
               item-text="name"
               item-value="short_uuid"
               label="Template"
@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import { ref, defineComponent } from '@vue/composition-api'
+import { ref, computed, defineComponent } from '@vue/composition-api'
 import useValidationRules from '@/core/composition/useValidationRules'
 
 export default defineComponent({
@@ -69,8 +69,14 @@ export default defineComponent({
         return {
           name: '',
           workspace: '',
-          template: 'blank'
+          template: ''
         }
+      }
+    },
+    projectTemplates: {
+      type: Array,
+      default: function () {
+        return []
       }
     }
   },
@@ -78,14 +84,12 @@ export default defineComponent({
   setup(props, context) {
     const RULES = useValidationRules()
 
-    const template = ref('0')
+    const template = computed({
+      get: () => props.projectData.template,
+      set: value => context.emit('handleOnInput', { path: 'template', value })
+    })
     const isFormValid = ref(false)
     const newProjectForm = ref(null)
-
-    const templates = [
-      { name: 'Blank', short_uuid: '0' },
-      { name: 'Data science basic 1', short_uuid: '1' }
-    ]
 
     const handleOnInput = (value, path) => context.emit('handleOnInput', { path, value })
 
@@ -106,7 +110,6 @@ export default defineComponent({
       RULES,
       newProjectForm,
       template,
-      templates,
       handleOnInput,
       handleCreate,
       handleCancel

@@ -36,5 +36,10 @@ export const mutations: MutationTree<projectState> = {
   },
   [mutation.RESET_PROJECT_DATA](state) {
     state.project = new ProjectModel().state
+  },
+  [mutation.SET_PROJECT_TEMPLATES](state, data) {
+    const [defaultTemplate] = data
+    state.project = { ...state.project, template: defaultTemplate.short_uuid }
+    state.projectTemplates = data
   }
 }

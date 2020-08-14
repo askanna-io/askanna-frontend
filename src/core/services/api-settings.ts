@@ -46,7 +46,8 @@ export const api: ApiSettings = {
       packages: id => `project/${id}/packages/`,
       getLastJobRun: id => `job/${id}/runs/`,
       create: () => 'project/',
-      update: id => `project/${id}/`
+      update: id => `project/${id}/`,
+      templates: () => 'project_template/'
     },
     package: {
       get: ({ projectId, packageId }) => `project/${projectId}/packages/${packageId}/`,

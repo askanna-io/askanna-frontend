@@ -21,7 +21,19 @@ export const state: projectState = {
     isSticked: true,
     isShowProjectBar: false,
     sticked: false
-  }
+  },
+  projectTemplates: [
+    {
+      created: '',
+      deleted: null,
+      modified: '',
+      name: '',
+      scope: null,
+      short_uuid: '',
+      template_location: '',
+      uuid: ''
+    }
+  ]
 }
 
 const namespaced: boolean = true
