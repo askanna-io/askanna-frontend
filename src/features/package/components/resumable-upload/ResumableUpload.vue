@@ -3,7 +3,8 @@
     <v-col cols="12">
       <div ref="draggable" @click.stop class="is-sortable-disabled is-drag-valid theme-list drop-zone">
         <div class="grid-block-wrapper vue-file-agent file-input-wrapper has-multiple">
-          <replace-info :projectShortUuid="projectShortUuid" :workspaceId="workspaceId" />
+          <replace-info v-if="isReplace" :projectShortUuid="projectShortUuid" :workspaceId="workspaceId" />
+          <new-package-info v-else :projectShortUuid="projectShortUuid" :workspaceId="workspaceId" />
           <canvas style="position: fixed; visibility: hidden; z-index: -3;"></canvas>
           <div transitionduration="300" pressdelay="0" helperclass="active-sorting-item">
             <div>
@@ -35,11 +36,12 @@
           <v-icon color="secondary" left>mdi-upload</v-icon>Upload
         </v-btn>
       </span>
-      <v-btn class="my-2" small outlined @click="handleCancel" color="secondary">
+      <v-btn class="my-2" v-if="isReplace" small outlined @click="handleCancel" color="secondary">
         <v-icon color="secondary" left>mdi-cancel</v-icon>Cancel
       </v-btn>
       <confirm-dialog
         v-if="showConfirmation"
+        :isReplace="isReplace"
         @uploadStarted="handleStartUpload"
         @cancelUploadStarted="handleCancelUploadStarted"
       />
@@ -58,19 +60,21 @@
 <script>
 import FilePreview from './FilePreview.vue'
 import ReplaceInfo from './ReplaceInfo.vue'
+import NewPackageInfo from './NewPackageInfo'
 import ConfirmDialog from './ConfirmDialog.vue'
 import UploadProcessDialod from './UploadProcessDialod.vue'
 
 import Resumablejs from '@/core/plugins/resumable.js'
 import useUploadStatus from '@/core/components/uploadStatus/useUploadStatus'
 import usePackageStore from '@/features/package/composition/usePackageStore'
+import useProjectStore from '@/features/project/composition/useProjectStore'
 
 import { ref, watch, reactive, computed, defineComponent, onMounted } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'ResumableUpload',
 
-  components: { ReplaceInfo, FilePreview, ConfirmDialog, UploadProcessDialod },
+  components: { ReplaceInfo, NewPackageInfo, FilePreview, ConfirmDialog, UploadProcessDialod },
 
   props: {
     statusData: {
@@ -90,12 +94,17 @@ export default defineComponent({
     id: {
       type: String,
       default: () => ''
+    },
+    isReplace: {
+      type: Boolean,
+      default: false
     }
   },
 
   setup(props, context) {
     const packageStore = usePackageStore()
     const uploadStatus = useUploadStatus()
+    const projectStore = useProjectStore()
 
     const r = ref(null)
     const draggable = ref(null)
@@ -122,7 +131,7 @@ export default defineComponent({
 
     const { projectId: projectShortUuid, workspaceId } = context.root.$route.params
 
-    const projectUuid = computed(() => packageStore.packageData.value.project)
+    const projectUuid = computed(() => projectStore.project.value.uuid)
 
     const token = localStorage.getItem('token')
     const uploadHeaders = { Authorization: `Token ${token}` }

@@ -52,6 +52,8 @@ export default defineComponent({
     const projectStore = useProjectStore()
     const menu = ref(false)
 
+    projectStore.resetProjectData()
+
     const handleMoreOptions = () =>
       context.root.$router.push({
         name: 'workspace-new-project',
@@ -70,10 +72,10 @@ export default defineComponent({
 
     return {
       menu,
-      handleCancel,
       projectName: projectStore.projectName,
-      handlerCreateProject,
-      handleMoreOptions
+      handleCancel,
+      handleMoreOptions,
+      handlerCreateProject
     }
   }
 })

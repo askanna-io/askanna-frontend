@@ -54,6 +54,12 @@ const jobRun = [
 
 const packageRoutes = [
   {
+    path: 'new-package',
+    component: () =>
+      import(/* webpackChunkName: "workspace-project-package-new" */ './views/project/package/new-package.vue'),
+    name: 'workspace-project-package-new'
+  },
+  {
     path: ':packageId',
     component: () =>
       import(/* webpackChunkName: "workspace-project-package-uuid" */ './views/project/package/index.vue'),

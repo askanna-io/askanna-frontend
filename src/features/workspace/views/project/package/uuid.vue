@@ -40,7 +40,7 @@
         </template>
       </package-toolbar>
       <v-expand-transition>
-        <resumable-upload v-if="isRaplace" @cancelUpload="handleReplace" class="py-2 px-4" :id="packageId" />
+        <resumable-upload v-if="isRaplace" isReplace @cancelUpload="handleReplace" class="py-2 px-4" :id="packageId" />
       </v-expand-transition>
       <template v-if="isProcessing">
         <package-processing />
@@ -87,10 +87,16 @@ export default defineComponent({
     const polling = ref(null)
     const isRaplace = ref(false)
     const file = ref(packageStore.file)
-    const { workspaceId, projectId, packageId = 'no-package', folderName = '' } = context.root.$route.params
+    const { workspaceId, projectId, packageId = 'new-package', folderName = '' } = context.root.$route.params
 
     onBeforeMount(async () => {
-      if (packageId === 'no-package') return
+      if (packageId === 'new-package') {
+        context.root.$router.push({
+          name: 'workspace-project-package-new',
+          params: { ...context.root.$route.params }
+        })
+        return
+      }
       await getPackage()
       pollData()
     })

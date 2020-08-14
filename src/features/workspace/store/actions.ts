@@ -77,7 +77,7 @@ export const actions: ActionTree<workspaceState, RootState> = {
         })
 
         project.packages = packages
-        project.lastPackage = packages.results.length ? packages.results[0] : { short_uuid: 'no-package' }
+        project.lastPackage = packages.results.length ? packages.results[0] : { short_uuid: 'new-package' }
 
         return project
       })

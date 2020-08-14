@@ -7,7 +7,7 @@
             <v-text-field
               @input="handleOnInput($event, 'name')"
               :value="projectData.name"
-              :rules="[RULES.min('Must be at least 3 characters long', 3), RULES.required('Project name is required')]"
+              :rules="[RULES.required('Project name is required')]"
               autofocus
               label="Project name"
               outlined
@@ -36,6 +36,7 @@
               item-text="name"
               item-value="short_uuid"
               label="Template"
+              no-data-text="as"
               dense
             ></v-select>
           </v-col>

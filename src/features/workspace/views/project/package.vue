@@ -24,7 +24,7 @@ export default defineComponent({
           await packagesStore.getProjectPackages(projectId)
           const lastPackage = packagesStore.projectPackages.value
             ? packagesStore.projectPackages.value
-            : { short_uuid: 'no-package' }
+            : { short_uuid: 'new-package' }
 
           packageId = lastPackage.short_uuid
         }
