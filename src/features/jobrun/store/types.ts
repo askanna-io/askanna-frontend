@@ -64,6 +64,7 @@ export const action = {
   resetStore: 'resetStore',
   getRunsJob: 'getRunsJob',
   getJobRunLog: 'getJobRunLog',
+  resetJobRunLog: 'resetJobRunLog',
   getJobRunResult: 'getJobRunResult',
   getInitJobRunLog: 'getInitJobRunLog',
   getJobRunPayload: 'getJobRunPayload',
@@ -76,6 +77,7 @@ export const action = {
 export const mutation = {
   SET_LOADING: 'SET_LOADING',
   SET_RESULT_MODAL: 'SET_RESULT_MODAL',
+  RESET_JOB_RUN_LOG: 'RESET_JOB_RUN_LOG',
   CLOSE_RESULT_MODAL: 'CLOSE_RESULT_MODAL',
   UPDATE_JOB_RUN_STORE: 'UPDATE_JOB_RUN_STORE'
 }

@@ -92,6 +92,7 @@ export default defineComponent({
     const forceFileDownload = useForceFileDownload()
 
     onBeforeMount(async () => {
+      jobRunStore.resetJobRunLog()
       jobRunStore.getInitJobRunLog({ uuid: jobRunId.value, params: { limit: 100, offset: 0 } })
     })
 
