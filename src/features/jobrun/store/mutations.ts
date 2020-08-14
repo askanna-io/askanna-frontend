@@ -58,5 +58,13 @@ export const mutations: MutationTree<jobRunState> = {
 
   [type.SET_JOB_RUN_LOG_FULL_VERSION](state, data) {
     state.jobRunLogFullVersion = data
+  },
+
+  [type.mutation.RESET_JOB_RUN_LOG](state) {
+    state.jobRunLog = {
+      next: '',
+      count: 0,
+      results: []
+    }
   }
 }

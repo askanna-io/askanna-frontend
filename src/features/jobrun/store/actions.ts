@@ -145,5 +145,9 @@ export const actions: ActionTree<jobRunState, RootState> = {
       return
     }
     commit(type.SET_JOB_RUN_LOG_FULL_VERSION, jobRunLog)
+  },
+
+  async [type.action.resetJobRunLog]({ commit }) {
+    commit(type.mutation.RESET_JOB_RUN_LOG)
   }
 }
