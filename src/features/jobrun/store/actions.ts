@@ -98,10 +98,41 @@ export const actions: ActionTree<jobRunState, RootState> = {
     commit(type.mutation.SET_LOADING, data)
   },
 
-  async [type.action.getJobRunLog]({ commit }, uuid) {
+  async [type.action.getInitJobRunLog]({ commit, dispatch }, data) {
     commit(type.mutation.SET_LOADING, { name: stateType.jobRunlogLoading, value: true })
 
-    let jobRunLog = {}
+    await dispatch(type.action.getJobRunLog, data)
+
+    commit(type.mutation.SET_LOADING, { name: stateType.jobRunlogLoading, value: false })
+  },
+
+  async [type.action.getJobRunLog]({ commit }, { uuid, params }) {
+    let jobRunLog = {
+      next: 0,
+      count: 0,
+      results: []
+    }
+    try {
+      jobRunLog = await apiService({
+        action: api.getJobRunLog,
+        serviceName,
+        uuid,
+        params
+      })
+    } catch (e) {
+      logger.error(commit, 'Error on jobrun log  in getJobRunLog action.\nError: ', e)
+
+      return
+    }
+    commit(type.SET_JOB_RUN_LOG, jobRunLog)
+  },
+
+  async [type.action.getFullVersionJobRunLog]({ commit }, uuid) {
+    let jobRunLog = {
+      next: 0,
+      count: 0,
+      results: []
+    }
     try {
       jobRunLog = await apiService({
         action: api.getJobRunLog,
@@ -113,7 +144,6 @@ export const actions: ActionTree<jobRunState, RootState> = {
 
       return
     }
-    commit(type.SET_JOB_RUN_LOG, jobRunLog)
-    commit(type.mutation.SET_LOADING, { name: stateType.jobRunlogLoading, value: false })
+    commit(type.SET_JOB_RUN_LOG_FULL_VERSION, jobRunLog)
   }
 }

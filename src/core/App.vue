@@ -126,7 +126,11 @@ export default class App extends Vue {
   color: #5d3eb2 !important;
 }
 
-.v-application code.language-js {
+.v-application code.language-js,
+.v-application code.shell,
+code.lang-shell {
+  border-top-left-radius: 0px !important;
+  border-top-right-radius: 0px !important;
   color: #ccc !important;
   background-color: unset !important;
 }

@@ -12,7 +12,6 @@
 
 <script>
 import JobsList from '@/features/jobs/components/JobsList'
-import useQuery from '@/core/composition/useQuery'
 import useProjectStore from '@project/composition/useProjectStore'
 import { computed, defineComponent, onBeforeMount } from '@vue/composition-api'
 
@@ -26,11 +25,10 @@ export default defineComponent({
   setup(props, context) {
     const projectStore = useProjectStore()
     const { projectId } = context.root.$route.params
-    const query = useQuery()
 
     onBeforeMount(async () => {
       await projectStore.resetProjectJobs()
-      await projectStore.getProjectJobs(projectId, query.params)
+      await projectStore.getProjectJobs(projectId)
     })
 
     const projectJobs = computed(() => projectStore.projectJobs.value)

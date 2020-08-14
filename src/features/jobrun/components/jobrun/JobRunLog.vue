@@ -47,7 +47,7 @@
         height="94"
         type="list-item-two-line"
       >
-        <prism-editor v-scroll:#scroll-target="onScroll" :code="logs" readonly line-numbers />
+        <the-highlight :value="logs" v-scroll:#scroll-target="throttle(onScroll, 1500)" />
       </v-skeleton-loader>
       <v-alert v-if="logNoAvailable" class="my-2" dense outlined color="grey">
         No log entries are available for this job run.
@@ -57,8 +57,11 @@
 </template>
 
 <script>
+import { throttle } from 'lodash'
+import TheHighlight from '@/core/components/highlight/TheHighlight'
 import PrismEditor from 'vue-prism-editor'
 import { useWindowSize } from '@u3u/vue-hooks'
+import useQuery from '@/core/composition/useQuery'
 import useMoment from '@/core/composition/useMoment'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
 import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
@@ -69,7 +72,7 @@ export default defineComponent({
   name: 'JobRunLog',
 
   components: {
-    PrismEditor
+    TheHighlight
   },
 
   setup(props, context) {
@@ -77,22 +80,45 @@ export default defineComponent({
     const moment = useMoment(context)
     const { height } = useWindowSize()
     const jobRunStore = useJobRunStore()
+    const jobRunId = computed(() => context.root.$route.params.jobRunId)
+    const query = useQuery({
+      offset: 100,
+      limit: 100,
+      store: jobRunStore,
+      uuid: jobRunId.value,
+      action: 'getJobRunLog',
+      queryPath: 'jobRunLog'
+    })
     const forceFileDownload = useForceFileDownload()
 
     onBeforeMount(async () => {
-      const { jobRunId } = context.root.$route.params
-
-      jobRunStore.getJobRunLog(jobRunId)
+      jobRunStore.getInitJobRunLog({ uuid: jobRunId.value, params: { limit: 100, offset: 0 } })
     })
 
     const logs = computed(() => {
-      if (!jobRunStore.jobRunLog.value) return ''
+      if (!jobRunStore.jobRunLog.value.results) return ''
 
       const reducer = (acc, cr) => {
         acc = acc + `${cr[2]} \n`
         return acc
       }
-      const result = jobRunStore.jobRunLog.value.length ? jobRunStore.jobRunLog.value.reduce(reducer, ``) : ''
+      const result = jobRunStore.jobRunLog.value.results.length
+        ? jobRunStore.jobRunLog.value.results.reduce(reducer, ``)
+        : ''
+
+      return result
+    })
+
+    const fullLog = computed(() => {
+      if (!jobRunStore.jobRunLogFullVersion.value) return ''
+
+      const reducer = (acc, cr) => {
+        acc = acc + `${cr[2]} \n`
+        return acc
+      }
+      const result = jobRunStore.jobRunLogFullVersion.value.length
+        ? jobRunStore.jobRunLogFullVersion.value.reduce(reducer, ``)
+        : ''
 
       return result
     })
@@ -102,10 +128,11 @@ export default defineComponent({
       return { 'max-height': `${maxHeight.value}px` }
     })
     const loading = computed(() => jobRunStore.jobRunlogLoading.value)
-    const logNoAvailable = computed(() => jobRunStore.jobRunLog.value === null && !loading.value)
+    const logNoAvailable = computed(() => jobRunStore.jobRunLog.value.results === null && !loading.value)
 
-    const handleCopy = () => {
-      context.root.$copyText(logs.value).then(
+    const handleCopy = async () => {
+      await getFullJobRun()
+      context.root.$copyText(fullLog.value).then(
         function (e) {
           snackBar.showSnackBar({ message: 'Copied', color: 'success' })
         },
@@ -115,13 +142,23 @@ export default defineComponent({
       )
     }
 
-    const handleDownload = () =>
-      forceFileDownload.trigger({ source: logs.value, name: `${jobRunStore.jobRun.value.short_uuid}_log.txt` })
-    const onScroll = e => {}
+    const handleDownload = async () => {
+      await getFullJobRun()
+
+      forceFileDownload.trigger({ source: fullLog.value, name: `${jobRunStore.jobRun.value.short_uuid}_log.txt` })
+    }
+
+    const onScroll = e => query.onScroll(e.target.scrollTop)
+
+    const getFullJobRun = async () => {
+      if (fullLog.value) return
+      await jobRunStore.getFullVersionJobRunLog(jobRunId.value)
+    }
 
     return {
       logs,
       loading,
+      throttle,
       onScroll,
       handleCopy,
       logNoAvailable,
