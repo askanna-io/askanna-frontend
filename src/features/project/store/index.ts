@@ -27,7 +27,7 @@ export const state: projectState = {
       created: '',
       deleted: null,
       modified: '',
-      name: 'Default - No template',
+      name: 'Blank project (no template used)',
       scope: null,
       short_uuid: '',
       template_location: '',

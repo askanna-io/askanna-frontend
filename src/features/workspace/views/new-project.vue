@@ -21,12 +21,12 @@
         all (meta) data related to running your projects.
       </p>
       <p>
-        You can use a blank template, where we will only add the askanna.yml file for you. Or you can choose one of the
-        project templates that are available.
+        You can use a blank template, or you can choose one of the project templates that are available.
       </p>
       <p>
-        Tip: via the AskAnna CLI, you can also create projects using the command line. You can do this via `askanna
-        create "project name"` [COPY] and follow the instructions in your terminal.
+        Tip: via the AskAnna CLI, you can also create projects using the command line. You can do this via
+        <ask-anna-copy-text :text="`askanna create ${projectName}`" />
+        and follow the instructions in your terminal.
       </p></v-card-text
     >
     <v-divider />
@@ -44,6 +44,8 @@
 <script>
 import Project from '@/features/project/components/Project'
 import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
+import AskAnnaCopyText from '@/core/components/shared/AskAnnaCopyText'
+
 import useProjectStore from '@/features/project/composition/useProjectStore'
 import useWorkSpaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 import { computed, reactive, onBeforeMount, defineComponent } from '@vue/composition-api'
@@ -51,7 +53,7 @@ import { computed, reactive, onBeforeMount, defineComponent } from '@vue/composi
 export default defineComponent({
   name: 'new-project',
 
-  components: { Project },
+  components: { Project, AskAnnaCopyText },
 
   setup(props, context) {
     const projectStore = useProjectStore(context)
@@ -60,6 +62,10 @@ export default defineComponent({
     onBeforeMount(async () => {
       projectStore.getProjectTemplates()
     })
+
+    const projectName = computed(() =>
+      projectStore.project.value.name ? projectStore.project.value.name : '"project name"'
+    )
 
     const breadcrumbs = computed(() => [
       {
@@ -90,6 +96,7 @@ export default defineComponent({
     }
 
     return {
+      projectName,
       projectTemplates: projectStore.projectTemplates,
       projectData: projectStore.project,
       handleOnInput,
