@@ -81,12 +81,10 @@ hue-6-2: #e6c07b
 }
 /* for block of code */
 .hljs-ln-code {
-  padding-left: 10px !important;
   white-space: pre-wrap;
   font-size: 14px;
 }
 .ask-anna-highlight td.hljs-ln-code {
-  padding-left: 10px;
   white-space: pre;
 }
 
