@@ -3,16 +3,8 @@
     <v-card-text class="pb-0 text-left">
       <div class="text--primary">
         <p>
-          There is no code pushed to this project. Below you can find instructions on how you can use the AskAnna CLI
-          (<code class="px-2 mr-2 text-primary">{{ cliInstall }}</code>
-          <v-tooltip top>
-            <template v-slot:activator="{ on }">
-              <v-btn x-small v-on="on" outlined color="secondary" @click.stop="handleCopy(cliInstall)">
-                <v-icon small color="secondary">mdi-content-copy</v-icon>
-              </v-btn>
-            </template>
-            <span>Copy</span>
-          </v-tooltip>
+          There is no code pushed to this project. Below you can find instructions on how you can use the AskAnna CLI (
+          <ask-anna-copy-text :text="cliInstall" />
           ) to push code to this project.
         </p>
         <p>
@@ -21,15 +13,7 @@
         </p>
         <div>COMMAND LINE INSTRUCTIONS</div>
         <p>
-          If you have installed the AskAnna CLI (<code class="px-2 mr-2 text-primary">{{ cliInstall }}</code>
-          <v-tooltip top>
-            <template v-slot:activator="{ on }">
-              <v-btn x-small v-on="on" outlined color="secondary" @click.stop="handleCopy(cliInstall)">
-                <v-icon small color="secondary">mdi-content-copy</v-icon>
-              </v-btn>
-            </template>
-            <span>Copy</span>
-          </v-tooltip>
+          If you have installed the AskAnna CLI (<ask-anna-copy-text :text="cliInstall" />
           ), you can use the command line interface as well.
         </p>
         <p>
@@ -43,37 +27,21 @@
           configuration you need to do.
         </p>
         <p>
-          <code class="px-2 mr-2 text-primary">{{ projectUrl }}</code>
+          <ask-anna-copy-text :text="projectUrl" />
           <v-tooltip top>
             <template v-slot:activator="{ on }">
-              <v-btn x-small v-on="on" outlined color="secondary" @click.stop="handleCopy(projectUrl)">
-                <v-icon small color="secondary">mdi-content-copy</v-icon>
+              <v-btn v-on="on" class="ml-1" x-small outlined color="secondary" @click.stop="handleDownload">
+                <v-icon small color="secondary">mdi-download</v-icon>
               </v-btn>
             </template>
-            <span>Copy</span>
+            <span>Download <i>askanna.yml</i></span>
           </v-tooltip>
         </p>
         <p>
           In your terminal, make sure you are in one of the project directories. Now you can run
-          <code class="px-2 mr-2">{{ askannaPush }}</code>
-          <v-tooltip top>
-            <template v-slot:activator="{ on }">
-              <v-btn v-on="on" x-small outlined color="secondary" @click.stop="handleCopy(askannaPush)">
-                <v-icon small color="secondary">mdi-content-copy</v-icon>
-              </v-btn>
-            </template>
-            <span>Copy</span>
-          </v-tooltip>
+          <ask-anna-copy-text :text="askannaPush" />
           and follow the instructions in the terminal. If you don’t want to confirm every time you push a file, you can
-          use <code class="px-2 mr-2">{{ askannaPushForce }}</code>
-          <v-tooltip top>
-            <template v-slot:activator="{ on }">
-              <v-btn v-on="on" x-small outlined color="secondary" @click.stop="handleCopy(askannaPushForce)">
-                <v-icon small color="secondary">mdi-content-copy</v-icon>
-              </v-btn>
-            </template>
-            <span>Copy</span>
-          </v-tooltip>
+          use <ask-anna-copy-text :text="askannaPushForce" />
         </p>
       </div>
     </v-card-text>
@@ -82,7 +50,8 @@
 <script>
 import { url } from '@/core/services/api-settings'
 import { ref, defineComponent } from '@vue/composition-api'
-import useSnackBar from '@/core/components/snackBar/useSnackBar'
+import AskAnnaCopyText from '@/core/components/shared/AskAnnaCopyText'
+import useForceFileDownload from '@/core/composition/useForceFileDownload'
 
 export default defineComponent({
   name: 'NewPackageInfo',
@@ -98,8 +67,10 @@ export default defineComponent({
     }
   },
 
+  components: { AskAnnaCopyText },
+
   setup(props, context) {
-    const snackBar = useSnackBar()
+    const forceFileDownload = useForceFileDownload()
 
     const projectUrl = ref(`push-target: ${url}/${props.workspaceId}/project/${props.projectShortUuid}`)
     const cliInstall = 'pip install askanna'
@@ -107,18 +78,15 @@ export default defineComponent({
     const askannaPushForce = 'askanna push -f'
     const askannaPushWithMessage = 'askanna push -m "a description"'
 
-    const handleCopy = text => {
-      context.root.$copyText(text).then(
-        () => snackBar.showSnackBar({ message: 'Copied', color: 'success' }),
-        () => snackBar.showSnackBar({ message: 'Can not copy', color: 'warning' })
-      )
+    const handleDownload = async () => {
+      forceFileDownload.trigger({ source: projectUrl.value, name: 'askanna.yml' })
     }
 
     return {
       projectUrl,
       cliInstall,
-      handleCopy,
       askannaPush,
+      handleDownload,
       askannaPushForce,
       askannaPushWithMessage
     }
