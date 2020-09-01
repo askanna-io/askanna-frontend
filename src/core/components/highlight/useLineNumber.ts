@@ -16,6 +16,7 @@ export default () => {
 
   function addLineNumbersBlockFor(inputHtml: string, firstLineIndex: number) {
     const lines = getLines(inputHtml)
+    if (!lines || !lines.length) return inputHtml
 
     // if last line contains only carriage return remove it
     if (lines[lines.length - 1].trim() === '') {
