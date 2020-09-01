@@ -9,7 +9,12 @@
           <v-row v-if="!settings.projectView">
             <v-col v-for="item in props.items" :key="item.name + item.short_uuid" cols="12" sm="6" md="6" lg="4">
               <v-hover v-slot:default="{ hover }" open-delay="200">
-                <workspace-project-card-item :project="item" :workspaceName="workspaceName" :hover="hover" />
+                <workspace-project-card-item
+                  :hover="hover"
+                  :project="item"
+                  :workspaceName="workspaceName"
+                  :description="sanitizeHTML(item.description)"
+                />
               </v-hover>
             </v-col>
           </v-row>
@@ -26,6 +31,7 @@
 </template>
 <script>
 import { defineComponent } from '@vue/composition-api'
+import useSanitizeHTML from '@/core/composition/useSanitizeHTML'
 import WorkspaceProjectCardItem from './WorkspaceProjectCardItem.vue'
 import WorkspaceProjectListItem from './WorkspaceProjectListItem.vue'
 import WorkspaceToolbar from '../../components/workspace/WorkspaceToolbar.vue'
@@ -56,6 +62,12 @@ export default defineComponent({
     }
   },
 
-  components: { WorkspaceToolbar, WorkspaceProjectCardItem, WorkspaceProjectListItem }
+  components: { WorkspaceToolbar, WorkspaceProjectCardItem, WorkspaceProjectListItem },
+
+  setup() {
+    const sanitizeHTML = useSanitizeHTML()
+
+    return { sanitizeHTML }
+  }
 })
 </script>
