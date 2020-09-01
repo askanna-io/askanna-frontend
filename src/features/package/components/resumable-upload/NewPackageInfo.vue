@@ -24,8 +24,7 @@
 
         <p>
           In the <span class="font-italic">askanna.yml</span>, you add the next line. Adding this line is the only
-          configuration you need to do. Or you can download
-          <v-tooltip top>
+          configuration you need to do. Or you can download<v-tooltip top>
             <template v-slot:activator="{ on }">
               <v-btn v-on="on" class="ml-1" x-small outlined color="secondary" @click.stop="handleDownload">
                 <v-icon small color="secondary">mdi-download</v-icon>
