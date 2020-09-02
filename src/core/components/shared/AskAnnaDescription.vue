@@ -342,13 +342,6 @@ export default {
   color: #5d3eb2 !important;
 }
 
-.ask-anna--editor code {
-  font-family: monospace;
-  background: none;
-  color: #ffffff;
-  font-size: 14px;
-}
-
 .ask-anna--editor p code {
   font-size: 14px;
   padding: 0.2rem 0.4rem;

@@ -1,6 +1,6 @@
 <template>
-  <span>
-    <code class="px-2 mr-2">{{ text }}</code>
+  <span class="ask-anna-copy-text">
+    <code class="px-2 mr-2 primary text--white">{{ text }}</code>
     <v-tooltip top>
       <template v-slot:activator="{ on }">
         <v-btn v-on="on" x-small outlined color="secondary" @click.stop="handleCopy">
@@ -40,3 +40,8 @@ export default defineComponent({
   }
 })
 </script>
+<style scoped>
+.ask-anna-copy-text code {
+  color: white;
+}
+</style>

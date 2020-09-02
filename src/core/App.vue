@@ -127,4 +127,11 @@ export default class App extends Vue {
   border: 1px solid #5d3eb2 !important;
   border-color: #5d3eb2 !important;
 }
+
+.ask-anna--editor code {
+  font-family: monospace !important;
+  background: none !important;
+  color: #ffffff !important;
+  font-size: 14px !important;
+}
 </style>
