@@ -24,18 +24,17 @@
 
         <p>
           In the <span class="font-italic">askanna.yml</span>, you add the next line. Adding this line is the only
-          configuration you need to do.
-        </p>
-        <p>
-          <ask-anna-copy-text :text="projectUrl" />
-          <v-tooltip top>
+          configuration you need to do. Or you can download<v-tooltip top>
             <template v-slot:activator="{ on }">
               <v-btn v-on="on" class="ml-1" x-small outlined color="secondary" @click.stop="handleDownload">
                 <v-icon small color="secondary">mdi-download</v-icon>
               </v-btn>
             </template>
             <span>Download <i>askanna.yml</i></span>
-          </v-tooltip>
+          </v-tooltip> and use this <span class="font-italic">askanna.yml</span> file.
+        </p>
+        <p>
+          <ask-anna-copy-text :text="projectUrl" />
         </p>
         <p>
           In your terminal, make sure you are in one of the project directories. Now you can run
