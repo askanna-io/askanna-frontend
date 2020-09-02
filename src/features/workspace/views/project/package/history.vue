@@ -2,8 +2,9 @@
   <v-row align="center" justify="center">
     <v-col cols="12" class="pt-0">
       <v-data-table
-        fixed-header
+        hide-default-footer
         :headers="headers"
+        :options="{ itemsPerPage: -1 }"
         :items="projectPackageHistory"
         class="job-table askanna-table scrollbar cursor--pointer"
         @click:row="handleClickRow"
@@ -217,12 +218,6 @@ export default defineComponent({
 </script>
 
 <style>
-.job-table .v-data-table__wrapper {
-  max-height: 500px;
-}
-.job-sub-table .v-data-table__wrapper {
-  max-height: 200px;
-}
 .job-sub-table .v-data-table__wrapper tr th {
   z-index: 1;
 }

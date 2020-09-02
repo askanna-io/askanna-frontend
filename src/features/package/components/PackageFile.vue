@@ -1,7 +1,7 @@
 <template>
   <v-row align="center" justify="center">
     <v-col cols="12" class="pt-0 pb-0">
-      <v-toolbar dense flat>
+      <v-toolbar dense flat v-sticky="sticked" sticky-offset="{top: 52, bottom: 10}">
         <v-btn icon small @click="handleBack">
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
@@ -44,6 +44,10 @@ export default defineComponent({
     currentPath: {
       type: Object,
       default: () => {}
+    },
+    sticked: {
+      type: Boolean,
+      default: true
     }
   },
 
