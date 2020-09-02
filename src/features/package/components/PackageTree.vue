@@ -2,7 +2,6 @@
   <v-data-table
     :items="items"
     :headers="headers"
-    :height="height"
     :options="{ itemsPerPage: -1 }"
     fixed-header
     hide-default-footer

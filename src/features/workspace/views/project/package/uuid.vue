@@ -1,7 +1,7 @@
 <template>
   <v-row align="center" justify="center">
     <v-col cols="12" class="pt-0 pb-0">
-      <package-toolbar :breadcrumbs="breadcrumbs">
+      <package-toolbar :breadcrumbs="breadcrumbs" v-sticky="sticked" sticky-offset="{top: 52, bottom: 10}">
         <template v-slot:left>
           <v-tooltip top>
             <template v-slot:activator="{ on }">
@@ -46,7 +46,7 @@
         <package-processing />
       </template>
       <template v-else>
-        <package-file v-if="file" :file="file" :fileSource="fileSource" :currentPath="currentPath" />
+        <package-file v-if="file" :file="file" :fileSource="fileSource" :currentPath="currentPath" :sticked="sticked" />
         <package-tree v-else :items="treeView" :height="calcHeight" @clickOnRow="handleClickOnRow" />
       </template>
     </v-col>
@@ -60,6 +60,7 @@ import PackageFile from '@package/components/PackageFile'
 import PackageTree from '@package/components/PackageTree'
 import { headers, FileIcons } from '@package/utils/index'
 import usePackages from '@packages/composition/usePackages'
+import useProjectStore from '@project/composition/useProjectStore'
 import PackageToolbar from '@/features/package/components/PackageToolbar'
 import { ref, watch, onBeforeMount, onUnmounted, computed } from '@vue/composition-api'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
@@ -81,6 +82,8 @@ export default defineComponent({
     const { height } = useWindowSize()
     const packages = usePackages(context)
     const packageStore = usePackageStore()
+    const projectStore = useProjectStore()
+
     const forceFileDownload = useForceFileDownload()
     const breadcrumbs = usePackageBreadcrumbs(context)
 
@@ -88,6 +91,8 @@ export default defineComponent({
     const isRaplace = ref(false)
     const file = ref(packageStore.file)
     const { workspaceId, projectId, packageId, folderName = '' } = context.root.$route.params
+
+    const sticked = computed(() => !projectStore.stickedVM.value)
 
     onBeforeMount(async () => {
       await getPackage()
@@ -197,6 +202,7 @@ export default defineComponent({
     }
 
     return {
+      sticked,
       file: packageStore.file,
       fileSource: packageStore.fileSource,
       treeView,
