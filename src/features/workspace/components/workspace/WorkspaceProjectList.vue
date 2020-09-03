@@ -1,5 +1,5 @@
 <template>
-  <v-data-iterator :items="items" hide-default-footer :no-data-text="''">
+  <v-data-iterator :items="items" hide-default-footer :no-data-text="''" disable-pagination>
     <template v-slot:header>
       <workspace-toolbar :title="workspaceName" />
     </template>

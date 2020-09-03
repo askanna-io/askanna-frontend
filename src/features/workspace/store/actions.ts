@@ -46,21 +46,25 @@ export const actions: ActionTree<workspaceState, RootState> = {
     commit(mutation.SET_LOADING, { name: stateType.workspacesLoading, value: false })
   },
 
-  async [action.getWorkpaceProjects]({ commit, state, dispatch }, uuid) {
+  async [action.getInitialWorkpaceProjects]({ commit, dispatch }, data) {
     commit(mutation.SET_LOADING, { name: stateType.workspaceProjectsLoading, value: true })
 
+    await dispatch(action.getWorkpaceProjects, data)
+
+    delay(() => commit(mutation.SET_LOADING, { name: stateType.workspaceProjectsLoading, value: false }), 350, 'later')
+  },
+
+  async [action.getWorkpaceProjects]({ commit, dispatch, state }, { params }) {
     let projects
     try {
       projects = await apiService({
         action: api.projects,
         serviceName,
-        uuid,
-        params: state.workspaceProjectsQuery
+        uuid: state.workspace.short_uuid,
+        params
       })
     } catch (error) {
       logger.error(commit, 'Error on load projects in getWorkpaceProjects action.\nError: ', error)
-
-      commit(mutation.SET_LOADING, { name: stateType.workspaceProjectsLoading, value: false })
 
       return
     }
@@ -74,8 +78,7 @@ export const actions: ActionTree<workspaceState, RootState> = {
         return project
       })
     )
-
-    commit(mutation.SET_WORKSPACE_PROJECTS, { results, count: results.length })
+    commit(mutation.SET_WORKSPACE_PROJECTS, { results, count: results.length, next: projects.next })
     commit(mutation.SET_LOADING, { name: stateType.workspaceProjectsLoading, value: false })
   },
 
@@ -102,5 +105,13 @@ export const actions: ActionTree<workspaceState, RootState> = {
 
   async [action.changeSettings]({ commit }, data) {
     commit(mutation.UPDATE_SETTINGS, data)
+  },
+
+  async [action.setQuery]({ commit }, data) {
+    commit(mutation.SET_QUERY, data)
+  },
+
+  async [action.reset]({ commit }) {
+    commit(mutation.RESET)
   }
 }
