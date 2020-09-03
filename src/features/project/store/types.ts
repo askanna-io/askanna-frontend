@@ -18,6 +18,7 @@ export interface ProjectState {
     isShowProjectBar: boolean
     sticked: boolean
   }
+  projectsLoading: Boolean
 }
 
 interface Project {

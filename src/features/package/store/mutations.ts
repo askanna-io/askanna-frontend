@@ -1,3 +1,4 @@
+import { set } from 'lodash'
 import * as type from './types'
 import { MutationTree } from 'vuex'
 import { File, PackageState } from './types'
@@ -35,5 +36,9 @@ export const mutations: MutationTree<PackageState> = {
 
   [type.REMOVE_FROM_PROCESSING_LIST](state, uuid) {
     state.processingList = state.processingList.filter(item => item.packageId !== uuid.packageId)
+  },
+
+  [type.SET_LOADING](state, { name, value }) {
+    set(state, name, value)
   }
 }

@@ -21,7 +21,8 @@ export const state: projectState = {
     isSticked: true,
     isShowProjectBar: false,
     sticked: false
-  }
+  },
+  projectsLoading: true
 }
 
 const namespaced: boolean = true

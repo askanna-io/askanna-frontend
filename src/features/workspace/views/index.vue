@@ -24,8 +24,8 @@ export default defineComponent({
 
       // if (workspaceStore.workspace.value.short_uuid === workspaceId) return
 
-      await workspaceStore.getWorkspace(workspaceId)
-      await workspaceStore.getWorkpaceProjects(workspaceId)
+      workspaceStore.getWorkspace(workspaceId)
+      workspaceStore.getWorkpaceProjects(workspaceId)
     })
   }
 })

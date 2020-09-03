@@ -5,8 +5,8 @@ export default function () {
   const state = {
     ...useState(PACKAGES_STORE, {
       projectPackages: 'projectPackages',
-      projectPackageHistory: 'projectPackageHistory',
-      loadingPackages: 'loadingPackages'
+      loadingPackages: 'loadingPackages',
+      projectPackageHistory: 'projectPackageHistory'
     })
   }
 
