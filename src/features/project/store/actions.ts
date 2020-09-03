@@ -6,6 +6,7 @@ import * as rootTypes from '@/core/store/actionTypes'
 import { apiStringify } from '@/core/services/api-settings'
 
 import { projectState, PROJECT_STORE, action, mutation } from './types'
+import projects from '@/server/fixtures/projects'
 
 const serviceName = PROJECT_STORE
 const api = apiStringify(serviceName)
@@ -120,5 +121,91 @@ export const actions: ActionTree<projectState, RootState> = {
 
   async [action.setMenu]({ commit }, data) {
     commit(mutation.SET_MENU, data)
+  },
+
+  async [action.createProjectShortWay]({ dispatch, state }, workspace) {
+    const data = {
+      name: state.project.name,
+      workspace
+    }
+    dispatch(action.createProject, data)
+  },
+
+  async [action.createProjectFullWay]({ dispatch, state }, workspace) {
+    const data = {
+      ...state.project,
+      workspace
+    }
+    const project = await dispatch(action.createProject, data)
+
+    return project
+  },
+
+  async [action.createProject]({ commit, dispatch }, data) {
+    let project
+    try {
+      project = await apiService({
+        action: api.create,
+        method: 'post',
+        serviceName,
+        data
+      })
+    } catch (error) {
+      dispatch(rootTypes.loggerError, {
+        errorHint: 'Error on create project in createProject action.\nError:',
+        error
+      })
+      return project
+    }
+    commit(mutation.RESET_PROJECT_DATA)
+    commit(mutation.UPDATE_PROJECTS, project)
+    commit('workspace/UPDATE_PROJECTS', { ...project, lastPackage: { short_uuid: 'new-package' } }, { root: true })
+
+    logger.success(commit, `The project ${project.name} is created`)
+
+    return project
+  },
+
+  async [action.updateProject]({ commit, dispatch, state }, uuid) {
+    let project
+    try {
+      project = await apiService({
+        action: api.update,
+        method: 'put',
+        serviceName,
+        uuid,
+        data: state.project
+      })
+    } catch (error) {
+      dispatch(rootTypes.loggerError, {
+        errorHint: 'Error on update project in updateProject action.\nError:',
+        error
+      })
+      return
+    }
+
+    commit(mutation.SET_PROJECT, project)
+  },
+
+  [action.setProject]({ commit }, data) {
+    commit(mutation.SET_PROJECT_DATA, data)
+  },
+
+  async [action.resetProjectData]({ commit }) {
+    commit(mutation.RESET_PROJECT_DATA)
+  },
+
+  async [action.getProjectTemplates]({ commit }) {
+    let projectTemplates
+    try {
+      projectTemplates = await apiService({
+        action: api.templates,
+        serviceName
+      })
+    } catch (error) {
+      return
+    }
+
+    commit(mutation.SET_PROJECT_TEMPLATES, projectTemplates)
   }
 }

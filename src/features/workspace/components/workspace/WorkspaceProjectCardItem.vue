@@ -19,7 +19,7 @@
     </v-card-title>
 
     <v-card-text class="font-weight-bold project--description">
-      {{ project.description }}
+      {{ description }}
     </v-card-text>
     <template v-if="isNotBeta">
       <v-card-actions>
@@ -65,6 +65,10 @@ export default defineComponent({
           finished: ''
         }
       }
+    },
+    description: {
+      type: String,
+      default: () => ''
     },
     workspaceName: {
       type: String,

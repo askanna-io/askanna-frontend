@@ -27,9 +27,7 @@
       <span class="title font-weight-light">{{ project.name }}</span>
     </v-card-title>
 
-    <v-card-text class="font-weight-bold">
-      {{ project.description }}
-    </v-card-text>
+    <v-card-text class="ask-anna--editor ProseMirror" v-html="project.description" />
     <v-divider v-if="!sticked" />
     <v-card :flat="!sticked" :class="{ 'ma-3': sticked }">
       <v-slide-y-transition>

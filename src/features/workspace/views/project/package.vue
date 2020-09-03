@@ -22,12 +22,11 @@ export default defineComponent({
           await packagesStore.getProjectPackages(projectId)
           const lastPackage = packagesStore.projectPackages.value
             ? packagesStore.projectPackages.value
-            : { short_uuid: '' }
+            : { short_uuid: 'new-package' }
 
           packageId = lastPackage.short_uuid
         }
         loading.value = false
-
         context.root.$router.push({
           name: 'workspace-project-package',
           params: {
