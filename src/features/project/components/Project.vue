@@ -25,7 +25,7 @@
             />
           </v-col>
         </v-row>
-        <v-row align="center">
+        <v-row align="center" v-if="false">
           <v-col class="d-flex" cols="12">
             Do you want to create a project from a template? If yes, which project template?
           </v-col>
@@ -38,7 +38,7 @@
               label="Template"
               no-data-text="as"
               dense
-            ></v-select>
+            />
           </v-col>
         </v-row>
         <v-row>
