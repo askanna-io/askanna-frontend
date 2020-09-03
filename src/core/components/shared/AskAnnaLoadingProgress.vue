@@ -89,7 +89,7 @@ export default defineComponent({
           bufferValue.value = 100
           loadingProgress.value = 0
         },
-        350,
+        100,
         'later'
       )
     }

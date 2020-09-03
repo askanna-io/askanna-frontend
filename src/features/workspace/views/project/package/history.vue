@@ -1,102 +1,104 @@
 <template>
-  <v-row align="center" justify="center">
-    <v-col cols="12" class="pt-0">
-      <v-data-table
-        fixed-header
-        :headers="headers"
-        :items="projectPackageHistory"
-        class="job-table askanna-table scrollbar cursor--pointer"
-        @click:row="handleClickRow"
-      >
-        <template v-slot:top>
-          <package-toolbar :breadcrumbs="breadcrumbs">
-            <template v-slot:left>
-              <v-tooltip top>
-                <template v-slot:activator="{ on }">
-                  <div v-on="on">
-                    <a @click="handeBackToPackageRoot" class="text-body-2"
-                      >Package #{{ packageId.slice(0, 4) }}<v-icon small>mdi-chevron-right</v-icon></a
-                    >
-                  </div>
-                </template>
-                <span>{{ packageId }}</span>
-              </v-tooltip>
-            </template>
-          </package-toolbar>
-        </template>
-        <template v-slot:item.filename="{ item }">
-          <v-tooltip top>
-            <template v-slot:activator="{ on }">
-              <div v-on="on">
-                {{ slicedText(item.filename, maxLength) }}
-              </div>
-            </template>
-            <span>{{ item.filename }}</span>
-          </v-tooltip>
-        </template>
-        <template v-slot:item.short_uuid="{ item }">
-          <v-tooltip top>
-            <template v-slot:activator="{ on, value }">
-              <div v-on="on">
-                <v-btn class="px-0" text small>#{{ item.short_uuid.slice(0, 4) }}</v-btn>
-                <v-tooltip right>
+  <ask-anna-loading-progress :loading="loadingPackages">
+    <v-row align="center" justify="center">
+      <v-col cols="12" class="pt-0">
+        <v-data-table
+          fixed-header
+          :headers="headers"
+          :items="projectPackageHistory"
+          class="job-table askanna-table scrollbar cursor--pointer"
+          @click:row="handleClickRow"
+        >
+          <template v-slot:top>
+            <package-toolbar :breadcrumbs="breadcrumbs">
+              <template v-slot:left>
+                <v-tooltip top>
                   <template v-slot:activator="{ on }">
-                    <v-btn icon text x-small v-on="on" v-show="value" @click.stop="handleCopy(item.short_uuid)"
-                      ><v-icon>mdi-content-copy</v-icon></v-btn
-                    >
+                    <div v-on="on">
+                      <a @click="handeBackToPackageRoot" class="text-body-2"
+                        >Package #{{ packageId.slice(0, 4) }}<v-icon small>mdi-chevron-right</v-icon></a
+                      >
+                    </div>
                   </template>
-                  <span>Copy package UUID</span>
+                  <span>{{ packageId }}</span>
                 </v-tooltip>
-              </div>
-            </template>
-            <span>{{ item.short_uuid }}</span>
-          </v-tooltip>
-        </template>
-        <template v-slot:item.created="{ item }">
-          {{ $moment(item.created).format(' Do MMMM YYYY, h:mm:ss a') }}
-        </template>
-        <template v-slot:item.created_by="{ item }">
-          <v-tooltip top>
-            <template v-slot:activator="{ on }">
-              <div v-on="on">
-                {{ slicedText(item.created_by.name, maxLength) }}
-              </div>
-            </template>
-            <span>{{ item.created_by.name }}</span>
-          </v-tooltip>
-        </template>
-        <template v-slot:item.description="{ item }">
-          <v-tooltip top>
-            <template v-slot:activator="{ on, value }">
-              <div v-on="on">
-                {{ slicedText(item.description, maxLength) }}
-                <v-tooltip right>
-                  <template v-slot:activator="{ on }">
-                    <v-btn icon text x-small v-on="on" v-show="value"></v-btn>
-                  </template>
-                </v-tooltip>
-              </div>
-            </template>
-            <span>{{ item.description }}</span>
-          </v-tooltip>
-        </template>
-        <template v-slot:item.uuid="{ item }">
-          <v-tooltip top>
-            <template v-slot:activator="{ on }">
-              <div v-on="on">
-                <v-btn outlined label small class="btn--hover" color="secondary" @click.stop="handleDownload(item)">
-                  <v-icon :left="$vuetify.breakpoint.name !== 'sm'">mdi-download</v-icon>
+              </template>
+            </package-toolbar>
+          </template>
+          <template v-slot:item.filename="{ item }">
+            <v-tooltip top>
+              <template v-slot:activator="{ on }">
+                <div v-on="on">
+                  {{ slicedText(item.filename, maxLength) }}
+                </div>
+              </template>
+              <span>{{ item.filename }}</span>
+            </v-tooltip>
+          </template>
+          <template v-slot:item.short_uuid="{ item }">
+            <v-tooltip top>
+              <template v-slot:activator="{ on, value }">
+                <div v-on="on">
+                  <v-btn class="px-0" text small>#{{ item.short_uuid.slice(0, 4) }}</v-btn>
+                  <v-tooltip right>
+                    <template v-slot:activator="{ on }">
+                      <v-btn icon text x-small v-on="on" v-show="value" @click.stop="handleCopy(item.short_uuid)"
+                        ><v-icon>mdi-content-copy</v-icon></v-btn
+                      >
+                    </template>
+                    <span>Copy package UUID</span>
+                  </v-tooltip>
+                </div>
+              </template>
+              <span>{{ item.short_uuid }}</span>
+            </v-tooltip>
+          </template>
+          <template v-slot:item.created="{ item }">
+            {{ $moment(item.created).format(' Do MMMM YYYY, h:mm:ss a') }}
+          </template>
+          <template v-slot:item.created_by="{ item }">
+            <v-tooltip top>
+              <template v-slot:activator="{ on }">
+                <div v-on="on">
+                  {{ slicedText(item.created_by.name, maxLength) }}
+                </div>
+              </template>
+              <span>{{ item.created_by.name }}</span>
+            </v-tooltip>
+          </template>
+          <template v-slot:item.description="{ item }">
+            <v-tooltip top>
+              <template v-slot:activator="{ on, value }">
+                <div v-on="on">
+                  {{ slicedText(item.description, maxLength) }}
+                  <v-tooltip right>
+                    <template v-slot:activator="{ on }">
+                      <v-btn icon text x-small v-on="on" v-show="value"></v-btn>
+                    </template>
+                  </v-tooltip>
+                </div>
+              </template>
+              <span>{{ item.description }}</span>
+            </v-tooltip>
+          </template>
+          <template v-slot:item.uuid="{ item }">
+            <v-tooltip top>
+              <template v-slot:activator="{ on }">
+                <div v-on="on">
+                  <v-btn outlined label small class="btn--hover" color="secondary" @click.stop="handleDownload(item)">
+                    <v-icon :left="$vuetify.breakpoint.name !== 'sm'">mdi-download</v-icon>
 
-                  <span class="hidden-sm-only">Download</span>
-                </v-btn>
-              </div>
-            </template>
-            <span>Download</span>
-          </v-tooltip>
-        </template>
-      </v-data-table>
-    </v-col>
-  </v-row>
+                    <span class="hidden-sm-only">Download</span>
+                  </v-btn>
+                </div>
+              </template>
+              <span>Download</span>
+            </v-tooltip>
+          </template>
+        </v-data-table>
+      </v-col>
+    </v-row>
+  </ask-anna-loading-progress>
 </template>
 
 <script>
