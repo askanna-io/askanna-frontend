@@ -1,56 +1,64 @@
 <template>
-  <v-row align="center" justify="center">
-    <v-col cols="12" class="pt-0 pb-0">
-      <package-toolbar :breadcrumbs="breadcrumbs" v-sticky="sticked" sticky-offset="{top: 52, bottom: 10}">
-        <template v-slot:left>
-          <v-tooltip top>
-            <template v-slot:activator="{ on }">
-              <div v-on="on">
-                <a v-if="currentPath" @click="handeBackToPackageRoot" class="text-body-2"
-                  >Package #{{ packageId.slice(0, 4) }}<v-icon small>mdi-chevron-right</v-icon></a
+  <ask-anna-loading-progress :loading="packageLoading">
+    <v-row align="center" justify="center">
+      <v-col cols="12" class="pt-0 pb-0">
+        <package-toolbar :breadcrumbs="breadcrumbs" v-sticky="sticked" sticky-offset="{top: 52, bottom: 10}">
+          <template v-slot:left>
+            <v-tooltip top>
+              <template v-slot:activator="{ on }">
+                <div v-on="on">
+                  <a v-if="currentPath" @click="handeBackToPackageRoot" class="text-body-2"
+                    >Package #{{ packageId.slice(0, 4) }}<v-icon small>mdi-chevron-right</v-icon></a
+                  >
+                  <span class="text-body-2" v-else> Package #{{ packageId.slice(0, 4) }}</span>
+                </div>
+              </template>
+              <span>{{ packageId }}</span>
+            </v-tooltip>
+          </template>
+          <template v-slot:rigth>
+            <v-slide-y-transition>
+              <div v-if="!file">
+                <v-btn small outlined color="secondary" class="mr-1 btn--hover" @click="handleDownload()">
+                  <v-icon color="secondary" left>mdi-download</v-icon>Download
+                </v-btn>
+                <v-btn
+                  small
+                  outlined
+                  :class="{ 'replace-active': isRaplace }"
+                  color="secondary"
+                  class="mr-1 btn--hover"
+                  @click="handleReplace()"
                 >
-                <span class="text-body-2" v-else> Package #{{ packageId.slice(0, 4) }}</span>
-              </div>
-            </template>
-            <span>{{ packageId }}</span>
-          </v-tooltip>
-        </template>
-        <template v-slot:rigth>
-          <v-slide-y-transition>
-            <div v-if="!file">
-              <v-btn small outlined color="secondary" class="mr-1 btn--hover" @click="handleDownload()">
-                <v-icon color="secondary" left>mdi-download</v-icon>Download
-              </v-btn>
-              <v-btn
-                small
-                outlined
-                :class="{ 'replace-active': isRaplace }"
-                color="secondary"
-                class="mr-1 btn--hover"
-                @click="handleReplace()"
-              >
-                <v-icon color="secondary" left>mdi-folder-move</v-icon>Replace
-              </v-btn>
+                  <v-icon color="secondary" left>mdi-folder-move</v-icon>Replace
+                </v-btn>
 
-              <v-btn small outlined color="secondary" class="btn--hover" @click="handleHistory()">
-                <v-icon color="secondary">mdi-history</v-icon>History
-              </v-btn>
-            </div>
-          </v-slide-y-transition>
+                <v-btn small outlined color="secondary" class="btn--hover" @click="handleHistory()">
+                  <v-icon color="secondary">mdi-history</v-icon>History
+                </v-btn>
+              </div>
+            </v-slide-y-transition>
+          </template>
+        </package-toolbar>
+        <v-expand-transition>
+          <resumable-upload v-if="isRaplace" @cancelUpload="handleReplace" class="py-2 px-4" :id="packageId" />
+        </v-expand-transition>
+        <template v-if="isProcessing">
+          <package-processing />
         </template>
-      </package-toolbar>
-      <v-expand-transition>
-        <resumable-upload v-if="isRaplace" @cancelUpload="handleReplace" class="py-2 px-4" :id="packageId" />
-      </v-expand-transition>
-      <template v-if="isProcessing">
-        <package-processing />
-      </template>
-      <template v-else>
-        <package-file v-if="file" :file="file" :fileSource="fileSource" :currentPath="currentPath" :sticked="sticked" />
-        <package-tree v-else :items="treeView" :height="calcHeight" @clickOnRow="handleClickOnRow" />
-      </template>
-    </v-col>
-  </v-row>
+        <template v-else>
+          <package-file
+            v-if="file"
+            :file="file"
+            :fileSource="fileSource"
+            :currentPath="currentPath"
+            :sticked="sticked"
+          />
+          <package-tree v-else :items="treeView" :height="calcHeight" @clickOnRow="handleClickOnRow" />
+        </template>
+      </v-col>
+    </v-row>
+  </ask-anna-loading-progress>
 </template>
 
 <script>
@@ -61,6 +69,7 @@ import PackageTree from '@package/components/PackageTree'
 import { headers, FileIcons } from '@package/utils/index'
 import usePackages from '@packages/composition/usePackages'
 import useProjectStore from '@project/composition/useProjectStore'
+import usePackagesStore from '@/features/packages/composition/usePackagesStore'
 import PackageToolbar from '@/features/package/components/PackageToolbar'
 import { ref, watch, onBeforeMount, onUnmounted, computed } from '@vue/composition-api'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
@@ -80,10 +89,10 @@ export default defineComponent({
 
   setup(props, context) {
     const { height } = useWindowSize()
-    const packages = usePackages(context)
     const packageStore = usePackageStore()
     const projectStore = useProjectStore()
 
+    const packagesStore = usePackagesStore(context)
     const forceFileDownload = useForceFileDownload()
     const breadcrumbs = usePackageBreadcrumbs(context)
 
@@ -185,7 +194,7 @@ export default defineComponent({
 
     const handleDownload = async () => {
       const packageData = packageStore.packageData.value
-      const source = await packages.downloadPackage({
+      const source = await packagesStore.downloadPackage({
         projectId: packageData.project,
         packageId: packageData.short_uuid
       })
@@ -205,6 +214,7 @@ export default defineComponent({
       sticked,
       file: packageStore.file,
       fileSource: packageStore.fileSource,
+      packageLoading: packageStore.packageLoading,
       treeView,
       packageId,
       FileIcons,

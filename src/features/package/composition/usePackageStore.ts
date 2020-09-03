@@ -16,6 +16,7 @@ export default function () {
       file: 'file',
       fileSource: 'fileSource',
       packageData: 'packageData',
+      packageLoading: 'packageLoading',
       processingList: 'processingList'
     })
   }

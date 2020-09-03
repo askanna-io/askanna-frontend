@@ -8,7 +8,8 @@ export default function () {
       workspace: 'workspace',
       workspaces: 'workspaces',
       workspaceProjects: 'workspaceProjects',
-      workspaceSettings: 'workspaceSettings'
+      workspaceSettings: 'workspaceSettings',
+      workspaceProjectsLoading: 'workspaceProjectsLoading'
     })
   }
 

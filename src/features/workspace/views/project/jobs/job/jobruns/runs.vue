@@ -1,11 +1,13 @@
 <template>
   <v-card class="mx-auto" flat>
-    <job-runs
-      :items="runs"
-      :height="calcSubHeight"
-      :tableClass="'job-sub-table'"
-      @handleClickOnRow="handleClickOnRow"
-    />
+    <ask-anna-loading-progress :type="'table-row'" :loading="loading">
+      <job-runs
+        :items="runs"
+        :height="calcSubHeight"
+        :tableClass="'job-sub-table'"
+        @handleClickOnRow="handleClickOnRow"
+      />
+    </ask-anna-loading-progress>
   </v-card>
 </template>
 
@@ -13,24 +15,29 @@
 import JobRuns from '@jobrun/components/JobRuns'
 import useJobStore from '@job/composition/useJobStore'
 import useJobRunStore from '@jobrun/composition/useJobRunStore'
-import { onBeforeMount, defineComponent, computed } from '@vue/composition-api'
+import { ref, onBeforeMount, defineComponent, computed } from '@vue/composition-api'
+import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress'
 
 export default defineComponent({
   components: {
-    JobRuns
+    JobRuns,
+    AskAnnaLoadingProgress
   },
 
   setup(rops, context) {
+    const loading = ref(true)
     const jobStore = useJobStore()
     const jobRunStore = useJobRunStore()
 
-    onBeforeMount(() => {
+    onBeforeMount(async () => {
       jobStore.resetStore()
       jobRunStore.resetStore()
       const { jobId } = context.root.$route.params
 
       jobStore.getJob(jobId)
-      jobRunStore.getRunsJob(jobId)
+      await jobRunStore.getRunsJob(jobId)
+
+      loading.value = false
     })
 
     const calcSubHeight = computed(() => {
@@ -49,6 +56,7 @@ export default defineComponent({
     }
 
     return {
+      loading,
       ...jobStore,
       ...jobRunStore,
       calcSubHeight,

@@ -45,7 +45,8 @@ export const action = {
   getWorkspace: 'getWorkspace',
   getWorkspaces: 'getWorkspaces',
   changeSettings: 'changeSettings',
-  getWorkpaceProjects: 'getWorkpaceProjects'
+  getWorkpaceProjects: 'getWorkpaceProjects',
+  getLastProjectPackage: 'getLastProjectPackage'
 }
 
 export const mutation = {

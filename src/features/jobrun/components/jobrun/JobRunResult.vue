@@ -57,19 +57,25 @@
       </v-flex>
     </v-toolbar>
     <v-flex :style="scrollerStyles" class="mb-4 overflow-y-auto" id="scroll-target">
-      <v-skeleton-loader
-        v-if="!isJobRunResultEmpty"
+      <ask-anna-loading-progress
         :loading="loading"
+        fullWidth
         transition="transition"
         height="94"
         type="list-item-two-line"
       >
-        <prism-editor v-scroll:#scroll-target="onScroll" :code="jobRunResultForView" readonly line-numbers />
-      </v-skeleton-loader>
+        <prism-editor
+          v-if="!isJobRunResultEmpty"
+          v-scroll:#scroll-target="onScroll"
+          :code="jobRunResultForView"
+          readonly
+          line-numbers
+        />
 
-      <v-alert v-if="isJobRunResultEmpty" class="my-2" dense outlined color="grey">
-        There is no result available for this run.
-      </v-alert>
+        <v-alert v-if="isJobRunResultEmpty" class="my-2" dense outlined color="grey">
+          There is no result available for this run.
+        </v-alert>
+      </ask-anna-loading-progress>
     </v-flex>
   </div>
 </template>
@@ -83,6 +89,7 @@ import useJobRunStore from '../../composition/useJobRunStore'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
 
 import { computed, defineComponent, onBeforeMount } from '@vue/composition-api'
+import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress'
 
 export default defineComponent({
   name: 'JobRunResult',

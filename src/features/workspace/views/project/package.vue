@@ -1,7 +1,5 @@
 <template>
-  <v-skeleton-loader ref="skeleton" :type="'table-row'" :loading="false">
-    <router-view />
-  </v-skeleton-loader>
+  <router-view />
 </template>
 
 <script>
