@@ -64,7 +64,7 @@ export default defineComponent({
     })
 
     const projectName = computed(() =>
-      projectStore.project.value.name ? projectStore.project.value.name : '"project name"'
+      projectStore.project.value.name ? `"${projectStore.project.value.name}"` : '"project name"'
     )
 
     const breadcrumbs = computed(() => [
