@@ -198,7 +198,7 @@
 </template>
 
 <script>
-import useProject from '@project/composition/useProject'
+import useProjectStore from '@project/composition/useProjectStore'
 import TheUploadStatus from '@/core/components/uploadStatus/TheUploadStatus'
 import useUploadStatus from '@/core/components/uploadStatus/useUploadStatus'
 
@@ -219,7 +219,7 @@ export default defineComponent({
   setup(props, context) {
     useTitle(context)
     const authStore = useAuthStore()
-    const project = useProject(context)
+    const projectStore = useProjectStore()
     const uploadStatus = useUploadStatus()
     const workspaceStore = useWorkspaceStore()
 
@@ -251,7 +251,7 @@ export default defineComponent({
 
     return {
       showAppBarIcon,
-      ...project,
+      ...projectStore,
       logout,
       onResize,
       workspaces,
