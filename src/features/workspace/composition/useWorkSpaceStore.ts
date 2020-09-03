@@ -9,7 +9,8 @@ export default function () {
       workspaces: 'workspaces',
       workspaceProjects: 'workspaceProjects',
       workspaceSettings: 'workspaceSettings',
-      workspaceProjectsLoading: 'workspaceProjectsLoading'
+      workspaceProjectsLoading: 'workspaceProjectsLoading',
+      workspaceProjectsQuery: 'workspaceProjectsQuery'
     })
   }
 
