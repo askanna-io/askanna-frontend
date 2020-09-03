@@ -54,6 +54,12 @@ const jobRun = [
 
 const packageRoutes = [
   {
+    path: 'new-package',
+    component: () =>
+      import(/* webpackChunkName: "workspace-project-package-new" */ './views/project/package/new-package.vue'),
+    name: 'workspace-project-package-new'
+  },
+  {
     path: ':packageId',
     component: () =>
       import(/* webpackChunkName: "workspace-project-package-uuid" */ './views/project/package/index.vue'),
@@ -173,6 +179,14 @@ export default {
           }
         },
         {
+          path: 'new-project',
+          component: () => import(/* webpackChunkName: "workspace-new-project" */ './views/new-project.vue'),
+          name: 'workspace-new-project',
+          meta: {
+            breadcrumb: 'New project - #:workspaceId'
+          }
+        },
+        {
           path: 'project/:projectId',
           component: () => import(/* webpackChunkName: "workspace-project" */ './views/project/index.vue'),
           meta: {
@@ -184,9 +198,8 @@ export default {
               path: '',
               name: 'workspace-project',
               redirect: { name: 'workspace-project-code' },
-
               component: () =>
-                import(/* webpackChunkName: "workspace-project-uuid-activity" */ './views/project/index.vue'),
+                import(/* webpackChunkName: "workspace-project-uuid-activity" */ './views/project/uuid-project.vue'),
               meta: {
                 breadcrumb: 'Project - #:projectId'
               }
