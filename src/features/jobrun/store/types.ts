@@ -9,6 +9,7 @@ export interface jobRubData {
   resultLoading: Boolean
   payLoadLoading: Boolean
   jobRunlogLoading: Boolean
+  jobRunArtifactLoading: Boolean
   jobRunResult: any
   jobRunLog: {
     count: number
@@ -16,6 +17,21 @@ export interface jobRubData {
     results: any[]
   }
   jobRunLogFullVersion: any[]
+  artifactData?: Package
+  file: string
+  fileSource: Blob
+}
+
+export interface Package {
+  uuid: string
+  cdn_base_url: string
+  filename: string
+  storage_location: string
+  project: string
+  size: number
+  created_by: number
+  created_at: string
+  files: File[]
 }
 
 export interface JobRun {
@@ -70,6 +86,7 @@ export const action = {
   getJobRunPayload: 'getJobRunPayload',
   showJobRunResult: 'showJobRunResult',
   closeResultModal: 'closeResultModal',
+  getJobRunArtifact: 'getJobRunArtifact',
   getFullVersionJobRunLog: 'getFullVersionJobRunLog'
 }
 
@@ -89,13 +106,25 @@ export const SET_JOB_RUN_LOG = 'SET_JOB_RUN_LOG'
 export const UPDATE_JOB_RESULT = 'UPDATE_JOB_RESULT'
 export const SET_JOB_RUN_RESULT = 'SET_JOB_RUN_RESULT'
 export const SET_JOB_RUN_PAYLOAD = 'SET_JOB_RUN_PAYLOAD'
+export const SET_JOB_RUN_ARTIFACT = 'SET_JOB_RUN_ARTIFACT'
 export const SET_JOB_RUN_LOG_FULL_VERSION = 'SET_JOB_RUN_LOG_FULL_VERSION'
 
 export const stateType = {
+  file: 'file',
+  runs: 'runs',
+  jobRun: 'jobRun',
+  jobRunLog: 'jobRunLog',
+  fileSource: 'fileSource',
+  logLoading: 'logLoading',
+  artifactData: 'artifactData',
+  jobRunResult: 'jobRunResult',
+  jobRunPayload: 'jobRunPayload',
   jobRunLoading: 'jobRunLoading',
   resultLoading: 'resultLoading',
   payLoadLoading: 'payLoadLoading',
-  jobRunlogLoading: 'jobRunlogLoading'
+  jobRunlogLoading: 'jobRunlogLoading',
+  jobRunLogFullVersion: 'jobRunLogFullVersion',
+  jobRunArtifactLoading: 'jobRunArtifactLoading'
 }
 
 export class JobRunModel {
@@ -145,6 +174,42 @@ export class JobRunModel {
       trigger: {
         name: ''
       }
+    }
+  }
+}
+
+export interface File {
+  path: string
+  parent: string
+  is_dir: boolean
+  size: number
+  last_modified: string
+  name: string
+  type: string
+  ext: string
+}
+export class ArtifactModel {
+  private _state: Package
+
+  constructor() {
+    this._state = ArtifactModel.initialState()
+  }
+
+  get state() {
+    return this._state
+  }
+
+  static initialState() {
+    return {
+      uuid: '',
+      filename: '',
+      cdn_base_url: '',
+      storage_location: '',
+      project: '',
+      size: 0,
+      created_by: 0,
+      created_at: '',
+      files: []
     }
   }
 }

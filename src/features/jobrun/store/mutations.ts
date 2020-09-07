@@ -1,5 +1,5 @@
 import { MutationTree } from 'vuex'
-import { JobRunModel, jobRunState } from './types'
+import { File, JobRunModel, jobRunState } from './types'
 import * as type from './types'
 import { set } from 'lodash'
 
@@ -66,5 +66,17 @@ export const mutations: MutationTree<jobRunState> = {
       count: 0,
       results: []
     }
+  },
+
+  [type.SET_JOB_RUN_ARTIFACT](state, { artifactData: data }) {
+    const re = /(?:\.([^.]+))?$/
+    const files = data.files.map((file: File) => {
+      const fileExt = re.exec(file.name)
+      const ext = (!file.is_dir && fileExt && typeof fileExt[1] !== 'undefined' && fileExt[1]) || 'txt'
+
+      return { ...file, ext }
+    })
+
+    state.artifactData = { ...data, files }
   }
 }

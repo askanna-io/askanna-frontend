@@ -1,0 +1,175 @@
+<template>
+  <ask-anna-loading-progress :loading="jobRunArtifactLoading">
+    <v-row align="center" justify="center">
+      <v-col cols="12" class="pt-0 pb-0">
+        <package-toolbar :breadcrumbs="breadcrumbs" v-sticky="sticked" sticky-offset="{top: 52, bottom: 10}">
+          <template v-slot:left>
+            <v-tooltip top>
+              <template v-slot:activator="{ on }">
+                <div v-on="on">
+                  <a v-if="currentPath" @click="handeBackToPackageRoot" class="text-body-2"
+                    >Artifact #{{ packageId.slice(0, 4) }}<v-icon small>mdi-chevron-right</v-icon></a
+                  >
+                  <span class="text-body-2" v-else> Artifact #{{ packageId.slice(0, 4) }}</span>
+                </div>
+              </template>
+              <span>{{ packageId }}</span>
+            </v-tooltip>
+          </template>
+          <template v-slot:rigth>
+            <v-slide-y-transition>
+              <div v-if="!file">
+                <v-btn small outlined color="secondary" class="mr-1 btn--hover" @click="handleDownload()">
+                  <v-icon color="secondary" left>mdi-download</v-icon>Download
+                </v-btn>
+              </div>
+            </v-slide-y-transition>
+          </template>
+        </package-toolbar>
+
+        <package-file v-if="file" :file="file" :fileSource="fileSource" :currentPath="currentPath" :sticked="sticked" />
+        <package-tree v-else :items="treeView" :height="calcHeight" @clickOnRow="handleClickOnRow" />
+      </v-col>
+    </v-row>
+  </ask-anna-loading-progress>
+</template>
+
+<script>
+import { useWindowSize } from '@u3u/vue-hooks'
+import { defineComponent } from '@vue/composition-api'
+import PackageFile from '@package/components/PackageFile'
+import PackageTree from '@package/components/PackageTree'
+import { headers, FileIcons } from '@package/utils/index'
+import usePackages from '@packages/composition/usePackages'
+import useProjectStore from '@project/composition/useProjectStore'
+import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
+import PackageToolbar from '@/features/package/components/PackageToolbar'
+import useForceFileDownload from '@/core/composition/useForceFileDownload'
+import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
+import usePackageStore from '@/features/package/composition/usePackageStore'
+
+import usePackagesStore from '@/features/packages/composition/usePackagesStore'
+import { ref, watch, onBeforeMount, onUnmounted, computed } from '@vue/composition-api'
+
+export default defineComponent({
+  name: 'PackageUuid',
+
+  components: {
+    PackageFile,
+    PackageTree,
+    PackageToolbar
+  },
+
+  setup(props, context) {
+    const { height } = useWindowSize()
+    const jobRunStore = useJobRunStore()
+    const projectStore = useProjectStore()
+    const packageStore = usePackageStore()
+
+    const forceFileDownload = useForceFileDownload()
+    const breadcrumbs = usePackageBreadcrumbs(context, { start: 8, end: 9 })
+
+    const file = ref(packageStore.file)
+    const {
+      workspaceId,
+      projectId,
+      jobRunId,
+      jobId,
+      packageId = 'new-package',
+      folderName = ''
+    } = context.root.$route.params
+
+    const sticked = computed(() => !projectStore.stickedVM.value)
+
+    onBeforeMount(async () => {
+      jobRunStore.getJobRunArtifact(jobRunId)
+    })
+
+    const calcHeight = computed(() => height.value - 370)
+    const path = computed(() => context.root.$route.params.folderName || '/')
+
+    const currentPath = computed(() => {
+      const pathArray = path.value.split('/')
+      const fileName = pathArray.pop()
+      const current = jobRunStore.artifactData.value.files.find(item => item.name === fileName)
+
+      return current
+    })
+
+    const treeView = computed(() => {
+      let parentPath
+      if (currentPath.value && currentPath.value.is_dir && path.value !== '/') {
+        parentPath = jobRunStore.artifactData.value.files.find(
+          file => file.name === currentPath.value.parent && file.is_dir
+        )
+        parentPath = {
+          ...parentPath,
+          name: '...',
+          ext: 'parent'
+        }
+      }
+      const tree = jobRunStore.artifactData.value.files.filter(item => item.parent === path.value)
+
+      return parentPath ? [parentPath, ...tree] : tree
+    })
+
+    watch(currentPath, async (currentPath, prevPath) => {
+      const path = currentPath && !currentPath.is_dir && currentPath.name !== '' ? currentPath.path : ''
+
+      if (prevPath && path !== '' && path === prevPath.path) return
+
+      await packageStore.getFileSource(path)
+    })
+
+    const handleClickOnRow = async item => {
+      //3Cpy-QMzd-MVko-1rDQ/project/7MQT-6309-9g3t-R5QR/jobs/2mb4-iA7p-680u-Tpaw/runs/3QXj-G4lD-J9lX-A2oK/artifact
+      let path = `/${workspaceId}/project/${projectId}/jobs/${jobId}/runs/${jobRunId}/artifact/${folderName}/${item.name}`
+      if (item.parent === '/') {
+        path = `/${workspaceId}/project/${projectId}/jobs/${jobId}/runs/${jobRunId}/artifact/${item.name}`
+      }
+
+      if (typeof item.path === 'undefined') {
+        path = `/${workspaceId}/project/${projectId}/jobs/${jobId}/runs/${jobRunId}/artifact/`
+      }
+
+      if (item.is_dir) {
+        path = `/${workspaceId}/project/${projectId}/jobs/${jobId}/runs/${jobRunId}/artifact/${item.path}`
+      }
+
+      context.root.$router.push({ path })
+    }
+
+    const handleDownload = async () => {
+      const artifactData = jobRunStore.artifactData.value
+      const source = await jobRunStore.downloadPackage({
+        projectId: jobRunStore.project,
+        packageId: jobRunStore.short_uuid
+      })
+      forceFileDownload.trigger({ source, name: artifactData.filename })
+    }
+
+    const handeBackToPackageRoot = () => {
+      context.root.$router.push({
+        name: 'workspace-project-jobs-job-jobrun-artifact',
+        params: { workspaceId, projectId, jobId, jobRunId }
+      })
+    }
+
+    return {
+      sticked,
+      file: packageStore.file,
+      fileSource: packageStore.fileSource,
+      jobRunArtifactLoading: jobRunStore.jobRunArtifactLoading,
+      treeView,
+      packageId,
+      FileIcons,
+      calcHeight,
+      breadcrumbs,
+      currentPath,
+      handleDownload,
+      handleClickOnRow,
+      handeBackToPackageRoot
+    }
+  }
+})
+</script>

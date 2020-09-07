@@ -54,7 +54,15 @@ export const actions: ActionTree<jobRunState, RootState> = {
       return
     }
 
-    commit(type.SET_JOB_RUN, jobRun)
+    commit(type.SET_JOB_RUN, {
+      ...jobRun,
+      package: {
+        short_uuid: '1KKO-yZH0-mM0Z-Sn87',
+        size: 1294,
+        title: 'Archive2.zip',
+        uuid: '2ba15727-ed61-4dc1-a160-944b7b9b765f'
+      }
+    })
     commit(type.mutation.SET_LOADING, { name: stateType.jobRunLoading, value: false })
   },
 
@@ -149,5 +157,86 @@ export const actions: ActionTree<jobRunState, RootState> = {
 
   async [type.action.resetJobRunLog]({ commit }) {
     commit(type.mutation.RESET_JOB_RUN_LOG)
+  },
+
+  async [type.action.getJobRunArtifact]({ commit }, uuid) {
+    commit(type.mutation.SET_LOADING, { name: stateType.jobRunArtifactLoading, value: true })
+
+    let artifactData = {
+      uuid: '2ba15727-ed61-4dc1-a160-944b7b9b765f',
+      files: [
+        {
+          path: '__MACOSX',
+          parent: '/',
+          name: '__MACOSX',
+          is_dir: true,
+          size: 645,
+          last_modified: '2020-09-04T12:28:05.760969',
+          type: 'directory'
+        },
+        {
+          path: 'README.md',
+          parent: '/',
+          name: 'README.md',
+          is_dir: false,
+          size: 42,
+          last_modified: '2020-06-30T18:44:36',
+          type: 'file'
+        },
+        {
+          path: '__MACOSX/._README.md',
+          parent: '__MACOSX',
+          name: '._README.md',
+          is_dir: false,
+          size: 433,
+          last_modified: '2020-06-30T18:44:36',
+          type: 'file'
+        },
+        {
+          path: 'askanna.yml',
+          parent: '/',
+          name: 'askanna.yml',
+          is_dir: false,
+          size: 66,
+          last_modified: '2020-06-18T08:45:00',
+          type: 'file'
+        },
+        {
+          path: '__MACOSX/._askanna.yml',
+          parent: '__MACOSX',
+          name: '._askanna.yml',
+          is_dir: false,
+          size: 212,
+          last_modified: '2020-06-18T08:45:00',
+          type: 'file'
+        }
+      ],
+      cdn_base_url: 'https://cdn-api.askanna.eu/files/blob/2ba15727-ed61-4dc1-a160-944b7b9b765f',
+      created: '2020-07-28T20:32:16.386121Z',
+      modified: '2020-07-28T20:32:16.386158Z',
+      title: 'Archive2.zip',
+      description: 'Archive2.zip',
+      deleted: null,
+      short_uuid: '1KKO-yZH0-mM0Z-Sn87',
+      filename: 'Archive2.zip',
+      storage_location: '1294_Archive2.zip',
+      size: 1294,
+      created_by: 5,
+      project: 'f1e2144a-87f9-4936-8562-4304c51332ea'
+    }
+    /*  try {
+      artifactData = await apiService({
+        action: api.getJobRunArtifact,
+        serviceName,
+        uuid
+      })
+    } catch (e) {
+      logger.error(commit, 'Error on artifactData  in getJobRunArtifact action.\nError: ', e)
+
+      return
+    } */
+
+    commit(type.SET_JOB_RUN_ARTIFACT, { artifactData })
+    commit(type.mutation.SET_LOADING, { name: stateType.jobRunArtifactLoading, value: false })
   }
 }

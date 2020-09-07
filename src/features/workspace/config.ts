@@ -38,6 +38,81 @@ const jobRun = [
         }
       },
       {
+        path: 'artifact',
+        component: () =>
+          import(
+            /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-artifact" */ './views/project/jobs/job/jobruns/jobrun/artifact.vue'
+          ),
+        name: 'workspace-project-jobs-job-jobrun-artifact',
+        meta: {
+          breadcrumb: 'Job run - #:jobRunId'
+        }
+      },
+      {
+        path: 'artifact',
+        component: () =>
+          import(
+            /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-artifact-index" */ './views/project/jobs/job/jobruns/jobrun/index-artifact.vue'
+          ),
+        name: 'workspace-project-jobs-job-jobrun-artifact-index',
+        children: [
+          {
+            path: '',
+            component: () =>
+              import(
+                /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-artifact" */ './views/project/jobs/job/jobruns/jobrun/artifact.vue'
+              ),
+            name: 'workspace-project-jobs-job-jobrun-artifact',
+            meta: {
+              breadcrumb: 'Artifact - #:packageId'
+            }
+          },
+          {
+            path: ':folderName(.*)',
+            component: () =>
+              import(
+                /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-artifact-folder" */ './views/project/jobs/job/jobruns/jobrun/artifact.vue'
+              ),
+            name: 'workspace-project-jobs-job-jobrun-artifact-folder',
+            meta: {
+              breadcrumb: ':folderName'
+            }
+          }
+        ]
+      },
+      {
+        path: 'code',
+        component: () =>
+          import(
+            /* webpackChunkName: "workspace-project-package-uuid" */ './views/project/jobs/job/jobruns/jobrun/index-code.vue'
+          ),
+        name: 'workspace-project-jobs-job-jobrun-code-index',
+        children: [
+          {
+            path: '',
+            component: () =>
+              import(
+                /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-code" */ './views/project/jobs/job/jobruns/jobrun/code.vue'
+              ),
+            name: 'workspace-project-jobs-job-jobrun-code',
+            meta: {
+              breadcrumb: 'Code - #:packageId'
+            }
+          },
+          {
+            path: ':folderName(.*)',
+            component: () =>
+              import(
+                /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-code-folder" */ './views/project/jobs/job/jobruns/jobrun/code.vue'
+              ),
+            name: 'workspace-project-jobs-job-jobrun-code-folder',
+            meta: {
+              breadcrumb: ':folderName'
+            }
+          }
+        ]
+      },
+      {
         path: 'log',
         component: () =>
           import(
