@@ -68,39 +68,8 @@ export const actions: ActionTree<workspaceState, RootState> = {
 
       return
     }
-    const results = await Promise.all(
-      map(projects.results, async (project: any) => {
-        const packages = await dispatch(action.getLastProjectPackage, project.short_uuid)
-
-        project.packages = packages
-        project.lastPackage = packages.results.length ? packages.results[0] : { short_uuid: 'new-package' }
-
-        return project
-      })
-    )
-    commit(mutation.SET_WORKSPACE_PROJECTS, { results, count: results.length, next: projects.next })
+    commit(mutation.SET_WORKSPACE_PROJECTS, projects)
     commit(mutation.SET_LOADING, { name: stateType.workspaceProjectsLoading, value: false })
-  },
-
-  async [action.getLastProjectPackage]({ commit }, uuid) {
-    let lastPackage
-    try {
-      lastPackage = await apiService({
-        action: api.getProjectPackages,
-        serviceName,
-        uuid,
-        params: {
-          limit: 1,
-          offset: 0
-        }
-      })
-    } catch (error) {
-      logger.error(commit, 'Error on load lastPackage in getLastProjectPackage action.\nError: ', error)
-
-      return []
-    }
-
-    return lastPackage
   },
 
   async [action.changeSettings]({ commit }, data) {
