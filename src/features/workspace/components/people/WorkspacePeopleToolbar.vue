@@ -5,7 +5,7 @@
     <v-spacer />
     <v-spacer />
     <v-menu
-      v-model="menu"
+      v-model="sortMenu"
       class="workspace-menu"
       data-test="workspace-menu"
       transition="slide-y-transition"
@@ -19,17 +19,13 @@
       </template>
 
       <v-list>
-        <v-list-item v-for="(item, index) in items" :key="index" @click="handleMenuClick(item)">
+        <v-list-item v-for="(item, index) in sortItems" :key="index" @click="handleMenuClick(item)">
           <v-list-item-title>{{ item.title }}</v-list-item-title>
         </v-list-item>
       </v-list>
     </v-menu>
-    <v-spacer />
-
-    <create-project-popup />
-
     <v-menu
-      v-model="menu"
+      v-model="sortMenu"
       class="workspace-menu"
       data-test="workspace-menu"
       transition="slide-y-transition"
@@ -39,23 +35,24 @@
       offset-y
     >
       <template v-slot:activator="{ on }">
-        <v-btn icon v-on="on" data-test="workspace-menu-activate-btn">
-          <v-icon>mdi-dots-vertical</v-icon>
+        <v-btn class="ml-1" v-on="on" small data-test="workspace-menu-activate-btn">
+          <v-icon> mdi-filter-variant </v-icon> Filters
         </v-btn>
       </template>
 
       <v-list>
-        <v-list-item v-for="(item, index) in items" :key="index" @click="handleMenuClick(item)">
+        <v-list-item v-for="(item, index) in sortItems" :key="index" @click="handleMenuClick(item)">
           <v-list-item-title>{{ item.title }}</v-list-item-title>
         </v-list-item>
       </v-list>
     </v-menu>
+
+    <v-spacer />
   </v-toolbar>
 </template>
 <script>
-import { reactive, defineComponent } from '@vue/composition-api'
+import { ref, reactive, defineComponent } from '@vue/composition-api'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
-import CreateProjectPopup from '@/features/project/components/CreateProjectPopup'
 
 export default defineComponent({
   name: 'WorkspaceToolbar',
@@ -71,16 +68,21 @@ export default defineComponent({
     }
   },
 
-  components: { CreateProjectPopup },
-
   setup(props, context) {
     const workspaceStore = useWorkspaceStore()
 
+    const sortMenu = ref(false)
+
     const state = reactive({
-      menu: false
+      menu: false,
+      sortMenu: false
     })
 
     const items = [{ title: 'People', to: 'workspace-people' }]
+    const sortItems = [
+      { title: 'A-Z', to: 'workspace-people' },
+      { title: 'Z-A', to: 'workspace-people' }
+    ]
 
     const handleMenuClick = item => {
       context.root.$router.push({
@@ -92,8 +94,10 @@ export default defineComponent({
 
     return {
       items,
-      menu: state.menu,
+      sortItems,
+      sortMenu,
       handleMenuClick,
+      menu: state.menu,
       handleChangeProjectView
     }
   }
