@@ -138,7 +138,7 @@ export default defineComponent({
       polling.value = setInterval(async () => {
         await getPackage()
         checkProcessing()
-      }, 5000)
+      }, 10000)
     }
 
     const checkProcessing = () => {
