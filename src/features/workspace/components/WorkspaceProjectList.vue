@@ -32,7 +32,7 @@ import { defineComponent } from '@vue/composition-api'
 import useSanitizeHTML from '@/core/composition/useSanitizeHTML'
 import WorkspaceProjectCardItem from './WorkspaceProjectCardItem.vue'
 import WorkspaceProjectListItem from './WorkspaceProjectListItem.vue'
-import WorkspaceToolbar from '../../components/workspace/WorkspaceToolbar.vue'
+import WorkspaceToolbar from '@/features/workspace/components/WorkspaceToolbar.vue'
 
 export default defineComponent({
   name: 'WorkspaceList',

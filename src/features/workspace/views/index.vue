@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import useWorkspaceStore from '../composition/useWorkSpaceStore'
+import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 import { computed, reactive, onBeforeMount, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({

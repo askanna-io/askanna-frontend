@@ -1,15 +1,13 @@
 <template>
   <div>
-    <workspace-project-list
+    <workspace-people-list
       v-scroll="throttle(onScroll, 1000)"
-      :loading="loading"
+      :workspaceUuid="workspace.uuid"
       :settings="workspaceSettings"
       :workspaceName="workspace.title"
       :items="workspaceProjects.results"
+      :loading="loading"
     />
-
-    <ask-anna-divider v-if="isNotBeta" text="Latest Activity" />
-    <ask-anna-time-lines v-if="isNotBeta" text="Latest Activity" />
   </div>
 </template>
 <script>
@@ -17,12 +15,12 @@ import { throttle } from 'lodash'
 import useQuery from '@/core/composition/useQuery'
 import { computed, defineComponent } from '@vue/composition-api'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
-import WorkspaceProjectList from '@/features/workspace/components/WorkspaceProjectList.vue'
+import WorkspacePeopleList from '@/features/workspace/components/people/WorkspacePeopleList.vue'
 
 export default defineComponent({
   name: 'workspace',
 
-  components: { WorkspaceProjectList },
+  components: { WorkspacePeopleList },
 
   setup(props, context) {
     const workspaceStore = useWorkspaceStore()

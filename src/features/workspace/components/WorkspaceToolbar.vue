@@ -9,13 +9,14 @@
     <create-project-popup />
 
     <v-menu
-      v-if="isNotBeta"
       v-model="menu"
       class="workspace-menu"
       data-test="workspace-menu"
+      transition="slide-y-transition"
+      bottom
       :close-on-content-click="false"
-      :nudge-width="200"
-      offset-x
+      :nudge-width="100"
+      offset-y
     >
       <template v-slot:activator="{ on }">
         <v-btn icon v-on="on" data-test="workspace-menu-activate-btn">
@@ -23,35 +24,28 @@
         </v-btn>
       </template>
 
-      <v-card>
-        <v-card-subtitle>Workspace settings</v-card-subtitle>
-        <v-card-subtitle>Project view</v-card-subtitle>
-        <v-card-text>
-          <v-btn-toggle @change="handleChangeProjectView" mandatory>
-            <v-btn>
-              <v-icon>mdi-card-bulleted-outline</v-icon>
-            </v-btn>
-
-            <v-btn data-test="view-list">
-              <v-icon>mdi-format-align-justify</v-icon>
-            </v-btn>
-          </v-btn-toggle>
-        </v-card-text>
-      </v-card>
+      <v-list>
+        <v-list-item v-for="(item, index) in items" :key="index" @click="handleMenuClick(item)">
+          <v-list-item-title>{{ item.title }}</v-list-item-title>
+        </v-list-item>
+      </v-list>
     </v-menu>
   </v-toolbar>
 </template>
 <script>
-import CreateProjectPopup from '@/features/project/components/CreateProjectPopup'
-
-import useWorkspaceStore from '../../composition/useWorkSpaceStore'
 import { reactive, defineComponent } from '@vue/composition-api'
+import CreateProjectPopup from '@/features/project/components/CreateProjectPopup'
+import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 
 export default defineComponent({
   name: 'WorkspaceToolbar',
 
   props: {
     title: {
+      type: String,
+      default: ''
+    },
+    workspaceUuid: {
       type: String,
       default: ''
     }
@@ -66,10 +60,20 @@ export default defineComponent({
       menu: false
     })
 
+    const items = [{ title: 'People', to: 'workspace-people' }]
+
+    const handleMenuClick = item => {
+      context.root.$router.push({
+        name: item.to,
+        params: context.root.$route.params
+      })
+    }
     const handleChangeProjectView = projectView => workspaceStore.changeSettings({ projectView })
 
     return {
+      items,
       menu: state.menu,
+      handleMenuClick,
       handleChangeProjectView
     }
   }
