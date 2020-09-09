@@ -1,5 +1,5 @@
 <template>
-  <ask-anna-loading-progress :loading="packageLoading">
+  <ask-anna-loading-progress :loading="packageLoading && !isProcessing">
     <v-row align="center" justify="center">
       <v-col cols="12" class="pt-0 pb-0">
         <package-toolbar :breadcrumbs="breadcrumbs" v-sticky="sticked" sticky-offset="{top: 52, bottom: 10}">
@@ -118,7 +118,9 @@ export default defineComponent({
         return
       }
       await getPackage()
-      pollData()
+      if (isProcessing.value) {
+        pollData()
+      }
     })
 
     onUnmounted(() => {
