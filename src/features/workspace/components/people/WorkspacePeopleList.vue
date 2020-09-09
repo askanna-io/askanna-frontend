@@ -6,7 +6,7 @@
     <template v-slot:default="props">
       <ask-anna-loading-progress :type="'table-row'" :loading="loading">
         <v-row v-if="!settings.projectView">
-          <v-col v-for="item in props.items" :key="item.name + item.short_uuid" cols="12" sm="6" md="6" lg="4">
+          <v-col v-for="item in props.items" :key="item.name + item.short_uuid" cols="12" sm="3" md="3" lg="3">
             <v-hover v-slot:default="{ hover }" open-delay="200">
               <workspace-people-card-item
                 :project="item"
