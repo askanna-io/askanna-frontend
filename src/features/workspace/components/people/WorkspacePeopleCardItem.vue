@@ -1,16 +1,17 @@
 <template>
   <v-card class="mx-auto h-100" :elevation="hover ? 16 : 2">
     <v-row>
-      <v-col cols="3">
-        <v-avatar color="grey" size="100" tile>
-          <v-img src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg" />
+      <v-col cols="2">
+        <v-avatar class="pl-1" size="70" tile>
+          <v-img v-if="people.avatar" class="img--rounded" :src="people.avatar" />
+          <v-icon v-else size="55">mdi-account-outline</v-icon>
         </v-avatar>
       </v-col>
-      <v-col cols="9" align-self="start">
+      <v-col class="ml-3" cols="9" align-self="start">
         <v-list-item color="rgba(0, 0, 0, .4)">
           <v-list-item-content>
-            <v-list-item-title class="title">Andrii Shapovalov</v-list-item-title>
-            <v-list-item-subtitle>Software Engineer</v-list-item-subtitle>
+            <v-list-item-title class="title">{{ people.name }}</v-list-item-title>
+            <v-list-item-subtitle>{{ people.job_title }}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
       </v-col>
@@ -25,17 +26,18 @@ export default defineComponent({
   name: 'WorkspacePeopleCardItem',
 
   props: {
-    project: {
+    people: {
       type: Object,
       default: function () {
         return {
-          status: 'UNDIFENED',
-          runtime: 0,
-          memory: 0,
-          return_payload: null,
-          stdout: null,
+          uuid: '',
+          name: '',
+          role: '',
+          job_title: '',
           created: '',
-          finished: ''
+          modified: '',
+          short_uuid: '',
+          last_active: ''
         }
       }
     },

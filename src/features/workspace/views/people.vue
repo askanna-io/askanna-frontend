@@ -5,7 +5,7 @@
       :workspaceUuid="workspace.uuid"
       :settings="workspaceSettings"
       :workspaceName="workspace.title"
-      :items="workspaceProjects.results"
+      :items="workspacePeople.results"
       :loading="loading"
     />
   </div>
@@ -13,7 +13,7 @@
 <script>
 import { throttle } from 'lodash'
 import useQuery from '@/core/composition/useQuery'
-import { computed, defineComponent } from '@vue/composition-api'
+import { computed, onBeforeMount, defineComponent } from '@vue/composition-api'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 import WorkspacePeopleList from '@/features/workspace/components/people/WorkspacePeopleList.vue'
 
@@ -24,22 +24,27 @@ export default defineComponent({
 
   setup(props, context) {
     const workspaceStore = useWorkspaceStore()
+
+    onBeforeMount(async () => {
+      await workspaceStore.getInitialWorkpacePeople({ params: { limit: 18, offset: 0 } })
+    })
+
     const query = useQuery({
       offset: 18,
       limit: 18,
       store: workspaceStore,
-      action: 'getWorkpaceProjects',
-      queryPath: 'workspaceProjects'
+      action: 'getWorkspacePeople',
+      queryPath: 'workspacePeople'
     })
 
     const onScroll = e => query.onScroll(e.target.documentElement.scrollTop)
 
     return {
-      loading: workspaceStore.workspaceProjectsLoading,
+      loading: workspaceStore.workspacePeopleLoading,
       throttle,
       onScroll,
       workspace: workspaceStore.workspace,
-      workspaceProjects: workspaceStore.workspaceProjects,
+      workspacePeople: workspaceStore.workspacePeople,
       workspaceSettings: workspaceStore.workspaceSettings
     }
   }

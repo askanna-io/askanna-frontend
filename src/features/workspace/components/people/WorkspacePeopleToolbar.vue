@@ -51,8 +51,6 @@
         </v-col>
       </v-row>
     </v-menu>
-
-    <v-spacer />
   </v-toolbar>
 </template>
 <script>

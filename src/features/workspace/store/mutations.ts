@@ -27,16 +27,17 @@ export const mutations: MutationTree<workspaceState> = {
     set(state, path, value)
   },
   [mutation.RESET](state) {
-    state.workspaceProjectsQuery = {
-      limit: 18,
-      offset: 0,
-      next: null
-    }
-
     state.workspaceProjects = {
       next: null,
       count: 0,
       results: []
+    }
+  },
+  [mutation.SET_WORKSPACE_PEOPLE](state, { count, results, next }) {
+    state.workspacePeople = {
+      next,
+      count,
+      results: [...state.workspacePeople.results, ...results]
     }
   }
 }

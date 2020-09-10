@@ -19,15 +19,16 @@ export const state: workspaceState = {
     limit: 10,
     offset: 0
   },
-  workspaceProjectsQuery: {
-    limit: 18,
-    offset: 0,
-    next: null
-  },
   workspacesLoading: true,
+  workspacePeopleLoading: true,
   workspaceProjectsLoading: true,
   workspaceSettings: {
     projectView: 0
+  },
+  workspacePeople: {
+    count: 0,
+    next: null,
+    results: []
   }
 }
 

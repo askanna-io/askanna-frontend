@@ -147,4 +147,8 @@ code.lang-shell {
   color: #ffffff !important;
   font-size: 14px !important;
 }
+
+.img--rounded {
+  border-radius: 50% !important;
+}
 </style>
