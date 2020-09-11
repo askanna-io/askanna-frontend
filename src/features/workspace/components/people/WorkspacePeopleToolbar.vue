@@ -12,16 +12,18 @@
       bottom
       :close-on-content-click="false"
       :nudge-width="100"
+      nudge-bottom="10"
       offset-y
     >
       <template v-slot:activator="{ on }">
-        <v-btn v-on="on" small data-test="workspace-menu-activate-btn"> <v-icon>mdi-sort</v-icon> Sort </v-btn>
+        <v-btn v-on="on" small data-test="workspace-menu-activate-btn"><v-icon>mdi-sort</v-icon>Sort</v-btn>
       </template>
-
       <v-list>
-        <v-list-item v-for="(item, index) in sortItems" :key="index" @click="handleMenuClick(item)">
-          <v-list-item-title>{{ item.title }}</v-list-item-title>
-        </v-list-item>
+        <v-list-item-group v-model="activeSort" color="primary">
+          <v-list-item v-for="(item, index) in sortItems" :key="index" @click="handleSort(item)">
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item>
+        </v-list-item-group>
       </v-list>
     </v-menu>
     <v-menu
@@ -34,17 +36,17 @@
     >
       <template v-slot:activator="{ on }">
         <v-btn class="ml-1" v-on="on" small data-test="workspace-menu-activate-btn">
-          <v-icon> mdi-filter-variant </v-icon> Filters
+          <v-icon> mdi-filter-variant </v-icon>Filters
         </v-btn>
       </template>
       <v-row class="pa-2 white">
         <v-col class="d-flex" cols="12">
           <v-select
-            v-model="template"
-            :items="projectTemplates"
+            v-model="activeFilter"
+            :items="filters"
             item-text="name"
-            item-value="short_uuid"
-            label="Template"
+            item-value="value"
+            label="account type"
             no-data-text=""
             dense
           />
@@ -64,87 +66,51 @@ export default defineComponent({
     title: {
       type: String,
       default: ''
-    },
-    workspaceUuid: {
-      type: String,
-      default: ''
     }
   },
 
   setup(props, context) {
     const workspaceStore = useWorkspaceStore()
 
+    const menu = ref(false)
+    const activeSort = ref('')
     const sortMenu = ref(false)
     const filterMenu = ref(false)
 
-    const state = reactive({
-      menu: false,
-      sortMenu: false
-    })
-
-    const items = [{ title: 'People', to: 'workspace-people' }]
     const sortItems = [
-      { title: 'A-Z', to: 'workspace-people' },
-      { title: 'Z-A', to: 'workspace-people' }
+      { title: 'A-Z', value: 'user__name' },
+      { title: 'Z-A', value: '-user__name' }
     ]
+    const { workspaceId } = context.root.$route.params
 
-    const handleMenuClick = item => {
-      context.root.$router.push({
-        name: item.to,
-        params: context.root.$route.params
-      })
+    const handleSort = async ({ value }) => {
+      await workspaceStore.setWorkspaceParams({ path: 'workspacePeopleParams.ordering', value })
+      await workspaceStore.getWorkspacePeople({ workspaceId, params: { offset: 0, limit: 18 } })
     }
-    const handleChangeProjectView = projectView => workspaceStore.changeSettings({ projectView })
 
-    const projects = [
-      { text: 'Your projects', icon: 'fas fa-project-diagram' },
-      { text: 'Shared projects', icon: 'mdi-account' },
-      { text: 'Conversions', icon: 'mdi-flag' }
-    ]
-
-    const projectsList = [
-      { icon: 'far fa-folder', iconClass: 'grey lighten-1 white--text', title: 'uiprototype', subtitle: 'AskAnna' },
-      {
-        icon: 'far fa-folder',
-        iconClass: 'grey lighten-1 white--text',
-        title: 'askanna-frontend',
-        subtitle: 'AskAnna'
-      },
-      {
-        icon: 'far fa-folder',
-        iconClass: 'grey lighten-1 white--text',
-        title: 'Git Lab Issue Reporter',
-        subtitle: ' Andrii Shapovalov'
+    const activeFilter = computed({
+      get: () => '',
+      set: async value => {
+        await workspaceStore.setWorkspaceParams({ path: 'workspacePeopleParams.role', value })
+        await workspaceStore.getWorkspacePeople({ workspaceId, params: { offset: 0, limit: 18 } })
       }
-    ]
-
-    const template = computed({
-      get: () => 2,
-      set: value => context.emit('handleOnInput', { path: 'template', value })
     })
 
-    const projectTemplates = [
-      { short_uuid: 1, name: 'All type' },
-      { short_uuid: 2, name: 'Admin' },
-      { short_uuid: 3, name: 'Members' },
-      { short_uuid: 3, name: 'Pending' }
+    const filters = [
+      { value: '', name: 'All types' },
+      { value: 'WA', name: 'Admin' },
+      { value: 'WM', name: 'Members' }
     ]
-
-    const project = ref('')
 
     return {
-      template,
-      filterMenu,
-      projectTemplates,
-      project,
-      projects,
-      projectsList,
-      items,
-      sortItems,
+      menu,
+      filters,
       sortMenu,
-      handleMenuClick,
-      menu: state.menu,
-      handleChangeProjectView
+      sortItems,
+      filterMenu,
+      activeSort,
+      activeFilter,
+      handleSort
     }
   }
 })

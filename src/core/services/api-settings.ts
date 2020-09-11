@@ -92,7 +92,8 @@ export const api: ApiSettings = {
       get: id => `workspace/${id}/`,
       list: () => `workspace/`,
       projects: id => `workspace/${id}/projects/`,
-      getProjectPackages: id => `project/${id}/packages/`
+      getProjectPackages: id => `project/${id}/packages/`,
+      getWorkspacePeople: id => `workspace/${id}/people/`
     },
 
     result: {

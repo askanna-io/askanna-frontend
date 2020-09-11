@@ -31,6 +31,7 @@
       </template>
     </v-data-iterator>
     <workspace-people-popup
+      v-if="popupValue"
       :value="popupValue"
       :people="selectedPeople"
       :workspaceName="workspaceName"
@@ -86,8 +87,8 @@ export default defineComponent({
 
     const handleValue = value => (popupValue.value = value)
 
-    const handleRemove = value => console.log('handleRemove')
-    const handleChangeRole = value => console.log('handleChangeRole')
+    const handleRemove = value => true
+    const handleChangeRole = value => true
 
     const handleSelectPeople = people => {
       selectedPeople.value = people

@@ -26,6 +26,10 @@ export interface WorkspaceState {
     next: null | string
     results: Person[]
   }
+  workspacePeopleParams: {
+    role: string
+    ordering: string
+  }
 }
 
 interface Workspace {
@@ -61,6 +65,7 @@ export const action = {
   getWorkspace: 'getWorkspace',
   getWorkspaces: 'getWorkspaces',
   changeSettings: 'changeSettings',
+  setWorkspaceParams: 'setWorkspaceParams',
   getWorkspacePeople: 'getWorkspacePeople',
   getWorkpaceProjects: 'getWorkpaceProjects',
   getInitialWorkpacePeople: 'getInitialWorkpacePeople',
@@ -75,8 +80,10 @@ export const mutation = {
   SET_WORKSPACES: 'SET_WORKSPACES',
   UPDATE_PROJECTS: 'UPDATE_PROJECTS',
   UPDATE_SETTINGS: 'UPDATE_SETTINGS',
+  SET_WORKSPACE_PARAMS: 'SET_WORKSPACE_PARAMS',
   SET_WORKSPACE_PEOPLE: 'SET_WORKSPACE_PEOPLE',
-  SET_WORKSPACE_PROJECTS: 'SET_WORKSPACE_PROJECTS'
+  SET_WORKSPACE_PROJECTS: 'SET_WORKSPACE_PROJECTS',
+  SET_WORKSPACE_PEOPLE_INITIAL: 'SET_WORKSPACE_PEOPLE_INITIAL'
 }
 
 export const stateType = {
@@ -86,6 +93,7 @@ export const stateType = {
   workspaceProjects: 'workspaceProjects',
   workspaceSettings: 'workspaceSettings',
   workspacesLoading: 'workspacesLoading',
+  workspacePeopleParams: 'workspacePeopleParams',
   workspacePeopleLoading: 'workspacePeopleLoading',
   workspaceProjectsLoading: 'workspaceProjectsLoading'
 }

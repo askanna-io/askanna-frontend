@@ -2,11 +2,11 @@
   <div>
     <workspace-people-list
       v-scroll="throttle(onScroll, 1000)"
-      :workspaceUuid="workspace.uuid"
+      :loading="loading"
       :settings="workspaceSettings"
+      :workspaceUuid="workspace.uuid"
       :workspaceName="workspace.title"
       :items="workspacePeople.results"
-      :loading="loading"
     />
   </div>
 </template>
@@ -24,14 +24,16 @@ export default defineComponent({
 
   setup(props, context) {
     const workspaceStore = useWorkspaceStore()
+    const { workspaceId } = context.root.$route.params
 
     onBeforeMount(async () => {
-      await workspaceStore.getInitialWorkpacePeople({ params: { limit: 18, offset: 0 } })
+      await workspaceStore.getInitialWorkpacePeople({ workspaceId, params: { limit: 18, offset: 0 } })
     })
 
     const query = useQuery({
-      offset: 18,
       limit: 18,
+      offset: 18,
+      uuid: workspaceId,
       store: workspaceStore,
       action: 'getWorkspacePeople',
       queryPath: 'workspacePeople'
@@ -40,10 +42,10 @@ export default defineComponent({
     const onScroll = e => query.onScroll(e.target.documentElement.scrollTop)
 
     return {
-      loading: workspaceStore.workspacePeopleLoading,
       throttle,
       onScroll,
       workspace: workspaceStore.workspace,
+      loading: workspaceStore.workspacePeopleLoading,
       workspacePeople: workspaceStore.workspacePeople,
       workspaceSettings: workspaceStore.workspaceSettings
     }

@@ -1,7 +1,7 @@
+import { set } from 'lodash'
 import { mutation } from './types'
 import { MutationTree } from 'vuex'
 import { workspaceState } from './types'
-import { set } from 'lodash'
 
 export const mutations: MutationTree<workspaceState> = {
   [mutation.SET_WORKSPACE](state, data) {
@@ -39,5 +39,11 @@ export const mutations: MutationTree<workspaceState> = {
       count,
       results: [...state.workspacePeople.results, ...results]
     }
+  },
+  [mutation.SET_WORKSPACE_PEOPLE_INITIAL](state, data) {
+    state.workspacePeople = data
+  },
+  [mutation.SET_WORKSPACE_PARAMS](state, { path, value }) {
+    set(state, path, value)
   }
 }

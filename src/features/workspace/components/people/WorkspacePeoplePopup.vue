@@ -31,7 +31,7 @@
             <v-col class="text-center" cols="12">
               <div>
                 <v-btn small block outlined text color="secondary" class="btn--hover" @click="handleChangeRole">
-                  Make Admin or Make Member
+                  Make Admin
                 </v-btn>
               </div>
               <div class="mt-2">
@@ -65,18 +65,14 @@ export default defineComponent({
           uuid: '',
           name: '',
           role: '',
-          job_title: '',
           avatar: '',
           created: '',
           modified: '',
+          job_title: '',
           short_uuid: '',
           last_active: ''
         }
       }
-    },
-    description: {
-      type: String,
-      default: () => ''
     },
     workspaceName: {
       type: String,

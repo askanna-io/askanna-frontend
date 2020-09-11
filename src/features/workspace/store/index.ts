@@ -29,6 +29,10 @@ export const state: workspaceState = {
     count: 0,
     next: null,
     results: []
+  },
+  workspacePeopleParams: {
+    ordering: '',
+    role: ''
   }
 }
 

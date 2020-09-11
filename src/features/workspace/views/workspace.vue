@@ -37,10 +37,10 @@ export default defineComponent({
     const onScroll = e => query.onScroll(e.target.documentElement.scrollTop)
 
     return {
-      loading: workspaceStore.workspaceProjectsLoading,
       throttle,
       onScroll,
       workspace: workspaceStore.workspace,
+      loading: workspaceStore.workspaceProjectsLoading,
       workspaceProjects: workspaceStore.workspaceProjects,
       workspaceSettings: workspaceStore.workspaceSettings
     }

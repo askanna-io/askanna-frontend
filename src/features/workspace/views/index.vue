@@ -20,6 +20,7 @@ export default defineComponent({
       if (workspaceId === 'workspace') {
         workspaceId = workspaceStore.workspaces.value.results[0].short_uuid
         context.root.$router.push({ path: `/${workspaceId}` })
+
         return
       }
 
