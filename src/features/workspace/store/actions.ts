@@ -525,7 +525,7 @@ export const actions: ActionTree<workspaceState, RootState> = {
       ]
     }
     params = { ...params, ...state.workspacePeopleParams }
-    try {
+    /* try {
       people = await apiService({
         action: api.getWorkspacePeople,
         serviceName,
@@ -536,7 +536,7 @@ export const actions: ActionTree<workspaceState, RootState> = {
       logger.error(commit, 'Error on load people in getWorkspacePeople action.\nError: ', error)
 
       return
-    }
+    } */
     const peopleMutation = params.offset === 0 ? mutation.SET_WORKSPACE_PEOPLE_INITIAL : mutation.SET_WORKSPACE_PEOPLE
 
     commit(peopleMutation, people)
