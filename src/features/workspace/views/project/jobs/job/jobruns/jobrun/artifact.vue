@@ -82,7 +82,17 @@ export default defineComponent({
     const sticked = computed(() => !projectStore.stickedVM.value)
 
     onBeforeMount(async () => {
-      jobRunStore.getJobRunArtifact(jobRunId)
+      const { jobRunId } = context.root.$route.params
+
+      if (jobRunStore.jobRun.value.short_uuid !== jobRunId) {
+        await jobRunStore.resetStore()
+        await jobRunStore.getJobRun(jobRunId)
+      }
+
+      jobRunStore.getJobRunArtifact({
+        jobRunShortId: jobRunId,
+        artifactShortId: jobRunStore.jobRun.value.artifact.short_uuid
+      })
     })
 
     const calcHeight = computed(() => height.value - 370)
@@ -122,7 +132,6 @@ export default defineComponent({
     })
 
     const handleClickOnRow = async item => {
-      //3Cpy-QMzd-MVko-1rDQ/project/7MQT-6309-9g3t-R5QR/jobs/2mb4-iA7p-680u-Tpaw/runs/3QXj-G4lD-J9lX-A2oK/artifact
       let path = `/${workspaceId}/project/${projectId}/jobs/${jobId}/runs/${jobRunId}/artifact/${folderName}/${item.name}`
       if (item.parent === '/') {
         path = `/${workspaceId}/project/${projectId}/jobs/${jobId}/runs/${jobRunId}/artifact/${item.name}`

@@ -8,7 +8,7 @@ const jobRun = [
   {
     path: ':jobRunId',
     name: 'workspace-project-jobs-job-jobrun',
-
+    redirect: { name: 'workspace-project-jobs-job-jobrun-input' },
     component: () =>
       import(
         /* webpackChunkName: "workspace-project-uuid-jobs-name-run" */ './views/project/jobs/job/jobruns/jobrun/index.vue'
