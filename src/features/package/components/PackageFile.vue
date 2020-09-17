@@ -16,13 +16,15 @@
           <v-icon color="secondary" left>mdi-content-copy</v-icon>Copy file
         </v-btn>
       </v-toolbar>
-      <prism-editor :code="fileComputed" language="js" readonly line-numbers />
+      <package-file-image v-if="isFileImg" :fileSource="fileSource" />
+      <prism-editor v-else :code="fileComputed" language="js" readonly line-numbers />
     </v-col>
   </v-row>
 </template>
 
 <script>
 import PrismEditor from 'vue-prism-editor'
+import PackageFileImage from './PackageFileImage'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
 import { defineComponent, watch, computed } from '@vue/composition-api'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
@@ -31,7 +33,8 @@ export default defineComponent({
   name: 'PackageFile',
 
   components: {
-    PrismEditor
+    PrismEditor,
+    PackageFileImage
   },
 
   props: {
@@ -69,9 +72,13 @@ export default defineComponent({
       )
     }
 
+    const imgExts = ['jpg', 'png', 'gif']
+    const isFileImg = computed(() => imgExts.includes(props.currentPath.ext))
+
     const handleDownload = () => forceFileDownload.trigger({ source: props.fileSource, name: props.currentPath.name })
 
     return {
+      isFileImg,
       handleBack,
       handleCopy,
       fileComputed,
