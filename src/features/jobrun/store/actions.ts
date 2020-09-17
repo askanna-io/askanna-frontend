@@ -159,7 +159,15 @@ export const actions: ActionTree<jobRunState, RootState> = {
     commit(type.mutation.RESET_JOB_RUN_LOG)
   },
 
-  async [type.action.getJobRunArtifact]({ commit }, uuid) {
+  async [type.action.getInitialJobRunArtifact]({ commit, dispatch }, data) {
+    commit(type.mutation.SET_LOADING, { name: stateType.jobRunArtifactLoading, value: true })
+
+    await dispatch(type.action.getJobRunArtifact, data)
+
+    commit(type.mutation.SET_LOADING, { name: stateType.jobRunArtifactLoading, value: false })
+  },
+
+  async [type.action.getJobRunArtifact]({ commit }, { uuid, params }) {
     commit(type.mutation.SET_LOADING, { name: stateType.jobRunArtifactLoading, value: true })
 
     let artifactData = {}
@@ -167,7 +175,8 @@ export const actions: ActionTree<jobRunState, RootState> = {
       artifactData = await apiService({
         action: api.getJobRunArtifact,
         serviceName,
-        uuid
+        uuid,
+        params
       })
     } catch (e) {
       logger.error(commit, 'Error on artifactData  in getJobRunArtifact action.\nError: ', e)

@@ -89,9 +89,12 @@ export default defineComponent({
         await jobRunStore.getJobRun(jobRunId)
       }
 
-      jobRunStore.getJobRunArtifact({
-        jobRunShortId: jobRunId,
-        artifactShortId: jobRunStore.jobRun.value.artifact.short_uuid
+      jobRunStore.getInitialJobRunArtifact({
+        params: { path: 'models' },
+        uuid: {
+          jobRunShortId: jobRunId,
+          artifactShortId: jobRunStore.jobRun.value.artifact.short_uuid
+        }
       })
     })
 

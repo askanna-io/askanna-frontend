@@ -87,7 +87,8 @@ export const action = {
   showJobRunResult: 'showJobRunResult',
   closeResultModal: 'closeResultModal',
   getJobRunArtifact: 'getJobRunArtifact',
-  getFullVersionJobRunLog: 'getFullVersionJobRunLog'
+  getFullVersionJobRunLog: 'getFullVersionJobRunLog',
+  getInitialJobRunArtifact: 'getInitialJobRunArtifact'
 }
 
 // mutations
