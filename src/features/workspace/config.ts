@@ -234,17 +234,6 @@ export default {
               }
             },
             {
-              path: 'code/history',
-              component: () =>
-                import(
-                  /* webpackChunkName: "workspace-project-package-history" */ './views/project/package/code-history.vue'
-                ),
-              name: 'workspace-project-package-history',
-              meta: {
-                breadcrumb: 'History'
-              }
-            },
-            {
               path: 'code',
               name: 'workspace-project-code',
               component: () =>

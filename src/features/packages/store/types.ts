@@ -1,9 +1,12 @@
 export interface PackagesState extends Packages {}
 
 export interface Packages {
-  projectPackages: Package[]
-  projectPackageHistory: Package[]
   loadingPackages: Boolean
+  projectPackages: {
+    count: number
+    next: null | string
+    results: Package[]
+  }
 }
 
 export interface Package {
@@ -16,13 +19,22 @@ export interface Package {
   created_at: string
 }
 
+export const stateType = {
+  projectPackages: 'projectPackages',
+  loadingPackages: 'loadingPackages',
+  projectPackageHistory: 'projectPackageHistory'
+}
+
 export const PACKAGES_STORE = 'packages'
 
 // actions
-export const resetStore = 'resetStore'
-export const getProjectPackages = 'getProjectPackages'
-export const downloadPackage = 'downloadPackage'
-export const getTargetPackage = 'getTargetPackage'
+export const action = {
+  resetStore: 'resetStore',
+  downloadPackage: 'downloadPackage',
+  getTargetPackage: 'getTargetPackage',
+  getProjectPackages: 'getProjectPackages',
+  getInitialProjectPackages: 'getInitialProjectPackages'
+}
 
 //mutations
 export const SET_LOADING = 'SET_LOADING'

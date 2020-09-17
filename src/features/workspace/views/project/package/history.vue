@@ -3,10 +3,12 @@
     <v-row align="center" justify="center">
       <v-col cols="12" class="pt-0">
         <v-data-table
+          v-scroll="throttle(onScroll, 1000)"
+          disable-pagination
           hide-default-footer
           :headers="headers"
           :options="{ itemsPerPage: -1 }"
-          :items="projectPackageHistory"
+          :items="projectPackages.results"
           class="job-table askanna-table scrollbar cursor--pointer"
           @click:row="handleClickRow"
         >
@@ -103,15 +105,17 @@
 </template>
 
 <script>
+import { throttle } from 'lodash'
 import { useWindowSize } from '@u3u/vue-hooks'
+import useQuery from '@/core/composition/useQuery'
 import useMoment from '@/core/composition/useMoment'
-import { computed, defineComponent } from '@vue/composition-api'
-import usePackages from '@packages/composition/usePackages'
 import useSlicedText from '@/core/composition/useSlicedText'
 import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
+import usePackagesStore from '@packages/composition/usePackagesStore'
 import PackageToolbar from '@/features/package/components/PackageToolbar'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
+import { computed, defineComponent, onBeforeMount } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'history',
@@ -123,10 +127,28 @@ export default defineComponent({
   setup(props, context) {
     const snackBar = useSnackBar()
     const moment = useMoment(context)
-    const slicedText = useSlicedText()
     const { width } = useWindowSize()
+    const slicedText = useSlicedText()
+    const packagesStore = usePackagesStore(context)
 
-    const packages = usePackages(context)
+    const { projectId: uuid } = context.root.$route.params
+
+    const query = useQuery({
+      uuid,
+      limit: 18,
+      offset: 18,
+      store: packagesStore,
+      action: 'getProjectPackages',
+      queryPath: 'projectPackages'
+    })
+
+    const onScroll = e => query.onScroll(e.target.documentElement.scrollTop)
+
+    onBeforeMount(async () => {
+      await packagesStore.resetStore()
+      await packagesStore.getInitialProjectPackages({ params: { limit: 18, offset: 0 }, uuid })
+    })
+
     const forceFileDownload = useForceFileDownload()
     const breadcrumbs = useBreadcrumbs(context, { start: 3 })
 
@@ -165,7 +187,7 @@ export default defineComponent({
     }
 
     const handleDownload = async packageData => {
-      const source = await packages.downloadPackage({
+      const source = await packagesStore.downloadPackage({
         projectId: packageData.project.short_uuid,
         packageId: packageData.short_uuid
       })
@@ -204,7 +226,9 @@ export default defineComponent({
 
     return {
       ...moment,
-      ...packages,
+      ...packagesStore,
+      throttle,
+      onScroll,
       headers,
       slicedText,
       breadcrumbs,

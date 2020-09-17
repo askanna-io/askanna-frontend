@@ -5,8 +5,11 @@ import { mutations } from './mutations'
 import { PackagesState, PACKAGES_STORE } from './types'
 
 export const state: PackagesState = {
-  projectPackages: [],
-  projectPackageHistory: [],
+  projectPackages: {
+    count: 0,
+    next: null,
+    results: []
+  },
   loadingPackages: true
 }
 

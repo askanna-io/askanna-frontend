@@ -3,30 +3,26 @@
 </template>
 
 <script>
+import useProjectStore from '@/features/project/composition/useProjectStore'
 import { ref, watch, onBeforeMount, onUnmounted, computed, defineComponent } from '@vue/composition-api'
-import usePackagesStore from '@/features/packages/composition/usePackagesStore'
 
 export default defineComponent({
   setup(props, context) {
-    const packagesStore = usePackagesStore(context)
-
-    const loading = ref(true)
+    const projectStore = useProjectStore()
 
     onBeforeMount(async () => {
       const { name } = context.root.$route
 
       if (name === 'workspace-project-code') {
         let { packageId, projectId } = context.root.$route.params
-
         if (!packageId) {
-          await packagesStore.getProjectPackages(projectId)
-          const lastPackage = packagesStore.projectPackages.value
-            ? packagesStore.projectPackages.value
-            : { short_uuid: 'new-package' }
+          await projectStore.getProject(projectId)
 
-          packageId = lastPackage.short_uuid
+          packageId = projectStore.project.value.package.short_uuid
+            ? projectStore.project.value.package.short_uuid
+            : 'new-package'
         }
-        loading.value = false
+
         context.root.$router.push({
           name: 'workspace-project-package',
           params: {
@@ -36,12 +32,6 @@ export default defineComponent({
         })
       }
     })
-
-    onUnmounted(() => {
-      loading.value = false
-    })
-
-    return { loading }
   }
 })
 </script>

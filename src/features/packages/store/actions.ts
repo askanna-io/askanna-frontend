@@ -1,4 +1,5 @@
 import * as type from './types'
+import { action, stateType } from './types'
 import { ActionTree } from 'vuex'
 import { logger } from '@/core/plugins/logger'
 import apiService from '@/core/services/apiService'
@@ -12,27 +13,30 @@ const serviceName = PACKAGES_STORE
 const api = apiStringify(serviceName)
 
 export const actions: ActionTree<PackagesState, RootState> = {
-  async [type.getProjectPackages]({ commit }, uuid) {
-    commit(type.SET_LOADING, { name: 'loadingPackages', value: true })
+  async [action.getInitialProjectPackages]({ commit, dispatch }, params) {
+    commit(type.SET_LOADING, { name: stateType.loadingPackages, value: true })
 
+    await dispatch(action.getProjectPackages, params)
+
+    commit(type.SET_LOADING, { name: stateType.loadingPackages, value: false })
+  },
+  async [action.getProjectPackages]({ commit }, { params, uuid }) {
     let packages
     try {
       packages = await apiService({
         action: api.projectPackages,
         serviceName,
-        uuid
+        uuid,
+        params
       })
     } catch (e) {
-      commit(type.SET_LOADING, { name: 'loadingPackages', value: false })
-
       logger.error(commit, 'Error on load packages in getProjectPackages action.\nError: ', e)
       return
     }
     commit(type.SET_PROJECT_PACKAGES, packages)
-    commit(type.SET_LOADING, { name: 'loadingPackages', value: false })
   },
 
-  async [type.getTargetPackage]({ commit }, uuid) {
+  async [action.getTargetPackage]({ commit }, uuid) {
     let packageTarget
     try {
       packageTarget = await apiService({
@@ -48,8 +52,8 @@ export const actions: ActionTree<PackagesState, RootState> = {
     return packageTarget.target || ''
   },
 
-  async [type.downloadPackage]({ dispatch, commit }, uuid) {
-    const url = await dispatch(type.getTargetPackage, uuid)
+  async [action.downloadPackage]({ dispatch, commit }, uuid) {
+    const url = await dispatch(action.getTargetPackage, uuid)
 
     let packageSource
     try {
@@ -68,7 +72,7 @@ export const actions: ActionTree<PackagesState, RootState> = {
     return packageSource
   },
 
-  async [type.resetStore]({ commit }) {
+  async [action.resetStore]({ commit }) {
     commit(type.RESET_STORE)
   }
 }

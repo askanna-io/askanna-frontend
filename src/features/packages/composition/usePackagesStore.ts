@@ -1,17 +1,15 @@
 import { useState, useActions } from '@u3u/vue-hooks'
-import { PACKAGES_STORE, getProjectPackages, downloadPackage, resetStore } from '../store/types'
+import { PACKAGES_STORE, action, stateType } from '../store/types'
 
 export default function () {
   const state = {
     ...useState(PACKAGES_STORE, {
-      projectPackages: 'projectPackages',
-      loadingPackages: 'loadingPackages',
-      projectPackageHistory: 'projectPackageHistory'
+      ...stateType
     })
   }
 
   const actions = {
-    ...useActions(PACKAGES_STORE, [getProjectPackages, downloadPackage, resetStore])
+    ...useActions(PACKAGES_STORE, { ...action })
   }
 
   return {
