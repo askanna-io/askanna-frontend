@@ -55,7 +55,6 @@ export default defineComponent({
   },
 
   setup(props, context) {
-    console.log(props.fileSource, props.currentPath)
     const snackBar = useSnackBar()
     const forceFileDownload = useForceFileDownload()
 
