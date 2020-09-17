@@ -13,7 +13,7 @@
           @click:row="handleClickRow"
         >
           <template v-slot:top>
-            <package-toolbar :breadcrumbs="breadcrumbs">
+            <package-toolbar v-sticky="sticked" sticky-offset="{top: 52, bottom: 10}" :breadcrumbs="breadcrumbs">
               <template v-slot:left>
                 <v-tooltip top>
                   <template v-slot:activator="{ on }">
@@ -115,6 +115,7 @@ import useSnackBar from '@/core/components/snackBar/useSnackBar'
 import usePackagesStore from '@packages/composition/usePackagesStore'
 import PackageToolbar from '@/features/package/components/PackageToolbar'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
+import useProjectStore from '@/features/project/composition/useProjectStore'
 import { computed, defineComponent, onBeforeMount } from '@vue/composition-api'
 
 export default defineComponent({
@@ -129,7 +130,12 @@ export default defineComponent({
     const moment = useMoment(context)
     const { width } = useWindowSize()
     const slicedText = useSlicedText()
+    const projectStore = useProjectStore()
     const packagesStore = usePackagesStore(context)
+    const forceFileDownload = useForceFileDownload()
+    const breadcrumbs = useBreadcrumbs(context, { start: 3 })
+
+    const sticked = computed(() => !projectStore.stickedVM.value)
 
     const { projectId: uuid } = context.root.$route.params
 
@@ -148,9 +154,6 @@ export default defineComponent({
       await packagesStore.resetStore()
       await packagesStore.getInitialProjectPackages({ params: { limit: 18, offset: 0 }, uuid })
     })
-
-    const forceFileDownload = useForceFileDownload()
-    const breadcrumbs = useBreadcrumbs(context, { start: 3 })
 
     const sortBy = (a, b) => {
       const nameA = a.name.toUpperCase()
@@ -227,13 +230,14 @@ export default defineComponent({
     return {
       ...moment,
       ...packagesStore,
+      sticked,
+      headers,
       throttle,
       onScroll,
-      headers,
-      slicedText,
-      breadcrumbs,
-      handleCopy,
       maxLength,
+      slicedText,
+      handleCopy,
+      breadcrumbs,
       handleClickRow,
       handleDownload,
       handeBackToPackageRoot,
