@@ -78,5 +78,15 @@ export const mutations: MutationTree<jobRunState> = {
     })
 
     state.artifactData = { ...data, files }
+  },
+
+  [type.mutation.SET_FILE](state, { file, fileSource }) {
+    state.file = file
+    state.fileSource = fileSource
+  },
+
+  [type.mutation.RESET_FILE_FILESOURCE](state) {
+    state.file = ''
+    state.fileSource = new Blob()
   }
 }

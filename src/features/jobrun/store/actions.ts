@@ -2,9 +2,11 @@ import * as type from './types'
 import { ActionTree } from 'vuex'
 import { logger } from '@/core/plugins/logger'
 import apiService from '@/core/services/apiService'
+import * as rootTypes from '@/core/store/actionTypes'
 import { apiStringify } from '@/core/services/api-settings'
 import { jobRunState, JobRun, JOB_RUN_STORE, stateType } from './types'
 
+const root = true
 const serviceName = JOB_RUN_STORE
 const api = apiStringify(serviceName)
 
@@ -186,5 +188,74 @@ export const actions: ActionTree<jobRunState, RootState> = {
 
     commit(type.SET_JOB_RUN_ARTIFACT, { artifactData })
     commit(type.mutation.SET_LOADING, { name: stateType.jobRunArtifactLoading, value: false })
+  },
+
+  async [type.action.getFileSource]({ dispatch, state, commit }, path) {
+    if (!path) return commit(type.mutation.SET_FILE, '')
+    if (!state.artifactData) return commit(type.mutation.SET_FILE, '')
+
+    commit(type.mutation.RESET_FILE_FILESOURCE)
+
+    const url = `${state.artifactData.cdn_base_url}/${path}`
+
+    let fileSource
+    try {
+      fileSource = await dispatch(
+        rootTypes.apiDownloadSerice,
+        {
+          url
+        },
+        { root }
+      )
+    } catch (e) {
+      logger.error(commit, 'Error on load fileSource in getFileSource action.\nError: ', e)
+      return
+    }
+
+    const file = await fileSource.text()
+
+    commit(type.mutation.SET_FILE, { file, fileSource })
+  },
+
+  async [type.action.resetFile]({ commit }) {
+    commit(type.mutation.RESET_FILE_FILESOURCE)
+  },
+
+  async [type.action.downloadPackage]({ dispatch, commit }, uuid) {
+    console.log(uuid)
+    const url = await dispatch(type.action.getTargetPackage, uuid)
+    console.log(url)
+
+    let packageSource
+    /* try {
+      packageSource = await dispatch(
+        rootTypes.apiDownloadSerice,
+        {
+          url
+        },
+        { root }
+      )
+    } catch (e) {
+      logger.error(commit, 'Error on load packageSource in downloadPackage action.\nError: ', e)
+      return
+    } */
+
+    return packageSource
+  },
+
+  async [type.action.getTargetPackage]({ commit }, uuid) {
+    let packageTarget
+    try {
+      packageTarget = await apiService({
+        action: api.getDownloadLink,
+        serviceName,
+        uuid
+      })
+    } catch (e) {
+      logger.error(commit, 'Error on load packageTarget in getTargetPackage action.\nError: ', e)
+      return ''
+    }
+
+    return packageTarget.target || ''
   }
 }

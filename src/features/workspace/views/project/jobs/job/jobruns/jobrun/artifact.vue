@@ -71,12 +71,12 @@ export default defineComponent({
 
     const file = ref(packageStore.file)
     const {
-      workspaceId,
-      projectId,
-      jobRunId,
       jobId,
-      packageId = 'new-package',
-      folderName = ''
+      jobRunId,
+      projectId,
+      workspaceId,
+      folderName = '',
+      packageId = 'new-package'
     } = context.root.$route.params
 
     const sticked = computed(() => !projectStore.stickedVM.value)
@@ -90,7 +90,6 @@ export default defineComponent({
       }
 
       jobRunStore.getInitialJobRunArtifact({
-        params: { path: 'models' },
         uuid: {
           jobRunShortId: jobRunId,
           artifactShortId: jobRunStore.jobRun.value.artifact.short_uuid
@@ -130,8 +129,8 @@ export default defineComponent({
       const path = currentPath && !currentPath.is_dir && currentPath.name !== '' ? currentPath.path : ''
 
       if (prevPath && path !== '' && path === prevPath.path) return
-
-      await packageStore.getFileSource(path)
+      console.log(path)
+      await jobRunStore.getFileSource(path)
     })
 
     const handleClickOnRow = async item => {
@@ -154,9 +153,17 @@ export default defineComponent({
     const handleDownload = async () => {
       const artifactData = jobRunStore.artifactData.value
       const source = await jobRunStore.downloadPackage({
-        projectId: jobRunStore.project,
-        packageId: jobRunStore.short_uuid
+        jobRunShortId: jobRunId,
+        artifactShortId: jobRunStore.jobRun.value.artifact.short_uuid
       })
+
+      /*  const link = document.createElement('a')
+
+      link.href =
+        'https://cdn-api.askanna.eu/files/artifacts/2cb35943475c4b0da943a59ca38d638e/c1ff6ad482224d778f845cb4f5870f70/7cbff44595ad49b3a658c600255b9f50/artifact_4446ea43a9ab43a48626e25f0418c6c2.zip'
+      link.setAttribute('download', `test`)
+      document.body.appendChild(link)
+      link.click() */
       forceFileDownload.trigger({ source, name: artifactData.filename })
     }
 

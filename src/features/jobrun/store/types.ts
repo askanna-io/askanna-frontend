@@ -75,13 +75,17 @@ export const JOB_RUN_STORE = 'jobrun'
 
 // actions
 export const action = {
+  resetFile: 'resetFile',
   getJobRun: 'getJobRun',
   setLoading: 'setLoading',
   resetStore: 'resetStore',
   getRunsJob: 'getRunsJob',
   getJobRunLog: 'getJobRunLog',
+  getFileSource: 'getFileSource',
   resetJobRunLog: 'resetJobRunLog',
+  downloadPackage: 'downloadPackage',
   getJobRunResult: 'getJobRunResult',
+  getTargetPackage: 'getTargetPackage',
   getInitJobRunLog: 'getInitJobRunLog',
   getJobRunPayload: 'getJobRunPayload',
   showJobRunResult: 'showJobRunResult',
@@ -93,11 +97,13 @@ export const action = {
 
 // mutations
 export const mutation = {
+  SET_FILE: 'SET_FILE',
   SET_LOADING: 'SET_LOADING',
   SET_RESULT_MODAL: 'SET_RESULT_MODAL',
   RESET_JOB_RUN_LOG: 'RESET_JOB_RUN_LOG',
   CLOSE_RESULT_MODAL: 'CLOSE_RESULT_MODAL',
-  UPDATE_JOB_RUN_STORE: 'UPDATE_JOB_RUN_STORE'
+  UPDATE_JOB_RUN_STORE: 'UPDATE_JOB_RUN_STORE',
+  RESET_FILE_FILESOURCE: 'RESET_FILE_FILESOURCE'
 }
 
 //mutations
