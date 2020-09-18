@@ -222,9 +222,7 @@ export const actions: ActionTree<jobRunState, RootState> = {
   },
 
   async [type.action.downloadPackage]({ dispatch, commit }, uuid) {
-    console.log(uuid)
     const url = await dispatch(type.action.getTargetPackage, uuid)
-    console.log(url)
 
     let packageSource
     /* try {

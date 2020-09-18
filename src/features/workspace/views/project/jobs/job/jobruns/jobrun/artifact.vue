@@ -129,7 +129,6 @@ export default defineComponent({
       const path = currentPath && !currentPath.is_dir && currentPath.name !== '' ? currentPath.path : ''
 
       if (prevPath && path !== '' && path === prevPath.path) return
-      console.log(path)
       await jobRunStore.getFileSource(path)
     })
 
