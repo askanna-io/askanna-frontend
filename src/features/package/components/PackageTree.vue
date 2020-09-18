@@ -17,15 +17,19 @@
       </v-icon>
     </template>
     <template v-slot:item.last_modified="{ item }">
-      {{ $moment(item.last_modified).format(' Do MMMM YYYY, h:mm:ss a') }}
+      {{ item.last_modified && $moment(item.last_modified).format(' Do MMMM YYYY, h:mm:ss a') }}
+    </template>
+    <template v-slot:item.size="{ item }">
+      {{ humanizeSize(item.size) }}
     </template>
   </v-data-table>
 </template>
 
 <script>
 import { headers, FileIcons } from '../utils/index'
-import { defineComponent } from '@vue/composition-api'
 import useMoment from '@/core/composition/useMoment'
+import { defineComponent } from '@vue/composition-api'
+import useSizeHumanize from '@/core/composition/useSizeHumanize'
 
 export default defineComponent({
   name: 'PackageTree',
@@ -43,10 +47,13 @@ export default defineComponent({
 
   setup(props, context) {
     const moment = useMoment(context)
+    const sizeHumanize = useSizeHumanize()
+
     const clickOnRow = item => context.emit('clickOnRow', item)
 
     return {
       ...moment,
+      ...sizeHumanize,
       headers,
       FileIcons,
       clickOnRow
