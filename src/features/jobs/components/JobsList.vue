@@ -87,7 +87,7 @@ export default defineComponent({
     const calcSubHeight = computed(() => {
       const rowHeight = 64
       const countItems = jobRunStore.runs.value.length
-      const subRowHeiht = countItems >= 5 ? 368 : countItems * rowHeight + 70
+      const subRowHeiht = countItems >= 5 ? 280 : countItems * rowHeight + 70
 
       return subRowHeiht
     })
