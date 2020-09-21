@@ -65,6 +65,7 @@ import ConfirmDialog from './ConfirmDialog.vue'
 import UploadProcessDialod from './UploadProcessDialod.vue'
 
 import Resumablejs from '@/core/plugins/resumable.js'
+import { apiUrl } from '@/core/services/api-settings'
 import useUploadStatus from '@/core/components/uploadStatus/useUploadStatus'
 import usePackageStore from '@/features/package/composition/usePackageStore'
 import useProjectStore from '@/features/project/composition/useProjectStore'
@@ -199,7 +200,7 @@ export default defineComponent({
     const getTarget = async () => {
       const { uuid } = currentChunkData.value
       const { short_uuid } = currentPackageData.value
-      const url = `https://api.askanna.eu/v1/package/${short_uuid}/packagechunk/${uuid}/chunk/`
+      const url = `${apiUrl}/v1/package/${short_uuid}/packagechunk/${uuid}/chunk/`
 
       return url
     }
