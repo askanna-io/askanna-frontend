@@ -17,6 +17,7 @@
         </v-btn>
       </v-toolbar>
       <package-file-image v-if="isFileImg" :fileSource="fileSource" />
+      <package-notebook v-else-if="isIpynb" :file="file" :fileSource="fileSource" />
       <prism-editor v-else :code="fileComputed" language="js" readonly line-numbers />
     </v-col>
   </v-row>
@@ -24,6 +25,7 @@
 
 <script>
 import PrismEditor from 'vue-prism-editor'
+import PackageNotebook from './PackageNotebook'
 import PackageFileImage from './PackageFileImage'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
 import { defineComponent, watch, computed } from '@vue/composition-api'
@@ -34,6 +36,7 @@ export default defineComponent({
 
   components: {
     PrismEditor,
+    PackageNotebook,
     PackageFileImage
   },
 
@@ -73,11 +76,13 @@ export default defineComponent({
     }
 
     const imgExts = ['jpg', 'png', 'gif']
+    const isIpynb = computed(() => props.currentPath.ext === 'ipynb')
     const isFileImg = computed(() => imgExts.includes(props.currentPath.ext))
 
     const handleDownload = () => forceFileDownload.trigger({ source: props.fileSource, name: props.currentPath.name })
 
     return {
+      isIpynb,
       isFileImg,
       handleBack,
       handleCopy,

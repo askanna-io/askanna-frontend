@@ -31,7 +31,8 @@
               </v-btn>
             </template>
             <span>Download <i>askanna.yml</i></span>
-          </v-tooltip> and use this <span class="font-italic">askanna.yml</span> file.
+          </v-tooltip>
+          and use this <span class="font-italic">askanna.yml</span> file.
         </p>
         <p>
           <ask-anna-copy-text :text="projectUrl" />
