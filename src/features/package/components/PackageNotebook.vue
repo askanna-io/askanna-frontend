@@ -132,7 +132,7 @@ export default defineComponent({
   content: 'Out [' attr(data-prompt-number) ']:';
 }
 
-div[style='max-height:1000px;max-width:1500px;overflow:auto;'] {
+.nb-notebook div[style='max-height:1000px;max-width:1500px;overflow:auto;'] {
   max-height: none !important;
 }
 
@@ -1043,8 +1043,8 @@ div[style='max-height:1000px;max-width:1500px;overflow:auto;'] {
   text-align: left;
   padding-left: 2em;
 }
-code[class*='language-'],
-pre[class*='language-'] {
+.nb-notebook code[class*='language-'],
+.nb-notebook pre[class*='language-'] {
   color: #000;
   background: 0 0;
   text-shadow: 0 1px #fff;
@@ -1064,99 +1064,99 @@ pre[class*='language-'] {
   -ms-hyphens: none;
   hyphens: none;
 }
-code[class*='language-'] ::-moz-selection,
-code[class*='language-']::-moz-selection,
-pre[class*='language-'] ::-moz-selection,
-pre[class*='language-']::-moz-selection {
+.nb-notebook code[class*='language-'] ::-moz-selection,
+.nb-notebook code[class*='language-']::-moz-selection,
+.nb-notebook pre[class*='language-'] ::-moz-selection,
+.nb-notebook pre[class*='language-']::-moz-selection {
   text-shadow: none;
   background: #b3d4fc;
 }
-code[class*='language-'] ::selection,
-code[class*='language-']::selection,
-pre[class*='language-'] ::selection,
-pre[class*='language-']::selection {
+.nb-notebook code[class*='language-'] ::selection,
+.nb-notebook code[class*='language-']::selection,
+.nb-notebook pre[class*='language-'] ::selection,
+.nb-notebook pre[class*='language-']::selection {
   text-shadow: none;
   background: #b3d4fc;
 }
 @media print {
-  code[class*='language-'],
-  pre[class*='language-'] {
+  .nb-notebook code[class*='language-'],
+  .nb-notebook pre[class*='language-'] {
     text-shadow: none;
   }
 }
-pre[class*='language-'] {
+.nb-notebook pre[class*='language-'] {
   padding: 1em;
   margin: 0.5em 0;
   overflow: auto;
 }
-:not(pre) > code[class*='language-'],
-pre[class*='language-'] {
+.nb-notebook :not(pre) > code[class*='language-'],
+.nb-notebook pre[class*='language-'] {
   background: #f5f2f0;
 }
-:not(pre) > code[class*='language-'] {
+.nb-notebook:not(pre) > code[class*='language-'] {
   padding: 0.1em;
   border-radius: 0.3em;
   white-space: normal;
 }
-.token.cdata,
-.token.comment,
-.token.doctype,
-.token.prolog {
+.nb-notebook .token.cdata,
+.nb-notebook .token.comment,
+.nb-notebook .token.doctype,
+.nb-notebook .token.prolog {
   color: #708090;
 }
-.token.punctuation {
+.nb-notebook .token.punctuation {
   color: #999;
 }
-.token.namespace {
+.nb-notebook .token.namespace {
   opacity: 0.7;
 }
-.token.boolean,
-.token.constant,
-.token.deleted,
-.token.number,
-.token.property,
-.token.symbol,
-.token.tag {
+.nb-notebook .token.boolean,
+.nb-notebook .token.constant,
+.nb-notebook .token.deleted,
+.nb-notebook .token.number,
+.nb-notebook .token.property,
+.nb-notebook .token.symbol,
+.nb-notebook .token.tag {
   color: #905;
 }
-.token.attr-name,
-.token.builtin,
-.token.char,
-.token.inserted,
-.token.selector,
-.token.string {
+.nb-notebook .token.attr-name,
+.nb-notebook .token.builtin,
+.nb-notebook .token.char,
+.nb-notebook .token.inserted,
+.nb-notebook .token.selector,
+.nb-notebook .token.string {
   color: #690;
 }
-.language-css .token.string,
-.style .token.string,
-.token.entity,
-.token.operator,
-.token.url {
+.nb-notebook .language-css .token.string,
+.nb-notebook .style .token.string,
+.nb-notebook .token.entity,
+.nb-notebook .token.operator,
+.nb-notebook .token.url {
   color: #9a6e3a;
   background: hsla(0, 0%, 100%, 0.5);
 }
-.token.atrule,
-.token.attr-value,
-.token.keyword {
+.nb-notebook .token.atrule,
+.nb-notebook .token.attr-value,
+.nb-notebook .token.keyword {
   color: #07a;
 }
-.token.class-name,
-.token.function {
+.nb-notebook .token.class-name,
+.nb-notebook .token.function {
   color: #dd4a68;
 }
-.token.important,
-.token.regex,
-.token.variable {
+.nb-notebook .token.important,
+.nb-notebook .token.regex,
+.nb-notebook .token.variable {
   color: #e90;
 }
-.token.bold,
-.token.important {
+.nb-notebook .token.bold,
+.nb-notebook .token.important {
   font-weight: 700;
 }
-.token.italic {
+.nb-notebook .token.italic {
   font-style: italic;
 }
-.token.entity {
+.nb-notebook .token.entity {
   cursor: help;
 }
 </style>
