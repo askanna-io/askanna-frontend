@@ -7,7 +7,7 @@
       params: {
         title: `${project.name} - ${workspaceName}`,
         projectId: project.short_uuid,
-        packageId: project.lastPackage.short_uuid
+        packageId: (project.package && project.package.short_uuid) || 'new-package'
       }
     }"
   >

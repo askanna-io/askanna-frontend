@@ -10,11 +10,11 @@ export const mutations: MutationTree<workspaceState> = {
   [mutation.SET_WORKSPACES](state, data) {
     state.workspaces = data
   },
-  [mutation.SET_WORKSPACE_PROJECTS](state, { count, results: list, next }) {
+  [mutation.SET_WORKSPACE_PROJECTS](state, { count, results, next }) {
     state.workspaceProjects = {
-      next,
-      count,
-      results: [...state.workspaceProjects.results, ...list]
+      next: next || state.workspaceProjects.next,
+      count: count || state.workspaceProjects.count,
+      results: [...state.workspaceProjects.results, ...results]
     }
   },
   [mutation.SET_LOADING](state, { name, value }) {

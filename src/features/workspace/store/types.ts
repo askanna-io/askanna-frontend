@@ -50,7 +50,6 @@ export const action = {
   getWorkspaces: 'getWorkspaces',
   changeSettings: 'changeSettings',
   getWorkpaceProjects: 'getWorkpaceProjects',
-  getLastProjectPackage: 'getLastProjectPackage',
   getInitialWorkpaceProjects: 'getInitialWorkpaceProjects'
 }
 
