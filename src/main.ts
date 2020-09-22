@@ -13,6 +13,27 @@ import vuetify from '@/core/plugins/vuetify'
 import 'vue-file-agent/dist/vue-file-agent.css'
 import VueCompositionApi from '@vue/composition-api'
 
+import * as Sentry from '@sentry/browser'
+import { Integrations } from '@sentry/tracing'
+import { Vue as VueIntegration } from '@sentry/integrations'
+
+if (process.env.VUE_APP_SENTRY === 'on') {
+  const rate: number = parseFloat(<string>process.env.VUE_APP_SENTRY_TRACES_RATE || '0')
+
+  Sentry.init({
+    dsn: 'https://c3668b20284540cb91541549285dcc94@o451235.ingest.sentry.io/5436959',
+    environment: process.env.VUE_APP_SENTRY_ENV,
+    integrations: [
+      new VueIntegration({
+        Vue,
+        tracing: true
+      }),
+      new Integrations.BrowserTracing()
+    ],
+    tracesSampleRate: rate
+  })
+}
+
 import VueKinesis from 'vue-kinesis'
 
 Vue.use(VueKinesis)
