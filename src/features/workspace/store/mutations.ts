@@ -12,8 +12,8 @@ export const mutations: MutationTree<workspaceState> = {
   },
   [mutation.SET_WORKSPACE_PROJECTS](state, { count, results, next }) {
     state.workspaceProjects = {
-      next,
-      count,
+      next: next || state.workspaceProjects.next,
+      count: count || state.workspaceProjects.count,
       results: [...state.workspaceProjects.results, ...results]
     }
   },

@@ -19,7 +19,8 @@ export const actions: ActionTree<PackageState, RootState> = {
       packageData = await apiService({
         action: api.get,
         serviceName,
-        uuid
+        uuid,
+        params: { limit: 1, offset: 0 }
       })
     } catch (e) {
       if (e.response && e.response.status === 500) {
