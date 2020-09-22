@@ -28,6 +28,7 @@
     </v-menu>
     <v-menu
       v-model="filterMenu"
+      transition="slide-y-transition"
       :close-on-content-click="false"
       :nudge-width="200"
       :nudge-height="300"
