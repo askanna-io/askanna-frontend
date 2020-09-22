@@ -12,6 +12,9 @@
   },
   "dependencies": {
     "@babel/polyfill": "7.8.7",
+    "@sentry/browser": "^5.24.2",
+    "@sentry/integrations": "^5.24.2",
+    "@sentry/tracing": "^5.24.2",
     "@types/lodash": "4.14.150",
     "@types/prismjs": "1.16.0",
     "@u3u/vue-hooks": "2.0.1",
