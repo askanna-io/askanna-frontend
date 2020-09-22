@@ -8,12 +8,12 @@
               <template v-slot:activator="{ on }">
                 <div v-on="on">
                   <a v-if="currentPath" @click="handeBackToPackageRoot" class="text-body-2"
-                    >Artifact #{{ packageId.slice(0, 4) }}<v-icon small>mdi-chevron-right</v-icon></a
+                    >Artifact #{{ artifactUuid.slice(0, 4) }}<v-icon small>mdi-chevron-right</v-icon></a
                   >
-                  <span class="text-body-2" v-else> Artifact #{{ packageId.slice(0, 4) }}</span>
+                  <span class="text-body-2" v-else> Artifact #{{ artifactUuid.slice(0, 4) }}</span>
                 </div>
               </template>
-              <span>{{ packageId }}</span>
+              <span>{{ artifactUuid }}</span>
             </v-tooltip>
           </template>
           <template v-slot:rigth>
@@ -47,7 +47,6 @@ import PackageToolbar from '@/features/package/components/PackageToolbar'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
 import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
 import usePackageStore from '@/features/package/composition/usePackageStore'
-
 import usePackagesStore from '@/features/packages/composition/usePackagesStore'
 import { ref, watch, onBeforeMount, onUnmounted, computed } from '@vue/composition-api'
 
@@ -99,6 +98,7 @@ export default defineComponent({
 
     const calcHeight = computed(() => height.value - 370)
     const path = computed(() => context.root.$route.params.folderName || '/')
+    const artifactUuid = computed(() => jobRunStore.jobRun.value.artifact.short_uuid)
 
     const currentPath = computed(() => {
       const pathArray = path.value.split('/')
@@ -179,7 +179,7 @@ export default defineComponent({
       fileSource: packageStore.fileSource,
       jobRunArtifactLoading: jobRunStore.jobRunArtifactLoading,
       treeView,
-      packageId,
+      artifactUuid,
       FileIcons,
       calcHeight,
       breadcrumbs,
