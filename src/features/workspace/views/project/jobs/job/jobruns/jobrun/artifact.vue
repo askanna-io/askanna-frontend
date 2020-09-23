@@ -37,11 +37,11 @@
 <script>
 import { useWindowSize } from '@u3u/vue-hooks'
 import { defineComponent } from '@vue/composition-api'
-import PackageFile from '@package/components/PackageFile'
 import PackageTree from '@package/components/PackageTree'
 import { headers, FileIcons } from '@package/utils/index'
 import usePackages from '@packages/composition/usePackages'
 import useProjectStore from '@project/composition/useProjectStore'
+import PackageFile from '@/features/package/components/PackageFile'
 import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
 import PackageToolbar from '@/features/package/components/PackageToolbar'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
@@ -68,7 +68,7 @@ export default defineComponent({
     const forceFileDownload = useForceFileDownload()
     const breadcrumbs = usePackageBreadcrumbs(context, { start: 8, end: 9 })
 
-    const file = ref(packageStore.file)
+    const file = ref(jobRunStore.file)
     const {
       jobId,
       jobRunId,
@@ -175,8 +175,8 @@ export default defineComponent({
 
     return {
       sticked,
-      file: packageStore.file,
-      fileSource: packageStore.fileSource,
+      file: jobRunStore.file,
+      fileSource: jobRunStore.fileSource,
       jobRunArtifactLoading: jobRunStore.jobRunArtifactLoading,
       treeView,
       artifactUuid,

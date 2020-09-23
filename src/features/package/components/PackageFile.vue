@@ -49,7 +49,18 @@ export default defineComponent({
     },
     currentPath: {
       type: Object,
-      default: () => {}
+      default: () => {
+        return {
+          ext: '',
+          is_dir: true,
+          last_modified: '',
+          name: '',
+          parent: '/',
+          path: '',
+          size: 0,
+          type: ''
+        }
+      }
     },
     sticked: {
       type: Boolean,

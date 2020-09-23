@@ -167,6 +167,11 @@ export class JobRunModel {
         uuid: '',
         short_uuid: ''
       },
+      artifact: {
+        name: '',
+        uuid: '',
+        short_uuid: ''
+      },
       runner: {
         cpu_cores: 0,
         cpu_time: 0,

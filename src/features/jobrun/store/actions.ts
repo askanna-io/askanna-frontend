@@ -217,7 +217,7 @@ export const actions: ActionTree<jobRunState, RootState> = {
     const url = await dispatch(type.action.getTargetPackage, uuid)
 
     let packageSource
-    /* try {
+    try {
       packageSource = await dispatch(
         rootTypes.apiDownloadSerice,
         {
@@ -228,7 +228,7 @@ export const actions: ActionTree<jobRunState, RootState> = {
     } catch (e) {
       logger.error(commit, 'Error on load packageSource in downloadPackage action.\nError: ', e)
       return
-    } */
+    }
 
     return packageSource
   },
