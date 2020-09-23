@@ -161,7 +161,7 @@ export const actions: ActionTree<jobState, RootState> = {
         uuid: job.short_uuid,
         data: {
           name: job.name,
-          title: job.title,
+          title: job.title || 'job title',
           description: job.description
         }
       })

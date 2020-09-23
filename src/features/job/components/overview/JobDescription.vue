@@ -165,8 +165,8 @@
       <v-btn v-if="editable" small outlined color="primary" @click="handleSave">
         <v-icon left dark>mdi-content-save</v-icon>Save
       </v-btn>
-      <v-btn v-if="editable" small outlined color="secondary" @click="handleClear">
-        <v-icon left dark>mdi-delete-forever-outline</v-icon>Clear
+      <v-btn v-if="editable" small outlined color="secondary" class="mr-1 btn--hover" @click="handleCancel">
+        <v-icon color="secondary" left>mdi-close</v-icon>Cancel
       </v-btn>
       <v-btn v-if="!editable" small outlined color="primary" @click="handleEdit">
         <v-icon left dark>mdi-file-edit-outline</v-icon>Edit
@@ -176,10 +176,11 @@
 </template>
 
 <script>
-import { Editor, EditorContent, EditorMenuBar } from 'tiptap'
-import javascript from 'highlight.js/lib/languages/javascript'
 import css from 'highlight.js/lib/languages/css'
 import python from 'highlight.js/lib/languages/python'
+import javascript from 'highlight.js/lib/languages/javascript'
+import { Editor, EditorContent, EditorMenuBar } from 'tiptap'
+import { ref, watch, onBeforeMount, onUnmounted, computed, defineComponent } from '@vue/composition-api'
 import {
   Blockquote,
   CodeBlock,
@@ -201,7 +202,7 @@ import {
   CodeBlockHighlight
 } from 'tiptap-extensions'
 
-export default {
+export default defineComponent({
   props: {
     description: {
       type: String,
@@ -212,8 +213,10 @@ export default {
     EditorContent,
     EditorMenuBar
   },
+
   data() {
     return {
+      currentDescriptionValue: '',
       toggle_multiple: [],
       editable: false,
       editor: new Editor({
@@ -255,6 +258,9 @@ export default {
       this.editor.setContent(val)
     },
     editable() {
+      if (this.editable) {
+        this.currentDescriptionValue = this.editor.getHTML()
+      }
       this.editor.setOptions({
         editable: this.editable
       })
@@ -271,8 +277,9 @@ export default {
       this.editable = !this.editable
     },
 
-    handleClear() {
-      this.editor.clearContent()
+    handleCancel() {
+      this.editor.setContent(this.currentDescriptionValue)
+      this.editable = !this.editable
     },
 
     handleEdit() {
@@ -280,7 +287,7 @@ export default {
       this.editor.focus()
     }
   }
-}
+})
 </script>
 <style lang="scss">
 .ProseMirror:focus {
