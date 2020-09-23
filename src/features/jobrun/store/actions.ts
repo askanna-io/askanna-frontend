@@ -56,15 +56,7 @@ export const actions: ActionTree<jobRunState, RootState> = {
       return
     }
 
-    commit(type.SET_JOB_RUN, {
-      ...jobRun,
-      package: {
-        short_uuid: '1KKO-yZH0-mM0Z-Sn87',
-        size: 1294,
-        title: 'Archive2.zip',
-        uuid: '2ba15727-ed61-4dc1-a160-944b7b9b765f'
-      }
-    })
+    commit(type.SET_JOB_RUN, jobRun)
     commit(type.mutation.SET_LOADING, { name: stateType.jobRunLoading, value: false })
   },
 

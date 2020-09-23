@@ -1,5 +1,5 @@
 <template>
-  <ask-anna-loading-progress :loading="packageLoading">
+  <ask-anna-loading-progress :loading="packageLoading && !isProcessing">
     <v-row align="center" justify="center">
       <v-col cols="12" class="pt-0 pb-0">
         <package-toolbar :breadcrumbs="breadcrumbs" v-sticky="sticked" sticky-offset="{top: 52, bottom: 10}">
@@ -84,16 +84,26 @@ export default defineComponent({
     const file = ref(packageStore.file)
     const { workspaceId, projectId, jobId, jobRunId, folderName = '' } = context.root.$route.params
 
-    const packageId = jobRunStore.jobRun.value.package.short_uuid
+    const packageId = computed(() => jobRunStore.jobRun.value.package.short_uuid)
 
     const sticked = computed(() => !projectStore.stickedVM.value)
 
     onBeforeMount(async () => {
+      const { jobRunId } = context.root.$route.params
+
+      if (jobRunStore.jobRun.value.short_uuid !== jobRunId) {
+        await jobRunStore.resetStore()
+        await jobRunStore.getJobRun(jobRunId)
+      }
+      const packageId = jobRunStore.jobRun.value.package.short_uuid
+
       if (packageId === 'new-package') {
         return
       }
       await getPackage()
-      pollData()
+      if (isProcessing.value) {
+        pollData()
+      }
     })
 
     onUnmounted(() => {
@@ -103,7 +113,7 @@ export default defineComponent({
     const getPackage = async () =>
       await packageStore.getPackage({
         projectId,
-        packageId,
+        packageId: jobRunStore.jobRun.value.package.short_uuid,
         folderName
       })
 
