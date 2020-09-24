@@ -1,5 +1,5 @@
 import { MutationTree } from 'vuex'
-import { File, JobRunModel, jobRunState } from './types'
+import { File, JobRunModel, jobRunState, ArtifactModel } from './types'
 import * as type from './types'
 import { set } from 'lodash'
 
@@ -42,6 +42,15 @@ export const mutations: MutationTree<jobRunState> = {
     state.resultLoading = true
     state.payLoadLoading = true
     state.jobRun = new JobRunModel().state
+
+    state.jobRunLog = {
+      count: 0,
+      next: null,
+      results: []
+    }
+    state.jobRunLogFullVersion = []
+    state.artifactData = new ArtifactModel().state
+    ;(state.file = ''), (state.fileSource = new Blob())
   },
 
   [type.mutation.SET_LOADING](state, { name, value }) {
