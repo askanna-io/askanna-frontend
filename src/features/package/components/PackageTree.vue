@@ -22,6 +22,9 @@
     <template v-slot:item.size="{ item }">
       {{ humanizeSize(item.size) }}
     </template>
+    <template v-slot:no-data>
+      {{ noDataAvailable }}
+    </template>
   </v-data-table>
 </template>
 
@@ -42,6 +45,10 @@ export default defineComponent({
     height: {
       type: Number,
       default: 300
+    },
+    noDataAvailable: {
+      type: String,
+      default: () => 'No data available'
     }
   },
 

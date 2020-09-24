@@ -2,7 +2,12 @@
   <ask-anna-loading-progress :loading="jobRunArtifactLoading">
     <v-row align="center" justify="center">
       <v-col cols="12" class="pt-0 pb-0">
-        <package-toolbar :breadcrumbs="breadcrumbs" v-sticky="sticked" sticky-offset="{top: 52, bottom: 10}">
+        <package-toolbar
+          v-if="artifactUuid"
+          :breadcrumbs="breadcrumbs"
+          v-sticky="sticked"
+          sticky-offset="{top: 52, bottom: 10}"
+        >
           <template v-slot:left>
             <v-tooltip top>
               <template v-slot:activator="{ on }">
@@ -28,7 +33,13 @@
         </package-toolbar>
 
         <package-file v-if="file" :file="file" :fileSource="fileSource" :currentPath="currentPath" :sticked="sticked" />
-        <package-tree v-else :items="treeView" :height="calcHeight" @clickOnRow="handleClickOnRow" />
+        <package-tree
+          v-else
+          :items="treeView"
+          :height="calcHeight"
+          :noDataAvailable="'There is no artifact available for this run.'"
+          @clickOnRow="handleClickOnRow"
+        />
       </v-col>
     </v-row>
   </ask-anna-loading-progress>
@@ -37,9 +48,9 @@
 <script>
 import { useWindowSize } from '@u3u/vue-hooks'
 import { defineComponent } from '@vue/composition-api'
-import PackageTree from '@package/components/PackageTree'
 import { headers, FileIcons } from '@package/utils/index'
-import usePackages from '@packages/composition/usePackages'
+import PackageTree from '@/features/package/components/PackageTree'
+import usePackages from '@/features/packages/composition/usePackages'
 import useProjectStore from '@project/composition/useProjectStore'
 import PackageFile from '@/features/package/components/PackageFile'
 import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
@@ -87,7 +98,6 @@ export default defineComponent({
         await jobRunStore.resetStore()
         await jobRunStore.getJobRun(jobRunId)
       }
-
       jobRunStore.getInitialJobRunArtifact({
         uuid: {
           jobRunShortId: jobRunId,

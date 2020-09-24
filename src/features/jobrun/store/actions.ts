@@ -154,15 +154,16 @@ export const actions: ActionTree<jobRunState, RootState> = {
   },
 
   async [type.action.getInitialJobRunArtifact]({ commit, dispatch }, data) {
-    commit(type.mutation.SET_LOADING, { name: stateType.jobRunArtifactLoading, value: true })
-
     await dispatch(type.action.getJobRunArtifact, data)
-
-    commit(type.mutation.SET_LOADING, { name: stateType.jobRunArtifactLoading, value: false })
   },
 
   async [type.action.getJobRunArtifact]({ commit }, { uuid, params }) {
     commit(type.mutation.SET_LOADING, { name: stateType.jobRunArtifactLoading, value: true })
+
+    if (!uuid.jobRunShortId || !uuid.artifactShortId) {
+      commit(type.mutation.SET_LOADING, { name: stateType.jobRunArtifactLoading, value: false })
+      return
+    }
 
     let artifactData = {}
     try {
@@ -174,6 +175,7 @@ export const actions: ActionTree<jobRunState, RootState> = {
       })
     } catch (e) {
       logger.error(commit, 'Error on artifactData  in getJobRunArtifact action.\nError: ', e)
+      commit(type.mutation.SET_LOADING, { name: stateType.jobRunArtifactLoading, value: false })
 
       return
     }
