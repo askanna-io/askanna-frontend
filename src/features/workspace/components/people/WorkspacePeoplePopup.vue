@@ -1,6 +1,6 @@
 <template>
   <v-row justify="center">
-    <v-dialog v-model="openVmodel" max-width="400px">
+    <v-dialog v-model="openVmodel" max-width="400px" origin>
       <v-card class="text-center position">
         <v-container pa-0 class="avatar--wrapper">
           <v-row>
@@ -32,7 +32,7 @@
           </v-container>
         </v-card-text>
         <v-divider />
-        <v-card-actions>
+        <v-card-actions v-if="isNotBeta">
           <v-row class="mx-2">
             <v-col class="text-center" cols="12">
               <div>
