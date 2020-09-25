@@ -47,8 +47,8 @@
         height="94"
         type="list-item-two-line"
       >
-        <the-highlight :value="logs" v-scroll:#scroll-target="throttle(onScroll, 1500)" />
-        <v-alert v-if="logNoAvailable" class="my-2" dense outlined color="grey">
+        <the-highlight v-if="!logNoAvailable" :value="logs" v-scroll:#scroll-target="throttle(onScroll, 1500)" />
+        <v-alert v-else class="my-2" dense outlined color="grey">
           No log entries are available for this job run.
         </v-alert>
       </ask-anna-loading-progress>
@@ -131,7 +131,7 @@ export default defineComponent({
       return { 'max-height': `${maxHeight.value}px` }
     })
     const loading = computed(() => jobRunStore.jobRunlogLoading.value)
-    const logNoAvailable = computed(() => jobRunStore.jobRunLog.value.results === null && !loading.value)
+    const logNoAvailable = computed(() => !jobRunStore.jobRunLog.value.results.length && !loading.value)
 
     const handleCopy = async () => {
       await getFullJobRun()
