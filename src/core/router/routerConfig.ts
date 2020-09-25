@@ -2,6 +2,10 @@ const routerConfig: RouterConfig = {
   login: {
     layout: 'login',
     isShowSecondNavBar: false
+  },
+  join: {
+    layout: 'login',
+    isShowSecondNavBar: false
   }
 }
 
