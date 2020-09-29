@@ -19,9 +19,9 @@
 
 <script>
 import useJobStore from '@job/composition/useJobStore'
-import JobRunning from '@job/components/overview/JobRunning'
 import JobDefinition from '@job/components/overview/JobDefinition'
 import JobDescription from '@job/components/overview/JobDescription'
+import JobRunning from '@/features/job/components/overview/JobRunning'
 import useProjectStore from '@/features/project/composition/useProjectStore'
 
 import { onBeforeMount, defineComponent, onBeforeDestroy } from '@vue/composition-api'

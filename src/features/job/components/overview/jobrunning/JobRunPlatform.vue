@@ -1,11 +1,8 @@
 <template>
   <v-container class="ma-0" fluid>
     <v-row>
-      <v-col cols="12" sm="6">
-        <v-textarea dense hide-details no-resize filled rows="6" outlined label="Input" value="" />
-      </v-col>
-      <v-col cols="12" sm="6">
-        <v-textarea dense hide-details no-resize filled rows="6" outlined label="Response" value="" />
+      <v-col cols="12">
+        <ask-anna-code :code="code" :title="'JSON data'" @onInput="handleOnInput($event, 'code')" />
       </v-col>
     </v-row>
     <v-row>
@@ -33,20 +30,35 @@
 </template>
 
 <script>
-import { defineComponent } from '@vue/composition-api'
-
+import { ref, defineComponent } from '@vue/composition-api'
 import useJobStore from '@job/composition/useJobStore'
+import AskAnnaCode from '@/core/components/shared/AskAnnaCode'
 
 export default defineComponent({
-  name: 'JobRunPortal',
+  name: 'JobRunPlatform',
+
+  components: {
+    AskAnnaCode
+  },
 
   setup(props, context) {
     const jobStore = useJobStore()
+
+    const code = ref(`{
+    "parameter": "test",
+    "data": {
+        "foo": "bar",
+        "bar": "foo"
+    }
+}`)
     const { jobId } = context.root.$route.params
 
+    const handleOnInput = value => (code.value = value)
     return {
+      code,
       ...jobStore,
-      jobId
+      jobId,
+      handleOnInput
     }
   }
 })
