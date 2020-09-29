@@ -55,9 +55,9 @@ import useProjectStore from '@project/composition/useProjectStore'
 import PackageFile from '@/features/package/components/PackageFile'
 import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
 import PackageToolbar from '@/features/package/components/PackageToolbar'
-import useForceFileDownload from '@/core/composition/useForceFileDownload'
 import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
 import usePackageStore from '@/features/package/composition/usePackageStore'
+import useTriggerFileDownload from '@/core/composition/useTriggerFileDownload'
 import usePackagesStore from '@/features/packages/composition/usePackagesStore'
 import { ref, watch, onBeforeMount, onUnmounted, computed } from '@vue/composition-api'
 
@@ -76,7 +76,7 @@ export default defineComponent({
     const projectStore = useProjectStore()
     const packageStore = usePackageStore()
 
-    const forceFileDownload = useForceFileDownload()
+    const triggerFileDownload = useTriggerFileDownload()
     const breadcrumbs = usePackageBreadcrumbs(context, { start: 8, end: 9 })
 
     const file = ref(jobRunStore.file)
@@ -161,19 +161,12 @@ export default defineComponent({
 
     const handleDownload = async () => {
       const artifactData = jobRunStore.artifactData.value
-      const source = await jobRunStore.downloadPackage({
+      const url = await jobRunStore.downloadPackage({
         jobRunShortId: jobRunId,
         artifactShortId: jobRunStore.jobRun.value.artifact.short_uuid
       })
 
-      /*  const link = document.createElement('a')
-
-      link.href =
-        'https://cdn-api.askanna.eu/files/artifacts/2cb35943475c4b0da943a59ca38d638e/c1ff6ad482224d778f845cb4f5870f70/7cbff44595ad49b3a658c600255b9f50/artifact_4446ea43a9ab43a48626e25f0418c6c2.zip'
-      link.setAttribute('download', `test`)
-      document.body.appendChild(link)
-      link.click() */
-      forceFileDownload.trigger({ source, name: artifactData.filename })
+      triggerFileDownload.trigger({ url, name: artifactData.filename })
     }
 
     const handeBackToPackageRoot = () => {
