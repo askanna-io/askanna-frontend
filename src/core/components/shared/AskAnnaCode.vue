@@ -1,6 +1,8 @@
 <template>
   <v-textarea
     :error-messages="jsonerror"
+    clearable
+    no-resize
     ref="textArea"
     rows="7"
     outlined
@@ -12,9 +14,8 @@
 </template>
 
 <script>
-import { ref, computed, defineComponent } from '@vue/composition-api'
-
 import TheHighlight from '@/core/components/highlight/TheHighlight'
+import { ref, computed, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'AskAnnaCode',
@@ -56,6 +57,8 @@ export default defineComponent({
         isJsonValid.value = false
         jsonerror.value = JSON.stringify(e.message)
       }
+      console.log('emit')
+      context.emit('validete', jsonerror.value)
     }
 
     const handleOnBlur = () => {

@@ -47,6 +47,7 @@
 
 <script>
 import JobRunCurl from './jobrunning/JobRunCurl'
+import JobRunPython from './jobrunning/JobRunPython'
 import JobRunPlatform from './jobrunning/JobRunPlatform'
 import { ref, defineComponent } from '@vue/composition-api'
 
@@ -55,6 +56,7 @@ export default defineComponent({
 
   components: {
     JobRunCurl,
+    JobRunPython,
     JobRunPlatform
   },
 
@@ -80,7 +82,7 @@ export default defineComponent({
       {
         id: 2,
         name: 'Python',
-        component: 'JobRunCurl',
+        component: 'JobRunPython',
         to: 'workspace-project-job-runnig-python',
         show: !context.root.isNotBeta
       }
