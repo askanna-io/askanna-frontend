@@ -2,12 +2,20 @@
   <v-row justify="center">
     <v-dialog v-model="openVmodel" max-width="400px" origin>
       <v-card class="text-center position">
+        <v-app-bar flat dense white--text color="white">
+          <v-spacer></v-spacer>
+
+          <v-btn icon @click="openVmodel = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </v-app-bar>
+
         <v-container pa-0 class="avatar--wrapper">
           <v-row>
-            <v-col class="pt-2 pb-0" cols="12" align-self="start">
-              <v-avatar rounded="21" :size="people.avatar ? 150 : 50" tile>
+            <v-col class="pt-0 pb-0" cols="12" align-self="start">
+              <v-avatar rounded="21" :size="people.avatar ? 150 : 150" tile>
                 <v-img v-if="people.avatar" class="img--rounded" :src="people.avatar" />
-                <v-icon v-else size="55">mdi-account-outline</v-icon>
+                <v-img v-else class="img--rounded" src="@/assets/icons/ask-annna-default-gravatar.png" />
               </v-avatar>
             </v-col>
             <v-col :class="[people.avatar ? 'pt-1' : 'pt-0']">
@@ -48,10 +56,6 @@
               </div>
             </v-col>
           </v-row>
-        </v-card-actions>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="openVmodel = false">Close</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -105,8 +109,6 @@ export default defineComponent({
 })
 </script>
 <style scoped>
-.avatar--wrapper {
-}
 .role {
   white-space: nowrap;
   display: inline-block;

@@ -4,13 +4,13 @@
       <v-col cols="2">
         <v-avatar class="pl-1" size="70" tile>
           <v-img v-if="people.avatar" class="img--rounded" :src="people.avatar" />
-          <v-icon v-else size="55">mdi-account-outline</v-icon>
+          <v-img v-else class="img--rounded" src="@/assets/icons/ask-annna-default-gravatar.png" />
         </v-avatar>
       </v-col>
       <v-col class="ml-3" cols="9" align-self="start">
         <v-list-item color="rgba(0, 0, 0, .4)">
           <v-list-item-content>
-            <v-list-item-title class="title">{{ people.name }}</v-list-item-title>
+            <v-list-item-title class="people-title">{{ people.name }}</v-list-item-title>
             <v-list-item-subtitle>{{ people.job_title }}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
@@ -64,5 +64,8 @@ export default defineComponent({
   min-height: 82px;
   max-height: 86px;
   overflow: hidden;
+}
+.people-title {
+  font-weight: 300px;
 }
 </style>
