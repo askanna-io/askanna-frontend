@@ -1,13 +1,12 @@
 <template>
-  <v-container class="ma-0" fluid>
+  <v-container class="ma-0 ml-1" fluid>
     <v-row>
-      <v-col cols="6">
+      <v-col cols="6" class="pt-0">
         <ask-anna-code
           :code="code"
           :title="'JSON data'"
           @validete="handleValidate"
           @onInput="handleOnInput($event, 'code')"
-          @
         />
       </v-col>
     </v-row>
@@ -22,11 +21,13 @@
       <v-col cols="12" sm="6">
         <p>
           You have successfully started the job run. The current status is:
-          <ask-anna-chip-status :status="jobRunStatus" /> (({{ startedTtext }} {{ calculateDuration }} ago)
+          <ask-anna-chip-status :status="jobRunStatus" /><span class="pl-2"
+            >The run {{ startedTtext }} {{ calculateDuration }} ago.</span
+          >
         </p>
 
         <v-btn small outlined color="secondary" class="mr-1 btn--hover" @click="hadnleOpenJobRun">
-          <v-icon color="secondary" left>mdi-link</v-icon>Open the job run
+          <v-icon color="secondary" left>mdi-link</v-icon>Open the run
         </v-btn>
       </v-col>
     </v-row>
@@ -53,12 +54,12 @@ export default defineComponent({
     jobStore.resetJobRun()
 
     const code = ref(`{
-        "parameter": "test",
-        "data": {
-            "foo": "bar",
-            "bar": "foo"
-        }
-    }`)
+    "parameter": "test",
+    "data": {
+        "foo": "bar",
+        "bar": "foo"
+    }
+}`)
     const timer = ref(null)
     const isValid = ref(false)
     const polling = ref(null)
@@ -93,7 +94,10 @@ export default defineComponent({
       })
     }
 
-    const calculateDuration = computed(() => moment.duratioHumanize(jobRun.value.created, startTime.value))
+    const calculateDuration = computed(() => {
+      const endTime = isFinished.value ? jobRun.value.updated : startTime.value
+      return moment.duratioHumanize(jobRun.value.created, endTime)
+    })
 
     const checkStatus = () => {
       polling.value = setInterval(async () => {
