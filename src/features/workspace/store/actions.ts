@@ -1,4 +1,3 @@
-import { delay, map } from 'lodash'
 import { ActionTree } from 'vuex'
 import { logger } from '@/core/plugins/logger'
 import apiService from '@/core/services/apiService'
@@ -51,7 +50,7 @@ export const actions: ActionTree<workspaceState, RootState> = {
 
     await dispatch(action.getWorkpaceProjects, data)
 
-    delay(() => commit(mutation.SET_LOADING, { name: stateType.workspaceProjectsLoading, value: false }), 350, 'later')
+    commit(mutation.SET_LOADING, { name: stateType.workspaceProjectsLoading, value: false })
   },
 
   async [action.getWorkpaceProjects]({ commit, dispatch, state }, { params }) {
@@ -82,5 +81,39 @@ export const actions: ActionTree<workspaceState, RootState> = {
 
   async [action.reset]({ commit }) {
     commit(mutation.RESET)
+  },
+
+  async [action.getInitialWorkpacePeople]({ commit, dispatch }, data) {
+    commit(mutation.SET_LOADING, { name: stateType.workspacePeopleLoading, value: true })
+
+    await dispatch(action.getWorkspacePeople, data)
+
+    commit(mutation.SET_LOADING, { name: stateType.workspacePeopleLoading, value: false })
+  },
+  async [action.getWorkspacePeople]({ commit, state }, { workspaceId, params }) {
+    commit(mutation.SET_LOADING, { name: stateType.workspacePeopleLoading, value: true })
+
+    let people = []
+    params = { ...params, ...state.workspacePeopleParams }
+    try {
+      people = await apiService({
+        action: api.getWorkspacePeople,
+        serviceName,
+        uuid: workspaceId,
+        params
+      })
+    } catch (error) {
+      logger.error(commit, 'Error on load people in getWorkspacePeople action.\nError: ', error)
+
+      return
+    }
+    const peopleMutation = params.offset === 0 ? mutation.SET_WORKSPACE_PEOPLE_INITIAL : mutation.SET_WORKSPACE_PEOPLE
+
+    commit(peopleMutation, people)
+    commit(mutation.SET_LOADING, { name: stateType.workspacePeopleLoading, value: false })
+  },
+
+  async [action.setWorkspaceParams]({ commit }, data) {
+    commit(mutation.SET_WORKSPACE_PARAMS, data)
   }
 }

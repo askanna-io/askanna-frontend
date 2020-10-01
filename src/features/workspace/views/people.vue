@@ -1,37 +1,42 @@
 <template>
   <div>
-    <workspace-project-list
+    <workspace-people-list
       v-scroll="throttle(onScroll, 1000)"
       :loading="loading"
       :settings="workspaceSettings"
+      :workspaceUuid="workspace.uuid"
       :workspaceName="workspace.title"
-      :items="workspaceProjects.results"
+      :items="workspacePeople.results"
     />
-
-    <ask-anna-divider v-if="isNotBeta" text="Latest Activity" />
-    <ask-anna-time-lines v-if="isNotBeta" text="Latest Activity" />
   </div>
 </template>
 <script>
 import { throttle } from 'lodash'
 import useQuery from '@/core/composition/useQuery'
-import { computed, defineComponent } from '@vue/composition-api'
+import { computed, onBeforeMount, defineComponent } from '@vue/composition-api'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
-import WorkspaceProjectList from '@/features/workspace/components/WorkspaceProjectList.vue'
+import WorkspacePeopleList from '@/features/workspace/components/people/WorkspacePeopleList.vue'
 
 export default defineComponent({
   name: 'workspace',
 
-  components: { WorkspaceProjectList },
+  components: { WorkspacePeopleList },
 
   setup(props, context) {
     const workspaceStore = useWorkspaceStore()
+    const { workspaceId } = context.root.$route.params
+
+    onBeforeMount(async () => {
+      await workspaceStore.getInitialWorkpacePeople({ workspaceId, params: { limit: 18, offset: 0 } })
+    })
+
     const query = useQuery({
-      offset: 18,
       limit: 18,
+      offset: 18,
+      uuid: workspaceId,
       store: workspaceStore,
-      action: 'getWorkpaceProjects',
-      queryPath: 'workspaceProjects'
+      action: 'getWorkspacePeople',
+      queryPath: 'workspacePeople'
     })
 
     const onScroll = e => query.onScroll(e.target.documentElement.scrollTop)
@@ -40,8 +45,8 @@ export default defineComponent({
       throttle,
       onScroll,
       workspace: workspaceStore.workspace,
-      loading: workspaceStore.workspaceProjectsLoading,
-      workspaceProjects: workspaceStore.workspaceProjects,
+      loading: workspaceStore.workspacePeopleLoading,
+      workspacePeople: workspaceStore.workspacePeople,
       workspaceSettings: workspaceStore.workspaceSettings
     }
   }

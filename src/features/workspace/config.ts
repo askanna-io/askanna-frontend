@@ -179,6 +179,14 @@ export default {
           }
         },
         {
+          path: 'people',
+          component: () => import(/* webpackChunkName: "workspace-people" */ './views/people.vue'),
+          name: 'workspace-people',
+          meta: {
+            breadcrumb: 'Peoplet - #:workspaceId'
+          }
+        },
+        {
           path: 'new-project',
           component: () => import(/* webpackChunkName: "workspace-new-project" */ './views/new-project.vue'),
           name: 'workspace-new-project',

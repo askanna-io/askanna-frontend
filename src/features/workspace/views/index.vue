@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import useWorkspaceStore from '../composition/useWorkSpaceStore'
+import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 import { computed, reactive, onBeforeMount, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
@@ -20,6 +20,7 @@ export default defineComponent({
       if (workspaceId === 'workspace') {
         workspaceId = workspaceStore.workspaces.value.results[0].short_uuid
         context.root.$router.push({ path: `/${workspaceId}` })
+
         return
       }
 
