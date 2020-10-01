@@ -6,7 +6,7 @@
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
 
-        <div>{{ currentPath.name }} {{ currentPath.size }} Bytes</div>
+        <div>{{ currentPath.name }} {{ humanizeSize(currentPath.size) }}</div>
 
         <v-spacer></v-spacer>
         <v-btn small outlined color="secondary" class="mr-1 btn--hover" @click="handleDownload">
@@ -28,6 +28,7 @@ import PrismEditor from 'vue-prism-editor'
 import PackageNotebook from './PackageNotebook'
 import PackageFileImage from './PackageFileImage'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
+import useSizeHumanize from '@/core/composition/useSizeHumanize'
 import { defineComponent, watch, computed } from '@vue/composition-api'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
 
@@ -59,6 +60,7 @@ export default defineComponent({
 
   setup(props, context) {
     const snackBar = useSnackBar()
+    const sizeHumanize = useSizeHumanize()
     const forceFileDownload = useForceFileDownload()
 
     const fileComputed = computed(() => props.file)
@@ -82,6 +84,7 @@ export default defineComponent({
     const handleDownload = () => forceFileDownload.trigger({ source: props.fileSource, name: props.currentPath.name })
 
     return {
+      ...sizeHumanize,
       isIpynb,
       isFileImg,
       handleBack,
