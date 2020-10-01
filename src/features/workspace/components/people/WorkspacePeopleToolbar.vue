@@ -41,8 +41,8 @@
         </v-btn>
       </template>
       <v-row class="pa-2 white">
-        <v-col class="d-flex pt-1" cols="12">
-          <v-card flat width="280">
+        <v-col class="d-flex pt-1 pb-1" cols="12">
+          <v-card flat width="284">
             <v-card-subtitle class="pa-0">
               <h3>Account types</h3>
             </v-card-subtitle>
