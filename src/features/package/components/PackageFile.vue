@@ -6,7 +6,9 @@
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
 
-        <div>{{ currentPath.name }} {{ humanizeSize(currentPath.size) }}</div>
+        <div>
+          {{ currentPath.name }}<span class="pl-3">({{ `${humanizeSize(currentPath.size)}` }})</span>
+        </div>
 
         <v-spacer></v-spacer>
         <v-btn small outlined color="secondary" class="mr-1 btn--hover" @click="handleDownload">
