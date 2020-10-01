@@ -44,7 +44,7 @@ export default defineComponent({
     const { jobId } = context.root.$route.params
     const pythonCode = `import requests
 
-url = "${apiUrl}/v1/run/${jobId}/'"
+url = "${apiUrl}/v1/run/${jobId}/"
 headers = {'Authorization': "Token ${authStore.authToken.value}"}
 data={
         "parameter": "test",
@@ -52,7 +52,7 @@ data={
             "foo": "bar",
             "bar": "foo"
         }
-    }
+     }
 
 response = requests.post(url,
     headers=headers,
