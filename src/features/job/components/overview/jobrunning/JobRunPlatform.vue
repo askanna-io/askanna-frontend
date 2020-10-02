@@ -21,9 +21,7 @@
       <v-col cols="12" sm="6">
         <p>
           You have successfully started the job run. The current status is:
-          <ask-anna-chip-status :status="jobRunStatus" /><span class="pl-2"
-            >The run {{ startedTtext }} {{ calculateDuration }} ago.</span
-          >
+          <ask-anna-chip-status :status="jobRunStatus" /><br />{{ startedTtext }}
         </p>
 
         <v-btn small outlined color="secondary" class="mr-1 btn--hover" @click="hadnleOpenJobRun">
@@ -71,12 +69,16 @@ export default defineComponent({
     const jobRunId = computed(() => jobStore.jobrun.value.run_uuid)
     const jobRunStatus = computed(() => jobStore.jobrun.value.status)
     const isFinished = computed(() => jobRunStatus.value === 'failed' || jobRunStatus.value === 'completed')
-    const startedTtext = computed(() => (isFinished.value ? 'finished' : 'started'))
+    const startedTtext = computed(() =>
+      isFinished.value
+        ? `The duration of the run was ${calculateDuration.value}.`
+        : `The run started ${calculateDuration.value} ago.`
+    )
 
     const handleOnInput = value => (code.value = value)
 
     const handleRunJob = async () => {
-      if (isValid.value) return
+      if (code.value && isValid.value) return
 
       await jobStore.startJob(code.value)
       checkStatus()

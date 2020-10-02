@@ -31,6 +31,9 @@ export const actions: ActionTree<jobState, RootState> = {
       jobRun = await apiService({
         action: api.start,
         method: 'post',
+        headers: {
+          'Content-Type': 'application/json'
+        },
         serviceName,
         uuid: state.job.short_uuid,
         data
