@@ -11,7 +11,7 @@ const jobRun = [
 
     component: () =>
       import(
-        /* webpackChunkName: "workspace-project-uuid-jobs-name-run" */ './views/project/jobs/job/jobruns/jobrun/index.vue'
+        /* webpackChunkName: "workspace-project-uuid-jobs-name-run" */ './views/project/jobs/job/jobruns/jobrun/input.vue'
       ),
 
     children: [
