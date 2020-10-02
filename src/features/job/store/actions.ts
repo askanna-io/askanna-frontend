@@ -25,14 +25,18 @@ export const actions: ActionTree<jobState, RootState> = {
     commit(type.SET_JOB, job)
   },
 
-  async [type.startJob]({ commit }, uuid) {
-    let job
+  async [type.startJob]({ commit, state, dispatch }, data) {
+    let jobRun
     try {
-      job = await apiService({
+      jobRun = await apiService({
         action: api.start,
         method: 'post',
+        headers: {
+          'Content-Type': 'application/json'
+        },
         serviceName,
-        uuid
+        uuid: state.job.short_uuid,
+        data
       })
     } catch (e) {
       logger.error(commit, 'Error on start job  in startJob action.\nError: ', e)
@@ -40,13 +44,31 @@ export const actions: ActionTree<jobState, RootState> = {
     }
     logger.success(commit, 'Job was started')
 
-    commit(type.UPDATE_JOB, job)
+    //  const status = await dispatch(type.action.getJobRunStatus, jobRun.run_uuid)
+
+    commit(type.mutation.SET_JOB_RUN, jobRun)
+  },
+
+  async [type.action.getJobRunStatus]({ commit, state }, uuid) {
+    let status
+    try {
+      status = await apiService({
+        action: api.jobrunStatus,
+        serviceName,
+        uuid: state.jobrun.run_uuid || state.jobrun.jobrun_uuid
+      })
+    } catch (e) {
+      logger.error(commit, 'Error on getjob run status in getJobRunStatus action.\nError: ', e)
+      return
+    }
+
+    commit(type.mutation.SET_JOB_RUN, status)
   },
 
   async [type.action.stopJob]({ commit }, id) {
-    let job
+    let jobRun
     try {
-      job = await apiService({
+      jobRun = await apiService({
         action: api.stop,
         method: 'post',
         serviceName,
@@ -58,7 +80,7 @@ export const actions: ActionTree<jobState, RootState> = {
       return
     }
     logger.userDanger(commit, 'Job was stoped')
-    commit(type.UPDATE_JOB, job)
+    commit(type.mutation.SET_JOB_RUN, jobRun)
   },
 
   async [type.action.pauseJob]({ commit }, id) {
@@ -175,6 +197,10 @@ export const actions: ActionTree<jobState, RootState> = {
 
   async [type.action.resetStore]({ commit }) {
     commit(type.mutation.RESET_JOB_STORE)
+  },
+
+  async [type.action.resetJobRun]({ commit }) {
+    commit(type.mutation.RESET_JOB_RUN)
   },
 
   async [type.action.changeJob]({ commit }, data) {
