@@ -26,7 +26,7 @@
             @focus="handleOnFocus"
             rows="7"
             ref="textArea"
-          ></textarea>
+          />
         </div>
         <div class="v-input__append-inner">
           <div class="v-input__icon v-input__icon--clear">
@@ -82,6 +82,13 @@ export default defineComponent({
     })
 
     const validateJson = val => {
+      if (!val) {
+        isJsonValid.value = true
+        jsonerror.value = ''
+        context.emit('validete', jsonerror.value)
+
+        return
+      }
       let jsonValue = null
 
       try {
