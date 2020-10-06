@@ -22,7 +22,14 @@
         </v-card>
       </v-slide-y-transition>
     </div>
-
+    <v-breadcrumbs v-if="!sticked" :items="breadcrumbs" class="">
+      <template v-slot:item="{ item }">
+        <v-breadcrumbs-item :to="item.to" exact>
+          {{ item.title }}
+        </v-breadcrumbs-item>
+      </template>
+    </v-breadcrumbs>
+    <v-divider />
     <v-card flat>
       <v-card-title v-if="!sticked">
         <span class="title font-weight-light">Job run: #{{ jobRunId }}</span>
