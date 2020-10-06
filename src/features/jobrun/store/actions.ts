@@ -120,9 +120,7 @@ export const actions: ActionTree<jobRunState, RootState> = {
         params
       })
     } catch (e) {
-      logger.error(commit, 'Error on jobrun log  in getJobRunLog action.\nError: ', e)
-
-      return
+      logger.error(commit, 'Error on jobrun log in getJobRunLog action.\nError: ', e)
     }
     commit(type.SET_JOB_RUN_LOG, jobRunLog)
   },

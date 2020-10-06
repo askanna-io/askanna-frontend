@@ -3,6 +3,17 @@ export interface jobState extends jobData {}
 export interface jobData {
   job: Job
   result: string
+  jobrun: JobRun
+}
+
+interface JobRun {
+  created: string
+  message_type: string
+  next_url: string
+  run_uuid: string
+  jobrun_uuid: string
+  status: string
+  updated: string
 }
 
 interface Job {
@@ -33,12 +44,16 @@ export const action = {
   resultJob: 'resultJob',
   changeJob: 'changeJob',
   resetStore: 'resetStore',
-  getJobInfo: 'getJobInfo'
+  getJobInfo: 'getJobInfo',
+  resetJobRun: 'resetJobRun',
+  getJobRunStatus: 'getJobRunStatus'
 }
 
 // mutations
 export const mutation = {
   CHANGE_JOB: 'CHANGE_JOB',
+  SET_JOB_RUN: 'SET_JOB_RUN',
+  RESET_JOB_RUN: 'RESET_JOB_RUN',
   RESET_JOB_STORE: 'RESET_JOB_STORE',
   SET_RESULT_MODAL: 'SET_RESULT_MODAL',
   UPDATE_JOB_RESULT: 'UPDATE_JOB_RESULT',
@@ -81,6 +96,30 @@ export class JobModel {
       modified: '',
       short_uuid: '',
       description: ''
+    }
+  }
+}
+
+export class JobRunModel {
+  private _state: JobRun
+
+  constructor() {
+    this._state = JobRunModel.initialState()
+  }
+
+  get state() {
+    return this._state
+  }
+
+  static initialState() {
+    return {
+      created: '',
+      message_type: '',
+      next_url: '',
+      run_uuid: '',
+      jobrun_uuid: '',
+      status: '',
+      updated: ''
     }
   }
 }

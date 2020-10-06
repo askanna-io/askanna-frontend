@@ -8,6 +8,7 @@ const jobRun = [
   {
     path: ':jobRunId',
     name: 'workspace-project-jobs-job-jobrun',
+    redirect: { name: 'workspace-project-jobs-job-jobrun-input' },
 
     component: () =>
       import(

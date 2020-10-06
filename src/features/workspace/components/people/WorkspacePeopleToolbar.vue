@@ -41,16 +41,22 @@
         </v-btn>
       </template>
       <v-row class="pa-2 white">
-        <v-col class="d-flex" cols="12">
-          <v-select
-            v-model="activeFilter"
-            :items="filters"
-            item-text="name"
-            item-value="value"
-            label="account type"
-            no-data-text=""
-            dense
-          />
+        <v-col class="d-flex pt-1 pb-1" cols="12">
+          <v-card flat width="284">
+            <v-card-subtitle class="pa-0">
+              <h3>Account types</h3>
+            </v-card-subtitle>
+            <v-select
+              hide-details
+              v-model="activeFilter"
+              :items="filters"
+              item-text="name"
+              item-value="value"
+              no-data-text=""
+              class="pt-0"
+            >
+            </v-select>
+          </v-card>
         </v-col>
       </v-row>
     </v-menu>
@@ -84,8 +90,8 @@ export default defineComponent({
     const filterMenu = ref(false)
 
     const sortItems = [
-      { title: 'A-Z', value: 'user__name' },
-      { title: 'Z-A', value: '-user__name' }
+      { title: 'A to Z', value: 'user__name' },
+      { title: 'Z to A', value: '-user__name' }
     ]
     const { workspaceId } = context.root.$route.params
 
@@ -121,3 +127,8 @@ export default defineComponent({
   }
 })
 </script>
+<style scoped>
+.filter-label {
+  font-size: 16px;
+}
+</style>

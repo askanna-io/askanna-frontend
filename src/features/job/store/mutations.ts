@@ -1,10 +1,14 @@
 import * as type from './types'
 import { MutationTree } from 'vuex'
-import { jobState, JobModel } from './types'
+import { jobState, JobModel, JobRunModel } from './types'
 
 export const mutations: MutationTree<jobState> = {
   [type.SET_JOB](state, data) {
     state.job = data
+  },
+
+  [type.mutation.SET_JOB_RUN](state, data) {
+    state.jobrun = { ...state.jobrun, ...data }
   },
 
   [type.UPDATE_JOB](state, params) {
@@ -14,5 +18,9 @@ export const mutations: MutationTree<jobState> = {
   [type.mutation.RESET_JOB_STORE](state) {
     state.result = ''
     state.job = new JobModel().state
+  },
+
+  [type.mutation.RESET_JOB_RUN](state) {
+    state.jobrun = new JobRunModel().state
   }
 }

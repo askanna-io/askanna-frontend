@@ -3,7 +3,7 @@ import { Commit } from 'vuex'
 
 const LOGGER = {
   consoleLog: true,
-  snackBar: true, //process.env.NODE_ENV !== 'production',
+  snackBar: false, //process.env.NODE_ENV !== 'production',
   development: true,
   production: false
 }

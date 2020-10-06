@@ -46,8 +46,9 @@
 </template>
 
 <script>
-import JobRunPortal from './jobrunning/JobRunPortal'
 import JobRunCurl from './jobrunning/JobRunCurl'
+import JobRunPython from './jobrunning/JobRunPython'
+import JobRunPlatform from './jobrunning/JobRunPlatform'
 import { ref, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
@@ -55,7 +56,8 @@ export default defineComponent({
 
   components: {
     JobRunCurl,
-    JobRunPortal
+    JobRunPython,
+    JobRunPlatform
   },
 
   setup(rops, context) {
@@ -65,16 +67,23 @@ export default defineComponent({
     const tabs = [
       {
         id: 0,
-        name: 'Portal',
-        component: 'JobRunPortal',
-        to: 'workspace-project-job-runnig-portal',
-        show: context.root.isNotBeta
+        name: 'Platform',
+        component: 'JobRunPlatform',
+        to: 'workspace-project-job-runnig-platform',
+        show: !context.root.isNotBeta
       },
       {
         id: 1,
         name: 'Curl',
         component: 'JobRunCurl',
         to: 'workspace-project-job-runnig-curl',
+        show: !context.root.isNotBeta
+      },
+      {
+        id: 2,
+        name: 'Python',
+        component: 'JobRunPython',
+        to: 'workspace-project-job-runnig-python',
         show: !context.root.isNotBeta
       }
     ]

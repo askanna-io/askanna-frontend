@@ -25,8 +25,10 @@ export default defineComponent({
       FAILURE: 'error',
       FAILED: 'error',
       IN_PROGRESS: 'yellow darken-2',
+      RUNNING: 'yellow darken-2',
       SUBMITTED: 'amber lighten-1',
-      PENDING: 'blue lighten-3'
+      PENDING: 'blue lighten-3',
+      QUEUED: 'blue lighten-3'
     }
     const ICONS = {
       UNDEFINED: 'mdi-do-not-disturb',
@@ -35,8 +37,10 @@ export default defineComponent({
       SUCCESS: 'mdi-checkbox-marked-circle',
       COMPLETED: 'mdi-checkbox-marked-circle',
       PENDING: 'mdi-progress-clock',
+      QUEUED: 'mdi-progress-clock',
       SUBMITTED: 'mdi-progress-check',
-      IN_PROGRESS: 'mdi-progress-clock'
+      IN_PROGRESS: 'mdi-progress-clock',
+      RUNNING: 'mdi-progress-clock'
     }
     const TEXTS = {
       SUCCESS: 'Succeeded',
@@ -45,10 +49,12 @@ export default defineComponent({
       FAILURE: 'Failure',
       FAILED: 'Failure',
       PENDING: 'Pending',
+      QUEUED: 'Pending',
       SUBMITTED: 'Submitted',
-      IN_PROGRESS: 'In progress'
+      IN_PROGRESS: 'In progress',
+      RUNNING: 'In progress'
     }
-    const status = computed(() => (props.status ? props.status : 'UNDEFINED'))
+    const status = computed(() => (props.status ? props.status.toUpperCase() : 'UNDEFINED'))
 
     const statusIcon = computed(() => ICONS[status.value])
     const statusColor = computed(() => COLORS[status.value])

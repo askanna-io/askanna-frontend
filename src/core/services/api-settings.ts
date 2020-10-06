@@ -72,11 +72,12 @@ export const api: ApiSettings = {
       kill: id => `job/${id}/kill/`,
       pause: id => `job/${id}/pause/`,
       reset: id => `job/${id}/reset/`,
-      start: id => `job/${id}/start/`,
+      start: id => `run/${id}/`,
       stop: id => `job/${id}/stop/`,
       result: id => `job/${id}/result/`,
       runs: id => `job/${id}/runs/`,
       getJobRun: id => `jobrun/${id}/`,
+      jobrunStatus: id => `status/${id}/`,
       getJobRunPayload: ({ jobRunShortId, payloadUuid }) => `jobrun/${jobRunShortId}/payload/${payloadUuid}/`
     },
     jobrun: {
