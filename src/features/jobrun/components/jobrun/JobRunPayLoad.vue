@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import PrismEditor from 'vue-prism-editor'
+import { PrismEditor } from 'vue-prism-editor'
 import { reactive, computed, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({

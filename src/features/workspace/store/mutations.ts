@@ -45,5 +45,13 @@ export const mutations: MutationTree<workspaceState> = {
   },
   [mutation.SET_WORKSPACE_PARAMS](state, { path, value }) {
     set(state, path, value)
+  },
+
+  [mutation.UPDATE_WORKSPACE_PEOPLE](state, data) {
+    state.workspacePeople = {
+      next: state.workspacePeople.next,
+      count: state.workspacePeople.count + 1,
+      results: state.workspacePeople.results.concat(data)
+    }
   }
 }

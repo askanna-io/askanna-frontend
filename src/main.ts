@@ -40,7 +40,7 @@ Vue.use(VueKinesis)
 
 import 'prismjs'
 import 'prismjs/themes/prism-tomorrow.css'
-import 'vue-prism-editor/dist/VuePrismEditor.css'
+import 'vue-prism-editor/dist/prismeditor.min.css'
 Vue.use(VueClipboard)
 Vue.use(VueFileAgent)
 // register globally
@@ -54,6 +54,11 @@ Vue.config.productionTip = false
 
 //check if the current user is authenticated
 router.beforeEach((to, _, next) => {
+  if (to.name === 'join') {
+    next()
+
+    return
+  }
   const token = window.localStorage.getItem('token')
   const backAfterUrl = window.localStorage.getItem('back_after_login')
 

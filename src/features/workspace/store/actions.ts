@@ -1,3 +1,4 @@
+import { map } from 'lodash'
 import { ActionTree } from 'vuex'
 import { logger } from '@/core/plugins/logger'
 import apiService from '@/core/services/apiService'
@@ -115,5 +116,59 @@ export const actions: ActionTree<workspaceState, RootState> = {
 
   async [action.setWorkspaceParams]({ commit }, data) {
     commit(mutation.SET_WORKSPACE_PARAMS, data)
+  },
+
+  async [action.sendInvitations]({ state, commit, dispatch }, data) {
+    const result = await Promise.all(
+      map(data, async item => {
+        const people = await dispatch(action.sendInviteEmail, {
+          ...item,
+          object_uuid: state.workspace.uuid
+        })
+        console.log(people)
+        return people.short_uuid && people
+      })
+    )
+    commit(mutation.UPDATE_WORKSPACE_PEOPLE, result)
+    logger.success(commit, 'Invites were sent')
+  },
+
+  async [action.sendInviteEmail]({ state, commit }, data) {
+    let response
+    try {
+      response = await apiService({
+        action: api.invitePeople,
+        method: 'post',
+        uuid: state.workspace.short_uuid,
+        serviceName,
+        data
+      })
+    } catch (e) {
+      logger.error(commit, 'Error on upload package in registerPackage action.\nError: ', e)
+    }
+
+    return response
+  },
+
+  async [action.acceptInvitetion]({ state, commit }, { token, peopleId, workspaceId }) {
+    let response
+
+    const data = {
+      status: 'accepted',
+      token
+    }
+    try {
+      response = await apiService({
+        action: api.acceptInvitetion,
+        method: 'PATCH',
+        uuid: { workspaceId, peopleId },
+        serviceName,
+        data
+      })
+    } catch (e) {
+      logger.error(commit, 'Error on upload package in registerPackage action.\nError: ', e)
+    }
+
+    return response
   }
 }

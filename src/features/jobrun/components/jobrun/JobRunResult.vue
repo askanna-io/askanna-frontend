@@ -80,7 +80,7 @@
   </div>
 </template>
 <script>
-import PrismEditor from 'vue-prism-editor'
+import { PrismEditor } from 'vue-prism-editor'
 import { JobRun } from '../../store/types'
 import { useWindowSize } from '@u3u/vue-hooks'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'

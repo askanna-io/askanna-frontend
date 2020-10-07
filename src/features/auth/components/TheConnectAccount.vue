@@ -1,72 +1,116 @@
 <template>
-  <v-form ref="loginForm" v-model="isFormValid" lazy-validation @keyup.native.enter="handleLogin" @submit="handleLogin">
-    <v-text-field dense outlined label="Username" validate-on-blur v-model="formData.username" />
-    <v-text-field
-      dense
-      outlined
-      v-model="formData.password"
-      validate-on-blur
-      :type="isShowPassword ? 'text' : 'password'"
-      name="input-10-1"
-      label="Password"
-      counter
-      @click:append="isShowPassword = !isShowPassword"
-    />
-    <input type="password" style="display: none;" browserAutocomplete="new-password" autocomplete="new-password" />
-    <v-btn :disabled="!isFormValid" color="primary" class="mr-4" @click="handleLogin">
-      Sign in, connect and join
-    </v-btn>
-  </v-form>
+  <div>
+    <v-form
+      v-if="!isSuccesLogedIn"
+      ref="loginFormRef"
+      v-model="isFormValid"
+      lazy-validation
+      @keyup.native.enter="handleLogin"
+      @submit.stop="handleLogin"
+    >
+      <v-text-field v-model="username" dense outlined validate-on-blur autocomplete="off" label="Username" required />
+      <v-text-field
+        dense
+        outlined
+        v-model="password"
+        :append-icon="isShowPassword ? 'far fa-eye' : 'fas fa-eye-slash'"
+        :type="isShowPassword ? 'text' : 'password'"
+        name="input-10-1"
+        label="Password"
+        counter
+        @click:append="isShowPassword = !isShowPassword"
+      />
+      <input type="password" style="display: none;" browserAutocomplete="new-password" autocomplete="new-password" />
+      <v-btn :disabled="!isFormValid" color="primary" class="mr-4" @click.stop="handleLogin">
+        Sign in, connect and join
+      </v-btn>
+      <v-checkbox v-if="isNotBeta" dense label="Remember me" />
+    </v-form>
+  </div>
 </template>
 
 <script>
-import { defineComponent } from '@vue/composition-api'
+// :rules="[RULES.min('Must be at least 3 characters long', 3), RULES.required('Username is required')]"
 import useAuthStore from '../composition/useAuthStore'
+import useValidationRules from '@/core/composition/useValidationRules'
+import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
+import { ref, reactive, computed, defineComponent, onMounted, toRefs } from '@vue/composition-api'
 
 export default defineComponent({
-  name: 'TheConnectAccount',
-
-  data: () => ({
-    formData: {
-      password: '',
-      username: ''
-    },
-    isFormValid: false,
-    isShowPassword: false
-  }),
+  name: 'TheSignIn',
 
   setup(rops, context) {
     const authStore = useAuthStore()
+    const workspaceStore = useWorkspaceStore()
 
-    return {
-      ...authStore
-    }
-  },
+    const RULES = useValidationRules()
+    const { token } = context.root.$route.params
+    const { peopleId, workspaceId } = context.root.$route.query
 
-  methods: {
-    async handleLogin() {
-      if (!this.$refs.loginForm.validate()) {
+    const username = ref('')
+    const password = ref('')
+    const expand = ref(false)
+
+    const isFormValid = ref(false)
+    const isShowPassword = ref(false)
+    const isSuccesLogedIn = ref(false)
+    const loginFormRef = ref(context.root.$refs.loginFormRef)
+    const loginForm = computed(() => loginFormRef.value)
+
+    console.log(workspaceStore)
+    const handleLogin = async () => {
+      if (!loginForm.value.validate()) {
         return
       }
+      let result = null
 
-      await this.login({ ...this.formData })
-    },
-    reset() {
-      this.$refs.loginForm.reset()
-    },
-    resetValidation() {
-      this.$refs.loginForm.resetValidation()
+      console.log(token, workspaceId, peopleId)
+
+      const auth = await authStore.actions.login({
+        username: username.value,
+        password: password.value,
+        redirect: false
+      })
+
+      /*
+created: "2020-10-07T11:10:05.502848Z"
+created_by: {uuid: "616e6472-6969-4061-736b-616e6e612121", short_uuid: "2xqh-igGl-4Cls-ObsM", name: "Andrii"}
+description: null
+modified: "2020-10-07T11:10:05.503099Z"
+name: "1212"
+short_uuid: "7WOW-kgag-q7Un-gne8"
+status: 1
+template: null
+uuid: "f72a8088-df64-45ec-ae34-b64f997d29ad"
+      */
+      if (auth) {
+        result = await workspaceStore.acceptInvitetion({
+          token,
+          peopleId,
+          workspaceId
+        })
+      }
+      console.log(result)
+      console.log()
+    }
+
+    const reset = () => loginForm.value.reset()
+    const resetValidation = () => loginForm.value.resetValidation()
+
+    return {
+      ...authStore,
+      RULES,
+      username,
+      password,
+      loginForm,
+      isFormValid,
+      loginFormRef,
+      isShowPassword,
+      isSuccesLogedIn,
+      reset,
+      handleLogin,
+      resetValidation
     }
   }
 })
 </script>
-<style scoped>
-.login-wrapper {
-  height: 100vh;
-  background: rgb(176, 132, 182);
-  background: linear-gradient(0deg, rgba(176, 132, 182, 1) 7%, rgba(14, 43, 50, 1) 57%);
-}
-.logo {
-  height: 27px;
-}
-</style>

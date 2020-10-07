@@ -11,7 +11,7 @@ export default {
       component: () => import(/* webpackChunkName: "login" */ './views/TheLogout.vue')
     },
     {
-      path: '/join',
+      path: '/join/:token',
       name: 'join',
       component: () => import(/* webpackChunkName: "join" */ './views/TheJoin.vue')
     }

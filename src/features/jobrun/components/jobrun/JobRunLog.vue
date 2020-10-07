@@ -59,7 +59,7 @@
 <script>
 import { throttle } from 'lodash'
 import TheHighlight from '@/core/components/highlight/TheHighlight'
-import PrismEditor from 'vue-prism-editor'
+import { PrismEditor } from 'vue-prism-editor'
 import { useWindowSize } from '@u3u/vue-hooks'
 import useQuery from '@/core/composition/useQuery'
 import useMoment from '@/core/composition/useMoment'

@@ -15,7 +15,15 @@
         </v-btn>
       </template>
       <v-card>
-        <v-card-title class="pl-3 pb-0">Invite more people to {{ workspaceName }}</v-card-title>
+        <v-app-bar flat dense white--text color="white">
+          <v-card-title class="pb-0 pl-0">Invite more people to {{ workspaceName }}</v-card-title>
+
+          <v-spacer></v-spacer>
+
+          <v-btn class="pa-2 mt-5" icon @click="handleCancel">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </v-app-bar>
         <v-container class="pb-0">
           <v-row no-gutters>
             <v-col class="transition-swing text-subtitle-1">
@@ -59,10 +67,9 @@
         </v-container>
 
         <v-card-actions>
-          <v-btn small outlined text color="secondary" class="mr-1 btn--hover" @click="handleSentInvation">
+          <v-btn small outlined text color="secondary" class="mr-1 ml-1 btn--hover" @click="handleSentInvation">
             {{ invationBtnText }}
           </v-btn>
-          <v-btn small outlined text class="mr-1" @click="handleCancel">Close</v-btn>
         </v-card-actions>
       </v-card>
     </v-menu>
@@ -71,6 +78,7 @@
 
 <script>
 import { ref, computed, defineComponent } from '@vue/composition-api'
+import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 
 export default defineComponent({
   name: 'WorkspacePeopleInvitePopup',
@@ -83,9 +91,18 @@ export default defineComponent({
   },
 
   setup(props, context) {
+    const workspaceStore = useWorkspaceStore()
+
     const menu = ref(false)
     const inviteForm = ref(null)
     const isNewRawAdded = ref(false)
+
+    const invationItems = ref([
+      { email: '', name: '' },
+      { email: '', name: '' }
+    ])
+
+    const { workspaceId } = context.root.$route.params
 
     const handleOnInput = (value, index, path, item) => {
       invationItems.value.splice(index, 1, { ...item, [path]: value })
@@ -100,16 +117,18 @@ export default defineComponent({
 
     const handleCancel = () => {
       menu.value = false
+      invationItems.value = [
+        { email: '', name: '' },
+        { email: '', name: '' }
+      ]
     }
 
-    const handleSentInvation = () => {
+    const handleSentInvation = async () => {
+      const invitations = invationItems.value.filter(item => item.email !== '')
+
+      await workspaceStore.sendInvitations(invitations)
       menu.value = false
     }
-
-    const invationItems = ref([
-      { email: '', name: '' },
-      { email: '', name: '' }
-    ])
 
     const iSinvationItemsPlural = computed(() => invationItems.value.filter(item => item.email !== '').length)
     const invationBtnText = computed(() => (iSinvationItemsPlural.value > 1 ? 'Send invations' : 'Send invation'))

@@ -27,12 +27,12 @@ export default defineComponent({
     const { workspaceId } = context.root.$route.params
 
     onBeforeMount(async () => {
-      await workspaceStore.getInitialWorkpacePeople({ workspaceId, params: { limit: 18, offset: 0 } })
+      await workspaceStore.getInitialWorkpacePeople({ workspaceId, params: { limit: 36, offset: 0 } })
     })
 
     const query = useQuery({
       limit: 18,
-      offset: 18,
+      offset: 36,
       uuid: workspaceId,
       store: workspaceStore,
       action: 'getWorkspacePeople',
