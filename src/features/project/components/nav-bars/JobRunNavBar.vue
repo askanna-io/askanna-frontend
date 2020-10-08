@@ -101,25 +101,7 @@ export default defineComponent({
     const jobRunStore = useJobRunStore()
     const projectStore = useProjectStore()
 
-    onBeforeMount(async () => {
-      const { jobId, jobRunId, projectId } = context.root.$route.params
-
-      if (jobStore.job.value.short_uuid !== jobId) {
-        projectStore.resetProjectJobs()
-        await fetchData(context, [projectStore.getProjectJobs(projectId)])
-
-        jobStore.getJob(jobId)
-      }
-      if (jobRunStore.jobRun.value.short_uuid !== jobRunId) {
-        jobRunStore.resetStore()
-
-        await jobRunStore.getJobRun(jobRunId)
-        await handleViewPayload()
-      }
-    })
-
     const jobName = computed(() => jobStore.job.value.name)
-    const isShowProjectBar = ref(false)
     const end = context.root.$route.name.indexOf('jobs-name') >= 1 ? 5 : 3
     const breadcrumbs = useBreadcrumbs(context, { start: 0, end: 7 })
 
@@ -128,26 +110,13 @@ export default defineComponent({
     const { jobId, jobRunId } = context.root.$route.params
     const jobRun = computed(() => jobRunStore.jobRun.value)
 
-    const handleViewPayload = async () => {
-      const {
-        short_uuid,
-        payload: { short_uuid: uuid }
-      } = jobRunStore.jobRun.value
-
-      if (!jobRunStore.jobRunPayload.value) {
-        await jobRunStore.getJobRunPayload({ jobRunShortId: short_uuid, payloadUuid: uuid })
-      }
-    }
-
     return {
-      onStick,
-      breadcrumbs,
-      isShowProjectBar,
-
       jobId,
       jobRun,
+      jobName,
+      onStick,
       jobRunId,
-      jobName
+      breadcrumbs
     }
   }
 })

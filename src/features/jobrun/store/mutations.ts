@@ -1,5 +1,5 @@
 import { MutationTree } from 'vuex'
-import { JobRunModel, jobRunState } from './types'
+import { File, JobRunModel, jobRunState, ArtifactModel } from './types'
 import * as type from './types'
 import { set } from 'lodash'
 
@@ -42,6 +42,15 @@ export const mutations: MutationTree<jobRunState> = {
     state.resultLoading = true
     state.payLoadLoading = true
     state.jobRun = new JobRunModel().state
+
+    state.jobRunLog = {
+      count: 0,
+      next: null,
+      results: []
+    }
+    state.jobRunLogFullVersion = []
+    state.artifactData = new ArtifactModel().state
+    ;(state.file = ''), (state.fileSource = new Blob())
   },
 
   [type.mutation.SET_LOADING](state, { name, value }) {
@@ -66,5 +75,27 @@ export const mutations: MutationTree<jobRunState> = {
       count: 0,
       results: []
     }
+  },
+
+  [type.SET_JOB_RUN_ARTIFACT](state, { artifactData: data }) {
+    const re = /(?:\.([^.]+))?$/
+    const files = data.files.map((file: File) => {
+      const fileExt = re.exec(file.name)
+      const ext = (!file.is_dir && fileExt && typeof fileExt[1] !== 'undefined' && fileExt[1]) || 'txt'
+
+      return { ...file, ext }
+    })
+
+    state.artifactData = { ...data, files }
+  },
+
+  [type.mutation.SET_FILE](state, { file, fileSource }) {
+    state.file = file
+    state.fileSource = fileSource
+  },
+
+  [type.mutation.RESET_FILE_FILESOURCE](state) {
+    state.file = ''
+    state.fileSource = new Blob()
   }
 }

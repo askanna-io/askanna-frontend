@@ -9,7 +9,7 @@
           small
           :to="{
             name: 'workspace-project-package',
-            params: { ...$route.params, packageId: value }
+            params: { projectId: $route.params.projectId, workspaceId: $route.params.workspaceId, packageId: value }
           }"
         >
           #{{ value.slice(0, 4) }}</v-btn

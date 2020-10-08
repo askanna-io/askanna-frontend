@@ -2,7 +2,7 @@ import { Module } from 'vuex'
 import { getters } from './getters'
 import { actions } from './actions'
 import { mutations } from './mutations'
-import { jobRunState, JOB_RUN_STORE, JobRunModel } from './types'
+import { jobRunState, JOB_RUN_STORE, JobRunModel, ArtifactModel } from './types'
 
 export const state: jobRunState = {
   runs: [],
@@ -13,13 +13,17 @@ export const state: jobRunState = {
   resultLoading: true,
   payLoadLoading: true,
   jobRunlogLoading: true,
+  jobRunArtifactLoading: true,
   jobRunResult: null,
   jobRunLog: {
     count: 0,
     next: null,
     results: []
   },
-  jobRunLogFullVersion: []
+  jobRunLogFullVersion: [],
+  artifactData: new ArtifactModel().state,
+  file: '',
+  fileSource: new Blob()
 }
 
 const namespaced: boolean = true
