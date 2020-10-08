@@ -47,6 +47,18 @@ export default defineComponent({
       },
       {
         id: 2,
+        name: 'Artifact',
+        show: !context.root.isNotBeta,
+        to: 'workspace-project-jobs-job-jobrun-artifact'
+      },
+      {
+        id: 3,
+        name: 'Code',
+        show: !context.root.isNotBeta,
+        to: 'workspace-project-jobs-job-jobrun-code'
+      },
+      {
+        id: 4,
         name: 'Log',
         show: !context.root.isNotBeta,
         to: 'workspace-project-jobs-job-jobrun-log'

@@ -9,6 +9,7 @@ export interface jobRubData {
   resultLoading: Boolean
   payLoadLoading: Boolean
   jobRunlogLoading: Boolean
+  jobRunArtifactLoading: Boolean
   jobRunResult: any
   jobRunLog: {
     count: number
@@ -16,6 +17,21 @@ export interface jobRubData {
     results: any[]
   }
   jobRunLogFullVersion: any[]
+  artifactData?: Package
+  file: string
+  fileSource: Blob
+}
+
+export interface Package {
+  uuid: string
+  cdn_base_url: string
+  filename: string
+  storage_location: string
+  project: string
+  size: number
+  created_by: number
+  created_at: string
+  files: File[]
 }
 
 export interface JobRun {
@@ -59,27 +75,35 @@ export const JOB_RUN_STORE = 'jobrun'
 
 // actions
 export const action = {
+  resetFile: 'resetFile',
   getJobRun: 'getJobRun',
   setLoading: 'setLoading',
   resetStore: 'resetStore',
   getRunsJob: 'getRunsJob',
   getJobRunLog: 'getJobRunLog',
+  getFileSource: 'getFileSource',
   resetJobRunLog: 'resetJobRunLog',
+  downloadPackage: 'downloadPackage',
   getJobRunResult: 'getJobRunResult',
+  getTargetPackage: 'getTargetPackage',
   getInitJobRunLog: 'getInitJobRunLog',
   getJobRunPayload: 'getJobRunPayload',
   showJobRunResult: 'showJobRunResult',
   closeResultModal: 'closeResultModal',
-  getFullVersionJobRunLog: 'getFullVersionJobRunLog'
+  getJobRunArtifact: 'getJobRunArtifact',
+  getFullVersionJobRunLog: 'getFullVersionJobRunLog',
+  getInitialJobRunArtifact: 'getInitialJobRunArtifact'
 }
 
 // mutations
 export const mutation = {
+  SET_FILE: 'SET_FILE',
   SET_LOADING: 'SET_LOADING',
   SET_RESULT_MODAL: 'SET_RESULT_MODAL',
   RESET_JOB_RUN_LOG: 'RESET_JOB_RUN_LOG',
   CLOSE_RESULT_MODAL: 'CLOSE_RESULT_MODAL',
-  UPDATE_JOB_RUN_STORE: 'UPDATE_JOB_RUN_STORE'
+  UPDATE_JOB_RUN_STORE: 'UPDATE_JOB_RUN_STORE',
+  RESET_FILE_FILESOURCE: 'RESET_FILE_FILESOURCE'
 }
 
 //mutations
@@ -89,13 +113,25 @@ export const SET_JOB_RUN_LOG = 'SET_JOB_RUN_LOG'
 export const UPDATE_JOB_RESULT = 'UPDATE_JOB_RESULT'
 export const SET_JOB_RUN_RESULT = 'SET_JOB_RUN_RESULT'
 export const SET_JOB_RUN_PAYLOAD = 'SET_JOB_RUN_PAYLOAD'
+export const SET_JOB_RUN_ARTIFACT = 'SET_JOB_RUN_ARTIFACT'
 export const SET_JOB_RUN_LOG_FULL_VERSION = 'SET_JOB_RUN_LOG_FULL_VERSION'
 
 export const stateType = {
+  file: 'file',
+  runs: 'runs',
+  jobRun: 'jobRun',
+  jobRunLog: 'jobRunLog',
+  fileSource: 'fileSource',
+  logLoading: 'logLoading',
+  artifactData: 'artifactData',
+  jobRunResult: 'jobRunResult',
+  jobRunPayload: 'jobRunPayload',
   jobRunLoading: 'jobRunLoading',
   resultLoading: 'resultLoading',
   payLoadLoading: 'payLoadLoading',
-  jobRunlogLoading: 'jobRunlogLoading'
+  jobRunlogLoading: 'jobRunlogLoading',
+  jobRunLogFullVersion: 'jobRunLogFullVersion',
+  jobRunArtifactLoading: 'jobRunArtifactLoading'
 }
 
 export class JobRunModel {
@@ -131,6 +167,11 @@ export class JobRunModel {
         uuid: '',
         short_uuid: ''
       },
+      artifact: {
+        name: '',
+        uuid: '',
+        short_uuid: ''
+      },
       runner: {
         cpu_cores: 0,
         cpu_time: 0,
@@ -145,6 +186,42 @@ export class JobRunModel {
       trigger: {
         name: ''
       }
+    }
+  }
+}
+
+export interface File {
+  path: string
+  parent: string
+  is_dir: boolean
+  size: number
+  last_modified: string
+  name: string
+  type: string
+  ext: string
+}
+export class ArtifactModel {
+  private _state: Package
+
+  constructor() {
+    this._state = ArtifactModel.initialState()
+  }
+
+  get state() {
+    return this._state
+  }
+
+  static initialState() {
+    return {
+      uuid: '',
+      filename: '',
+      cdn_base_url: '',
+      storage_location: '',
+      project: '',
+      size: 0,
+      created_by: 0,
+      created_at: '',
+      files: []
     }
   }
 }
