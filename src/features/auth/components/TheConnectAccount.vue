@@ -21,10 +21,15 @@
         @click:append="isShowPassword = !isShowPassword"
       />
       <input type="password" style="display: none;" browserAutocomplete="new-password" autocomplete="new-password" />
-      <v-btn :disabled="!isFormValid" color="primary" class="mr-4" @click.stop="handleLogin">
+      <v-btn :disabled="!isFormValid" :loading="loading" color="primary" class="mr-4" @click.stop="handleLogin">
         Sign in, connect and join
+        <template v-slot:loader>
+          <span>{{ loadingText }}...</span>
+          <v-icon class="custom-loader" dark>
+            mdi-loading
+          </v-icon>
+        </template>
       </v-btn>
-      <v-checkbox v-if="isNotBeta" dense label="Remember me" />
     </v-form>
   </div>
 </template>
@@ -50,6 +55,7 @@ export default defineComponent({
     const username = ref('')
     const password = ref('')
     const expand = ref(false)
+    const loading = ref(false)
 
     const isFormValid = ref(false)
     const isShowPassword = ref(false)
@@ -57,14 +63,15 @@ export default defineComponent({
     const loginFormRef = ref(context.root.$refs.loginFormRef)
     const loginForm = computed(() => loginFormRef.value)
 
-    console.log(workspaceStore)
+    const loadingText = ref('Login on AskAnna...')
+
     const handleLogin = async () => {
       if (!loginForm.value.validate()) {
         return
       }
-      let result = null
 
-      console.log(token, workspaceId, peopleId)
+      loading.value = true
+      let result = null
 
       const auth = await authStore.actions.login({
         username: username.value,
@@ -72,26 +79,24 @@ export default defineComponent({
         redirect: false
       })
 
-      /*
-created: "2020-10-07T11:10:05.502848Z"
-created_by: {uuid: "616e6472-6969-4061-736b-616e6e612121", short_uuid: "2xqh-igGl-4Cls-ObsM", name: "Andrii"}
-description: null
-modified: "2020-10-07T11:10:05.503099Z"
-name: "1212"
-short_uuid: "7WOW-kgag-q7Un-gne8"
-status: 1
-template: null
-uuid: "f72a8088-df64-45ec-ae34-b64f997d29ad"
-      */
       if (auth) {
+        loadingText.value = 'Accept invitataion...'
+
         result = await workspaceStore.acceptInvitetion({
           token,
           peopleId,
           workspaceId
         })
       }
-      console.log(result)
-      console.log()
+
+      if (result && result.status === 'accepted') {
+        console.log(result)
+        loadingText.value = 'Join to workspace...'
+        setTimeout(() => context.root.$router.push({ path: `/${workspaceId}` }), 1000)
+
+        return
+      }
+      loading.value = false
     }
 
     const reset = () => loginForm.value.reset()
@@ -99,7 +104,9 @@ uuid: "f72a8088-df64-45ec-ae34-b64f997d29ad"
 
     return {
       ...authStore,
+      loadingText,
       RULES,
+      loading,
       username,
       password,
       loginForm,
@@ -114,3 +121,41 @@ uuid: "f72a8088-df64-45ec-ae34-b64f997d29ad"
   }
 })
 </script>
+<style>
+.custom-loader {
+  animation: loader 1s infinite;
+  display: flex;
+}
+@-moz-keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@-o-keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+</style>
