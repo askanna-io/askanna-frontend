@@ -9,7 +9,8 @@ module.exports = {
   },
   devServer: {
     host: '0.0.0.0',
-    public: process.env.NODE_ENV === 'production' ? 'askanna.localhost' : 'localhost'
+    public: process.env.NODE_ENV === 'production' ? 'askanna.127-0-0-1.nip.io' : 'localhost',
+    disableHostCheck: true
   },
   configureWebpack: {
     resolve: {

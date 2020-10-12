@@ -28,3 +28,10 @@ package-lock.json
 
 package-lock.json
 /src/core/services/api-settings-1.ts
+
+.node-version
+.env
+
+# Allow custom local overrides.
+docker-compose.override.yml
+
