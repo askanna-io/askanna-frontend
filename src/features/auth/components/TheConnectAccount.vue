@@ -25,7 +25,7 @@
         Sign in, connect and join
         <template v-slot:loader>
           <span>{{ loadingText }}...</span>
-          <v-icon class="custom-loader" dark>
+          <v-icon class="ask-anna-btn-loader" dark>
             mdi-loading
           </v-icon>
         </template>
@@ -70,8 +70,8 @@ export default defineComponent({
         return
       }
 
-      loading.value = true
       let result = null
+      loading.value = true
 
       const auth = await authStore.actions.login({
         username: username.value,
@@ -79,7 +79,7 @@ export default defineComponent({
         redirect: false
       })
 
-      if (auth) {
+      if (auth && auth.key) {
         loadingText.value = 'Accept invitataion...'
 
         result = await workspaceStore.acceptInvitetion({
@@ -90,9 +90,8 @@ export default defineComponent({
       }
 
       if (result && result.status === 'accepted') {
-        console.log(result)
         loadingText.value = 'Join to workspace...'
-        setTimeout(() => context.root.$router.push({ path: `/${workspaceId}` }), 1000)
+        setTimeout(() => context.root.$router.push({ name: 'workspace', params: { workspaceId } }), 1000)
 
         return
       }
@@ -121,41 +120,4 @@ export default defineComponent({
   }
 })
 </script>
-<style>
-.custom-loader {
-  animation: loader 1s infinite;
-  display: flex;
-}
-@-moz-keyframes loader {
-  from {
-    transform: rotate(0);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-@-webkit-keyframes loader {
-  from {
-    transform: rotate(0);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-@-o-keyframes loader {
-  from {
-    transform: rotate(0);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-@keyframes loader {
-  from {
-    transform: rotate(0);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-</style>
+<style></style>

@@ -67,8 +67,28 @@
         </v-container>
 
         <v-card-actions>
-          <v-btn small outlined text color="secondary" class="mr-1 ml-1 btn--hover" @click="handleSentInvation">
+          <v-btn
+            :loading="loading"
+            text
+            small
+            outlined
+            color="secondary"
+            class="mr-1 ml-1 btn--hover"
+            @click="handleSentInvation"
+          >
+            <v-icon left>
+              mdi-mail
+            </v-icon>
             {{ invationBtnText }}
+            <template v-slot:loader>
+              <v-icon left>
+                mdi-mail
+              </v-icon>
+              <span>{{ loadingText }}...</span>
+              <v-icon class="ask-anna-btn-loader">
+                mdi-loading
+              </v-icon>
+            </template>
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -94,8 +114,10 @@ export default defineComponent({
     const workspaceStore = useWorkspaceStore()
 
     const menu = ref(false)
+    const loading = ref(false)
     const inviteForm = ref(null)
     const isNewRawAdded = ref(false)
+    const loadingText = ref('Sending...')
 
     const invationItems = ref([
       { email: '', name: '' },
@@ -126,8 +148,12 @@ export default defineComponent({
     const handleSentInvation = async () => {
       const invitations = invationItems.value.filter(item => item.email !== '')
 
-      await workspaceStore.sendInvitations(invitations)
+      loading.value = true
+
+      /*   await workspaceStore.sendInvitations(invitations)
+
       menu.value = false
+      loading.value = false */
     }
 
     const iSinvationItemsPlural = computed(() => invationItems.value.filter(item => item.email !== '').length)
@@ -135,7 +161,9 @@ export default defineComponent({
 
     return {
       menu,
+      loading,
       inviteForm,
+      loadingText,
       invationItems,
       handleCancel,
       handleOnInput,

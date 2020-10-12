@@ -125,10 +125,14 @@ export const actions: ActionTree<workspaceState, RootState> = {
           ...item,
           object_uuid: state.workspace.uuid
         })
-        console.log(people)
-        return people.short_uuid && people
+        if (people.short_uuid && people) {
+          return people
+        }
+        item.error = people
+        return item
       })
     )
+
     commit(mutation.UPDATE_WORKSPACE_PEOPLE, result)
     logger.success(commit, 'Invites were sent')
   },
@@ -145,6 +149,8 @@ export const actions: ActionTree<workspaceState, RootState> = {
       })
     } catch (e) {
       logger.error(commit, 'Error on upload package in registerPackage action.\nError: ', e)
+
+      return e
     }
 
     return response
@@ -154,7 +160,6 @@ export const actions: ActionTree<workspaceState, RootState> = {
     let response
 
     const data = {
-      status: 'accepted',
       token
     }
     try {

@@ -58,7 +58,7 @@ export default defineComponent({
       default: false
     },
     statusColor: {
-      type: String || Boolean,
+      type: [String, Boolean],
       default: 'white'
     }
   }
