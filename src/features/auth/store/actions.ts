@@ -11,7 +11,7 @@ import { logger } from '@/core/plugins/logger'
 const serviceName = AUTH_STORE
 
 export const actions: ActionTree<AuthState, RootState> = {
-  async [ac.login]({ commit }, { username, password }) {
+  async [ac.login]({ commit }, { username, password, redirect = true }) {
     const url = api.url() + api.auth.login()
 
     axios.defaults.xsrfCookieName = 'csrftoken'
@@ -22,7 +22,8 @@ export const actions: ActionTree<AuthState, RootState> = {
       const { data } = result
 
       commit(mt.SET_AUTH, data)
-      router.push({ path: '/workspace' })
+
+      if (redirect) router.push({ path: '/workspace' })
 
       return data
     } catch (error) {
@@ -30,7 +31,7 @@ export const actions: ActionTree<AuthState, RootState> = {
 
       if ((error && error.response && error.response.status === 400) || error.statusCode === 400) {
         const message = error.response.data.non_field_errors[0]
-        logger.error(commit, 'Error on login action.\nError: ', message)
+        logger.userDanger(commit, message)
 
         return error
       }

@@ -22,6 +22,7 @@
                   :people="item"
                   :workspaceName="workspaceName"
                   :hover="hover"
+                  :statusColor="getStatus(item.status)"
                   :description="sanitizeHTML(item.description)"
                 />
               </v-hover>
@@ -95,7 +96,18 @@ export default defineComponent({
       popupValue.value = true
     }
 
-    return { sanitizeHTML, popupValue, selectedPeople, handleValue, handleRemove, handleChangeRole, handleSelectPeople }
+    const getStatus = status => status === 'invited' && 'blue lighten-3'
+
+    return {
+      getStatus,
+      popupValue,
+      sanitizeHTML,
+      selectedPeople,
+      handleValue,
+      handleRemove,
+      handleChangeRole,
+      handleSelectPeople
+    }
   }
 })
 </script>

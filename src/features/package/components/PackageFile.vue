@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import PrismEditor from 'vue-prism-editor'
+import { PrismEditor } from 'vue-prism-editor'
 import PackageNotebook from './PackageNotebook'
 import PackageFileImage from './PackageFileImage'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'

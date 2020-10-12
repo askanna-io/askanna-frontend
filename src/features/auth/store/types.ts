@@ -17,5 +17,6 @@ export const mt = {
 
 export const ac = {
   login: 'login',
-  logout: 'logout'
+  logout: 'logout',
+  acceptInvatation: 'acceptInvatation'
 }

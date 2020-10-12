@@ -1,5 +1,9 @@
 <template>
   <v-card class="mx-auto h-100" :elevation="hover ? 16 : 2">
+    <v-app-bar height="10" absolute flat dense white--text color="white">
+      <v-spacer />
+      <v-icon v-if="statusColor" class="mt-5" :color="statusColor">mdi-email-send-outline</v-icon>
+    </v-app-bar>
     <v-row>
       <v-col cols="2">
         <v-avatar class="pl-1" size="70" tile>
@@ -52,6 +56,10 @@ export default defineComponent({
     hover: {
       type: Boolean,
       default: false
+    },
+    statusColor: {
+      type: [String, Boolean],
+      default: 'white'
     }
   }
 })

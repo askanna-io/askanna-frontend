@@ -60,9 +60,12 @@
         </v-col>
       </v-row>
     </v-menu>
+    <v-spacer />
+    <workspace-people-invite-popup :workspaceName="title" />
   </v-toolbar>
 </template>
 <script>
+import WorkspacePeopleInvitePopup from './WorkspacePeopleInvitePopup'
 import { ref, computed, reactive, defineComponent } from '@vue/composition-api'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 
@@ -75,6 +78,8 @@ export default defineComponent({
       default: ''
     }
   },
+
+  components: { WorkspacePeopleInvitePopup },
 
   setup(props, context) {
     const workspaceStore = useWorkspaceStore()
