@@ -4,23 +4,37 @@ This is the repository the holds code for AskAnna-Frontend. Code is written in T
 
 ## Running for development
 
-We provide a way to run the code in a dockerized environment. This setup asumes you are *NOT* running your own webserver like nginx or apache on your local machine. The setup contains a nginx reverse proxy which will occupy port 80 on your machine.
+We use Docker Compose to run the project locally. 
 
-If you already have some webserver software running which is on port 80, please shut this down before using the following commands.
-
-You can visit the result in [http://askanna.localhost](http://askanna.localhost). Please mind that we don't have support for HTTPS yet.
+The first thing to do is configure docker-compose to use local ports and volumes. This only needs to be run once.
 
 ```
-docker-compose -f local.yml up
+ln -s docker-compose.local.yml docker-compose.override.yml
 ```
+
+From the on, use the following command to start your containers.
+
+```
+docker-compose up
+```
+
+You can visit the result in [http://localhost:8080](http://localhost:8080). Please mind that we don't have support for HTTPS yet.
+
 
 If you have changed the Dockerfile or changed something in `package.json`, please allow docker to rebuild the image:
 
 ```
-docker-compose -f local up -build
+docker-compose up -build
 ```
 
-Any change in the `src` folder will be automaticly picked up and rebuild in this modus.
+Any change in the `src` folder will be automatically picked up and rebuild in this modus.
+
+### Developing remotely
+
+It is possible to use a remote Docker instance while developing locally. Information is found the [docker-compose.mutagen.yml](./docker-compose.mutagen.yml) file.
+
+This method can also be used when developing on a macOS to improve the app performance.
+
 
 ## Running build version in docker-compose
 
@@ -32,7 +46,7 @@ docker-compose -f production.yml up --build
 
 On building the image, the command `npm run build` is issued to build.
 
-In this setup the front-end code with backend and can be accessed via: [askanna.localhost](http://askanna.localhost).
+In this setup the front-end code with backend and can be accessed via: [askanna.127-0-0-1.nip.io](http://askanna.127-0-0-1.nip.io).
 
 ## Vue specific configuration for docker
 

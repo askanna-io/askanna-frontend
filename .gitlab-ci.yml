@@ -23,7 +23,7 @@ build_docker:
     entrypoint: [""]
   script:
     - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
-    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/compose/production/Dockerfile --destination ${DOCKER_REPO}:$CI_COMMIT_REF_SLUG
+    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/compose/Dockerfile --destination ${DOCKER_REPO}:$CI_COMMIT_REF_SLUG
   only:
     - branches
   except:
@@ -39,10 +39,10 @@ build_docker_beta:
   script:
     - cp .env.beta .env.production.local
     - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
-    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/compose/production/Dockerfile --destination ${DOCKER_REPO}:$CI_COMMIT_REF_SLUG
+    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/compose/Dockerfile --destination ${DOCKER_REPO}:$CI_COMMIT_REF_SLUG
   only:
     - beta
-  
+
 stop_review:
   variables:
     GIT_STRATEGY: none
@@ -88,4 +88,4 @@ deploy_master:
     url: https://askanna.eu
   only:
     - master
-    
+

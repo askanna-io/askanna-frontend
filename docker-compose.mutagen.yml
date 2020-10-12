@@ -1,0 +1,53 @@
+# https://mutagen.io/documentation/orchestration/compose
+
+# This file should be used as override for default config.
+# It extends the service definitions to use mutagen volumes
+# instead of bind/local volumes.
+# https://docs.docker.com/compose/extends/
+#   $ ln -s docker-compose.mutagen.yml docker-compose.override.yml
+
+# Can be used with local docker or with remote docker instances.
+# Local usage will improve performance on macOS.
+
+# To use it with a remote docker instance the value of `DOCKER_HOST`
+# needs to be set in the `.env` file.
+# DOCKER_HOST=ssh://user@host
+
+# Build and run using `mutagen compose` instead of `docker-compose`
+#   $ mutagen compose build
+#   $ mutagen compose up
+
+# When done developing for the day take containers down.
+# This will also pause the mutagen sync processes.
+#   $ mutagen compose down
+
+version: '3'
+
+services:
+  frontend:
+    volumes:
+      - app:/app
+
+volumes:
+  app:
+
+x-mutagen:
+  sync:
+    defaults:
+      mode: "two-way-resolved"
+      ignore:
+        vcs: true
+      permissions:
+        defaultFileMode: "0644"
+        defaultDirectoryMode: "0755"
+    app:
+      alpha: "."
+      beta: "volume://app"
+      ignore:
+        paths:
+          - "/node_modules"
+          - ".vscode"
+  forward:
+    frontend:
+      source: "tcp::8080"
+      destination: "network://default:tcp:frontend:8080"

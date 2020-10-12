@@ -1,5 +1,0 @@
-###
-#  The folllowing lines will be integrated into the nginx `location config` form jwilder/nginx-proxy
-###
-
-try_files $uri $uri/ /index.html;

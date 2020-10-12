@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  frontend:
+    build:
+      context: .
+      target: base-stage
+      dockerfile: ./compose/Dockerfile
+    volumes:
+      - /app/node_modules
