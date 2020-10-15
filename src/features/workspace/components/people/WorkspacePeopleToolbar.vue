@@ -48,8 +48,27 @@
             </v-card-subtitle>
             <v-select
               hide-details
-              v-model="activeFilter"
-              :items="filters"
+              v-model="activeRoleFilter"
+              :items="roleFilters"
+              item-text="name"
+              item-value="value"
+              no-data-text=""
+              class="pt-0"
+            >
+            </v-select>
+          </v-card>
+        </v-col>
+      </v-row>
+      <v-row class="pa-2 white">
+        <v-col class="d-flex pt-1 pb-1" cols="12">
+          <v-card flat width="284">
+            <v-card-subtitle class="pa-0">
+              <h3>Account status</h3>
+            </v-card-subtitle>
+            <v-select
+              hide-details
+              v-model="activeStatusFilter"
+              :items="statusFilters"
               item-text="name"
               item-value="value"
               no-data-text=""
@@ -89,39 +108,52 @@ export default defineComponent({
     const sortMenu = ref(false)
     const filterMenu = ref(false)
 
-    const sortItems = [
-      { title: 'A to Z', value: 'user__name' },
-      { title: 'Z to A', value: '-user__name' }
-    ]
     const { workspaceId } = context.root.$route.params
 
-    const handleSort = async ({ value }) => {
-      await workspaceStore.setWorkspaceParams({ path: 'workspacePeopleParams.ordering', value })
-      await workspaceStore.getWorkspacePeople({ workspaceId, params: { offset: 0, limit: 18 } })
-    }
+    const sortItems = [
+      { title: 'A to Z', value: { sortBy: 'name', sort: 1 } },
+      { title: 'Z to A', value: { sortBy: 'name', sort: -1 } }
+    ]
 
-    const activeFilter = computed({
-      get: () => '',
-      set: async value => {
-        await workspaceStore.setWorkspaceParams({ path: 'workspacePeopleParams.role', value })
-        await workspaceStore.getWorkspacePeople({ workspaceId, params: { offset: 0, limit: 18 } })
-      }
-    })
-
-    const filters = [
+    const roleFilters = [
       { value: '', name: 'All types' },
       { value: 'WA', name: 'Admin' },
       { value: 'WM', name: 'Members' }
     ]
 
+    const statusFilters = [
+      { value: '', name: 'All' },
+      { value: 'invited', name: 'Invited' },
+      { value: 'accepted', name: 'Accepted' }
+    ]
+
+    const activeRoleFilter = computed({
+      get: () => '',
+      set: async value => {
+        await workspaceStore.setWorkspaceParams({ path: 'workspacePeopleParams.filter.role', value })
+      }
+    })
+
+    const activeStatusFilter = computed({
+      get: () => '',
+      set: async value => {
+        await workspaceStore.setWorkspaceParams({ path: 'workspacePeopleParams.filter.status', value })
+      }
+    })
+
+    const handleSort = async ({ value }) =>
+      await workspaceStore.setWorkspaceParams({ path: 'workspacePeopleParams.sorting', value })
+
     return {
       menu,
-      filters,
       sortMenu,
       sortItems,
       filterMenu,
       activeSort,
-      activeFilter,
+      roleFilters,
+      statusFilters,
+      activeRoleFilter,
+      activeStatusFilter,
       handleSort
     }
   }

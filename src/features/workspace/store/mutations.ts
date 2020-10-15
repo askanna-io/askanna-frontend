@@ -33,13 +33,7 @@ export const mutations: MutationTree<workspaceState> = {
       results: []
     }
   },
-  [mutation.SET_WORKSPACE_PEOPLE](state, { count, results, next }) {
-    state.workspacePeople = {
-      next,
-      count,
-      results: [...state.workspacePeople.results, ...results]
-    }
-  },
+
   [mutation.SET_WORKSPACE_PEOPLE_INITIAL](state, data) {
     state.workspacePeople = data
   },
@@ -48,10 +42,6 @@ export const mutations: MutationTree<workspaceState> = {
   },
 
   [mutation.UPDATE_WORKSPACE_PEOPLE](state, data) {
-    state.workspacePeople = {
-      next: state.workspacePeople.next,
-      count: state.workspacePeople.count + 1,
-      results: state.workspacePeople.results.concat(data)
-    }
+    state.workspacePeople = [...state.workspacePeople, ...data]
   }
 }

@@ -8,6 +8,8 @@ interface Rules {
   [ruleName: string]: rule<ruleFunction>
 }
 
+const emailPatern = /^\w+([.-]?\w+)+([+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,4})+$/
+
 const rules: Rules = {
   required: errorMessage => {
     return (v: any) => !!v || `${errorMessage}`
@@ -19,7 +21,7 @@ const rules: Rules = {
     return v => (!v ? `${errorMessage}` : v.length >= minLength || `${errorMessage}`)
   },
   email: errorMessage => {
-    return v => /^\w+([.-]?\w+)+([+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,4})+$/.test(v) || `${errorMessage}`
+    return v => emailPatern.test(v) || `${errorMessage}`
   },
   maxVal: (errorMessage, maxValue = 100) => {
     return (v: any) => v <= maxValue || `${errorMessage}`
@@ -35,7 +37,9 @@ const rules: Rules = {
 export function useValidationRules() {
   const RULES = reactive(rules)
 
-  return RULES
+  const isValidEmail = (email: string) => emailPatern.test(email)
+
+  return { RULES, isValidEmail }
 }
 
 export default useValidationRules

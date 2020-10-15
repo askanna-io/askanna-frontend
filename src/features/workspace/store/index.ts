@@ -25,14 +25,17 @@ export const state: workspaceState = {
   workspaceSettings: {
     projectView: 0
   },
-  workspacePeople: {
-    count: 0,
-    next: null,
-    results: []
-  },
+  workspacePeople: [],
   workspacePeopleParams: {
-    ordering: '',
-    role: ''
+    search: '',
+    sorting: {
+      sortBy: 'name',
+      sort: 1
+    },
+    filter: {
+      role: '',
+      status: ''
+    }
   }
 }
 

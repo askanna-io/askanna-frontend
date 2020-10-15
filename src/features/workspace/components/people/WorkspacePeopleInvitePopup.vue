@@ -1,13 +1,6 @@
 <template>
   <div class="text-center">
-    <v-menu
-      v-model="menu"
-      :close-on-content-click="false"
-      :nudge-width="390"
-      :nudge-bottom="10"
-      :nudge-left="100"
-      offset-y
-    >
+    <v-dialog v-model="menu" :close-on-content-click="false" width="500">
       <template v-slot:activator="{ on, attrs }">
         <v-btn v-bind="attrs" v-on="on" small rounded class="mr-3">
           <v-icon color="primary" left>mdi-plus</v-icon>
@@ -18,56 +11,61 @@
         <v-app-bar flat dense white--text color="white">
           <v-card-title class="pb-0 pl-0">Invite more people to {{ workspaceName }}</v-card-title>
 
-          <v-spacer></v-spacer>
+          <v-spacer />
 
           <v-btn class="pa-2 mt-5" icon @click="handleCancel">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-app-bar>
-        <v-container class="pb-0">
+        <v-container id="scroll-target" style="max-height: 400px;" class="pl-1 pt-0 overflow-y-auto">
           <v-row no-gutters>
-            <v-col class="transition-swing text-subtitle-1">
-              Email address
+            <v-col class="pa-2" cols="12">
+              <v-combobox
+                hide-details=""
+                :delimiters="[' ']"
+                append-icon=""
+                v-model="invationItems"
+                chips
+                counter
+                outlined
+                multiple
+                clearable
+                autofocus
+                deletable-chips
+                label="Invitations"
+                placeholder="Type emails here"
+              >
+                <template v-slot:selection="{ attrs, item, select, selected }">
+                  <v-chip
+                    v-bind="attrs"
+                    :input-value="selected"
+                    :class="getStyle(item).color"
+                    close
+                    @click="select"
+                    @click:close="handleRemove(item)"
+                  >
+                    <v-icon left>
+                      {{ getStyle(item).icon }}
+                    </v-icon>
+                    <strong>{{ item }}</strong
+                    >&nbsp;
+                    <span></span>
+                  </v-chip>
+                </template>
+              </v-combobox>
+              <v-chip class="mt-2" v-if="inValidEmails.length" color="error" @click="handleRemoveInValidEmails">
+                <v-avatar color="white" left class="error--text">
+                  {{ inValidEmails.length }}
+                </v-avatar>
+                Delete {{ inValidEmails.length }} invalid email{{ inValidEmails.length > 1 ? 's' : '' }}
+              </v-chip>
             </v-col>
-            <v-col class="transition-swing text-subtitle-1">
-              Name (optional)
-            </v-col>
-            <v-responsive :key="`width-2`" width="100%" />
           </v-row>
-        </v-container>
-
-        <v-container id="scroll-target" ref="inviteForm" style="max-height: 400px;" class="pl-1 pt-0 overflow-y-auto">
-          <template v-for="(item, index) in invationItems" v-scroll:#scroll-target>
-            <v-row no-gutters :key="index">
-              <v-col class="pa-2" cols="6">
-                <v-text-field
-                  :value="item.email"
-                  @input="handleOnInput($event, index, 'email', item)"
-                  @blur="handleEmailBlur($event, { index, item })"
-                  @keyup.enter="handleSentInvation"
-                  small
-                  dense
-                  hide-details
-                  outlined
-                />
-              </v-col>
-              <v-col class="pa-2" cols="6">
-                <v-text-field
-                  :value="item.name"
-                  @input="handleOnInput($event, index, 'name', item)"
-                  @keyup.enter="handleSentInvation"
-                  small
-                  dense
-                  hide-details
-                  outlined
-                />
-              </v-col>
-            </v-row>
-          </template>
         </v-container>
 
         <v-card-actions>
           <v-btn
+            :disabled="!invationItems.length || Boolean(inValidEmails.length)"
             :loading="loading"
             text
             small
@@ -92,11 +90,12 @@
           </v-btn>
         </v-card-actions>
       </v-card>
-    </v-menu>
+    </v-dialog>
   </div>
 </template>
 
 <script>
+import useValidationRules from '@/core/composition/useValidationRules'
 import { ref, computed, defineComponent } from '@vue/composition-api'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 
@@ -112,64 +111,89 @@ export default defineComponent({
 
   setup(props, context) {
     const workspaceStore = useWorkspaceStore()
+    const validationRules = useValidationRules()
 
     const menu = ref(false)
     const loading = ref(false)
-    const inviteForm = ref(null)
+    const invationItems = ref([])
     const isNewRawAdded = ref(false)
     const loadingText = ref('Sending...')
 
-    const invationItems = ref([
-      { email: '', name: '' },
-      { email: '', name: '' }
-    ])
-
     const { workspaceId } = context.root.$route.params
 
-    const handleOnInput = (value, index, path, item) => {
-      invationItems.value.splice(index, 1, { ...item, [path]: value })
-    }
+    const invationBtnText = computed(() => (invationItems.value.length > 1 ? 'Send invations' : 'Send invation'))
+    const inValidEmails = computed(() => invationItems.value.filter(email => !validationRules.isValidEmail(email)))
 
-    const handleEmailBlur = (event, { item, index }) => {
-      inviteForm.value.scrollTop = inviteForm.value.scrollHeight
-      if (index + 1 === invationItems.value.length && item.email !== '') {
-        invationItems.value.push({ email: '', name: '' })
-      }
-    }
+    const handleOnInput = (value, index, path, item) => invationItems.value.splice(index, 1, { ...item, [path]: value })
 
     const handleCancel = () => {
       menu.value = false
-      invationItems.value = [
-        { email: '', name: '' },
-        { email: '', name: '' }
-      ]
+      invationItems.value = []
     }
 
     const handleSentInvation = async () => {
-      const invitations = invationItems.value.filter(item => item.email !== '')
-
       loading.value = true
+      const reducer = (acc, email) => {
+        const isExist = workspaceStore.workspacePeople.value.find(item => item.email === email)
 
-      /*   await workspaceStore.sendInvitations(invitations)
+        if (!isExist) {
+          acc.push(email)
+        }
+        return acc
+      }
+
+      const emails = invationItems.value.reduce(reducer, [])
+      if (emails.length) {
+        await workspaceStore.sendInvitations(emails)
+      }
 
       menu.value = false
-      loading.value = false */
+      loading.value = false
+      invationItems.value = []
     }
 
-    const iSinvationItemsPlural = computed(() => invationItems.value.filter(item => item.email !== '').length)
-    const invationBtnText = computed(() => (iSinvationItemsPlural.value > 1 ? 'Send invations' : 'Send invation'))
+    const handleRemove = item => invationItems.value.splice(invationItems.value.indexOf(item), 1)
+
+    const handleRemoveInValidEmails = () => {
+      invationItems.value = invationItems.value.filter(email => validationRules.isValidEmail(email))
+    }
+
+    const getStyle = email => {
+      const isEmailValid = !validationRules.isValidEmail(email)
+      const isExist = workspaceStore.workspacePeople.value.find(item => item.email === email)
+      const isInvited = isExist && isExist.status === 'invited'
+      const isAccepted = isExist && isExist.status === 'accepted'
+      const icons = {
+        error: 'mdi-email-off-outline',
+        invited: 'mdi-email-send-outline',
+        accepted: 'mdi-email-check-outline'
+      }
+
+      const icon = (isExist && icons[isExist.status]) || (isEmailValid && icons.error) || ''
+
+      return {
+        color: {
+          error: isEmailValid,
+          green: isAccepted,
+          'blue lighten-3': isInvited
+        },
+        icon
+      }
+    }
 
     return {
       menu,
       loading,
-      inviteForm,
+      getStyle,
       loadingText,
-      invationItems,
+      handleRemove,
       handleCancel,
+      invationItems,
       handleOnInput,
+      inValidEmails,
       invationBtnText,
-      handleEmailBlur,
-      handleSentInvation
+      handleSentInvation,
+      handleRemoveInValidEmails
     }
   }
 })

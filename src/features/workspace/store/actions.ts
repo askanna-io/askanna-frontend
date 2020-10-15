@@ -95,22 +95,19 @@ export const actions: ActionTree<workspaceState, RootState> = {
     commit(mutation.SET_LOADING, { name: stateType.workspacePeopleLoading, value: true })
 
     let people = []
-    params = { ...params, ...state.workspacePeopleParams }
     try {
       people = await apiService({
         action: api.getWorkspacePeople,
         serviceName,
-        uuid: workspaceId,
-        params
+        uuid: workspaceId
       })
     } catch (error) {
       logger.error(commit, 'Error on load people in getWorkspacePeople action.\nError: ', error)
 
       return
     }
-    const peopleMutation = params.offset === 0 ? mutation.SET_WORKSPACE_PEOPLE_INITIAL : mutation.SET_WORKSPACE_PEOPLE
 
-    commit(peopleMutation, people)
+    commit(mutation.SET_WORKSPACE_PEOPLE_INITIAL, people)
     commit(mutation.SET_LOADING, { name: stateType.workspacePeopleLoading, value: false })
   },
 
@@ -120,16 +117,15 @@ export const actions: ActionTree<workspaceState, RootState> = {
 
   async [action.sendInvitations]({ state, commit, dispatch }, data) {
     const result = await Promise.all(
-      map(data, async item => {
+      map(data, async email => {
         const people = await dispatch(action.sendInviteEmail, {
-          ...item,
+          email,
+          name: ' ',
           object_uuid: state.workspace.uuid
         })
         if (people.short_uuid && people) {
           return people
         }
-        item.error = people
-        return item
       })
     )
 

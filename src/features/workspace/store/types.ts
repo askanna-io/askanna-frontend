@@ -21,14 +21,14 @@ export interface WorkspaceState {
   workspaceSettings: {
     projectView: Number
   }
-  workspacePeople: {
-    count: number
-    next: null | string
-    results: Person[]
-  }
+  workspacePeople: Person[]
   workspacePeopleParams: {
-    role: string
-    ordering: string
+    search: string
+    sorting: { sortBy: string; sort: number }
+    filter: {
+      role: string
+      status: string
+    }
   }
 }
 
