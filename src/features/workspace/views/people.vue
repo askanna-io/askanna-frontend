@@ -33,6 +33,9 @@ export default defineComponent({
       } = workspaceStore.workspacePeopleParams.value
 
       let people = [...workspaceStore.workspacePeople.value]
+
+      if (!people.length) return people
+
       if (role) {
         people = people.filter(item => item.role === role)
       }
@@ -43,12 +46,12 @@ export default defineComponent({
 
       if (sortBy && sort) {
         people = people.sort((a, b) => {
-          const nameA = a.name.toUpperCase() // ignore upper and lowercase
-          const nameB = b.name.toUpperCase() // ignore upper and lowercase
+          const nameA = (a.name && a.name.toUpperCase()) || ''
+          const nameB = (b.name && b.name.toUpperCase()) || ''
+
           if (nameA < nameB) return -sort
           if (nameA > nameB) return sort
 
-          // names must be equal
           return 0
         })
       }

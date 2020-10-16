@@ -3,12 +3,14 @@ import { ac, mt } from './types'
 import { ActionTree } from 'vuex'
 import router from '@/core/router'
 import { AuthState } from './types'
-import { api } from '@/core/services/api-settings'
-import { apiStringify } from '@/core/services/api-settings'
-import { AUTH_STORE } from '@/core/store/storeTypes'
 import { logger } from '@/core/plugins/logger'
+import { api } from '@/core/services/api-settings'
+import apiService from '@/core/services/apiService'
+import { AUTH_STORE } from '@/core/store/storeTypes'
+import { apiStringify } from '@/core/services/api-settings'
 
 const serviceName = AUTH_STORE
+const apiAccounts = apiStringify('accounts')
 
 export const actions: ActionTree<AuthState, RootState> = {
   async [ac.login]({ commit }, { username, password, redirect = true }) {
@@ -52,5 +54,23 @@ export const actions: ActionTree<AuthState, RootState> = {
     commit(mt.DROP_AUTH, null)
 
     router.push({ path: '/login' })
+  },
+
+  async [ac.createAccount]({ commit }, data) {
+    let response
+    try {
+      response = await apiService({
+        action: apiAccounts.create,
+        method: 'post',
+        serviceName: 'accounts',
+        data
+      })
+    } catch (e) {
+      logger.error(commit, 'Error on create account in createAccount action.\nError: ', e)
+
+      return e
+    }
+
+    return response
   }
 }

@@ -49,24 +49,22 @@ export default defineComponent({
     const workspaceStore = useWorkspaceStore()
 
     const RULES = useValidationRules()
-    const { token } = context.root.$route.params
-    const { peopleId, workspaceId } = context.root.$route.query
+    const { token, peopleId, workspaceId } = context.root.$route.params
 
     const username = ref('')
     const password = ref('')
     const expand = ref(false)
     const loading = ref(false)
 
+    const loginFormRef = ref(null)
     const isFormValid = ref(false)
     const isShowPassword = ref(false)
     const isSuccesLogedIn = ref(false)
-    const loginFormRef = ref(context.root.$refs.loginFormRef)
-    const loginForm = computed(() => loginFormRef.value)
 
     const loadingText = ref('Login on AskAnna...')
 
     const handleLogin = async () => {
-      if (!loginForm.value.validate()) {
+      if (!loginFormRef.value.validate()) {
         return
       }
 
@@ -98,8 +96,8 @@ export default defineComponent({
       loading.value = false
     }
 
-    const reset = () => loginForm.value.reset()
-    const resetValidation = () => loginForm.value.resetValidation()
+    const reset = () => loginFormRef.value.reset()
+    const resetValidation = () => loginFormRef.value.resetValidation()
 
     return {
       ...authStore,
@@ -108,7 +106,6 @@ export default defineComponent({
       loading,
       username,
       password,
-      loginForm,
       isFormValid,
       loginFormRef,
       isShowPassword,
@@ -120,4 +117,3 @@ export default defineComponent({
   }
 })
 </script>
-<style></style>

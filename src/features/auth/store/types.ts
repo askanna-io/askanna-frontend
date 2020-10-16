@@ -18,5 +18,6 @@ export const mt = {
 export const ac = {
   login: 'login',
   logout: 'logout',
+  createAccount: 'createAccount',
   acceptInvatation: 'acceptInvatation'
 }

@@ -120,17 +120,22 @@ export const actions: ActionTree<workspaceState, RootState> = {
       map(data, async email => {
         const people = await dispatch(action.sendInviteEmail, {
           email,
-          name: ' ',
+          name: email,
           object_uuid: state.workspace.uuid
         })
         if (people.short_uuid && people) {
           return people
         }
+
+        return { email: '', name: '' }
       })
     )
+    const people = result.filter(item => item.email !== '')
 
-    commit(mutation.UPDATE_WORKSPACE_PEOPLE, result)
-    logger.success(commit, 'Invites were sent')
+    if (people.length) {
+      commit(mutation.UPDATE_WORKSPACE_PEOPLE, people)
+      logger.success(commit, 'Invites were sent')
+    }
   },
 
   async [action.sendInviteEmail]({ state, commit }, data) {

@@ -1,77 +1,158 @@
 <template>
-  <v-form ref="loginForm" v-model="isFormValid" lazy-validation @keyup.native.enter="handleLogin" @submit="handleLogin">
-    <v-card flat class="text-left position">
-      <v-container pa-0 pb-2 class="avatar--wrapper">
-        <v-row>
-          <v-col class="pt-2 pb-0" cols="2" align-self="center">
-            <v-avatar rounded="21" :size="false ? 150 : 50" tile>
-              <v-img v-if="false" class="img--rounded" :src="'/'" />
-              <v-icon v-else size="55">mdi-account-outline</v-icon>
-            </v-avatar>
-          </v-col>
-          <v-col class="pt-2 pb-0" align-self="center">
-            Add your photo
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-card>
-    <v-text-field dense outlined label="Name" validate-on-blur v-model="formData.username" />
-    <v-text-field dense outlined label="Email address" validate-on-blur v-model="formData.username" />
+  <v-form ref="loginFormRef" v-model="isFormValid" @keyup.native.enter="handleLogin" @submit="handleLogin">
+    <v-checkbox v-model="isEmailEqName" class="mt-0" label="Use email address as username" />
     <v-text-field
+      v-if="!isEmailEqName"
+      :rules="[RULE.required('The name is required')]"
       dense
       outlined
-      v-model="formData.password"
+      label="Name"
       validate-on-blur
-      :type="isShowPassword ? 'text' : 'password'"
-      name="input-10-1"
-      label="Password"
+      v-model="name"
+    />
+    <v-text-field
+      v-if="!isEmailEqName"
+      :rules="[RULE.required('The user name is required')]"
+      dense
+      outlined
+      label="User name"
+      validate-on-blur
+      v-model="username"
+    />
+    <v-text-field
+      v-model="email"
+      dense
+      outlined
+      validate-on-blur
+      label="Email address"
+      :rules="[
+        RULE.email('The email address you entered is not valid', 3),
+        RULE.required('The email address is required')
+      ]"
+    />
+    <v-text-field
+      dense
       counter
+      outlined
+      validate-on-blur
+      label="Password"
+      v-model="password"
+      :rules="[
+        RULE.required('The password is required'),
+        RULE.min('The password should be longer than 10 characters', 10)
+      ]"
+      :type="isShowPassword ? 'text' : 'password'"
       @click:append="isShowPassword = !isShowPassword"
     />
+    <span v-if="errorMessages.length" class="error--text text-caption">
+      <template v-for="error in errorMessages">
+        {{ error }}
+      </template>
+    </span>
     <input type="password" style="display: none;" browserAutocomplete="new-password" autocomplete="new-password" />
-    <v-btn :disabled="!isFormValid" color="primary" class="mr-4" @click="handleLogin">
+    <v-btn :disabled="!isFormValid" :loading="loading" color="primary" class="mr-4" @click="handleLogin">
       Create account and join
+      <template v-slot:loader>
+        <span>{{ loadingText }}...</span>
+        <v-icon class="ask-anna-btn-loader" dark>
+          mdi-loading
+        </v-icon>
+      </template>
     </v-btn>
   </v-form>
 </template>
 
 <script>
-import { defineComponent } from '@vue/composition-api'
 import useAuthStore from '../composition/useAuthStore'
+import useValidationRules from '@/core/composition/useValidationRules'
+import { ref, toRefs, reactive, defineComponent } from '@vue/composition-api'
+import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 
 export default defineComponent({
   name: 'TheCreateNewAccount',
 
-  data: () => ({
-    formData: {
-      password: '',
-      username: ''
-    },
-    isFormValid: false,
-    isShowPassword: false
-  }),
-
   setup(rops, context) {
     const authStore = useAuthStore()
+    const workspaceStore = useWorkspaceStore()
+    const validationRules = useValidationRules()
 
-    return {
-      ...authStore
-    }
-  },
+    const step = ref(0)
+    const loading = ref(false)
+    const errorMessages = ref([])
+    const isFormValid = ref(false)
+    const loginFormRef = ref(null)
+    const isEmailEqName = ref(true)
+    const isShowPassword = ref(false)
 
-  methods: {
-    async handleLogin() {
-      if (!this.$refs.loginForm.validate()) {
+    const formData = reactive({
+      name: '',
+      email: '',
+      username: '',
+      password: ''
+    })
+
+    const { token, peopleId, workspaceId } = context.root.$route.params
+    const loadingTexts = ['Creating accout', 'Accept invitataion...', 'Join to workspace...']
+
+    const reset = () => loginFormRef.value.reset()
+    const resetValidation = () => loginFormRef.value.resetValidation()
+
+    const handleLogin = async () => {
+      errorMessages.value = []
+      if (!loginFormRef.value.validate()) {
+        return
+      }
+      loading.value = true
+
+      const name = isEmailEqName.value ? formData.email : formData.name
+      const username = isEmailEqName.value ? formData.email : formData.username
+
+      step.value = 1
+
+      const account = await authStore.actions.createAccount({ ...formData, name, username })
+
+      if (account && account.response && account.response.status === 400) {
+        errorMessages.value = account.response.data.non_field_errors
+        loading.value = false
+
         return
       }
 
-      await this.login({ ...this.formData })
-    },
-    reset() {
-      this.$refs.loginForm.reset()
-    },
-    resetValidation() {
-      this.$refs.loginForm.resetValidation()
+      let invatation = null
+      if (account && account.short_uuid) {
+        step.value = 2
+
+        invatation = await workspaceStore.acceptInvitetion({
+          token,
+          peopleId,
+          workspaceId
+        })
+      }
+
+      if (invatation && invatation.status === 'accepted') {
+        step.value = 3
+
+        setTimeout(() => context.root.$router.push({ name: 'workspace', params: { workspaceId } }), 1000)
+
+        return
+      }
+
+      step.value = 0
+      loading.value = false
+    }
+
+    return {
+      loading,
+      ...toRefs(formData),
+      isFormValid,
+      loginFormRef,
+      errorMessages,
+      isEmailEqName,
+      isShowPassword,
+      loadingText: loadingTexts[step.value],
+      handleLogin,
+      ...authStore,
+      RULE: validationRules.RULES
     }
   }
 })

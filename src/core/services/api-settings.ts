@@ -36,6 +36,9 @@ export const api: ApiSettings = {
     auth: {
       logout: () => `rest-auth/logout/`
     },
+    accounts: {
+      create: () => `accounts/`
+    },
     jobs: {
       list: () => `job/`
     },
