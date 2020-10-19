@@ -23,7 +23,6 @@ const apiService = async ({
   responseType = 'json',
   serviceName = 'workspace'
 }: ServiceParams) => {
-  console.log(api.points)
   try {
     const result = await $axios(api.apiUrl() + api.points[serviceName][action](uuid), {
       data,

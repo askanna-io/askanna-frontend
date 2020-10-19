@@ -59,6 +59,12 @@
                 </v-avatar>
                 Delete {{ inValidEmails.length }} invalid email{{ inValidEmails.length > 1 ? 's' : '' }}
               </v-chip>
+              <v-chip class="mt-2" v-if="invitedEmails.length" color="green" @click="handleRemoveInvitedEmails">
+                <v-avatar color="white" left class="green--text">
+                  {{ invitedEmails.length }}
+                </v-avatar>
+                Delete {{ invitedEmails.length }} ivited email{{ invitedEmails.length > 1 ? 's' : '' }}
+              </v-chip>
             </v-col>
           </v-row>
         </v-container>
@@ -123,6 +129,11 @@ export default defineComponent({
 
     const invationBtnText = computed(() => (invationItems.value.length > 1 ? 'Send invations' : 'Send invation'))
     const inValidEmails = computed(() => invationItems.value.filter(email => !validationRules.isValidEmail(email)))
+    const invitedEmails = computed(() =>
+      invationItems.value.filter(
+        email => workspaceStore.workspacePeople.value.some(item => item.email === email) && email
+      )
+    )
 
     const handleOnInput = (value, index, path, item) => invationItems.value.splice(index, 1, { ...item, [path]: value })
 
@@ -158,6 +169,10 @@ export default defineComponent({
       invationItems.value = invationItems.value.filter(email => validationRules.isValidEmail(email))
     }
 
+    const handleRemoveInvitedEmails = () => {
+      invationItems.value = invationItems.value.filter(email => !invitedEmails.value.includes(email))
+    }
+
     const getStyle = email => {
       const isEmailValid = !validationRules.isValidEmail(email)
       const isExist = workspaceStore.workspacePeople.value.find(item => item.email === email)
@@ -191,8 +206,10 @@ export default defineComponent({
       invationItems,
       handleOnInput,
       inValidEmails,
+      invitedEmails,
       invationBtnText,
       handleSentInvation,
+      handleRemoveInvitedEmails,
       handleRemoveInValidEmails
     }
   }

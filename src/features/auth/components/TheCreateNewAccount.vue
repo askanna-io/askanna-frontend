@@ -118,8 +118,14 @@ export default defineComponent({
         return
       }
 
+      const auth = await authStore.actions.login({
+        username,
+        password: formData.password,
+        redirect: false
+      })
+
       let invatation = null
-      if (account && account.short_uuid) {
+      if (account && account.short_uuid && auth && auth.key) {
         step.value = 2
 
         invatation = await workspaceStore.acceptInvitetion({
