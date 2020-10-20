@@ -65,7 +65,7 @@
 <script>
 import useAuthStore from '../composition/useAuthStore'
 import useValidationRules from '@/core/composition/useValidationRules'
-import { ref, toRefs, reactive, defineComponent } from '@vue/composition-api'
+import { ref, toRefs, reactive, computed, defineComponent } from '@vue/composition-api'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 
 export default defineComponent({
@@ -90,14 +90,16 @@ export default defineComponent({
       username: '',
       password: ''
     })
+    const loadingText = computed(() => loadingTexts[step.value])
 
     const { token, peopleId, workspaceId } = context.root.$route.params
-    const loadingTexts = ['Creating accout', 'Accept invitataion...', 'Join to workspace...']
+    const loadingTexts = ['Creating accout', 'Sign in', 'Accept invitataion', 'Join to workspace']
 
     const reset = () => loginFormRef.value.reset()
     const resetValidation = () => loginFormRef.value.resetValidation()
 
     const handleLogin = async () => {
+      step.value = 0
       errorMessages.value = []
       if (!loginFormRef.value.validate()) {
         return
@@ -107,8 +109,6 @@ export default defineComponent({
       const name = isEmailEqName.value ? formData.email : formData.name
       const username = isEmailEqName.value ? formData.email : formData.username
 
-      step.value = 1
-
       const account = await authStore.actions.createAccount({ ...formData, name, username })
 
       if (account && account.response && account.response.status === 400) {
@@ -117,6 +117,8 @@ export default defineComponent({
 
         return
       }
+
+      step.value = 1
 
       const auth = await authStore.actions.login({
         username,
@@ -143,19 +145,19 @@ export default defineComponent({
         return
       }
 
-      step.value = 0
       loading.value = false
+      step.value = 0
     }
 
     return {
       loading,
       ...toRefs(formData),
+      loadingText,
       isFormValid,
       loginFormRef,
       errorMessages,
       isEmailEqName,
       isShowPassword,
-      loadingText: loadingTexts[step.value],
       handleLogin,
       ...authStore,
       RULE: validationRules.RULES

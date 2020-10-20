@@ -134,7 +134,11 @@ export const actions: ActionTree<workspaceState, RootState> = {
 
     if (people.length) {
       commit(mutation.UPDATE_WORKSPACE_PEOPLE, people)
-      logger.success(commit, 'Invites were sent')
+      logger.success(
+        commit,
+        `You have successfully invited ${people.map(item => item.email).join(', ')} to join the workspace
+      ${state.workspace.title}`
+      )
     }
   },
 
@@ -161,6 +165,7 @@ export const actions: ActionTree<workspaceState, RootState> = {
     let response
 
     const data = {
+      status: 'accepted',
       token
     }
     try {
