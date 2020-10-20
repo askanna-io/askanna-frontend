@@ -32,7 +32,7 @@
     <v-row align="center" justify="center">
       <v-col cols="12" xl="2" md="4" sm="6" class="rounded">
         <v-card>
-          <v-card-title>## What's AskAnna? </v-card-title>
+          <v-card-title>What's AskAnna? </v-card-title>
           <v-card-text>
             AskAnna is the platform where you can easily collaborate on data science and machine learning projects. You
             can kickstart your next project using templates, version control, and MLOps automation tools. Also, we will

@@ -1,23 +1,31 @@
 <template>
-  <v-form ref="loginFormRef" v-model="isFormValid" @keyup.native.enter="handleLogin" @submit="handleLogin">
+  <v-form
+    ref="loginFormRef"
+    lazy-validation
+    v-model="isFormValid"
+    @submit="handleLogin"
+    @keyup.native.enter="handleLogin"
+  >
     <v-checkbox v-model="isEmailEqName" class="mt-0" label="Use email address as username" />
     <v-text-field
       v-if="!isEmailEqName"
-      :rules="[RULE.required('The name is required')]"
       dense
       outlined
       label="Name"
-      validate-on-blur
       v-model="name"
+      validate-on-blur
+      :error-messages="error.name"
+      :rules="[RULE.required('The name is required')]"
     />
     <v-text-field
       v-if="!isEmailEqName"
-      :rules="[RULE.required('The user name is required')]"
       dense
       outlined
       label="User name"
       validate-on-blur
       v-model="username"
+      :error-messages="error.username"
+      :rules="[RULE.required('The user name is required')]"
     />
     <v-text-field
       v-model="email"
@@ -25,9 +33,10 @@
       outlined
       validate-on-blur
       label="Email address"
+      :error-messages="error.email"
       :rules="[
-        RULE.email('The email address you entered is not valid', 3),
-        RULE.required('The email address is required')
+        RULE.required('The email address is required'),
+        RULE.email('The email address you entered is not valid', 3)
       ]"
     />
     <v-text-field
@@ -37,6 +46,7 @@
       validate-on-blur
       label="Password"
       v-model="password"
+      :error-messages="error.password"
       :rules="[
         RULE.required('The password is required'),
         RULE.min('The password should be longer than 10 characters', 10)
@@ -65,8 +75,8 @@
 <script>
 import useAuthStore from '../composition/useAuthStore'
 import useValidationRules from '@/core/composition/useValidationRules'
-import { ref, toRefs, reactive, computed, defineComponent } from '@vue/composition-api'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
+import { ref, watch, toRefs, reactive, computed, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'TheCreateNewAccount',
@@ -90,6 +100,10 @@ export default defineComponent({
       username: '',
       password: ''
     })
+
+    const errorData = reactive({
+      error: { name: '', email: '', username: '', password: '' }
+    })
     const loadingText = computed(() => loadingTexts[step.value])
 
     const { token, peopleId, workspaceId } = context.root.$route.params
@@ -112,8 +126,10 @@ export default defineComponent({
       const account = await authStore.actions.createAccount({ ...formData, name, username })
 
       if (account && account.response && account.response.status === 400) {
-        errorMessages.value = account.response.data.non_field_errors
+        errorData.error = { ...errorData.error, ...account.response.data }
+
         loading.value = false
+        step.value = 0
 
         return
       }
@@ -149,9 +165,22 @@ export default defineComponent({
       step.value = 0
     }
 
+    const resetError = () => {
+      errorData.error = { name: '', email: '', username: '', password: '' }
+    }
+
+    watch(formData, async (formData, prevFormData) => {
+      // check if exist error from backend on typing fields, try resest validation
+      if (Object.values(errorData.error).some(error => error.length)) {
+        resetError()
+        loginFormRef.value.resetValidation()
+      }
+    })
+
     return {
       loading,
       ...toRefs(formData),
+      ...toRefs(errorData),
       loadingText,
       isFormValid,
       loginFormRef,
