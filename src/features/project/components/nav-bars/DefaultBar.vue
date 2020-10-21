@@ -20,6 +20,15 @@
       </v-card>
     </div>
 
+    <v-breadcrumbs v-if="!sticked" :items="projectBreadcrumbs">
+      <template v-slot:item="{ item }">
+        <v-breadcrumbs-item :to="item.to" exact>
+          {{ item.title }}
+        </v-breadcrumbs-item>
+      </template>
+    </v-breadcrumbs>
+    <v-divider />
+
     <v-card-title>
       <v-icon large left>
         mdi-semantic-web

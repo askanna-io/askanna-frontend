@@ -168,7 +168,7 @@ export default {
       path: '/:workspaceId',
       component: () => import(/* webpackChunkName: "workspace-index" */ './views/index.vue'),
       meta: {
-        breadcrumb: 'Dashboard'
+        breadcrumb: 'Home'
       },
       children: [
         {
@@ -184,7 +184,7 @@ export default {
           component: () => import(/* webpackChunkName: "workspace-people" */ './views/people.vue'),
           name: 'workspace-people',
           meta: {
-            breadcrumb: 'Peoplet - #:workspaceId'
+            breadcrumb: 'People'
           }
         },
         {
