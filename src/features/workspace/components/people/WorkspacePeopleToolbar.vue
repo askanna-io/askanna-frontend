@@ -118,7 +118,7 @@ export default defineComponent({
     const roleFilters = [
       { value: '', name: 'All types' },
       { value: 'WA', name: 'Admin' },
-      { value: 'WM', name: 'Members' }
+      { value: 'WM', name: 'Member' }
     ]
 
     const statusFilters = [

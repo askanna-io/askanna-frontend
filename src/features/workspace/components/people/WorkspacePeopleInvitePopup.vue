@@ -59,11 +59,13 @@
                 </v-avatar>
                 Delete {{ inValidEmails.length }} invalid email{{ inValidEmails.length > 1 ? 's' : '' }}
               </v-chip>
-              <v-chip class="mt-2" v-if="invitedEmails.length" color="green" @click="handleRemoveInvitedEmails">
-                <v-avatar color="white" left class="green--text">
+              <v-chip class="mt-2" v-if="invitedEmails.length" color="primary" @click="handleRemoveInvitedEmails">
+                <v-avatar color="white" left class="primary--text">
                   {{ invitedEmails.length }}
                 </v-avatar>
-                Delete {{ invitedEmails.length }} ivited email{{ invitedEmails.length > 1 ? 's' : '' }}
+                Remove {{ invitedEmails.length }} email{{ invitedEmails.length > 1 ? 's' : '' }} of existing member{{
+                  invitedEmails.length > 1 ? 's' : ''
+                }}
               </v-chip>
             </v-col>
           </v-row>
@@ -71,7 +73,7 @@
 
         <v-card-actions>
           <v-btn
-            :disabled="!invationItems.length || Boolean(inValidEmails.length)"
+            :disabled="!invationItems.length || Boolean(inValidEmails.length) || Boolean(invitedEmails.length)"
             :loading="loading"
             text
             small
@@ -189,7 +191,7 @@ export default defineComponent({
       return {
         color: {
           error: isEmailValid,
-          green: isAccepted,
+          primary: isAccepted,
           'blue lighten-3': isInvited
         },
         icon

@@ -3,7 +3,7 @@
     <v-dialog v-model="openVmodel" max-width="400px" origin>
       <v-card class="text-center position">
         <v-app-bar flat dense white--text color="white">
-          <v-spacer></v-spacer>
+          <v-spacer />
 
           <v-btn icon @click="openVmodel = false">
             <v-icon>mdi-close</v-icon>
@@ -20,7 +20,7 @@
             </v-col>
             <v-col :class="[people.avatar ? 'pt-1' : 'pt-0']">
               <v-chip class="role" color="primary">
-                {{ people.role }}
+                {{ roleName }}
               </v-chip>
             </v-col>
           </v-row>
@@ -31,7 +31,7 @@
               <v-col class="pt-0" cols="12" align-self="start">
                 <v-list-item>
                   <v-list-item-content>
-                    <v-list-item-title class="title">{{ people.name }}</v-list-item-title>
+                    <v-list-item-title class="title">{{ people.name || people.email }}</v-list-item-title>
                     <v-list-item-subtitle>{{ people.job_title }}</v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item>
@@ -50,7 +50,7 @@
               </div>
               <div class="mt-2">
                 <v-btn small block outlined text color="secondary" class="btn--hover" @click="handleRemove">
-                  Remove&nbsp;<br /><span class="error--text">{{ people.name }}</span
+                  Remove&nbsp;<br /><span class="error--text">{{ people.name || people.email }}</span
                   >&nbsp;from {{ workspaceName }}
                 </v-btn>
               </div>
@@ -101,10 +101,21 @@ export default defineComponent({
       set: value => context.emit('handleValue', value)
     })
 
+    const roleFilters = {
+      ALL: 'All types',
+      WA: 'Admin',
+      WM: 'Member'
+    }
+
+    const roleName = computed(() => {
+      const val = props.people.role
+      return roleFilters[val]
+    })
+
     const handleRemove = value => context.emit('handleRemove', value)
     const handleChangeRole = value => context.emit('handleChangeRole', value)
 
-    return { dialog, openVmodel, handleRemove, handleChangeRole }
+    return { dialog, roleName, openVmodel, handleRemove, handleChangeRole }
   }
 })
 </script>
