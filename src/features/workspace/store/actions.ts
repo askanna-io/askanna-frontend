@@ -121,6 +121,7 @@ export const actions: ActionTree<workspaceState, RootState> = {
         const people = await dispatch(action.sendInviteEmail, {
           email,
           name: email,
+          web_ui_url: window.location.origin,
           object_uuid: state.workspace.uuid
         })
         if (people.short_uuid && people) {
