@@ -18,7 +18,7 @@
 import useJobStore from '@job/composition/useJobStore'
 import useProject from '@project/composition/useProject'
 import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
-import { onUnmounted, defineComponent } from '@vue/composition-api'
+import { computed, isReactive, onUnmounted, defineComponent } from '@vue/composition-api'
 import ProjectNavBar from '@project/components/nav-bars/ProjectNavBar'
 
 export default defineComponent({
