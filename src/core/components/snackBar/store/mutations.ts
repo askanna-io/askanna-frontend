@@ -3,7 +3,8 @@ import { mt, TIMINGS, SnackbarState } from './types'
 
 export const mutations: MutationTree<SnackbarState> = {
   [mt.SET_SNACKBAR](state, params) {
-    let { timeout, message = '' } = params
+    let { timeout } = params
+    const { message = '' } = params
 
     if (!timeout) {
       timeout = message.length * TIMINGS.SNACKBAR_SYMBOL_READ_TIME
