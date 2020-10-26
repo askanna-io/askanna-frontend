@@ -4,9 +4,8 @@ import { logger } from '@/core/plugins/logger'
 import apiService from '@/core/services/apiService'
 import * as rootTypes from '@/core/store/actionTypes'
 import { apiStringify } from '@/core/services/api-settings'
-
 import { projectState, PROJECT_STORE, action, mutation } from './types'
-import projects from '@/server/fixtures/projects'
+import { mutation as gMutation, GENERAL_STORE } from '@/core/store/general/types'
 
 const serviceName = PROJECT_STORE
 const api = apiStringify(serviceName)
@@ -29,6 +28,7 @@ export const actions: ActionTree<projectState, RootState> = {
     }
 
     commit(mutation.SET_PROJECT, project)
+    commit(`${GENERAL_STORE}/${gMutation.SET_BREADCRUMB_PARAMS}`, { projectId: project.name }, { root: true })
   },
 
   async [action.getProjects]({ state, commit, dispatch }) {

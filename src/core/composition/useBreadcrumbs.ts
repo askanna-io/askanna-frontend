@@ -1,9 +1,13 @@
-import { watch, SetupContext } from '@vue/composition-api'
+import useGeneralStore from '@/core/store/general/useGeneralStore'
+
+import { computed, SetupContext } from '@vue/composition-api'
 
 export default function (context: SetupContext, { start = 0, end = undefined }) {
-  let breadcrumbs: any = []
+  const generalStore = useGeneralStore()
 
-  const getBreadcrumbs = function () {
+  const getBreadcrumbs = computed(() => {
+    let breadcrumbs: any = []
+
     let isReachCurrent = false
 
     breadcrumbs = context.root.$route.matched
@@ -15,10 +19,11 @@ export default function (context: SetupContext, { start = 0, end = undefined }) 
 
         let path = route.path
         let title = route.meta.breadcrumb
-
         Object.entries(context.root.$route.params).forEach(([key, value]) => {
           path = path.replace(`:${key}`, value)
-          title = title.replace(`:${key}`, value)
+          //@ts-expect-error: Let's ignore a single compiler error
+          const name = generalStore.breadcrumbParams.value[key]
+          title = title.replace(`:${key}`, name || value)
         })
         return {
           title,
@@ -26,14 +31,9 @@ export default function (context: SetupContext, { start = 0, end = undefined }) 
           disabled: isReachCurrent
         }
       })
-  }
 
-  watch(
-    () => context.root.$route,
-    function () {
-      getBreadcrumbs()
-    }
-  )
+    return breadcrumbs
+  })
 
-  return breadcrumbs
+  return getBreadcrumbs
 }

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <workspace-people-navbar />
     <workspace-people-list
       v-scroll="throttle(onScroll, 1000)"
       :loading="loading"
@@ -16,11 +17,12 @@ import useQuery from '@/core/composition/useQuery'
 import { computed, onBeforeMount, defineComponent } from '@vue/composition-api'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 import WorkspacePeopleList from '@/features/workspace/components/people/WorkspacePeopleList.vue'
+import WorkspacePeopleNavbar from '@/features/workspace/components/people/WorkspacePeopleNavbar.vue'
 
 export default defineComponent({
   name: 'workspace',
 
-  components: { WorkspacePeopleList },
+  components: { WorkspacePeopleList, WorkspacePeopleNavbar },
 
   setup(props, context) {
     const workspaceStore = useWorkspaceStore()

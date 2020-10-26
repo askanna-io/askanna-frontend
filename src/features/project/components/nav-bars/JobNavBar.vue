@@ -11,6 +11,7 @@
         </v-breadcrumbs>
         <v-spacer />
       </v-toolbar>
+
       <v-card :flat="!sticked" v-if="sticked" :class="{ 'ma-3': sticked }">
         <v-divider v-if="!sticked" />
         <v-slide-y-transition>
@@ -22,6 +23,14 @@
         <job-tool-bar :jobName="job.name" :projectName="project.name" />
       </v-card>
     </div>
+    <v-breadcrumbs v-if="!sticked" :items="breadcrumbs">
+      <template v-slot:item="{ item }">
+        <v-breadcrumbs-item :to="item.to" exact>
+          {{ item.title }}
+        </v-breadcrumbs-item>
+      </template>
+    </v-breadcrumbs>
+    <v-divider />
     <job-tool-bar v-if="!sticked" :jobName="job.name" :projectName="project.name" />
   </div>
 </template>

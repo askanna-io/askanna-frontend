@@ -4,6 +4,7 @@ import { jobState, JOB_STORE } from './types'
 import { logger } from '@/core/plugins/logger'
 import apiService from '@/core/services/apiService'
 import { apiStringify } from '@/core/services/api-settings'
+import { mutation as gMutation, GENERAL_STORE } from '@/core/store/general/types'
 
 const serviceName = JOB_STORE
 const api = apiStringify(serviceName)
@@ -23,6 +24,7 @@ export const actions: ActionTree<jobState, RootState> = {
     }
 
     commit(type.SET_JOB, job)
+    commit(`${GENERAL_STORE}/${gMutation.SET_BREADCRUMB_PARAMS}`, { jobId: job.name }, { root: true })
   },
 
   async [type.startJob]({ commit, state, dispatch }, data) {

@@ -112,7 +112,7 @@ export const actions: ActionTree<PackageState, RootState> = {
   async [type.finishUpload]({ commit }, { uuid, data }) {
     let result
     // convert the data to formdata for proper file upload
-    let formData = new FormData()
+    const formData = new FormData()
 
     type CalType = (name: any, value: any) => void
     const callback: CalType = ([name, value]) => formData.append(name, value)

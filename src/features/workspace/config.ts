@@ -23,7 +23,7 @@ const jobRun = [
           ),
         name: 'workspace-project-jobs-job-jobrun-input',
         meta: {
-          breadcrumb: 'Job run - #:jobRunId'
+          breadcrumb: 'Job run - :jobRunId'
         }
       },
       {
@@ -34,7 +34,7 @@ const jobRun = [
           ),
         name: 'workspace-project-jobs-job-jobrun-result',
         meta: {
-          breadcrumb: 'Job run - #:jobRunId'
+          breadcrumb: 'Job run - :jobRunId'
         }
       },
       {
@@ -120,7 +120,7 @@ const jobRun = [
           ),
         name: 'workspace-project-jobs-job-jobrun-log',
         meta: {
-          breadcrumb: 'Job run - #:jobRunId'
+          breadcrumb: 'Job run - :jobRunId'
         }
       }
     ]
@@ -140,7 +140,7 @@ const packageRoutes = [
       import(/* webpackChunkName: "workspace-project-package-uuid" */ './views/project/package/index.vue'),
     name: 'workspace-project-package-index',
     meta: {
-      breadcrumb: 'Code - #:packageId'
+      breadcrumb: 'Code - :packageId'
     },
     children: [
       {
@@ -191,7 +191,7 @@ const JobRoutes = [
     component: () =>
       import(/* webpackChunkName: "workspace-project-uuid-jobs-id" */ './views/project/jobs/job/index.vue'),
     meta: {
-      breadcrumb: 'Job - #:jobId'
+      breadcrumb: 'Job - :jobId'
     },
     children: [
       {
@@ -210,7 +210,7 @@ const JobRoutes = [
             /* webpackChunkName: "workspace-project-job-runs-index" */ './views/project/jobs/job/jobruns/index.vue'
           ),
         meta: {
-          breadcrumb: 'Job runs'
+          breadcrumb: 'Runs'
         },
         children: jobRun
       },
@@ -242,7 +242,7 @@ export default {
       path: '/:workspaceId',
       component: () => import(/* webpackChunkName: "workspace-index" */ './views/index.vue'),
       meta: {
-        breadcrumb: 'Dashboard'
+        breadcrumb: 'Workspace - :workspaceId'
       },
       children: [
         {
@@ -258,7 +258,7 @@ export default {
           component: () => import(/* webpackChunkName: "workspace-people" */ './views/people.vue'),
           name: 'workspace-people',
           meta: {
-            breadcrumb: 'Peoplet - #:workspaceId'
+            breadcrumb: 'People'
           }
         },
         {
@@ -266,14 +266,14 @@ export default {
           component: () => import(/* webpackChunkName: "workspace-new-project" */ './views/new-project.vue'),
           name: 'workspace-new-project',
           meta: {
-            breadcrumb: 'New project - #:workspaceId'
+            breadcrumb: 'New project - :workspaceId'
           }
         },
         {
           path: 'project/:projectId',
           component: () => import(/* webpackChunkName: "workspace-project" */ './views/project/index.vue'),
           meta: {
-            breadcrumb: 'Project - #:projectId'
+            breadcrumb: 'Project - :projectId'
           },
 
           children: [
@@ -284,7 +284,7 @@ export default {
               component: () =>
                 import(/* webpackChunkName: "workspace-project-uuid-activity" */ './views/project/uuid-project.vue'),
               meta: {
-                breadcrumb: 'Project - #:projectId'
+                breadcrumb: 'Project - :projectId'
               }
             },
             {

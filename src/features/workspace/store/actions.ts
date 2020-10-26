@@ -2,6 +2,7 @@ import { ActionTree } from 'vuex'
 import { logger } from '@/core/plugins/logger'
 import apiService from '@/core/services/apiService'
 import { apiStringify } from '@/core/services/api-settings'
+import { mutation as gMutation, GENERAL_STORE } from '@/core/store/general/types'
 import { workspaceState, WORKSPACE_STORE, stateType, action, mutation } from './types'
 
 const serviceName = WORKSPACE_STORE
@@ -23,6 +24,7 @@ export const actions: ActionTree<workspaceState, RootState> = {
     }
 
     commit(mutation.SET_WORKSPACE, workspace)
+    commit(`${GENERAL_STORE}/${gMutation.SET_BREADCRUMB_PARAMS}`, { workspaceId: workspace.title }, { root: true })
   },
 
   async [action.getWorkspaces]({ state, commit }) {
