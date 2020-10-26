@@ -24,7 +24,7 @@ export const actions: ActionTree<jobState, RootState> = {
     }
 
     commit(type.SET_JOB, job)
-    commit(`${GENERAL_STORE}/${gMutation.SET_BREADCRUMB_PARAMS}`, { jobId: job.title }, { root: true })
+    commit(`${GENERAL_STORE}/${gMutation.SET_BREADCRUMB_PARAMS}`, { jobId: job.name }, { root: true })
   },
 
   async [type.startJob]({ commit, state, dispatch }, data) {

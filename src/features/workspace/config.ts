@@ -136,7 +136,7 @@ const JobRoutes = [
             /* webpackChunkName: "workspace-project-job-runs-index" */ './views/project/jobs/job/jobruns/index.vue'
           ),
         meta: {
-          breadcrumb: 'Job runs'
+          breadcrumb: 'Runs'
         },
         children: jobRun
       },
