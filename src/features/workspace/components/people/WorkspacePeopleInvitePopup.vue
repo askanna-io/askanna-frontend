@@ -57,7 +57,7 @@
                 <v-avatar color="white" left class="error--text">
                   {{ inValidEmails.length }}
                 </v-avatar>
-                Delete {{ inValidEmails.length }} invalid email{{ inValidEmails.length > 1 ? 's' : '' }}
+                Remove {{ inValidEmails.length }} invalid email{{ inValidEmails.length > 1 ? 's' : '' }}
               </v-chip>
               <v-chip class="mt-2" v-if="invitedEmails.length" color="primary" @click="handleRemoveInvitedEmails">
                 <v-avatar color="white" left class="primary--text">
