@@ -6,9 +6,7 @@
     @submit="handleLogin"
     @keyup.native.enter="handleLogin"
   >
-    <v-checkbox v-model="isEmailEqName" class="mt-0" label="Use email address as username" />
     <v-text-field
-      v-if="!isEmailEqName"
       dense
       outlined
       label="Name"
@@ -18,14 +16,13 @@
       :rules="[RULE.required('The name is required')]"
     />
     <v-text-field
-      v-if="!isEmailEqName"
       dense
       outlined
-      label="User name"
+      label="Username"
       validate-on-blur
       v-model="username"
       :error-messages="error.username"
-      :rules="[RULE.required('The user name is required')]"
+      :rules="[RULE.required('The username is required')]"
     />
     <v-text-field
       v-model="email"
@@ -106,7 +103,7 @@ export default defineComponent({
     })
     const loadingText = computed(() => loadingTexts[step.value])
 
-    const { token, peopleId, workspaceId } = context.root.$route.params
+    const { token, peopleId, workspaceId, workspaceName } = context.root.$route.params
     const loadingTexts = ['Creating accout', 'Sign in', 'Accept invitataion', 'Join to workspace']
 
     const reset = () => loginFormRef.value.reset()
@@ -120,10 +117,7 @@ export default defineComponent({
       }
       loading.value = true
 
-      const name = isEmailEqName.value ? formData.email : formData.name
-      const username = isEmailEqName.value ? formData.email : formData.username
-
-      const account = await authStore.actions.createAccount({ ...formData, name, username })
+      const account = await authStore.actions.createAccount(formData)
 
       if (account && account.response && account.response.status === 400) {
         errorData.error = { ...errorData.error, ...account.response.data }
@@ -137,7 +131,7 @@ export default defineComponent({
       step.value = 1
 
       const auth = await authStore.actions.login({
-        username,
+        username: formData.username,
         password: formData.password,
         redirect: false
       })

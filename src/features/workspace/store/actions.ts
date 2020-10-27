@@ -178,7 +178,8 @@ export const actions: ActionTree<workspaceState, RootState> = {
         data
       })
     } catch (e) {
-      logger.error(commit, 'Error on upload package in registerPackage action.\nError: ', e)
+      logger.error(commit, 'Error on accept invitation in acceptInvitetion action.\nError: ', e)
+      return e
     }
 
     return response
