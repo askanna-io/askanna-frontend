@@ -13,20 +13,8 @@
       validate-on-blur
       v-model="username"
       :error-messages="error.username"
-      :rules="[RULE.required('The username is required')]"
     />
-    <v-text-field
-      v-model="email"
-      dense
-      outlined
-      validate-on-blur
-      label="Email address"
-      :error-messages="error.email"
-      :rules="[
-        RULE.required('The email address is required'),
-        RULE.email('The email address you entered is not valid', 3)
-      ]"
-    />
+    <v-text-field v-model="email" dense outlined validate-on-blur label="Email address" :error-messages="error.email" />
     <v-text-field
       dense
       counter
@@ -35,10 +23,6 @@
       label="Password"
       v-model="password"
       :error-messages="error.password"
-      :rules="[
-        RULE.required('The password is required'),
-        RULE.min('The password should be longer than 10 characters', 10)
-      ]"
       :type="isShowPassword ? 'text' : 'password'"
       @click:append="isShowPassword = !isShowPassword"
     />

@@ -8,11 +8,13 @@
       @keyup.native.enter="handleLogin"
       @submit.stop="handleLogin"
     >
-      <v-text-field v-model="username" validate-on-blur autocomplete="off" label="Username" required />
+      <v-text-field v-model="username" dense outlined validate-on-blur autocomplete="off" label="Email" required />
       <v-text-field
         v-model="password"
         :append-icon="isShowPassword ? 'far fa-eye' : 'fas fa-eye-slash'"
         :type="isShowPassword ? 'text' : 'password'"
+        dense
+        outlined
         name="input-10-1"
         label="Password"
         counter
