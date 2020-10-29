@@ -7,8 +7,9 @@
           The invitation you tried to open is not valid. Maybe the invitation is already accepted, or something else
           went wrong.
           <br />
+          <br />
           Please check with the person who send you the invite, or send us an email on
-          <a href="mailto:support@askanna.io" target="_blank">support@askanna.io</a>
+          <a href="mailto:support@askanna.io" target="_blank">support@askanna.io</a>.
         </v-card-text>
       </v-card>
     </v-col>
