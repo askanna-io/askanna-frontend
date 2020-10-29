@@ -193,6 +193,7 @@
       </v-container>
       <the-snack-bar />
       <the-upload-status />
+      <update-app />
     </v-content>
   </v-app>
 </template>
@@ -201,6 +202,8 @@
 import useProjectStore from '@project/composition/useProjectStore'
 import TheUploadStatus from '@/core/components/uploadStatus/TheUploadStatus'
 import useUploadStatus from '@/core/components/uploadStatus/useUploadStatus'
+
+import UpdateApp from '@/core/components/shared/updateApp/UpdateApp'
 
 import { createNamespacedHelpers } from 'vuex'
 import { logout } from '@/core/store/actionTypes'
@@ -214,7 +217,7 @@ const { mapActions } = createNamespacedHelpers(AUTH_STORE)
 export default defineComponent({
   name: 'dashboard',
 
-  components: { TheUploadStatus },
+  components: { UpdateApp, TheUploadStatus },
 
   setup(props, context) {
     useTitle(context)

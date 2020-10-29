@@ -1,5 +1,12 @@
 const path = require('path')
 module.exports = {
+  pwa: {
+    workboxPluginMode: 'InjectManifest',
+    workboxOptions: {
+      swSrc: './src/sw.js',
+      swDest: 'service-worker.js'
+    }
+  },
   chainWebpack: config => {
     config.plugin('define').tap(args => {
       const v = JSON.stringify(require('./package.json').version)
