@@ -6,7 +6,7 @@
       </v-col>
     </v-row>
     <v-row align="center" justify="center">
-      <v-col>
+      <v-col class="pt-0">
         <ask-anna-loading-progress
           :type="'table-row'"
           :loading="loading"

@@ -3,7 +3,7 @@
     <v-col cols="6" xl="2" md="4" sm="6" class="rounded">
       <v-card>
         <v-card-title>Oops...something went wrong</v-card-title>
-        <v-card-text class="">
+        <v-card-text class="text-body-1">
           The invitation you tried to open is not valid. Maybe the invitation is already accepted, or something else
           went wrong.
           <br />
