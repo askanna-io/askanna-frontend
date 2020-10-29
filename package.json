@@ -6,9 +6,9 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
-    "test:unit:watch": "vue-cli-service test:unit --watch",
     "test:e2e": "vue-cli-service test:e2e",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "test:unit:watch": "vue-cli-service test:unit --watch"
   },
   "dependencies": {
     "@babel/polyfill": "7.8.7",
@@ -27,6 +27,7 @@
     "miragejs": "0.1.40",
     "moment": "^2.26.0",
     "prismjs": "1.21.0",
+    "register-service-worker": "1.7.1",
     "tiptap": "1.29.5",
     "tiptap-extensions": "1.32.4",
     "vue": "2.6.12",
@@ -49,11 +50,12 @@
     "@mdi/font": "5.1.45",
     "@types/jest": "25.2.2",
     "@types/node": "14.0.1",
-    "@typescript-eslint/parser": "4.5.0",
     "@typescript-eslint/eslint-plugin": "4.5.0",
+    "@typescript-eslint/parser": "4.5.0",
     "@vue/cli-plugin-babel": "4.5.8",
     "@vue/cli-plugin-e2e-cypress": "4.5.8",
     "@vue/cli-plugin-eslint": "4.5.8",
+    "@vue/cli-plugin-pwa": "^4.5.8",
     "@vue/cli-plugin-router": "4.5.8",
     "@vue/cli-plugin-typescript": "4.5.8",
     "@vue/cli-plugin-unit-jest": "4.5.8",
