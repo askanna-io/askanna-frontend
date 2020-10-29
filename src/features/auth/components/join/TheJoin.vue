@@ -1,8 +1,7 @@
 <template>
-  <div class="join-wrapper">
+  <div>
     <v-row align="center" justify="center">
       <v-col cols="6" xl="2" md="4" sm="6" class="rounded">
-        <img alt="AskAnna logo" src="@/assets/logo.svg" class="logo" />
         <div class="mb-2 ml-0 text-h6 white--text">Join the workspace {{ workspaceName }} on AskAnna</div>
         <v-expansion-panels class="login-expansion" v-model="panel" mandatory>
           <v-expansion-panel :key="0" active-class="colored-border">
@@ -49,9 +48,10 @@
 </template>
 
 <script>
-import { ref, defineComponent } from '@vue/composition-api'
-import TheConnectAccount from '../components/TheConnectAccount'
-import TheCreateNewAccount from '../components/TheCreateNewAccount'
+import TheConnectAccount from './TheConnectAccount'
+import TheCreateNewAccount from './TheCreateNewAccount'
+import { ref, computed, defineComponent } from '@vue/composition-api'
+import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 
 export default defineComponent({
   name: 'TheJoin',
@@ -61,10 +61,10 @@ export default defineComponent({
     TheCreateNewAccount
   },
 
-  setup(props, context) {
+  setup() {
     const panel = ref(0)
-
-    const { workspaceName } = context.root.$route.params
+    const workspaceStore = useWorkspaceStore()
+    const workspaceName = computed(() => workspaceStore.invitation.value.workspace.name)
 
     return {
       panel,
@@ -74,15 +74,6 @@ export default defineComponent({
 })
 </script>
 <style scoped>
-.join-wrapper {
-  height: 100vh;
-  background-image: url('~@/assets/bg/askanna-bg-01.svg');
-  background-size: cover;
-}
-.logo {
-  height: 74px;
-  margin-bottom: 6px;
-}
 .login-expansion .v-expansion-panel {
 }
 .colored-border {

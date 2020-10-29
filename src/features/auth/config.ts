@@ -11,9 +11,9 @@ export default {
       component: () => import(/* webpackChunkName: "login" */ './views/TheLogout.vue')
     },
     {
-      path: '/join/:token/workspace/:workspaceId/people/:peopleId/workspace/:workspaceName',
+      path: '/join/:token/workspace/:workspaceId/people/:peopleId',
       name: 'join',
-      component: () => import(/* webpackChunkName: "join" */ './views/TheJoin.vue')
+      component: () => import(/* webpackChunkName: "join" */ './views/join.vue')
     }
   ]
 }

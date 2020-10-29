@@ -56,7 +56,8 @@
 </template>
 
 <script>
-import useAuthStore from '../composition/useAuthStore'
+import { get } from 'lodash'
+import useAuthStore from '../../composition/useAuthStore'
 import JoinExistingAccountPopup from './JoinExistingAccountPopup'
 import useValidationRules from '@/core/composition/useValidationRules'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
@@ -124,7 +125,7 @@ export default defineComponent({
         })
       }
 
-      if (auth && auth.response && auth.response.status === 400) {
+      if (result && auth.response && auth.response.status === 400) {
         loading.value = false
 
         errorData.error = { ...errorData.error, ...auth.response.data }
@@ -136,12 +137,9 @@ export default defineComponent({
         joinToWorkpase()
         return
       }
-      if (result.response && result.response.status === 400) {
-        if (
-          result.response.data &&
-          result.response.data.user &&
-          result.response.data.user[0] === 'User is already part of this membership'
-        ) {
+
+      if (get(result, 'response.status') === 400) {
+        if (get(result, 'response.data.user[0]') === 'User is already part of this membership') {
           joinExistDialog.value = true
         }
       }

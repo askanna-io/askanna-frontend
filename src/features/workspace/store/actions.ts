@@ -1,4 +1,4 @@
-import { map } from 'lodash'
+import { get, map } from 'lodash'
 import { ActionTree } from 'vuex'
 import { logger } from '@/core/plugins/logger'
 import apiService from '@/core/services/apiService'
@@ -162,7 +162,7 @@ export const actions: ActionTree<workspaceState, RootState> = {
     return response
   },
 
-  async [action.acceptInvitetion]({ state, commit }, { token, peopleId, workspaceId }) {
+  async [action.acceptInvitetion]({ commit }, { token, peopleId, workspaceId }) {
     let response
 
     const data = {
@@ -178,10 +178,29 @@ export const actions: ActionTree<workspaceState, RootState> = {
         data
       })
     } catch (e) {
-      logger.error(commit, 'Error on accept invitation in acceptInvitetion action.\nError: ', e)
       return e
     }
 
     return response
+  },
+
+  async [action.getInvitetionInfo]({ commit }, { token, peopleId, workspaceId }) {
+    let response
+
+    try {
+      response = await apiService({
+        action: api.acceptInvitetion,
+        uuid: { workspaceId, peopleId },
+        serviceName,
+        params: { token }
+      })
+    } catch (e) {
+      let message = get(e, 'response.data.token') || 'Your token is not valid.\nError: '
+      logger.userDanger(commit, message)
+
+      commit(mutation.RESET_INVITATION)
+      return
+    }
+    commit(mutation.SET_INVITATION, response)
   }
 }

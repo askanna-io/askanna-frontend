@@ -9,15 +9,6 @@
     <v-text-field
       dense
       outlined
-      label="Name"
-      v-model="name"
-      validate-on-blur
-      :error-messages="error.name"
-      :rules="[RULE.required('The name is required')]"
-    />
-    <v-text-field
-      dense
-      outlined
       label="Username"
       validate-on-blur
       v-model="username"
@@ -70,7 +61,7 @@
 </template>
 
 <script>
-import useAuthStore from '../composition/useAuthStore'
+import useAuthStore from '../../composition/useAuthStore'
 import useValidationRules from '@/core/composition/useValidationRules'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 import { ref, watch, toRefs, reactive, computed, defineComponent } from '@vue/composition-api'
@@ -92,14 +83,13 @@ export default defineComponent({
     const isShowPassword = ref(false)
 
     const formData = reactive({
-      name: '',
-      email: '',
+      email: workspaceStore.invitation.value.email || '',
       username: '',
       password: ''
     })
 
     const errorData = reactive({
-      error: { name: '', email: '', username: '', password: '' }
+      error: { email: '', username: '', password: '' }
     })
     const loadingText = computed(() => loadingTexts[step.value])
 
@@ -117,7 +107,7 @@ export default defineComponent({
       }
       loading.value = true
 
-      const account = await authStore.actions.createAccount(formData)
+      const account = await authStore.actions.createAccount({ ...formData, name: formData.username })
 
       if (account && account.response && account.response.status === 400) {
         errorData.error = { ...errorData.error, ...account.response.data }
