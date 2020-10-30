@@ -11,12 +11,15 @@
       <v-text-field
         v-model="username"
         :error-messages="error.email"
-        :rules="[RULE.required('The username is required')]"
+        :rules="[
+          RULE.required('The email address is required'),
+          RULE.email('The email address you entered is not valid', 3)
+        ]"
         dense
         outlined
         validate-on-blur
         autocomplete="off"
-        label="Username"
+        label="Email"
         required
       />
       <v-text-field

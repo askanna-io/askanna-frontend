@@ -6,15 +6,19 @@
     @submit="handleLogin"
     @keyup.native.enter="handleLogin"
   >
+    <v-text-field dense outlined label="Name" validate-on-blur v-model="name" :error-messages="error.name" />
     <v-text-field
+      v-model="email"
+      :rules="[
+        RULE.required('The email address is required'),
+        RULE.email('The email address you entered is not valid', 3)
+      ]"
       dense
       outlined
-      label="Username"
       validate-on-blur
-      v-model="username"
-      :error-messages="error.username"
+      label="Email address"
+      :error-messages="error.email"
     />
-    <v-text-field v-model="email" dense outlined validate-on-blur label="Email address" :error-messages="error.email" />
     <v-text-field
       dense
       counter
@@ -24,6 +28,10 @@
       v-model="password"
       :error-messages="error.password"
       :type="isShowPassword ? 'text' : 'password'"
+      :rules="[
+        RULE.required('The password is required'),
+        RULE.min('The password should be longer than 10 characters', 10)
+      ]"
       @click:append="isShowPassword = !isShowPassword"
     />
     <span v-if="errorMessages.length" class="error--text text-caption">
@@ -67,13 +75,14 @@ export default defineComponent({
     const isShowPassword = ref(false)
 
     const formData = reactive({
+      name: '',
       email: workspaceStore.invitation.value.email || '',
       username: '',
       password: ''
     })
 
     const errorData = reactive({
-      error: { email: '', username: '', password: '' }
+      error: { name: '', email: '', username: '', password: '' }
     })
     const loadingText = computed(() => loadingTexts[step.value])
 
@@ -91,8 +100,9 @@ export default defineComponent({
       }
       loading.value = true
 
-      const username = formData.username || formData.email
-      const account = await authStore.actions.createAccount({ ...formData, username })
+      const name = formData.name || undefined
+      const username = formData.email
+      const account = await authStore.actions.createAccount({ ...formData, name, username })
 
       if (account && account.response && account.response.status === 400) {
         errorData.error = { ...errorData.error, ...account.response.data }
