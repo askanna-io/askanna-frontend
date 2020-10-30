@@ -1,10 +1,12 @@
 const path = require('path')
 module.exports = {
   pwa: {
+    name: 'AskAnna - Running Data Science Projects',
+    appleMobileWebAppCapable: 'yes',
+    appleMobileWebAppStatusBarStyle: 'black',
     workboxPluginMode: 'InjectManifest',
     workboxOptions: {
-      swSrc: './src/sw.js',
-      swDest: 'service-worker.js'
+      swSrc: './src/service-worker.js'
     }
   },
   chainWebpack: config => {

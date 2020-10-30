@@ -5,9 +5,7 @@ export default function () {
   const state = reactive({
     refreshing: false,
     registration: null,
-    snackBtnText: '',
-    snackWithBtnText: '',
-    snackWithButtons: false
+    snackWithButtons: true
   })
 
   const showRefreshUI = e => {
@@ -16,8 +14,6 @@ export default function () {
     // The new service worker is installed, but not yet active.
     // Store the ServiceWorkerRegistration instance for later use.
     state.registration = e.detail
-    state.snackBtnText = 'Refresh'
-    state.snackWithBtnText = 'New version available!'
     state.snackWithButtons = true
   }
 
@@ -30,14 +26,6 @@ export default function () {
 
   // Listen for swUpdated event and display refresh snackbar as required.
   document.addEventListener('swUpdated', showRefreshUI, { once: true })
-  // Refresh all open app tabs when a new service worker is installed.
-  if (navigator.serviceWorker) {
-    navigator.serviceWorker.addEventListener('controllerchange', () => {
-      if (state.refreshing) return
-      state.refreshing = true
-      window.location.reload()
-    })
-  }
 
   return {
     refreshApp,
