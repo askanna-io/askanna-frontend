@@ -5,7 +5,7 @@ export default function () {
   const state = reactive({
     refreshing: false,
     registration: null,
-    snackWithButtons: true
+    snackWithButtons: false
   })
 
   const showRefreshUI = e => {
