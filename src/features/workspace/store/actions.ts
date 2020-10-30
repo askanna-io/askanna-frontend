@@ -196,7 +196,7 @@ export const actions: ActionTree<workspaceState, RootState> = {
       })
     } catch (e) {
       let message = get(e, 'response.data.token') || 'Your token is not valid.\nError: '
-      logger.userDanger(commit, message)
+      logger.error(commit, message, e)
 
       commit(mutation.RESET_INVITATION)
       return

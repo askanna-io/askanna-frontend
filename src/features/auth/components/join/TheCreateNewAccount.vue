@@ -91,7 +91,8 @@ export default defineComponent({
       }
       loading.value = true
 
-      const account = await authStore.actions.createAccount({ ...formData, name: formData.username })
+      const username = formData.username || formData.email
+      const account = await authStore.actions.createAccount({ ...formData, username })
 
       if (account && account.response && account.response.status === 400) {
         errorData.error = { ...errorData.error, ...account.response.data }
@@ -105,7 +106,7 @@ export default defineComponent({
       step.value = 1
 
       const auth = await authStore.actions.login({
-        username: formData.username,
+        username: username,
         password: formData.password,
         redirect: false
       })

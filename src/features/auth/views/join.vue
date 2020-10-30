@@ -44,7 +44,9 @@ export default defineComponent({
     const { token, peopleId, workspaceId } = context.root.$route.params
 
     const loading = ref(true)
-    const isInvitationValid = computed(() => Boolean(workspaceStore.invitation.value.email))
+    const isInvitationValid = computed(
+      () => Boolean(workspaceStore.invitation.value.email) && workspaceStore.invitation.value.status !== 'accepted'
+    )
 
     onBeforeMount(async () => {
       loading.value = true
