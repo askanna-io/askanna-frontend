@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import PrismEditor from 'vue-prism-editor'
+import { PrismEditor } from 'vue-prism-editor'
 import { apiUrl } from '@/core/services/api-settings'
 import { defineComponent } from '@vue/composition-api'
 import useJobStore from '@job/composition/useJobStore'

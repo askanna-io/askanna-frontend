@@ -7,10 +7,11 @@
     top
   >
     {{ snackbar.message }}
-    <v-btn dark text @click="closeSnackBar">
-      <v-icon>far fa-times-circle</v-icon>
-      Close
-    </v-btn>
+    <template v-slot:action>
+      <v-btn dark icon text @click="closeSnackBar = false">
+        <v-icon>far fa-times-circle</v-icon>
+      </v-btn>
+    </template>
   </v-snackbar>
 </template>
 

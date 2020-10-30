@@ -2,7 +2,7 @@ import { Module } from 'vuex'
 import { getters } from './getters'
 import { actions } from './actions'
 import { mutations } from './mutations'
-import { workspaceState, WORKSPACE_STORE, WorkspaceModel } from './types'
+import { workspaceState, WORKSPACE_STORE, WorkspaceModel, InvitationModel } from './types'
 
 export const state: workspaceState = {
   workspace: new WorkspaceModel().state,
@@ -25,15 +25,19 @@ export const state: workspaceState = {
   workspaceSettings: {
     projectView: 0
   },
-  workspacePeople: {
-    count: 0,
-    next: null,
-    results: []
-  },
+  workspacePeople: [],
   workspacePeopleParams: {
-    ordering: '',
-    role: ''
-  }
+    search: '',
+    sorting: {
+      sortBy: 'name',
+      sort: 1
+    },
+    filter: {
+      role: '',
+      status: ''
+    }
+  },
+  invitation: new InvitationModel().state
 }
 
 const namespaced: boolean = true

@@ -48,7 +48,7 @@ export const logger = {
     commit(setSnackBar, { message, color: 'orange' }, { root: true })
   },
   userDanger: (commit: Commit, message: any) => {
-    commit(setSnackBar, { message, color: 'amber darken-4' }, { root: true })
+    commit(setSnackBar, { timeout: 2000, message, color: 'amber darken-4' }, { root: true })
   },
   error: (commit: Commit, errorHint: string, error: Error) => {
     let message, timeout

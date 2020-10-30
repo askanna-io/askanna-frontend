@@ -36,6 +36,9 @@ export const api: ApiSettings = {
     auth: {
       logout: () => `rest-auth/logout/`
     },
+    accounts: {
+      create: () => `accounts/`
+    },
     jobs: {
       list: () => `job/`
     },
@@ -96,6 +99,8 @@ export const api: ApiSettings = {
       get: id => `workspace/${id}/`,
       list: () => `workspace/`,
       projects: id => `workspace/${id}/projects/`,
+      invitePeople: id => `workspace/${id}/people/`,
+      acceptInvitetion: ({ workspaceId, peopleId }) => `workspace/${workspaceId}/people/${peopleId}/`,
       getProjectPackages: id => `project/${id}/packages/`,
       getWorkspacePeople: id => `workspace/${id}/people/`
     },
