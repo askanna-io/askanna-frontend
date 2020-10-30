@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-content>
-      <v-container fluid py-0>
+      <v-container fluid pa-0>
         <router-view />
         <span v-if="isNotBeta" class="version">Build version:&nbsp;{{ version }}</span>
       </v-container>

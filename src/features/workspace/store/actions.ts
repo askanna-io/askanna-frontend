@@ -1,3 +1,4 @@
+import { get, map } from 'lodash'
 import { ActionTree } from 'vuex'
 import { logger } from '@/core/plugins/logger'
 import apiService from '@/core/services/apiService'
@@ -96,26 +97,112 @@ export const actions: ActionTree<workspaceState, RootState> = {
     commit(mutation.SET_LOADING, { name: stateType.workspacePeopleLoading, value: true })
 
     let people = []
-    params = { ...params, ...state.workspacePeopleParams }
     try {
       people = await apiService({
         action: api.getWorkspacePeople,
         serviceName,
-        uuid: workspaceId,
-        params
+        uuid: workspaceId
       })
     } catch (error) {
       logger.error(commit, 'Error on load people in getWorkspacePeople action.\nError: ', error)
 
       return
     }
-    const peopleMutation = params.offset === 0 ? mutation.SET_WORKSPACE_PEOPLE_INITIAL : mutation.SET_WORKSPACE_PEOPLE
 
-    commit(peopleMutation, people)
+    commit(mutation.SET_WORKSPACE_PEOPLE_INITIAL, people)
     commit(mutation.SET_LOADING, { name: stateType.workspacePeopleLoading, value: false })
   },
 
   async [action.setWorkspaceParams]({ commit }, data) {
     commit(mutation.SET_WORKSPACE_PARAMS, data)
+  },
+
+  async [action.sendInvitations]({ state, commit, dispatch }, data) {
+    const result = await Promise.all(
+      map(data, async email => {
+        const people = await dispatch(action.sendInviteEmail, {
+          email,
+          name: email,
+          front_end_url: window.location.origin,
+          object_uuid: state.workspace.uuid
+        })
+        if (people.short_uuid && people) {
+          return people
+        }
+
+        return { email: '', name: '' }
+      })
+    )
+    const people = result.filter(item => item.email !== '')
+
+    if (people.length) {
+      commit(mutation.UPDATE_WORKSPACE_PEOPLE, people)
+      logger.success(
+        commit,
+        `You have successfully invited ${people.map(item => item.email).join(', ')} to join the workspace
+      ${state.workspace.title}`
+      )
+    }
+  },
+
+  async [action.sendInviteEmail]({ state, commit }, data) {
+    let response
+    try {
+      response = await apiService({
+        action: api.invitePeople,
+        method: 'post',
+        uuid: state.workspace.short_uuid,
+        serviceName,
+        data
+      })
+    } catch (e) {
+      logger.error(commit, 'Error on upload package in registerPackage action.\nError: ', e)
+
+      return e
+    }
+
+    return response
+  },
+
+  async [action.acceptInvitetion]({ commit }, { token, peopleId, workspaceId }) {
+    let response
+
+    const data = {
+      status: 'accepted',
+      token
+    }
+    try {
+      response = await apiService({
+        action: api.acceptInvitetion,
+        method: 'PATCH',
+        uuid: { workspaceId, peopleId },
+        serviceName,
+        data
+      })
+    } catch (e) {
+      return e
+    }
+
+    return response
+  },
+
+  async [action.getInvitetionInfo]({ commit }, { token, peopleId, workspaceId }) {
+    let response
+
+    try {
+      response = await apiService({
+        action: api.acceptInvitetion,
+        uuid: { workspaceId, peopleId },
+        serviceName,
+        params: { token }
+      })
+    } catch (e) {
+      const message = get(e, 'response.data.token') || 'Your token is not valid.\nError: '
+      logger.error(commit, message, e)
+
+      commit(mutation.RESET_INVITATION)
+      return
+    }
+    commit(mutation.SET_INVITATION, response)
   }
 }

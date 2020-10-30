@@ -1,5 +1,9 @@
 <template>
   <v-card class="mx-auto h-100" :elevation="hover ? 16 : 2">
+    <v-app-bar height="10" absolute flat dense white--text color="white">
+      <v-spacer />
+      <v-icon v-if="statusColor" class="mt-5" :color="statusColor">mdi-email-send-outline</v-icon>
+    </v-app-bar>
     <v-row>
       <v-col cols="2">
         <v-avatar class="pl-1" size="70" tile>
@@ -10,7 +14,7 @@
       <v-col class="ml-3" cols="9" align-self="start">
         <v-list-item color="rgba(0, 0, 0, .4)">
           <v-list-item-content>
-            <v-list-item-title class="people-title">{{ people.name }}</v-list-item-title>
+            <v-list-item-title class="people-title">{{ people.name || people.email }}</v-list-item-title>
             <v-list-item-subtitle>{{ people.job_title }}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
@@ -52,6 +56,10 @@ export default defineComponent({
     hover: {
       type: Boolean,
       default: false
+    },
+    statusColor: {
+      type: [String, Boolean],
+      default: 'white'
     }
   }
 })

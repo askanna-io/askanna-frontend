@@ -3,10 +3,10 @@
     <v-col cols="6" xl="2" md="4" sm="6" class="rounded">
       <img alt="AskAnna logo" src="@/assets/logo.svg" class="logo" />
       <v-expansion-panels class="login-expansion" v-model="panel">
-        <v-expansion-panel :key="0" active-class="colored-border" class="white--text white">
-          <v-expansion-panel-header v-slot="{ open }">
+        <v-expansion-panel :key="0" active-class="colored-border" class="white">
+          <v-expansion-panel-header>
             <v-row no-gutters>
-              <v-col cols="4" :class="{ 'primary--text': open }">Sign in</v-col>
+              <v-col cols="4" class="text-h6">Sign in</v-col>
               <v-col cols="8">
                 <v-fade-transition leave-absolute> </v-fade-transition>
               </v-col>
@@ -18,9 +18,9 @@
         </v-expansion-panel>
 
         <v-expansion-panel v-if="isNotBeta" :key="1" active-class="colored-border">
-          <v-expansion-panel-header v-slot="{ open }">
+          <v-expansion-panel-header>
             <v-row no-gutters>
-              <v-col cols="4" :class="{ 'primary--text': open }">Sign up</v-col>
+              <v-col cols="4" class="text-h6">Sign up</v-col>
               <v-col cols="8">
                 <v-fade-transition leave-absolute>
                   <span v-if="open" key="0">
