@@ -72,6 +72,7 @@ export const actions: ActionTree<PackageState, RootState> = {
   },
 
   async [type.resetFile]({ commit }) {
+    console.log('reset fiel')
     commit(type.RESET_FILE_FILESOURCE)
   },
 

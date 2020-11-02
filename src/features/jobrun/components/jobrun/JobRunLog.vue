@@ -58,16 +58,15 @@
 
 <script>
 import { throttle } from 'lodash'
-import TheHighlight from '@/core/components/highlight/TheHighlight'
-import { PrismEditor } from 'vue-prism-editor'
 import { useWindowSize } from '@u3u/vue-hooks'
 import useQuery from '@/core/composition/useQuery'
 import useMoment from '@/core/composition/useMoment'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
+import TheHighlight from '@/core/components/highlight/TheHighlight'
 import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
-import { reactive, computed, onBeforeMount, defineComponent } from '@vue/composition-api'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
 import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress'
+import { reactive, computed, onBeforeMount, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'JobRunLog',

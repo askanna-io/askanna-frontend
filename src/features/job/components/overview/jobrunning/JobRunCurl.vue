@@ -18,23 +18,23 @@
       </v-flex>
     </v-toolbar>
     <v-flex class="mb-4">
-      <prism-editor class="curl-code" line-numbers :code="curl" readonly />
+      <the-highlight class="curl-code" :value="curl" languageName="json" />
     </v-flex>
   </div>
 </template>
 
 <script>
-import { PrismEditor } from 'vue-prism-editor'
 import { apiUrl } from '@/core/services/api-settings'
 import { defineComponent } from '@vue/composition-api'
 import useJobStore from '@job/composition/useJobStore'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
 import useAuthStore from '@/features/auth/composition/useAuthStore'
+import TheHighlight from '@/core/components/highlight/TheHighlight'
 
 export default defineComponent({
   name: 'JobRunCurl',
 
-  components: { PrismEditor },
+  components: { TheHighlight },
 
   setup(props, context) {
     const jobStore = useJobStore()

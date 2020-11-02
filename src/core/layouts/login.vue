@@ -1,12 +1,12 @@
 <template>
   <v-app>
-    <v-content>
+    <v-main>
       <v-container fluid pa-0>
         <router-view />
         <span v-if="isNotBeta" class="version">Build version:&nbsp;{{ version }}</span>
       </v-container>
       <the-snack-bar />
-    </v-content>
+    </v-main>
   </v-app>
 </template>
 <script>

@@ -20,17 +20,17 @@
       </v-toolbar>
       <package-file-image v-if="isFileImg" :fileSource="fileSource" />
       <package-notebook v-else-if="isIpynb" :file="file" :fileSource="fileSource" />
-      <prism-editor v-else :code="fileComputed" language="js" readonly line-numbers />
+      <the-highlight v-else :value="fileComputed" :languageName="languageName" />
     </v-col>
   </v-row>
 </template>
 
 <script>
-import { PrismEditor } from 'vue-prism-editor'
 import PackageNotebook from './PackageNotebook'
 import PackageFileImage from './PackageFileImage'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
 import useSizeHumanize from '@/core/composition/useSizeHumanize'
+import TheHighlight from '@/core/components/highlight/TheHighlight'
 import { defineComponent, watch, computed } from '@vue/composition-api'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
 
@@ -38,7 +38,7 @@ export default defineComponent({
   name: 'PackageFile',
 
   components: {
-    PrismEditor,
+    TheHighlight,
     PackageNotebook,
     PackageFileImage
   },
@@ -72,6 +72,7 @@ export default defineComponent({
   },
 
   setup(props, context) {
+    const allowedLangs = ['json', 'md', 'py', 'txt', 'yml', 'ini', 'toml', 'markdown']
     const snackBar = useSnackBar()
     const sizeHumanize = useSizeHumanize()
     const forceFileDownload = useForceFileDownload()
@@ -93,10 +94,14 @@ export default defineComponent({
     const imgExts = ['jpg', 'png', 'gif']
     const isIpynb = computed(() => props.currentPath.ext === 'ipynb')
     const isFileImg = computed(() => imgExts.includes(props.currentPath.ext))
+    const languageName = computed(() =>
+      allowedLangs.includes(props.currentPath.ext) ? props.currentPath.ext : 'markdown'
+    )
 
     const handleDownload = () => forceFileDownload.trigger({ source: props.fileSource, name: props.currentPath.name })
 
     return {
+      languageName,
       ...sizeHumanize,
       isIpynb,
       isFileImg,
@@ -108,8 +113,3 @@ export default defineComponent({
   }
 })
 </script>
-<style>
-.prism-editor-wrapper .language-js {
-  box-shadow: none;
-}
-</style>

@@ -41,20 +41,8 @@ const jobRun = [
         path: 'artifact',
         component: () =>
           import(
-            /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-artifact" */ './views/project/jobs/job/jobruns/jobrun/artifact.vue'
-          ),
-        name: 'workspace-project-jobs-job-jobrun-artifact',
-        meta: {
-          breadcrumb: 'Job run - #:jobRunId'
-        }
-      },
-      {
-        path: 'artifact',
-        component: () =>
-          import(
             /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-artifact-index" */ './views/project/jobs/job/jobruns/jobrun/index-artifact.vue'
           ),
-        name: 'workspace-project-jobs-job-jobrun-artifact-index',
         children: [
           {
             path: '',
@@ -86,7 +74,6 @@ const jobRun = [
           import(
             /* webpackChunkName: "workspace-project-package-uuid" */ './views/project/jobs/job/jobruns/jobrun/index-code.vue'
           ),
-        name: 'workspace-project-jobs-job-jobrun-code-index',
         children: [
           {
             path: '',
@@ -138,7 +125,6 @@ const packageRoutes = [
     path: ':packageId',
     component: () =>
       import(/* webpackChunkName: "workspace-project-package-uuid" */ './views/project/package/index.vue'),
-    name: 'workspace-project-package-index',
     meta: {
       breadcrumb: 'Code - :packageId'
     },

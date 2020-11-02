@@ -3,7 +3,7 @@
     <v-col cols="12" class="pb-0 pt-0">
       <div class="page">
         <div style="max-height: 420px;" class="overflow-y-auto" id="scroll-target">
-          <prism-editor v-if="partFile" v-scroll:#scroll-target="onScroll" :code="partFile" readonly line-numbers />
+          <the-highlight v-if="partFile" :value="partFile" languageName="json" />
         </div>
       </div>
     </v-col>
@@ -11,14 +11,14 @@
 </template>
 
 <script>
-import PrismEditor from 'vue-prism-editor'
+import TheHighlight from '@/core/components/highlight/TheHighlight'
 import { reactive, computed, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'JobRunPayLoad',
 
   components: {
-    PrismEditor
+    TheHighlight
   },
 
   props: {
@@ -35,19 +35,13 @@ export default defineComponent({
       return props.file.slice(state.sliceStart, state.sliceEnd)
     })
 
-    const onScroll = e => {}
-
     return {
-      onScroll,
       partFile
     }
   }
 })
 </script>
 <style>
-.prism-editor-wrapper .language-js {
-  box-shadow: none;
-}
 .big-json {
   max-height: 300px;
   overflow: hidden;

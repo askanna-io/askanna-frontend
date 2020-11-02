@@ -1,34 +1,30 @@
-import { watch, SetupContext } from '@vue/composition-api'
+import { computed, SetupContext } from '@vue/composition-api'
 
 export default (context: SetupContext, params: { start: number; end: number } = { start: 0, end: 6 }) => {
   const { start, end } = params
 
-  let breadcrumbs: any = []
-
-  const getBreadcrumbs = () => {
+  const getBreadcrumbs = computed(() => {
     const beforeFolderPath = context.root.$route.path.split('/').slice(start, end).join('/')
+    const { workspaceId, projectId, packageId } = context.root.$route.params
 
     let currentPath = beforeFolderPath
-
-    breadcrumbs = context.root.$route.path
+    const breadcrumbs = context.root.$route.path
       .split('/')
       .slice(end)
       .filter(name => name !== '')
-      .map(name => {
-        currentPath = `${name}`
+      .map((name, index, arr) => {
+        currentPath += `/${name}`
         return {
           title: name,
-          to: currentPath,
-          disabled: false
+          to: {
+            path: currentPath,
+            params: { workspaceId, projectId, packageId, folderName: currentPath }
+          },
+          disabled: index === arr.length - 1
         }
       })
-  }
+    return breadcrumbs
+  })
 
-  watch(
-    () => context.root.$route,
-    () => {
-      getBreadcrumbs()
-    }
-  )
-  return breadcrumbs
+  return getBreadcrumbs
 }
