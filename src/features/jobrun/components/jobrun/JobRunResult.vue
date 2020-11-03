@@ -64,13 +64,7 @@
         height="94"
         type="list-item-two-line"
       >
-        <prism-editor
-          v-if="!isJobRunResultEmpty"
-          v-scroll:#scroll-target="onScroll"
-          :code="jobRunResultForView"
-          readonly
-          line-numbers
-        />
+        <the-highlight v-if="!isJobRunResultEmpty" :value="jobRunResultForView" languageName="json" readonly />
 
         <v-alert v-if="isJobRunResultEmpty" class="my-2" dense outlined color="grey">
           There is no result available for this run.
@@ -80,21 +74,19 @@
   </div>
 </template>
 <script>
-import { PrismEditor } from 'vue-prism-editor'
 import { JobRun } from '../../store/types'
 import { useWindowSize } from '@u3u/vue-hooks'
-import useSnackBar from '@/core/components/snackBar/useSnackBar'
-
 import useJobRunStore from '../../composition/useJobRunStore'
+import useSnackBar from '@/core/components/snackBar/useSnackBar'
+import TheHighlight from '@/core/components/highlight/TheHighlight'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
-
 import { computed, defineComponent, onBeforeMount } from '@vue/composition-api'
 import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress'
 
 export default defineComponent({
   name: 'JobRunResult',
 
-  components: { PrismEditor },
+  components: { TheHighlight },
 
   setup(props, context) {
     const snackBar = useSnackBar()
@@ -141,15 +133,12 @@ export default defineComponent({
       )
     }
 
-    const onScroll = e => {}
-
     return {
       loading,
       jobRunResultForView,
       scrollerStyles,
       isJobRunResultEmpty,
 
-      onScroll,
       handleCopy,
       handleDownload
     }

@@ -59,7 +59,7 @@ import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
 import usePackageStore from '@/features/package/composition/usePackageStore'
 import useTriggerFileDownload from '@/core/composition/useTriggerFileDownload'
 import usePackagesStore from '@/features/packages/composition/usePackagesStore'
-import { ref, watch, onBeforeMount, onUnmounted, computed } from '@vue/composition-api'
+import { ref, watchEffect, onBeforeMount, onUnmounted, computed } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'PackageUuid',
@@ -79,7 +79,8 @@ export default defineComponent({
     const triggerFileDownload = useTriggerFileDownload()
     const breadcrumbs = usePackageBreadcrumbs(context, { start: 8, end: 9 })
 
-    const file = ref(jobRunStore.file)
+    const file = computed(() => jobRunStore.file.value)
+
     const {
       jobId,
       jobRunId,
@@ -90,21 +91,6 @@ export default defineComponent({
     } = context.root.$route.params
 
     const sticked = computed(() => !projectStore.stickedVM.value)
-
-    onBeforeMount(async () => {
-      const { jobRunId } = context.root.$route.params
-
-      if (jobRunStore.jobRun.value.short_uuid !== jobRunId) {
-        await jobRunStore.resetStore()
-        await jobRunStore.getJobRun(jobRunId)
-      }
-      jobRunStore.getInitialJobRunArtifact({
-        uuid: {
-          jobRunShortId: jobRunId,
-          artifactShortId: jobRunStore.jobRun.value.artifact.short_uuid
-        }
-      })
-    })
 
     const calcHeight = computed(() => height.value - 370)
     const path = computed(() => context.root.$route.params.folderName || '/')
@@ -118,28 +104,26 @@ export default defineComponent({
       return current
     })
 
-    const treeView = computed(() => {
-      let parentPath
+    const parentPath = computed(() => {
+      let parentPathTemp
       if (currentPath.value && currentPath.value.is_dir && path.value !== '/') {
-        parentPath = jobRunStore.artifactData.value.files.find(
+        parentPathTemp = jobRunStore.artifactData.value.files.find(
           file => file.name === currentPath.value.parent && file.is_dir
         )
-        parentPath = {
-          ...parentPath,
+        parentPathTemp = {
+          ...parentPathTemp,
           name: '...',
           ext: 'parent'
         }
       }
-      const tree = jobRunStore.artifactData.value.files.filter(item => item.parent === path.value)
 
-      return parentPath ? [parentPath, ...tree] : tree
+      return parentPathTemp
     })
 
-    watch(currentPath, async (currentPath, prevPath) => {
-      const path = currentPath && !currentPath.is_dir && currentPath.name !== '' ? currentPath.path : ''
+    const treeView = computed(() => {
+      const tree = jobRunStore.artifactData.value.files.filter(item => item.parent === path.value)
 
-      if (prevPath && path !== '' && path === prevPath.path) return
-      await jobRunStore.getFileSource(path)
+      return parentPath.value ? [parentPath.value, ...tree] : tree
     })
 
     const handleClickOnRow = async item => {
@@ -176,9 +160,32 @@ export default defineComponent({
       })
     }
 
+    onBeforeMount(async () => {
+      const { jobRunId } = context.root.$route.params
+
+      if (jobRunStore.jobRun.value.short_uuid !== jobRunId) {
+        await jobRunStore.resetStore()
+        await jobRunStore.getJobRun(jobRunId)
+      }
+      await jobRunStore.getInitialJobRunArtifact({
+        uuid: {
+          jobRunShortId: jobRunId,
+          artifactShortId: jobRunStore.jobRun.value.artifact.short_uuid
+        }
+      })
+    })
+
+    watchEffect(async () => {
+      if (!currentPath.value || (currentPath.value && currentPath.value.is_dir)) await jobRunStore.resetFile()
+      const filePath =
+        currentPath.value && !currentPath.value.is_dir && currentPath.value.name !== '' ? currentPath.value.path : ''
+      if (filePath === '') return
+      await jobRunStore.getFileSource(filePath)
+    })
+
     return {
       sticked,
-      file: jobRunStore.file,
+      file,
       fileSource: jobRunStore.fileSource,
       jobRunArtifactLoading: jobRunStore.jobRunArtifactLoading,
       treeView,

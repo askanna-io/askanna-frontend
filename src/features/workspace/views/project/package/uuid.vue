@@ -77,7 +77,7 @@ import usePackages from '@packages/composition/usePackages'
 import useProjectStore from '@project/composition/useProjectStore'
 import usePackagesStore from '@/features/packages/composition/usePackagesStore'
 import PackageToolbar from '@/features/package/components/PackageToolbar'
-import { ref, watch, onBeforeMount, onUnmounted, computed } from '@vue/composition-api'
+import { ref, watchEffect, onBeforeMount, onUnmounted, computed } from '@vue/composition-api'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
 import usePackageStore from '@/features/package/composition/usePackageStore'
 import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
@@ -104,7 +104,7 @@ export default defineComponent({
 
     const polling = ref(null)
     const isRaplace = ref(false)
-    const file = ref(packageStore.file)
+    const file = computed(() => packageStore.file.value)
     const { workspaceId, projectId, packageId = 'new-package', folderName = '' } = context.root.$route.params
 
     const sticked = computed(() => !projectStore.stickedVM.value)
@@ -148,7 +148,10 @@ export default defineComponent({
     }
 
     const calcHeight = computed(() => height.value - 370)
-    const path = computed(() => context.root.$route.params.folderName || '/')
+    const path = computed(() => {
+      let a = context.root.$route.params.folderName || '/'
+      return a
+    })
     const isProcessing = computed(() => packageStore.processingList.value.find(item => item.packageId === packageId))
 
     const currentPath = computed(() => {
@@ -159,28 +162,26 @@ export default defineComponent({
       return current
     })
 
-    const treeView = computed(() => {
-      let parentPath
+    const parentPath = computed(() => {
+      let parentPathTemp
       if (currentPath.value && currentPath.value.is_dir && path.value !== '/') {
-        parentPath = packageStore.packageData.value.files.find(
+        parentPathTemp = packageStore.packageData.value.files.find(
           file => file.name === currentPath.value.parent && file.is_dir
         )
-        parentPath = {
-          ...parentPath,
+        parentPathTemp = {
+          ...parentPathTemp,
           name: '...',
           ext: 'parent'
         }
       }
-      const tree = packageStore.packageData.value.files.filter(item => item.parent === path.value)
 
-      return parentPath ? [parentPath, ...tree] : tree
+      return parentPathTemp
     })
 
-    watch(currentPath, async (currentPath, prevPath) => {
-      const path = currentPath && !currentPath.is_dir && currentPath.name !== '' ? currentPath.path : ''
+    const treeView = computed(() => {
+      const tree = packageStore.packageData.value.files.filter(item => item.parent === path.value)
 
-      if (prevPath && path !== '' && path === prevPath.path) return
-      await packageStore.getFileSource(path)
+      return parentPath.value ? [parentPath.value, ...tree] : tree
     })
 
     const handleClickOnRow = async item => {
@@ -225,9 +226,18 @@ export default defineComponent({
       })
     }
 
+    watchEffect(() => {
+      packageStore.resetFile()
+      const filePath =
+        currentPath.value && !currentPath.value.is_dir && currentPath.value.name !== '' ? currentPath.value.path : ''
+
+      if (filePath === '') return
+      packageStore.getFileSource(filePath)
+    })
+
     return {
       sticked,
-      file: packageStore.file,
+      file,
       fileSource: packageStore.fileSource,
       packageLoading: packageStore.packageLoading,
       treeView,

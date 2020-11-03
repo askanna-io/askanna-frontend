@@ -58,7 +58,7 @@ import useForceFileDownload from '@/core/composition/useForceFileDownload'
 import usePackageStore from '@/features/package/composition/usePackageStore'
 import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
 import usePackagesStore from '@/features/packages/composition/usePackagesStore'
-import { ref, watch, onBeforeMount, onUnmounted, computed } from '@vue/composition-api'
+import { ref, watchEffect, onBeforeMount, onUnmounted, computed } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'PackageUuid',
@@ -81,7 +81,8 @@ export default defineComponent({
     const breadcrumbs = usePackageBreadcrumbs(context, { start: 8, end: 9 })
 
     const polling = ref(null)
-    const file = ref(packageStore.file)
+    const file = computed(() => packageStore.file.value)
+
     const { workspaceId, projectId, jobId, jobRunId, folderName = '' } = context.root.$route.params
 
     const packageId = computed(() => jobRunStore.jobRun.value.package.short_uuid)
@@ -142,28 +143,26 @@ export default defineComponent({
       return current
     })
 
-    const treeView = computed(() => {
-      let parentPath
+    const parentPath = computed(() => {
+      let parentPathTemp
       if (currentPath.value && currentPath.value.is_dir && path.value !== '/') {
-        parentPath = packageStore.packageData.value.files.find(
+        parentPathTemp = packageStore.packageData.value.files.find(
           file => file.name === currentPath.value.parent && file.is_dir
         )
-        parentPath = {
-          ...parentPath,
+        parentPathTemp = {
+          ...parentPathTemp,
           name: '...',
           ext: 'parent'
         }
       }
-      const tree = packageStore.packageData.value.files.filter(item => item.parent === path.value)
 
-      return parentPath ? [parentPath, ...tree] : tree
+      return parentPathTemp
     })
 
-    watch(currentPath, async (currentPath, prevPath) => {
-      const path = currentPath && !currentPath.is_dir && currentPath.name !== '' ? currentPath.path : ''
+    const treeView = computed(() => {
+      const tree = packageStore.packageData.value.files.filter(item => item.parent === path.value)
 
-      if (prevPath && path !== '' && path === prevPath.path) return
-      await packageStore.getFileSource(path)
+      return parentPath.value ? [parentPath.value, ...tree] : tree
     })
 
     const handleClickOnRow = async item => {
@@ -198,6 +197,15 @@ export default defineComponent({
         params: { workspaceId, projectId, packageId, jobId, jobRunId }
       })
     }
+
+    watchEffect(() => {
+      packageStore.resetFile()
+      const filePath =
+        currentPath.value && !currentPath.value.is_dir && currentPath.value.name !== '' ? currentPath.value.path : ''
+
+      if (filePath === '') return
+      packageStore.getFileSource(filePath)
+    })
 
     return {
       sticked,

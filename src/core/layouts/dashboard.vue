@@ -187,13 +187,13 @@
       </v-container>
     </v-app-bar>
 
-    <v-content>
+    <v-main>
       <v-container class="a-content">
         <router-view />
       </v-container>
       <the-snack-bar />
       <the-upload-status />
-    </v-content>
+    </v-main>
   </v-app>
 </template>
 

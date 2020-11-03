@@ -12,7 +12,11 @@ export default defineComponent({
   name: 'TheHighlight',
 
   props: {
-    value: String
+    value: String,
+    languageName: {
+      type: String,
+      default: 'shell'
+    }
   },
 
   setup(props, context) {
@@ -20,7 +24,7 @@ export default defineComponent({
     const lineNumber = useLineNumber()
 
     const highlighted = computed(() => {
-      let result = hljs.highlight('shell', props.value, true).value
+      let result = hljs.highlight(props.languageName, props.value, true).value
       result = lineNumber.lineNumbersValue(result)
 
       return result

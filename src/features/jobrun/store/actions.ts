@@ -151,7 +151,7 @@ export const actions: ActionTree<jobRunState, RootState> = {
     commit(type.mutation.RESET_JOB_RUN_LOG)
   },
 
-  async [type.action.getInitialJobRunArtifact]({ commit, dispatch }, data) {
+  async [type.action.getInitialJobRunArtifact]({ dispatch }, data) {
     await dispatch(type.action.getJobRunArtifact, data)
   },
 

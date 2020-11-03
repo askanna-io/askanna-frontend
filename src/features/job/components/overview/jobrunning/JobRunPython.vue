@@ -18,23 +18,23 @@
       </v-flex>
     </v-toolbar>
     <v-flex class="mb-4">
-      <prism-editor class="curl-code" line-numbers :code="pythonCode" readonly />
+      <the-highlight class="curl-code" :value="pythonCode" languageName="python" />
     </v-flex>
   </div>
 </template>
 
 <script>
-import { PrismEditor } from 'vue-prism-editor'
 import { apiUrl } from '@/core/services/api-settings'
 import { defineComponent } from '@vue/composition-api'
 import useJobStore from '@job/composition/useJobStore'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
+import TheHighlight from '@/core/components/highlight/TheHighlight'
 import useAuthStore from '@/features/auth/composition/useAuthStore'
 
 export default defineComponent({
   name: 'JobRunPython',
 
-  components: { PrismEditor },
+  components: { TheHighlight },
 
   setup(props, context) {
     const jobStore = useJobStore()
