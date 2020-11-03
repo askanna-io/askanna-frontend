@@ -83,19 +83,21 @@ const jobRun = [
               ),
             name: 'workspace-project-jobs-job-jobrun-code',
             meta: {
-              breadcrumb: 'Code - #:packageId'
-            }
-          },
-          {
-            path: ':folderName(.*)',
-            component: () =>
-              import(
-                /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-code-folder" */ './views/project/jobs/job/jobruns/jobrun/code.vue'
-              ),
-            name: 'workspace-project-jobs-job-jobrun-code-folder',
-            meta: {
-              breadcrumb: ':folderName'
-            }
+              breadcrumb: 'Code'
+            },
+            children: [
+              {
+                path: ':folderName(.*)',
+                component: () =>
+                  import(
+                    /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-code-folder" */ './views/project/jobs/job/jobruns/jobrun/code.vue'
+                  ),
+                name: 'workspace-project-jobs-job-jobrun-code-folder',
+                meta: {
+                  breadcrumb: ':folderName'
+                }
+              }
+            ]
           }
         ]
       },

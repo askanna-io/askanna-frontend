@@ -110,7 +110,7 @@ export default defineComponent({
 
     const jobName = computed(() => jobStore.job.value.name)
     const end = context.root.$route.name.indexOf('jobs-name') >= 1 ? 5 : 3
-    const breadcrumbs = useBreadcrumbs(context, { start: 0, end: 7 })
+    const breadcrumbs = useBreadcrumbs(context, { start: 0, end: 6 })
 
     const onStick = data => props.handleOnStick(data.sticked)
 
