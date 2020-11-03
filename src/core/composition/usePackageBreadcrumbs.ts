@@ -1,13 +1,14 @@
 import { computed, SetupContext } from '@vue/composition-api'
 
 export default (context: SetupContext, params: { start: number; end: number } = { start: 0, end: 6 }) => {
-  const { start, end } = params
+  const { end } = params
 
   const getBreadcrumbs = computed(() => {
-    const beforeFolderPath = context.root.$route.path.split('/').slice(start, end).join('/')
+    const beforeFolderPath = context.root.$route.path.split('/').slice(0, end).join('/')
     const { workspaceId, projectId, packageId } = context.root.$route.params
 
     let currentPath = beforeFolderPath
+
     const breadcrumbs = context.root.$route.path
       .split('/')
       .slice(end)
