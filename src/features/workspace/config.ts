@@ -9,6 +9,9 @@ const jobRun = [
     path: ':jobRunId',
     name: 'workspace-project-jobs-job-jobrun',
     redirect: { name: 'workspace-project-jobs-job-jobrun-input' },
+    meta: {
+      breadcrumb: 'Job run - :jobRunId'
+    },
     component: () =>
       import(
         /* webpackChunkName: "workspace-project-uuid-jobs-name-run" */ './views/project/jobs/job/jobruns/jobrun/index.vue'
@@ -21,10 +24,7 @@ const jobRun = [
           import(
             /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-input" */ './views/project/jobs/job/jobruns/jobrun/input.vue'
           ),
-        name: 'workspace-project-jobs-job-jobrun-input',
-        meta: {
-          breadcrumb: 'Job run - :jobRunId'
-        }
+        name: 'workspace-project-jobs-job-jobrun-input'
       },
       {
         path: 'result',
@@ -32,10 +32,7 @@ const jobRun = [
           import(
             /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-result" */ './views/project/jobs/job/jobruns/jobrun/result.vue'
           ),
-        name: 'workspace-project-jobs-job-jobrun-result',
-        meta: {
-          breadcrumb: 'Job run - :jobRunId'
-        }
+        name: 'workspace-project-jobs-job-jobrun-result'
       },
       {
         path: 'artifact',
@@ -51,20 +48,20 @@ const jobRun = [
                 /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-artifact" */ './views/project/jobs/job/jobruns/jobrun/artifact.vue'
               ),
             name: 'workspace-project-jobs-job-jobrun-artifact',
-            meta: {
-              breadcrumb: 'Artifact - #:packageId'
-            }
-          },
-          {
-            path: ':folderName(.*)',
-            component: () =>
-              import(
-                /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-artifact-folder" */ './views/project/jobs/job/jobruns/jobrun/artifact.vue'
-              ),
-            name: 'workspace-project-jobs-job-jobrun-artifact-folder',
-            meta: {
-              breadcrumb: ':folderName'
-            }
+
+            children: [
+              {
+                path: ':folderName(.*)',
+                component: () =>
+                  import(
+                    /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-artifact-folder" */ './views/project/jobs/job/jobruns/jobrun/artifact.vue'
+                  ),
+                name: 'workspace-project-jobs-job-jobrun-artifact-folder',
+                meta: {
+                  breadcrumb: ':folderName'
+                }
+              }
+            ]
           }
         ]
       },
@@ -82,9 +79,7 @@ const jobRun = [
                 /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-code" */ './views/project/jobs/job/jobruns/jobrun/code.vue'
               ),
             name: 'workspace-project-jobs-job-jobrun-code',
-            meta: {
-              breadcrumb: 'Code'
-            },
+
             children: [
               {
                 path: ':folderName(.*)',
@@ -107,10 +102,7 @@ const jobRun = [
           import(
             /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-log" */ './views/project/jobs/job/jobruns/jobrun/log.vue'
           ),
-        name: 'workspace-project-jobs-job-jobrun-log',
-        meta: {
-          breadcrumb: 'Job run - :jobRunId'
-        }
+        name: 'workspace-project-jobs-job-jobrun-log'
       }
     ]
   }
