@@ -220,7 +220,6 @@ export default defineComponent({
   components: { UpdateApp, TheUploadStatus },
 
   setup(props, context) {
-    console.log('from dashborasd 2 2 2 2 2 2 2 2 2 2 2 2 2')
     useTitle(context)
     const authStore = useAuthStore()
     const projectStore = useProjectStore()

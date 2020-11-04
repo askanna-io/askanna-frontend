@@ -3,7 +3,11 @@ self.addEventListener('message', event => {
     self.skipWaiting()
   }
 })
-
+self.addEventListener('message', event => {
+  if (event.data === 'skipWaiting') {
+    self.skipWaiting()
+  }
+})
 // The precaching code provided by Workbox.
 self.__precacheManifest = [].concat(self.__precacheManifest || [])
 // workbox.precaching.suppressWarnings(); // Only used with Vue CLI 3 and Workbox v3.
