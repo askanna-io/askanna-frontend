@@ -11,14 +11,9 @@ if (process.env.NODE_ENV === 'production') {
     },
     registered(registration) {
       console.log('Service worker has been registered.')
-      // Routinely check for app updates by testing for a new service worker.
-      setInterval(() => {
-        console.log('update')
-        registration.update()
-      }, 10000) // hourly checks
     },
     cached() {
-      console.log('Content has been cached for offline use.')
+      console.log('Content has been cached for offline user.')
     },
     updatefound() {
       console.log('New content is downloading.')

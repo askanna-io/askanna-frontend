@@ -1,6 +1,7 @@
 self.addEventListener('message', event => {
-  console.log('serwice worker ')
-  if (event.data === 'sw:update') self.skipWaiting()
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting()
+  }
 })
 
 // The precaching code provided by Workbox.
