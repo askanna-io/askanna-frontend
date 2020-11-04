@@ -15,7 +15,7 @@
               sm="4"
               md="3"
               lg="3"
-              xl="2"
+              xl="3"
             >
               <v-hover v-slot:default="{ hover }" open-delay="200">
                 <workspace-people-card-item
