@@ -11,10 +11,7 @@
       <v-text-field
         v-model="username"
         :error-messages="error.email"
-        :rules="[
-          RULE.required('The email address is required'),
-          RULE.email('The email address you entered is not valid', 3)
-        ]"
+        :rules="[RULE.required('The email is required'), RULE.email('The email you entered is not valid', 3)]"
         dense
         outlined
         validate-on-blur
