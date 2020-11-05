@@ -16,7 +16,7 @@ if (process.env.NODE_ENV === 'production') {
         }
       })
     })
-
+    // refrech all open tabs
     var refreshing: boolean
 
     navigator.serviceWorker.addEventListener('controllerchange', function () {
