@@ -16,5 +16,15 @@ if (process.env.NODE_ENV === 'production') {
         }
       })
     })
+
+    var refreshing: boolean
+
+    navigator.serviceWorker.addEventListener('controllerchange', function () {
+      if (refreshing) return
+
+      window.location.reload()
+
+      refreshing = true
+    })
   }
 }
