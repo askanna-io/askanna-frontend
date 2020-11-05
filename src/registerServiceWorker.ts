@@ -1,31 +1,30 @@
-/* eslint-disable no-console */
-
-import { register } from 'register-service-worker'
+/* eslint-disable*/
 
 if (process.env.NODE_ENV === 'production') {
-  register(`${process.env.BASE_URL}service-worker.js`, {
-    ready() {
-      console.log(
-        'App is being served from cache by a service worker.\n' + 'For more details, visit https://goo.gl/AFskqB'
-      )
-    },
-    registered() {
-      console.log('Service worker has been registered.')
-    },
-    cached() {
-      console.log('Content has been cached for offline use.')
-    },
-    updatefound() {
-      console.log('New content is downloading.')
-    },
-    updated() {
-      console.log('New content is available; please refresh.')
-    },
-    offline() {
-      console.log('No internet connection found. App is running in offline mode.')
-    },
-    error(error) {
-      console.error('Error during service worker registration:', error)
-    }
-  })
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register(`${process.env.BASE_URL}service-worker.js`).then(function (reg) {
+        reg.onupdatefound = function () {
+          const newSW = reg.installing
+
+          if (!newSW) return
+          newSW.onstatechange = function () {
+            if (newSW.state) {
+              document.dispatchEvent(new CustomEvent('swUpdated', { detail: newSW }))
+            }
+          }
+        }
+      })
+    })
+    // refrech all open tabs
+    var refreshing: boolean
+
+    navigator.serviceWorker.addEventListener('controllerchange', function () {
+      if (refreshing) return
+
+      window.location.reload()
+
+      refreshing = true
+    })
+  }
 }

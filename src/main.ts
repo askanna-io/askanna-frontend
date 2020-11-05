@@ -12,6 +12,7 @@ import { app, router, store } from './core'
 import vuetify from '@/core/plugins/vuetify'
 import 'vue-file-agent/dist/vue-file-agent.css'
 import VueCompositionApi from '@vue/composition-api'
+import './registerServiceWorker'
 
 import * as Sentry from '@sentry/browser'
 import { Integrations } from '@sentry/tracing'

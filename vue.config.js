@@ -1,5 +1,14 @@
 const path = require('path')
 module.exports = {
+  pwa: {
+    name: 'AskAnna - Running Data Science Projects',
+    appleMobileWebAppCapable: 'yes',
+    appleMobileWebAppStatusBarStyle: 'black',
+    workboxPluginMode: 'InjectManifest',
+    workboxOptions: {
+      swSrc: './src/service-worker.js'
+    }
+  },
   chainWebpack: config => {
     config.plugin('define').tap(args => {
       const v = JSON.stringify(require('./package.json').version)
