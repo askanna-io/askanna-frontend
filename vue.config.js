@@ -1,7 +1,7 @@
 const path = require('path')
 module.exports = {
   pwa: {
-    name: 'AskAnna - Running Data Science Projects',
+    name: 'AskAnna',
     appleMobileWebAppCapable: 'yes',
     appleMobileWebAppStatusBarStyle: 'black',
     workboxPluginMode: 'InjectManifest',
