@@ -1,6 +1,6 @@
 <template>
   <v-snackbar v-model="snackWithButtons" color="secondary" bottom right timeout="-1">
-    New version available!
+    A new version of AskAnna is available!
     <template v-slot:action="{ attrs }">
       <v-btn class="mr-3" small v-bind="attrs" @click="refreshApp">Refresh</v-btn>
 
