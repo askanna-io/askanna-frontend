@@ -286,6 +286,15 @@ export default {
               children: JobRoutes
             },
             {
+              path: 'variables',
+              name: 'workspace-project-variables',
+              component: () =>
+                import(/* webpackChunkName: "workspace-project-variables" */ './views/project/variables.vue'),
+              meta: {
+                breadcrumb: 'Variables'
+              }
+            },
+            {
               path: 'documentation',
               component: () =>
                 import(
