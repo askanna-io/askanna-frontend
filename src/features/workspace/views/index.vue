@@ -27,7 +27,7 @@ export default defineComponent({
       // if (workspaceStore.workspace.value.short_uuid === workspaceId) return
 
       await workspaceStore.getWorkspace(workspaceId)
-      await workspaceStore.getInitialWorkpaceProjects({ params: { limit: 18, offset: 0 } })
+      await workspaceStore.getInitialWorkpaceProjects({ params: { limit: 100, offset: 0 } })
     })
   }
 })

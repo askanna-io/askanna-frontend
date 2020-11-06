@@ -83,7 +83,7 @@ export default defineComponent({
     const jobRunStore = useJobRunStore()
     const jobRunId = computed(() => context.root.$route.params.jobRunId)
     const query = useQuery({
-      offset: 100,
+      offset: 200,
       limit: 100,
       store: jobRunStore,
       uuid: jobRunId.value,
@@ -94,7 +94,7 @@ export default defineComponent({
 
     onBeforeMount(async () => {
       jobRunStore.resetJobRunLog()
-      jobRunStore.getInitJobRunLog({ uuid: jobRunId.value, params: { limit: 100, offset: 0 } })
+      jobRunStore.getInitJobRunLog({ uuid: jobRunId.value, params: { limit: 200, offset: 0 } })
     })
 
     const logs = computed(() => {

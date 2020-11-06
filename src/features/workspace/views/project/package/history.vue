@@ -142,7 +142,7 @@ export default defineComponent({
     const query = useQuery({
       uuid,
       limit: 18,
-      offset: 18,
+      offset: 100,
       store: packagesStore,
       action: 'getProjectPackages',
       queryPath: 'projectPackages'
@@ -152,7 +152,7 @@ export default defineComponent({
 
     onBeforeMount(async () => {
       await packagesStore.resetStore()
-      await packagesStore.getInitialProjectPackages({ params: { limit: 18, offset: 0 }, uuid })
+      await packagesStore.getInitialProjectPackages({ params: { limit: 100, offset: 0 }, uuid })
     })
 
     const sortBy = (a, b) => {

@@ -9,7 +9,7 @@ export default function ({ offset, limit, store, action, queryPath, uuid }: any)
     if (scrollTop > currentScrollTop.value && get(store, `${queryPath}.value.next`)) {
       currentScrollTop.value = scrollTop
       store[action]({ uuid, params: { limit, offset: richedOffset.value } })
-      richedOffset.value += offset
+      richedOffset.value += limit
     }
   }
 
