@@ -7,7 +7,7 @@
             <v-text-field
               @input="handleOnInput($event, 'name')"
               :value="projectData.name"
-              :rules="[RULES.required('Project name is required')]"
+              :rules="[RULE.required('Project name is required')]"
               autofocus
               label="Project name"
               outlined
@@ -83,7 +83,7 @@ export default defineComponent({
   },
 
   setup(props, context) {
-    const RULES = useValidationRules()
+    const validationRules = useValidationRules()
 
     const template = computed({
       get: () => props.projectData.template,
@@ -108,7 +108,7 @@ export default defineComponent({
 
     return {
       isFormValid,
-      RULES,
+      RULE: validationRules.RULES,
       newProjectForm,
       template,
       handleOnInput,
