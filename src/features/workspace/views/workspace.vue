@@ -27,7 +27,7 @@ export default defineComponent({
   setup(props, context) {
     const workspaceStore = useWorkspaceStore()
     const query = useQuery({
-      offset: 18,
+      offset: 99,
       limit: 18,
       store: workspaceStore,
       action: 'getWorkpaceProjects',
