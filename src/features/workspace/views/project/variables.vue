@@ -21,7 +21,7 @@
           >
         </v-card-text>
       </v-card>
-      <v-toolbar color="grey lighten-4" flat dense class="br-r5">
+      <v-toolbar color="grey lighten-4" flat dense>
         <v-spacer />
 
         <v-dialog v-model="dialog" max-width="500px">
@@ -45,8 +45,9 @@
             <v-card-text>
               <v-container class="pb-0">
                 <v-row>
-                  <v-col cols="12" sm="10" md="10">
+                  <v-col cols="12" sm="12" md="12">
                     <v-text-field
+                      id="edited-item-name"
                       v-model="editedItem.name"
                       autofocus
                       @keyup.enter="handlerCreateProject"
@@ -59,20 +60,27 @@
                   </v-col>
                 </v-row>
                 <v-row>
-                  <v-col cols="12" sm="10" md="10">
+                  <v-col cols="12" sm="12" md="12">
                     <v-textarea
-                      v-model="editedItem.value"
+                      @input="handleChangeValue"
+                      :value="editedItem.masked ? '*****' : editedItem.value"
+                      :disabled="isEdit && editedItem.masked"
+                      no-resize
                       hide-details
                       outlined
                       name="input-7-4"
                       label="Value"
-                      value="The Woodman set to work at once, and so sharp was his axe that the tree was soon chopped nearly through."
                     />
                   </v-col>
                 </v-row>
                 <v-row>
                   <v-col class="pt-0" cols="12">
-                    <v-checkbox v-model="editedItem.masked" label="Masked" hide-details />
+                    <v-checkbox
+                      :disabled="isEdit && editedItem.masked"
+                      v-model="editedItem.masked"
+                      label="Masked"
+                      hide-details
+                    />
                   </v-col>
                 </v-row>
               </v-container>
@@ -82,7 +90,7 @@
               <v-btn text @click="close" small outlined>
                 Cancel
               </v-btn>
-              <v-btn v-if="editedIndex !== -1" color="error" outlined small text @click="deleteItem">
+              <v-btn v-if="isEdit" color="error" outlined small text @click="deleteItem">
                 Delete
               </v-btn>
               <v-btn small outlined text color="primary" class="mr-1 btn--hover" @click="save">
@@ -93,7 +101,10 @@
         </v-dialog>
         <v-dialog v-model="dialogDelete" max-width="450px">
           <v-card>
-            <v-card-title>Are you sure you want to delete variable {{ editedItem.name }} ?</v-card-title>
+            <v-card-title
+              >Are you sure you want to delete variable:
+              <span class="primary--text">{{ editedItem.name }}</span> ?</v-card-title
+            >
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="primary" small outlined text @click="deleteItemConfirm">Yes</v-btn>
@@ -120,76 +131,65 @@
       </v-btn>
     </template>
     <template v-slot:no-data>
-      <v-btn color="primary" @click="initialize">
-        Reset
-      </v-btn>
+      No variables in project
     </template>
   </v-data-table>
 </template>
 
 <script>
-import { defineComponent } from '@vue/composition-api'
+import useCopy from '@/core/composition/useCopy'
 import AskAnnaCopy from '@/core/components/shared/AskAnnaCopy'
+import { ref, toRefs, reactive, computed, defineComponent } from '@vue/composition-api'
+import useSnackBar from '@/core/components/snackBar/useSnackBar'
 
 export default defineComponent({
   name: 'Variables',
 
   components: { AskAnnaCopy },
 
-  data: () => ({
-    dialog: false,
-    dialogDelete: false,
-    headers: [
-      {
-        text: 'UUID',
-        align: 'start',
-        sortable: false,
-        value: 'short_uuid',
-        width: '10%'
+  setup(props, context) {
+    const copy = useCopy(context)
+    const snackBar = useSnackBar()
+
+    const modal = ref(null)
+
+    const state = reactive({
+      dialog: false,
+      dialogDelete: false,
+      headers: [
+        {
+          text: 'UUID',
+          align: 'start',
+          sortable: false,
+          value: 'short_uuid',
+          width: '10%'
+        },
+        { text: 'Name', value: 'name', width: '35%', sortable: false },
+        { text: 'Value', value: 'value', width: '35%', sortable: false },
+        { text: 'Masked', value: 'masked', width: '10%', sortable: false },
+        { text: '', value: 'actions', width: '10%', sortable: false }
+      ],
+      variables: [],
+      editedIndex: -1,
+      editedItem: {
+        short_uuid: '',
+        name: '',
+        value: '',
+        masked: false
       },
-      { text: 'Name', value: 'name', width: '35%' },
-      { text: 'Value', value: 'value', width: '35%' },
-      { text: 'Masked', value: 'masked', width: '10%' },
-      { text: '', value: 'actions', width: '10%', sortable: false }
-    ],
-    variables: [],
-    editedIndex: -1,
-    editedItem: {
-      short_uuid: '',
-      name: '',
-      value: '',
-      masked: false
-    },
-    defaultItem: {
-      short_uuid: '',
-      name: '',
-      value: '',
-      masked: false
-    }
-  }),
+      defaultItem: {
+        short_uuid: '',
+        name: '',
+        value: '',
+        masked: false
+      }
+    })
 
-  computed: {
-    formTitle() {
-      return this.editedIndex === -1 ? 'Add a variable' : 'Edit a variable'
-    }
-  },
+    const isEdit = computed(() => state.editedIndex !== -1)
+    const formTitle = computed(() => (!isEdit.value ? 'Add a variable' : 'Edit a variable'))
 
-  watch: {
-    dialog(val) {
-      val || this.close()
-    },
-    dialogDelete(val) {
-      val || this.closeDelete()
-    }
-  },
-
-  created() {
-    this.initialize()
-  },
-
-  methods: {
-    initialize() {
-      this.variables = [
+    const initialize = () => {
+      state.variables = [
         {
           short_uuid: 'asd21-21dasd-12as-1',
           name: 'Token auth',
@@ -209,43 +209,60 @@ export default defineComponent({
           masked: true
         }
       ]
-    },
+    }
 
-    editItem(item) {
-      this.editedIndex = this.variables.indexOf(item)
-      this.editedItem = Object.assign({}, item)
-      this.dialog = true
-    },
+    const editItem = item => {
+      state.editedIndex = state.variables.indexOf(item)
+      state.editedItem = Object.assign({}, item)
+      state.dialog = true
+    }
 
-    deleteItem() {
-      this.dialogDelete = true
-    },
+    const handleChangeValue = val => (state.editedItem.value = val)
 
-    deleteItemConfirm() {
-      this.variables.splice(this.editedIndex, 1)
-      this.closeDelete()
-    },
+    const deleteItem = () => {
+      state.dialogDelete = true
+    }
 
-    close() {
-      this.dialog = false
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
-      })
-    },
+    const deleteItemConfirm = () => {
+      state.variables.splice(state.editedIndex, 1)
+      closeDelete()
+    }
 
-    closeDelete() {
-      this.dialogDelete = false
-      this.close()
-    },
+    const close = () => {
+      state.dialog = false
+      state.editedItem = Object.assign({}, state.defaultItem)
+      state.editedIndex = -1
+    }
 
-    save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.variables[this.editedIndex], this.editedItem)
+    const closeDelete = () => {
+      state.dialogDelete = false
+      close()
+    }
+
+    const save = () => {
+      if (state.editedIndex > -1) {
+        Object.assign(state.variables[state.editedIndex], state.editedItem)
       } else {
-        this.variables.push({ ...this.editedItem, short_uuid: `asd21-21dasd-12as-${this.variables.length + 1}` })
+        state.variables.push({ ...state.editedItem, short_uuid: `asd21-21dasd-12as-${state.variables.length + 1}` })
       }
-      this.close()
+      close()
+    }
+
+    initialize()
+
+    return {
+      ...toRefs(state),
+      isEdit,
+      handleCopy: copy.handleCopyTextById,
+      modal,
+      formTitle,
+      close,
+      editItem,
+      deleteItem,
+      deleteItemConfirm,
+      closeDelete,
+      save,
+      handleChangeValue
     }
   }
 })

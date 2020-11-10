@@ -5,7 +5,7 @@
         <v-btn class="px-0" text small>{{ prefix }}{{ text.slice(0, show) }}</v-btn>
         <v-tooltip right>
           <template v-slot:activator="{ on }">
-            <v-btn icon text x-small v-on="on" v-show="value" @click.stop="handleCopy"
+            <v-btn icon text x-small v-on="on" v-show="value" @click.stop="handleCopy(text)"
               ><v-icon>mdi-content-copy</v-icon></v-btn
             >
           </template>
@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import useCopy from '@/core/composition/useCopy'
 import { defineComponent } from '@vue/composition-api'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
 
@@ -40,16 +41,10 @@ export default defineComponent({
   },
 
   setup(props, context) {
+    const copy = useCopy(context)
     const snackBar = useSnackBar()
 
-    const handleCopy = () => {
-      context.root.$copyText(props.text).then(
-        () => snackBar.showSnackBar({ message: 'Copied', color: 'success' }),
-        () => snackBar.showSnackBar({ message: 'Can not copy', color: 'warning' })
-      )
-    }
-
-    return { handleCopy }
+    return { handleCopy: copy.handleCopyText }
   }
 })
 </script>
