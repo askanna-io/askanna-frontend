@@ -5,9 +5,9 @@
         <v-card-text>
           <p>
             Project variables are applied to every run environment within this project. You can use variables for
-            settings, passwords, tokens, etcetera. You can usethe variable in your job definition via
-            <b>VARIABLE_NAME</b> . Also the variables are avaiable as environment variables, so you can refer directly
-            to them via for example you Python script.
+            settings, passwords, tokens, etcetera. You can use the variable in your job definition via
+            <b>VARIABLE_NAME</b>. Also the variables are avaiable as environment variables, so you can refer directly to
+            them via for example you Python script.
           </p>
           <p>
             Masked variables can be used for sensitive information. By default we will not expose the value of these
@@ -76,8 +76,8 @@
                 <v-row>
                   <v-col class="pt-0" cols="12">
                     <v-checkbox
-                      :disabled="isEdit && editedItem.masked"
-                      v-model="editedItem.masked"
+                      :disabled="isEdit && editedItem.masked && isSaved"
+                      v-model="maskedModel"
                       label="Masked"
                       hide-details
                     />
@@ -177,6 +177,7 @@ export default defineComponent({
         value: '',
         masked: false
       },
+      isSaved: true,
       defaultItem: {
         short_uuid: '',
         name: '',
@@ -230,6 +231,7 @@ export default defineComponent({
 
     const close = () => {
       state.dialog = false
+      state.isSaved = true
       state.editedItem = Object.assign({}, state.defaultItem)
       state.editedIndex = -1
     }
@@ -248,6 +250,16 @@ export default defineComponent({
       close()
     }
 
+    const maskedModel = computed({
+      get: () => state.editedItem.masked,
+      set: val => {
+        if (!state.editedItem.masked) {
+          state.isSaved = false
+        }
+        state.editedItem.masked = val
+      }
+    })
+
     initialize()
 
     return {
@@ -262,6 +274,7 @@ export default defineComponent({
       deleteItemConfirm,
       closeDelete,
       save,
+      maskedModel,
       handleChangeValue
     }
   }
