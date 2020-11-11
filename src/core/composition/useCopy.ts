@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { SetupContext } from '@vue/composition-api'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
 
