@@ -1,5 +1,13 @@
 <template>
-  <v-data-table :headers="headers" :items="variables" hide-default-footer>
+  <v-data-table
+    class="variables-table"
+    show-expand
+    :headers="headers"
+    :items="variables"
+    hide-default-footer
+    :expanded.sync="expanded"
+    item-key="short_uuid"
+  >
     <template v-slot:top>
       <v-card flat>
         <v-card-text>
@@ -32,7 +40,7 @@
             </v-btn>
           </template>
           <v-card>
-            <v-app-bar flat dense white--text color="white">
+            <v-app-bar flat>
               <v-card-title>
                 <span class="headline">{{ formTitle }}</span>
               </v-card-title>
@@ -87,13 +95,13 @@
             </v-card-text>
 
             <v-card-actions class="ml-5">
-              <v-btn text @click="close" small outlined>
+              <v-btn @click="close" small outlined text color="secondary" class="mr-1 btn--hover">
                 Cancel
               </v-btn>
-              <v-btn v-if="isEdit" color="error" outlined small text @click="deleteItem">
+              <v-btn v-if="isEdit" small outlined text color="error" class="mr-1 btn--hover" @click="deleteItem">
                 Delete
               </v-btn>
-              <v-btn small outlined text color="primary" class="mr-1 btn--hover" @click="save">
+              <v-btn small outlined text color="secondary" class="mr-1 btn--hover" @click="save">
                 Save
               </v-btn>
             </v-card-actions>
@@ -105,11 +113,11 @@
               >Are you sure you want to delete variable:
               <span class="primary--text">{{ editedItem.name }}</span> ?</v-card-title
             >
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="primary" small outlined text @click="deleteItemConfirm">Yes</v-btn>
-              <v-btn color="secondary" small outlined text @click="closeDelete">No</v-btn>
-              <v-spacer></v-spacer>
+            <v-card-actions class="ml-5">
+              <v-btn small outlined text color="secondary" class="mr-1 btn--hover" @click="deleteItemConfirm"
+                >Yes</v-btn
+              >
+              <v-btn small outlined text color="secondary" class="mr-1 btn--hover" @click="closeDelete">No</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -123,12 +131,33 @@
       <ask-anna-copy :text="item.name" :show="30" />
     </template>
     <template v-slot:item.value="{ item }">
-      <ask-anna-copy :text="item.masked ? '*****' : item.value" :show="30" />
+      <v-expansion-panels :disabled="item.masked" flat tile accordion>
+        <v-expansion-panel>
+          <v-expansion-panel-header>
+            <ask-anna-copy :text="item.masked ? '*****' : item.value" :show="30" />
+          </v-expansion-panel-header>
+          <v-expansion-panel-content>
+            {{ item.value }}
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+      </v-expansion-panels>
+    </template>
+    <template v-slot:item.masked="{ item }">
+      {{ item.masked ? 'Yes' : 'No' }}
     </template>
     <template v-slot:item.actions="{ item }">
       <v-btn class="my-2" small outlined color="secondary" @click="editItem(item)">
         <v-icon color="secondary" left small class="mr-2"> mdi-pencil </v-icon>Edit
       </v-btn>
+    </template>
+    <template v-slot:expanded-item="{ headers, item }">
+      <td />
+      <td />
+      <td>{{ item.value }}</td>
+      <td />
+
+      <td />
+      <td />
     </template>
     <template v-slot:no-data>
       No variables in project
@@ -167,7 +196,8 @@ export default defineComponent({
         { text: 'Name', value: 'name', width: '35%', sortable: false },
         { text: 'Value', value: 'value', width: '35%', sortable: false },
         { text: 'Masked', value: 'masked', width: '10%', sortable: false },
-        { text: '', value: 'actions', width: '10%', sortable: false }
+        { text: '', value: 'actions', width: '10%', sortable: false },
+        { text: '', value: 'data-table-expand' }
       ],
       variables: [],
       editedIndex: -1,
@@ -262,8 +292,11 @@ export default defineComponent({
 
     initialize()
 
+    const expanded = ref([])
+
     return {
       ...toRefs(state),
+      expanded,
       isEdit,
       handleCopy: copy.handleCopyTextById,
       modal,
@@ -280,3 +313,11 @@ export default defineComponent({
   }
 })
 </script>
+<style>
+.variables-table .v-data-table__expanded.v-data-table__expanded__content {
+  box-shadow: unset !important;
+}
+.variables-table .theme--light.v-expansion-panels .v-expansion-panel {
+  background-color: unset !important;
+}
+</style>
