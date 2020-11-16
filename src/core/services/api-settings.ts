@@ -107,6 +107,11 @@ export const api: ApiSettings = {
 
     result: {
       get: id => `result/${id}/`
+    },
+
+    variables: {
+      list: id => `project/${id}/variables/`,
+      update: ({ projectId, variableId }) => `project/${projectId}/variables/${variableId}/`
     }
   }
 }

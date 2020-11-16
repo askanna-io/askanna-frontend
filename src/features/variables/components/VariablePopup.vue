@@ -1,0 +1,198 @@
+<template>
+  <v-dialog v-model="variablePopupVmodel" max-width="500px">
+    <v-card>
+      <v-app-bar dense color="white" flat>
+        <v-card-title>
+          <span class="title font-weight-light">{{ formTitle }}</span>
+        </v-card-title>
+        <v-spacer />
+
+        <v-btn icon @click="handleClose">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </v-app-bar>
+      <v-card-text>
+        <v-container class="pb-0">
+          <v-row>
+            <v-col cols="12" sm="12" md="12">
+              <v-text-field
+                id="edited-item-name"
+                dense
+                small
+                outlined
+                autofocus
+                label="Name"
+                hide-details
+                :value="variable.name"
+                @keyup.enter="handlerCreateProject"
+                @input="setVariable({ path: 'name', value: $event })"
+              />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="12" sm="12" md="12">
+              <v-textarea
+                outlined
+                no-resize
+                hide-details
+                label="Value"
+                name="input-7-4"
+                :disabled="isEdit && variable.is_masked"
+                :value="variable.is_masked ? '*****' : variable.value"
+                @input="setVariable({ path: 'value', value: $event })"
+              />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col class="pt-0" cols="12">
+              <v-checkbox
+                v-model="maskedModel"
+                :disabled="isEdit && variable.is_masked && isSaved"
+                hide-details
+                label="Masked"
+              />
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-card-text>
+
+      <v-card-actions class="ml-5">
+        <v-btn @click="handleClose" small outlined text color="secondary" class="mr-1 btn--hover">
+          Cancel
+        </v-btn>
+        <v-btn v-if="isEdit" small outlined text color="error" class="mr-1 btn--hover" @click="deleteItem">
+          Delete
+        </v-btn>
+        <v-btn small outlined text color="secondary" class="mr-1 btn--hover" @click="handleSave">
+          Save
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+    <variable-confirm-delete-popup
+      :value="dialogDelete"
+      @onDelete="handleConfirmDeleteItem"
+      @onCloseDeletePopup="handleCloseDelete"
+    />
+  </v-dialog>
+</template>
+<script>
+import useVariablesStore from '@/features/variables/composition/useVariablesStore'
+import VariableConfirmDeletePopup from '@/features/variables/components/VariableConfirmDeletePopup'
+import { toRefs, reactive, computed, onBeforeUnmount, defineComponent } from '@vue/composition-api'
+
+export default defineComponent({
+  name: 'VariablePopup',
+
+  props: {
+    projectId: {
+      type: String,
+      default: () => ''
+    }
+  },
+
+  components: { VariableConfirmDeletePopup },
+
+  setup(props, context) {
+    const variablesStore = useVariablesStore()
+
+    const {
+      setVariable,
+      resetVariable,
+      createVariable,
+      updateVariable,
+      deleteVariable,
+      variablePopupVmodel
+    } = variablesStore
+
+    const variable = computed(() => variablesStore.variable.value)
+
+    const state = reactive({
+      dialog: false,
+      isSaved: true,
+      dialogDelete: false
+    })
+    const isEdit = computed(() => Boolean(variable.value.short_uuid))
+    const formTitle = computed(() => (variable.value.short_uuid ? 'Edit a variable' : 'Add a variable'))
+    const maskedModel = computed({
+      get: () => variable.value.is_masked,
+      set: value => {
+        if (!variable.value.is_masked) {
+          state.isSaved = false
+        }
+        setVariable({ path: 'is_masked', value })
+      }
+    })
+
+    const deleteItem = () => {
+      state.dialogDelete = true
+    }
+
+    const handleConfirmDeleteItem = async () => {
+      const { name, short_uuid } = variable.value
+
+      await deleteVariable({
+        name,
+        variableId: short_uuid,
+        projectId: props.projectId
+      })
+      handleCloseDelete()
+    }
+
+    const handleClose = () => {
+      variablePopupVmodel.value = false
+      state.isSaved = true
+      resetVariable()
+    }
+
+    const handleCloseDelete = () => {
+      state.dialogDelete = false
+      handleClose()
+    }
+
+    const handleSave = () => {
+      isEdit.value ? handleUpdateVariable() : handleCreateVariable()
+
+      handleClose()
+    }
+
+    const handleCreateVariable = async () => {
+      const { name, value, is_masked } = variable.value
+      await createVariable({
+        name,
+        value,
+        is_masked,
+        project: props.projectId
+      })
+    }
+
+    const handleUpdateVariable = async () => {
+      const { name, value, is_masked, short_uuid: variableId } = variable.value
+
+      await updateVariable({
+        name,
+        value,
+        is_masked,
+        variableId,
+        projectId: props.projectId
+      })
+    }
+
+    onBeforeUnmount(() => resetVariable())
+
+    return {
+      ...toRefs(state),
+      isEdit,
+      variable,
+      formTitle,
+      deleteItem,
+      handleSave,
+      setVariable,
+      handleClose,
+      maskedModel,
+      handleCloseDelete,
+      variablePopupVmodel,
+      handleConfirmDeleteItem
+    }
+  }
+})
+</script>
