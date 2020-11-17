@@ -17,10 +17,10 @@
       <ask-anna-copy :text="item.name" :show="30" />
     </template>
     <template v-slot:item.value="{ item }">
-      <v-expansion-panels class="ask-anna-expansion-panels" :disabled="item.masked" flat tile accordion>
+      <v-expansion-panels class="ask-anna-expansion-panels" :disabled="item.is_masked" flat tile accordion>
         <v-expansion-panel>
           <v-expansion-panel-header>
-            <ask-anna-copy :text="item.masked ? '*****' : item.value" :show="30" />
+            <ask-anna-copy :text="item.is_masked ? '********' : item.value" :show="30" />
           </v-expansion-panel-header>
           <v-expansion-panel-content>
             {{ item.value }}
@@ -28,7 +28,7 @@
         </v-expansion-panel>
       </v-expansion-panels>
     </template>
-    <template v-slot:item.masked="{ item }">
+    <template v-slot:item.is_masked="{ item }">
       {{ item.is_masked ? 'Yes' : 'No' }}
     </template>
     <template v-slot:item.actions="{ item }">
@@ -69,9 +69,9 @@ export default defineComponent({
         value: 'short_uuid',
         width: '10%'
       },
-      { text: 'Name', value: 'name', width: '35%', sortable: false },
+      { text: 'Name', value: 'name', width: '35%' },
       { text: 'Value', value: 'value', width: '35%', sortable: false },
-      { text: 'Masked', value: 'masked', width: '10%', sortable: false },
+      { text: 'Masked', value: 'is_masked', width: '10%' },
       { text: '', value: 'actions', width: '10%', sortable: false }
     ])
 
