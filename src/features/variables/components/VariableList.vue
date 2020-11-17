@@ -14,7 +14,7 @@
       <ask-anna-copy :text="item.short_uuid" prefix="#" />
     </template>
     <template v-slot:item.name="{ item }">
-      <ask-anna-copy :text="item.name" :show="30" />
+      <ask-anna-copy :text="item.name" slicedText :show="30" />
     </template>
     <template v-slot:item.value="{ item }">
       <v-expansion-panels class="ask-anna-expansion-panels" :disabled="item.is_masked" flat tile accordion>
@@ -43,6 +43,7 @@
 </template>
 
 <script>
+import { useWindowSize } from '@u3u/vue-hooks'
 import AskAnnaCopy from '@/core/components/shared/AskAnnaCopy'
 import { ref, computed, onBeforeMount, defineComponent } from '@vue/composition-api'
 
@@ -59,6 +60,8 @@ export default defineComponent({
   components: { AskAnnaCopy },
 
   setup(props, context) {
+    const { width } = useWindowSize()
+
     const modal = ref(null)
 
     const headers = ref([

@@ -27,16 +27,4 @@ export const mutations: MutationTree<VariablesState> = {
   [type.mutation.RESET_VARIABLE](state) {
     state.variable = new VariableModel().state
   }
-  /*  [type.UPDATE_JOB](state, params) {
-    state.job = Object.assign({}, state.job, params)
-  },
-
-  [type.mutation.RESET_JOB_STORE](state) {
-    state.result = ''
-    state.job = new JobModel().state
-  },
-
-  [type.mutation.RESET_JOB_RUN](state) {
-    state.jobrun = new JobRunModel().state
-  } */
 }

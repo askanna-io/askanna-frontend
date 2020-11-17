@@ -2,7 +2,7 @@
   <v-tooltip top>
     <template v-slot:activator="{ on, value }">
       <div v-on="on">
-        <v-btn class="px-0" text small>{{ prefix }} {{ sliceText() }}</v-btn>
+        <v-btn class="px-0 ask-anna-copy" ref="btn" text small>{{ prefix }} {{ sliceText }}</v-btn>
         <v-tooltip right>
           <template v-slot:activator="{ on }">
             <v-btn icon text x-small v-on="on" v-show="value" @click.stop="handleCopy(text)"
@@ -19,7 +19,7 @@
 
 <script>
 import useCopy from '@/core/composition/useCopy'
-import { computed, defineComponent } from '@vue/composition-api'
+import { ref, watch, computed, defineComponent } from '@vue/composition-api'
 import useSlicedText from '@/core/composition/useSlicedText'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
 
@@ -50,14 +50,24 @@ export default defineComponent({
     const snackBar = useSnackBar()
     const slicedText = useSlicedText()
 
-    const sliceText = () => (props.smartSlice ? slicedText(props.text, props.show) : props.text.slice(0, props.show))
+    const btn = ref(null)
+    const btnWidtn = ref(100)
 
-    return { sliceText, handleCopy: copy.handleCopyText }
+    const sliceText = computed(() => {
+      return props.smartSlice ? slicedText(props.text, props.show) : props.text.slice(0, props.show)
+    })
+
+    watch(btn, async btn => {
+      if (!btn) return
+      btnWidtn.value = btn.$el.offsetWidth
+    })
+
+    return { btn, sliceText, handleCopy: copy.handleCopyText }
   }
 })
 </script>
-<style scoped>
-.ask-anna-copy-text code {
-  color: white;
+<style>
+.ask-anna-copy .v-btn__content {
+  text-transform: initial;
 }
 </style>
