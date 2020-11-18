@@ -13,7 +13,6 @@
     </v-card>
   </v-dialog>
 </template>
-
 <script>
 import { computed, defineComponent } from '@vue/composition-api'
 
