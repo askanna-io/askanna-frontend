@@ -2,8 +2,9 @@
   <v-dialog v-model="valueModel" max-width="450px">
     <v-card>
       <v-card-title
-        >Are you sure you want to delete variable <span class="primary--text">{{ variableName }}</span
-        >?</v-card-title
+        >Are you sure you want to delete variable<span class="primary--text break"
+          >{{ ` ${variableName}` }}<span class="mark">?</span></span
+        ></v-card-title
       >
       <v-card-actions class="ml-5">
         <v-btn small outlined text color="secondary" class="mr-1 btn--hover" @click="deleteItemConfirm">Yes</v-btn>
@@ -47,3 +48,11 @@ export default defineComponent({
   }
 })
 </script>
+<style scoped>
+.break {
+  white-space: break-spaces;
+}
+.mark {
+  color: rgba(0, 0, 0, 0.87);
+}
+</style>
