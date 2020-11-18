@@ -18,7 +18,7 @@
         </v-btn>
       </v-app-bar>
       <v-card-text>
-        <v-form ref="variableFormRef" v-model="isFormValid" @submit="handleSave" @keyup.native.enter="handleSave">
+        <v-form ref="variableFormRef" v-model="isFormValid" @submit="handleSave">
           <v-container class="pb-0">
             <v-row>
               <v-col cols="12" sm="12" md="12" class="pb-0">
@@ -32,7 +32,6 @@
                   validate-on-blur
                   :value="variable.name"
                   :rules="[RULE.required('The name is required')]"
-                  @keyup.enter="handlerCreateProject"
                   @input="setVariable({ path: 'name', value: $event })"
                 />
               </v-col>

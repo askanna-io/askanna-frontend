@@ -1,27 +1,45 @@
 <template>
-  <v-tooltip top>
-    <template v-slot:activator="{ on, value }">
-      <div v-on="on">
-        <v-btn class="px-0 ask-anna-copy" ref="btn" text small>{{ prefix }} {{ sliceText }}</v-btn>
-        <v-tooltip right>
-          <template v-slot:activator="{ on }">
-            <v-btn icon text x-small v-on="on" v-show="value" @click.stop="handleCopy(text)"
-              ><v-icon>mdi-content-copy</v-icon></v-btn
-            >
-          </template>
-          <span>Copy</span>
-        </v-tooltip>
-      </div>
-    </template>
-    <span>{{ text }}</span>
-  </v-tooltip>
+  <div>
+    <v-tooltip top left v-if="!masked">
+      <template v-slot:activator="{ on, value }">
+        <div v-on="on">
+          {{ prefix }} {{ sliceText }}
+          <v-btn
+            v-if="(expanded && isSliced) || (expanded && isSliced && !masked)"
+            text
+            icon
+            class="px-0 ask-anna-copy"
+            @click="expand = !expand"
+          >
+            <v-icon>mdi-chevron-{{ expand ? 'up' : 'down' }}</v-icon>
+          </v-btn>
+          <v-tooltip right>
+            <template v-slot:activator="{ on }">
+              <v-btn icon text x-small v-on="on" v-show="value" @click.stop="handleCopy(text)"
+                ><v-icon>mdi-content-copy</v-icon></v-btn
+              >
+            </template>
+            <span>Copy</span>
+          </v-tooltip>
+        </div>
+      </template>
+
+      <span>{{ text }} as</span>
+    </v-tooltip>
+    <v-expand-transition>
+      <v-card flat v-show="expand" class="transparent">{{ text }}</v-card>
+    </v-expand-transition>
+    <span v-if="masked">
+      {{ text }}
+    </span>
+  </div>
 </template>
 
 <script>
+import { useWindowSize } from '@u3u/vue-hooks'
 import useCopy from '@/core/composition/useCopy'
-import { ref, watch, computed, defineComponent } from '@vue/composition-api'
 import useSlicedText from '@/core/composition/useSlicedText'
-import useSnackBar from '@/core/components/snackBar/useSnackBar'
+import { ref, computed, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'AskAnnaCopy',
@@ -42,32 +60,49 @@ export default defineComponent({
     smartSlice: {
       type: Boolean,
       default: false
+    },
+    width: {
+      type: Number,
+      default: () => 100
+    },
+    masked: {
+      type: Boolean,
+      default: false
+    },
+    expanded: {
+      type: Boolean,
+      default: false
     }
   },
 
   setup(props, context) {
     const copy = useCopy(context)
-    const snackBar = useSnackBar()
+    const { width } = useWindowSize()
     const slicedText = useSlicedText()
 
-    const btn = ref(null)
-    const btnWidtn = ref(100)
+    const expand = ref(false)
 
-    const sliceText = computed(() => {
-      return props.smartSlice ? slicedText(props.text, props.show) : props.text.slice(0, props.show)
+    const delta = computed(() => {
+      const [parentContainer] = document.getElementsByClassName('variables-table')
+      const containerWidth = (parentContainer && parentContainer.offsetWidth) || 1000
+
+      switch (context.root.$vuetify.breakpoint.name) {
+        case 'xs':
+          return containerWidth + width.value - width.value + 500
+
+        default:
+          return containerWidth + width.value - width.value - (props.expanded ? 300 : 200)
+      }
     })
 
-    watch(btn, async btn => {
-      if (!btn) return
-      btnWidtn.value = btn.$el.offsetWidth
-    })
+    const rowWidth = computed(() => (delta.value * props.width) / 100 / 8)
+    const isSliced = computed(() => props.text.length > rowWidth.value)
 
-    return { btn, sliceText, handleCopy: copy.handleCopyText }
+    const sliceText = computed(() =>
+      props.smartSlice ? slicedText(props.text, rowWidth.value) : props.text.slice(0, props.show)
+    )
+
+    return { expand, isSliced, sliceText, handleCopy: copy.handleCopyText }
   }
 })
 </script>
-<style>
-.ask-anna-copy .v-btn__content {
-  text-transform: initial;
-}
-</style>

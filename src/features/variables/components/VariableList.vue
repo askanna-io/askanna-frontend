@@ -14,19 +14,10 @@
       <ask-anna-copy :text="item.short_uuid" prefix="#" />
     </template>
     <template v-slot:item.name="{ item }">
-      <ask-anna-copy :text="item.name" slicedText :show="30" />
+      <ask-anna-copy :text="item.name" smartSlice :width="35" />
     </template>
     <template v-slot:item.value="{ item }">
-      <v-expansion-panels class="ask-anna-expansion-panels" :disabled="item.is_masked" flat tile accordion>
-        <v-expansion-panel>
-          <v-expansion-panel-header>
-            <ask-anna-copy :text="item.is_masked ? '********' : item.value" :show="30" />
-          </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            {{ item.value }}
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-      </v-expansion-panels>
+      <ask-anna-copy :text="item.value" smartSlice :width="35" :masked="item.is_masked" expanded />
     </template>
     <template v-slot:item.is_masked="{ item }">
       {{ item.is_masked ? 'Yes' : 'No' }}
@@ -45,6 +36,7 @@
 <script>
 import { useWindowSize } from '@u3u/vue-hooks'
 import AskAnnaCopy from '@/core/components/shared/AskAnnaCopy'
+
 import { ref, computed, onBeforeMount, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
@@ -87,19 +79,3 @@ export default defineComponent({
   }
 })
 </script>
-<style lang="scss">
-.variables-table .v-data-table__expanded.v-data-table__expanded__content {
-  box-shadow: unset !important;
-}
-.variables-table .theme--light.v-expansion-panels .v-expansion-panel {
-  background-color: unset !important;
-}
-.ask-anna-table {
-  .ask-anna-expansion-panels {
-    .v-expansion-panel-header,
-    .v-expansion-panel-content__wrap {
-      padding-left: 0;
-    }
-  }
-}
-</style>
