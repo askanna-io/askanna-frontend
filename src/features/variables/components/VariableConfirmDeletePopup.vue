@@ -2,7 +2,7 @@
   <v-dialog v-model="valueModel" max-width="450px">
     <v-card>
       <v-card-title
-        >Are you sure you want to delete variable: <span class="primary--text">{{ 'das' }}</span
+        >Are you sure you want to delete variable <span class="primary--text">{{ variableName }}</span
         >?</v-card-title
       >
       <v-card-actions class="ml-5">
@@ -23,13 +23,17 @@ export default defineComponent({
     value: {
       type: Boolean,
       default: false
+    },
+    variableName: {
+      type: String,
+      default: () => ''
     }
   },
 
   setup(props, context) {
     const valueModel = computed({
       get: () => props.value,
-      set: () => ''
+      set: () => context.emit('onCloseDeletePopup')
     })
 
     const deleteItemConfirm = () => context.emit('onDelete')

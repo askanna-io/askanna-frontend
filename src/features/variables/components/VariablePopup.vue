@@ -46,7 +46,7 @@
                   validate-on-blur
                   :disabled="isEdit && variable.is_masked && isSaved"
                   :rules="[RULE.required('The value is required')]"
-                  :value="variable.is_masked && isEdit && isSaved ? '********' : variable.value"
+                  :value="variable.value"
                   @input="setVariable({ path: 'value', value: $event })"
                 />
               </v-col>
@@ -78,6 +78,7 @@
       </v-card-actions>
     </v-card>
     <variable-confirm-delete-popup
+      :variableName="variable.name"
       :value="dialogDelete"
       @onDelete="handleConfirmDeleteItem"
       @onCloseDeletePopup="handleCloseDelete"
