@@ -19,9 +19,6 @@
     <template v-slot:item.value="{ item }">
       <ask-anna-copy :text="item.value" smartSlice :width="35" :masked="item.is_masked" expanded />
     </template>
-    <template v-slot:item.is_masked="{ item }">
-      {{ item.is_masked ? 'Yes' : 'No' }}
-    </template>
     <template v-slot:item.actions="{ item }">
       <v-btn class="my-2" small outlined color="secondary" @click="handleEditItem(item)">
         <v-icon color="secondary" left small class="mr-2"> mdi-pencil </v-icon>Edit
@@ -65,8 +62,7 @@ export default defineComponent({
         width: '10%'
       },
       { text: 'Name', value: 'name', width: '35%' },
-      { text: 'Value', value: 'value', width: '35%', sortable: false },
-      { text: 'Masked', value: 'is_masked', width: '10%' },
+      { text: 'Value', value: 'value', width: '45%', sortable: true },
       { text: '', value: 'actions', width: '10%', sortable: false }
     ])
 

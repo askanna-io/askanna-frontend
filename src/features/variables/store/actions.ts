@@ -63,16 +63,19 @@ export const actions: ActionTree<VariablesState, RootState> = {
   },
 
   async [type.action.updateVariable]({ commit, dispatch }, { projectId, variableId, ...data }) {
-    let variable
     try {
-      variable = await apiService({
+      await apiService({
         action: api.update,
         method: 'PATCH',
         serviceName,
         data,
         uuid: { projectId, variableId }
       })
-    } catch (error) {}
+    } catch (error) {
+      logger.error(commit, 'Error on update variable  in updateVariable action.\nError: ', error)
+
+      return
+    }
 
     logger.success(commit, `The variable ${name} is updated`)
 

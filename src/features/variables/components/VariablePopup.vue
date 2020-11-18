@@ -44,10 +44,9 @@
                   label="Value"
                   name="input-7-4"
                   validate-on-blur
-                  :disabled="isEdit && variable.is_masked && isSaved"
                   :rules="[RULE.required('The value is required')]"
                   :value="variable.value"
-                  @input="setVariable({ path: 'value', value: $event })"
+                  @input="handleSetVariable({ path: 'value', value: $event })"
                 />
               </v-col>
             </v-row>
@@ -127,7 +126,8 @@ export default defineComponent({
     const state = reactive({
       dialog: false,
       isSaved: true,
-      dialogDelete: false
+      dialogDelete: false,
+      isValueChanged: false
     })
 
     const isEdit = computed(() => Boolean(variable.value.short_uuid))
@@ -161,7 +161,9 @@ export default defineComponent({
       reset()
       resetVariable()
       resetValidation()
+
       state.isSaved = true
+      state.isValueChanged = false
       variablePopupVmodel.value = false
     }
 
@@ -191,14 +193,22 @@ export default defineComponent({
 
     const handleUpdateVariable = async () => {
       const { name, value, is_masked, short_uuid: variableId } = variable.value
+      let data = { name, is_masked }
+      if (state.isValueChanged) {
+        data.value = value
+      }
 
       await updateVariable({
-        name,
-        value,
+        ...data,
         is_masked,
         variableId,
         projectId: props.projectId
       })
+    }
+
+    const handleSetVariable = data => {
+      state.isValueChanged = true
+      setVariable(data)
     }
 
     onBeforeUnmount(() => resetVariable())
@@ -215,6 +225,7 @@ export default defineComponent({
       handleClose,
       maskedModel,
       variableFormRef,
+      handleSetVariable,
       handleCloseDelete,
       variablePopupVmodel,
       handleConfirmDeleteItem,
