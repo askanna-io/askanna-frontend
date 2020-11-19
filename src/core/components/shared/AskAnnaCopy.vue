@@ -88,10 +88,19 @@ export default defineComponent({
 
       switch (context.root.$vuetify.breakpoint.name) {
         case 'xs':
-          return containerWidth + width.value - width.value + 500
+          return containerWidth + width.value - width.value + (props.expanded ? 500 : 500)
+
+        case 'sm':
+          return containerWidth + width.value - width.value + (props.expanded ? 150 : -40)
+
+        case 'md':
+          return containerWidth + width.value - width.value + (props.expanded ? 290 : 50)
+
+        case 'lg':
+          return containerWidth + width.value - width.value + (props.expanded ? 420 : 100)
 
         default:
-          return containerWidth + width.value - width.value - (props.expanded ? 300 : 200)
+          return containerWidth + width.value - width.value + (props.expanded ? 300 : 100)
       }
     })
 
