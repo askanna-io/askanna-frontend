@@ -11,7 +11,7 @@
     </template>
 
     <template v-slot:item.short_uuid="{ item }">
-      <ask-anna-copy :text="item.short_uuid" prefix="#" />
+      <ask-anna-copy :text="item.short_uuid" prefix="#" :show="4" />
     </template>
     <template v-slot:item.name="{ item }">
       <ask-anna-copy :text="item.name" smartSlice :width="35" />

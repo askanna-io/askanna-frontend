@@ -24,10 +24,10 @@
         </div>
       </template>
 
-      <span>{{ text }} as</span>
+      <span>{{ text }}</span>
     </v-tooltip>
     <v-expand-transition>
-      <v-card flat v-show="expand" class="transparent">{{ text }}</v-card>
+      <v-card flat v-show="expand" class="transparent">{{ restOftext }}</v-card>
     </v-expand-transition>
     <span v-if="masked">
       {{ text }}
@@ -101,8 +101,9 @@ export default defineComponent({
     const sliceText = computed(() =>
       props.smartSlice ? slicedText(props.text, rowWidth.value) : props.text.slice(0, props.show)
     )
+    const restOftext = computed(() => (isSliced.value ? props.text.slice(sliceText.value.length - 3) : props.text))
 
-    return { expand, isSliced, sliceText, handleCopy: copy.handleCopyText }
+    return { expand, isSliced, sliceText, restOftext, handleCopy: copy.handleCopyText }
   }
 })
 </script>
