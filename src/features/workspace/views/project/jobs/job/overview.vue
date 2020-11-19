@@ -2,13 +2,11 @@
   <v-card class="mx-auto" flat>
     <v-card-title>Description</v-card-title>
     <v-divider />
-    <v-container class="ma-0 fluid">
-      <job-description
-        :description="job.description"
-        @onSave="handleOnJobSave"
-        @onChangeDescription="handleChangeDescription"
-      />
-    </v-container>
+    <job-description
+      :description="job.description"
+      @onSave="handleOnJobSave"
+      @onChangeDescription="handleChangeDescription"
+    />
     <v-divider />
     <job-definition :job="job" :lastPackage="lastPackage" @handleGoToCode="handleGoToCode" />
     <v-divider />

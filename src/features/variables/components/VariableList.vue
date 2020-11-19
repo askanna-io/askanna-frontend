@@ -21,7 +21,7 @@
     </template>
     <template v-slot:item.actions="{ item }">
       <v-btn class="my-2" small outlined color="secondary" @click="handleEditItem(item)">
-        <v-icon color="secondary" left small class="mr-2"> mdi-pencil </v-icon>Edit
+        <v-icon color="secondary" left small class="mr-2">mdi-pencil</v-icon>Edit
       </v-btn>
     </template>
     <template v-slot:no-data>

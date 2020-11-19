@@ -167,14 +167,14 @@
       <editor-content class="ma-2" :editor="editor" spellcheck="false" />
 
       <v-card-actions v-if="!onLiveMode">
-        <v-btn v-if="editable" x-small outlined color="primary" @click="handleSave">
-          <v-icon left dark>mdi-content-save</v-icon>Save
+        <v-btn v-if="editable" small outlined color="secondary" @click="handleSave">
+          <v-icon left small dark>mdi-content-save</v-icon>Save
         </v-btn>
-        <v-btn v-if="editable" x-small outlined color="secondary" @click="handleClear">
-          <v-icon left dark>mdi-delete-forever-outline</v-icon>Clear
+        <v-btn v-if="editable" small outlined color="secondary" @click="handleClear">
+          <v-icon left small dark>mdi-delete-forever-outline</v-icon>Clear
         </v-btn>
-        <v-btn v-if="!editable" x-small outlined color="primary" @click="handleEdit">
-          <v-icon left dark>mdi-file-edit-outline</v-icon>Edit
+        <v-btn v-if="!editable" class="my-2 btn--hover" small outlined color="secondary" @click="handleEdit">
+          <v-icon color="secondary" left small class="mr-2">mdi-pencil</v-icon>Edit
         </v-btn>
       </v-card-actions>
     </v-card>
