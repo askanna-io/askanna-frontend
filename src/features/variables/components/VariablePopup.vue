@@ -31,7 +31,10 @@
                   label="Name"
                   validate-on-blur
                   :value="variable.name"
-                  :rules="[RULE.required('The name is required')]"
+                  :rules="[
+                    RULE.required('The name is required'),
+                    RULE.max('The maximum length of the variable name is 128 characters', 128)
+                  ]"
                   @input="setVariable({ path: 'name', value: $event })"
                 />
               </v-col>
@@ -44,7 +47,10 @@
                   label="Value"
                   name="input-7-4"
                   validate-on-blur
-                  :rules="[RULE.required('The value is required')]"
+                  :rules="[
+                    RULE.required('The value is required'),
+                    RULE.max('The maximum length of the variable value is 4096 characters', 4096)
+                  ]"
                   :value="variable.value"
                   @input="handleSetVariable({ path: 'value', value: $event })"
                 />
