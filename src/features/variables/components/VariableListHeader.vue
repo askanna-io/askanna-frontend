@@ -4,20 +4,19 @@
       <v-card-text>
         <p>
           Project variables are applied to every run environment within this project. You can use variables for
-          settings, passwords, tokens, etcetera. You can use the variable in your job definition via
-          <b>VARIABLE_NAME</b>. Also the variables are avaiable as environment variables, so you can refer directly to
-          them via for example you Python script.
+          settings, passwords, tokens, etcetera. Masked variables can be used for sensitive information. By design we
+          will not expose the value of these variables in the web interface.
         </p>
         <p>
-          Masked variables can be used for sensitive information. By default we will not expose the value of these
-          variables.
+          <a
+            class="app-link text-decoration-none primary--text font-weight-medium d-inline-block"
+            href="https://docs.askanna.io/#/variables"
+            target="_blank"
+          >
+            Read the documentation</a
+          >
+          for more information about how you can use variables in the job definition and project code.
         </p>
-        <a
-          class="app-link text-decoration-none primary--text font-weight-medium d-inline-block"
-          href="https://docs.askanna.io/#/jobs?id=variables"
-          target="_blank"
-          >Read the documentation for more information.</a
-        >
       </v-card-text>
     </v-card>
     <v-toolbar color="grey lighten-4" flat dense>

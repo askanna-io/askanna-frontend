@@ -4,7 +4,6 @@ import { VariablesState, VARIABLES_STORE } from './types'
 import { logger } from '@/core/plugins/logger'
 import apiService from '@/core/services/apiService'
 import { apiStringify } from '@/core/services/api-settings'
-import { mutation as gMutation, GENERAL_STORE } from '@/core/store/general/types'
 
 const serviceName = VARIABLES_STORE
 const api = apiStringify(serviceName)
@@ -41,7 +40,11 @@ export const actions: ActionTree<VariablesState, RootState> = {
         uuid: data.project,
         data
       })
-    } catch (error) {}
+    } catch (error) {
+      logger.error(commit, 'Error on create variable  in createVariable action.\nError: ', error)
+
+      return
+    }
 
     logger.success(commit, `The variable ${variable.name} is created`)
 
@@ -58,6 +61,8 @@ export const actions: ActionTree<VariablesState, RootState> = {
       })
     } catch (error) {
       logger.error(commit, 'Error on load variable  in getVariable action.\nError: ', error)
+
+      return
     }
     commit(type.mutation.SET_EDIT_VARIABLE, variable)
   },
@@ -91,7 +96,11 @@ export const actions: ActionTree<VariablesState, RootState> = {
         serviceName,
         uuid: { projectId, variableId }
       })
-    } catch (error) {}
+    } catch (error) {
+      logger.error(commit, 'Error on delete variable  in deleteVariable action.\nError: ', error)
+
+      return
+    }
 
     logger.success(commit, `The variable ${name} is deleted`)
 
