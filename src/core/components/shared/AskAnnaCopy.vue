@@ -27,7 +27,7 @@
       <span>{{ text }}</span>
     </v-tooltip>
     <v-expand-transition>
-      <v-card flat v-show="expand" class="transparent">{{ restOftext }}</v-card>
+      <v-card flat v-show="expand" class="transparent"><div class="expanded" v-html="restOftext" /> </v-card>
     </v-expand-transition>
     <span v-if="masked">
       {{ text }}
@@ -116,3 +116,8 @@ export default defineComponent({
   }
 })
 </script>
+<style>
+.expanded {
+  white-space: break-spaces;
+}
+</style>
