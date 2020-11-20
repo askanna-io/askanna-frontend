@@ -37,8 +37,8 @@
           v-else
           :items="treeView"
           :height="calcHeight"
+          :getRoutePath="getRoutePath"
           :noDataAvailable="'There is no artifact available for this run.'"
-          @clickOnRow="handleClickOnRow"
         />
       </v-col>
     </v-row>
@@ -126,7 +126,7 @@ export default defineComponent({
       return parentPath.value ? [parentPath.value, ...tree] : tree
     })
 
-    const handleClickOnRow = async item => {
+    const getRoutePath = item => {
       let path = `/${workspaceId}/project/${projectId}/jobs/${jobId}/runs/${jobRunId}/artifact/${folderName}/${item.name}`
       if (item.parent === '/') {
         path = `/${workspaceId}/project/${projectId}/jobs/${jobId}/runs/${jobRunId}/artifact/${item.name}`
@@ -140,7 +140,7 @@ export default defineComponent({
         path = `/${workspaceId}/project/${projectId}/jobs/${jobId}/runs/${jobRunId}/artifact/${item.path}`
       }
 
-      context.root.$router.push({ path })
+      return { path }
     }
 
     const handleDownload = async () => {
@@ -194,8 +194,8 @@ export default defineComponent({
       calcHeight,
       breadcrumbs,
       currentPath,
+      getRoutePath,
       handleDownload,
-      handleClickOnRow,
       handeBackToPackageRoot
     }
   }

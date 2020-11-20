@@ -37,7 +37,7 @@
             :currentPath="currentPath"
             :sticked="sticked"
           />
-          <package-tree v-else :items="treeView" :height="calcHeight" @clickOnRow="handleClickOnRow" />
+          <package-tree v-else :items="treeView" :height="calcHeight" :getRoutePath="getRoutePath" />
         </template>
       </v-col>
     </v-row>
@@ -165,7 +165,7 @@ export default defineComponent({
       return parentPath.value ? [parentPath.value, ...tree] : tree
     })
 
-    const handleClickOnRow = async item => {
+    const getRoutePath = item => {
       let path = `/${workspaceId}/project/${projectId}/jobs/${jobId}/runs/${jobRunId}/code/${folderName}/${item.name}`
       if (item.parent === '/') {
         path = `/${workspaceId}/project/${projectId}/jobs/${jobId}/runs/${jobRunId}/code/${item.name}`
@@ -179,7 +179,7 @@ export default defineComponent({
         path = `/${workspaceId}/project/${projectId}/jobs/${jobId}/runs/${jobRunId}/code/${item.path}`
       }
 
-      context.root.$router.push({ path })
+      return { path }
     }
 
     const handleDownload = async () => {
@@ -218,9 +218,9 @@ export default defineComponent({
       calcHeight,
       breadcrumbs,
       currentPath,
+      getRoutePath,
       isProcessing,
       handleDownload,
-      handleClickOnRow,
       handeBackToPackageRoot
     }
   }

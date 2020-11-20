@@ -26,7 +26,7 @@ export default class App extends Vue {
   }
 }
 </script>
-<style>
+<style lang="scss">
 .ask-anna-btn-loader {
   animation: loader 1s infinite;
   display: flex;
@@ -164,5 +164,17 @@ code.lang-shell {
 
 .img--rounded {
   border-radius: 50% !important;
+}
+
+.ask-anna-table {
+  &--with-links {
+    .table-link {
+      &--unformated {
+        text-decoration: none;
+        display: block;
+        color: inherit;
+      }
+    }
+  }
 }
 </style>

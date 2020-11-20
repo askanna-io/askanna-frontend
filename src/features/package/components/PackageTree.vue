@@ -5,22 +5,32 @@
     :options="{ itemsPerPage: -1 }"
     fixed-header
     hide-default-footer
-    class="job-table scrollbar cursor--pointer"
-    @click:row="clickOnRow"
+    class="job-table scrollbar cursor--pointer ask-anna-table ask-anna-table--with-links"
   >
     <template v-slot:item.type="{ item }">
-      <v-icon v-if="item.is_dir">
-        mdi-folder
-      </v-icon>
-      <v-icon v-else>
-        {{ FileIcons[item.ext] }}
-      </v-icon>
+      <router-link class="table-link table-link--unformated" :to="getRoutePath(item)">
+        <v-icon v-if="item.is_dir">
+          mdi-folder
+        </v-icon>
+        <v-icon v-else>
+          {{ FileIcons[item.ext] }}
+        </v-icon>
+      </router-link>
+    </template>
+    <template v-slot:item.name="{ item }">
+      <router-link class="table-link table-link--unformated" :to="getRoutePath(item)">
+        {{ item.name }}
+      </router-link>
     </template>
     <template v-slot:item.last_modified="{ item }">
-      {{ item.last_modified && $moment(item.last_modified).format(' Do MMMM YYYY, h:mm:ss a') }}
+      <router-link class="table-link table-link--unformated" :to="getRoutePath(item)">
+        {{ item.last_modified && $moment(item.last_modified).format(' Do MMMM YYYY, h:mm:ss a') }}
+      </router-link>
     </template>
     <template v-slot:item.size="{ item }">
-      {{ humanizeSize(item.size) }}
+      <router-link class="table-link table-link--unformated" :to="getRoutePath(item)">
+        {{ humanizeSize(item.size) }}
+      </router-link>
     </template>
     <template v-slot:no-data>
       {{ noDataAvailable }}
@@ -49,6 +59,10 @@ export default defineComponent({
     noDataAvailable: {
       type: String,
       default: () => 'No data available'
+    },
+    getRoutePath: {
+      type: Function,
+      default: () => ''
     }
   },
 
@@ -56,15 +70,19 @@ export default defineComponent({
     const moment = useMoment(context)
     const sizeHumanize = useSizeHumanize()
 
-    const clickOnRow = item => context.emit('clickOnRow', item)
-
     return {
       ...moment,
       ...sizeHumanize,
       headers,
-      FileIcons,
-      clickOnRow
+      FileIcons
     }
   }
 })
 </script>
+<style>
+.job-table a {
+  text-decoration: none;
+  display: block;
+  color: inherit;
+}
+</style>
