@@ -31,11 +31,12 @@
                   label="Name"
                   validate-on-blur
                   :value="variable.name"
+                  :error-messages="error.name"
                   :rules="[
                     RULE.required('The name is required'),
                     RULE.max('The maximum length of the variable name is 128 characters', 128)
                   ]"
-                  @input="setVariable({ path: 'name', value: $event })"
+                  @input="handleSetName({ path: 'name', value: $event })"
                 />
               </v-col>
             </v-row>
@@ -47,11 +48,12 @@
                   label="Value"
                   name="input-7-4"
                   validate-on-blur
+                  :value="variable.value"
+                  :error-messages="error.value"
                   :rules="[
                     RULE.required('The value is required'),
                     RULE.max('The maximum length of the variable value is 3,000 characters', 3000)
                   ]"
-                  :value="variable.value"
                   @input="handleSetVariable({ path: 'value', value: $event })"
                 />
               </v-col>
@@ -114,6 +116,9 @@ export default defineComponent({
 
     const isFormValid = ref(false)
     const variableFormRef = ref(null)
+    const errorData = reactive({
+      error: { name: '', value: '' }
+    })
 
     const reset = () => variableFormRef.value.reset()
     const resetValidation = () => variableFormRef.value.resetValidation()
@@ -165,6 +170,7 @@ export default defineComponent({
 
     const handleClose = async () => {
       reset()
+      resetError()
       resetVariable()
       resetValidation()
 
@@ -178,18 +184,23 @@ export default defineComponent({
       handleClose()
     }
 
-    const handleSave = () => {
+    const handleSave = async () => {
       if (!variableFormRef.value.validate()) {
         return
       }
-      isEdit.value ? handleUpdateVariable() : handleCreateVariable()
+      const variable = isEdit.value ? await handleUpdateVariable() : await handleCreateVariable()
+
+      if (variable && variable.response && variable.response.status === 400) {
+        errorData.error = { ...errorData.error, ...variable.response.data }
+        return
+      }
 
       handleClose()
     }
 
     const handleCreateVariable = async () => {
       const { name, value, is_masked } = variable.value
-      await createVariable({
+      return await createVariable({
         name,
         value,
         is_masked,
@@ -204,7 +215,7 @@ export default defineComponent({
         data.value = value
       }
 
-      await updateVariable({
+      return await updateVariable({
         ...data,
         is_masked,
         variableId,
@@ -212,15 +223,26 @@ export default defineComponent({
       })
     }
 
+    const handleSetName = data => {
+      errorData.error.name = ''
+      setVariable(data)
+    }
+
     const handleSetVariable = data => {
+      errorData.error.value = ''
       state.isValueChanged = true
       setVariable(data)
+    }
+
+    const resetError = () => {
+      errorData.error = { name: '', value: '' }
     }
 
     onBeforeUnmount(() => resetVariable())
 
     return {
       ...toRefs(state),
+      ...toRefs(errorData),
       isEdit,
       variable,
       formTitle,
@@ -230,6 +252,7 @@ export default defineComponent({
       isFormValid,
       handleClose,
       maskedModel,
+      handleSetName,
       variableFormRef,
       handleSetVariable,
       handleCloseDelete,

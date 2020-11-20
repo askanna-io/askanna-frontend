@@ -43,7 +43,7 @@ export const actions: ActionTree<VariablesState, RootState> = {
     } catch (error) {
       logger.error(commit, 'Error on create variable  in createVariable action.\nError: ', error)
 
-      return
+      return error
     }
 
     logger.success(commit, `The variable ${variable.name} is created`)
@@ -79,7 +79,7 @@ export const actions: ActionTree<VariablesState, RootState> = {
     } catch (error) {
       logger.error(commit, 'Error on update variable  in updateVariable action.\nError: ', error)
 
-      return
+      return error
     }
 
     logger.success(commit, `The variable ${name} is updated`)
