@@ -1,6 +1,7 @@
 <template>
   <v-data-table
     fixed-header
+    class="job-runs-table ask-anna-table ask-anna-table--with-links"
     :items="items"
     :height="height"
     :page.sync="page"
@@ -10,31 +11,38 @@
     @page-count="pageCount = $event"
   >
     <template v-slot:item="{ item }">
-      <tr @click="handleClickOnRow(item)">
+      <tr>
         <td class="text-start">
-          <v-tooltip top>
-            <template v-slot:activator="{ on, value }">
-              <div v-on="on">
-                <v-btn class="px-0" text small>#{{ item.short_uuid.slice(0, 4) }}</v-btn>
-                <v-tooltip right>
-                  <template v-slot:activator="{ on }">
-                    <v-btn icon text x-small v-on="on" v-show="value" @click.stop="handleCopy(item.short_uuid)"
-                      ><v-icon>mdi-content-copy</v-icon></v-btn
-                    >
-                  </template>
-                  <span>Copy run UUID</span>
-                </v-tooltip>
-              </div>
-            </template>
-            <span>{{ item.short_uuid }}</span>
-          </v-tooltip>
+          <router-link class="table-link table-link--unformated" :to="routeLinkParams(item)">
+            <v-tooltip top>
+              <template v-slot:activator="{ on, value }">
+                <div v-on="on">
+                  <v-btn class="px-0" text small>#{{ item.short_uuid.slice(0, 4) }}</v-btn>
+                  <v-tooltip right>
+                    <template v-slot:activator="{ on }">
+                      <v-btn icon text x-small v-on="on" v-show="value" @click.prevent="handleCopy(item.short_uuid)"
+                        ><v-icon>mdi-content-copy</v-icon></v-btn
+                      >
+                    </template>
+                    <span>Copy run UUID</span>
+                  </v-tooltip>
+                </div>
+              </template>
+              <span>{{ item.short_uuid }}</span>
+            </v-tooltip>
+          </router-link>
         </td>
         <td class="text-start">
-          <ask-anna-chip-status :status="item.status" />
+          <router-link class="table-link table-link--unformated" :to="routeLinkParams(item)">
+            <ask-anna-chip-status :status="item.status" />
+          </router-link>
         </td>
         <td class="text-start">
-          <b>Started:</b> &nbsp;{{ $moment(item.created).format(' Do MMMM YYYY, h:mm:ss a') }} <br />
-          <b>Duration:</b> &nbsp;{{ calculateDuration(item) }}<br />
+          <router-link class="table-link table-link--unformated" :to="routeLinkParams(item)">
+            <b>Started:</b> &nbsp;{{ $moment(item.created).format(' Do MMMM YYYY, h:mm:ss a') }}
+            <br />
+            <b>Duration:</b> &nbsp;{{ calculateDuration(item) }}<br />
+          </router-link>
         </td>
       </tr>
     </template>
@@ -63,8 +71,11 @@ export default defineComponent({
       type: Number,
       default: () => 0
     },
-
     tableClass: {
+      type: String,
+      default: () => ''
+    },
+    routeName: {
       type: String,
       default: () => ''
     }
@@ -111,11 +122,23 @@ export default defineComponent({
       return ''
     }
 
+    const routeLinkParams = item => {
+      return {
+        name: 'workspace-project-jobs-job-jobrun-input',
+        params: {
+          ...context.root.$route.params,
+          jobRunId: item.short_uuid,
+          jobId: item.jobdef.short_uuid
+        }
+      }
+    }
+
     return {
       ...moment,
       headers,
       pageCount,
       handleCopy,
+      routeLinkParams,
       handleClickOnRow,
       calculateDuration
     }
