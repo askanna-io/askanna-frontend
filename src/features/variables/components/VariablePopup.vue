@@ -49,7 +49,7 @@
                   validate-on-blur
                   :rules="[
                     RULE.required('The value is required'),
-                    RULE.max('The maximum length of the variable value is 4096 characters', 4096)
+                    RULE.max('The maximum length of the variable value is 3,000 characters', 3000)
                   ]"
                   :value="variable.value"
                   @input="handleSetVariable({ path: 'value', value: $event })"
