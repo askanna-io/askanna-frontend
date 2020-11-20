@@ -159,17 +159,17 @@
       </div>
     </editor-menu-bar>
     <v-divider v-show="editable" class="mt-2" />
-    <editor-content class="ma-2" :editor="editor" spellcheck="false" />
+    <editor-content class="ma-2 ml-4" :editor="editor" spellcheck="false" />
 
-    <v-card-actions>
-      <v-btn v-if="editable" small outlined color="primary" @click="handleSave">
-        <v-icon left dark>mdi-content-save</v-icon>Save
+    <v-card-actions class="ml-2">
+      <v-btn v-if="editable" class="mr-1 btn--hover" small outlined color="secondary" @click="handleSave">
+        <v-icon left dark small>mdi-content-save</v-icon>Save
       </v-btn>
       <v-btn v-if="editable" small outlined color="secondary" class="mr-1 btn--hover" @click="handleCancel">
-        <v-icon color="secondary" left>mdi-close</v-icon>Cancel
+        <v-icon color="secondary" small left>mdi-close</v-icon>Cancel
       </v-btn>
-      <v-btn v-if="!editable" small outlined color="primary" @click="handleEdit">
-        <v-icon left dark>mdi-file-edit-outline</v-icon>Edit
+      <v-btn v-if="!editable" class="my-2 btn--hover" small outlined color="secondary" @click="handleEdit">
+        <v-icon color="secondary" left small class="mr-2">mdi-pencil</v-icon>Edit
       </v-btn>
     </v-card-actions>
   </v-card>
@@ -203,12 +203,15 @@ import {
 } from 'tiptap-extensions'
 
 export default defineComponent({
+  name: 'JobDescription',
+
   props: {
     description: {
       type: String,
       default: '<p></p>'
     }
   },
+
   components: {
     EditorContent,
     EditorMenuBar

@@ -49,6 +49,13 @@ export default defineComponent({
 
       {
         id: 3,
+        name: 'Variables',
+        to: 'workspace-project-variables',
+        show: !context.root.isNotBeta
+      },
+
+      {
+        id: 4,
         name: 'Documentation',
         to: 'workspace-project-documentation',
         show: context.root.isNotBeta
