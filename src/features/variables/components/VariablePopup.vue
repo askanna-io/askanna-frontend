@@ -85,8 +85,8 @@
       </v-card-actions>
     </v-card>
     <variable-confirm-delete-popup
-      :variableName="variable.name"
       :value="dialogDelete"
+      :variableName="variable.name"
       @onDelete="handleConfirmDeleteItem"
       @onCloseDeletePopup="handleCloseDelete"
     />

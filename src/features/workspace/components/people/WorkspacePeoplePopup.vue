@@ -40,18 +40,17 @@
           </v-container>
         </v-card-text>
         <v-divider />
-        <v-card-actions v-if="isNotBeta">
+        <v-card-actions>
           <v-row class="mx-2">
             <v-col class="text-center" cols="12">
-              <div>
+              <div v-if="isNotBeta">
                 <v-btn small block outlined text color="secondary" class="btn--hover" @click="handleChangeRole">
                   Make Admin
                 </v-btn>
               </div>
               <div class="mt-2">
                 <v-btn small block outlined text color="secondary" class="btn--hover" @click="handleRemove">
-                  Remove&nbsp;<br /><span class="error--text">{{ people.name || people.email }}</span
-                  >&nbsp;from {{ workspaceName }}
+                  Remove&nbsp;<br /><span class="error--text">{{ name }}</span>
                 </v-btn>
               </div>
             </v-col>
@@ -62,6 +61,7 @@
   </v-row>
 </template>
 <script>
+import useSlicedText from '@/core/composition/useSlicedText'
 import { ref, computed, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
@@ -95,6 +95,7 @@ export default defineComponent({
   },
   setup(props, context) {
     const dialog = ref(false)
+    const slicedText = useSlicedText()
 
     const openVmodel = computed({
       get: () => props.value,
@@ -112,10 +113,12 @@ export default defineComponent({
       return roleFilters[val]
     })
 
-    const handleRemove = value => context.emit('handleRemove', value)
+    const name = computed(() => slicedText(props.people.name || props.people.email, 17))
+
+    const handleRemove = value => context.emit('onRemovePeople', value)
     const handleChangeRole = value => context.emit('handleChangeRole', value)
 
-    return { dialog, roleName, openVmodel, handleRemove, handleChangeRole }
+    return { name, dialog, roleName, openVmodel, handleRemove, handleChangeRole }
   }
 })
 </script>

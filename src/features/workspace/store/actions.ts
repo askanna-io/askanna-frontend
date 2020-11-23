@@ -93,6 +93,7 @@ export const actions: ActionTree<workspaceState, RootState> = {
 
     commit(mutation.SET_LOADING, { name: stateType.workspacePeopleLoading, value: false })
   },
+
   async [action.getWorkspacePeople]({ commit, state }, { workspaceId, params }) {
     commit(mutation.SET_LOADING, { name: stateType.workspacePeopleLoading, value: true })
 
@@ -111,6 +112,16 @@ export const actions: ActionTree<workspaceState, RootState> = {
 
     commit(mutation.SET_WORKSPACE_PEOPLE_INITIAL, people)
     commit(mutation.SET_LOADING, { name: stateType.workspacePeopleLoading, value: false })
+  },
+
+  async [action.deleteWorkspacePeople]({ commit, state }, item) {
+    commit(mutation.DELETE_WORKSPACE_PEOPLE, item)
+
+    logger.success(
+      commit,
+      `You have successfully deleted ${item.name} from the workspace
+    ${state.workspace.title}`
+    )
   },
 
   async [action.setWorkspaceParams]({ commit }, data) {
