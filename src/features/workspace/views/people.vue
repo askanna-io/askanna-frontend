@@ -17,6 +17,7 @@
       @handleValue="handleValue"
       @handleChangeRole="handleChangeRole"
       @onRemovePeople="handleOpenRemovePeople"
+      @onDeleteInivitationPopup="handleDeleteInivitationPopup"
     />
     <workspace-people-confirm-delete-popup
       v-if="peopleConfirmDeletePopup"
@@ -25,30 +26,44 @@
       @onDeleteConfirm="handleDeleteItem"
       @onCloseDeletePopup="handleCloseConfirmDeletePopup"
     />
+    <workspace-people-confirm-delete-invitation-popup
+      v-if="deleteInvitationConfirmPopup"
+      :value="deleteInvitationConfirmPopup"
+      :peopleName="selectedPeople.name"
+      @onDeleteConfirm="handleDeleteItem"
+      @onCloseDeletePopup="handleCloseConfirmDeletePopup"
+    />
   </div>
 </template>
 <script>
-import { ref, computed, onBeforeMount, defineComponent } from '@vue/composition-api'
+import { ref, computed, onBeforeMount, defineComponent, reactive } from '@vue/composition-api'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 import WorkspacePeopleList from '@/features/workspace/components/people/WorkspacePeopleList.vue'
 import WorkspacePeoplePopup from '@/features/workspace/components/people/WorkspacePeoplePopup.vue'
 import WorkspacePeopleNavbar from '@/features/workspace/components/people/WorkspacePeopleNavbar.vue'
 import WorkspacePeopleConfirmDeletePopup from '@/features/workspace/components/people/WorkspacePeopleConfirmDeletePopup.vue'
+import WorkspacePeopleConfirmDeleteInvitationPopup from '@/features/workspace/components/people/WorkspacePeopleConfirmDeleteInvitationPopup.vue'
 
 export default defineComponent({
   name: 'workspace',
 
-  components: { WorkspacePeopleList, WorkspacePeopleNavbar, WorkspacePeoplePopup, WorkspacePeopleConfirmDeletePopup },
+  components: {
+    WorkspacePeopleList,
+    WorkspacePeoplePopup,
+    WorkspacePeopleNavbar,
+    WorkspacePeopleConfirmDeletePopup,
+    WorkspacePeopleConfirmDeleteInvitationPopup
+  },
 
   setup(props, context) {
     const workspaceStore = useWorkspaceStore()
     const { workspaceId } = context.root.$route.params
 
     onBeforeMount(async () => await workspaceStore.getInitialWorkpacePeople({ workspaceId }))
-
     const peoplePopup = ref(false)
     const selectedPeople = ref(null)
     const peopleConfirmDeletePopup = ref(false)
+    const deleteInvitationConfirmPopup = ref(false)
 
     const workspacePeople = computed(() => {
       const {
@@ -101,6 +116,7 @@ export default defineComponent({
     }
 
     const handleCloseConfirmDeletePopup = value => (peopleConfirmDeletePopup.value = false)
+    const handleDeleteInivitationPopup = () => (deleteInvitationConfirmPopup.value = true)
 
     return {
       peoplePopup,
@@ -112,8 +128,10 @@ export default defineComponent({
       handleSelectPeople,
       handleOpenRemovePeople,
       peopleConfirmDeletePopup,
+      handleDeleteInivitationPopup,
       handleCloseConfirmDeletePopup,
       workspacePeople,
+      deleteInvitationConfirmPopup,
       workspace: workspaceStore.workspace,
       loading: workspaceStore.workspacePeopleLoading,
       workspaceSettings: workspaceStore.workspaceSettings

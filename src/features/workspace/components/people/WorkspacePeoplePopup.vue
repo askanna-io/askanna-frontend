@@ -40,7 +40,30 @@
           </v-container>
         </v-card-text>
         <v-divider />
-        <v-card-actions>
+
+        <v-card-actions v-if="people.status === 'invited'">
+          <v-row class="mx-2">
+            <v-col cols="6">
+              <v-btn
+                small
+                block
+                outlined
+                text
+                color="secondary"
+                class="btn--hover"
+                @click="handleDeleteInivitationPopup"
+              >
+                Delete invitation
+              </v-btn>
+            </v-col>
+            <v-col cols="6">
+              <v-btn small block outlined text color="secondary" class="btn--hover" @click="handleRemove">
+                Resend invitation
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-card-actions>
+        <v-card-actions v-else>
           <v-row class="mx-2">
             <v-col class="text-center" cols="12">
               <div v-if="isNotBeta">
@@ -75,6 +98,7 @@ export default defineComponent({
           uuid: '',
           name: '',
           role: '',
+          status: '',
           avatar: '',
           created: '',
           modified: '',
@@ -117,8 +141,9 @@ export default defineComponent({
 
     const handleRemove = value => context.emit('onRemovePeople', value)
     const handleChangeRole = value => context.emit('handleChangeRole', value)
+    const handleDeleteInivitationPopup = () => context.emit('onDeleteInivitationPopup')
 
-    return { name, dialog, roleName, openVmodel, handleRemove, handleChangeRole }
+    return { name, dialog, roleName, openVmodel, handleRemove, handleChangeRole, handleDeleteInivitationPopup }
   }
 })
 </script>
