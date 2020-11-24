@@ -17,7 +17,8 @@
       @handleValue="handleValue"
       @handleChangeRole="handleChangeRole"
       @onRemovePeople="handleOpenRemovePeople"
-      @onDeleteInivitationPopup="handleDeleteInivitationPopup"
+      @onDeleteInivitationPopup="handleDeleteInivitationPopup(true)"
+      @onResendInivitationPopup="handleResendInivitationPopup(true)"
     />
     <workspace-people-confirm-delete-popup
       v-if="peopleConfirmDeletePopup"
@@ -28,21 +29,29 @@
     />
     <workspace-people-confirm-delete-invitation-popup
       v-if="deleteInvitationConfirmPopup"
-      :value="deleteInvitationConfirmPopup"
       :peopleName="selectedPeople.name"
+      :value="deleteInvitationConfirmPopup"
       @onDeleteConfirm="handleDeleteItem"
-      @onCloseDeletePopup="handleCloseConfirmDeletePopup"
+      @onClose="handleDeleteInivitationPopup(false)"
+    />
+    <workspace-people-confirm-resend-invitation-popup
+      v-if="resendInvitationConfirmPopup"
+      :peopleName="selectedPeople.name"
+      :value="resendInvitationConfirmPopup"
+      @onResendConfirm="handleResendItem"
+      @onClose="handleResendInivitationPopup(false)"
     />
   </div>
 </template>
 <script>
-import { ref, computed, onBeforeMount, defineComponent, reactive } from '@vue/composition-api'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
+import { ref, computed, onBeforeMount, defineComponent, reactive } from '@vue/composition-api'
 import WorkspacePeopleList from '@/features/workspace/components/people/WorkspacePeopleList.vue'
 import WorkspacePeoplePopup from '@/features/workspace/components/people/WorkspacePeoplePopup.vue'
 import WorkspacePeopleNavbar from '@/features/workspace/components/people/WorkspacePeopleNavbar.vue'
 import WorkspacePeopleConfirmDeletePopup from '@/features/workspace/components/people/WorkspacePeopleConfirmDeletePopup.vue'
 import WorkspacePeopleConfirmDeleteInvitationPopup from '@/features/workspace/components/people/WorkspacePeopleConfirmDeleteInvitationPopup.vue'
+import WorkspacePeopleConfirmResendInvitationPopup from '@/features/workspace/components/people/WorkspacePeopleConfirmResendInvitationPopup.vue'
 
 export default defineComponent({
   name: 'workspace',
@@ -52,6 +61,7 @@ export default defineComponent({
     WorkspacePeoplePopup,
     WorkspacePeopleNavbar,
     WorkspacePeopleConfirmDeletePopup,
+    WorkspacePeopleConfirmResendInvitationPopup,
     WorkspacePeopleConfirmDeleteInvitationPopup
   },
 
@@ -64,6 +74,7 @@ export default defineComponent({
     const selectedPeople = ref(null)
     const peopleConfirmDeletePopup = ref(false)
     const deleteInvitationConfirmPopup = ref(false)
+    const resendInvitationConfirmPopup = ref(false)
 
     const workspacePeople = computed(() => {
       const {
@@ -113,25 +124,36 @@ export default defineComponent({
       workspaceStore.deleteWorkspacePeople(selectedPeople.value)
       peopleConfirmDeletePopup.value = false
       peoplePopup.value = false
+      deleteInvitationConfirmPopup.value = false
     }
 
     const handleCloseConfirmDeletePopup = value => (peopleConfirmDeletePopup.value = false)
-    const handleDeleteInivitationPopup = () => (deleteInvitationConfirmPopup.value = true)
+    const handleDeleteInivitationPopup = value => (deleteInvitationConfirmPopup.value = value)
+    const handleResendInivitationPopup = value => (resendInvitationConfirmPopup.value = value)
+
+    const handleResendItem = () => {
+      workspaceStore.resendInvitation(selectedPeople.value.email)
+      resendInvitationConfirmPopup.value = false
+      peoplePopup.value = false
+    }
 
     return {
       peoplePopup,
-      peopleConfirmDeletePopup,
-      selectedPeople,
       handleValue,
+      selectedPeople,
+      workspacePeople,
       handleDeleteItem,
+      handleResendItem,
       handleChangeRole,
       handleSelectPeople,
       handleOpenRemovePeople,
       peopleConfirmDeletePopup,
+      peopleConfirmDeletePopup,
+      resendInvitationConfirmPopup,
+      deleteInvitationConfirmPopup,
       handleDeleteInivitationPopup,
       handleCloseConfirmDeletePopup,
-      workspacePeople,
-      deleteInvitationConfirmPopup,
+      handleResendInivitationPopup,
       workspace: workspaceStore.workspace,
       loading: workspaceStore.workspacePeopleLoading,
       workspaceSettings: workspaceStore.workspaceSettings

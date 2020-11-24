@@ -57,7 +57,15 @@
               </v-btn>
             </v-col>
             <v-col cols="6">
-              <v-btn small block outlined text color="secondary" class="btn--hover" @click="handleRemove">
+              <v-btn
+                small
+                block
+                outlined
+                text
+                color="secondary"
+                class="btn--hover"
+                @click="handleResendInivitationPopup"
+              >
                 Resend invitation
               </v-btn>
             </v-col>
@@ -142,8 +150,18 @@ export default defineComponent({
     const handleRemove = value => context.emit('onRemovePeople', value)
     const handleChangeRole = value => context.emit('handleChangeRole', value)
     const handleDeleteInivitationPopup = () => context.emit('onDeleteInivitationPopup')
+    const handleResendInivitationPopup = () => context.emit('onResendInivitationPopup')
 
-    return { name, dialog, roleName, openVmodel, handleRemove, handleChangeRole, handleDeleteInivitationPopup }
+    return {
+      name,
+      dialog,
+      roleName,
+      openVmodel,
+      handleRemove,
+      handleChangeRole,
+      handleDeleteInivitationPopup,
+      handleResendInivitationPopup
+    }
   }
 })
 </script>

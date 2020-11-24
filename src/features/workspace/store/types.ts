@@ -81,11 +81,11 @@ export const action = {
   setQuery: 'setQuery',
   getWorkspace: 'getWorkspace',
   getWorkspaces: 'getWorkspaces',
-
   changeSettings: 'changeSettings',
   sendInvitations: 'sendInvitations',
   sendInviteEmail: 'sendInviteEmail',
   acceptInvitetion: 'acceptInvitetion',
+  resendInvitation: 'resendInvitation',
   getInvitetionInfo: 'getInvitetionInfo',
   setWorkspaceParams: 'setWorkspaceParams',
   getWorkspacePeople: 'getWorkspacePeople',

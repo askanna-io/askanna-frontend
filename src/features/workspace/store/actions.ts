@@ -156,6 +156,22 @@ export const actions: ActionTree<workspaceState, RootState> = {
     }
   },
 
+  async [action.resendInvitation]({ state, commit }, email) {
+    /*  const invitation = await dispatch(action.sendInviteEmail, {
+      email,
+      name: email,
+      front_end_url: window.location.origin,
+      object_uuid: state.workspace.uuid
+    })
+    */
+
+    logger.success(
+      commit,
+      `You have successfully re-invited ${email} to join the workspace
+      ${state.workspace.title}`
+    )
+  },
+
   async [action.sendInviteEmail]({ state, commit }, data) {
     let response
     try {

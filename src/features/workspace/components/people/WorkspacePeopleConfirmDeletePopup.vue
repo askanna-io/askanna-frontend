@@ -68,7 +68,7 @@ export default defineComponent({
   setup(props, context) {
     const slicedText = useSlicedText()
 
-    const name = computed(() => slicedText(props.peopleName || props.peopleName, 17))
+    const name = computed(() => slicedText(props.peopleName, 17))
 
     const valueModel = computed({
       get: () => props.value,
