@@ -1,6 +1,6 @@
 <template>
   <v-dialog v-model="valueModel" max-width="650px">
-    <v-card class="">
+    <v-card class="AskAnna-card AskAnna-card--in-dialog">
       <v-app-bar flat dense white--text color="white">
         <v-card-title class="px-0"
           >Do you want to remove<span class="primary--text break"
@@ -35,9 +35,8 @@
           </li>
         </ul>
         <br />
-        <p>
-          The removal action cannot be undone! Please confirm that you want to remove <b>{{ peopleName }}</b>
-        </p>
+        The removal action cannot be undone! Please confirm that you want to remove <b>{{ peopleName }}</b
+        >:
       </v-card-text>
       <v-card-actions class="ml-5">
         <v-btn small outlined text color="secondary" class="mr-1 btn--hover" @click="closeDelete">Cancel</v-btn>

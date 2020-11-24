@@ -177,4 +177,12 @@ code.lang-shell {
     }
   }
 }
+
+.AskAnna-card {
+  &--in-dialog {
+    .v-card__text {
+      font-size: 0.95rem;
+    }
+  }
+}
 </style>
