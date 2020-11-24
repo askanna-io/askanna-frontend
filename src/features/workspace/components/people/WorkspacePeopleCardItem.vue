@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto h-100" :elevation="hover ? 16 : 2">
+  <v-card class="mx-auto h-100 cursor--pointer" :elevation="hover ? 16 : 2">
     <v-app-bar height="10" absolute flat dense white--text color="white">
       <v-spacer />
       <v-icon v-if="statusColor" class="mt-5" :color="statusColor">mdi-email-send-outline</v-icon>
