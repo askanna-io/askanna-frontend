@@ -20,7 +20,8 @@
           </li>
         </ul>
         <br />
-        The action cannot be undone! Please confirm that you want to delete the invitation for <b>{{ peopleName }}</b>
+        The action cannot be undone! Please confirm that you want to delete the invitation for <b>{{ peopleName }}</b
+        >:
       </v-card-text>
       <v-card-actions class="ml-5">
         <v-btn small outlined text color="secondary" class="mr-1 btn--hover" @click="closeDelete">Cancel</v-btn>

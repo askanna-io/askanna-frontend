@@ -44,15 +44,7 @@
         <v-card-actions v-if="people.status === 'invited'">
           <v-row class="mx-2">
             <v-col cols="6">
-              <v-btn
-                small
-                block
-                outlined
-                text
-                color="secondary"
-                class="btn--hover"
-                @click="handleDeleteInivitationPopup"
-              >
+              <v-btn small block outlined text color="error" class="btn--hover" @click="handleDeleteInivitationPopup">
                 Delete invitation
               </v-btn>
             </v-col>
@@ -80,8 +72,8 @@
                 </v-btn>
               </div>
               <div class="mt-2">
-                <v-btn small block outlined text color="secondary" class="btn--hover" @click="handleRemove">
-                  Remove&nbsp;<br /><span class="error--text">{{ name }}</span>
+                <v-btn small block outlined text color="error" class="btn--hover" @click="handleRemove">
+                  Remove&nbsp;<br /><span class="secondary--text">{{ name }}</span>
                 </v-btn>
               </div>
             </v-col>
