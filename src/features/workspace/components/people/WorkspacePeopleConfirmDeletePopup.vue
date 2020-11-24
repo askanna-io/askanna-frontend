@@ -1,8 +1,12 @@
 <template>
   <v-dialog v-model="valueModel" max-width="650px">
-    <v-card>
+    <v-card class="">
       <v-app-bar flat dense white--text color="white">
-        Do you want to remove<span class="primary--text break">{{ ` ${peopleName}` }}<span class="mark">?</span></span>
+        <v-card-title class="px-0"
+          >Do you want to remove<span class="primary--text break"
+            >{{ ` ${peopleName}` }}<span class="mark">?</span></span
+          >
+        </v-card-title>
         <v-spacer />
 
         <v-btn icon @click="closeDelete">
@@ -11,24 +15,33 @@
       </v-app-bar>
       <v-card-text>
         You are about to remove the member <b>{{ peopleName }}</b
-        >. Here's what will happen when you remove {{ peopleName }}:
+        >. Here's what will happen when you remove <b>{{ peopleName }}</b
+        >:
+        <br />
+        <br />
         <ul>
-          <li>{{ peopleName }} will be removed from this workspace and projects in this workspace</li>
-          <li>{{ peopleName }} will not be able to open this workspace anymore</li>
           <li>
-            If {{ peopleName }} has access to other workspaces, {{ peopleName }} will still have access to these
-            workspaces
+            <b>{{ peopleName }}</b> will be removed from this workspace and projects in this workspace
           </li>
-          <li>Everything {{ peopleName }} has done will remain in place</li>
+          <li>
+            <b>{{ peopleName }}</b> will not be able to open this workspace anymore
+          </li>
+          <li>
+            If <b>{{ peopleName }}</b> has access to other workspaces, <b>{{ peopleName }}</b> will still have access to
+            these workspaces
+          </li>
+          <li>
+            Everything <b>{{ peopleName }}</b> has done will remain in place
+          </li>
         </ul>
-        The removal action cannot be undone!
+        <br />
         <p>
-          Please confirm that you want to remove <b>{{ peopleName }}</b>
+          The removal action cannot be undone! Please confirm that you want to remove <b>{{ peopleName }}</b>
         </p>
       </v-card-text>
       <v-card-actions class="ml-5">
         <v-btn small outlined text color="secondary" class="mr-1 btn--hover" @click="closeDelete">Cancel</v-btn>
-        <v-btn small outlined text color="secondary" class="mr-1 btn--hover" @click="deleteItemConfirm"
+        <v-btn small outlined text color="error" class="mr-1 btn--hover" @click="deleteItemConfirm"
           >Remove {{ name }}</v-btn
         >
       </v-card-actions>
