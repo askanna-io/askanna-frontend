@@ -5,6 +5,7 @@
     :headers="headers"
     hide-default-footer
     item-key="short_uuid"
+    disable-pagination
   >
     <template v-slot:top>
       <slot name="header" />
