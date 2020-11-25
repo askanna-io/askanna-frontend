@@ -132,7 +132,10 @@ export default defineComponent({
     const handleResendInivitationPopup = value => (resendInvitationConfirmPopup.value = value)
 
     const handleResendItem = () => {
-      workspaceStore.resendInvitation(selectedPeople.value.email)
+      workspaceStore.resendInvitation({
+        peopleId: selectedPeople.value.short_uuid,
+        workspaceId: selectedPeople.value.workspace.short_uuid
+      })
       resendInvitationConfirmPopup.value = false
       peoplePopup.value = false
     }

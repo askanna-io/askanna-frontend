@@ -156,20 +156,33 @@ export const actions: ActionTree<workspaceState, RootState> = {
     }
   },
 
-  async [action.resendInvitation]({ state, commit }, email) {
-    /*  const invitation = await dispatch(action.sendInviteEmail, {
-      email,
-      name: email,
-      front_end_url: window.location.origin,
-      object_uuid: state.workspace.uuid
-    })
-    */
+  async [action.resendInvitation]({ state, commit }, uuid) {
+    let response
 
-    logger.success(
-      commit,
-      `You have successfully re-invited ${email} to join the workspace
+    const data = {
+      status: 'invited'
+    }
+    try {
+      response = await apiService({
+        action: api.acceptInvitetion,
+        method: 'PATCH',
+        uuid,
+        serviceName,
+        data
+      })
+    } catch (e) {
+      logger.error(commit, 'Error on resent invatation in resendInvitation action.\nError: ', e)
+
+      return e
+    }
+
+    if (response) {
+      logger.success(
+        commit,
+        `You have successfully re-invited ${response.email} to join the workspace
       ${state.workspace.title}`
-    )
+      )
+    }
   },
 
   async [action.sendInviteEmail]({ state, commit }, data) {
