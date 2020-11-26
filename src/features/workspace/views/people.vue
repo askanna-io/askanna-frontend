@@ -31,7 +31,7 @@
       v-if="deleteInvitationConfirmPopup"
       :peopleName="selectedPeople.name"
       :value="deleteInvitationConfirmPopup"
-      @onDeleteConfirm="handleDeleteItem"
+      @onDeleteConfirm="handleDeleteInvitation"
       @onClose="handleDeleteInivitationPopup(false)"
     />
     <workspace-people-confirm-resend-invitation-popup
@@ -127,6 +127,16 @@ export default defineComponent({
       deleteInvitationConfirmPopup.value = false
     }
 
+    const handleDeleteInvitation = () => {
+      workspaceStore.deleteInvitation({
+        peopleId: selectedPeople.value.short_uuid,
+        workspaceId: selectedPeople.value.workspace.short_uuid
+      })
+      peopleConfirmDeletePopup.value = false
+      peoplePopup.value = false
+      deleteInvitationConfirmPopup.value = false
+    }
+
     const handleCloseConfirmDeletePopup = value => (peopleConfirmDeletePopup.value = false)
     const handleDeleteInivitationPopup = value => (deleteInvitationConfirmPopup.value = value)
     const handleResendInivitationPopup = value => (resendInvitationConfirmPopup.value = value)
@@ -149,6 +159,7 @@ export default defineComponent({
       handleResendItem,
       handleChangeRole,
       handleSelectPeople,
+      handleDeleteInvitation,
       handleOpenRemovePeople,
       peopleConfirmDeletePopup,
       peopleConfirmDeletePopup,

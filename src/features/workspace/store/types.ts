@@ -84,6 +84,7 @@ export const action = {
   changeSettings: 'changeSettings',
   sendInvitations: 'sendInvitations',
   sendInviteEmail: 'sendInviteEmail',
+  deleteInvitation: 'deleteInvitation',
   acceptInvitetion: 'acceptInvitetion',
   resendInvitation: 'resendInvitation',
   getInvitetionInfo: 'getInvitetionInfo',

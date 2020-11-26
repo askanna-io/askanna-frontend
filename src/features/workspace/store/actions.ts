@@ -185,6 +185,31 @@ export const actions: ActionTree<workspaceState, RootState> = {
     }
   },
 
+  async [action.deleteInvitation]({ state, commit }, uuid) {
+    let response
+
+    try {
+      response = await apiService({
+        action: api.acceptInvitetion,
+        method: 'DELETE',
+        uuid,
+        serviceName
+      })
+    } catch (e) {
+      logger.error(commit, 'Error on resent invatation in resendInvitation action.\nError: ', e)
+
+      return e
+    }
+
+    if (response) {
+      logger.success(
+        commit,
+        `You have successfully re-invited ${response.email} to join the workspace
+      ${state.workspace.title}`
+      )
+    }
+  },
+
   async [action.sendInviteEmail]({ state, commit }, data) {
     let response
     try {
