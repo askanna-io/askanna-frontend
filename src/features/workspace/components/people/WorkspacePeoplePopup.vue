@@ -63,7 +63,7 @@
             </v-col>
           </v-row>
         </v-card-actions>
-        <v-card-actions v-else>
+        <v-card-actions v-if="isNotBeta">
           <v-row class="mx-2">
             <v-col class="text-center" cols="12">
               <div v-if="isNotBeta">
