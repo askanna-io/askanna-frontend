@@ -127,11 +127,9 @@ export default defineComponent({
       deleteInvitationConfirmPopup.value = false
     }
 
-    const handleDeleteInvitation = () => {
-      workspaceStore.deleteInvitation({
-        peopleId: selectedPeople.value.short_uuid,
-        workspaceId: selectedPeople.value.workspace.short_uuid
-      })
+    const handleDeleteInvitation = async () => {
+      await workspaceStore.deleteInvitation(selectedPeople.value)
+
       peopleConfirmDeletePopup.value = false
       peoplePopup.value = false
       deleteInvitationConfirmPopup.value = false
