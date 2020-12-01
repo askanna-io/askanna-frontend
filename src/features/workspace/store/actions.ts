@@ -199,14 +199,14 @@ export const actions: ActionTree<workspaceState, RootState> = {
         serviceName
       })
     } catch (e) {
-      logger.error(commit, 'Error on resent invatation in deleteInvitation action.\nError: ', e)
+      logger.error(commit, 'Error on delete invatation in deleteInvitation action.\nError: ', e)
 
       return e
     }
     commit(mutation.DELETE_WORKSPACE_PEOPLE, people)
     logger.success(
       commit,
-      `You have successfully deleted ${people.name} from the workspace
+      `You have successfully deleted the invitation for ${people.name} on the workspace
       ${people.workspace.name}`
     )
   },
