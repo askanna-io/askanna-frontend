@@ -45,6 +45,10 @@ export const mutations: MutationTree<workspaceState> = {
     state.workspacePeople = [...state.workspacePeople, ...data]
   },
 
+  [mutation.DELETE_WORKSPACE_PEOPLE](state, item) {
+    state.workspacePeople.splice(state.workspacePeople.indexOf(item), 1)
+  },
+
   [mutation.SET_INVITATION](state, data) {
     state.invitation = data
   },

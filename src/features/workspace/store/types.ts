@@ -84,11 +84,14 @@ export const action = {
   changeSettings: 'changeSettings',
   sendInvitations: 'sendInvitations',
   sendInviteEmail: 'sendInviteEmail',
+  deleteInvitation: 'deleteInvitation',
   acceptInvitetion: 'acceptInvitetion',
+  resendInvitation: 'resendInvitation',
+  getInvitetionInfo: 'getInvitetionInfo',
   setWorkspaceParams: 'setWorkspaceParams',
   getWorkspacePeople: 'getWorkspacePeople',
   getWorkpaceProjects: 'getWorkpaceProjects',
-  getInvitetionInfo: 'getInvitetionInfo',
+  deleteWorkspacePeople: 'deleteWorkspacePeople',
   getInitialWorkpacePeople: 'getInitialWorkpacePeople',
   getInitialWorkpaceProjects: 'getInitialWorkpaceProjects'
 }
@@ -106,6 +109,7 @@ export const mutation = {
   SET_WORKSPACE_PARAMS: 'SET_WORKSPACE_PARAMS',
   SET_WORKSPACE_PEOPLE: 'SET_WORKSPACE_PEOPLE',
   SET_WORKSPACE_PROJECTS: 'SET_WORKSPACE_PROJECTS',
+  DELETE_WORKSPACE_PEOPLE: 'DELETE_WORKSPACE_PEOPLE',
   UPDATE_WORKSPACE_PEOPLE: 'UPDATE_WORKSPACE_PEOPLE',
   SET_WORKSPACE_PEOPLE_INITIAL: 'SET_WORKSPACE_PEOPLE_INITIAL'
 }

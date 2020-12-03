@@ -93,6 +93,7 @@ export const actions: ActionTree<workspaceState, RootState> = {
 
     commit(mutation.SET_LOADING, { name: stateType.workspacePeopleLoading, value: false })
   },
+
   async [action.getWorkspacePeople]({ commit, state }, { workspaceId, params }) {
     commit(mutation.SET_LOADING, { name: stateType.workspacePeopleLoading, value: true })
 
@@ -111,6 +112,16 @@ export const actions: ActionTree<workspaceState, RootState> = {
 
     commit(mutation.SET_WORKSPACE_PEOPLE_INITIAL, people)
     commit(mutation.SET_LOADING, { name: stateType.workspacePeopleLoading, value: false })
+  },
+
+  async [action.deleteWorkspacePeople]({ commit, state }, item) {
+    commit(mutation.DELETE_WORKSPACE_PEOPLE, item)
+
+    logger.success(
+      commit,
+      `You have successfully deleted ${item.name} from the workspace
+    ${state.workspace.title}`
+    )
   },
 
   async [action.setWorkspaceParams]({ commit }, data) {
@@ -143,6 +154,61 @@ export const actions: ActionTree<workspaceState, RootState> = {
       ${state.workspace.title}`
       )
     }
+  },
+
+  async [action.resendInvitation]({ state, commit }, uuid) {
+    let response
+
+    const data = {
+      status: 'invited'
+    }
+    try {
+      response = await apiService({
+        action: api.acceptInvitetion,
+        method: 'PATCH',
+        uuid,
+        serviceName,
+        data
+      })
+    } catch (e) {
+      logger.error(commit, 'Error on resent invatation in resendInvitation action.\nError: ', e)
+
+      return e
+    }
+
+    if (response) {
+      logger.success(
+        commit,
+        `You have successfully re-invited ${response.email} to join the workspace
+      ${state.workspace.title}`
+      )
+    }
+  },
+
+  async [action.deleteInvitation]({ commit }, people) {
+    let response
+
+    try {
+      response = await apiService({
+        action: api.acceptInvitetion,
+        method: 'DELETE',
+        uuid: {
+          peopleId: people.short_uuid,
+          workspaceId: people.workspace.short_uuid
+        },
+        serviceName
+      })
+    } catch (e) {
+      logger.error(commit, 'Error on delete invatation in deleteInvitation action.\nError: ', e)
+
+      return e
+    }
+    commit(mutation.DELETE_WORKSPACE_PEOPLE, people)
+    logger.success(
+      commit,
+      `You have successfully deleted the invitation for ${people.name} on the workspace
+      ${people.workspace.name}`
+    )
   },
 
   async [action.sendInviteEmail]({ state, commit }, data) {

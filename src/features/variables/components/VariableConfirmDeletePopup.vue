@@ -17,7 +17,7 @@
 import { computed, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
-  name: 'Variables',
+  name: 'VariableConfirmDeletePopup',
 
   props: {
     value: {

@@ -40,18 +40,40 @@
           </v-container>
         </v-card-text>
         <v-divider />
+
+        <v-card-actions v-if="people.status === 'invited'">
+          <v-row class="mx-2">
+            <v-col cols="6">
+              <v-btn small block outlined text color="error" class="btn--hover" @click="handleDeleteInivitationPopup">
+                Delete invitation
+              </v-btn>
+            </v-col>
+            <v-col cols="6">
+              <v-btn
+                small
+                block
+                outlined
+                text
+                color="secondary"
+                class="btn--hover"
+                @click="handleResendInivitationPopup"
+              >
+                Resend invitation
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-card-actions>
         <v-card-actions v-if="isNotBeta">
           <v-row class="mx-2">
             <v-col class="text-center" cols="12">
-              <div>
+              <div v-if="isNotBeta">
                 <v-btn small block outlined text color="secondary" class="btn--hover" @click="handleChangeRole">
                   Make Admin
                 </v-btn>
               </div>
               <div class="mt-2">
-                <v-btn small block outlined text color="secondary" class="btn--hover" @click="handleRemove">
-                  Remove&nbsp;<br /><span class="error--text">{{ people.name || people.email }}</span
-                  >&nbsp;from {{ workspaceName }}
+                <v-btn small block outlined text color="error" class="btn--hover" @click="handleRemove">
+                  Remove&nbsp;<br /><span class="secondary--text">{{ name }}</span>
                 </v-btn>
               </div>
             </v-col>
@@ -62,6 +84,7 @@
   </v-row>
 </template>
 <script>
+import useSlicedText from '@/core/composition/useSlicedText'
 import { ref, computed, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
@@ -75,6 +98,7 @@ export default defineComponent({
           uuid: '',
           name: '',
           role: '',
+          status: '',
           avatar: '',
           created: '',
           modified: '',
@@ -95,6 +119,7 @@ export default defineComponent({
   },
   setup(props, context) {
     const dialog = ref(false)
+    const slicedText = useSlicedText()
 
     const openVmodel = computed({
       get: () => props.value,
@@ -112,10 +137,23 @@ export default defineComponent({
       return roleFilters[val]
     })
 
-    const handleRemove = value => context.emit('handleRemove', value)
-    const handleChangeRole = value => context.emit('handleChangeRole', value)
+    const name = computed(() => slicedText(props.people.name || props.people.email, 17))
 
-    return { dialog, roleName, openVmodel, handleRemove, handleChangeRole }
+    const handleRemove = value => context.emit('onRemovePeople', value)
+    const handleChangeRole = value => context.emit('handleChangeRole', value)
+    const handleDeleteInivitationPopup = () => context.emit('onDeleteInivitationPopup')
+    const handleResendInivitationPopup = () => context.emit('onResendInivitationPopup')
+
+    return {
+      name,
+      dialog,
+      roleName,
+      openVmodel,
+      handleRemove,
+      handleChangeRole,
+      handleDeleteInivitationPopup,
+      handleResendInivitationPopup
+    }
   }
 })
 </script>
