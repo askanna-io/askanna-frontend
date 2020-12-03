@@ -1,5 +1,9 @@
 variables:
   DOCKER_REPO: $CI_REGISTRY_IMAGE
+
+include:
+  - template: Code-Quality.gitlab-ci.yml
+
 stages:
   - test
   - build
@@ -8,11 +12,17 @@ stages:
 
 build_dist:
   image: node:lts-alpine
+  stage: test
   tags:
     - kubernetes
   script:
     - npm ci
     - npm run build
+
+code_quality:
+  stage: test
+  tags:
+    - docker
 
 build_docker:
   stage: build
@@ -59,6 +69,7 @@ stop_review:
     - curl -X POST -F token=${DEPLOY_TOKEN} -F ref=master -F variables[product]=frontend -F variables[branch]=${CI_COMMIT_REF_SLUG} -F variables[action]=undeploy -F variables[slug]=${CI_ENVIRONMENT_SLUG} ${TRIGGER_URL}
   except:
     - master
+    - beta
 
 .deploy: &deploy
   variables:
