@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-main>
+    <v-main class="login-layout">
       <v-container fluid pa-0>
         <router-view />
         <span v-if="isNotBeta" class="version">Build version:&nbsp;{{ version }}</span>
@@ -10,19 +10,14 @@
   </v-app>
 </template>
 <script>
+import useTitle from '@/core/composition/useTitle'
 import { onBeforeUnmount, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'Login',
 
-  setup() {
-    const html = document.getElementsByTagName('html')[0]
-    html.classList.add('login-layout')
-
-    onBeforeUnmount(() => {
-      const html = document.getElementsByTagName('html')[0]
-      html.classList.remove('login-layout')
-    })
+  setup(props, context) {
+    useTitle(context)
 
     return {
       version: process.env.VERSION
@@ -37,6 +32,26 @@ export default defineComponent({
   bottom: 0;
 }
 .login-layout {
+  height: 100vh;
+  background-image: url('~@/assets/bg/askanna-bg-01.svg');
+  background-size: cover;
   overflow: hidden;
+}
+
+.login-wrapper {
+  height: 100vh;
+}
+.logo {
+  height: 74px;
+  margin-bottom: 6px;
+}
+.login-expansion .v-expansion-panel {
+  min-width: 360px;
+}
+.colored-border {
+  border: 1px solid;
+}
+.no-bg {
+  background: none;
 }
 </style>

@@ -52,7 +52,7 @@ Vue.config.productionTip = false
 
 //check if the current user is authenticated
 router.beforeEach((to, _, next) => {
-  if (to.name === 'join') {
+  if (to.name === 'join' || to.name === 'account-reset-password' || to.name === 'forgot-password') {
     next()
 
     return

@@ -6,6 +6,15 @@ const routerConfig: RouterConfig = {
   join: {
     layout: 'login',
     isShowSecondNavBar: false
+  },
+  ['account-reset-password']: {
+    layout: 'login',
+    isShowSecondNavBar: false
+  },
+
+  ['forgot-password']: {
+    layout: 'login',
+    isShowSecondNavBar: false
   }
 }
 

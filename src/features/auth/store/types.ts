@@ -19,5 +19,8 @@ export const ac = {
   login: 'login',
   logout: 'logout',
   createAccount: 'createAccount',
-  acceptInvatation: 'acceptInvatation'
+  resetPassword: 'resetPassword',
+  acceptInvatation: 'acceptInvatation',
+  validateResetToken: 'validateResetToken',
+  confirmResetPassword: 'confirmResetPassword'
 }

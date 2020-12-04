@@ -72,5 +72,61 @@ export const actions: ActionTree<AuthState, RootState> = {
     }
 
     return response
+  },
+
+  async [ac.resetPassword]({ commit }, payload) {
+    const url = api.url() + api.auth.resetPassword()
+
+    axios.defaults.xsrfCookieName = 'csrftoken'
+    axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
+
+    try {
+      const result = await axios.post(url, payload)
+
+      return result
+    } catch (error) {
+      logger.error(commit, 'Error on resetPassword action.\nError: ', error)
+
+      return error
+    }
+  },
+
+  async [ac.validateResetToken]({ commit }, params) {
+    let result
+    const url = api.url() + api.auth.validateResetToken()
+
+    axios.defaults.xsrfCookieName = 'csrftoken'
+    axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
+
+    try {
+      result = await axios.get(url, {
+        params
+      })
+    } catch (error) {
+      logger.error(commit, 'Error on validateResetToken action.\nError: ', error)
+
+      return error
+    }
+
+    return result && result.data
+  },
+
+  async [ac.confirmResetPassword]({ commit }, payload) {
+    const url = api.url() + api.auth.confirmResetPassword()
+
+    axios.defaults.xsrfCookieName = 'csrftoken'
+    axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
+
+    try {
+      const result = await axios.post(url, payload)
+
+      logger.success(commit, `Your password has been reset successfully!`)
+
+      return result
+    } catch (error) {
+      logger.error(commit, 'Error on confirmResetPassword action.\nError: ', error)
+
+      return error
+    }
   }
 }
