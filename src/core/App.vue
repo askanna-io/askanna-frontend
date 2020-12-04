@@ -166,6 +166,12 @@ code.lang-shell {
   border-radius: 50% !important;
 }
 
+.ask-anna-link {
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+}
+
 .ask-anna-table {
   &--with-links {
     .table-link {

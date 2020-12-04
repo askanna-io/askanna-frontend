@@ -22,7 +22,7 @@
       />
       <input type="password" style="display: none;" browserAutocomplete="new-password" autocomplete="new-password" />
       <v-btn :disabled="!isFormValid" color="primary" class="mr-4" @click.stop="handleLogin">
-        Sign in
+        Log in to AskAnna
       </v-btn>
       <v-checkbox v-if="isNotBeta" dense label="Remember me" />
     </v-form>
