@@ -209,7 +209,7 @@ import { createNamespacedHelpers } from 'vuex'
 import { logout } from '@/core/store/actionTypes'
 import useTitle from '@/core/composition/useTitle'
 import { AUTH_STORE } from '@/core/store/storeTypes'
-import { ref, computed, defineComponent } from '@vue/composition-api'
+import { ref, computed, defineComponent, onBeforeMount } from '@vue/composition-api'
 import useAuthStore from '../../features/auth/composition/useAuthStore'
 import useWorkspaceStore from '../../features/workspace/composition/useWorkSpaceStore'
 
@@ -251,6 +251,10 @@ export default defineComponent({
     const handleShowHideUploadStatus = () => {
       uploadStatus.showHideSnackBar()
     }
+
+    onBeforeMount(async () => {
+      await authStore.actions.getCurrentUser()
+    })
 
     return {
       showAppBarIcon,

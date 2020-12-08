@@ -37,6 +37,7 @@ export const mutations: MutationTree<workspaceState> = {
   [mutation.SET_WORKSPACE_PEOPLE_INITIAL](state, data) {
     state.workspacePeople = data
   },
+
   [mutation.SET_WORKSPACE_PARAMS](state, { path, value }) {
     set(state, path, value)
   },
@@ -55,5 +56,9 @@ export const mutations: MutationTree<workspaceState> = {
 
   [mutation.RESET_INVITATION](state) {
     state.invitation = new InvitationModel().state
+  },
+
+  [mutation.SET_CURRENT_PEOPLE](state, data) {
+    state.currentPeople = { ...state.currentPeople, ...data }
   }
 }

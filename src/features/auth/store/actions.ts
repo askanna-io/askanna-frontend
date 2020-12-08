@@ -10,10 +10,11 @@ import { AUTH_STORE } from '@/core/store/storeTypes'
 import { apiStringify } from '@/core/services/api-settings'
 
 const serviceName = AUTH_STORE
+const authApi = apiStringify('auth')
 const apiAccounts = apiStringify('accounts')
 
 export const actions: ActionTree<AuthState, RootState> = {
-  async [ac.login]({ commit }, { username, password, redirect = true }) {
+  async [ac.login]({ commit, dispatch }, { username, password, redirect = true }) {
     const url = api.url() + api.auth.login()
 
     axios.defaults.xsrfCookieName = 'csrftoken'
@@ -24,6 +25,7 @@ export const actions: ActionTree<AuthState, RootState> = {
       const { data } = result
 
       commit(mt.SET_AUTH, data)
+      commit('workspace/SET_CURRENT_PEOPLE', { email: username, name: username }, { root: true })
 
       if (redirect) router.push({ path: '/workspace' })
 
@@ -72,6 +74,23 @@ export const actions: ActionTree<AuthState, RootState> = {
     }
 
     return response
+  },
+
+  async [ac.getCurrentUser]({ commit }) {
+    const url = api.url() + api.auth.currentUser()
+
+    let result
+    try {
+      result = await axios.get(url)
+    } catch (e) {
+      logger.error(commit, 'Error on get current user in getCurrentUser action.\nError: ', e)
+
+      return e
+    }
+
+    commit('workspace/SET_CURRENT_PEOPLE', result.data, { root: true })
+
+    return result
   },
 
   async [ac.resetPassword]({ commit }, payload) {

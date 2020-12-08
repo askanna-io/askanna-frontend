@@ -11,6 +11,7 @@ interface ApiSettings {
   auth: {
     login: AuthApiUrl
     logout: apiUrl
+    currentUser: AuthApiUrl
     resetPassword: AuthApiUrl
     validateResetToken: AuthApiUrl
     confirmResetPassword: AuthApiUrl
@@ -34,13 +35,15 @@ export const api: ApiSettings = {
   auth: {
     login: () => `rest-auth/login/`,
     logout: () => `rest-auth/logout/`,
+    currentUser: () => 'rest-auth/user/',
     resetPassword: () => `rest-auth/password/reset/`,
     validateResetToken: () => `rest-auth/password/token-status/`,
     confirmResetPassword: () => `rest-auth/password/reset/confirm/`
   },
   points: {
     auth: {
-      logout: () => `rest-auth/logout/`
+      logout: () => `rest-auth/logout/`,
+      getCurrentUser: () => 'rest-auth/user/'
     },
     accounts: {
       create: () => `accounts/`

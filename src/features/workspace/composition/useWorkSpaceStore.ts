@@ -7,6 +7,7 @@ export default function () {
       ...stateType,
       workspace: 'workspace',
       workspaces: 'workspaces',
+      currentPeople: 'currentPeople',
       workspaceProjects: 'workspaceProjects',
       workspaceSettings: 'workspaceSettings',
       workspaceProjectsLoading: 'workspaceProjectsLoading'

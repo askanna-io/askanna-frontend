@@ -37,7 +37,13 @@ export const state: workspaceState = {
       status: ''
     }
   },
-  invitation: new InvitationModel().state
+  invitation: new InvitationModel().state,
+  currentPeople: {
+    role: '',
+    name: '',
+    email: '',
+    short_uuid: ''
+  }
 }
 
 const namespaced: boolean = true
