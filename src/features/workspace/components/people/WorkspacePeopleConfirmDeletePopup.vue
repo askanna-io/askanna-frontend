@@ -1,18 +1,19 @@
 <template>
   <v-dialog v-model="valueModel" max-width="650px">
     <v-card class="AskAnna-card AskAnna-card--in-dialog">
-      <v-app-bar flat dense white--text color="white">
-        <v-card-title class="px-0"
-          >Do you want to remove<span class="primary--text break"
-            >{{ ` ${peopleName}` }}<span class="mark">?</span></span
-          >
-        </v-card-title>
+      <v-toolbar flat dense white--text color="white">
+        <v-toolbar-title class="px-0 toolbar-title">
+          <div class="grid-container">
+            <div class="pre">Do you want to remove&nbsp;</div>
+            <div class="long primary--text">{{ peopleName }}</div>
+            <div class="mark pre">&nbsp;?</div>
+          </div>
+        </v-toolbar-title>
         <v-spacer />
-
         <v-btn icon @click="closeDelete">
           <v-icon>mdi-close</v-icon>
         </v-btn>
-      </v-app-bar>
+      </v-toolbar>
       <v-card-text>
         You are about to remove the member <b>{{ peopleName }}</b
         >. Here's what will happen when you remove <b>{{ peopleName }}</b
@@ -87,11 +88,23 @@ export default defineComponent({
   }
 })
 </script>
-<style scoped>
-.break {
-  white-space: break-spaces;
+<style>
+.pre {
+  white-space: pre;
 }
+
 .mark {
   color: rgba(0, 0, 0, 0.87);
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 0fr auto 0fr;
+}
+
+.long {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 </style>

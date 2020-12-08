@@ -13,6 +13,7 @@
       v-if="peoplePopup"
       :value="peoplePopup"
       :people="selectedPeople"
+      :currentUser="currentUser"
       :workspaceName="workspace.title"
       @handleValue="handleValue"
       @handleChangeRole="handleChangeRole"
@@ -120,8 +121,8 @@ export default defineComponent({
       peoplePopup.value = true
     }
 
-    const handleDeleteItem = () => {
-      workspaceStore.deleteWorkspacePeople(selectedPeople.value)
+    const handleDeleteItem = async () => {
+      await workspaceStore.deleteWorkspacePeople(selectedPeople.value)
       peopleConfirmDeletePopup.value = false
       peoplePopup.value = false
       deleteInvitationConfirmPopup.value = false
@@ -165,6 +166,8 @@ export default defineComponent({
       deleteInvitationConfirmPopup,
       handleDeleteInivitationPopup,
       handleCloseConfirmDeletePopup,
+      workspacePeople,
+      currentUser: workspaceStore.currentPeople,
       handleResendInivitationPopup,
       workspace: workspaceStore.workspace,
       loading: workspaceStore.workspacePeopleLoading,

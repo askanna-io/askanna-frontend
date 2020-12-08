@@ -86,15 +86,12 @@ export const actions: ActionTree<workspaceState, RootState> = {
     commit(mutation.RESET)
   },
 
-  async [action.getInitialWorkpacePeople]({ commit, dispatch }, data) {
-    commit(mutation.SET_LOADING, { name: stateType.workspacePeopleLoading, value: true })
-
+  async [action.getInitialWorkpacePeople]({ dispatch }, data) {
     await dispatch(action.getWorkspacePeople, data)
-
-    commit(mutation.SET_LOADING, { name: stateType.workspacePeopleLoading, value: false })
+    await dispatch(action.getCurrentPeople)
   },
 
-  async [action.getWorkspacePeople]({ commit, state }, { workspaceId, params }) {
+  async [action.getWorkspacePeople]({ commit }, { workspaceId }) {
     commit(mutation.SET_LOADING, { name: stateType.workspacePeopleLoading, value: true })
 
     let people = []
@@ -112,16 +109,6 @@ export const actions: ActionTree<workspaceState, RootState> = {
 
     commit(mutation.SET_WORKSPACE_PEOPLE_INITIAL, people)
     commit(mutation.SET_LOADING, { name: stateType.workspacePeopleLoading, value: false })
-  },
-
-  async [action.deleteWorkspacePeople]({ commit, state }, item) {
-    commit(mutation.DELETE_WORKSPACE_PEOPLE, item)
-
-    logger.success(
-      commit,
-      `You have successfully deleted ${item.name} from the workspace
-    ${state.workspace.title}`
-    )
   },
 
   async [action.setWorkspaceParams]({ commit }, data) {
@@ -270,5 +257,35 @@ export const actions: ActionTree<workspaceState, RootState> = {
       return
     }
     commit(mutation.SET_INVITATION, response)
+  },
+
+  async [action.deleteWorkspacePeople]({ commit }, people) {
+    let response
+
+    try {
+      await apiService({
+        action: api.acceptInvitetion,
+        method: 'DELETE',
+        uuid: { workspaceId: people.workspace.short_uuid, peopleId: people.short_uuid },
+        serviceName
+      })
+    } catch (e) {
+      logger.error(commit, 'Error on delete people in deleteWorkspacePeople action.\nError: ', e)
+
+      return e
+    }
+
+    commit(mutation.DELETE_WORKSPACE_PEOPLE, people)
+
+    logger.success(
+      commit,
+      `You have successfully deleted ${people.name} from the workspace
+    ${people.workspace.name}`
+    )
+  },
+
+  async [action.getCurrentPeople]({ state, commit }) {
+    const people = state.workspacePeople.find(item => item.email === state.currentPeople.email)
+    commit(mutation.SET_CURRENT_PEOPLE, people)
   }
 }

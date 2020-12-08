@@ -39,6 +39,7 @@
             </v-row>
           </v-container>
         </v-card-text>
+
         <v-divider />
 
         <v-card-actions v-if="people.status === 'invited'">
@@ -63,7 +64,9 @@
             </v-col>
           </v-row>
         </v-card-actions>
-        <v-card-actions v-if="isNotBeta">
+        <v-card-actions
+          v-if="people.status === 'accepted' && currentUser.role === 'WA' && currentUser.email !== people.email"
+        >
           <v-row class="mx-2">
             <v-col class="text-center" cols="12">
               <div v-if="isNotBeta">
@@ -72,8 +75,8 @@
                 </v-btn>
               </div>
               <div class="mt-2">
-                <v-btn small block outlined text color="error" class="btn--hover" @click="handleRemove">
-                  Remove&nbsp;<br /><span class="secondary--text">{{ name }}</span>
+                <v-btn small block outlined text color="error" class="btn--hover" max-width="340" @click="handleRemove">
+                  Remove&nbsp;{{ name }}
                 </v-btn>
               </div>
             </v-col>
@@ -115,6 +118,16 @@ export default defineComponent({
     value: {
       type: Boolean,
       default: false
+    },
+    currentUser: {
+      type: Object,
+      default: function () {
+        return {
+          email: '',
+          name: '',
+          role: ''
+        }
+      }
     }
   },
   setup(props, context) {
@@ -137,7 +150,7 @@ export default defineComponent({
       return roleFilters[val]
     })
 
-    const name = computed(() => slicedText(props.people.name || props.people.email, 17))
+    const name = computed(() => slicedText(props.people.name || props.people.email, 30))
 
     const handleRemove = value => context.emit('onRemovePeople', value)
     const handleChangeRole = value => context.emit('handleChangeRole', value)

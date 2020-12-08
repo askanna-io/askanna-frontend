@@ -31,6 +31,12 @@ export interface WorkspaceState {
     }
   }
   invitation: Invitation
+  currentPeople: {
+    role: string
+    name: string
+    email: string
+    short_uuid: string
+  }
 }
 interface Invitation {
   name: string
@@ -64,6 +70,7 @@ interface Workspace {
 }
 
 interface Person {
+  email: string
   uuid: string
   short_uuid: string
   name: string
@@ -72,6 +79,20 @@ interface Person {
   created: string
   modified: string
   last_active: string
+  front_end_url: string
+  object_type: string
+  object_uuid: string
+  status: string
+  user: {
+    name?: string
+    short_uuid?: string
+    uuid?: string
+  }
+  workspace: {
+    name?: string
+    short_uuid?: string
+    uuid?: string
+  }
 }
 
 export const WORKSPACE_STORE = 'workspace'
@@ -79,6 +100,7 @@ export const WORKSPACE_STORE = 'workspace'
 export const action = {
   reset: 'reset',
   setQuery: 'setQuery',
+  deletePeople: 'deletePeople',
   getWorkspace: 'getWorkspace',
   getWorkspaces: 'getWorkspaces',
   changeSettings: 'changeSettings',
@@ -86,6 +108,7 @@ export const action = {
   sendInviteEmail: 'sendInviteEmail',
   deleteInvitation: 'deleteInvitation',
   acceptInvitetion: 'acceptInvitetion',
+  getCurrentPeople: 'getCurrentPeople',
   resendInvitation: 'resendInvitation',
   getInvitetionInfo: 'getInvitetionInfo',
   setWorkspaceParams: 'setWorkspaceParams',
@@ -106,6 +129,7 @@ export const mutation = {
   UPDATE_PROJECTS: 'UPDATE_PROJECTS',
   UPDATE_SETTINGS: 'UPDATE_SETTINGS',
   RESET_INVITATION: 'RESET_INVITATION',
+  SET_CURRENT_PEOPLE: 'SET_CURRENT_PEOPLE',
   SET_WORKSPACE_PARAMS: 'SET_WORKSPACE_PARAMS',
   SET_WORKSPACE_PEOPLE: 'SET_WORKSPACE_PEOPLE',
   SET_WORKSPACE_PROJECTS: 'SET_WORKSPACE_PROJECTS',

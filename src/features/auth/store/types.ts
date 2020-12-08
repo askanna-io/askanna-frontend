@@ -19,6 +19,7 @@ export const ac = {
   login: 'login',
   logout: 'logout',
   createAccount: 'createAccount',
+  getCurrentUser: 'getCurrentUser',
   resetPassword: 'resetPassword',
   acceptInvatation: 'acceptInvatation',
   validateResetToken: 'validateResetToken',
