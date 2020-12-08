@@ -5,7 +5,7 @@
         <v-card-title>Oops...something went wrong</v-card-title>
         <v-card-text class="text-body-1">
           The invitation you tried to open is not valid. Maybe the invitation is already accepted, or something else
-          went wrong.
+          went wrong. An invitation is valid for 7 days. A workspace member can easily resend the invitation to you.
           <br />
           <br />
           Please check with the person who send you the invite, or send us an email on
