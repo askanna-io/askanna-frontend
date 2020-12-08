@@ -211,5 +211,26 @@ export const actions: ActionTree<projectState, RootState> = {
     }
 
     commit(mutation.SET_PROJECT_TEMPLATES, projectTemplates)
+  },
+
+  async [action.deleteProject]({ commit, dispatch }, project) {
+    try {
+      await apiService({
+        action: api.delete,
+        method: 'delete',
+        serviceName,
+        uuid: project.short_uuid
+      })
+    } catch (error) {
+      dispatch(rootTypes.loggerError, {
+        errorHint: 'Error on delete project in deleteProject action.\nError:',
+        error
+      })
+      return
+    }
+
+    commit(`workspace/DELETE_WORKSPACE_PROJECT`, project, { root: true })
+
+    logger.success(commit, `You have successfully deleted the project ${project.name}`)
   }
 }

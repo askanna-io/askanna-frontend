@@ -16,18 +16,16 @@ export default defineComponent({
         await workspaceStore.getWorkspaces()
       }
       let { workspaceId } = context.root.$route.params
-
-      if (workspaceId === 'workspace') {
+      if (workspaceId === 'workspace' && workspaceStore.workspaces.value.results.length) {
         workspaceId = workspaceStore.workspaces.value.results[0].short_uuid
         context.root.$router.push({ path: `/${workspaceId}` })
 
         return
       }
-
-      // if (workspaceStore.workspace.value.short_uuid === workspaceId) return
-
-      await workspaceStore.getWorkspace(workspaceId)
-      await workspaceStore.getInitialWorkpaceProjects({ params: { limit: 99, offset: 0 } })
+      if (workspaceId !== 'workspace') {
+        await workspaceStore.getWorkspace(workspaceId)
+        await workspaceStore.getInitialWorkpaceProjects({ params: { limit: 99, offset: 0 } })
+      }
     })
   }
 })

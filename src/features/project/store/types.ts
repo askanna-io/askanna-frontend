@@ -55,6 +55,7 @@ export const action = {
   getProject: 'getProject',
   getProjects: 'getProjects',
   createProject: 'createProject',
+  deleteProject: 'deleteProject',
   updateProject: 'updateProject',
   getProjectJobs: 'getProjectJobs',
   getLastPackage: 'getLastPackage',

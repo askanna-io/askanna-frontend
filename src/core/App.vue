@@ -183,6 +183,12 @@ code.lang-shell {
     }
   }
 }
+.AskAnna-app-bar {
+  .v-toolbar__content {
+    padding-left: 0px;
+    padding-right: 3px;
+  }
+}
 
 .AskAnna-card {
   &--in-dialog {

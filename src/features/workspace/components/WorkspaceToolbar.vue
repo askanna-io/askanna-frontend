@@ -19,7 +19,7 @@
       offset-y
     >
       <template v-slot:activator="{ on }">
-        <v-btn icon v-on="on" data-test="workspace-menu-activate-btn">
+        <v-btn small icon v-on="on" data-test="workspace-menu-activate-btn">
           <v-icon>mdi-dots-vertical</v-icon>
         </v-btn>
       </template>
