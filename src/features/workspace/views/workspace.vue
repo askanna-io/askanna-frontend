@@ -34,14 +34,16 @@ export default defineComponent({
       queryPath: 'workspaceProjects'
     })
 
+    const workspaceProjects = computed(() => workspaceStore.workspaceProjects.value)
+
     const onScroll = e => query.onScroll(e.target.documentElement.scrollTop)
 
     return {
       throttle,
       onScroll,
+      workspaceProjects,
       workspace: workspaceStore.workspace,
       loading: workspaceStore.workspaceProjectsLoading,
-      workspaceProjects: workspaceStore.workspaceProjects,
       workspaceSettings: workspaceStore.workspaceSettings
     }
   }

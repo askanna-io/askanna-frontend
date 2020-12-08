@@ -56,7 +56,7 @@ export const actions: ActionTree<workspaceState, RootState> = {
     commit(mutation.SET_LOADING, { name: stateType.workspaceProjectsLoading, value: false })
   },
 
-  async [action.getWorkpaceProjects]({ commit, dispatch, state }, { params }) {
+  async [action.getWorkpaceProjects]({ state, commit }, { params }) {
     let projects
     try {
       projects = await apiService({

@@ -11,12 +11,17 @@
       }
     }"
   >
-    <v-card-title>
-      <v-icon large left>
-        mdi-semantic-web
-      </v-icon>
-      <span class="title font-weight-light">{{ project.name }}</span>
-    </v-card-title>
+    <v-toolbar flat dense white--text color="white" class="AskAnna-app-bar">
+      <v-toolbar-title class="pl-4 title font-weight-light">
+        <v-icon large>
+          mdi-semantic-web
+        </v-icon>
+        {{ project.name }}
+      </v-toolbar-title>
+      <v-spacer />
+
+      <project-menu-popup :project="project" />
+    </v-toolbar>
 
     <v-card-text class="font-weight-bold project--description">
       {{ description }}
@@ -47,9 +52,14 @@
 
 <script>
 import { defineComponent } from '@vue/composition-api'
+import ProjectMenuPopup from '@/features/project/components/ProjectMenuPopup'
 
 export default defineComponent({
   name: 'WorkspaceProjectCardItem',
+
+  components: {
+    ProjectMenuPopup
+  },
 
   props: {
     project: {
