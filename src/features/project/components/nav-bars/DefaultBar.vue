@@ -44,6 +44,8 @@
           <v-toolbar dense color="white" flat class="br-r5 ma-3">
             <project-menu :projectName="project.name" />
             <v-spacer />
+
+            <project-menu-popup :project="project" :routeToRedirect="'workspace'" />
           </v-toolbar>
         </div>
       </v-slide-y-transition>
@@ -54,11 +56,12 @@
 import ProjectMenu from './parts/ProjectMenu'
 import { ref, defineComponent } from '@vue/composition-api'
 import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
+import ProjectMenuPopup from '@/features/project/components/ProjectMenuPopup'
 
 export default defineComponent({
   name: 'DefaultBar',
 
-  components: { ProjectMenu },
+  components: { ProjectMenu, ProjectMenuPopup },
 
   props: {
     project: {
