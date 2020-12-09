@@ -3,6 +3,7 @@ import { ac, mt } from './types'
 import { ActionTree } from 'vuex'
 import router from '@/core/router'
 import { AuthState } from './types'
+import * as Sentry from '@sentry/browser'
 import { logger } from '@/core/plugins/logger'
 import { api } from '@/core/services/api-settings'
 import apiService from '@/core/services/apiService'
@@ -55,6 +56,10 @@ export const actions: ActionTree<AuthState, RootState> = {
     }
     commit(mt.DROP_AUTH, null)
 
+    if (process.env.VUE_APP_SENTRY === 'on') {
+      Sentry.configureScope(scope => scope.setUser(null))
+    }
+
     router.push({ path: '/login' })
   },
 
@@ -89,6 +94,11 @@ export const actions: ActionTree<AuthState, RootState> = {
     }
 
     commit('workspace/SET_CURRENT_PEOPLE', result.data, { root: true })
+
+    if (process.env.VUE_APP_SENTRY === 'on') {
+      const { email, short_uuid: id, username } = result.data
+      Sentry.setUser({ id, email, username })
+    }
 
     return result
   },
