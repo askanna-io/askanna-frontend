@@ -60,6 +60,10 @@ export default defineComponent({
           finished: ''
         }
       }
+    },
+    routeToRedirect: {
+      type: String,
+      default: () => ''
     }
   },
 
@@ -97,6 +101,9 @@ export default defineComponent({
       await projectStore.deleteProject(props.project)
       deleteProjectConfirmPopup.value = false
       menu.value = false
+      if (props.routeToRedirect) {
+        context.root.$router.push({ name: props.routeToRedirect })
+      }
     }
 
     return {
