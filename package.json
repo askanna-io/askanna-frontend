@@ -1,6 +1,6 @@
 {
   "name": "askanna-frontend",
-  "version": "0.1.158",
+  "version": "0.1.161",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -12,9 +12,9 @@
   },
   "dependencies": {
     "@babel/polyfill": "7.8.7",
-    "@sentry/browser": "5.25.0",
-    "@sentry/integrations": "5.25.0",
-    "@sentry/tracing": "5.25.0",
+    "@sentry/browser": "5.29.0",
+    "@sentry/integrations": "5.29.0",
+    "@sentry/tracing": "5.29.0",
     "@types/lodash": "4.14.161",
     "@u3u/vue-hooks": "2.0.1",
     "@vue/composition-api": "1.0.0-beta.18",
