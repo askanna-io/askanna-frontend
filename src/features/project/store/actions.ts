@@ -1,10 +1,12 @@
 import { map } from 'lodash'
 import { ActionTree } from 'vuex'
+import router from '@/core/router'
 import { logger } from '@/core/plugins/logger'
 import apiService from '@/core/services/apiService'
 import * as rootTypes from '@/core/store/actionTypes'
 import { apiStringify } from '@/core/services/api-settings'
-import { projectState, PROJECT_STORE, action, mutation } from './types'
+
+import { projectState, PROJECT_STORE, action, mutation, ProjectModel } from './types'
 import { mutation as gMutation, GENERAL_STORE } from '@/core/store/general/types'
 
 const serviceName = PROJECT_STORE
@@ -20,10 +22,11 @@ export const actions: ActionTree<projectState, RootState> = {
         uuid: uuid
       })
     } catch (error) {
-      dispatch(rootTypes.loggerError, {
-        errorHint: 'Error on load project  in getProject action.\nError:',
-        error
-      })
+      logger.error(commit, 'Error on load project  in getProject action.\nError: ', error)
+
+      project = new ProjectModel().state
+      router.push({ name: 'workspace-project-does-not-exist' })
+
       return
     }
 
