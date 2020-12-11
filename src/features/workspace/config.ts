@@ -250,6 +250,16 @@ export default {
           }
         },
         {
+          path: 'project-does-not-exist',
+          component: () =>
+            import(/* webpackChunkName: "workspace-project-does-not-exist" */ './views/project-does-not-exist.vue'),
+          name: 'workspace-project-does-not-exist',
+          meta: {
+            title: 'Oops...we cannot find this project',
+            breadcrumb: 'Project does not exist'
+          }
+        },
+        {
           path: 'project/:projectId',
           component: () => import(/* webpackChunkName: "workspace-project" */ './views/project/index.vue'),
           meta: {
