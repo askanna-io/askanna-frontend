@@ -1,5 +1,6 @@
 import * as type from './types'
 import { ActionTree } from 'vuex'
+import router from '@/core/router'
 import { jobState, JOB_STORE } from './types'
 import { logger } from '@/core/plugins/logger'
 import apiService from '@/core/services/apiService'
@@ -20,6 +21,9 @@ export const actions: ActionTree<jobState, RootState> = {
       })
     } catch (error) {
       logger.error(commit, 'Error on load job  in getJob action.\nError: ', error)
+
+      router.push({ name: 'workspace-project-job-does-not-exist' })
+
       return
     }
 

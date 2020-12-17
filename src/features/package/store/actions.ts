@@ -1,5 +1,6 @@
 import * as type from './types'
 import { ActionTree } from 'vuex'
+import router from '@/core/router'
 import { logger } from '@/core/plugins/logger'
 import { PackageState, PACKAGE_STORE, packageServiceName } from './types'
 import { apiStringify } from '@/core/services/api-settings'
@@ -33,6 +34,8 @@ export const actions: ActionTree<PackageState, RootState> = {
 
         return
       }
+      router.push({ name: 'workspace-project-code-does-not-exist' })
+
       commit(type.SET_LOADING, { name: 'packageLoading', value: false })
 
       logger.error(commit, 'Error on load packageData in getPackage action.\nError: ', e)

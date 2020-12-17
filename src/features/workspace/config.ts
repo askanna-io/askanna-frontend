@@ -6,6 +6,18 @@ const jobRun = [
     name: 'workspace-project-job-jobruns'
   },
   {
+    path: 'run-does-not-exist',
+    component: () =>
+      import(
+        /* webpackChunkName: "workspace-project-job-run-does-not-exist" */ './views/project/jobs/job/jobruns/run-does-not-exist.vue'
+      ),
+    name: 'workspace-project-job-run-does-not-exist',
+    meta: {
+      title: 'Oops...we cannot find this jobrun',
+      breadcrumb: 'Run does not exist'
+    }
+  },
+  {
     path: ':jobRunId',
     name: 'workspace-project-jobs-job-jobrun',
     redirect: { name: 'workspace-project-jobs-job-jobrun-input' },
@@ -165,6 +177,18 @@ const JobRoutes = [
     }
   },
   {
+    path: 'job-does-not-exist',
+    component: () =>
+      import(
+        /* webpackChunkName: "workspace-project-job-does-not-exist" */ './views/project/jobs/job-does-not-exist.vue'
+      ),
+    name: 'workspace-project-job-does-not-exist',
+    meta: {
+      title: 'Oops...we cannot find this job',
+      breadcrumb: 'Job does not exist'
+    }
+  },
+  {
     path: ':jobId',
     redirect: { name: 'workspace-project-job-overiew' },
 
@@ -219,6 +243,16 @@ const JobRoutes = [
 export default {
   paths: [
     {
+      path: '/workspace-does-not-exist',
+      component: () =>
+        import(/* webpackChunkName: "workspace-does-not-exist" */ './views/workspace-does-not-exist.vue'),
+      name: 'workspace-does-not-exist',
+      meta: {
+        title: 'Oops...we cannot find this workspace',
+        breadcrumb: 'Workspace does not exist'
+      }
+    },
+    {
       path: '/:workspaceId',
       component: () => import(/* webpackChunkName: "workspace-index" */ './views/index.vue'),
       meta: {
@@ -252,8 +286,8 @@ export default {
         {
           path: 'project-does-not-exist',
           component: () =>
-            import(/* webpackChunkName: "workspace-project-does-not-exist" */ './views/project-does-not-exist.vue'),
-          name: 'workspace-project-does-not-exist',
+            import(/* webpackChunkName: "project-does-not-exist" */ './views/project-does-not-exist.vue'),
+          name: 'project-does-not-exist',
           meta: {
             title: 'Oops...we cannot find this project',
             breadcrumb: 'Project does not exist'
@@ -321,6 +355,18 @@ export default {
               component: () =>
                 import(/* webpackChunkName: "workspace-project-package" */ './views/project/package.vue'),
               children: packageRoutes
+            },
+            {
+              path: 'code-does-not-exist',
+              component: () =>
+                import(
+                  /* webpackChunkName: "workspace-project-code-does-not-exist" */ './views/project/code-does-not-exist.vue'
+                ),
+              name: 'workspace-project-code-does-not-exist',
+              meta: {
+                title: 'Oops...we cannot find this package',
+                breadcrumb: 'Package does not exist'
+              }
             }
           ]
         }

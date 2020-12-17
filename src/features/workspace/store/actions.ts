@@ -1,5 +1,6 @@
 import { get, map } from 'lodash'
 import { ActionTree } from 'vuex'
+import router from '@/core/router'
 import { logger } from '@/core/plugins/logger'
 import apiService from '@/core/services/apiService'
 import { apiStringify } from '@/core/services/api-settings'
@@ -19,7 +20,9 @@ export const actions: ActionTree<workspaceState, RootState> = {
         uuid
       })
     } catch (error) {
-      logger.error(commit, 'Error on load workspaces  in getWorkspaces action.\nError: ', error)
+      logger.error(commit, 'Error on load workspace in getWorkspace action.\nError: ', error)
+
+      router.push({ name: 'workspace-does-not-exist' })
 
       return
     }
