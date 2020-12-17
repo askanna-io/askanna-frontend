@@ -25,7 +25,7 @@ export const actions: ActionTree<projectState, RootState> = {
       logger.error(commit, 'Error on load project  in getProject action.\nError: ', error)
 
       project = new ProjectModel().state
-      router.push({ name: 'workspace-project-does-not-exist' })
+      router.push({ name: 'project-does-not-exist' })
 
       return
     }

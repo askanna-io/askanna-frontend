@@ -1,5 +1,5 @@
 <template>
-  <ask-anna-page-does-not-exist pageTitle="project" outlined>
+  <ask-anna-page-does-not-exist pageTitle="workspace" outlined>
     <template v-slot:header>
       <v-breadcrumbs :items="breadcrumbs">
         <template v-slot:item="{ item }">
@@ -13,26 +13,18 @@
 </template>
 
 <script>
-import useWorkSpaceStore from '@/features/workspace/composition/useWorkSpaceStore'
+import { computed, defineComponent } from '@vue/composition-api'
 import AskAnnaPageDoesNotExist from '@/core/components/shared/AskAnnaPageDoesNotExist'
-import { computed, reactive, onBeforeMount, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
-  name: 'project-does-not-exist',
+  name: 'workspace-does-not-exist',
 
   components: { AskAnnaPageDoesNotExist },
 
   setup(props, context) {
-    const workSpaceStore = useWorkSpaceStore(context)
-
     const breadcrumbs = computed(() => [
       {
-        title: workSpaceStore.workspace.value.title,
-        to: `/${workSpaceStore.workspace.value.short_uuid}`,
-        disabled: false
-      },
-      {
-        title: 'Project does not exist',
+        title: 'Workspace does not exist',
         to: '',
         disabled: true
       }
