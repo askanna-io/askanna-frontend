@@ -8,16 +8,31 @@
       @keyup.native.enter="handleLogin"
       @submit.stop="handleLogin"
     >
-      <v-text-field v-model="username" dense outlined validate-on-blur autocomplete="off" label="Email" required />
+      <v-text-field
+        v-model="username"
+        :error-messages="error.username || error.name || error.email"
+        dense
+        outlined
+        validate-on-blur
+        autocomplete="off"
+        label="Email"
+        required
+        :rules="[RULE.required('The email is required'), RULE.email('The email you entered is not valid', 3)]"
+      />
       <v-text-field
         v-model="password"
-        :append-icon="isShowPassword ? 'far fa-eye' : 'fas fa-eye-slash'"
+        :error-messages="error.password"
         :type="isShowPassword ? 'text' : 'password'"
+        :append-icon="isShowPassword ? 'far fa-eye' : 'fas fa-eye-slash'"
         dense
         outlined
         name="input-10-1"
         label="Password"
         counter
+        :rules="[
+          RULE.required('The password is required'),
+          RULE.min('The password should be longer than 10 characters', 10)
+        ]"
         @click:append="isShowPassword = !isShowPassword"
       />
       <input type="password" style="display: none;" browserAutocomplete="new-password" autocomplete="new-password" />
@@ -30,10 +45,9 @@
 </template>
 
 <script lang="ts">
-// :rules="[RULES.min('Must be at least 3 characters long', 3), RULES.required('Username is required')]"
 import useAuthStore from '../composition/useAuthStore'
 import useValidationRules from '@/core/composition/useValidationRules'
-import { ref, reactive, computed, defineComponent, onMounted, toRefs } from '@vue/composition-api'
+import { ref, watch, reactive, computed, defineComponent, onMounted, toRefs } from '@vue/composition-api'
 
 type VForm = Vue & {
   reset: () => void
@@ -46,7 +60,7 @@ export default defineComponent({
 
   setup(rops, context) {
     const authStore = useAuthStore()
-    const RULES = useValidationRules()
+    const validationRules = useValidationRules()
 
     const username = ref('')
     const password = ref('')
@@ -58,29 +72,52 @@ export default defineComponent({
     const loginFormRef = ref(context.root.$refs.loginFormRef)
     const loginForm = computed(() => loginFormRef.value as VForm)
 
-    const handleLogin = () => {
+    const formData = reactive({
+      username: '',
+      password: ''
+    })
+    const errorData = reactive({
+      error: { name: '', email: '', username: '', password: '' }
+    })
+
+    const handleLogin = async () => {
       if (!loginForm.value.validate()) {
         return
       }
-      authStore.actions.login({ username: username.value, password: password.value })
+      const authError = await authStore.actions.login(formData)
+
+      if (authError && authError.response && authError.response.status === 400) {
+        errorData.error = { ...errorData.error, ...authError.response.data }
+
+        return
+      }
     }
 
     const reset = () => loginForm.value.reset()
     const resetValidation = () => loginForm.value.resetValidation()
+    const resetError = () => {
+      errorData.error = { name: '', email: '', username: '', password: '' }
+    }
+
+    watch(formData, async (formData, prevFormData) => {
+      // check if exist error from backend on typing fields, try resest validation
+      if (Object.values(errorData.error).some(error => error.length)) {
+        resetError()
+        resetValidation()
+      }
+    })
 
     return {
       ...authStore,
-      RULES,
-      username,
-      password,
+      ...toRefs(formData),
+      ...toRefs(errorData),
       loginForm,
+      handleLogin,
       isFormValid,
       loginFormRef,
       isShowPassword,
       isSuccesLogedIn,
-      reset,
-      handleLogin,
-      resetValidation
+      RULE: validationRules.RULES
     }
   }
 })
