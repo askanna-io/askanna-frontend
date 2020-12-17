@@ -12,7 +12,7 @@
     }"
   >
     <v-toolbar flat dense white--text color="white" class="AskAnna-app-bar">
-      <v-toolbar-title class="pl-4 title font-weight-light">
+      <v-toolbar-title class="pl-4 pt-5 title font-weight-light">
         <v-icon large>
           mdi-semantic-web
         </v-icon>
