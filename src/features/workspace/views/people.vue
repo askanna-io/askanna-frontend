@@ -15,8 +15,10 @@
       :people="selectedPeople"
       :currentUser="currentUser"
       :workspaceName="workspace.title"
+      :roleAction="roleAction"
+      :isPeopleAdmin="isPeopleAdmin"
       @handleValue="handleValue"
-      @handleChangeRole="handleChangeRole"
+      @onChangeRole="handleChangeRole"
       @onRemovePeople="handleOpenRemovePeople"
       @onDeleteInivitationPopup="handleDeleteInivitationPopup(true)"
       @onResendInivitationPopup="handleResendInivitationPopup(true)"
@@ -42,6 +44,16 @@
       @onResendConfirm="handleResendItem"
       @onClose="handleResendInivitationPopup(false)"
     />
+
+    <workspace-people-confirm-change-role-popup
+      v-if="changeRoleConfirmPopup"
+      :roleAction="roleAction"
+      :peopleName="selectedPeople.name"
+      :isPeopleAdmin="isPeopleAdmin"
+      :value="changeRoleConfirmPopup"
+      @onChangeRoleConfirm="handleConfirmChangeRole"
+      @onClose="handleCloseChangeRolePopup(false)"
+    />
   </div>
 </template>
 <script>
@@ -51,6 +63,7 @@ import WorkspacePeopleList from '@/features/workspace/components/people/Workspac
 import WorkspacePeoplePopup from '@/features/workspace/components/people/WorkspacePeoplePopup.vue'
 import WorkspacePeopleNavbar from '@/features/workspace/components/people/WorkspacePeopleNavbar.vue'
 import WorkspacePeopleConfirmDeletePopup from '@/features/workspace/components/people/WorkspacePeopleConfirmDeletePopup.vue'
+import WorkspacePeopleConfirmChangeRolePopup from '@/features/workspace/components/people/WorkspacePeopleConfirmChangeRolePopup.vue'
 import WorkspacePeopleConfirmDeleteInvitationPopup from '@/features/workspace/components/people/WorkspacePeopleConfirmDeleteInvitationPopup.vue'
 import WorkspacePeopleConfirmResendInvitationPopup from '@/features/workspace/components/people/WorkspacePeopleConfirmResendInvitationPopup.vue'
 
@@ -62,6 +75,7 @@ export default defineComponent({
     WorkspacePeoplePopup,
     WorkspacePeopleNavbar,
     WorkspacePeopleConfirmDeletePopup,
+    WorkspacePeopleConfirmChangeRolePopup,
     WorkspacePeopleConfirmResendInvitationPopup,
     WorkspacePeopleConfirmDeleteInvitationPopup
   },
@@ -73,9 +87,16 @@ export default defineComponent({
     onBeforeMount(async () => await workspaceStore.getInitialWorkpacePeople({ workspaceId }))
     const peoplePopup = ref(false)
     const selectedPeople = ref(null)
+
+    const changeRoleConfirmPopup = ref(false)
     const peopleConfirmDeletePopup = ref(false)
+    const peopleChangeRoleConfirmPopup = ref(false)
     const deleteInvitationConfirmPopup = ref(false)
     const resendInvitationConfirmPopup = ref(false)
+
+    const isPeopleAdmin = computed(() => selectedPeople.value.role === 'WA')
+    const role = computed(() => (isPeopleAdmin.value ? 'WM' : 'WA'))
+    const roleAction = computed(() => (isPeopleAdmin.value ? 'revoke' : 'grant'))
 
     const workspacePeople = computed(() => {
       const {
@@ -114,7 +135,22 @@ export default defineComponent({
     const handleValue = value => (peoplePopup.value = value)
 
     const handleOpenRemovePeople = value => (peopleConfirmDeletePopup.value = true)
-    const handleChangeRole = value => true
+
+    const handleCloseChangeRolePopup = value => (changeRoleConfirmPopup.value = false)
+
+    const handleChangeRole = async role => (changeRoleConfirmPopup.value = true)
+
+    const handleConfirmChangeRole = async () => {
+      const people = await workspaceStore.actions.changeRole({
+        role: role.value,
+        peopleId: selectedPeople.value.short_uuid,
+        workspaceId: selectedPeople.value.workspace.short_uuid
+      })
+      if (people) {
+        changeRoleConfirmPopup.value = false
+        peoplePopup.value = false
+      }
+    }
 
     const handleSelectPeople = people => {
       selectedPeople.value = people
@@ -150,26 +186,30 @@ export default defineComponent({
     }
 
     return {
+      roleAction,
       peoplePopup,
       handleValue,
+      isPeopleAdmin,
       selectedPeople,
       workspacePeople,
       handleDeleteItem,
       handleResendItem,
       handleChangeRole,
       handleSelectPeople,
+      changeRoleConfirmPopup,
       handleDeleteInvitation,
       handleOpenRemovePeople,
+      handleConfirmChangeRole,
       peopleConfirmDeletePopup,
       peopleConfirmDeletePopup,
+      handleCloseChangeRolePopup,
       resendInvitationConfirmPopup,
       deleteInvitationConfirmPopup,
       handleDeleteInivitationPopup,
-      handleCloseConfirmDeletePopup,
-      workspacePeople,
-      currentUser: workspaceStore.currentPeople,
       handleResendInivitationPopup,
+      handleCloseConfirmDeletePopup,
       workspace: workspaceStore.workspace,
+      currentUser: workspaceStore.currentPeople,
       loading: workspaceStore.workspacePeopleLoading,
       workspaceSettings: workspaceStore.workspaceSettings
     }

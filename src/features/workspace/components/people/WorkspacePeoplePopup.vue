@@ -41,9 +41,8 @@
         </v-card-text>
 
         <v-divider />
-
-        <v-card-actions v-if="people.status === 'invited'">
-          <v-row class="mx-2">
+        <v-card-actions v-if="people.status === 'invited'" :class="{ 'pb-0': isCurrentUserAdmin }">
+          <v-row dense class="mx-2">
             <v-col cols="6">
               <v-btn small block outlined text color="error" class="btn--hover" @click="handleDeleteInivitationPopup">
                 Delete invitation
@@ -65,16 +64,17 @@
           </v-row>
         </v-card-actions>
         <v-card-actions
-          v-if="people.status === 'accepted' && currentUser.role === 'WA' && currentUser.email !== people.email"
+          v-if="isCurrentUserAdmin && currentUser.email !== people.email"
+          :class="{ 'pt-0': isCurrentUserAdmin && people.status !== 'accepted' }"
         >
-          <v-row class="mx-2">
+          <v-row dense class="mx-2">
             <v-col class="text-center" cols="12">
-              <div v-if="isNotBeta">
-                <v-btn small block outlined text color="secondary" class="btn--hover" @click="handleChangeRole">
-                  Make Admin
+              <div>
+                <v-btn small block outlined text :color="colorBtn" class="btn--hover" @click="handleChangeRole">
+                  {{ roleAction }} admin powers
                 </v-btn>
               </div>
-              <div class="mt-2">
+              <div v-if="people.status === 'accepted'" :class="{ 'mt-2': people.status === 'accepted' }">
                 <v-btn small block outlined text color="error" class="btn--hover" max-width="340" @click="handleRemove">
                   Remove&nbsp;{{ name }}
                 </v-btn>
@@ -128,6 +128,14 @@ export default defineComponent({
           role: ''
         }
       }
+    },
+    isPeopleAdmin: {
+      type: Boolean,
+      default: false
+    },
+    roleAction: {
+      type: String,
+      default: () => 'revoke'
     }
   },
   setup(props, context) {
@@ -152,8 +160,12 @@ export default defineComponent({
 
     const name = computed(() => slicedText(props.people.name || props.people.email, 30))
 
+    const colorBtn = computed(() => (props.isPeopleAdmin ? 'error' : 'secondary'))
+
+    const isCurrentUserAdmin = computed(() => props.currentUser.role === 'WA')
+
     const handleRemove = value => context.emit('onRemovePeople', value)
-    const handleChangeRole = value => context.emit('handleChangeRole', value)
+    const handleChangeRole = () => context.emit('onChangeRole')
     const handleDeleteInivitationPopup = () => context.emit('onDeleteInivitationPopup')
     const handleResendInivitationPopup = () => context.emit('onResendInivitationPopup')
 
@@ -161,9 +173,11 @@ export default defineComponent({
       name,
       dialog,
       roleName,
+      colorBtn,
       openVmodel,
       handleRemove,
       handleChangeRole,
+      isCurrentUserAdmin,
       handleDeleteInivitationPopup,
       handleResendInivitationPopup
     }

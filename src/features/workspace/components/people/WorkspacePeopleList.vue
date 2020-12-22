@@ -9,7 +9,7 @@
           <v-col
             v-for="item in props.items"
             @click="handleSelectPeople(item)"
-            :key="item.name + item.short_uuid"
+            :key="item.name + item.short_uuid + item.role"
             cols="12"
             sm="4"
             md="3"

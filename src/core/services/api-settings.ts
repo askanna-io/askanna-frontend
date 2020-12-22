@@ -110,6 +110,7 @@ export const api: ApiSettings = {
       list: () => `workspace/`,
       projects: id => `workspace/${id}/projects/`,
       invitePeople: id => `workspace/${id}/people/`,
+      changeRole: ({ workspaceId, peopleId }) => `workspace/${workspaceId}/people/${peopleId}/`,
       acceptInvitetion: ({ workspaceId, peopleId }) => `workspace/${workspaceId}/people/${peopleId}/`,
       getProjectPackages: id => `project/${id}/packages/`,
       getWorkspacePeople: id => `workspace/${id}/people/`

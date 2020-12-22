@@ -100,6 +100,7 @@ export const WORKSPACE_STORE = 'workspace'
 export const action = {
   reset: 'reset',
   setQuery: 'setQuery',
+  changeRole: 'changeRole',
   deletePeople: 'deletePeople',
   getWorkspace: 'getWorkspace',
   getWorkspaces: 'getWorkspaces',
@@ -135,6 +136,7 @@ export const mutation = {
   SET_WORKSPACE_PROJECTS: 'SET_WORKSPACE_PROJECTS',
   updateWorkpaceProjects: 'updateWorkpaceProjects',
   DELETE_WORKSPACE_PEOPLE: 'DELETE_WORKSPACE_PEOPLE',
+  CHANGE_WORKSPACE_PEOPLE: 'CHANGE_WORKSPACE_PEOPLE',
   UPDATE_WORKSPACE_PEOPLE: 'UPDATE_WORKSPACE_PEOPLE',
   DELETE_WORKSPACE_PROJECT: 'DELETE_WORKSPACE_PROJECT',
   SET_WORKSPACE_PEOPLE_INITIAL: 'SET_WORKSPACE_PEOPLE_INITIAL'
