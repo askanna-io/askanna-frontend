@@ -68,5 +68,13 @@ export const mutations: MutationTree<workspaceState> = {
 
   [mutation.SET_CURRENT_PEOPLE](state, data) {
     state.currentPeople = { ...state.currentPeople, ...data }
+  },
+
+  [mutation.CHANGE_WORKSPACE_PEOPLE](state, item) {
+    state.workspacePeople.splice(
+      state.workspacePeople.map(people => people.short_uuid).indexOf(item.short_uuid),
+      1,
+      item
+    )
   }
 }

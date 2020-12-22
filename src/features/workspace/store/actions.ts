@@ -242,6 +242,36 @@ export const actions: ActionTree<workspaceState, RootState> = {
     return response
   },
 
+  async [action.changeRole]({ commit }, { role, peopleId, workspaceId }) {
+    let people
+
+    const data = {
+      role
+    }
+    try {
+      people = await apiService({
+        action: api.acceptInvitetion,
+        method: 'PATCH',
+        uuid: { workspaceId, peopleId },
+        serviceName,
+        data
+      })
+    } catch (e) {
+      logger.error(commit, 'Error on change people Role in changeRole action.\nError: ', e)
+
+      return e
+    }
+    logger.success(
+      commit,
+      `You have successfully changed role to ${people.name} from the workspace
+    ${people.workspace.name}`
+    )
+
+    commit(mutation.CHANGE_WORKSPACE_PEOPLE, people)
+
+    return people
+  },
+
   async [action.getInvitetionInfo]({ commit }, { token, peopleId, workspaceId }) {
     let response
 

@@ -20,6 +20,7 @@ export default function () {
 
   return {
     ...state,
-    ...actions
+    ...actions,
+    actions
   }
 }
