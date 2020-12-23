@@ -34,19 +34,6 @@ export default defineComponent({
     const polling = ref(null)
     const isReady = computed(() => prepareAccount.IsAccountReady.value)
 
-    const breadcrumbs = computed(() => [
-      {
-        title: 'Dashboard',
-        to: `/`,
-        disabled: false
-      },
-      {
-        title: 'Workspace does not ready',
-        to: '',
-        disabled: true
-      }
-    ])
-
     const checkWorkspace = async () => {
       await prepareAccount.checkIfWorkspaceIsReady({ ...authData.value })
 
@@ -76,8 +63,7 @@ export default defineComponent({
 
     return {
       isReady,
-      loading,
-      breadcrumbs
+      loading
     }
   }
 })
