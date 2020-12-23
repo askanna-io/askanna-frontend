@@ -30,12 +30,12 @@
 import { computed, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
-  name: 'workspace-does-not-exist',
+  name: 'WorkspaceNotReady',
 
   setup(props, context) {
     const breadcrumbs = computed(() => [
       {
-        title: 'Workspace does not ready',
+        title: 'Cannot find a workspace',
         to: '',
         disabled: true
       }
