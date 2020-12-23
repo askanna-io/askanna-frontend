@@ -29,7 +29,7 @@ $axios.interceptors.response.use(
   err => {
     if (err.response && err.response.status === 401) {
       localStorage.setItem('token', '')
-      router.push({ name: 'login' })
+      router.push({ name: 'signin' })
 
       return
     }

@@ -15,7 +15,7 @@ const authApi = apiStringify('auth')
 const apiAccounts = apiStringify('accounts')
 
 export const actions: ActionTree<AuthState, RootState> = {
-  async [ac.login]({ commit, dispatch }, { username, password, redirect = true }) {
+  async [ac.login]({ commit }, { username, password, redirect = true }) {
     const url = api.url() + api.auth.login()
 
     axios.defaults.xsrfCookieName = 'csrftoken'
@@ -26,9 +26,9 @@ export const actions: ActionTree<AuthState, RootState> = {
       const { data } = result
 
       commit(mt.SET_AUTH, data)
-      commit('workspace/SET_CURRENT_PEOPLE', { email: username, name: username }, { root: true })
+      commit('workspace/SET_CURRENT_PEOPLE', { username, email: username, name: username, password }, { root: true })
 
-      if (redirect) router.push({ path: '/workspace' })
+      if (redirect) router.push({ name: 'check-access' })
 
       return data
     } catch (error) {
@@ -42,11 +42,11 @@ export const actions: ActionTree<AuthState, RootState> = {
     }
   },
 
-  async [ac.logout]({ commit }) {
+  async [ac.logout]({ commit }, redirect = true) {
     try {
       await axios.post(api.url() + api.auth.logout({}))
     } catch (error) {
-      router.push({ path: '/login' })
+      logger.error(commit, 'Error on logout action.\nError: ', error)
     }
     commit(mt.DROP_AUTH, null)
 
@@ -54,7 +54,7 @@ export const actions: ActionTree<AuthState, RootState> = {
       Sentry.configureScope(scope => scope.setUser(null))
     }
 
-    router.push({ path: '/login' })
+    if (redirect) router.push({ path: '/signin' })
   },
 
   async [ac.createAccount]({ commit }, data) {
@@ -75,7 +75,8 @@ export const actions: ActionTree<AuthState, RootState> = {
     return response
   },
 
-  async [ac.getCurrentUser]({ commit }) {
+  async [ac.getCurrentUser]({ state, commit }) {
+    if (!state.authToken) return
     const url = api.url() + api.auth.currentUser()
 
     let result

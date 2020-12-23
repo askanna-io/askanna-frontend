@@ -7,7 +7,7 @@ export default () => {
       ...workspaceConfig.paths,
       {
         path: '*',
-        redirect: '/login'
+        redirect: '/signin'
       }
     ],
     mode: 'history',

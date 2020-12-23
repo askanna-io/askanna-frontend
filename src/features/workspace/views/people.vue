@@ -132,6 +132,8 @@ export default defineComponent({
       return people
     })
 
+    const loading = computed(() => workspaceStore.loading.value.people)
+
     const handleValue = value => (peoplePopup.value = value)
 
     const handleOpenRemovePeople = value => (peopleConfirmDeletePopup.value = true)
@@ -186,6 +188,7 @@ export default defineComponent({
     }
 
     return {
+      loading,
       roleAction,
       peoplePopup,
       handleValue,
@@ -201,16 +204,15 @@ export default defineComponent({
       handleOpenRemovePeople,
       handleConfirmChangeRole,
       peopleConfirmDeletePopup,
-      peopleConfirmDeletePopup,
       handleCloseChangeRolePopup,
       resendInvitationConfirmPopup,
       deleteInvitationConfirmPopup,
       handleDeleteInivitationPopup,
+      handleCloseConfirmDeletePopup,
       handleResendInivitationPopup,
       handleCloseConfirmDeletePopup,
       workspace: workspaceStore.workspace,
       currentUser: workspaceStore.currentPeople,
-      loading: workspaceStore.workspacePeopleLoading,
       workspaceSettings: workspaceStore.workspaceSettings
     }
   }

@@ -37,7 +37,7 @@
       />
       <input type="password" style="display: none;" browserAutocomplete="new-password" autocomplete="new-password" />
       <v-btn :disabled="!isFormValid" color="primary" class="mr-4" @click.stop="handleLogin">
-        Log in to AskAnna
+        {{ submitButtonTitle }}
       </v-btn>
       <v-checkbox v-if="isNotBeta" dense label="Remember me" />
     </v-form>
@@ -57,6 +57,13 @@ type VForm = Vue & {
 
 export default defineComponent({
   name: 'TheSignIn',
+
+  props: {
+    submitButtonTitle: {
+      type: String,
+      default: 'Log in to AskAnna'
+    }
+  },
 
   setup(rops, context) {
     const authStore = useAuthStore()

@@ -1,6 +1,6 @@
 <template>
-  <v-row align="center" justify="center" class="login-wrapper">
-    <v-col cols="6" xl="2" md="4" sm="6" class="rounded">
+  <v-row justify="center" class="login-wrapper">
+    <v-col cols="6" xl="2" md="6" sm="9" lg="4" class="rounded">
       <img alt="AskAnna logo" src="@/assets/logo.svg" class="logo" />
       <v-expansion-panels readonly class="login-expansion" v-model="panel">
         <v-expansion-panel :key="0" active-class="colored-border" class="white">

@@ -24,6 +24,7 @@
 import { ref, toRefs, computed, reactive, onBeforeMount, defineComponent } from '@vue/composition-api'
 
 import TheJoin from '../components/join/TheJoin'
+import useAuthStore from '../composition/useAuthStore'
 import InvalidInvitation from '../components/join/InvalidInvitation'
 import TheCreateNewAccount from '../components/join/TheCreateNewAccount'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
@@ -40,6 +41,7 @@ export default defineComponent({
   },
 
   setup(props, context) {
+    const authStore = useAuthStore()
     const workspaceStore = useWorkspaceStore()
     const { token, peopleId, workspaceId } = context.root.$route.params
 
@@ -50,6 +52,7 @@ export default defineComponent({
 
     onBeforeMount(async () => {
       loading.value = true
+      await authStore.actions.logout(false)
       await workspaceStore.getInvitetionInfo({
         token,
         peopleId,

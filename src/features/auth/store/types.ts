@@ -19,8 +19,8 @@ export const ac = {
   login: 'login',
   logout: 'logout',
   createAccount: 'createAccount',
-  getCurrentUser: 'getCurrentUser',
   resetPassword: 'resetPassword',
+  getCurrentUser: 'getCurrentUser',
   acceptInvatation: 'acceptInvatation',
   validateResetToken: 'validateResetToken',
   confirmResetPassword: 'confirmResetPassword'

@@ -25,6 +25,8 @@ export default defineComponent({
       if (workspaceId !== 'workspace') {
         await workspaceStore.getWorkspace(workspaceId)
         await workspaceStore.getInitialWorkpaceProjects({ params: { limit: 99, offset: 0 } })
+      } else {
+        await workspaceStore.setLoading({ projects: false })
       }
     })
   }

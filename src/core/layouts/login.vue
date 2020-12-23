@@ -38,6 +38,11 @@ export default defineComponent({
   overflow: hidden;
 }
 
+.login-layout .v-main__wrap {
+  height: 100%;
+  overflow-y: scroll;
+}
+
 .login-wrapper {
   height: 100vh;
 }

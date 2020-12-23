@@ -1,5 +1,9 @@
 const routerConfig: RouterConfig = {
-  login: {
+  signin: {
+    layout: 'login',
+    isShowSecondNavBar: false
+  },
+  signup: {
     layout: 'login',
     isShowSecondNavBar: false
   },

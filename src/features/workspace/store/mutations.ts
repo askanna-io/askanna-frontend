@@ -25,8 +25,8 @@ export const mutations: MutationTree<workspaceState> = {
       results
     }
   },
-  [mutation.SET_LOADING](state, { name, value }) {
-    set(state, name, value)
+  [mutation.SET_LOADING](state, value) {
+    state.loading = { ...state.loading, ...value }
   },
   [mutation.UPDATE_SETTINGS](state, data) {
     state.workspaceSettings = Object.assign({}, state.workspaceSettings, data)

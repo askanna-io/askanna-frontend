@@ -15,9 +15,11 @@ export interface WorkspaceState {
     limit: number
     offset: number
   }
-  workspacesLoading: Boolean
-  workspacePeopleLoading: Boolean
-  workspaceProjectsLoading: Boolean
+  loading: {
+    people: Boolean
+    projects: Boolean
+    workspaces: Boolean
+  }
   workspaceSettings: {
     projectView: Number
   }
@@ -100,6 +102,7 @@ export const WORKSPACE_STORE = 'workspace'
 export const action = {
   reset: 'reset',
   setQuery: 'setQuery',
+  setLoading: 'setLoading',
   changeRole: 'changeRole',
   deletePeople: 'deletePeople',
   getWorkspace: 'getWorkspace',

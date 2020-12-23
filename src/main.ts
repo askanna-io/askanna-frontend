@@ -51,24 +51,25 @@ Vue.use(VueCompositionApi)
 Vue.config.productionTip = false
 
 //check if the current user is authenticated
+const notAllowedRouteWithToken = ['signin', 'signup']
 router.beforeEach((to, _, next) => {
-  if (to.name === 'join' || to.name === 'account-reset-password' || to.name === 'forgot-password') {
-    next()
+  if (to.name === next.name) return
 
-    return
-  }
   const token = window.localStorage.getItem('token')
   const backAfterUrl = window.localStorage.getItem('back_after_login')
+  const isRequiresAuth = to.matched.some(route => route.meta.requiresAuth)
+  const isNotAllowedWithToken = notAllowedRouteWithToken.some(route => route === to.name)
 
-  if (!token && to.name !== 'login') {
+  if (isRequiresAuth && !token) {
     window.localStorage.setItem('back_after_login', window.location.pathname)
-    next('login')
+
+    next('signin')
+  } else if (token && isNotAllowedWithToken) {
+    next('/')
   } else if (token && backAfterUrl) {
     window.localStorage.setItem('back_after_login', '')
 
     next(backAfterUrl)
-  } else if (token && to.name === 'login') {
-    next('/workspace')
   } else {
     next()
   }
