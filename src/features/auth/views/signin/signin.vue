@@ -1,10 +1,10 @@
 <template>
   <v-expansion-panel :key="0" active-class="colored-border" class="white">
-    <v-expansion-panel-header hide-actions>
+    <v-expansion-panel-header>
       <v-row no-gutters>
-        <v-col cols="12" class="text-h6">Log in to AskAnna</v-col>
+        <v-col cols="12" class="text-h6">Sign in</v-col>
         <v-col cols="8" v-if="false">
-          <v-fade-transition leave-absolute> </v-fade-transition>
+          <v-fade-transition leave-absolute></v-fade-transition>
         </v-col>
       </v-row>
     </v-expansion-panel-header>
@@ -21,21 +21,18 @@ import { ref, defineComponent } from '@vue/composition-api'
 import ForgotPasswordLink from '../../components/account/ForgotPasswordLink'
 
 export default defineComponent({
-  name: 'Login',
+  name: 'Signin',
+
+  props: {
+    title: {
+      type: String,
+      default: () => 'Sign in'
+    }
+  },
 
   components: {
     TheSignIn,
     ForgotPasswordLink
-  },
-
-  setup() {
-    const handleOpenLogin = () => (isLogin.value = true)
-    const handleOpenForgot = () => (isLogin.value = false)
-
-    return {
-      handleOpenLogin,
-      handleOpenForgot
-    }
   }
 })
 </script>

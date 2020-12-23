@@ -83,7 +83,7 @@ export default defineComponent({
         return
       }
       isPasswordReset.value = true
-      setTimeout(() => context.root.$router.push({ name: 'login' }), 3000)
+      setTimeout(() => context.root.$router.push({ name: 'signin' }), 3000)
     }
 
     const handleGoToLogin = () => context.emit('onOpenLogin')

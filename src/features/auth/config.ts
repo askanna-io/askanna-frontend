@@ -1,18 +1,25 @@
 export default {
   paths: [
     {
+      path: '/',
+      name: 'check-access',
+      component: () => import(/* webpackChunkName: "check-access" */ './views/check-access.vue')
+    },
+    {
       meta: {
         title: 'Log in to AskAnna'
       },
-      path: '/login',
-      component: () => import(/* webpackChunkName: "login" */ './views/login/index.vue'),
-      children: [
-        {
-          path: '',
-          name: 'login',
-          component: () => import(/* webpackChunkName: "login" */ './views/login/login.vue')
-        }
-      ]
+      path: '/signin',
+      component: () => import(/* webpackChunkName: "signin" */ './views/signin/index.vue'),
+      name: 'signin'
+    },
+    {
+      meta: {
+        title: 'Sign up AskAnna'
+      },
+      path: '/signup',
+      component: () => import(/* webpackChunkName: "signup" */ './views/signin/index.vue'),
+      name: 'signup'
     },
     {
       path: '/logout',

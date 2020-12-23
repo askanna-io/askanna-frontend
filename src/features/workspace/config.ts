@@ -256,7 +256,8 @@ export default {
       path: '/:workspaceId',
       component: () => import(/* webpackChunkName: "workspace-index" */ './views/index.vue'),
       meta: {
-        breadcrumb: 'Workspace - :workspaceId'
+        breadcrumb: 'Workspace - :workspaceId',
+        requiresAuth: true
       },
       children: [
         {

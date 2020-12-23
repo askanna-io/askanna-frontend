@@ -89,7 +89,7 @@ export default defineComponent({
       isSent.value = true
     }
 
-    const handleGoToLogin = () => context.root.$router.push({ name: 'login' })
+    const handleGoToLogin = () => context.root.$router.push({ name: 'signin' })
 
     const resetError = () => {
       errorData.error = { email: '', username: '' }

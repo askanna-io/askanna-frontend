@@ -11,7 +11,7 @@ export default new Router({
     ...workspace.paths,
     {
       path: '*',
-      redirect: '/login'
+      redirect: '/signin'
     }
   ],
   mode: 'history',

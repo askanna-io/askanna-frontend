@@ -11,7 +11,7 @@ import { routerConfig, RouterConfig } from './router/routerConfig'
 @Component
 export default class App extends Vue {
   get config() {
-    const name: string = this.$route.name || 'login'
+    const name: string = this.$route.name || 'signin'
     // get layout from routerConfig else use default
     return (
       ({}.hasOwnProperty.call(routerConfig, name) && routerConfig[name]) || {

@@ -7,12 +7,14 @@ export default function () {
       authToken: 'authToken'
     })
   }
+
   const actions = {
     ...useActions(authStoreName, { ...ac })
   }
 
   return {
     ...state,
-    actions
+    actions,
+    state
   }
 }

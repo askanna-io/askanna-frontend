@@ -7,6 +7,7 @@ export const mutations: MutationTree<AuthState> = {
     state.authToken = authData.key
     localStorage.setItem('token', authData.key)
   },
+
   [mt.DROP_AUTH](state) {
     state.userId = ''
     state.authToken = ''

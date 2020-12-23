@@ -32,7 +32,7 @@ export const actions: ActionTree<workspaceState, RootState> = {
   },
 
   async [action.getWorkspaces]({ state, commit }) {
-    commit(mutation.SET_LOADING, { name: stateType.workspacesLoading, value: true })
+    commit(mutation.SET_LOADING, { workspaces: true })
     let workspaces
     try {
       workspaces = await apiService({
@@ -42,21 +42,23 @@ export const actions: ActionTree<workspaceState, RootState> = {
       })
     } catch (error) {
       logger.error(commit, 'Error on load workspaces in getWorkspaces action.\nError: ', error)
-      commit(mutation.SET_LOADING, { name: stateType.workspacesLoading, value: false })
+      commit(mutation.SET_LOADING, { workspaces: false })
 
       return
     }
 
     commit(mutation.SET_WORKSPACES, workspaces)
-    commit(mutation.SET_LOADING, { name: stateType.workspacesLoading, value: false })
+    commit(mutation.SET_LOADING, { workspaces: false })
+
+    return workspaces
   },
 
   async [action.getInitialWorkpaceProjects]({ commit, dispatch }, data) {
-    commit(mutation.SET_LOADING, { name: stateType.workspaceProjectsLoading, value: true })
+    commit(mutation.SET_LOADING, { projects: true })
 
     await dispatch(action.getWorkpaceProjects, data)
 
-    commit(mutation.SET_LOADING, { name: stateType.workspaceProjectsLoading, value: false })
+    commit(mutation.SET_LOADING, { projects: false })
   },
 
   async [action.getWorkpaceProjects]({ state, commit }, { params }) {
@@ -74,7 +76,7 @@ export const actions: ActionTree<workspaceState, RootState> = {
       return
     }
     commit(mutation.SET_WORKSPACE_PROJECTS, projects)
-    commit(mutation.SET_LOADING, { name: stateType.workspaceProjectsLoading, value: false })
+    commit(mutation.SET_LOADING, { projects: false })
   },
 
   async [action.changeSettings]({ commit }, data) {
@@ -95,7 +97,7 @@ export const actions: ActionTree<workspaceState, RootState> = {
   },
 
   async [action.getWorkspacePeople]({ commit }, { workspaceId }) {
-    commit(mutation.SET_LOADING, { name: stateType.workspacePeopleLoading, value: true })
+    commit(mutation.SET_LOADING, { people: true })
 
     let people = []
     try {
@@ -111,7 +113,7 @@ export const actions: ActionTree<workspaceState, RootState> = {
     }
 
     commit(mutation.SET_WORKSPACE_PEOPLE_INITIAL, people)
-    commit(mutation.SET_LOADING, { name: stateType.workspacePeopleLoading, value: false })
+    commit(mutation.SET_LOADING, { people: false })
   },
 
   async [action.setWorkspaceParams]({ commit }, data) {
@@ -123,7 +125,6 @@ export const actions: ActionTree<workspaceState, RootState> = {
       map(data, async email => {
         const people = await dispatch(action.sendInviteEmail, {
           email,
-          name: email,
           front_end_url: window.location.origin,
           object_uuid: state.workspace.uuid
         })
@@ -320,5 +321,9 @@ export const actions: ActionTree<workspaceState, RootState> = {
   async [action.getCurrentPeople]({ state, commit }) {
     const people = state.workspacePeople.find(item => item.email === state.currentPeople.email)
     commit(mutation.SET_CURRENT_PEOPLE, people)
+  },
+
+  async [action.setLoading]({ commit }, data) {
+    commit(mutation.SET_LOADING, data)
   }
 }
