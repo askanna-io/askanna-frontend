@@ -20,15 +20,8 @@
         A project is where you can collaborate with your team, or yourself. You can house files, code, jobs, runs and
         all (meta) data related to running your projects.
       </p>
-      <p>
-        You can use a blank template, or you can choose one of the project templates that are available.
-      </p>
-      <p>
-        Tip: via the AskAnna CLI, you can also create projects using the command line. You can do this via
-        <ask-anna-copy-text :text="`askanna create ${projectName}`" />
-        and follow the instructions in your terminal.
-      </p></v-card-text
-    >
+    </v-card-text>
+
     <v-divider />
 
     <project
