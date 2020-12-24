@@ -52,11 +52,7 @@ export default defineComponent({
     jobStore.resetJobRun()
 
     const code = ref(`{
-    "parameter": "test",
-    "data": {
-        "foo": "bar",
-        "bar": "foo"
-    }
+
 }`)
     const timer = ref(null)
     const isValid = ref(false)
