@@ -10,7 +10,6 @@ export default function (context: SetupContext) {
   onBeforeMount(() => {
     packagesStore.resetStore()
     const { projectId } = context.root.$route.params
-
     fetchData(context, packagesStore.getProjectPackages(projectId))
   })
 

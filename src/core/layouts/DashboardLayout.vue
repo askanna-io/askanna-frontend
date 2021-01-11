@@ -126,15 +126,15 @@
                   </v-col>
                 </v-row>
               </v-menu>
-              <v-menu v-model="menu2" v-resize="onResize" :close-on-content-click="false" :nudge-width="200" offset-x>
+              <v-menu v-model="menu2" v-resize="onResize" close-on-content-click :nudge-width="200" offset-x>
                 <template v-slot:activator="{ on }">
-                  <v-btn icon v-on="on" class="d-md-none">
+                  <v-btn small icon v-on="on" class="d-md-none">
                     <v-icon>mdi-dots-vertical</v-icon>
                   </v-btn>
                 </template>
                 <v-list dense>
-                  <v-list-item>
-                    <v-list-item-title>Settings</v-list-item-title>
+                  <v-list-item :key="'profile'" exact :to="{ name: 'workspace-profile' }">
+                    Edit my profile
                   </v-list-item>
                   <v-list-item>
                     <v-list-item-title @click="logout">Logout</v-list-item-title>
@@ -144,15 +144,15 @@
             </v-flex>
 
             <v-flex>
-              <v-menu v-model="menu2" :close-on-content-click="false" :nudge-width="200" offset-x>
+              <v-menu v-model="menu2" close-on-content-click :nudge-width="200" offset-x>
                 <template v-slot:activator="{ on }">
-                  <v-btn icon v-on="on" class="d-md-none">
+                  <v-btn small icon v-on="on" class="d-md-none">
                     <v-icon>mdi-dots-vertical</v-icon>
                   </v-btn>
                 </template>
                 <v-list dense>
-                  <v-list-item>
-                    <v-list-item-title>Settings</v-list-item-title>
+                  <v-list-item :key="'profile'" exact :to="{ name: 'workspace-profile' }">
+                    Edit my profile
                   </v-list-item>
                   <v-list-item>
                     <v-list-item-title @click="logout">Logout</v-list-item-title>
@@ -166,7 +166,7 @@
               <v-icon>{{ iconStatus }}</v-icon>
             </v-btn>
             <span v-if="isNotBeta">Build version:&nbsp;{{ version }}</span>
-            <v-menu transition="slide-y-transition" offset-y>
+            <v-menu transition="slide-y-transition" offset-y close-on-content-click>
               <template v-slot:activator="{ on }">
                 <v-btn icon v-on="on">
                   <v-icon>fas fa-user</v-icon>
@@ -176,6 +176,9 @@
               <v-list>
                 <v-list-item v-if="isNotBeta">
                   <v-list-item-title>Settings</v-list-item-title>
+                </v-list-item>
+                <v-list-item :key="'profile'" exact :to="{ name: 'workspace-profile' }">
+                  Edit my profile
                 </v-list-item>
                 <v-list-item :key="'logout'" exact @click="logout">
                   Logout
@@ -199,48 +202,44 @@
 </template>
 
 <script>
+import '@/core/plugins/intercom.js'
 import useProjectStore from '@project/composition/useProjectStore'
+import UpdateApp from '@/core/components/shared/updateApp/UpdateApp'
 import TheUploadStatus from '@/core/components/uploadStatus/TheUploadStatus'
 import useUploadStatus from '@/core/components/uploadStatus/useUploadStatus'
-
-import UpdateApp from '@/core/components/shared/updateApp/UpdateApp'
 
 import { createNamespacedHelpers } from 'vuex'
 import { logout } from '@/core/store/actionTypes'
 import useTitle from '@/core/composition/useTitle'
 import { AUTH_STORE } from '@/core/store/storeTypes'
-import { ref, computed, defineComponent, onBeforeMount } from '@vue/composition-api'
+import useUserStore from '@/features/user/composition/useUserStore'
 import useAuthStore from '../../features/auth/composition/useAuthStore'
+import { ref, computed, defineComponent, onBeforeMount, onUpdated } from '@vue/composition-api'
 import useWorkspaceStore from '../../features/workspace/composition/useWorkSpaceStore'
 
 const { mapActions } = createNamespacedHelpers(AUTH_STORE)
 export default defineComponent({
-  name: 'dashboard',
+  name: 'DashboardLayout',
 
   components: { UpdateApp, TheUploadStatus },
 
   setup(props, context) {
     useTitle(context)
     const authStore = useAuthStore()
+    const userStore = useUserStore()
     const projectStore = useProjectStore()
     const uploadStatus = useUploadStatus()
     const workspaceStore = useWorkspaceStore()
 
-    const logout = () => authStore.actions.logout()
     const xsOnly = ref(null)
+    const logout = () => authStore.actions.logout()
     const workspaces = computed(() => workspaceStore.workspaces.value.results)
-    const workspaceVmodel = computed({
-      get: () => {
-        return workspaceStore.workspace.value.uuid
-      },
-      set: uuid => {
-        workspaceStore.getWorkspace(uuid)
-      }
-    })
+    const workspaceShortUuid = computed(() => workspaceStore.workspace.value.short_uuid)
 
     const showAppBarIcon = computed(() => context.root.$route.name !== 'workspace')
 
     const handleChangeWorkspace = ({ short_uuid }) => {
+      if (workspaceShortUuid.value === short_uuid) return
       context.root.$router.push({ path: `/${short_uuid}`, params: { workspace: short_uuid } })
     }
 
@@ -253,7 +252,13 @@ export default defineComponent({
     }
 
     onBeforeMount(async () => {
-      await authStore.actions.getCurrentUser()
+      await userStore.actions.getUserProfile()
+    })
+
+    onUpdated(() => {
+      if (process.env.VUE_APP_INTERCOM === 'on') {
+        window.Intercom('update')
+      }
     })
 
     return {
@@ -278,7 +283,7 @@ export default defineComponent({
     items: [{ title: 'Workspace', name: 'workspace', icon: 'mdi-view-dashboard' }],
     projects: [
       { text: 'Your workspaces', icon: 'fas fa-project-diagram' },
-      { text: 'Shared workspaces', icon: 'mdi-account' }
+      { text: 'Shared workspaces', icon: '  ' }
     ],
     projectsList: [
       {

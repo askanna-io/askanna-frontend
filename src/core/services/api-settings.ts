@@ -104,7 +104,6 @@ export const api: ApiSettings = {
       getJobRunPayload: ({ jobRunShortId, payloadUuid }) => `jobrun/${jobRunShortId}/payload/${payloadUuid}/`,
       getJobRunArtifact: ({ jobRunShortId, artifactShortId }) => `jobrun/${jobRunShortId}/artifact/${artifactShortId}/`
     },
-
     workspace: {
       get: id => `workspace/${id}/`,
       list: () => `workspace/`,
@@ -115,14 +114,17 @@ export const api: ApiSettings = {
       getProjectPackages: id => `project/${id}/packages/`,
       getWorkspacePeople: id => `workspace/${id}/people/`
     },
-
     result: {
       get: id => `result/${id}/`
     },
-
     variables: {
       list: id => `project/${id}/variables/`,
       update: ({ projectId, variableId }) => `project/${projectId}/variables/${variableId}/`
+    },
+    user: {
+      getAccounts: () => 'accounts/',
+      getProfile: () => 'rest-auth/user/',
+      updateAccount: id => `accounts/${id}/`
     }
   }
 }

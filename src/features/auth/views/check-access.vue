@@ -5,12 +5,11 @@
 </template>
 
 <script>
-import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress'
-
-import { ref, computed, onBeforeMount, onUnmounted, defineComponent } from '@vue/composition-api'
+import useUserStore from '@/features/user/composition/useUserStore'
 import usePrepareAccount from '@/features/auth/composition/usePrepareAccount'
 import WorkspaceNotReady from '@/features/workspace/components/WorkspaceNotReady'
-import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
+import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress'
+import { ref, computed, onBeforeMount, onUnmounted, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'check-access',
@@ -21,12 +20,13 @@ export default defineComponent({
   },
 
   setup(props, context) {
-    const workspaceStore = useWorkspaceStore()
+    const userStore = useUserStore()
     const prepareAccount = usePrepareAccount(context)
+
     const authData = computed(() => {
       return {
-        username: workspaceStore.currentPeople.value.username,
-        password: workspaceStore.currentPeople.value.password
+        username: userStore.state.tempAuth.value.username,
+        password: userStore.state.tempAuth.value.password
       }
     })
 
@@ -39,6 +39,7 @@ export default defineComponent({
 
       if (isReady.value) {
         clearInterval(polling.value)
+        userStore.mutations.DELETE_TEMP_AUTH()
         context.root.$router.push({ name: 'workspace', params: { workspaceId: prepareAccount.workspaceId.value } })
       }
       loading.value = false

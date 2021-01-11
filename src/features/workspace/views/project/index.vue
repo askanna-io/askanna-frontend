@@ -2,12 +2,12 @@
   <v-card class="mx-auto" outlined sticky-container>
     <project-nav-bar
       :job="job"
-      :sticked="menu.sticked"
-      :isShowProjectBar="menu.isShowProjectBar"
-      :handleOnStick="handleOnStick"
-      :handleShowProjectBar="handleShowProjectBar"
       :project="project"
       :routeName="routeName"
+      :sticked="menu.sticked"
+      :handleOnStick="handleOnStick"
+      :isShowProjectBar="menu.isShowProjectBar"
+      :handleShowProjectBar="handleShowProjectBar"
       :projectBreadcrumbs="projectBreadcrumbs"
     />
     <router-view />
@@ -29,10 +29,11 @@ export default defineComponent({
   setup(props, context) {
     const project = useProject(context)
     const jobStore = useJobStore(context)
-    const routeName = context.root.$route.name
-    const jobEnd = context.root.$route.name.indexOf('jobs-name') >= 1 ? 5 : 3
-    const end = context.root.$route.name === 'workspace-project-job-overiew' ? 6 : jobEnd
-    const projectBreadcrumbs = useBreadcrumbs(context, { start: 0, end })
+
+    const routeName = computed(() => context.root.$route.name)
+    const jobEnd = computed(() => (context.root.$route.name.indexOf('jobs-name') >= 1 ? 5 : 3))
+    const end = computed(() => (context.root.$route.name === 'workspace-project-job-overiew' ? 6 : jobEnd.value))
+    const projectBreadcrumbs = useBreadcrumbs(context, { start: 0, end: end.value })
 
     onUnmounted(() => {
       project.resetProjectData()
@@ -46,7 +47,7 @@ export default defineComponent({
       if (!value) project.setMenu({ name: 'menu.sticked', value: false })
     }
 
-    return { ...project, ...jobStore, routeName, projectBreadcrumbs, handleShowProjectBar, handleOnStick }
+    return { ...project, ...jobStore, routeName, handleOnStick, projectBreadcrumbs, handleShowProjectBar }
   }
 })
 </script>

@@ -26,7 +26,7 @@ export const actions: ActionTree<AuthState, RootState> = {
       const { data } = result
 
       commit(mt.SET_AUTH, data)
-      commit('workspace/SET_CURRENT_PEOPLE', { username, email: username, name: username, password }, { root: true })
+      commit('user/SET_TEMP_AUTH', { username, password }, { root: true })
 
       if (redirect) router.push({ name: 'check-access' })
 
@@ -73,29 +73,6 @@ export const actions: ActionTree<AuthState, RootState> = {
     }
 
     return response
-  },
-
-  async [ac.getCurrentUser]({ state, commit }) {
-    if (!state.authToken) return
-    const url = api.url() + api.auth.currentUser()
-
-    let result
-    try {
-      result = await axios.get(url)
-    } catch (e) {
-      logger.error(commit, 'Error on get current user in getCurrentUser action.\nError: ', e)
-
-      return e
-    }
-
-    commit('workspace/SET_CURRENT_PEOPLE', result.data, { root: true })
-
-    if (process.env.VUE_APP_SENTRY === 'on') {
-      const { email, short_uuid: id, username } = result.data
-      Sentry.setUser({ id, email, username })
-    }
-
-    return result
   },
 
   async [ac.resetPassword]({ commit }, payload) {

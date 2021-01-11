@@ -56,12 +56,12 @@ export const actions: ActionTree<workspaceState, RootState> = {
   async [action.getInitialWorkpaceProjects]({ commit, dispatch }, data) {
     commit(mutation.SET_LOADING, { projects: true })
 
-    await dispatch(action.getWorkpaceProjects, data)
+    await dispatch(action.getWorkpaceProjects, { ...data, initial: true })
 
     commit(mutation.SET_LOADING, { projects: false })
   },
 
-  async [action.getWorkpaceProjects]({ state, commit }, { params }) {
+  async [action.getWorkpaceProjects]({ state, commit }, { params, initial }) {
     let projects
     try {
       projects = await apiService({
@@ -75,7 +75,13 @@ export const actions: ActionTree<workspaceState, RootState> = {
 
       return
     }
-    commit(mutation.SET_WORKSPACE_PROJECTS, projects)
+
+    if (initial) {
+      commit(mutation.SET_INITIAL_WORKSPACE_PROJECTS, projects)
+    } else {
+      commit(mutation.SET_WORKSPACE_PROJECTS, projects)
+    }
+
     commit(mutation.SET_LOADING, { projects: false })
   },
 
@@ -273,6 +279,29 @@ export const actions: ActionTree<workspaceState, RootState> = {
     return people
   },
 
+  async [action.updateWorkspaceProfile]({ state, commit }, data) {
+    let people
+
+    try {
+      people = await apiService({
+        action: api.acceptInvitetion,
+        method: 'PATCH',
+        uuid: { workspaceId: state.workspace.short_uuid, peopleId: state.currentPeople.short_uuid },
+        serviceName,
+        data
+      })
+    } catch (e) {
+      logger.error(commit, 'Error on change people in updateWorkspaceProfile action.\nError: ', e)
+
+      return e
+    }
+
+    commit(mutation.SET_CURRENT_PEOPLE, people)
+    commit(mutation.CHANGE_WORKSPACE_PEOPLE, people)
+
+    return people
+  },
+
   async [action.getInvitetionInfo]({ commit }, { token, peopleId, workspaceId }) {
     let response
 
@@ -319,8 +348,18 @@ export const actions: ActionTree<workspaceState, RootState> = {
   },
 
   async [action.getCurrentPeople]({ state, commit }) {
-    const people = state.workspacePeople.find(item => item.email === state.currentPeople.email)
+    const people = state.workspacePeople.find(item => item.user.short_uuid === state.currentPeople.short_uuid)
     commit(mutation.SET_CURRENT_PEOPLE, people)
+
+    if (people && process.env.VUE_APP_INTERCOM === 'on') {
+      window.Intercom('boot', {
+        app_id: 'c6wuieqm',
+        name: people.name,
+        email: people.email,
+        user_id: people.user.short_uuid,
+        created_at: state.currentPeople.created_at
+      })
+    }
   },
 
   async [action.setLoading]({ commit }, data) {

@@ -12,7 +12,7 @@ const serviceName = packageServiceName
 const api = apiStringify(serviceName)
 
 export const actions: ActionTree<PackageState, RootState> = {
-  async [type.getPackage]({ commit }, uuid) {
+  async [type.getPackage]({ commit }, { failedRoute, ...uuid }) {
     commit(type.SET_LOADING, { name: 'packageLoading', value: true })
 
     let packageData
@@ -34,7 +34,9 @@ export const actions: ActionTree<PackageState, RootState> = {
 
         return
       }
-      router.push({ name: 'workspace-project-code-does-not-exist' })
+
+      const name = failedRoute || 'workspace-project-code-does-not-exist'
+      router.push({ name })
 
       commit(type.SET_LOADING, { name: 'packageLoading', value: false })
 

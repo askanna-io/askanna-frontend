@@ -32,7 +32,7 @@
                 <v-list-item>
                   <v-list-item-content>
                     <v-list-item-title class="title">{{ people.name || people.email }}</v-list-item-title>
-                    <v-list-item-subtitle>{{ people.job_title }}</v-list-item-subtitle>
+                    <v-list-item-subtitle class="text-subtitle-2">{{ people.job_title }}</v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item>
               </v-col>
@@ -59,6 +59,15 @@
                 @click="handleResendInivitationPopup"
               >
                 Resend invitation
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-card-actions>
+        <v-card-actions v-if="currentUser.email === people.email">
+          <v-row class="mx-2">
+            <v-col>
+              <v-btn small block outlined text color="secondary" class="btn--hover" :to="{ name: 'workspace-profile' }">
+                Edit my profile
               </v-btn>
             </v-col>
           </v-row>

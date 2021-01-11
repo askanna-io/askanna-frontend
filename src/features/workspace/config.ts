@@ -109,6 +109,18 @@ const jobRun = [
         ]
       },
       {
+        path: 'code-does-not-exist',
+        component: () =>
+          import(
+            /* webpackChunkName: "workspace-project-jobs-job-jobrun-code-does-not-exist" */ './views/project/jobs/job/jobruns/jobrun/jobrun-code-does-not-exist.vue'
+          ),
+        name: 'workspace-project-jobs-job-jobrun-code-does-not-exist',
+        meta: {
+          title: 'Oops...we cannot find this package',
+          breadcrumb: 'Package does not exist'
+        }
+      },
+      {
         path: 'log',
         component: () =>
           import(
@@ -292,6 +304,14 @@ export default {
           meta: {
             title: 'Oops...we cannot find this project',
             breadcrumb: 'Project does not exist'
+          }
+        },
+        {
+          path: 'profile',
+          component: () => import(/* webpackChunkName: "workspace-profile" */ './views/workspace-profile.vue'),
+          name: 'workspace-profile',
+          meta: {
+            breadcrumb: 'Profile'
           }
         },
         {

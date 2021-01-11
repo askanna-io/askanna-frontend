@@ -36,11 +36,10 @@ export default defineComponent({
     const projectStore = useProjectStore()
     const { jobId, workspaceId, projectId } = context.root.$route.params
 
-    onBeforeMount(() => {
-      jobStore.resetStore()
-
-      jobStore.getJob(jobId)
-      projectStore.getLastPackage(projectId)
+    onBeforeMount(async () => {
+      await jobStore.resetStore()
+      await jobStore.getJob(jobId)
+      await projectStore.getLastPackage(projectId)
     })
 
     const handleGoToCode = () =>

@@ -50,7 +50,6 @@ import { defineComponent } from '@vue/composition-api'
 import PackageFile from '@package/components/PackageFile'
 import PackageTree from '@package/components/PackageTree'
 import { headers, FileIcons } from '@package/utils/index'
-import usePackages from '@packages/composition/usePackages'
 import useProjectStore from '@project/composition/useProjectStore'
 import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
 import PackageToolbar from '@/features/package/components/PackageToolbar'
@@ -101,6 +100,7 @@ export default defineComponent({
       if (packageId === 'new-package') {
         return
       }
+
       await getPackage()
       if (isProcessing.value) {
         pollData()
@@ -114,8 +114,9 @@ export default defineComponent({
     const getPackage = async () =>
       await packageStore.getPackage({
         projectId,
+        folderName,
         packageId: jobRunStore.jobRun.value.package.short_uuid,
-        folderName
+        failedRoute: 'workspace-project-jobs-job-jobrun-code-does-not-exist'
       })
 
     const pollData = () => {

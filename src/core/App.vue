@@ -1,30 +1,31 @@
 <template>
   <v-app>
-    <component :is="layout" />
+    <Layout :layout="layout" />
   </v-app>
 </template>
 
-<script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+<script>
+import { get } from 'lodash'
+import Layout from '@/core/layouts/Layout'
 import { routerConfig, RouterConfig } from './router/routerConfig'
+import { ref, computed, defineComponent, onBeforeMount } from '@vue/composition-api'
 
-@Component
-export default class App extends Vue {
-  get config() {
-    const name: string = this.$route.name || 'signin'
-    // get layout from routerConfig else use default
-    return (
-      ({}.hasOwnProperty.call(routerConfig, name) && routerConfig[name]) || {
-        layout: 'dashboard'
-      }
-    )
-  }
+export default defineComponent({
+  name: 'App',
 
-  get layout() {
-    const layout = this.config.layout
-    return () => import(`./layouts/${layout}.vue`)
+  components: { Layout },
+
+  setup(props, context) {
+    const layout = computed(() => {
+      const name = context.root.$route.name || 'signin'
+
+      // get layout from routerConfig else use default
+      return get(routerConfig, `${name}.layout`) || 'dashboard'
+    })
+
+    return { layout }
   }
-}
+})
 </script>
 <style lang="scss">
 .ask-anna-btn-loader {
@@ -195,6 +196,13 @@ code.lang-shell {
     .v-card__text {
       font-size: 0.95rem;
     }
+  }
+}
+
+.AskAnna-text {
+  &--initial,
+  &--initial .v-btn__content {
+    text-transform: initial;
   }
 }
 </style>

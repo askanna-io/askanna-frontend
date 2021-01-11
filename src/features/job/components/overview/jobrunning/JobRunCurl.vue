@@ -55,7 +55,7 @@ export default defineComponent({
           snackBar.showSnackBar({ message: 'Copied', color: 'success' })
         },
         function (e) {
-          snackBar.showSnackBar({ message: 'Can not copy', color: 'warning' })
+          snackBar.showSnackBar({ message: 'Can not copy', color: 'failed' })
         }
       )
     }

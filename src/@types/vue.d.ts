@@ -5,3 +5,9 @@ declare module 'vue/types/vue' {
     moment: typeof moment
   }
 }
+
+declare global {
+  interface Window {
+    Intercom: any
+  }
+}

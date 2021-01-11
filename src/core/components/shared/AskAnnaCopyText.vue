@@ -32,7 +32,7 @@ export default defineComponent({
     const handleCopy = () => {
       context.root.$copyText(props.text).then(
         () => snackBar.showSnackBar({ message: 'Copied', color: 'success' }),
-        () => snackBar.showSnackBar({ message: 'Can not copy', color: 'warning' })
+        () => snackBar.showSnackBar({ message: 'Can not copy', color: 'failed' })
       )
     }
 

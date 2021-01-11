@@ -16,6 +16,8 @@ export default defineComponent({
     const jobRunStore = useJobRunStore()
     const projectStore = useProjectStore()
 
+    const { workspaceId } = context.root.$route.params
+
     onBeforeMount(async () => {
       const { jobId, projectId } = context.root.$route.params
 

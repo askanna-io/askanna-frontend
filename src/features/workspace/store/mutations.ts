@@ -17,6 +17,15 @@ export const mutations: MutationTree<workspaceState> = {
       results: [...state.workspaceProjects.results, ...results]
     }
   },
+
+  [mutation.SET_INITIAL_WORKSPACE_PROJECTS](state, { count, results, next }) {
+    state.workspaceProjects = {
+      next,
+      count,
+      results: [...results]
+    }
+  },
+
   [mutation.DELETE_WORKSPACE_PROJECT](state, projectToDelete) {
     const results = state.workspaceProjects.results.filter(project => project.short_uuid !== projectToDelete.short_uuid)
     state.workspaceProjects = {

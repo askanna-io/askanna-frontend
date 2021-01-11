@@ -1,14 +1,14 @@
 <template>
   <v-snackbar
+    top
     v-model="openVmodel"
     :color="snackbar.color"
     :timeout="snackbar.timeout"
     :multi-line="snackbar.message && snackbar.message.length > 60"
-    top
   >
     {{ snackbar.message }}
     <template v-slot:action>
-      <v-btn dark icon text @click="closeSnackBar = false">
+      <v-btn dark icon text @click="openVmodel = false">
         <v-icon>far fa-times-circle</v-icon>
       </v-btn>
     </template>

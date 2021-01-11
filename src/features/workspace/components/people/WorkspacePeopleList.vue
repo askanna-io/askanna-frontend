@@ -64,6 +64,16 @@ export default defineComponent({
           projectView: 1
         }
       }
+    },
+    currentUser: {
+      type: Object,
+      default: function () {
+        return {
+          email: '',
+          name: '',
+          role: ''
+        }
+      }
     }
   },
 
@@ -87,3 +97,9 @@ export default defineComponent({
   }
 })
 </script>
+
+<style scoped>
+.is-current-user {
+  border: 1px solid var(--v-primary-base);
+}
+</style>

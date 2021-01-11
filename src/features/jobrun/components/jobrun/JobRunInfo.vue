@@ -8,12 +8,13 @@
   </div>
 </template>
 <script lang="ts">
+import useMoment from '@/core/composition/useMoment'
 import JobRunInfoJob from './parts/JobRunInfoJob.vue'
 import JobRunInfoCode from './parts/JobRunInfoCode.vue'
 import JobRunInfoText from './parts/JobRunInfoText.vue'
 import JobRunInfoStatus from './parts/JobRunInfoStatus.vue'
+import JobRunInfoAvatar from './parts/JobRunInfoAvatar.vue'
 import JobRunInfoPackage from './parts/JobRunInfoPackage.vue'
-import useMoment from '@/core/composition/useMoment'
 
 import { JobRun, JobRunModel } from '../../store/types'
 import { computed, defineComponent } from '@vue/composition-api'
@@ -26,6 +27,7 @@ export default defineComponent({
     JobRunInfoText,
     JobRunInfoCode,
     JobRunInfoStatus,
+    JobRunInfoAvatar,
     JobRunInfoPackage
   },
 
@@ -77,8 +79,8 @@ export default defineComponent({
         },
         {
           text: 'By',
-          value: props.jobRun.owner.name,
-          component: 'JobRunInfoText'
+          value: props.jobRun.owner,
+          component: 'JobRunInfoAvatar'
         },
         {
           text: 'Trigger',
@@ -103,7 +105,7 @@ export default defineComponent({
       ]
       interface VariableItem {
         text: string
-        value: string | number
+        value: string | number | object
         component: string
       }
 

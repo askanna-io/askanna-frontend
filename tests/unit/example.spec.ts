@@ -16,7 +16,7 @@ describe('App.vue', () => {
     const localVue = createLocalVue()
     localVue.use(VueRouter)
 
-    wrapper = shallowMount<App>(App, {
+    wrapper = shallowMount(App, {
       router,
       vuetify,
       localVue,
