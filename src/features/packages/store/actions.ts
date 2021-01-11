@@ -15,11 +15,11 @@ const api = apiStringify(serviceName)
 export const actions: ActionTree<PackagesState, RootState> = {
   async [action.getInitialProjectPackages]({ commit, dispatch }, params) {
     commit(type.SET_LOADING, { name: stateType.loadingPackages, value: true })
-
     await dispatch(action.getProjectPackages, params)
 
     commit(type.SET_LOADING, { name: stateType.loadingPackages, value: false })
   },
+
   async [action.getProjectPackages]({ commit }, { params, uuid }) {
     let packages
     try {

@@ -1,10 +1,11 @@
 <template>
-  <div>
-    {{ text }}:<v-btn
+  <div class="d-flex align-baseline">
+    <div class="text-body-1">{{ text }}:</div>
+    <v-btn
       color="primary"
-      class="px-0 text--capitalize text-body-1"
+      class="px-1 AskAnna-text--initial text-body-1"
       text
-      small
+      x-small
       :to="{
         name: 'workspace-project-job-overiew',
         params: { ...$route.params }

@@ -8,7 +8,7 @@ export default function (context: SetupContext) {
   const handleCopyText = (text: string) => {
     context.root.$copyText(text).then(
       () => snackBar.showSnackBar({ message: 'Copied', color: 'success' }),
-      () => snackBar.showSnackBar({ message: 'Can not copy', color: 'warning' })
+      () => snackBar.showSnackBar({ message: 'Can not copy', color: 'failed' })
     )
   }
 

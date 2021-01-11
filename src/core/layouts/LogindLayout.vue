@@ -14,7 +14,7 @@ import useTitle from '@/core/composition/useTitle'
 import { onBeforeUnmount, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
-  name: 'Login',
+  name: 'LogindLayout',
 
   setup(props, context) {
     useTitle(context)

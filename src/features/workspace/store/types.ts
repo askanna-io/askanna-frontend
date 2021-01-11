@@ -37,6 +37,7 @@ export interface WorkspaceState {
     role: string
     name: string
     email: string
+    created_at: string
     short_uuid: string
   }
 }
@@ -119,6 +120,7 @@ export const action = {
   getWorkspacePeople: 'getWorkspacePeople',
   getWorkpaceProjects: 'getWorkpaceProjects',
   deleteWorkspacePeople: 'deleteWorkspacePeople',
+  updateWorkspaceProfile: 'updateWorkspaceProfile',
   getInitialWorkpacePeople: 'getInitialWorkpacePeople',
   getInitialWorkpaceProjects: 'getInitialWorkpaceProjects'
 }
@@ -142,7 +144,8 @@ export const mutation = {
   CHANGE_WORKSPACE_PEOPLE: 'CHANGE_WORKSPACE_PEOPLE',
   UPDATE_WORKSPACE_PEOPLE: 'UPDATE_WORKSPACE_PEOPLE',
   DELETE_WORKSPACE_PROJECT: 'DELETE_WORKSPACE_PROJECT',
-  SET_WORKSPACE_PEOPLE_INITIAL: 'SET_WORKSPACE_PEOPLE_INITIAL'
+  SET_WORKSPACE_PEOPLE_INITIAL: 'SET_WORKSPACE_PEOPLE_INITIAL',
+  SET_INITIAL_WORKSPACE_PROJECTS: 'SET_INITIAL_WORKSPACE_PROJECTS'
 }
 
 export const stateType = {

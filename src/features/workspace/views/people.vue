@@ -4,6 +4,7 @@
     <workspace-people-list
       :loading="loading"
       :items="workspacePeople"
+      :currentUser="currentUser"
       :settings="workspaceSettings"
       :workspaceUuid="workspace.uuid"
       :workspaceName="workspace.title"
@@ -58,7 +59,7 @@
 </template>
 <script>
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
-import { ref, computed, onBeforeMount, defineComponent, reactive } from '@vue/composition-api'
+import { ref, provide, readonly, computed, onBeforeMount, defineComponent, reactive } from '@vue/composition-api'
 import WorkspacePeopleList from '@/features/workspace/components/people/WorkspacePeopleList.vue'
 import WorkspacePeoplePopup from '@/features/workspace/components/people/WorkspacePeoplePopup.vue'
 import WorkspacePeopleNavbar from '@/features/workspace/components/people/WorkspacePeopleNavbar.vue'
@@ -84,7 +85,6 @@ export default defineComponent({
     const workspaceStore = useWorkspaceStore()
     const { workspaceId } = context.root.$route.params
 
-    onBeforeMount(async () => await workspaceStore.getInitialWorkpacePeople({ workspaceId }))
     const peoplePopup = ref(false)
     const selectedPeople = ref(null)
 

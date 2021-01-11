@@ -19,7 +19,7 @@ export const logger = {
       {
         message,
         timeout,
-        color: 'light-green'
+        color: 'success'
       },
       { root: true }
     )
@@ -29,7 +29,7 @@ export const logger = {
       setSnackBar,
       {
         message: 'wrong_credentials',
-        color: 'deep-orange'
+        color: 'failed'
       },
       { root: true }
     )
@@ -39,7 +39,7 @@ export const logger = {
       setSnackBar,
       {
         message: 'check_your_email',
-        color: 'light-green'
+        color: 'success'
       },
       { root: true }
     )
@@ -48,7 +48,7 @@ export const logger = {
     commit(setSnackBar, { message, color: 'orange' }, { root: true })
   },
   userDanger: (commit: Commit, message: any) => {
-    commit(setSnackBar, { timeout: 2000, message, color: 'amber darken-4' }, { root: true })
+    commit(setSnackBar, { timeout: 2000, message, color: 'failed' }, { root: true })
   },
   error: (commit: Commit, errorHint: string, error: Error) => {
     let message, timeout
@@ -60,7 +60,7 @@ export const logger = {
         {
           message,
           timeout,
-          color: 'amber darken-4'
+          color: 'failed'
         },
         { root: true }
       )
