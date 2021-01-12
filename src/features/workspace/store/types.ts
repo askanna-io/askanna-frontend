@@ -39,6 +39,11 @@ export interface WorkspaceState {
     email: string
     created_at: string
     short_uuid: string
+    user: {
+      name: string
+      uuid: string
+      short_uuid: string
+    }
   }
 }
 interface Invitation {

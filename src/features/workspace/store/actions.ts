@@ -348,7 +348,7 @@ export const actions: ActionTree<workspaceState, RootState> = {
   },
 
   async [action.getCurrentPeople]({ state, commit }) {
-    const people = state.workspacePeople.find(item => item.user.short_uuid === state.currentPeople.short_uuid)
+    const people = state.workspacePeople.find(item => item.user.short_uuid === state.currentPeople.user.short_uuid)
     commit(mutation.SET_CURRENT_PEOPLE, people)
 
     if (people && process.env.VUE_APP_INTERCOM === 'on') {
