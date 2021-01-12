@@ -45,7 +45,12 @@ export const state: workspaceState = {
     name: '',
     email: '',
     created_at: '',
-    short_uuid: ''
+    short_uuid: '',
+    user: {
+      uuid: '',
+      name: '',
+      short_uuid: ''
+    }
   }
 }
 

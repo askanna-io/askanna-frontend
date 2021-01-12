@@ -31,7 +31,7 @@ export const actions: ActionTree<userState, RootState> = {
     commit(mt.SET_USER_PROFILE, result.data)
     commit(
       'workspace/SET_CURRENT_PEOPLE',
-      { short_uuid: result.data.short_uuid, created_at: result.data.date_joined },
+      { user: { short_uuid: result.data.short_uuid }, created_at: result.data.date_joined },
       { root: true }
     )
 
