@@ -50,18 +50,16 @@ export const actions: ActionTree<jobState, RootState> = {
     }
     logger.success(commit, 'Job was started')
 
-    //  const status = await dispatch(type.action.getJobRunStatus, jobRun.run_uuid)
-
     commit(type.mutation.SET_JOB_RUN, jobRun)
   },
 
-  async [type.action.getJobRunStatus]({ commit, state }, uuid) {
+  async [type.action.getJobRunStatus]({ commit, state }) {
     let status
     try {
       status = await apiService({
         action: api.jobrunStatus,
         serviceName,
-        uuid: state.jobrun.run_uuid || state.jobrun.jobrun_uuid
+        uuid: state.jobrun.short_uuid
       })
     } catch (e) {
       logger.error(commit, 'Error on getjob run status in getJobRunStatus action.\nError: ', e)

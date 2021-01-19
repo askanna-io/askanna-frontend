@@ -62,9 +62,9 @@ export default defineComponent({
     const { jobId } = context.root.$route.params
 
     const jobRun = computed(() => jobStore.jobrun.value)
-    const jobRunId = computed(() => jobStore.jobrun.value.run_uuid)
+    const jobRunId = computed(() => jobStore.jobrun.value.short_uuid)
     const jobRunStatus = computed(() => jobStore.jobrun.value.status)
-    const isFinished = computed(() => jobRunStatus.value === 'failed' || jobRunStatus.value === 'completed')
+    const isFinished = computed(() => jobRunStatus.value === 'failed' || jobRunStatus.value === 'finished')
     const startedTtext = computed(() =>
       isFinished.value
         ? `The duration of the run was ${calculateDuration.value}.`
@@ -99,7 +99,7 @@ export default defineComponent({
 
     const checkStatus = () => {
       polling.value = setInterval(async () => {
-        await jobStore.getJobRunStatus(jobRunId.value)
+        await jobStore.getJobRunStatus()
         if (isFinished.value) {
           clearInterval(timer.value)
           clearInterval(polling.value)
