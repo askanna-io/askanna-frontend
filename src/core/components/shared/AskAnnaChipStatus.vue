@@ -28,7 +28,8 @@ export default defineComponent({
       RUNNING: 'yellow darken-2',
       SUBMITTED: 'amber lighten-1',
       PENDING: 'blue lighten-3',
-      QUEUED: 'blue lighten-3'
+      QUEUED: 'blue lighten-3',
+      FINISHED: 'success'
     }
     const ICONS = {
       UNDEFINED: 'mdi-do-not-disturb',
@@ -40,7 +41,8 @@ export default defineComponent({
       QUEUED: 'mdi-progress-clock',
       SUBMITTED: 'mdi-progress-check',
       IN_PROGRESS: 'mdi-progress-clock',
-      RUNNING: 'mdi-progress-clock'
+      RUNNING: 'mdi-progress-clock',
+      FINISHED: 'mdi-checkbox-marked-circle'
     }
     const TEXTS = {
       SUCCESS: 'Succeeded',
@@ -52,7 +54,8 @@ export default defineComponent({
       QUEUED: 'Pending',
       SUBMITTED: 'Submitted',
       IN_PROGRESS: 'In progress',
-      RUNNING: 'In progress'
+      RUNNING: 'In progress',
+      FINISHED: 'Finished'
     }
     const status = computed(() => (props.status ? props.status.toUpperCase() : 'UNDEFINED'))
 

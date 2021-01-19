@@ -7,13 +7,14 @@ export interface jobData {
 }
 
 interface JobRun {
-  created: string
-  message_type: string
-  next_url: string
-  run_uuid: string
-  jobrun_uuid: string
+  uuid: string
   status: string
   updated: string
+  created: string
+  finished: string
+  next_url: string
+  short_uuid: string
+  message_type: string
 }
 
 interface Job {
@@ -113,13 +114,14 @@ export class JobRunModel {
 
   static initialState() {
     return {
-      created: '',
-      message_type: '',
-      next_url: '',
-      run_uuid: '',
-      jobrun_uuid: '',
+      uuid: '',
       status: '',
-      updated: ''
+      updated: '',
+      created: '',
+      next_url: '',
+      finished: '',
+      short_uuid: '',
+      message_type: ''
     }
   }
 }
