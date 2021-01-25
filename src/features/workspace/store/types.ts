@@ -114,6 +114,8 @@ export const action = {
   getWorkspace: 'getWorkspace',
   getWorkspaces: 'getWorkspaces',
   changeSettings: 'changeSettings',
+  getPeopleAvatar: 'getPeopleAvatar',
+  setPeopleAvatar: 'setPeopleAvatar',
   sendInvitations: 'sendInvitations',
   sendInviteEmail: 'sendInviteEmail',
   deleteInvitation: 'deleteInvitation',

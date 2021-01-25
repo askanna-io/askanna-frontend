@@ -112,7 +112,8 @@ export const api: ApiSettings = {
       changeRole: ({ workspaceId, peopleId }) => `workspace/${workspaceId}/people/${peopleId}/`,
       acceptInvitetion: ({ workspaceId, peopleId }) => `workspace/${workspaceId}/people/${peopleId}/`,
       getProjectPackages: id => `project/${id}/packages/`,
-      getWorkspacePeople: id => `workspace/${id}/people/`
+      getWorkspacePeople: id => `workspace/${id}/people/`,
+      setPeopleAvatar: ({ workspaceId, peopleId }) => `workspace/${workspaceId}/people/${peopleId}/avatar/`
     },
     result: {
       get: id => `result/${id}/`

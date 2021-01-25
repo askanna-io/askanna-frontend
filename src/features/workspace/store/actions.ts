@@ -349,6 +349,7 @@ export const actions: ActionTree<workspaceState, RootState> = {
 
   async [action.getCurrentPeople]({ state, commit }) {
     const people = state.workspacePeople.find(item => item.user.short_uuid === state.currentPeople.user.short_uuid)
+
     commit(mutation.SET_CURRENT_PEOPLE, people)
 
     if (people && process.env.VUE_APP_INTERCOM === 'on') {
@@ -364,5 +365,23 @@ export const actions: ActionTree<workspaceState, RootState> = {
 
   async [action.setLoading]({ commit }, data) {
     commit(mutation.SET_LOADING, data)
+  },
+
+  async [action.setPeopleAvatar]({ state, commit }, data) {
+    let result
+
+    try {
+      result = await apiService({
+        action: api.setPeopleAvatar,
+        method: 'PATCH',
+        uuid: { workspaceId: state.workspace.short_uuid, peopleId: state.currentPeople.short_uuid },
+        serviceName,
+        data
+      })
+    } catch (e) {
+      logger.error(commit, 'Error on update people avatar in setPeopleAvatar action.\nError: ', e)
+
+      return e
+    }
   }
 }

@@ -30,7 +30,7 @@
         />
 
         <v-card-title class="text-subtitle-1 py-1">Profile image</v-card-title>
-        <user-workspace-profile-avatar />
+        <user-workspace-profile-avatar @onChangeAvatar="handleOnChangeAvatar" :workspaceProfile="workspaceProfile" />
 
         <v-btn
           text
@@ -80,22 +80,28 @@ export default defineComponent({
     })
 
     const state = reactive({
+      avatar: '',
       userData: {},
       workspaceData: {},
       isUserDataEdited: false,
-      isWorkspaceDataChanged: false
+      isWorkspaceDataChanged: false,
+      isWorkspaceAvatarChanged: false
     })
 
     const resetState = async () => {
+      state.avatar = ''
       state.userData = {}
       state.workspaceData = {}
       state.isUserDataEdited = false
       state.isWorkspaceDataChanged = false
+      state.isWorkspaceAvatarChanged = false
 
       userStore.mutations.DELETE_PASSWORD()
     }
 
-    const isSaveDisabled = computed(() => !state.isUserDataEdited && !state.isWorkspaceDataChanged)
+    const isSaveDisabled = computed(
+      () => !state.isUserDataEdited && !state.isWorkspaceDataChanged && !state.isWorkspaceAvatarChanged
+    )
 
     const userProfile = computed(() => userStore.state.userProfile.value)
     const workspaceTitle = computed(() => workSpaceStore.workspace.value.title)
@@ -157,6 +163,19 @@ export default defineComponent({
         }
       }
 
+      if (state.isWorkspaceAvatarChanged) {
+        const result = await workSpaceStore.actions.setPeopleAvatar({
+          avatar: `data:*/*;base64, ${state.avatar}`
+        })
+
+        if (result) {
+          isSuccess2 = true
+          succesMessage2 = 'workspace profile'
+        } else {
+          failedMessage2 = 'workspace profile'
+        }
+      }
+
       succesMessage = succesMessage1 && succesMessage2 && `login information and workspace profile`
       failedMessage = failedMessage1 && failedMessage2 && ' login information and workspace profile'
 
@@ -196,6 +215,18 @@ export default defineComponent({
       errors.userDataError = { name: '', email: '', username: '', password: '' }
     }
 
+    const handleOnChangeAvatar = data => {
+      state.avatar = data
+      state.isWorkspaceAvatarChanged = true
+      console.log(state.isWorkspaceAvatarChanged)
+    }
+
+    const handleUploadAvatar = async data => {
+      const result = await workSpaceStore.actions.setPeopleAvatar({
+        avatar: `data:*/*;base64, ${data}`
+      })
+    }
+
     watch(state, _ => {
       // check if exist error from backend on typing fields, try resest validation
       if (Object.values(errors.userDataError).some(error => error.length)) {
@@ -217,6 +248,8 @@ export default defineComponent({
 
       handleSave,
       handleCancel,
+      handleUploadAvatar,
+      handleOnChangeAvatar,
       handleOnUpdateUserProfile,
       handleOnUpdateWorkSpaceProfile
     }
