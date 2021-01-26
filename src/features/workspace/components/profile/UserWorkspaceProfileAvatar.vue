@@ -39,6 +39,7 @@
 </template>
 
 <script>
+import defaultAvatar from './avatar'
 import useValidationRules from '@/core/composition/useValidationRules'
 import { ref, watch, reactive, computed, defineComponent } from '@vue/composition-api'
 
@@ -87,9 +88,13 @@ export default defineComponent({
       handleOnInput(file)
     }
 
-    const handleRemove = () => {
-      imageUrl.value = ''
-      handleOnInput(new File([''], 'avatar'))
+    const handleRemove = async () => {
+      const base64Response = await fetch(defaultAvatar)
+
+      const blob = await base64Response.blob()
+      const file = new File([blob], 'ask-annna-default-gravatar.png', { type: 'image/png', lastModified: new Date() })
+
+      handleOnInput(file)
     }
 
     return {
