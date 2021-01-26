@@ -5,8 +5,8 @@
       <v-icon v-if="statusColor" class="mt-5" :color="statusColor">mdi-email-send-outline</v-icon>
     </v-app-bar>
     <v-row>
-      <v-col cols="2">
-        <v-avatar class="pl-1" size="60" tile>
+      <v-col cols="2" class="ml-2">
+        <v-avatar class="ml-1" size="60" tile>
           <v-img class="img--rounded" :src="people.avatar.small" />
         </v-avatar>
       </v-col>

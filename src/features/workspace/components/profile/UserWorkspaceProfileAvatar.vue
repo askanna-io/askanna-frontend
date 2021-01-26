@@ -1,34 +1,41 @@
 <template>
-  <v-row class="dropbox" dense justify="start" @drop.prevent="addFile" @dragover.prevent>
-    <v-col class="pt-0 pb-0" cols="12" align-self="start">
-      <v-avatar class="ma-2" rounded="21" :size="false ? 150 : 150" tile>
-        <v-img
-          v-if="imageUrl || workspaceProfile.avatar.large"
-          class="img--rounded"
-          :src="imageUrl || workspaceProfile.avatar.large"
+  <v-container fluid>
+    <v-row dense justify="start" @drop.prevent="addFile" @dragover.prevent>
+      <v-col class="pt-0 pb-0" cols="auto" align-self="start">
+        <v-avatar class="ma-2" rounded="21" :size="false ? 150 : 150" tile>
+          <v-img
+            v-if="imageUrl || workspaceProfile.avatar.large"
+            class="img--rounded"
+            :src="imageUrl || workspaceProfile.avatar.large"
+          />
+
+          <v-img v-else class="img--rounded" src="@/assets/icons/ask-annna-default-gravatar.png" />
+        </v-avatar>
+      </v-col>
+      <v-col xs="12" sm="2" lg="2" xl="2">
+        <input
+          type="file"
+          :value="avatar"
+          ref="fileInput"
+          class="input-file"
+          @input="handleOnInput"
+          accept="image/png, image/jpeg, image/bmp"
         />
-
-        <v-img v-else class="img--rounded" src="@/assets/icons/ask-annna-default-gravatar.png" />
-      </v-avatar>
-    </v-col>
-    <v-col cols="1">
-      <input
-        type="file"
-        :value="avatar"
-        ref="fileInput"
-        class="input-file"
-        @input="handleOnInput"
-        accept="image/png, image/jpeg, image/bmp"
-      />
-
-      <v-btn x-small outlined text color="secondary" class="ma-2 btn--hover" @click="hanleBrowse">
-        Change my image
-      </v-btn>
-      <v-btn x-small outlined text color="secondary" class="ma-2 btn--hover" @click="handleRemove">
-        Remove my image
-      </v-btn>
-    </v-col>
-  </v-row>
+        <v-row no-gutters>
+          <v-col class="pb-3">
+            <v-btn x-small block outlined text color="secondary" class="btn--hover" @click="hanleBrowse">
+              Change my image
+            </v-btn>
+          </v-col>
+          <v-col>
+            <v-btn x-small block outlined text color="secondary" class="btn--hover" @click="handleRemove">
+              Remove my image
+            </v-btn>
+          </v-col>
+        </v-row>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -82,7 +89,7 @@ export default defineComponent({
 
     const handleRemove = () => {
       imageUrl.value = ''
-      context.emit('onChangeAvatar', '')
+      handleOnInput(new File([''], 'avatar'))
     }
 
     return {

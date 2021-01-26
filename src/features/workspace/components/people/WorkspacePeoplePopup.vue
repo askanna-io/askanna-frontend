@@ -14,7 +14,7 @@
           <v-row>
             <v-col class="pt-0 pb-0" cols="12" align-self="start">
               <v-avatar rounded="21" :size="people.avatar ? 150 : 150" tile>
-                <v-img v-if="people.avatar" class="img--rounded" :src="people.avatar" />
+                <v-img v-if="people.avatar" class="img--rounded" :src="people.avatar.large" />
                 <v-img v-else class="img--rounded" src="@/assets/icons/ask-annna-default-gravatar.png" />
               </v-avatar>
             </v-col>

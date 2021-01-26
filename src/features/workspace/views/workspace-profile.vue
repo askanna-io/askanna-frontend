@@ -31,21 +31,29 @@
 
         <v-card-title class="text-subtitle-1 py-1">Profile image</v-card-title>
         <user-workspace-profile-avatar @onChangeAvatar="handleOnChangeAvatar" :workspaceProfile="workspaceProfile" />
-
-        <v-btn
-          text
-          small
-          outlined
-          color="secondary"
-          @click="handleSave"
-          class="ma-2 btn--hover"
-          :disabled="isSaveDisabled"
-        >
-          Save my changes
-        </v-btn>
-        <v-btn small outlined text color="secondary" class="ma-2 btn--hover" @click="handleCancel">
-          Cancel
-        </v-btn>
+        <v-container fluid>
+          <v-row dense justify="start">
+            <v-col xs="12" sm="6" md="2" lg="2">
+              <v-btn
+                text
+                block
+                small
+                outlined
+                color="secondary"
+                @click="handleSave"
+                class="btn--hover"
+                :disabled="isSaveDisabled"
+              >
+                Save my changes
+              </v-btn>
+            </v-col>
+            <v-col xs="12" sm="6" md="2" lg="2">
+              <v-btn small block outlined text color="secondary" class="btn--hover" @click="handleCancel">
+                Cancel
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-container>
       </v-form>
     </ask-anna-loading-progress>
   </v-card>
@@ -165,12 +173,15 @@ export default defineComponent({
 
       if (state.isWorkspaceAvatarChanged) {
         const result = await workSpaceStore.actions.setPeopleAvatar({
-          avatar: `data:*/*;base64, ${state.avatar}`
+          avatar: state.avatar
         })
 
-        if (result) {
+        if (result?.valid) {
           isSuccess2 = true
           succesMessage2 = 'workspace profile'
+          await workSpaceStore.actions.getInitialWorkpacePeople({
+            workspaceId: workSpaceStore.workspace.value.short_uuid
+          })
         } else {
           failedMessage2 = 'workspace profile'
         }
@@ -218,13 +229,6 @@ export default defineComponent({
     const handleOnChangeAvatar = data => {
       state.avatar = data
       state.isWorkspaceAvatarChanged = true
-      console.log(state.isWorkspaceAvatarChanged)
-    }
-
-    const handleUploadAvatar = async data => {
-      const result = await workSpaceStore.actions.setPeopleAvatar({
-        avatar: `data:*/*;base64, ${data}`
-      })
     }
 
     watch(state, _ => {
@@ -248,7 +252,6 @@ export default defineComponent({
 
       handleSave,
       handleCancel,
-      handleUploadAvatar,
       handleOnChangeAvatar,
       handleOnUpdateUserProfile,
       handleOnUpdateWorkSpaceProfile

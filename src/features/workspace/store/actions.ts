@@ -323,8 +323,6 @@ export const actions: ActionTree<workspaceState, RootState> = {
   },
 
   async [action.deleteWorkspacePeople]({ commit }, people) {
-    let response
-
     try {
       await apiService({
         action: api.acceptInvitetion,
@@ -383,5 +381,7 @@ export const actions: ActionTree<workspaceState, RootState> = {
 
       return e
     }
+
+    return result
   }
 }
