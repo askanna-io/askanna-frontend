@@ -270,8 +270,7 @@ export const actions: ActionTree<workspaceState, RootState> = {
     }
     logger.success(
       commit,
-      `You have successfully changed role to ${people.name} from the workspace
-    ${people.workspace.name}`
+      `You have successfully changed the role of ${people.name} for the workspace ${people.workspace.name}.`
     )
 
     commit(mutation.CHANGE_WORKSPACE_PEOPLE, people)
