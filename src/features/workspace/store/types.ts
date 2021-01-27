@@ -44,6 +44,12 @@ export interface WorkspaceState {
       uuid: string
       short_uuid: string
     }
+    avatar: {
+      icon: string
+      large: string
+      medium: string
+      small: string
+    }
   }
 }
 interface Invitation {
