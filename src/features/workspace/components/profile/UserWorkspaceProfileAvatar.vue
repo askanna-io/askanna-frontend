@@ -1,76 +1,128 @@
 <template>
-  <v-row dense justify="start">
-    <v-col class="pt-0 pb-0" cols="12" align-self="start">
-      <v-avatar rounded="21" :size="false ? 150 : 150" tile>
-        <v-img v-if="false" class="img--rounded" :src="people.avatar" />
-        <v-img v-else class="img--rounded" src="@/assets/icons/ask-annna-default-gravatar.png" />
-      </v-avatar>
-    </v-col>
-    <v-col cols="1" v-if="false">
-      <v-btn x-small outlined text color="secondary" class="ma-2 btn--hover" @click="handleSave">
-        Change my image
-      </v-btn>
-      <v-btn x-small outlined text color="secondary" class="ma-2 btn--hover" @click="handleSave">
-        Remove my image
-      </v-btn>
-    </v-col>
-  </v-row>
+  <v-container fluid>
+    <v-row dense justify="start" @drop.prevent="addFile" @dragover.prevent>
+      <v-col class="pt-0 pb-0" cols="auto" align-self="start">
+        <v-avatar class="ma-2" rounded="21" :size="false ? 150 : 150" tile>
+          <v-img
+            v-if="imageUrl || workspaceProfile.avatar.large"
+            class="img--rounded"
+            :src="imageUrl || workspaceProfile.avatar.large"
+          />
+
+          <v-img v-else class="img--rounded" src="@/assets/icons/ask-annna-default-gravatar.png" />
+        </v-avatar>
+      </v-col>
+      <v-col xs="12" sm="2" lg="2" xl="2">
+        <input
+          type="file"
+          :value="avatar"
+          ref="fileInput"
+          class="input-file"
+          @input="handleOnInput"
+          accept="image/png, image/jpeg, image/bmp"
+        />
+        <v-row no-gutters>
+          <v-col class="pb-3">
+            <v-btn x-small block outlined text color="secondary" class="btn--hover" @click="hanleBrowse">
+              Change my image
+            </v-btn>
+          </v-col>
+          <v-col>
+            <v-btn x-small block outlined text color="secondary" class="btn--hover" @click="handleRemove">
+              Remove my image
+            </v-btn>
+          </v-col>
+        </v-row>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
-import { ref, toRefs, reactive, computed, defineComponent } from '@vue/composition-api'
+import defaultAvatar from './avatar'
 import useValidationRules from '@/core/composition/useValidationRules'
+import { ref, watch, reactive, computed, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'UserWorkspaceProfileAvatar',
 
   props: {
-    projectData: {
+    workspaceProfile: {
       type: Object,
       default: function () {
         return {
           name: '',
-          workspace: '',
-          template: ''
+          workspace: {},
+          avatar: {
+            icon: '',
+            large: '',
+            medium: '',
+            small: ''
+          }
         }
-      }
-    },
-    projectTemplates: {
-      type: Array,
-      default: function () {
-        return []
       }
     }
   },
 
   setup(props, context) {
-    const validationRules = useValidationRules()
-    const isShowPassword = ref(false)
+    const fileInput = ref()
+    const avatar = ref(null)
+    const imageUrl = ref('')
 
-    const formData = reactive({
-      name: 'Robbert',
-      title: 'Super admin of Askanna'
-    })
+    const hanleBrowse = () => context.refs.fileInput.click()
 
-    const errorData = reactive({
-      error: { name: '', title: '' }
-    })
+    const handleOnInput = e => {
+      const fileObject = (e?.target && e?.target.files[0]) || e
+      const reader = new FileReader()
 
-    const reset = () => loginForm.value.reset()
-    const resetValidation = () => loginForm.value.resetValidation()
-    const resetError = () => {
-      errorData.error = { name: '', title: '' }
+      reader.onload = () => {
+        imageUrl.value = URL.createObjectURL(fileObject)
+        context.emit('onChangeAvatar', reader.result)
+      }
+
+      reader.readAsDataURL(fileObject)
     }
 
-    const handleSave = () => ''
+    const addFile = e => {
+      const [file] = e.dataTransfer.files
+      handleOnInput(file)
+    }
+
+    const handleRemove = async () => {
+      const base64Response = await fetch(defaultAvatar)
+
+      const blob = await base64Response.blob()
+      const file = new File([blob], 'ask-annna-default-gravatar.png', { type: 'image/png', lastModified: new Date() })
+
+      handleOnInput(file)
+    }
 
     return {
-      handleSave,
-      isShowPassword,
-      ...toRefs(formData),
-      ...toRefs(errorData),
-      RULE: validationRules.RULES
+      avatar,
+      addFile,
+      imageUrl,
+      fileInput,
+      hanleBrowse,
+      handleRemove,
+      handleOnInput
     }
   }
 })
 </script>
+<style lang="scss">
+.dropbox {
+  outline: 2px dashed grey; /* the dash box */
+  outline-offset: -10px;
+  color: dimgray;
+  padding: 10px 10px;
+  min-height: 200px; /* minimum height */
+  position: relative;
+  cursor: pointer;
+}
+
+.input-file {
+  opacity: 0; /* invisible but it's there! */
+  position: absolute;
+  cursor: pointer;
+}
+</style>

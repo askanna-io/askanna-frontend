@@ -169,7 +169,9 @@
             <v-menu transition="slide-y-transition" offset-y close-on-content-click>
               <template v-slot:activator="{ on }">
                 <v-btn icon v-on="on">
-                  <v-icon>fas fa-user</v-icon>
+                  <v-avatar class="ma-2" rounded="35" :size="35" tile>
+                    <v-img class="img--rounded" :src="workspaceProfile.avatar.small" />
+                  </v-avatar>
                 </v-btn>
               </template>
 
@@ -234,6 +236,8 @@ export default defineComponent({
     const xsOnly = ref(null)
     const logout = () => authStore.actions.logout()
     const workspaces = computed(() => workspaceStore.workspaces.value.results)
+    const workspaceProfile = computed(() => workspaceStore.state.currentPeople.value)
+
     const workspaceShortUuid = computed(() => workspaceStore.workspace.value.short_uuid)
 
     const showAppBarIcon = computed(() => context.root.$route.name !== 'workspace')
@@ -267,6 +271,7 @@ export default defineComponent({
       logout,
       onResize,
       workspaces,
+      workspaceProfile,
       iconStatus: uploadStatus.iconStatus,
       colorStatus: uploadStatus.colorStatus,
       handleShowHideUploadStatus,

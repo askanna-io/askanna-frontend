@@ -44,6 +44,12 @@ export interface WorkspaceState {
       uuid: string
       short_uuid: string
     }
+    avatar: {
+      icon: string
+      large: string
+      medium: string
+      small: string
+    }
   }
 }
 interface Invitation {
@@ -114,6 +120,8 @@ export const action = {
   getWorkspace: 'getWorkspace',
   getWorkspaces: 'getWorkspaces',
   changeSettings: 'changeSettings',
+  getPeopleAvatar: 'getPeopleAvatar',
+  setPeopleAvatar: 'setPeopleAvatar',
   sendInvitations: 'sendInvitations',
   sendInviteEmail: 'sendInviteEmail',
   deleteInvitation: 'deleteInvitation',

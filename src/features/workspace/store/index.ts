@@ -50,6 +50,12 @@ export const state: workspaceState = {
       uuid: '',
       name: '',
       short_uuid: ''
+    },
+    avatar: {
+      icon: '',
+      large: '',
+      medium: '',
+      small: ''
     }
   }
 }

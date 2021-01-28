@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-row dense justify="start">
-      <v-col cols="4">
+      <v-col xs="12" sm="6" md="4" lg="4" xl="3">
         <v-text-field
           dense
           outlined
@@ -14,7 +14,7 @@
     </v-row>
 
     <v-row dense justify="start">
-      <v-col cols="4">
+      <v-col xs="12" sm="6" md="4" lg="4" xl="3">
         <v-text-field
           dense
           outlined
