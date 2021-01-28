@@ -19,7 +19,11 @@
     </v-row>
     <v-row v-if="panel" align="center" justify="center">
       <v-col cols="6" xl="2" md="6" sm="9" lg="4" class="rounded">
-        <ask-anna-read-more />
+        <v-expansion-panels class="login-expansion" v-model="panel">
+          <v-expand-transition>
+            <ask-anna-read-more />
+          </v-expand-transition>
+        </v-expansion-panels>
       </v-col>
     </v-row>
   </div>
@@ -38,7 +42,7 @@ export default defineComponent({
 
   components: { Signin, Signup, SigninThankYou, AskAnnaReadMore, WaitBeforeCreateAccount },
 
-  setup(props, context) {
+  setup(_, context) {
     const { name } = context.root.$route
     const panelValue = name === 'signin' ? 0 : 1
 
