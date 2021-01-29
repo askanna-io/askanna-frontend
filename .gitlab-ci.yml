@@ -1,5 +1,6 @@
 variables:
   DOCKER_REPO: $CI_REGISTRY_IMAGE
+  ENVIRONMENT_DOMAIN: askanna.eu
 
 include:
   - template: Code-Quality.gitlab-ci.yml
@@ -35,9 +36,24 @@ build_docker:
     - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
     - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/compose/Dockerfile --destination ${DOCKER_REPO}:$CI_COMMIT_REF_SLUG
   only:
+    - master
+
+build_docker_review:
+  stage: build
+  tags:
+    - kubernetes
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  script:
+    - cp .env.review .env.production.local
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/compose/Dockerfile --destination ${DOCKER_REPO}:$CI_COMMIT_REF_SLUG
+  only:
     - branches
   except:
     - beta
+    - master
 
 build_docker_beta:
   stage: build
@@ -53,24 +69,6 @@ build_docker_beta:
   only:
     - beta
 
-stop_review:
-  variables:
-    GIT_STRATEGY: none
-  stage: cleanup
-  image: curlimages/curl
-  environment:
-    name: $CI_COMMIT_REF_NAME
-    action: stop
-  when: manual
-  allow_failure: true
-  tags:
-    - kubernetes
-  script:
-    - curl -X POST -F token=${DEPLOY_TOKEN} -F ref=master -F variables[product]=frontend -F variables[branch]=${CI_COMMIT_REF_SLUG} -F variables[action]=undeploy -F variables[slug]=${CI_ENVIRONMENT_SLUG} ${TRIGGER_URL}
-  except:
-    - master
-    - beta
-
 .deploy: &deploy
   variables:
     GIT_STRATEGY: none
@@ -81,22 +79,51 @@ stop_review:
   script:
     - curl -X POST -F token=${DEPLOY_TOKEN} -F ref=master -F variables[product]=frontend -F variables[branch]=${CI_COMMIT_REF_SLUG} -F variables[action]=deploy -F variables[slug]=${CI_ENVIRONMENT_SLUG} ${TRIGGER_URL}
 
-deploy_branch:
-  <<: *deploy
-  environment:
-    name: $CI_COMMIT_REF_NAME
-    url: https://${CI_ENVIRONMENT_SLUG}-fe.askanna.eu
-    on_stop: stop_review
-  only:
-    - branches
-  except:
-    - master
-
 deploy_master:
   <<: *deploy
   environment:
     name: master
-    url: https://askanna.eu
+    url: https://${ENVIRONMENT_DOMAIN}
   only:
     - master
 
+deploy_beta:
+  <<: *deploy
+  environment:
+    name: beta
+    url: https://beta.${ENVIRONMENT_DOMAIN}
+  only:
+    - beta
+
+deploy_review:
+  <<: *deploy
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    url: https://${CI_ENVIRONMENT_SLUG}-fe.${ENVIRONMENT_DOMAIN}
+    on_stop: stop_review
+    auto_stop_in: 2 weeks
+  only:
+    - branches
+  except:
+    - master
+    - beta
+
+stop_review:
+  variables:
+    GIT_STRATEGY: none
+  stage: cleanup
+  image: curlimages/curl
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    action: stop
+  when: manual
+  allow_failure: true
+  tags:
+    - kubernetes
+  script:
+    - curl -X POST -F token=${DEPLOY_TOKEN} -F ref=master -F variables[product]=frontend -F variables[branch]=${CI_COMMIT_REF_SLUG} -F variables[action]=undeploy -F variables[slug]=${CI_ENVIRONMENT_SLUG} ${TRIGGER_URL}
+  only:
+    - branches
+  except:
+    - master
+    - beta
