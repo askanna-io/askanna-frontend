@@ -1,0 +1,17 @@
+############################################
+# Build image - contains built code
+############################################
+FROM gitlab.askanna.io:4567/askanna/askanna-frontend/base:latest AS build
+
+WORKDIR /app
+COPY . .
+
+RUN npm run build
+
+############################################
+# Production image - serves built code
+############################################
+FROM nginx:stable-alpine
+
+COPY --from=build /app/dist /usr/share/nginx/html
+COPY ./compose/vhost.d/default.conf /etc/nginx/conf.d/default.conf
