@@ -1,4 +1,7 @@
-# https://mutagen.io/documentation/orchestration/compose
+# Info: https://mutagen.io/documentation/orchestration/compose
+#   Mutagen compose is new in Mutagen v0.12. It might be necessary
+#   to install Mutagen from the Mutagen beta channel:
+#   https://mutagen.io/documentation/introduction/installation#development-channels
 
 # This file should be used as override for default config.
 # It extends the service definitions to use mutagen volumes
@@ -6,10 +9,10 @@
 # https://docs.docker.com/compose/extends/
 #   $ ln -s docker-compose.mutagen.yml docker-compose.override.yml
 
-# Can be used with local docker or with remote docker instances.
-# Local usage will improve performance on macOS.
+# Can be used with local Docker or with remote Docker instances.
+# Local usage will improve performance on MacOS.
 
-# To use it with a remote docker instance the value of `DOCKER_HOST`
+# To use it with a remote Docker instance the value of `DOCKER_HOST`
 # needs to be set in the `.env` file.
 # DOCKER_HOST=ssh://user@host
 
