@@ -10,7 +10,7 @@
         <p>
           <a
             class="app-link text-decoration-none primary--text font-weight-medium d-inline-block"
-            href="https://docs.askanna.io/#/variables"
+            href="https://docs.askanna.io/variables/"
             target="_blank"
           >
             Read the documentation</a
