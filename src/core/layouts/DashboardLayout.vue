@@ -136,6 +136,9 @@
                   <v-list-item :key="'profile'" exact :to="{ name: 'workspace-profile' }">
                     Edit my profile
                   </v-list-item>
+                  <v-list-item href="https://docs.askanna.io" target="_blank">
+                    <v-list-item-title>Documentation</v-list-item-title>
+                  </v-list-item>
                   <v-list-item>
                     <v-list-item-title @click="logout">Logout</v-list-item-title>
                   </v-list-item>
@@ -153,6 +156,9 @@
                 <v-list dense>
                   <v-list-item :key="'profile'" exact :to="{ name: 'workspace-profile' }">
                     Edit my profile
+                  </v-list-item>
+                  <v-list-item href="https://docs.askanna.io" target="_blank">
+                    <v-list-item-title>Documentation</v-list-item-title>
                   </v-list-item>
                   <v-list-item>
                     <v-list-item-title @click="logout">Logout</v-list-item-title>
@@ -181,6 +187,9 @@
                 </v-list-item>
                 <v-list-item :key="'profile'" exact :to="{ name: 'workspace-profile' }">
                   Edit my profile
+                </v-list-item>
+                <v-list-item href="https://docs.askanna.io" target="_blank">
+                  <v-list-item-title>Documentation</v-list-item-title>
                 </v-list-item>
                 <v-list-item :key="'logout'" exact @click="logout">
                   Logout
