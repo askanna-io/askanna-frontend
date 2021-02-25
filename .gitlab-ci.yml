@@ -1,5 +1,9 @@
 variables:
   ENVIRONMENT_DOMAIN: askanna.eu
+  GCP_PROJECT: askanna-services
+  GKE_CLUSTER_NAME: review-and-runners
+  GKE_CLUSTER_ZONE: europe-west1-d
+  DOCKER_REVIEW: $CI_REGISTRY_IMAGE/review:$CI_COMMIT_REF_SLUG
 
 include:
   - template: Code-Quality.gitlab-ci.yml
@@ -50,6 +54,9 @@ build_review:
     - .use-kaniko
   before_script:
     - cp .env.review .env.production.local
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+  script:
+    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $DOCKER_FILE --destination $DOCKER_REVIEW
   only:
     - branches
   except:
@@ -97,11 +104,23 @@ deploy_beta:
     - beta
 
 deploy_review:
-  <<: *deploy
+  stage: deploy
   needs: [build_review]
+  image: devth/helm
+  tags:
+    - kubernetes
+  script:
+    - init_k8s
+    - helm upgrade
+      --install
+      --set app.image="$DOCKER_REVIEW"
+      --set app.host="$CI_ENVIRONMENT_SLUG.frontend.askanna.dev"
+      --wait
+      $CI_PROJECT_NAME-$CI_ENVIRONMENT_SLUG
+      ./k8s-chart
   environment:
     name: review/$CI_COMMIT_REF_NAME
-    url: https://${CI_ENVIRONMENT_SLUG}-fe.${ENVIRONMENT_DOMAIN}
+    url: https://$CI_ENVIRONMENT_SLUG.frontend.askanna.dev
     on_stop: stop_review
     auto_stop_in: 2 weeks
   only:
@@ -111,21 +130,30 @@ deploy_review:
     - beta
 
 stop_review:
+  stage: cleanup
+  image: devth/helm
   variables:
     GIT_STRATEGY: none
-  stage: cleanup
-  image: curlimages/curl
+  script:
+    - init_k8s
+    - helm uninstall $CI_PROJECT_NAME-$CI_ENVIRONMENT_SLUG
   environment:
     name: review/$CI_COMMIT_REF_NAME
     action: stop
   when: manual
   allow_failure: true
-  tags:
-    - kubernetes
-  script:
-    - curl -X POST -F token=${DEPLOY_TOKEN} -F ref=master -F variables[product]=frontend -F variables[branch]=${CI_COMMIT_REF_SLUG} -F variables[action]=undeploy -F variables[slug]=${CI_ENVIRONMENT_SLUG} ${TRIGGER_URL}
   only:
     - branches
   except:
     - master
     - beta
+
+.functions: &functions |
+    # Functions
+    function init_k8s() {
+        gcloud auth activate-service-account --project $GCP_PROJECT --key-file $GCP_SERVICE_ACCOUNT_FILE_AA_SERVICES
+        gcloud container clusters get-credentials $GKE_CLUSTER_NAME --zone $GKE_CLUSTER_ZONE --project $GCP_PROJECT
+    }
+
+before_script:
+  - *functions

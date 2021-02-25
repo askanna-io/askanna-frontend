@@ -1,0 +1,4 @@
+Thank you for installing the AskAnna Frontend!
+
+To learn more about AskAnna, check our documentation: https://docs.askanna.io
+Do you need support? Send us an email: support@askanna.io
