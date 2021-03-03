@@ -24,7 +24,7 @@
                 hide-details=""
                 :delimiters="[' ']"
                 append-icon=""
-                v-model="invationItems"
+                v-model="invitationItems"
                 chips
                 counter
                 outlined
@@ -73,19 +73,19 @@
 
         <v-card-actions>
           <v-btn
-            :disabled="!invationItems.length || Boolean(inValidEmails.length) || Boolean(invitedEmails.length)"
+            :disabled="!invitationItems.length || Boolean(inValidEmails.length) || Boolean(invitedEmails.length)"
             :loading="loading"
             text
             small
             outlined
             color="secondary"
             class="mr-1 ml-1 btn--hover"
-            @click="handleSentInvation"
+            @click="handleSentInvitation"
           >
             <v-icon left>
               mdi-mail
             </v-icon>
-            {{ invationBtnText }}
+            {{ invitationBtnText }}
             <template v-slot:loader>
               <v-icon left>
                 mdi-mail
@@ -123,28 +123,28 @@ export default defineComponent({
 
     const menu = ref(false)
     const loading = ref(false)
-    const invationItems = ref([])
+    const invitationItems = ref([])
     const isNewRawAdded = ref(false)
     const loadingText = ref('Sending...')
 
     const { workspaceId } = context.root.$route.params
 
-    const invationBtnText = computed(() => (invationItems.value.length > 1 ? 'Send invations' : 'Send invation'))
-    const inValidEmails = computed(() => invationItems.value.filter(email => !validationRules.isValidEmail(email)))
+    const invitationBtnText = computed(() => (invitationItems.value.length > 1 ? 'Send invitations' : 'Send invitation'))
+    const inValidEmails = computed(() => invitationItems.value.filter(email => !validationRules.isValidEmail(email)))
     const invitedEmails = computed(() =>
-      invationItems.value.filter(
+      invitationItems.value.filter(
         email => workspaceStore.workspacePeople.value.some(item => item.email === email) && email
       )
     )
 
-    const handleOnInput = (value, index, path, item) => invationItems.value.splice(index, 1, { ...item, [path]: value })
+    const handleOnInput = (value, index, path, item) => invitationItems.value.splice(index, 1, { ...item, [path]: value })
 
     const handleCancel = () => {
       menu.value = false
-      invationItems.value = []
+      invitationItems.value = []
     }
 
-    const handleSentInvation = async () => {
+    const handleSentInvitation = async () => {
       loading.value = true
       const reducer = (acc, email) => {
         const isExist = workspaceStore.workspacePeople.value.find(item => item.email === email)
@@ -155,24 +155,24 @@ export default defineComponent({
         return acc
       }
 
-      const emails = invationItems.value.reduce(reducer, [])
+      const emails = invitationItems.value.reduce(reducer, [])
       if (emails.length) {
         await workspaceStore.sendInvitations(emails)
       }
 
       menu.value = false
       loading.value = false
-      invationItems.value = []
+      invitationItems.value = []
     }
 
-    const handleRemove = item => invationItems.value.splice(invationItems.value.indexOf(item), 1)
+    const handleRemove = item => invitationItems.value.splice(invitationItems.value.indexOf(item), 1)
 
     const handleRemoveInValidEmails = () => {
-      invationItems.value = invationItems.value.filter(email => validationRules.isValidEmail(email))
+      invitationItems.value = invitationItems.value.filter(email => validationRules.isValidEmail(email))
     }
 
     const handleRemoveInvitedEmails = () => {
-      invationItems.value = invationItems.value.filter(email => !invitedEmails.value.includes(email))
+      invitationItems.value = invitationItems.value.filter(email => !invitedEmails.value.includes(email))
     }
 
     const getStyle = email => {
@@ -205,12 +205,12 @@ export default defineComponent({
       loadingText,
       handleRemove,
       handleCancel,
-      invationItems,
+      invitationItems,
       handleOnInput,
       inValidEmails,
       invitedEmails,
-      invationBtnText,
-      handleSentInvation,
+      invitationBtnText,
+      handleSentInvitation,
       handleRemoveInvitedEmails,
       handleRemoveInValidEmails
     }
