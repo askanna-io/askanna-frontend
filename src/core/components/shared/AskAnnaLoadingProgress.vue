@@ -66,6 +66,9 @@ export default defineComponent({
             loadingProgress.value = -10
           }
         } else {
+          if (!props.loading && isLoading.value) {
+            stopLoading()
+          }
         }
         loadingProgress.value += Math.random() * speed.value
       }, 100)
