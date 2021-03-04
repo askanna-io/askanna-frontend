@@ -1,9 +1,12 @@
 variables:
-  ENVIRONMENT_DOMAIN: askanna.eu
   GCP_PROJECT: askanna-services
   GKE_CLUSTER_NAME: review-and-runners
   GKE_CLUSTER_ZONE: europe-west1-d
-  DOCKER_REVIEW: $CI_REGISTRY_IMAGE/review:$CI_COMMIT_REF_SLUG
+  MASTER_DOMAIN: askanna.eu
+  BETA_DOMAIN: beta.askanna.eu
+  DEVOPS_DOMAIN: frontend.askanna.dev
+  DOCKER_BASE_IMAGE: $CI_REGISTRY_IMAGE/base:$CI_COMMIT_REF_SLUG
+  DOCKER_REVIEW: $CI_REGISTRY_IMAGE/review:$CI_COMMIT_REF_SLUG-$CI_COMMIT_SHORT_SHA
 
 include:
   - template: Code-Quality.gitlab-ci.yml
@@ -25,8 +28,9 @@ stages:
   variables:
     DOCKER_FILE: $CI_PROJECT_DIR/compose/Dockerfile.deploy
     DOCKER_DESTINATION: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
-  script:
+  before_script:
     - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+  script:
     - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $DOCKER_FILE --destination $DOCKER_DESTINATION
 
 build_base:
@@ -34,13 +38,15 @@ build_base:
   extends:
     - .use-kaniko
   variables:
-    DOCKER_FILE: $CI_PROJECT_DIR/compose/Dockerfile.base
-    DOCKER_DESTINATION: $CI_REGISTRY_IMAGE/base:latest
-  only:
-    changes:
-      - compose/Dockerfile.base
-      - package-lock.json
-      - package.json
+    DOCKER_FILE: $CI_PROJECT_DIR/compose/Dockerfile.base    
+  script:
+    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $DOCKER_FILE --destination $DOCKER_BASE_IMAGE
+  rules:
+    - if: $CI_COMMIT_BRANCH
+      changes:
+        - compose/Dockerfile.base
+        - package.json
+        - package-lock.json
 
 build_master:
   stage: build-deploy
@@ -52,12 +58,10 @@ build_master:
 build_review:
   stage: build-deploy
   extends:
-    - .use-kaniko
-  before_script:
-    - cp .env.review .env.production.local
-    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+    - .use-kaniko 
   script:
-    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $DOCKER_FILE --destination $DOCKER_REVIEW
+    - cp .env.review .env.production.local
+    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $DOCKER_FILE --destination $DOCKER_REVIEW --build-arg BASE_IMAGE=$DOCKER_BASE_IMAGE
   only:
     - branches
   except:
@@ -68,8 +72,9 @@ build_beta:
   stage: build-deploy
   extends:
     - .use-kaniko
-  before_script:
+  script:
     - cp .env.beta .env.production.local
+    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $DOCKER_FILE --destination $DOCKER_DESTINATION --build-arg BASE_IMAGE=$DOCKER_BASE_IMAGE
   only:
     - beta
 
@@ -92,7 +97,7 @@ deploy_master:
   <<: *deploy
   environment:
     name: master
-    url: https://${ENVIRONMENT_DOMAIN}
+    url: https://${MASTER_DOMAIN}
   only:
     - master
 
@@ -100,14 +105,14 @@ deploy_beta:
   <<: *deploy
   environment:
     name: beta
-    url: https://beta.${ENVIRONMENT_DOMAIN}
+    url: https://${BETA_DOMAIN}
   only:
     - beta
 
 deploy_review:
   stage: deploy
   needs: [build_review]
-  image: devth/helm
+  image: gitlab.askanna.io:4567/askanna/services/helm
   tags:
     - kubernetes
   script:
@@ -115,13 +120,14 @@ deploy_review:
     - helm upgrade
       --install
       --set app.image="$DOCKER_REVIEW"
-      --set app.host="$CI_ENVIRONMENT_SLUG.frontend.askanna.dev"
+      --set app.host="$CI_ENVIRONMENT_SLUG.$DEVOPS_DOMAIN"
+      --set deployment.minReplicas=1
       --wait
       $CI_PROJECT_NAME-$CI_ENVIRONMENT_SLUG
       ./k8s-chart
   environment:
     name: review/$CI_COMMIT_REF_NAME
-    url: https://$CI_ENVIRONMENT_SLUG.frontend.askanna.dev
+    url: https://$CI_ENVIRONMENT_SLUG.$DEVOPS_DOMAIN
     on_stop: stop_review
     auto_stop_in: 2 weeks
   only:
@@ -132,7 +138,7 @@ deploy_review:
 
 stop_review:
   stage: cleanup
-  image: devth/helm
+  image: gitlab.askanna.io:4567/askanna/services/helm
   variables:
     GIT_STRATEGY: none
   script:
