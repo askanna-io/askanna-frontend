@@ -129,7 +129,9 @@ export default defineComponent({
 
     const { workspaceId } = context.root.$route.params
 
-    const invitationBtnText = computed(() => (invitationItems.value.length > 1 ? 'Send invitations' : 'Send invitation'))
+    const invitationBtnText = computed(() =>
+      invitationItems.value.length > 1 ? 'Send invitations' : 'Send invitation'
+    )
     const inValidEmails = computed(() => invitationItems.value.filter(email => !validationRules.isValidEmail(email)))
     const invitedEmails = computed(() =>
       invitationItems.value.filter(
@@ -137,7 +139,8 @@ export default defineComponent({
       )
     )
 
-    const handleOnInput = (value, index, path, item) => invitationItems.value.splice(index, 1, { ...item, [path]: value })
+    const handleOnInput = (value, index, path, item) =>
+      invitationItems.value.splice(index, 1, { ...item, [path]: value })
 
     const handleCancel = () => {
       menu.value = false

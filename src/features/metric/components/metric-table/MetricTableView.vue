@@ -19,7 +19,7 @@
           </th>
           <th
             v-if="isLabels"
-            :colspan="isLabels"
+            :colspan="labels.length"
             class="text-left text-subtitle-2 font-weight-bold h-20 AskAnna-box-shadow--none"
           >
             Labels
