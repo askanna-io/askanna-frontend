@@ -47,18 +47,24 @@ export default defineComponent({
       },
       {
         id: 2,
+        name: 'Metrics',
+        show: !context.root.isNotBeta,
+        to: 'workspace-project-jobs-job-jobrun-metrics'
+      },
+      {
+        id: 3,
         name: 'Artifact',
         show: !context.root.isNotBeta,
         to: 'workspace-project-jobs-job-jobrun-artifact'
       },
       {
-        id: 3,
+        id: 4,
         name: 'Code',
         show: !context.root.isNotBeta,
         to: 'workspace-project-jobs-job-jobrun-code'
       },
       {
-        id: 4,
+        id: 5,
         name: 'Log',
         show: !context.root.isNotBeta,
         to: 'workspace-project-jobs-job-jobrun-log'

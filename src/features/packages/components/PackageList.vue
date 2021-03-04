@@ -85,11 +85,12 @@ export default defineComponent({
       {
         text: 'Name',
         align: 'left',
-        value: 'filename'
+        value: 'filename',
+        class: 'text-left text-subtitle-2 font-weight-bold h-20'
       },
-      { text: 'Created', value: 'created' },
-      { text: '', value: 'uuid', sortable: false },
-      { text: '', value: 'menu' }
+      { text: 'Created', value: 'created', class: 'text-left text-subtitle-2 font-weight-bold h-20' },
+      { text: '', value: 'uuid', sortable: false, class: 'text-left text-subtitle-2 font-weight-bold h-20' },
+      { text: '', value: 'menu', class: 'text-left text-subtitle-2 font-weight-bold h-20' }
     ]
 
     const handleClickRow = ({ short_uuid }) => context.emit('handleClickRow', short_uuid)

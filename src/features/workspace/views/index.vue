@@ -3,8 +3,8 @@
 </template>
 
 <script>
+import { onUpdated, onBeforeMount, defineComponent } from '@vue/composition-api'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
-import { computed, reactive, onUpdated, onBeforeMount, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   setup(props, context) {
@@ -36,12 +36,16 @@ export default defineComponent({
       if (workspaceId !== 'workspace') {
         await initWorkspace(workspaceId)
       } else {
-        await workspaceStore.setLoading({ projects: false })
+        setTimeout(() => workspaceStore.setLoading({ projects: false }), 100)
       }
     })
 
     onUpdated(async () => {
       const { workspaceId } = context.root.$route.params
+
+      workspaceStore.setLoading({ projects: true })
+
+      setTimeout(() => workspaceStore.setLoading({ projects: false }), 100)
 
       if (workspaceId !== workspaceStore.workspace.value.short_uuid) {
         await initWorkspace(workspaceId)

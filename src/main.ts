@@ -35,10 +35,6 @@ if (process.env.VUE_APP_SENTRY === 'on') {
   })
 }
 
-import VueKinesis from 'vue-kinesis'
-
-Vue.use(VueKinesis)
-
 Vue.use(VueClipboard)
 Vue.use(VueFileAgent)
 // register globally
@@ -56,7 +52,6 @@ router.beforeEach((to, _, next) => {
   if (to.name === next.name) return
 
   const token = window.localStorage.getItem('token')
-  const backAfterUrl = window.localStorage.getItem('back_after_login')
   const isRequiresAuth = to.matched.some(route => route.meta.requiresAuth)
   const isNotAllowedWithToken = notAllowedRouteWithToken.some(route => route === to.name)
 
@@ -66,10 +61,6 @@ router.beforeEach((to, _, next) => {
     next('signin')
   } else if (token && isNotAllowedWithToken) {
     next('/')
-  } else if (token && backAfterUrl) {
-    window.localStorage.setItem('back_after_login', '')
-
-    next(backAfterUrl)
   } else {
     next()
   }

@@ -20,13 +20,13 @@
         </div>
       </div>
       <span ref="browseButton">
-        <v-btn class="my-2 mr-2" v-if="!isFileAdded" small outlined color="secondary">
-          <v-icon color="secondary" left>mdi-upload</v-icon>Browse
+        <v-btn class="my-2 mr-2 btn--hover" v-if="!isFileAdded" small outlined color="secondary">
+          <v-icon left color="secondary">mdi-upload</v-icon>Browse
         </v-btn>
       </span>
       <span>
         <v-btn
-          class="my-2 mr-2"
+          class="my-2 mr-2 btn--hover"
           v-if="isFileAdded && fileRecordsForUpload && fileRecordsForUpload.length"
           small
           outlined
@@ -36,7 +36,7 @@
           <v-icon color="secondary" left>mdi-upload</v-icon>Upload
         </v-btn>
       </span>
-      <v-btn class="my-2" v-if="isReplace" small outlined @click="handleCancel" color="secondary">
+      <v-btn class="my-2 btn--hover" v-if="isReplace" small outlined @click="handleCancel" color="secondary">
         <v-icon color="secondary" left>mdi-cancel</v-icon>Cancel
       </v-btn>
       <confirm-dialog

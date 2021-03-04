@@ -12,8 +12,8 @@ const serviceName = packageServiceName
 const api = apiStringify(serviceName)
 
 export const actions: ActionTree<PackageState, RootState> = {
-  async [type.getPackage]({ commit }, { failedRoute, ...uuid }) {
-    commit(type.SET_LOADING, { name: 'packageLoading', value: true })
+  async [type.getPackage]({ commit }, { loading, failedRoute, ...uuid }) {
+    if (loading) commit(type.SET_LOADING, { name: 'packageLoading', value: true })
 
     let packageData
     try {
@@ -31,6 +31,7 @@ export const actions: ActionTree<PackageState, RootState> = {
             files: []
           }
         })
+        if (loading) commit(type.SET_LOADING, { name: 'packageLoading', value: false })
 
         return
       }
@@ -38,7 +39,7 @@ export const actions: ActionTree<PackageState, RootState> = {
       const name = failedRoute || 'workspace-project-code-does-not-exist'
       router.push({ name })
 
-      commit(type.SET_LOADING, { name: 'packageLoading', value: false })
+      if (loading) commit(type.SET_LOADING, { name: 'packageLoading', value: false })
 
       logger.error(commit, 'Error on load packageData in getPackage action.\nError: ', e)
 

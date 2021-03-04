@@ -1,5 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios'
 import router from '../router'
+import VueRouter from 'vue-router'
+const { isNavigationFailure, NavigationFailureType } = VueRouter
 // create axios instance and set csrftoken for Django
 const $axios = axios
 $axios.defaults.xsrfCookieName = 'csrftoken'
@@ -29,8 +31,12 @@ $axios.interceptors.response.use(
   err => {
     if (err.response && err.response.status === 401) {
       localStorage.setItem('token', '')
-      router.push({ name: 'signin' })
-
+      // trying to redirect user to signin page
+      router.push({ name: 'signin' }).catch(failure => {
+        if (isNavigationFailure(failure, NavigationFailureType.duplicated)) {
+          return
+        }
+      })
       return
     }
 

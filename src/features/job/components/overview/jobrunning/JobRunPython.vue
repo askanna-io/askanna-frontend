@@ -1,6 +1,6 @@
 <template>
   <div class="px-4">
-    <v-toolbar dense flat color="grey lighten-3" class="br-r4">
+    <v-toolbar dense flat color="grey lighten-4" class="br-r4">
       <v-flex class="d-flex">
         <div class="mr-auto d-flex align-center">
           Shell
@@ -8,8 +8,8 @@
         <div>
           <v-tooltip top>
             <template v-slot:activator="{ on }">
-              <v-btn small v-on="on" outlined color="secondary" @click="handleCopy()">
-                <v-icon color="secondary">mdi-content-copy</v-icon>
+              <v-btn class="mr-1 btn--hover" small v-on="on" outlined color="secondary" @click="handleCopy()">
+                <v-icon left color="secondary">mdi-content-copy</v-icon>Copy
               </v-btn>
             </template>
             <span>Copy</span>

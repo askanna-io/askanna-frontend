@@ -20,9 +20,9 @@ export const state: workspaceState = {
     offset: 0
   },
   loading: {
-    people: true,
-    projects: true,
-    workspaces: true
+    people: false,
+    projects: false,
+    workspaces: false
   },
   workspaceSettings: {
     projectView: 0

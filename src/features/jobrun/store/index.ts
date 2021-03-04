@@ -5,13 +5,18 @@ import { mutations } from './mutations'
 import { jobRunState, JOB_RUN_STORE, JobRunModel, ArtifactModel } from './types'
 
 export const state: jobRunState = {
-  runs: [],
+  runs: {
+    count: 0,
+    next: null,
+    results: []
+  },
   openJobRunResult: false,
   jobRun: new JobRunModel().state,
   jobRunPayload: null,
   jobRunLoading: true,
   resultLoading: true,
-  payLoadLoading: true,
+  payLoadLoading: false,
+  jobRunsLoading: false,
   jobRunlogLoading: true,
   jobRunArtifactLoading: true,
   jobRunResult: null,

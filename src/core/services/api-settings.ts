@@ -126,6 +126,10 @@ export const api: ApiSettings = {
       getAccounts: () => 'accounts/',
       getProfile: () => 'rest-auth/user/',
       updateAccount: id => `accounts/${id}/`
+    },
+    metric: {
+      getMetric: jobRunShortId => `runinfo/${jobRunShortId}/metrics/`,
+      getMetricMeta: jobRunShortId => `runinfo/${jobRunShortId}/metrics/${jobRunShortId}/meta/`
     }
   }
 }

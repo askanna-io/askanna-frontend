@@ -16,6 +16,10 @@ export default defineComponent({
     languageName: {
       type: String,
       default: 'shell'
+    },
+    maxRowToShow: {
+      type: Number || null,
+      default: null
     }
   },
 
@@ -25,7 +29,7 @@ export default defineComponent({
 
     const highlighted = computed(() => {
       let result = hljs.highlight(props.languageName, props.value, true).value
-      result = lineNumber.lineNumbersValue(result)
+      result = lineNumber.lineNumbersValue(result, { maxRowToShow: props.maxRowToShow })
 
       return result
     })

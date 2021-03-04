@@ -21,7 +21,7 @@
       <ask-anna-copy :text="item.value" smartSlice :width="35" :masked="item.is_masked" expanded />
     </template>
     <template v-slot:item.actions="{ item }">
-      <v-btn class="my-2" small outlined color="secondary" @click="handleEditItem(item)">
+      <v-btn class="my-2 btn--hover" small outlined color="secondary" @click="handleEditItem(item)">
         <v-icon color="secondary" left small class="mr-2">mdi-pencil</v-icon>Edit
       </v-btn>
     </template>
@@ -61,11 +61,24 @@ export default defineComponent({
         align: 'start',
         sortable: false,
         value: 'short_uuid',
-        width: '10%'
+        width: '10%',
+        class: 'text-left text-subtitle-2 font-weight-bold h-20'
       },
-      { text: 'Name', value: 'name', width: '35%' },
-      { text: 'Value', value: 'value', width: '45%', sortable: true },
-      { text: '', value: 'actions', width: '10%', sortable: false }
+      { text: 'Name', value: 'name', width: '35%', class: 'text-left text-subtitle-2 font-weight-bold h-20' },
+      {
+        text: 'Value',
+        value: 'value',
+        width: '45%',
+        sortable: true,
+        class: 'text-left text-subtitle-2 font-weight-bold h-20'
+      },
+      {
+        text: '',
+        value: 'actions',
+        width: '10%',
+        sortable: false,
+        class: 'text-left text-subtitle-2 font-weight-bold h-20'
+      }
     ])
 
     const handleEditItem = item => context.emit('onEditItem', item.short_uuid)

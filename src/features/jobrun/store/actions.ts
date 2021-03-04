@@ -12,22 +12,26 @@ const serviceName = JOB_RUN_STORE
 const api = apiStringify(serviceName)
 
 export const actions: ActionTree<jobRunState, RootState> = {
-  async [type.action.getRunsJob]({ commit }, uuid) {
+  async [type.action.getRunsJob]({ commit }, { uuid, params }) {
+    commit(type.mutation.SET_LOADING, { name: stateType.jobRunsLoading, value: true })
+
     let runs: JobRun[]
     try {
       runs = await apiService({
-        action: api.runs,
-        method: 'get',
+        uuid,
+        params,
         serviceName,
-        uuid
+        action: api.runs
       })
     } catch (e) {
       logger.error(commit, 'Error on runs job  in getRunsJob action.\nError: ', e)
+      commit(type.mutation.SET_LOADING, { name: stateType.jobRunsLoading, value: false })
 
       return
     }
 
     commit(type.SET_JOB_RUNS, runs)
+    commit(type.mutation.SET_LOADING, { name: stateType.jobRunsLoading, value: false })
   },
 
   async [type.action.resetStore]({ commit }) {
@@ -75,6 +79,7 @@ export const actions: ActionTree<jobRunState, RootState> = {
       })
     } catch (e) {
       logger.error(commit, 'Error on jobRunPayload job  in getJobRunPayload action.\nError: ', e)
+      commit(type.mutation.SET_LOADING, { name: stateType.payLoadLoading, value: false })
 
       return
     }
@@ -162,7 +167,7 @@ export const actions: ActionTree<jobRunState, RootState> = {
     commit(type.mutation.SET_LOADING, { name: stateType.jobRunArtifactLoading, value: true })
 
     if (!uuid.jobRunShortId || !uuid.artifactShortId) {
-      commit(type.mutation.SET_LOADING, { name: stateType.jobRunArtifactLoading, value: false })
+      setTimeout(() => commit(type.mutation.SET_LOADING, { name: stateType.jobRunArtifactLoading, value: false }), 1000)
       return
     }
 

@@ -1,6 +1,6 @@
 <template>
   <div class="px-4">
-    <v-toolbar dense flat color="grey lighten-3" class="br-r4">
+    <v-toolbar dense flat color="grey lighten-4" class="br-r4">
       <v-flex class="d-flex">
         <div class="mr-auto d-flex align-center"></div>
         <div>
@@ -12,10 +12,10 @@
                 small
                 outlined
                 color="secondary"
-                class="mr-1"
+                class="mr-1 btn--hover"
                 @click="handleDownload()"
               >
-                <v-icon color="secondary">mdi-download</v-icon>
+                <v-icon left color="secondary">mdi-download</v-icon>Download
               </v-btn>
             </template>
             <span>Download</span>
@@ -29,9 +29,10 @@
                 small
                 outlined
                 color="secondary"
+                class="mr-1 btn--hover"
                 @click="handleCopy()"
               >
-                <v-icon color="secondary">mdi-content-copy</v-icon>
+                <v-icon left color="secondary">mdi-content-copy</v-icon>Copy
               </v-btn>
             </template>
             <span>Copy</span>
@@ -60,13 +61,12 @@
 import { throttle } from 'lodash'
 import { useWindowSize } from '@u3u/vue-hooks'
 import useQuery from '@/core/composition/useQuery'
-import useMoment from '@/core/composition/useMoment'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
 import TheHighlight from '@/core/components/highlight/TheHighlight'
 import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
 import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress'
-import { reactive, computed, onBeforeMount, defineComponent } from '@vue/composition-api'
+import { computed, onBeforeMount, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'JobRunLog',
@@ -78,17 +78,17 @@ export default defineComponent({
 
   setup(props, context) {
     const snackBar = useSnackBar()
-    const moment = useMoment(context)
     const { height } = useWindowSize()
     const jobRunStore = useJobRunStore()
+    const next = computed(() => jobRunStore.jobRunLog.value.next)
     const jobRunId = computed(() => context.root.$route.params.jobRunId)
+
     const query = useQuery({
-      offset: 200,
+      next,
       limit: 100,
-      store: jobRunStore,
+      offset: 200,
       uuid: jobRunId.value,
-      action: 'getJobRunLog',
-      queryPath: 'jobRunLog'
+      storeAction: jobRunStore.getJobRunLog
     })
     const forceFileDownload = useForceFileDownload()
 
@@ -147,7 +147,7 @@ export default defineComponent({
     const handleDownload = async () => {
       await getFullJobRun()
 
-      forceFileDownload.trigger({ source: fullLog.value, name: `${jobRunStore.jobRun.value.short_uuid}_log.txt` })
+      forceFileDownload.trigger({ source: fullLog.value, name: `run_${jobRunStore.jobRun.value.short_uuid}_log.txt` })
     }
 
     const onScroll = e => query.onScroll(e.target.scrollTop)

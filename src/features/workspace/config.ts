@@ -47,6 +47,61 @@ const jobRun = [
         name: 'workspace-project-jobs-job-jobrun-result'
       },
       {
+        path: 'metrics',
+        redirect: { name: 'workspace-project-jobs-job-jobrun-metrics-table' },
+        component: () =>
+          import(
+            /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-metrics" */ './views/project/jobs/job/jobruns/jobrun/metrics/index.vue'
+          ),
+        name: 'workspace-project-jobs-job-jobrun-metrics',
+        children: [
+          {
+            path: 'table',
+            component: () =>
+              import(
+                /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-metrics-table" */ './views/project/jobs/job/jobruns/jobrun/metrics/table-view.vue'
+              ),
+            name: 'workspace-project-jobs-job-jobrun-metrics-table',
+            meta: {
+              tabValue: 'table'
+            }
+          },
+          {
+            path: 'json',
+            component: () =>
+              import(
+                /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-metrics-json" */ './views/project/jobs/job/jobruns/jobrun/metrics/json-view.vue'
+              ),
+            name: 'workspace-project-jobs-job-jobrun-metrics-json',
+            meta: {
+              tabValue: 'json'
+            }
+          },
+          {
+            path: 'card',
+            component: () =>
+              import(
+                /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-metrics-card" */ './views/project/jobs/job/jobruns/jobrun/metrics/card-view.vue'
+              ),
+            name: 'workspace-project-jobs-job-jobrun-metrics-card',
+            meta: {
+              tabValue: 'card'
+            }
+          },
+          {
+            path: 'grid',
+            component: () =>
+              import(
+                /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-metrics-grid" */ './views/project/jobs/job/jobruns/jobrun/metrics/grid-view.vue'
+              ),
+            name: 'workspace-project-jobs-job-jobrun-metrics-grid',
+            meta: {
+              tabValue: 'grid'
+            }
+          }
+        ]
+      },
+      {
         path: 'artifact',
         component: () =>
           import(

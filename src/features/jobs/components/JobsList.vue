@@ -4,8 +4,8 @@
     fixed-header
     single-expand
     item-key="short_uuid"
-    class="job-table scrollbar ask-anna-table ask-anna-table--with-links"
     no-data-text="For this project, there are no jobs configured."
+    class="job-table scrollbar ask-anna-table ask-anna-table--with-links"
     :items="jobList"
     :expanded.sync="expanded"
     :headers="JobsListHeaders"
@@ -17,9 +17,11 @@
         <ask-anna-loading-progress v-if="item.runs.count" :type="'table-row'" :loading="loading">
           <job-runs
             :items="runs"
+            :count="count"
             :height="calcSubHeight"
+            :loading="jobRunsLoading"
             :tableClass="'job-sub-table'"
-            @handleClickOnRow="handleClickOnRow"
+            @onChangeParams="params => handleChangeParams({ uuid: item.short_uuid, params })"
           />
         </ask-anna-loading-progress>
 
@@ -63,9 +65,8 @@ import { useWindowSize } from '@u3u/vue-hooks'
 import { JobsListHeaders } from '../utils/index'
 import JobRuns from '@jobrun/components/JobRuns'
 import useMoment from '@/core/composition/useMoment'
-import useJobStore from '../../job/composition/useJobStore'
-import { ref, computed, defineComponent } from '@vue/composition-api'
 import useJobRunStore from '../../jobrun/composition/useJobRunStore'
+import { ref, computed, defineComponent } from '@vue/composition-api'
 import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress'
 
 export default defineComponent({
@@ -84,7 +85,6 @@ export default defineComponent({
   },
 
   setup(props, context) {
-    const jobStore = useJobStore()
     const moment = useMoment(context)
     const { height } = useWindowSize()
     const jobRunStore = useJobRunStore()
@@ -94,9 +94,13 @@ export default defineComponent({
     const loading = ref(true)
     const currentJob = ref(true)
 
+    const count = computed(() => jobRunStore.runs.value.count)
+    const runs = computed(() => jobRunStore.runs.value.results)
+    const jobRunsLoading = computed(() => jobRunStore.jobRunsLoading.value)
+
     const calcSubHeight = computed(() => {
       const rowHeight = 64
-      const countItems = jobRunStore.runs.value.length
+      const countItems = count.value
       const subRowHeiht = countItems >= 5 ? 280 : countItems * rowHeight + 70
 
       return subRowHeiht
@@ -113,20 +117,9 @@ export default defineComponent({
       loading.value = true
 
       currentJob.value = item
+      await jobRunStore.getRunsJob({ uuid: item.short_uuid, params: { offset: 0, limit: 5 } })
 
-      await jobRunStore.getRunsJob(item.short_uuid)
       loading.value = false
-    }
-
-    const handleClickOnRow = item => {
-      context.root.$router.push({
-        name: 'workspace-project-jobs-job-jobrun-input',
-        params: {
-          ...context.root.$route.params,
-          jobRunId: item.short_uuid,
-          jobId: currentJob.value.short_uuid || 'jobname'
-        }
-      })
     }
 
     const routeLinkParams = item => {
@@ -139,20 +132,29 @@ export default defineComponent({
       }
     }
 
+    const handleChangeParams = async ({ uuid, params }) => {
+      await jobRunStore.getRunsJob({
+        uuid,
+        params
+      })
+    }
+
     return {
+      runs,
+      count,
       height,
       loading,
       expanded,
       selection,
       calcSubHeight,
+      jobRunsLoading,
       ...moment,
-      ...jobStore,
-      ...jobRunStore,
       JobsListHeaders,
       routeLinkParams,
+
       handleExpand,
       handleJobClick,
-      handleClickOnRow
+      handleChangeParams
     }
   }
 })

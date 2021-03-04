@@ -139,13 +139,14 @@ export default defineComponent({
 
     const { projectId: uuid } = context.root.$route.params
 
+    const next = computed(() => packagesStore.state.projectPackages.value.next)
+
     const query = useQuery({
+      next,
       uuid,
       limit: 18,
       offset: 100,
-      store: packagesStore,
-      action: 'getProjectPackages',
-      queryPath: 'projectPackages'
+      storeAction: packagesStore.getProjectPackages
     })
 
     const onScroll = e => query.onScroll(e.target.documentElement.scrollTop)
@@ -169,17 +170,40 @@ export default defineComponent({
     }
 
     const headers = [
-      { text: 'UUID', value: 'short_uuid', sortable: false, class: 'w-min-110', width: '10%' },
-      { text: 'Date created', value: 'created', class: 'w-min-210', width: '10%' },
-      { text: 'By', value: 'created_by', sort: sortBy, class: 'w-min-110', width: '10%' },
+      {
+        text: 'UUID',
+        value: 'short_uuid',
+        sortable: false,
+        width: '10%',
+        class: 'w-min-110 text-left text-subtitle-2 font-weight-bold h-20'
+      },
+      {
+        text: 'Date created',
+        value: 'created',
+        width: '10%',
+        class: 'w-min-210 text-left text-subtitle-2 font-weight-bold h-20'
+      },
+      {
+        text: 'By',
+        value: 'created_by',
+        sort: sortBy,
+        width: '10%',
+        class: 'w-min-110 text-left text-subtitle-2 font-weight-bold h-20'
+      },
       {
         text: 'Description',
         align: 'left',
         value: 'description',
         width: '60%',
-        class: 'w-max-110'
+        class: 'w-max-110 text-left text-subtitle-2 font-weight-bold h-20'
       },
-      { text: '', value: 'uuid', sortable: false, class: 'w-min-110', width: '10%' }
+      {
+        text: '',
+        value: 'uuid',
+        sortable: false,
+        width: '10%',
+        class: 'w-min-110 text-left text-subtitle-2 font-weight-bold h-20'
+      }
     ]
 
     const handleClickRow = ({ short_uuid, versionId }) => {

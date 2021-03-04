@@ -3,9 +3,10 @@
     <ask-anna-loading-progress :type="'table-row'" :loading="loading">
       <job-runs
         :items="runs"
-        :height="calcSubHeight"
+        :count="count"
+        :loading="jobRunsLoading"
         :tableClass="'job-sub-table'"
-        @handleClickOnRow="handleClickOnRow"
+        @onChangeParams="handleChangeParams"
       />
     </ask-anna-loading-progress>
   </v-card>
@@ -25,6 +26,8 @@ export default defineComponent({
   },
 
   setup(rops, context) {
+    const { jobId: uuid } = context.root.$route.params
+
     const loading = ref(true)
     const jobStore = useJobStore()
     const jobRunStore = useJobRunStore()
@@ -32,35 +35,37 @@ export default defineComponent({
     onBeforeMount(async () => {
       jobStore.resetStore()
       jobRunStore.resetStore()
-      const { jobId } = context.root.$route.params
 
-      jobStore.getJob(jobId)
-      await jobRunStore.getRunsJob(jobId)
+      jobStore.getJob(uuid)
+      await jobRunStore.getRunsJob({
+        uuid,
+        params: {
+          limit: 5,
+          offset: 0
+        }
+      })
 
       loading.value = false
     })
 
-    const calcSubHeight = computed(() => {
-      const countItems = jobRunStore.runs.length
-      const rowHeight = 64
-      const subRowHeiht = countItems >= 5 ? 368 : countItems * rowHeight + 70
+    const runs = computed(() => jobRunStore.runs.value.results)
+    const count = computed(() => jobRunStore.runs.value.count)
 
-      return subRowHeiht
-    })
+    const jobRunsLoading = computed(() => jobRunStore.jobRunsLoading.value)
 
-    const handleClickOnRow = item => {
-      context.root.$router.push({
-        name: 'workspace-project-jobs-job-jobrun-input',
-        params: { ...context.root.$route.params, jobRunId: item.short_uuid }
+    const handleChangeParams = async params => {
+      await jobRunStore.getRunsJob({
+        uuid,
+        params
       })
     }
 
     return {
+      runs,
+      count,
       loading,
-      ...jobStore,
-      ...jobRunStore,
-      calcSubHeight,
-      handleClickOnRow
+      jobRunsLoading,
+      handleChangeParams
     }
   }
 })

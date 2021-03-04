@@ -1,5 +1,5 @@
 <template>
-  <ask-anna-loading-progress :loading="packageLoading && !isProcessing">
+  <ask-anna-loading-progress :loading="packageLoading">
     <v-row align="center" justify="center">
       <v-col cols="12" class="pt-0 pb-0">
         <package-toolbar :breadcrumbs="breadcrumbs" v-sticky="sticked" sticky-offset="{top: 52, bottom: 10}">
@@ -49,7 +49,7 @@
             :id="packageId"
           />
         </v-expand-transition>
-        <template v-if="isProcessing">
+        <template v-if="isProcessing && !isRaplace">
           <package-processing />
         </template>
         <template v-else>
@@ -60,7 +60,9 @@
             :currentPath="currentPath"
             :sticked="sticked"
           />
-          <package-tree v-else :items="treeView" :height="calcHeight" :getRoutePath="getRoutePath" />
+          <template v-else>
+            <package-tree v-if="!isProcessing" :items="treeView" :height="calcHeight" :getRoutePath="getRoutePath" />
+          </template>
         </template>
       </v-col>
     </v-row>
@@ -76,7 +78,7 @@ import { headers, FileIcons } from '@package/utils/index'
 import useProjectStore from '@project/composition/useProjectStore'
 import usePackagesStore from '@/features/packages/composition/usePackagesStore'
 import PackageToolbar from '@/features/package/components/PackageToolbar'
-import { ref, watchEffect, onBeforeMount, onUnmounted, computed } from '@vue/composition-api'
+import { ref, watch, watchEffect, onBeforeMount, onUnmounted, computed } from '@vue/composition-api'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
 import usePackageStore from '@/features/package/composition/usePackageStore'
 import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
@@ -126,16 +128,20 @@ export default defineComponent({
       clearInterval(polling.value)
     })
 
-    const getPackage = async () =>
+    const getPackage = async (loading = true) => {
+      const { projectId, packageId = 'new-package', folderName = '' } = context.root.$route.params
+
       await packageStore.getPackage({
+        loading,
         projectId,
         packageId,
         folderName
       })
+    }
 
     const pollData = () => {
       polling.value = setInterval(async () => {
-        await getPackage()
+        await getPackage(false)
         checkProcessing()
       }, 10000)
     }
@@ -225,7 +231,19 @@ export default defineComponent({
       })
     }
 
-    watchEffect(() => {
+    // check if current package the same as in store
+    watch(
+      () => context.root.$route,
+      async () => {
+        const { packageId } = context.root.$route.params
+        if (packageId !== packageStore.packageData.value.short_uuid) {
+          isRaplace.value = false
+          await getPackage()
+        }
+      }
+    )
+
+    watchEffect(async () => {
       packageStore.resetFile()
       const filePath =
         currentPath.value && !currentPath.value.is_dir && currentPath.value.name !== '' ? currentPath.value.path : ''
@@ -234,11 +252,12 @@ export default defineComponent({
       packageStore.getFileSource(filePath)
     })
 
+    const packageLoading = computed(() => packageStore.packageLoading.value)
+
     return {
-      sticked,
       file,
+      sticked,
       fileSource: packageStore.fileSource,
-      packageLoading: packageStore.packageLoading,
       treeView,
       packageId,
       FileIcons,
@@ -250,6 +269,7 @@ export default defineComponent({
       getRoutePath,
       handleReplace,
       handleHistory,
+      packageLoading,
       handleDownload,
       handeBackToPackageRoot
     }

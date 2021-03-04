@@ -15,7 +15,7 @@
           <v-icon color="secondary" left>mdi-download</v-icon>Download file
         </v-btn>
         <v-btn small outlined color="secondary" class="mr-1 btn--hover" @click="handleCopy">
-          <v-icon color="secondary" left>mdi-content-copy</v-icon>Copy file
+          <v-icon color="secondary" left>mdi-content-copy</v-icon>Copy
         </v-btn>
       </v-toolbar>
       <package-file-image v-if="isFileImg" :fileSource="fileSource" />

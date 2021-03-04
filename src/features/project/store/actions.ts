@@ -34,7 +34,7 @@ export const actions: ActionTree<projectState, RootState> = {
     commit(`${GENERAL_STORE}/${gMutation.SET_BREADCRUMB_PARAMS}`, { projectId: project.name }, { root: true })
   },
 
-  async [action.getProjects]({ state, commit, dispatch }) {
+  async [action.getProjects]({ state, commit }) {
     let projects
     try {
       projects = await apiService({
@@ -43,17 +43,15 @@ export const actions: ActionTree<projectState, RootState> = {
         params: state.query
       })
     } catch (error) {
-      dispatch(rootTypes.loggerError, {
-        errorHint: 'Error on load projects in getProjects action.\nError:',
-        error
-      })
+      logger.error(commit, 'Error on load projects in getProjects action.\nError: ', error)
+
       return
     }
 
     commit(mutation.SET_PROJECTS, projects)
   },
 
-  async [action.getProjectJobs]({ commit, dispatch }, uuid) {
+  async [action.getProjectJobs]({ commit }, uuid) {
     commit(mutation.SET_LOADING, { name: 'jobsLoading', value: true })
 
     let jobs
@@ -66,10 +64,8 @@ export const actions: ActionTree<projectState, RootState> = {
     } catch (error) {
       commit(mutation.SET_LOADING, { name: 'jobsLoading', value: false })
 
-      dispatch(rootTypes.loggerError, {
-        errorHint: 'Error on load project jobs in getProjectJobs action.\nError: ',
-        error
-      })
+      logger.error(commit, 'Error on load project jobs in getProjectJobs action.\nError: ', error)
+
       return
     }
 
@@ -144,7 +140,7 @@ export const actions: ActionTree<projectState, RootState> = {
     return project
   },
 
-  async [action.createProject]({ commit, dispatch }, data) {
+  async [action.createProject]({ commit }, data) {
     let project
     try {
       project = await apiService({
@@ -154,10 +150,8 @@ export const actions: ActionTree<projectState, RootState> = {
         data
       })
     } catch (error) {
-      dispatch(rootTypes.loggerError, {
-        errorHint: 'Error on create project in createProject action.\nError:',
-        error
-      })
+      logger.error(commit, 'Error on create project in createProject action.\nError:', error)
+
       return project
     }
     commit(mutation.RESET_PROJECT_DATA)
@@ -173,7 +167,7 @@ export const actions: ActionTree<projectState, RootState> = {
     return project
   },
 
-  async [action.updateProject]({ commit, dispatch, state }, uuid) {
+  async [action.updateProject]({ commit, state }, uuid) {
     let project
     try {
       project = await apiService({
@@ -184,10 +178,8 @@ export const actions: ActionTree<projectState, RootState> = {
         data: state.project
       })
     } catch (error) {
-      dispatch(rootTypes.loggerError, {
-        errorHint: 'Error on update project in updateProject action.\nError:',
-        error
-      })
+      logger.error(commit, 'Error on update project in updateProject action.\nError: ', error)
+
       return
     }
 
@@ -216,7 +208,7 @@ export const actions: ActionTree<projectState, RootState> = {
     commit(mutation.SET_PROJECT_TEMPLATES, projectTemplates)
   },
 
-  async [action.deleteProject]({ commit, dispatch }, project) {
+  async [action.deleteProject]({ commit }, project) {
     try {
       await apiService({
         action: api.delete,
@@ -225,10 +217,8 @@ export const actions: ActionTree<projectState, RootState> = {
         uuid: project.short_uuid
       })
     } catch (error) {
-      dispatch(rootTypes.loggerError, {
-        errorHint: 'Error on delete project in deleteProject action.\nError:',
-        error
-      })
+      logger.error(commit, 'Error on delete project in deleteProject action.\nError: ', error)
+
       return
     }
 

@@ -3,11 +3,12 @@
     fixed-header
     class="job-runs-table ask-anna-table ask-anna-table--with-links"
     :items="items"
-    :height="height"
     :page.sync="page"
+    :loading="loading"
     :headers="headers"
     :class="tableClass"
-    :options="{ itemsPerPage: 5 }"
+    :options.sync="options"
+    :server-items-length="count"
     @page-count="pageCount = $event"
   >
     <template v-slot:item="{ item }">
@@ -53,12 +54,16 @@
 import useMoment from '@/core/composition/useMoment'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
 
-import { ref, defineComponent } from '@vue/composition-api'
+import { ref, watch, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'JobRuns',
 
   props: {
+    count: {
+      type: Number,
+      default: () => 0
+    },
     items: {
       type: Array,
       default: () => []
@@ -67,10 +72,7 @@ export default defineComponent({
       type: Number,
       default: () => 300
     },
-    page: {
-      type: Number,
-      default: () => 0
-    },
+
     tableClass: {
       type: String,
       default: () => ''
@@ -78,6 +80,10 @@ export default defineComponent({
     routeName: {
       type: String,
       default: () => ''
+    },
+    loading: {
+      type: Boolean,
+      default: () => false
     }
   },
 
@@ -85,19 +91,22 @@ export default defineComponent({
     const snackBar = useSnackBar()
     const moment = useMoment(context)
 
+    const page = ref(0)
+
+    const options = ref({ itemsPerPage: 5, page: 1 })
+
     const pageCount = ref(0)
     const headers = [
       {
         text: 'Run',
         sortable: false,
         value: 'info',
-        width: '10%'
+        width: '10%',
+        class: 'text-left text-subtitle-2 font-weight-bold h-20'
       },
-      { text: 'Status', value: 'status' },
-      { text: 'Timing', value: 'runtime' }
+      { text: 'Status', sortable: false, value: 'status', class: 'text-left text-subtitle-2 font-weight-bold h-20' },
+      { text: 'Timing', sortable: false, value: 'runtime', class: 'text-left text-subtitle-2 font-weight-bold h-20' }
     ]
-
-    const handleClickOnRow = value => context.emit('handleClickOnRow', value)
 
     const handleCopy = id => {
       context.root.$copyText(id).then(
@@ -133,13 +142,28 @@ export default defineComponent({
       }
     }
 
+    watch(options, async (options, currentOptions) => {
+      const { itemsPerPage: limit = 5, page = 1 } = options
+      const { itemsPerPage: currentLimit = 5, page: currentPage = 1 } = currentOptions
+
+      if (limit === currentLimit && page === currentPage) return
+
+      const params = {
+        limit,
+        offset: (page - 1) * limit
+      }
+
+      context.emit('onChangeParams', params)
+    })
+
     return {
       ...moment,
+      page,
       headers,
+      options,
       pageCount,
       handleCopy,
       routeLinkParams,
-      handleClickOnRow,
       calculateDuration
     }
   }

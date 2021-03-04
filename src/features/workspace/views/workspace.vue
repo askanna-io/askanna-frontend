@@ -24,14 +24,17 @@ export default defineComponent({
 
   components: { WorkspaceProjectList },
 
-  setup(props, context) {
+  setup() {
     const workspaceStore = useWorkspaceStore()
+
+    const next = computed(() => workspaceStore.state.workspaceProjects.value.next)
+
     const query = useQuery({
-      offset: 99,
+      next,
       limit: 18,
+      offset: 99,
       store: workspaceStore,
-      action: 'getWorkpaceProjects',
-      queryPath: 'workspaceProjects'
+      storeAction: workspaceStore.actions.getWorkpaceProjects
     })
 
     const loading = computed(() => workspaceStore.loading.value.projects)

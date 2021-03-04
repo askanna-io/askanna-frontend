@@ -1,5 +1,3 @@
-import { SetupContext } from '@vue/composition-api'
-
 export default () => {
   const TABLE_NAME = 'hljs-ln'
   const LINE_NAME = 'hljs-ln-line'
@@ -9,21 +7,27 @@ export default () => {
   const DATA_ATTR_NAME = 'data-line-number'
   const BREAK_LINE_REGEXP = /\r\n|\r|\n/g
 
-  function getLines(text: string) {
+  const getLines = (text: string) => {
     if (text.length === 0) return []
     return text.split(BREAK_LINE_REGEXP)
   }
 
-  function addLineNumbersBlockFor(inputHtml: string, firstLineIndex: number) {
-    const lines = getLines(inputHtml)
+  function addLineNumbersBlockFor(inputHtml: string, firstLineIndex: number, options: Options) {
+    let lines = getLines(inputHtml)
     if (!lines || !lines.length) return inputHtml
 
     // if last line contains only carriage return remove it
     if (lines[lines.length - 1].trim() === '') {
       lines.pop()
     }
-
+    let isSliced = false
+    let appendHtml = ''
     if (lines.length > firstLineIndex) {
+      if (options.maxRowToShow && options.maxRowToShow < lines.length) {
+        isSliced = true
+        lines = lines.slice(0, options.maxRowToShow)
+      }
+
       let html = ''
       lines.forEach((line, i) => {
         i += 1
@@ -38,7 +42,14 @@ export default () => {
   </tr>`.replace(/\n/g, '')
       })
 
-      return `<table class="${TABLE_NAME}">${html}</table>`
+      if (options.maxRowToShow && isSliced) {
+        appendHtml = `<div>
+        ...
+        </div>
+        `.replace(/\n/g, '')
+      }
+
+      return `<table class="${TABLE_NAME}">${html}</table>${appendHtml}`
     }
 
     return inputHtml
@@ -54,10 +65,11 @@ export default () => {
     // convert options
     const firstLineIndex = options.singleLine ? 0 : 1
 
-    return addLineNumbersBlockFor(element.innerHTML, firstLineIndex)
+    return addLineNumbersBlockFor(element.innerHTML, firstLineIndex, options)
   }
 
   interface Options {
+    maxRowToShow?: false | number
     singleLine?: boolean
   }
 
@@ -67,5 +79,5 @@ export default () => {
 
     return lineNumbersInternal(element, options)
   }
-  return { lineNumbersValue }
+  return { getLines, lineNumbersValue }
 }
