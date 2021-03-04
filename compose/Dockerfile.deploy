@@ -1,7 +1,8 @@
 ############################################
 # Build image - contains built code
 ############################################
-FROM gitlab.askanna.io:4567/askanna/askanna-frontend/base:latest AS build
+ARG BASE_IMAGE=gitlab.askanna.io:4567/askanna/askanna-frontend/base:master
+FROM $BASE_IMAGE AS build
 
 WORKDIR /app
 COPY . .
