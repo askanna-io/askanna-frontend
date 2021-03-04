@@ -1,7 +1,7 @@
 import { MutationTree } from 'vuex'
 import { File, JobRunModel, jobRunState, ArtifactModel } from './types'
 import * as type from './types'
-import { set } from 'lodash'
+import { isArray, set } from 'lodash'
 
 export const mutations: MutationTree<jobRunState> = {
   [type.SET_JOB_RUN](state, data) {
@@ -9,13 +9,15 @@ export const mutations: MutationTree<jobRunState> = {
   },
 
   [type.SET_JOB_RUNS](state, data) {
-    const runs = data.sort((a: any, b: any) => {
-      const dateA = new Date(a.created)
-      const dateB = new Date(b.created)
-
-      return dateB.getTime() - dateA.getTime()
-    })
-    state.runs = runs
+    if (isArray(data)) {
+      state.runs = {
+        next: null,
+        results: data,
+        count: data.length
+      }
+      return
+    }
+    state.runs = data
   },
 
   [type.mutation.CLOSE_RESULT_MODAL](state) {
@@ -35,7 +37,11 @@ export const mutations: MutationTree<jobRunState> = {
   },
 
   [type.mutation.UPDATE_JOB_RUN_STORE](state) {
-    state.runs = []
+    state.runs = {
+      count: 0,
+      next: null,
+      results: []
+    }
     state.jobRunResult = null
     state.jobRunPayload = null
     state.jobRunLoading = true

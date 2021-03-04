@@ -39,7 +39,8 @@ build_base:
   only:
     changes:
       - compose/Dockerfile.base
-      - package*.json
+      - package-lock.json
+      - package.json
 
 build_master:
   stage: build-deploy

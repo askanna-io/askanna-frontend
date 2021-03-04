@@ -10,7 +10,7 @@
           <v-tooltip top>
             <template v-slot:activator="{ on }">
               <v-btn x-small v-on="on" outlined color="secondary" @click.stop="handleCopy(cliInstall)">
-                <v-icon small color="secondary">mdi-content-copy</v-icon>
+                <v-icon small color="secondary">mdi-content-copy</v-icon>Copy
               </v-btn>
             </template>
             <span>Copy</span>
@@ -27,7 +27,7 @@
           <v-tooltip top>
             <template v-slot:activator="{ on }">
               <v-btn x-small v-on="on" outlined color="secondary" @click.stop="handleCopy(cliInstall)">
-                <v-icon small color="secondary">mdi-content-copy</v-icon>
+                <v-icon small color="secondary">mdi-content-copy</v-icon>Copy
               </v-btn>
             </template>
             <span>Copy</span>
@@ -49,7 +49,7 @@
           <v-tooltip top>
             <template v-slot:activator="{ on }">
               <v-btn x-small v-on="on" outlined color="secondary" @click.stop="handleCopy(projectUrl)">
-                <v-icon small color="secondary">mdi-content-copy</v-icon>
+                <v-icon small color="secondary">mdi-content-copy</v-icon>Copy
               </v-btn>
             </template>
             <span>Copy</span>
@@ -61,7 +61,7 @@
           <v-tooltip top>
             <template v-slot:activator="{ on }">
               <v-btn v-on="on" x-small outlined color="secondary" @click.stop="handleCopy(askannaPush)">
-                <v-icon small color="secondary">mdi-content-copy</v-icon>
+                <v-icon small color="secondary">mdi-content-copy</v-icon>Copy
               </v-btn>
             </template>
             <span>Copy</span>
@@ -71,7 +71,7 @@
           <v-tooltip top>
             <template v-slot:activator="{ on }">
               <v-btn v-on="on" x-small outlined color="secondary" @click.stop="handleCopy(askannaPushForce)">
-                <v-icon small color="secondary">mdi-content-copy</v-icon>
+                <v-icon small color="secondary">mdi-content-copy</v-icon>Copy
               </v-btn>
             </template>
             <span>Copy</span>
@@ -83,7 +83,7 @@
           <v-tooltip top>
             <template v-slot:activator="{ on }">
               <v-btn v-on="on" x-small outlined color="secondary" @click.stop="handleCopy(askannaPushWithMessage)">
-                <v-icon small color="secondary">mdi-content-copy</v-icon>
+                <v-icon small color="secondary">mdi-content-copy</v-icon>Copy
               </v-btn>
             </template>
             <span>Copy</span>

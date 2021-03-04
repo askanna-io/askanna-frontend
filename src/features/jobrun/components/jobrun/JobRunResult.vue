@@ -1,6 +1,6 @@
 <template>
   <div class="px-4">
-    <v-toolbar dense flat color="grey lighten-3" class="br-r4">
+    <v-toolbar dense flat color="grey lighten-4" class="br-r4">
       <v-flex class="d-flex">
         <div class="mr-auto d-flex align-center"></div>
         <div>
@@ -29,7 +29,7 @@
                 small
                 outlined
                 color="secondary"
-                class="mr-1"
+                class="mr-1 btn--hover"
                 @click="handleDownload('formated')"
               >
                 <v-icon color="secondary" left>mdi-download</v-icon>Formated
@@ -46,9 +46,10 @@
                 :disabled="loading || isJobRunResultEmpty"
                 outlined
                 color="secondary"
+                class="mr-1 btn--hover"
                 @click="handleCopy()"
               >
-                <v-icon color="secondary">mdi-content-copy</v-icon>
+                <v-icon left color="secondary">mdi-content-copy</v-icon>Copy
               </v-btn>
             </template>
             <span>Copy</span>
@@ -119,7 +120,7 @@ export default defineComponent({
     const handleDownload = async formatType => {
       const source = formatType === 'raw' ? jobRunResultRaw.value : jobRunResultFormated.value
 
-      forceFileDownload.trigger({ source, name: `${jobRunStore.jobRun.value.short_uuid}-result.json` })
+      forceFileDownload.trigger({ source, name: `run_${jobRunStore.jobRun.value.short_uuid}_result.json` })
     }
 
     const handleCopy = () => {

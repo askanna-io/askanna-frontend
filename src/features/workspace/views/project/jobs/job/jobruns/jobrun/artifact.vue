@@ -47,18 +47,17 @@
 
 <script>
 import { useWindowSize } from '@u3u/vue-hooks'
+import { FileIcons } from '@package/utils/index'
 import { defineComponent } from '@vue/composition-api'
-import { headers, FileIcons } from '@package/utils/index'
 import PackageTree from '@/features/package/components/PackageTree'
 import useProjectStore from '@project/composition/useProjectStore'
 import PackageFile from '@/features/package/components/PackageFile'
 import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
 import PackageToolbar from '@/features/package/components/PackageToolbar'
 import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
-import usePackageStore from '@/features/package/composition/usePackageStore'
 import useTriggerFileDownload from '@/core/composition/useTriggerFileDownload'
-import usePackagesStore from '@/features/packages/composition/usePackagesStore'
-import { ref, watchEffect, onBeforeMount, onUnmounted, computed } from '@vue/composition-api'
+
+import { watchEffect, onBeforeMount, computed } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'PackageUuid',
@@ -73,7 +72,6 @@ export default defineComponent({
     const { height } = useWindowSize()
     const jobRunStore = useJobRunStore()
     const projectStore = useProjectStore()
-    const packageStore = usePackageStore()
 
     const triggerFileDownload = useTriggerFileDownload()
     const breadcrumbs = usePackageBreadcrumbs(context, { start: 8, end: 9 })
@@ -182,19 +180,22 @@ export default defineComponent({
       await jobRunStore.getFileSource(filePath)
     })
 
+    const fileSource = computed(() => jobRunStore.fileSource.value)
+    const jobRunArtifactLoading = computed(() => jobRunStore.jobRunArtifactLoading.value)
+
     return {
-      sticked,
       file,
-      fileSource: jobRunStore.fileSource,
-      jobRunArtifactLoading: jobRunStore.jobRunArtifactLoading,
+      sticked,
       treeView,
-      artifactUuid,
       FileIcons,
+      fileSource,
       calcHeight,
       breadcrumbs,
       currentPath,
+      artifactUuid,
       getRoutePath,
       handleDownload,
+      jobRunArtifactLoading,
       handeBackToPackageRoot
     }
   }

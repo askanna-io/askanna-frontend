@@ -1,6 +1,6 @@
 <template>
   <div class="px-4">
-    <v-toolbar dense flat color="grey lighten-3" class="br-r4">
+    <v-toolbar dense flat color="grey lighten-4" class="br-r4">
       <v-flex class="d-flex">
         <div class="mr-auto d-flex align-center">
           Payload
@@ -14,7 +14,7 @@
                 outlined
                 v-on="on"
                 color="secondary"
-                class="mr-1"
+                class="mr-1 btn--hover"
                 @click="handleDownload('raw')"
               >
                 <v-icon color="secondary" left>mdi-download</v-icon>Raw
@@ -31,7 +31,7 @@
                 small
                 outlined
                 color="secondary"
-                class="mr-1"
+                class="mr-1 btn--hover"
                 @click="handleDownload('formated')"
               >
                 <v-icon color="secondary" left>mdi-download</v-icon>Formated
@@ -49,8 +49,9 @@
                 outlined
                 color="secondary"
                 @click="handleCopy()"
+                class="mr-1 btn--hover"
               >
-                <v-icon color="secondary">mdi-content-copy</v-icon>
+                <v-icon left color="secondary">mdi-content-copy</v-icon>Copy
               </v-btn>
             </template>
             <span>Copy</span>
@@ -96,16 +97,11 @@ export default defineComponent({
     const isJobRunPayloadEmpty = computed(() => !jobRunPayload.value && !loading.value)
 
     const handleDownload = async formatType => {
-      const {
-        short_uuid,
-        payload: { short_uuid: uuid }
-      } = jobRunStore.jobRun.value
-      await jobRunStore.getJobRunPayload({ jobRunShortId: short_uuid, payloadUuid: uuid })
-
+      const { short_uuid } = jobRunStore.jobRun.value
       const formatOption = formatType === 'raw' ? null : 2
       const jrPayload = JSON.stringify(jobRunPayload.value, null, formatOption)
 
-      forceFileDownload.trigger({ source: jrPayload, name: `payload-${uuid}.json` })
+      forceFileDownload.trigger({ source: jrPayload, name: `run_${short_uuid}_payload.json` })
     }
 
     const handleCopy = () => {

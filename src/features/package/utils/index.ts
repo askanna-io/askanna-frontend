@@ -24,14 +24,16 @@ export const headers = [
     align: 'left',
     sortable: false,
     value: 'type',
-    width: 10
+    width: 10,
+    class: 'text-left text-subtitle-2 font-weight-bold h-20'
   },
   {
     text: 'Name',
     align: 'left',
     sortable: false,
-    value: 'name'
+    value: 'name',
+    class: 'text-left text-subtitle-2 font-weight-bold h-20'
   },
-  { text: 'Size', value: 'size' },
-  { text: 'Modified', value: 'last_modified' }
+  { text: 'Size', value: 'size', class: 'text-left text-subtitle-2 font-weight-bold h-20' },
+  { text: 'Modified', value: 'last_modified', class: 'text-left text-subtitle-2 font-weight-bold h-20' }
 ]

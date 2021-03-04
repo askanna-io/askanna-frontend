@@ -31,7 +31,7 @@ import { computed, defineComponent } from '@vue/composition-api'
 export default defineComponent({
   name: 'WorkspacePeopleNavbar',
 
-  setup(props, context) {
+  setup(_, context) {
     const projectStore = useProjectStore(context)
 
     const breadcrumbs = useBreadcrumbs(context, { start: 0, end: 3 })

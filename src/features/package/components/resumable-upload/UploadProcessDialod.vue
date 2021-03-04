@@ -14,23 +14,10 @@
       </v-card-text>
 
       <v-card-actions class="ml-4">
-        <v-btn v-if="!isUploadFinish" color="secondary" small outlined text @click="dialog = false">
+        <v-btn v-if="!isUploadFinish" class="btn--hover" color="secondary" small outlined text @click="dialog = false">
           <v-icon color="secondary" left>mdi-close</v-icon>Close
         </v-btn>
-        <v-btn
-          v-else
-          color="primary"
-          small
-          outlined
-          text
-          :to="{
-            name: 'workspace-project-package',
-            params: {
-              projectId,
-              packageId
-            }
-          }"
-        >
+        <v-btn v-else color="primary" small outlined text @click="handleOpenPackage">
           <v-icon small color="secondary" left>mdi-link-box-outline</v-icon>Open the uploaded code
         </v-btn>
       </v-card-actions>
@@ -74,7 +61,18 @@ export default defineComponent({
 
     const iconStatus = computed(() => uploadStatus.iconStatus.value)
 
-    return { dialog, iconStatus }
+    const handleOpenPackage = () => {
+      const { projectId, packageId } = props
+      context.root.$router.push({
+        name: 'workspace-project-package',
+        params: {
+          projectId,
+          packageId
+        }
+      })
+    }
+
+    return { dialog, iconStatus, handleOpenPackage }
   }
 })
 </script>

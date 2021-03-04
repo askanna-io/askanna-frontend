@@ -1,13 +1,14 @@
 export interface jobRunState extends jobRubData {}
 
 export interface jobRubData {
-  runs: JobRun[]
+  runs: { count: number; results: JobRun[]; next: null | string }
   openJobRunResult: boolean
   jobRun: JobRun
   jobRunPayload: string | null
   jobRunLoading: Boolean
   resultLoading: Boolean
   payLoadLoading: Boolean
+  jobRunsLoading: Boolean
   jobRunlogLoading: Boolean
   jobRunArtifactLoading: Boolean
   jobRunResult: any
@@ -38,6 +39,7 @@ export interface JobRun {
   uuid: string
   payload: {
     duration: number
+    short_uuid: string
   }
   status: string
   runtime: number
@@ -128,6 +130,7 @@ export const stateType = {
   jobRunPayload: 'jobRunPayload',
   jobRunLoading: 'jobRunLoading',
   resultLoading: 'resultLoading',
+  jobRunsLoading: 'jobRunsLoading',
   payLoadLoading: 'payLoadLoading',
   jobRunlogLoading: 'jobRunlogLoading',
   jobRunLogFullVersion: 'jobRunLogFullVersion',
@@ -149,7 +152,8 @@ export class JobRunModel {
     return {
       uuid: '',
       payload: {
-        duration: 0
+        duration: 0,
+        short_uuid: ''
       },
       status: '',
       runtime: 0,

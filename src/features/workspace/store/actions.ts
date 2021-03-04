@@ -65,10 +65,10 @@ export const actions: ActionTree<workspaceState, RootState> = {
     let projects
     try {
       projects = await apiService({
-        action: api.projects,
+        params,
         serviceName,
-        uuid: state.workspace.short_uuid,
-        params
+        action: api.projects,
+        uuid: state.workspace.short_uuid
       })
     } catch (error) {
       logger.error(commit, 'Error on load projects in getWorkpaceProjects action.\nError: ', error)
@@ -82,7 +82,8 @@ export const actions: ActionTree<workspaceState, RootState> = {
       commit(mutation.SET_WORKSPACE_PROJECTS, projects)
     }
 
-    commit(mutation.SET_LOADING, { projects: false })
+    // @TODO:1 refactore loading after create project
+    setTimeout(() => commit(mutation.SET_LOADING, { projects: false }), 1000)
   },
 
   async [action.changeSettings]({ commit }, data) {

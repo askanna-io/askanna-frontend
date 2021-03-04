@@ -99,6 +99,12 @@ export default defineComponent({
   border: none !important;
 }
 
+.AskAnna-box-shadow {
+  &--none {
+    box-shadow: unset !important;
+  }
+}
+
 .scrollbar {
   overflow-y: auto !important;
   overflow-x: hidden !important;

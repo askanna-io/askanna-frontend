@@ -62,7 +62,7 @@ export default defineComponent({
 
   components: { WorkspaceToolbar, WorkspaceProjectCardItem, WorkspaceProjectListItem },
 
-  setup(props, context) {
+  setup() {
     const sanitizeHTML = useSanitizeHTML()
 
     return { sanitizeHTML }

@@ -14,14 +14,14 @@
       </v-card-text>
     </v-card>
     <v-expand-transition>
-      <slot v-if="!isLoading" />
+      <slot v-if="!isLoading && !loading" />
     </v-expand-transition>
   </div>
 </template>
 
 <script>
 import { delay } from 'lodash'
-import { onUpdated, ref, computed, defineComponent } from '@vue/composition-api'
+import { ref, watch, onBeforeMount, computed, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'AskAnnaLoadingProgress',
@@ -49,7 +49,7 @@ export default defineComponent({
     const speed = ref(10)
     const interval = ref(0)
     const bufferValue = ref(100)
-    const isLoading = ref(true)
+    const isLoading = ref(false)
     const loadingProgress = ref(0)
     const indeterminate = ref(false)
     const loadingState = computed(() => props.loading)
@@ -59,15 +59,6 @@ export default defineComponent({
       clearInterval(interval.value)
 
       interval.value = setInterval(() => {
-        if (!loadingState.value) {
-          // indeterminate.value = false
-          loadingProgress.value = 100
-
-          stopLoading()
-
-          return
-        }
-
         if (loadingProgress.value > 99) {
           if (loadingState.value) {
             indeterminate.value = !indeterminate.value
@@ -94,15 +85,27 @@ export default defineComponent({
       )
     }
 
-    onUpdated(() => {
-      if (loadingState.value && !isLoading.value) {
-        indeterminate.value = false
-        bufferValue.value = 100
-        startLoading()
-      }
-    })
+    watch(
+      () => props.loading,
+      val => {
+        if (!val) {
+          loadingProgress.value = 100
 
-    startLoading()
+          stopLoading()
+
+          return
+        }
+        if (val && !isLoading.value) {
+          indeterminate.value = false
+          bufferValue.value = 100
+          startLoading()
+        }
+      }
+    )
+
+    onBeforeMount(async () => {
+      startLoading()
+    })
 
     return { bufferValue, indeterminate, isLoading, loadingProgress }
   }

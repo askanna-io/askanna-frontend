@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import VueRouter from 'vue-router'
 import useUserStore from '@/features/user/composition/useUserStore'
 import usePrepareAccount from '@/features/auth/composition/usePrepareAccount'
 import WorkspaceNotReady from '@/features/workspace/components/WorkspaceNotReady'
@@ -40,8 +41,27 @@ export default defineComponent({
       if (isReady.value) {
         clearInterval(polling.value)
         userStore.mutations.DELETE_TEMP_AUTH()
+
+        const backAfterUrl = window.localStorage.getItem('back_after_login')
+        window.localStorage.setItem('back_after_login', '')
+
+        //check if user need redirect to last visited page
+        const { isNavigationFailure, NavigationFailureType } = VueRouter
+
+        if (backAfterUrl && backAfterUrl !== '/') {
+          context.root.$router
+            .push({ path: backAfterUrl, params: { workspaceId: prepareAccount.workspaceId.value } })
+            .catch(failure => {
+              if (isNavigationFailure(failure, NavigationFailureType.duplicated)) {
+                return
+              }
+            })
+          return
+        }
+
         context.root.$router.push({ name: 'workspace', params: { workspaceId: prepareAccount.workspaceId.value } })
       }
+
       loading.value = false
     }
 
