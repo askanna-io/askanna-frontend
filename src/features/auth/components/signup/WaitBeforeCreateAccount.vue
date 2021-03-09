@@ -3,7 +3,7 @@
     <v-card-title class="break">Wait a moment while we are creating your account</v-card-title>
     <v-card-text class="pb-2 text-body-1">
       You can wait while Anna is creating your account. This can take a couple of seconds. You can also do something
-      else. We will send you an email ones the account is ready.
+      else. We will send you an email once the account is ready.
     </v-card-text>
   </v-card>
 </template>
