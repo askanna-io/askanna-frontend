@@ -14,7 +14,7 @@
     <template v-slot:item="{ item }">
       <tr>
         <td class="text-start">
-          <router-link class="table-link table-link--unformated" :to="routeLinkParams(item)">
+          <router-link class="table-link table-link--unformated" :to="routeLinkParams({ item })">
             <v-tooltip top>
               <template v-slot:activator="{ on, value }">
                 <div v-on="on">
@@ -34,15 +34,28 @@
           </router-link>
         </td>
         <td class="text-start">
-          <router-link class="table-link table-link--unformated" :to="routeLinkParams(item)">
+          <router-link class="table-link table-link--unformated" :to="routeLinkParams({ item })">
             <ask-anna-chip-status :status="item.status" />
           </router-link>
         </td>
         <td class="text-start">
-          <router-link class="table-link table-link--unformated" :to="routeLinkParams(item)">
+          <router-link class="table-link table-link--unformated" :to="routeLinkParams({ item })">
             <b>Started:</b> &nbsp;{{ $moment(item.created).format(' Do MMMM YYYY, h:mm:ss a') }}
             <br />
             <b>Duration:</b> &nbsp;{{ calculateDuration(item) }}<br />
+          </router-link>
+        </td>
+        <td class="text-start">
+          <router-link class="table-link table-link--unformated" :to="routeLinkParams({ item })">
+            {{ getPayloadTitle(item.payload) }}
+          </router-link>
+        </td>
+        <td class="text-start">
+          <router-link
+            class="table-link table-link--unformated"
+            :to="routeLinkParams({ item, name: 'workspace-project-jobs-job-jobrun-metrics' })"
+          >
+            {{ getMetricTitle(item.metricsmeta.count) }}
           </router-link>
         </td>
       </tr>
@@ -55,6 +68,7 @@ import useMoment from '@/core/composition/useMoment'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
 
 import { ref, watch, defineComponent } from '@vue/composition-api'
+import { metric } from '@/features/metric/store'
 
 export default defineComponent({
   name: 'JobRuns',
@@ -105,7 +119,19 @@ export default defineComponent({
         class: 'text-left text-subtitle-2 font-weight-bold h-20'
       },
       { text: 'Status', sortable: false, value: 'status', class: 'text-left text-subtitle-2 font-weight-bold h-20' },
-      { text: 'Timing', sortable: false, value: 'runtime', class: 'text-left text-subtitle-2 font-weight-bold h-20' }
+      { text: 'Timing', sortable: false, value: 'runtime', class: 'text-left text-subtitle-2 font-weight-bold h-20' },
+      {
+        text: 'Input',
+        sortable: false,
+        value: 'payload',
+        class: 'text-left text-subtitle-2 font-weight-bold h-20'
+      },
+      {
+        text: 'Metrics',
+        sortable: false,
+        value: 'metricsmeta',
+        class: 'text-left text-subtitle-2 font-weight-bold h-20'
+      }
     ]
 
     const handleCopy = id => {
@@ -131,15 +157,31 @@ export default defineComponent({
       return ''
     }
 
-    const routeLinkParams = item => {
+    const routeLinkParams = ({ item, name = 'workspace-project-jobs-job-jobrun-input' }) => {
       return {
-        name: 'workspace-project-jobs-job-jobrun-input',
+        name,
         params: {
           ...context.root.$route.params,
           jobRunId: item.short_uuid,
           jobId: item.jobdef.short_uuid
         }
       }
+    }
+
+    const getPayloadTitle = payload => {
+      let title = 'No input'
+      if (payload.lines >= 1) {
+        title = `${payload.lines} line${payload.lines > 1 ? 's' : ''}`
+      }
+      return title
+    }
+
+    const getMetricTitle = count => {
+      let title = 'No metrics'
+      if (count >= 1) {
+        title = `${count} metric${count > 1 ? 's' : ''}`
+      }
+      return title
     }
 
     watch(options, async (options, currentOptions) => {
@@ -163,6 +205,8 @@ export default defineComponent({
       options,
       pageCount,
       handleCopy,
+      getMetricTitle,
+      getPayloadTitle,
       routeLinkParams,
       calculateDuration
     }
