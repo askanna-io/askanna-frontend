@@ -8,12 +8,22 @@ import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStor
 
 export default defineComponent({
   setup(props, context) {
+    const reShortUuid = /[0-9a-zA-Z]{4}\-[0-9a-zA-Z]{4}\-[0-9a-zA-Z]{4}\-[0-9a-zA-Z]{4}$/g
     const workspaceStore = useWorkspaceStore()
 
     const initWorkspace = async workspaceId => {
-      await workspaceStore.getWorkspace(workspaceId)
-      await workspaceStore.getInitialWorkpaceProjects({ params: { limit: 99, offset: 0 } })
-      await workspaceStore.actions.getInitialWorkpacePeople({ workspaceId })
+      //check if worskpace short_uuid match pattern
+      // on match get workspace, project, people
+      // if not => redirect to /
+      const isValidShortUuid = workspaceId.match(reShortUuid)
+
+      if (isValidShortUuid && isValidShortUuid[0] === workspaceId) {
+        await workspaceStore.getWorkspace(workspaceId)
+        await workspaceStore.getInitialWorkpaceProjects({ params: { limit: 99, offset: 0 } })
+        await workspaceStore.actions.getInitialWorkpacePeople({ workspaceId })
+      } else {
+        context.root.$router.push({ path: `/` })
+      }
     }
 
     onBeforeMount(async () => {
