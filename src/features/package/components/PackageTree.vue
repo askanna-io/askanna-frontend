@@ -1,5 +1,6 @@
 <template>
   <v-data-table
+    :hide-default-header="!items.length"
     :items="items"
     :headers="headers"
     :options="{ itemsPerPage: -1 }"
@@ -33,7 +34,9 @@
       </router-link>
     </template>
     <template v-slot:no-data>
-      {{ noDataAvailable }}
+      <v-alert class="mb-4 my-2 text-center" dense outlined color="grey">
+        {{ noDataAvailable }}
+      </v-alert>
     </template>
   </v-data-table>
 </template>

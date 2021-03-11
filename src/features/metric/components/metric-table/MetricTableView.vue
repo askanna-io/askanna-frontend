@@ -56,15 +56,6 @@
           </tr>
         </template>
       </tbody>
-      <tbody v-if="!metricData.length">
-        <tr>
-          <td colspan="3">
-            <v-alert class="my-2 text-center" dense outlined color="grey">
-              There are no metrics available for this run.
-            </v-alert>
-          </td>
-        </tr>
-      </tbody>
     </template>
   </v-data-table>
 </template>
