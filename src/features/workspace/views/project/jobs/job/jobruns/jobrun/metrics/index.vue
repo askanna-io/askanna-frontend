@@ -1,7 +1,14 @@
 <template>
   <div class="px-4">
     <v-card flat>
-      <v-toolbar flat dense color="grey lighten-4" :class="{ 'br-r4': !sticked }" sticky-offset="{top: 48, bottom: 10}">
+      <v-toolbar
+        v-if="!disabledTools"
+        flat
+        dense
+        color="grey lighten-4"
+        :class="{ 'br-r4': !sticked }"
+        sticky-offset="{top: 48, bottom: 10}"
+      >
         <v-flex class="d-flex">
           <div class="mr-auto d-flex align-center"></div>
 

@@ -1,6 +1,6 @@
 <template>
   <div class="px-4">
-    <v-toolbar dense flat color="grey lighten-4" class="br-r4">
+    <v-toolbar v-if="!isJobRunPayloadEmpty" dense flat color="grey lighten-4" class="br-r4">
       <v-flex class="d-flex">
         <div class="mr-auto d-flex align-center">
           Payload
@@ -62,15 +62,15 @@
     <v-flex class="mb-4">
       <ask-anna-loading-progress :type="'table-row'" :loading="loading" fullWidth>
         <job-run-pay-load v-if="!isJobRunPayloadEmpty" :file="jobRunPayloadComputed" />
-        <v-alert v-if="isJobRunPayloadEmpty" class="my-2" color="grey" dense outlined>
-          There is no payload available for this run.
+        <v-alert v-if="isJobRunPayloadEmpty" class="my-2 mb-0 text-center" color="grey" dense outlined>
+          There is no input available for this run.
         </v-alert>
       </ask-anna-loading-progress>
     </v-flex>
   </div>
 </template>
 <script>
-import { JobRun } from '../../store/types'
+import { isEmpty } from 'lodash'
 import JobRunPayLoad from './JobRunPayLoad.vue'
 import useJobRunStore from '../../composition/useJobRunStore'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
@@ -94,7 +94,9 @@ export default defineComponent({
     const loading = computed(() => jobRunStore.payLoadLoading.value)
     const jobRunPayload = computed(() => jobRunStore.jobRunPayload.value)
     const jobRunPayloadComputed = computed(() => JSON.stringify(jobRunStore.jobRunPayload.value, null, 2))
-    const isJobRunPayloadEmpty = computed(() => !jobRunPayload.value && !loading.value)
+    const isJobRunPayloadEmpty = computed(
+      () => (!jobRunPayload.value || isEmpty(jobRunPayload.value)) && !loading.value
+    )
 
     const handleDownload = async formatType => {
       const { short_uuid } = jobRunStore.jobRun.value

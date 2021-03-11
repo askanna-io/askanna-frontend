@@ -1,6 +1,6 @@
 <template>
   <div class="px-4">
-    <v-toolbar dense flat color="grey lighten-4" class="br-r4">
+    <v-toolbar v-if="!isJobRunResultEmpty" dense flat color="grey lighten-4" class="br-r4">
       <v-flex class="d-flex">
         <div class="mr-auto d-flex align-center"></div>
         <div>
@@ -67,7 +67,7 @@
       >
         <the-highlight v-if="!isJobRunResultEmpty" :value="jobRunResultForView" languageName="json" readonly />
 
-        <v-alert v-if="isJobRunResultEmpty" class="my-2" dense outlined color="grey">
+        <v-alert v-if="isJobRunResultEmpty" class="my-2 mb-0 text-center" dense outlined color="grey">
           There is no result available for this run.
         </v-alert>
       </ask-anna-loading-progress>

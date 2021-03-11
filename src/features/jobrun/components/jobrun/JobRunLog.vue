@@ -1,6 +1,6 @@
 <template>
   <div class="px-4">
-    <v-toolbar dense flat color="grey lighten-4" class="br-r4">
+    <v-toolbar v-if="!logNoAvailable" dense flat color="grey lighten-4" class="br-r4">
       <v-flex class="d-flex">
         <div class="mr-auto d-flex align-center"></div>
         <div>
@@ -49,8 +49,8 @@
         type="list-item-two-line"
       >
         <the-highlight v-if="!logNoAvailable" :value="logs" v-scroll:#scroll-target="throttle(onScroll, 1500)" />
-        <v-alert v-else class="my-2" dense outlined color="grey">
-          No log entries are available for this job run.
+        <v-alert v-else class="my-2 mb-0 text-center" dense outlined color="grey">
+          There is no log available for this run.
         </v-alert>
       </ask-anna-loading-progress>
     </v-flex>

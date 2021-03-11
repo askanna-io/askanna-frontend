@@ -1,14 +1,20 @@
 <template>
   <ask-anna-loading-progress :type="'table-row'" :loading="loading">
-    <metric-table-view
-      :labels="labels"
-      :sticked="sticked"
-      :metricData="items"
-      :height="tableHeight"
-      :loading="loadingByParams"
-      @onSort="handleOnSort"
-      @onScroll="handleOnScroll"
-    />
+    <div>
+      <metric-table-view
+        v-if="items.length"
+        :labels="labels"
+        :sticked="sticked"
+        :metricData="items"
+        :height="tableHeight"
+        :loading="loadingByParams"
+        @onSort="handleOnSort"
+        @onScroll="handleOnScroll"
+      />
+      <v-alert v-else class="mt-2 text-center" dense outlined color="grey">
+        There are no metrics available for this run.
+      </v-alert>
+    </div>
   </ask-anna-loading-progress>
 </template>
 <script>

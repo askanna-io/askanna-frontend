@@ -2,7 +2,12 @@
   <ask-anna-loading-progress :loading="packageLoading && !isProcessing">
     <v-row align="center" justify="center">
       <v-col cols="12" class="pt-0 pb-0">
-        <package-toolbar :breadcrumbs="breadcrumbs" v-sticky="sticked" sticky-offset="{top: 52, bottom: 10}">
+        <package-toolbar
+          v-if="treeView.length"
+          :breadcrumbs="breadcrumbs"
+          v-sticky="sticked"
+          sticky-offset="{top: 52, bottom: 10}"
+        >
           <template v-slot:left>
             <v-tooltip top>
               <template v-slot:activator="{ on }">
@@ -209,8 +214,8 @@ export default defineComponent({
     })
 
     return {
+      file,
       sticked,
-      file: packageStore.file,
       fileSource: packageStore.fileSource,
       packageLoading: packageStore.packageLoading,
       treeView,
