@@ -38,10 +38,10 @@
     <template v-slot:body="{ items }">
       <tbody ref="tableRef" v-if="!loading">
         <template v-for="(item, index) in items">
-          <tr v-for="(metric, index2) in item.metric" :key="`${index}-${index2}`">
-            <td>{{ metric.name }}</td>
+          <tr :key="index">
+            <td>{{ item.metric.name }}</td>
             <td class="text-left">
-              <metric-value :metricRow="metric" :fullText="true" :isLabels="isLabels" />
+              <metric-value :metricRow="item.metric" :fullText="true" :isLabels="isLabels" />
             </td>
             <template v-if="labels.length">
               <metric-table-label-td
