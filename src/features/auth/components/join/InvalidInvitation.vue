@@ -1,6 +1,6 @@
 <template>
   <v-row align="center" justify="center">
-    <v-col cols="6" xl="2" md="4" sm="6" class="rounded">
+    <v-col cols="6" xl="3" md="4" sm="6" class="rounded">
       <v-card>
         <v-card-title>Oops...something went wrong</v-card-title>
         <v-card-text class="text-body-1">

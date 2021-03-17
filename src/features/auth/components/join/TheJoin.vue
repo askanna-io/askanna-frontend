@@ -1,7 +1,7 @@
 <template>
   <div>
-    <v-row align="center" justify="center">
-      <v-col cols="6" xl="2" md="4" sm="6" class="rounded">
+    <v-row align="start" justify="center">
+      <v-col cols="8" xl="3" md="6" sm="9" lg="4" class="rounded pt-0">
         <div class="mb-2 ml-0 text-h6 white--text">Join the workspace {{ workspaceName }} on AskAnna</div>
         <v-expansion-panels class="login-expansion" v-model="panel" mandatory>
           <v-expansion-panel :key="0" active-class="colored-border">
@@ -29,19 +29,12 @@
       </v-col>
     </v-row>
     <v-row align="center" justify="center">
-      <v-col cols="12" xl="2" md="4" sm="6" class="rounded">
-        <v-card>
-          <v-card-title>What's AskAnna?</v-card-title>
-          <v-card-text class="pb-2 text-body-1">
-            AskAnna is the platform where you can easily collaborate on data science and machine learning projects. You
-            can kickstart your next project using templates, version control, and MLOps automation tools. Also, we will
-            make it easy for you to integrate with other tools. You can run everything in AskAnna using our APIs. This
-            means that out of the box, you can productize your data solution, without the support of additional DevOps.
-            <p class="mt-3">
-              <a href="https://askanna.io" target="_blank">Read more about AskAnna on our website</a>
-            </p>
-          </v-card-text>
-        </v-card>
+      <v-col cols="8" xl="3" md="6" sm="9" lg="4" class="rounded">
+        <v-expansion-panels class="login-expansion" v-model="panel">
+          <v-expand-transition>
+            <ask-anna-read-more />
+          </v-expand-transition>
+        </v-expansion-panels>
       </v-col>
     </v-row>
   </div>
@@ -51,12 +44,14 @@
 import TheConnectAccount from './TheConnectAccount'
 import TheCreateNewAccount from './TheCreateNewAccount'
 import { ref, computed, defineComponent } from '@vue/composition-api'
+import AskAnnaReadMore from '@/features/auth/components/AskAnnaReadMore'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 
 export default defineComponent({
   name: 'TheJoin',
 
   components: {
+    AskAnnaReadMore,
     TheConnectAccount,
     TheCreateNewAccount
   },
