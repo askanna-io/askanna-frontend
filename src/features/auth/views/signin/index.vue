@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-row justify="center">
-      <v-col cols="8" xl="2" md="6" sm="9" lg="4" class="rounded">
+      <v-col cols="8" xl="3" md="6" sm="9" lg="4" class="rounded">
         <img alt="AskAnna logo" src="@/assets/logo.svg" class="logo" />
         <v-expansion-panels class="login-expansion" v-model="panel">
           <signin v-if="!signUpStep" />
@@ -18,7 +18,7 @@
       </v-col>
     </v-row>
     <v-row v-if="panel" align="center" justify="center">
-      <v-col cols="6" xl="2" md="6" sm="9" lg="4" class="rounded">
+      <v-col cols="8" xl="3" md="6" sm="9" lg="4" class="rounded">
         <v-expansion-panels class="login-expansion" v-model="panel">
           <v-expand-transition>
             <ask-anna-read-more />
@@ -34,8 +34,8 @@ import Signin from './signin'
 import Signup from './signup'
 import SigninThankYou from './signin-thank-you'
 import AskAnnaReadMore from '@/features/auth/components/AskAnnaReadMore'
+import { ref, provide, readonly, defineComponent } from '@vue/composition-api'
 import WaitBeforeCreateAccount from '@/features/auth/components/signup/WaitBeforeCreateAccount'
-import { ref, provide, reactive, readonly, computed, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'SigninIndex',

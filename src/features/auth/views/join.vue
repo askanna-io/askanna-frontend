@@ -1,7 +1,7 @@
 <template>
   <div class="join-wrapper">
-    <v-row align="center" justify="center">
-      <v-col cols="6" xl="2" md="4" sm="6" class="rounded">
+    <v-row justify="center">
+      <v-col cols="8" xl="3" md="6" sm="9" lg="4" class="rounded pb-0">
         <img alt="AskAnna logo" src="@/assets/logo.svg" class="logo" />
       </v-col>
     </v-row>
@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { ref, toRefs, computed, reactive, onBeforeMount, defineComponent } from '@vue/composition-api'
+import { ref, computed, onBeforeMount, defineComponent } from '@vue/composition-api'
 
 import TheJoin from '../components/join/TheJoin'
 import useAuthStore from '../composition/useAuthStore'

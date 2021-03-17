@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-main class="login-layout">
-      <v-container fluid pa-0>
+      <v-container fluid pa-0 class="login-layout--container">
         <router-view />
         <span v-if="isNotBeta" class="version">Build version:&nbsp;{{ version }}</span>
       </v-container>
@@ -49,6 +49,10 @@ export default defineComponent({
   background-image: url('~@/assets/bg/askanna-bg-01.svg');
   background-size: cover;
   overflow: hidden;
+}
+.login-layout--container {
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .login-layout .v-main__wrap {
