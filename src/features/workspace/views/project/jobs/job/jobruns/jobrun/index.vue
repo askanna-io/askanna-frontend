@@ -17,10 +17,10 @@ export default defineComponent({
     onBeforeMount(async () => {
       const { jobId, projectId, jobRunId } = context.root.$route.params
       if (jobStore.job.value.short_uuid !== jobId) {
-        projectStore.resetProjectJobs()
-        projectStore.getProjectJobs(projectId)
+        await projectStore.resetProjectJobs()
+        await projectStore.getProjectJobs(projectId)
 
-        jobStore.getJob(jobId)
+        await jobStore.getJob(jobId)
       }
 
       await jobRunStore.getJobRun(jobRunId)

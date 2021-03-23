@@ -17,6 +17,7 @@
 
 <script>
 import useJobStore from '@job/composition/useJobStore'
+import useJobRunStore from '@jobrun/composition/useJobRunStore'
 import JobDefinition from '@job/components/overview/JobDefinition'
 import JobDescription from '@job/components/overview/JobDescription'
 import JobRunning from '@/features/job/components/overview/JobRunning'
@@ -33,11 +34,14 @@ export default defineComponent({
 
   setup(rops, context) {
     const jobStore = useJobStore()
+    const jobRunStore = useJobRunStore()
+
     const projectStore = useProjectStore()
     const { jobId, workspaceId, projectId } = context.root.$route.params
 
     onBeforeMount(async () => {
       await jobStore.resetStore()
+      await jobRunStore.resetStore()
       await jobStore.getJob(jobId)
       await projectStore.getLastPackage(projectId)
     })
