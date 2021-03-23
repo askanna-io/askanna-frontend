@@ -4,13 +4,21 @@
 
 <script>
 import useProjectStore from '@/features/project/composition/useProjectStore'
-import { ref, watch, onBeforeMount, onUnmounted, computed, defineComponent } from '@vue/composition-api'
+import { onBeforeMount, onBeforeUpdate, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   setup(props, context) {
     const projectStore = useProjectStore()
 
-    onBeforeMount(async () => {
+    onBeforeMount(() => {
+      gotoPackage()
+    })
+
+    onBeforeUpdate(() => {
+      gotoPackage()
+    })
+
+    const gotoPackage = async () => {
       const { name } = context.root.$route
 
       if (name === 'workspace-project-code') {
@@ -31,7 +39,7 @@ export default defineComponent({
           }
         })
       }
-    })
+    }
   }
 })
 </script>
