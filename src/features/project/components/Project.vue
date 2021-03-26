@@ -19,7 +19,8 @@
         <v-row>
           <v-col cols="12">
             <ask-anna-description
-              :description="'asd'"
+              cleared
+              outlined
               :title="'Project description (optional)'"
               @onChangeDescription="handleOnInput($event, 'description')"
             />
