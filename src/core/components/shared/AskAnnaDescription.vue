@@ -1,6 +1,6 @@
 <template>
   <form @focusout="handleOnBlurWrapper" @focusin="handleOnClickWrapper">
-    <v-card class="ask-anna--editor" :class="{ 'border--primary ': isFocused }" flat outlined>
+    <v-card class="ask-anna--editor" :class="{ 'border--primary ': isFocused && outlined }" flat :outlined="outlined">
       <label class="ask-anna-descriptio--title v-label theme--light px-1" :class="{ 'v-label--active': isFocused }">{{
         title
       }}</label>
@@ -170,8 +170,11 @@
         <v-btn v-if="editable" small outlined color="secondary" @click="handleSave">
           <v-icon left small dark>mdi-content-save</v-icon>Save
         </v-btn>
-        <v-btn v-if="editable" small outlined color="secondary" @click="handleClear">
+        <v-btn v-if="editable && cleared" small outlined color="secondary" @click="handleClear">
           <v-icon left small dark>mdi-delete-forever-outline</v-icon>Clear
+        </v-btn>
+        <v-btn v-if="editable" small outlined color="secondary" class="mr-1 btn--hover" @click="handleCancel">
+          <v-icon color="secondary" small left>mdi-close</v-icon>Cancel
         </v-btn>
         <v-btn v-if="!editable" class="my-2 btn--hover" small outlined color="secondary" @click="handleEdit">
           <v-icon color="secondary" left small class="mr-2">mdi-pencil</v-icon>Edit
@@ -211,6 +214,22 @@ export default {
   name: 'AskAnnaDescription',
 
   props: {
+    cleared: {
+      type: Boolean,
+      default: false
+    },
+    preview: {
+      type: Boolean,
+      default: false
+    },
+    outlined: {
+      type: Boolean,
+      default: false
+    },
+    readonly: {
+      type: Boolean,
+      default: false
+    },
     onLiveMode: {
       type: Boolean,
       default: true
@@ -230,9 +249,9 @@ export default {
   },
   data() {
     return {
-      isFocused: false,
-      toggle_multiple: [],
       editable: true,
+      isFocused: false,
+      currentDescriptionValue: '',
       editor: new Editor({
         autoFocus: false,
         editable: true,
@@ -240,7 +259,6 @@ export default {
           new CodeBlockHighlight({
             languages: {
               javascript,
-              css,
               python
             }
           }),
@@ -267,11 +285,27 @@ export default {
     }
   },
 
+  created() {
+    if (this.preview) {
+      this.editable = false
+    }
+
+    if (this.readonly) {
+      this.editable = false
+    }
+  },
+
   watch: {
     description(val) {
       this.editor.setContent(val)
+      if (this.editable) {
+        this.currentDescriptionValue = this.editor.getHTML()
+      }
     },
     editable() {
+      if (this.editable) {
+        this.currentDescriptionValue = this.editor.getHTML()
+      }
       this.editor.setOptions({
         editable: this.editable
       })
@@ -290,6 +324,13 @@ export default {
 
     handleClear() {
       this.editor.clearContent()
+    },
+
+    handleCancel() {
+      this.handleClear()
+
+      this.editor.setContent(this.currentDescriptionValue)
+      this.editable = !this.editable
     },
 
     handleEdit() {
@@ -322,7 +363,7 @@ export default {
 .ProseMirror pre {
   padding: 0.7rem 1rem;
   border-radius: 5px;
-  background: #000;
+  background: #282c34 !important;
   color: #fff;
   font-size: 0.8rem;
   overflow-x: auto;
@@ -348,7 +389,7 @@ export default {
   border-radius: 5px;
   font-size: 0.8rem;
   font-weight: 700;
-  background: rgba(0, 0, 0, 0.1);
+  background: #282c34 !important;
   color: rgba(0, 0, 0, 0.8);
 }
 

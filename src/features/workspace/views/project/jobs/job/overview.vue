@@ -2,11 +2,15 @@
   <v-card class="mx-auto" flat>
     <v-card-title>Description</v-card-title>
     <v-divider />
-    <job-description
+
+    <ask-anna-description
+      preview
+      :onLiveMode="false"
       :description="job.description"
       @onSave="handleOnJobSave"
       @onChangeDescription="handleChangeDescription"
     />
+
     <v-divider />
     <job-definition :job="job" :lastPackage="lastPackage" @handleGoToCode="handleGoToCode" />
     <v-divider />
@@ -19,7 +23,6 @@
 import useJobStore from '@job/composition/useJobStore'
 import useJobRunStore from '@jobrun/composition/useJobRunStore'
 import JobDefinition from '@job/components/overview/JobDefinition'
-import JobDescription from '@job/components/overview/JobDescription'
 import JobRunning from '@/features/job/components/overview/JobRunning'
 import useProjectStore from '@/features/project/composition/useProjectStore'
 
@@ -28,8 +31,7 @@ import { onBeforeMount, defineComponent, onBeforeDestroy } from '@vue/compositio
 export default defineComponent({
   components: {
     JobRunning,
-    JobDefinition,
-    JobDescription
+    JobDefinition
   },
 
   setup(rops, context) {
