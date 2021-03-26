@@ -2,7 +2,7 @@
   <div class="px-4">
     <v-card flat>
       <v-toolbar
-        v-if="!disabledTools"
+        v-if="!disabledTools || isFiltered"
         flat
         dense
         color="grey lighten-4"
@@ -86,6 +86,8 @@ export default defineComponent({
 
     const sticked = computed(() => !projectStore.stickedVM.value)
     const items = computed(() => metricStore.state.metrics.value.results)
+    const isFiltered = computed(() => metricStore.state.isFiltered.value)
+
     const metricFullData = computed(() => metricStore.state.metricFullData.value)
     const metricJSON = computed(() => JSON.stringify(metricStore.state.metricJSON.value.results, null, 2))
 
@@ -137,6 +139,7 @@ export default defineComponent({
       views,
       sticked,
       viewModel,
+      isFiltered,
       disabledTools,
 
       handleCopy,

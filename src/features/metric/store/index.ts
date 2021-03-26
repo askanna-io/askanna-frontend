@@ -5,6 +5,7 @@ import { mutations } from './mutations'
 import { metricState, METRIC_STORE } from './types'
 
 export const state: metricState = {
+  isFiltered: false,
   metrics: {
     count: 0,
     next: null,

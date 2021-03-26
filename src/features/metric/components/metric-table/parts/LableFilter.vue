@@ -1,5 +1,5 @@
 <template>
-  <v-menu v-model="menu" disabled :close-on-content-click="false" :nudge-width="200" nudge-right="60">
+  <v-menu v-model="menu" :close-on-content-click="false" :nudge-width="200" nudge-right="60">
     <template v-slot:activator="{ on, attrs }">
       <v-row v-on="on" @mouseover="handleOnHover" @mouseleave="handleOnBlur">
         <v-col class="pt-0">
