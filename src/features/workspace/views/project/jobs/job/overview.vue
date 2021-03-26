@@ -4,6 +4,7 @@
     <v-divider />
 
     <ask-anna-description
+      class="mx-2"
       preview
       :onLiveMode="false"
       :description="job.description"

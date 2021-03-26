@@ -1,9 +1,12 @@
 <template>
   <form @focusout="handleOnBlurWrapper" @focusin="handleOnClickWrapper">
     <v-card class="ask-anna--editor" :class="{ 'border--primary ': isFocused && outlined }" flat :outlined="outlined">
-      <label class="ask-anna-descriptio--title v-label theme--light px-1" :class="{ 'v-label--active': isFocused }">{{
-        title
-      }}</label>
+      <label
+        v-if="title"
+        class="ask-anna-descriptio--title v-label theme--light px-1"
+        :class="{ 'v-label--active': isFocused }"
+        >{{ title }}</label
+      >
       <editor-menu-bar class="ma-2 pt-1" v-if="editable" :editor="editor" v-slot="{ commands, isActive }">
         <div class="menubar">
           <v-btn
