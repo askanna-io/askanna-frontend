@@ -34,5 +34,9 @@ export const mutations: MutationTree<metricState> = {
 
   [mutation.SET_LOADING](state, value) {
     state.loading = { ...state.loading, ...value }
+  },
+
+  [mutation.SET_IS_FILTERED](state, value) {
+    state.isFiltered = value
   }
 }

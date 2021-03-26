@@ -1,13 +1,9 @@
 <template>
   <v-container fluid class="metric--grid">
     <v-row justify="start" v-sticky="sticked" sticky-offset="{top: 68, bottom: 10}">
-      <v-col class="text-left text-subtitle-2 font-weight-bold h-20 text--secondary">
-        <TableFilter title="Name" sortBy="metric.name" @onSort="handleOnSort" />
-      </v-col>
+      <v-col class="text-left text-subtitle-2 font-weight-bold h-20 text--secondary"> </v-col>
 
-      <v-col class="text-left text-subtitle-2 font-weight-bold h-20 text--secondary">
-        <TableFilter title="Value" sortBy="metric.value" @onSort="handleOnSort" />
-      </v-col>
+      <v-col class="text-left text-subtitle-2 font-weight-bold h-20 text--secondary"> </v-col>
 
       <v-col cols="8">
         <span class="text-left text-subtitle-2 font-weight-bold h-20 text--secondary">
@@ -51,7 +47,6 @@
 <script>
 import MetricValue from './parts/MetricValue'
 import LableFilter from './parts/LableFilter'
-import TableFilter from './parts/TableFilter'
 
 import { defineComponent } from '@vue/composition-api'
 

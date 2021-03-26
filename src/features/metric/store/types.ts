@@ -1,6 +1,7 @@
 export interface metricState extends MetricState {}
 
 export interface MetricState {
+  isFiltered: boolean
   metrics: {
     count: number
     results: Metric[]
@@ -42,6 +43,7 @@ export const METRIC_STORE = 'metric'
 export const action = {
   getMetric: 'getMetric',
   setLoading: 'setLoading',
+  setIsFiltered: 'setIsFiltered',
   getMetricJSON: 'getMetricJSON',
   getMetricLabels: 'getMetricLabels',
   getMetricInitial: 'getMetricInitial',
@@ -52,6 +54,7 @@ export const action = {
 export const mutation = {
   SET_METRIC: 'SET_METRIC',
   SET_LOADING: 'SET_LOADING',
+  SET_IS_FILTERED: 'SET_IS_FILTERED',
   SET_METRIC_INIT: 'SET_METRIC_INIT',
   SET_METRIC_JSON: 'SET_METRIC_JSON',
   SET_METRIC_LABELS: 'SET_METRIC_LABELS',
@@ -61,6 +64,7 @@ export const mutation = {
 export const stateType = {
   metrics: 'metrics',
   loading: 'loading',
+  isFiltered: 'isFiltered',
   metricJSON: 'metricJSON',
   metricLabels: 'metricLabels',
   metricFullData: 'metricFullData'

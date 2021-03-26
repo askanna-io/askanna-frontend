@@ -6,6 +6,7 @@ export default function () {
     ...useState(METRIC_STORE, {
       metrics: stateType.metrics,
       loading: stateType.loading,
+      isFiltered: stateType.isFiltered,
       metricJSON: stateType.metricJSON,
       metricLabels: stateType.metricLabels,
       metricFullData: stateType.metricFullData

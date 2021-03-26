@@ -1,27 +1,28 @@
 <template>
   <v-data-table fixed-header :height="height" class="pt-2" disable-pagination hide-default-footer :items="metricData">
     <template v-slot:header>
-      <thead v-if="metricData.length">
+      <thead v-if="metricData.length || isSorted">
         <tr>
           <th
-            :style="{ width: '20%' }"
+            :style="{ width: '20%', minWidth: '110px' }"
             :class="{ 'AskAnna-box-shadow--none': isLabels }"
             class="text-left text-subtitle-2 font-weight-bold h-20"
           >
-            <TableFilter title="Name" sortBy="metric.name" @onSort="handleOnSort" />
+            <sort-filter-by-metric-name />
           </th>
           <th
             :style="rowValueStyle"
             :class="{ 'AskAnna-box-shadow--none': isLabels }"
             class="text-left text-subtitle-2 font-weight-bold h-20"
           >
-            <TableFilter title="Value" sortBy="metric.value" disabled @onSort="handleOnSort" />
+            <sort-filter-by-metric-value />
           </th>
           <th
             v-if="isLabels"
             :colspan="labels.length"
             class="text-left text-subtitle-2 font-weight-bold h-20 AskAnna-box-shadow--none"
           >
+            <sort-filter-by-metric-label v-if="false" :labels="labels" />
             Labels
           </th>
         </tr>
@@ -29,7 +30,7 @@
           <th colspan="2" class="h-30 text-left" />
           <template>
             <th class="h-30 text-left text-subtitle-2 font-weight-bold" v-for="label in labels" :key="label">
-              <lable-filter :title="label" />
+              {{ label }}
             </th>
           </template>
         </tr>
@@ -46,7 +47,7 @@
             <template v-if="labels.length">
               <metric-table-label-td
                 v-for="label in labels"
-                :key="label + index2"
+                :key="label + index"
                 :label="label"
                 :isLabel="true"
                 :labels="item.label"
@@ -62,9 +63,12 @@
 <script>
 import MetricValue from './parts/MetricValue'
 import LableFilter from './parts/LableFilter'
-import TableFilter from './parts/TableFilter'
 import MetricTableLabelTd from './parts/MetricTableLabelTd'
+import SortFilterByMetricName from './parts/sort-filter/SortFilterByMetricName'
+import SortFilterByMetricValue from './parts/sort-filter/SortFilterByMetricValue'
+import SortFilterByMetricLabel from './parts/sort-filter/SortFilterByMetricLabel'
 
+import useSortFilterTable from './parts/sort-filter/useSortFilterTable'
 import { ref, watch, defineComponent, computed } from '@vue/composition-api'
 
 export default defineComponent({
@@ -75,17 +79,22 @@ export default defineComponent({
     height: Number,
     loading: Boolean,
     sticked: Boolean,
-    metricData: Array
+    metricData: Array,
+    isSorted: Boolean
   },
 
-  components: { MetricValue, LableFilter, TableFilter, MetricTableLabelTd },
+  components: {
+    MetricValue,
+    LableFilter,
+    MetricTableLabelTd,
+    SortFilterByMetricName,
+    SortFilterByMetricValue,
+    SortFilterByMetricLabel
+  },
 
   setup(props, context) {
     const tableRef = ref(null)
-
-    const handleOnSort = data => context.emit('onSort', data)
-
-    const lastScrollTop = ref(0)
+    const { lastScrollTop } = useSortFilterTable(context)
 
     const handleOnScroll = data => {
       if (data.target.scrollTop > 0 && data.target.scrollTop !== lastScrollTop.value) {
@@ -115,13 +124,12 @@ export default defineComponent({
       return { ...style }
     })
 
-    watch(tableRef, async tableRef => {
-      if (!tableRef) return
-
+    watch(tableRef, tableRef => {
+      if (!tableRef || !tableRef.parentElement) return
       tableRef.parentElement.parentElement.onscroll = e => handleOnScroll(e)
     })
 
-    return { isLabels, tableRef, isFullText, rowValueStyle, handleOnSort, handleOnScroll }
+    return { isLabels, tableRef, isFullText, rowValueStyle, handleOnScroll }
   }
 })
 </script>
