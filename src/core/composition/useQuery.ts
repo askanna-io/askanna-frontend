@@ -1,6 +1,6 @@
 import { ref } from '@vue/composition-api'
 
-export default function ({ next, queryParams, uuid, offset, limit, storeAction, loading }: any) {
+export default function ({ next, queryParams = {}, uuid, offset, limit, storeAction, loading }: any) {
   const currentScrollTop = ref(0)
   const richedOffset = ref(offset)
 
