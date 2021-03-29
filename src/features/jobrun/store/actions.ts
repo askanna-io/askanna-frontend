@@ -101,7 +101,6 @@ export const actions: ActionTree<jobRunState, RootState> = {
     } catch (e) {
       logger.error(commit, 'Error on jobRunResult job  in getJobRunResult action.\nError: ', e)
     }
-    console.log(jobRunResult)
     commit(type.SET_JOB_RUN_RESULT, jobRunResult)
     commit(type.mutation.SET_LOADING, { name: stateType.resultLoading, value: false })
   },
