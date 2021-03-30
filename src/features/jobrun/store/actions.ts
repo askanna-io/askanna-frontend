@@ -96,6 +96,9 @@ export const actions: ActionTree<jobRunState, RootState> = {
         uuid,
         serviceName,
         responseType: 'text',
+        headers: {
+          ContentType: 'text/html; charset=utf-8'
+        },
         action: api.getJobRunResult
       })
     } catch (e) {
