@@ -21,8 +21,8 @@ const apiService = async ({
   params = null,
   method = 'get',
   action = 'get',
-  responseType = 'json',
   transformResponse,
+  responseType = 'json',
   serviceName = 'workspace'
 }: ServiceParams) => {
   try {
