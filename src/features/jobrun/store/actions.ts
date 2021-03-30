@@ -90,16 +90,14 @@ export const actions: ActionTree<jobRunState, RootState> = {
   async [type.action.getJobRunResult]({ commit }, uuid) {
     commit(type.mutation.SET_LOADING, { name: stateType.resultLoading, value: true })
 
-    let jobRunResult = null
+    let jobRunResult = ''
     try {
       jobRunResult = await apiService({
         uuid,
         serviceName,
         responseType: 'text',
-        headers: {
-          'Content-Type': 'text/plain;charset=utf-8'
-        },
-        action: api.getJobRunResult
+        action: api.getJobRunResult,
+        transformResponse: [data => data]
       })
     } catch (e) {
       logger.error(commit, 'Error on jobRunResult job  in getJobRunResult action.\nError: ', e)

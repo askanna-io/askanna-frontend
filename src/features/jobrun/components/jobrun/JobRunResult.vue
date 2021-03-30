@@ -21,7 +21,7 @@
             <span>Download raw</span>
           </v-tooltip>
 
-          <v-tooltip top>
+          <v-tooltip top v-if="false">
             <template v-slot:activator="{ on }">
               <v-btn
                 v-on="on"
@@ -75,7 +75,6 @@
   </div>
 </template>
 <script>
-import { JobRun } from '../../store/types'
 import { useWindowSize } from '@u3u/vue-hooks'
 import useJobRunStore from '../../composition/useJobRunStore'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
@@ -87,9 +86,9 @@ import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgr
 export default defineComponent({
   name: 'JobRunResult',
 
-  components: { TheHighlight },
+  components: { TheHighlight, AskAnnaLoadingProgress },
 
-  setup(props, context) {
+  setup(_, context) {
     const snackBar = useSnackBar()
 
     const { height } = useWindowSize()
@@ -97,11 +96,9 @@ export default defineComponent({
     const forceFileDownload = useForceFileDownload()
 
     const jobRunResult = computed(() => jobRunStore.jobRunResult.value)
-    const jobRunResultRaw = computed(() => JSON.stringify(jobRunResult.value))
-    const jobRunResultFormated = computed(() => JSON.stringify(jobRunResult.value, null, 2))
-    const jobRunResultForView = computed(() => {
-      return jobRunResultFormated.value.slice(0, 100000)
-    })
+    const jobRunResultRaw = computed(() => jobRunResult.value)
+    const jobRunResultFormated = computed(() => jobRunResult.value)
+    const jobRunResultForView = computed(() => jobRunResult.value.slice(0, 100000))
 
     const loading = computed(() => jobRunStore.resultLoading.value)
     const isJobRunResultEmpty = computed(() => !jobRunResult.value && !loading.value)
@@ -136,8 +133,8 @@ export default defineComponent({
 
     return {
       loading,
-      jobRunResultForView,
       scrollerStyles,
+      jobRunResultForView,
       isJobRunResultEmpty,
 
       handleCopy,
