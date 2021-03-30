@@ -97,7 +97,7 @@ export const actions: ActionTree<jobRunState, RootState> = {
         serviceName,
         responseType: 'text',
         headers: {
-          ContentType: 'text/html; charset=utf-8'
+          'Content-Type': 'text/plain;charset=utf-8'
         },
         action: api.getJobRunResult
       })

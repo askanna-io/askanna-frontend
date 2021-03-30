@@ -97,7 +97,7 @@ export const api: ApiSettings = {
       get: id => `jobrun/${id}/`,
       runs: id => `job/${id}/runs/`,
       getJobRun: id => `jobrun/${id}/`,
-      getJobRunResult: id => `result/${id}`,
+      getJobRunResult: id => `result/${id}/`,
       getJobRunLog: id => `jobrun/${id}/log`,
       getDownloadLink: ({ jobRunShortId, artifactShortId }) =>
         `jobrun/${jobRunShortId}/artifact/${artifactShortId}/download/`,
