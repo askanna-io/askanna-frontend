@@ -1,10 +1,28 @@
 // notebook.js 0.5.1
 // http://github.com/jsvine/notebookjs
 // notebook.js may be freely distributed under the MIT license.
+import Prism from 'prismjs'
+import '@/assets/css/prism-tomorrow.css'
 import * as katex from '@/assets/js/katex.min.js'
 import * as marked from '@/assets/js/marked.min.js'
 import * as ansi_up from '@/assets/js/ansi_up.min.js'
 import * as dompurify from '@/assets/js/purify.min.js'
+
+var highlighter = function (code, lang) {
+  if (typeof lang === 'undefined') lang = 'markup'
+
+  if (!Prism.languages.hasOwnProperty(lang)) {
+    try {
+      require('prismjs/components/prism-' + lang + '.js')
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.warn('** failed to load Prism lang: ' + lang)
+      Prism.languages[lang] = false
+    }
+  }
+
+  return Prism.languages[lang] ? Prism.highlight(code, Prism.languages[lang]) : code
+}
 
 const nb = function () {
   const VERSION = '0.5.1'
@@ -333,6 +351,15 @@ const nb = function () {
     })
     this.el = notebook_el
     return notebook_el
+  }
+
+  nb.highlighter = function (text, pre, code, lang) {
+    var language = lang || 'python'
+    pre.className = 'language-' + language
+    if (typeof code != 'undefined') {
+      code.className = 'language-' + language
+    }
+    return highlighter(text, language)
   }
 
   nb.parse = function (nbjson, config) {
