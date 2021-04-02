@@ -1,6 +1,6 @@
 import $axios from '@/core/plugins/axios'
 import { api, apiUrlFunctionParams } from './api-settings'
-import { Method, ResponseType, AxiosResponse } from 'axios'
+import { Method, ResponseType, AxiosResponse, AxiosTransformer } from 'axios'
 
 interface ServiceParams {
   uuid?: any
@@ -11,6 +11,7 @@ interface ServiceParams {
   action?: string
   responseType?: ResponseType
   serviceName?: string
+  transformResponse?: AxiosTransformer | AxiosTransformer[]
 }
 
 const apiService = async ({
@@ -20,6 +21,7 @@ const apiService = async ({
   params = null,
   method = 'get',
   action = 'get',
+  transformResponse,
   responseType = 'json',
   serviceName = 'workspace'
 }: ServiceParams) => {
@@ -29,7 +31,8 @@ const apiService = async ({
       method,
       params,
       headers,
-      responseType
+      responseType,
+      transformResponse
     })
 
     if (result.status === 200 || result.status === 201 || result.status === 204) {

@@ -19,7 +19,7 @@ export const state: jobRunState = {
   jobRunsLoading: false,
   jobRunlogLoading: true,
   jobRunArtifactLoading: true,
-  jobRunResult: null,
+  jobRunResult: '',
   jobRunLog: {
     count: 0,
     next: null,
