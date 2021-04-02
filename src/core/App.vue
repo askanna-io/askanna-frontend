@@ -146,7 +146,9 @@ export default defineComponent({
 .v-btn.btn--hover:hover i::before {
   color: #5d3eb2 !important;
 }
-
+.v-application .ProseMirror code {
+  padding-left: 0;
+}
 .v-application code.language-js,
 .v-application code.shell,
 code.lang-shell {

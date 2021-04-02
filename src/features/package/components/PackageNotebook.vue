@@ -1,14 +1,14 @@
 <template>
   <v-row align="center" justify="center">
     <v-col cols="12">
-      <v-card flat v-html="notebookHtml" />
+      <v-card class="AskAnna--notebook" flat v-html="notebookHtml" />
     </v-col>
   </v-row>
 </template>
 
 <script>
 import Nb from '@/assets/js/notebook.js'
-import { defineComponent, watch, computed } from '@vue/composition-api'
+import { computed, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'PackageNotebook',
@@ -30,7 +30,7 @@ export default defineComponent({
     }
   },
 
-  setup(props, context) {
+  setup(props) {
     const nb = Nb()
 
     const notebookHtml = computed(() => {
@@ -48,6 +48,19 @@ export default defineComponent({
 </script>
 
 <style>
+.AskAnna--notebook pre {
+  border-radius: 4px;
+}
+
+.AskAnna--notebook .nb-notebook code[class*='language-'],
+.AskAnna--notebook .nb-notebook pre[class*='language-'] {
+  font-size: 14px;
+}
+
+.AskAnna--notebook pre code {
+  background-color: unset;
+  padding-left: 0;
+}
 .nb-notebook {
   padding-left: 106px;
   padding-right: 106px;
@@ -81,12 +94,18 @@ export default defineComponent({
 
 .nb-output th {
   font-weight: bold;
+  background: #f5f5f5;
+  padding: 6px 12px;
 }
 
-.nb-output th,
+.nb-output thead th {
+  text-align: left !important;
+}
+
 .nb-output td {
+  white-space: pre;
   border: 1px solid #000;
-  padding: 0.25em;
+  padding: 12px;
   text-align: left;
   vertical-align: middle;
   border-collapse: collapse;
@@ -108,7 +127,6 @@ export default defineComponent({
   min-height: 1em;
   width: 100%;
   overflow-x: scroll;
-  border-right: 1px dotted #ccc;
 }
 
 .nb-output img {
@@ -1043,13 +1061,14 @@ export default defineComponent({
   text-align: left;
   padding-left: 2em;
 }
-.nb-notebook code[class*='language-'],
-.nb-notebook pre[class*='language-'] {
+
+.nb-notebook .nb-output code[class*='language-'],
+.nb-notebook .nb-output pre[class*='language-'] {
   color: #000;
   background: 0 0;
   text-shadow: 0 1px #fff;
   font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-  font-size: 1em;
+  font-size: 14px;
   text-align: left;
   white-space: pre;
   word-spacing: normal;
@@ -1064,33 +1083,33 @@ export default defineComponent({
   -ms-hyphens: none;
   hyphens: none;
 }
-.nb-notebook code[class*='language-'] ::-moz-selection,
-.nb-notebook code[class*='language-']::-moz-selection,
-.nb-notebook pre[class*='language-'] ::-moz-selection,
-.nb-notebook pre[class*='language-']::-moz-selection {
+.nb-notebook .nb-output code[class*='language-'] ::-moz-selection,
+.nb-notebook .nb-output code[class*='language-']::-moz-selection,
+.nb-notebook .nb-output pre[class*='language-'] ::-moz-selection,
+.nb-notebook .nb-output pre[class*='language-']::-moz-selection {
   text-shadow: none;
   background: #b3d4fc;
 }
-.nb-notebook code[class*='language-'] ::selection,
-.nb-notebook code[class*='language-']::selection,
-.nb-notebook pre[class*='language-'] ::selection,
-.nb-notebook pre[class*='language-']::selection {
+.nb-notebook .nb-output code[class*='language-'] ::selection,
+.nb-notebook .nb-output code[class*='language-']::selection,
+.nb-notebook .nb-output pre[class*='language-'] ::selection,
+.nb-notebook .nb-output pre[class*='language-']::selection {
   text-shadow: none;
   background: #b3d4fc;
 }
 @media print {
-  .nb-notebook code[class*='language-'],
-  .nb-notebook pre[class*='language-'] {
+  .nb-notebook .nb-output code[class*='language-'],
+  .nb-notebook .nb-output pre[class*='language-'] {
     text-shadow: none;
   }
 }
-.nb-notebook pre[class*='language-'] {
+.nb-notebook .nb-output pre[class*='language-'] {
   padding: 1em;
   margin: 0.5em 0;
   overflow: auto;
 }
 .nb-notebook :not(pre) > code[class*='language-'],
-.nb-notebook pre[class*='language-'] {
+.nb-notebook .nb-output pre[class*='language-'] {
   background: #f5f2f0;
 }
 .nb-notebook:not(pre) > code[class*='language-'] {
@@ -1098,65 +1117,64 @@ export default defineComponent({
   border-radius: 0.3em;
   white-space: normal;
 }
-.nb-notebook .token.cdata,
-.nb-notebook .token.comment,
-.nb-notebook .token.doctype,
-.nb-notebook .token.prolog {
+.nb-notebook .nb-output .token.cdata,
+.nb-notebook .nb-output .token.comment,
+.nb-notebook .nb-output .token.doctype,
+.nb-notebook .nb-output .token.prolog {
   color: #708090;
 }
-.nb-notebook .token.punctuation {
+.nb-notebook .nb-output .token.punctuation {
   color: #999;
 }
-.nb-notebook .token.namespace {
+.nb-notebook .nb-output .token.namespace {
   opacity: 0.7;
 }
-.nb-notebook .token.boolean,
-.nb-notebook .token.constant,
-.nb-notebook .token.deleted,
-.nb-notebook .token.number,
-.nb-notebook .token.property,
-.nb-notebook .token.symbol,
-.nb-notebook .token.tag {
+.nb-notebook .nb-output .token.boolean,
+.nb-notebook .nb-output .token.constant,
+.nb-notebook .nb-output .token.deleted,
+.nb-notebook .nb-output .token.number,
+.nb-notebook .nb-output .token.property,
+.nb-notebook .nb-output .token.symbol,
+.nb-notebook .nb-output .token.tag {
   color: #905;
 }
-.nb-notebook .token.attr-name,
-.nb-notebook .token.builtin,
-.nb-notebook .token.char,
-.nb-notebook .token.inserted,
-.nb-notebook .token.selector,
-.nb-notebook .token.string {
+.nb-notebook .nb-output .token.attr-name,
+.nb-notebook .nb-output .token.builtin,
+.nb-notebook .nb-output .token.char,
+.nb-notebook .nb-output .token.inserted,
+.nb-notebook .nb-output .token.selector,
+.nb-notebook .nb-output .token.string {
   color: #690;
 }
-.nb-notebook .language-css .token.string,
-.nb-notebook .style .token.string,
-.nb-notebook .token.entity,
-.nb-notebook .token.operator,
-.nb-notebook .token.url {
+.nb-notebook .nb-output .language-css .token.string,
+.nb-notebook .nb-output .style .token.string,
+.nb-notebook .nb-output .token.entity,
+.nb-notebook .nb-output .token.operator,
+.nb-notebook .nb-output .token.url {
   color: #9a6e3a;
-  background: hsla(0, 0%, 100%, 0.5);
 }
-.nb-notebook .token.atrule,
-.nb-notebook .token.attr-value,
-.nb-notebook .token.keyword {
+.nb-notebook .nb-output .token.atrule,
+.nb-notebook .nb-output .token.attr-value,
+.nb-notebook .nb-output .token.keyword {
   color: #07a;
 }
-.nb-notebook .token.class-name,
-.nb-notebook .token.function {
+.nb-notebook .nb-output .token.class-name,
+.nb-notebook .nb-output .token.function {
   color: #dd4a68;
 }
-.nb-notebook .token.important,
-.nb-notebook .token.regex,
-.nb-notebook .token.variable {
+.nb-notebook .nb-output .token.important,
+.nb-notebook .nb-output .token.regex,
+.nb-notebook .nb-output .token.variable {
   color: #e90;
 }
-.nb-notebook .token.bold,
-.nb-notebook .token.important {
+.nb-notebook .nb-output .token.bold,
+.nb-notebook .nb-output .token.important {
   font-weight: 700;
 }
-.nb-notebook .token.italic {
+.nb-notebook .nb-output .token.italic {
   font-style: italic;
 }
-.nb-notebook .token.entity {
+.nb-notebook .nb-output .token.entity {
   cursor: help;
 }
 </style>

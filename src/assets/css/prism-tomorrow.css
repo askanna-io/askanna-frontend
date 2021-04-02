@@ -1,0 +1,108 @@
+.AskAnna--notebook .nb-notebook code[class='language-python'],
+.AskAnna--notebook .nb-notebook pre[class='language-python'] {
+  background: none;
+  color: #ccc;
+  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  font-size: 14px;
+  hyphens: none;
+  line-height: 1.5;
+  tab-size: 4;
+  text-align: left;
+  white-space: pre;
+  word-break: normal;
+  word-spacing: normal;
+  word-wrap: normal;
+}
+
+.AskAnna--notebook .nb-notebook pre[class='language-python'] {
+  margin: 0.5em 0;
+  overflow: auto;
+  padding: 1em;
+}
+
+.AskAnna--notebook .nb-notebook :not(pre) > code[class='language-python'],
+.AskAnna--notebook .nb-notebook pre[class='language-python'] {
+  background: #282c34;
+}
+
+.AskAnna--notebook .nb-notebook :not(pre) > code[class='language-python'] {
+  border-radius: 0.3em;
+  padding: 0.1em;
+  white-space: normal;
+}
+
+.AskAnna--notebook .nb-notebook .comment,
+.AskAnna--notebook .nb-notebook .block-comment,
+.AskAnna--notebook .nb-notebook .prolog,
+.AskAnna--notebook .nb-notebook .doctype,
+.AskAnna--notebook .nb-notebook .cdata {
+  color: #999;
+}
+
+.AskAnna--notebook .nb-notebook .tag,
+.AskAnna--notebook .nb-notebook .attr-name,
+.AskAnna--notebook .nb-notebook .namespace,
+.AskAnna--notebook .nb-notebook .deleted {
+  color: #e2777a;
+}
+
+.AskAnna--notebook .nb-notebook .function-name {
+  color: #6196cc;
+}
+
+.AskAnna--notebook .nb-notebook .boolean,
+.AskAnna--notebook .nb-notebook .number,
+.AskAnna--notebook .nb-notebook .function {
+  color: #f99157;
+}
+
+.AskAnna--notebook .nb-notebook .property,
+.AskAnna--notebook .nb-notebook .class-name,
+.AskAnna--notebook .nb-notebook .constant,
+.AskAnna--notebook .nb-notebook .symbol {
+  color: #f8c555;
+}
+
+.AskAnna--notebook .nb-notebook .selector,
+.AskAnna--notebook .nb-notebook .important,
+.AskAnna--notebook .nb-notebook .atrule,
+.AskAnna--notebook .nb-notebook .keyword,
+.AskAnna--notebook .nb-notebook .builtin {
+  color: #69c;
+}
+
+.AskAnna--notebook .nb-notebook .string,
+.AskAnna--notebook .nb-notebook .char,
+.AskAnna--notebook .nb-notebook .attr-value,
+.AskAnna--notebook .nb-notebook .regex,
+.AskAnna--notebook .nb-notebook .variable {
+  color: #9c9;
+}
+
+.AskAnna--notebook .nb-notebook .important,
+.AskAnna--notebook .nb-notebook .bold {
+  font-weight: 700;
+}
+
+.AskAnna--notebook .nb-notebook .italic {
+  font-style: italic;
+}
+
+.AskAnna--notebook .nb-notebook .entity {
+  cursor: help;
+}
+
+.AskAnna--notebook .nb-notebook .inserted {
+  color: green;
+}
+
+.AskAnna--notebook .dataframe tbody tr th:only-of-type {
+  text-align: left;
+}
+
+.AskAnna--notebook .nb-notebook .punctuation,
+.AskAnna--notebook .nb-notebook .operator,
+.AskAnna--notebook .nb-notebook .entity,
+.AskAnna--notebook .nb-notebook .url {
+  color: #ccc;
+}
