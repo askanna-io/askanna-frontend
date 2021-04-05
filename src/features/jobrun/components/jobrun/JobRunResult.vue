@@ -4,22 +4,17 @@
       <v-flex class="d-flex">
         <div class="mr-auto d-flex align-center"></div>
         <div>
-          <v-tooltip top>
-            <template v-slot:activator="{ on }">
-              <v-btn
-                small
-                :disabled="loading || isJobRunResultEmpty"
-                outlined
-                v-on="on"
-                color="secondary"
-                class="mr-1"
-                @click="handleDownload('raw')"
-              >
-                <v-icon color="secondary" left>mdi-download</v-icon>Raw
-              </v-btn>
-            </template>
-            <span>Download raw</span>
-          </v-tooltip>
+          <v-btn
+            small
+            :disabled="loading || isJobRunResultEmpty"
+            outlined
+            v-on="on"
+            color="secondary"
+            class="mr-1 btn--hover"
+            @click="handleDownload('raw')"
+          >
+            <v-icon color="secondary" left>mdi-download</v-icon>Download file
+          </v-btn>
 
           <v-tooltip top v-if="false">
             <template v-slot:activator="{ on }">
@@ -38,22 +33,17 @@
             <span>Download formated</span>
           </v-tooltip>
 
-          <v-tooltip top>
-            <template v-slot:activator="{ on }">
-              <v-btn
-                small
-                v-on="on"
-                :disabled="loading || isJobRunResultEmpty"
-                outlined
-                color="secondary"
-                class="mr-1 btn--hover"
-                @click="handleCopy()"
-              >
-                <v-icon left color="secondary">mdi-content-copy</v-icon>Copy
-              </v-btn>
-            </template>
-            <span>Copy</span>
-          </v-tooltip>
+          <v-btn
+            small
+            v-on="on"
+            :disabled="loading || isJobRunResultEmpty"
+            outlined
+            color="secondary"
+            class="mr-1 btn--hover"
+            @click="handleCopy()"
+          >
+            <v-icon left color="secondary">mdi-content-copy</v-icon>Copy
+          </v-btn>
         </div>
       </v-flex>
     </v-toolbar>
