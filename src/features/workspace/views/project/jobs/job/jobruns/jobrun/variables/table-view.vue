@@ -1,20 +1,20 @@
 <template>
   <ask-anna-loading-progress :type="'table-row'" :loading="loading">
     <div>
-      <metric-table-view
+      <variables-table-view
         v-if="items.length || isSorted"
         :isSorted="isSorted"
         :labels="labels"
         :sticked="sticked"
         :metricData="items"
         :height="tableHeight"
-        :itemPathName="'metric'"
+        :itemPathName="'variable'"
         :loading="loadingByParams"
         @onSort="handleOnSort"
         @onScroll="handleOnScroll"
       />
       <v-alert v-else class="mt-2 text-center" dense outlined color="grey">
-        There are no metrics available for this run.
+        There are no variables available for this run.
       </v-alert>
     </div>
   </ask-anna-loading-progress>
@@ -24,44 +24,47 @@ import { throttle } from 'lodash'
 
 import { useWindowSize } from '@u3u/vue-hooks'
 import useQuery from '@/core/composition/useQuery'
-import useMetricStore from '@/features/metric/composition/useMetricStore'
+import useJobRunStore from '@jobrun/composition/useJobRunStore'
 import useProjectStore from '@/features/project/composition/useProjectStore'
 import { ref, computed, onBeforeMount, defineComponent } from '@vue/composition-api'
-import MetricTableView from '@/features/metric/components/metric-table/MetricTableView'
+import VariablesTableView from '@/features/runinfo-variables/components/metric-table/VariablesTableView'
+import useRuninfoVariablesStore from '@/features/runinfo-variables/composition/useRuninfoVariablesStore'
 
 export default defineComponent({
   name: 'table-view',
 
   components: {
-    MetricTableView
+    VariablesTableView
   },
 
   setup(props, context) {
     const { height } = useWindowSize()
-    const metricStore = useMetricStore()
+    const jobRunStore = useJobRunStore()
+
     const projectStore = useProjectStore()
+    const runinfoVariablesStore = useRuninfoVariablesStore()
 
     const { jobRunId: uuid } = context.root.$route.params
 
     const isSorted = ref(false)
 
     const sticked = computed(() => !projectStore.stickedVM.value)
-    const next = computed(() => metricStore.state.metrics.value.next)
-    const labels = computed(() => metricStore.state.metricLabels.value)
-    const items = computed(() => metricStore.state.metrics.value.results)
-    const loading = computed(() => metricStore.state.loading.value.metric)
-    //const queryParams = computed(() => metricStore.state.metricsQuery.value)
+    const next = computed(() => runinfoVariablesStore.state.variables.value.next)
+    const labels = computed(() => jobRunStore.jobRun.value.variablesmeta.labels)
 
-    const metricsQuery = ref({})
+    const items = computed(() => runinfoVariablesStore.state.variables.value.results)
+    const loading = computed(() => runinfoVariablesStore.state.loading.value.variables)
+
+    const variablesQuery = ref({})
     const queryParams = computed({
-      get: () => metricsQuery.value,
+      get: () => variablesQuery.value,
       set: val => {
         isSorted.value = true
-        metricsQuery.value = val
+        variablesQuery.value = val
       }
     })
 
-    const loadingByParams = computed(() => metricStore.state.loading.value.metricByParams)
+    const loadingByParams = computed(() => runinfoVariablesStore.state.loading.value.variablesByParams)
 
     const tableHeight = computed(() => height.value - 66)
 
@@ -71,12 +74,12 @@ export default defineComponent({
       limit: 10,
       offset: 100,
       queryParams,
-      storeAction: metricStore.actions.getMetricByParams
+      storeAction: runinfoVariablesStore.actions.getVariablesByParams
     })
 
     const handleOnSort = async params => {
-      await metricStore.actions.getMetricInitial({ uuid, params, loading: 'metricByParams' })
-      await metricStore.actions.setIsFiltered(true)
+      await runinfoVariablesStore.actions.getVariablesInitial({ uuid, params, loading: 'variablesByParams' })
+      await runinfoVariablesStore.actions.setIsFiltered(true)
 
       const { limit, offset, ...rest } = params
       queryParams.value = rest
@@ -87,9 +90,9 @@ export default defineComponent({
     const handleOnScroll = e => throttled(e.target.scrollTop)
 
     onBeforeMount(async () => {
-      await metricStore.actions.setIsFiltered(false)
-      await metricStore.actions.getMetricLabels(uuid)
-      await metricStore.actions.getMetricInitial({ uuid, params: { limit: 100, offset: 0 } })
+      await runinfoVariablesStore.actions.setIsFiltered(false)
+      //await runinfoVariablesStore.actions.getVariablesLabels(uuid)
+      await runinfoVariablesStore.actions.getVariablesInitial({ uuid, params: { limit: 100, offset: 0 } })
     })
 
     return {

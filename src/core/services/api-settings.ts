@@ -130,6 +130,10 @@ export const api: ApiSettings = {
     metric: {
       getMetric: jobRunShortId => `runinfo/${jobRunShortId}/metrics/`,
       getMetricMeta: jobRunShortId => `runinfo/${jobRunShortId}/metrics/${jobRunShortId}/meta/`
+    },
+    runifo: {
+      getVariables: jobRunShortId => `runinfo/${jobRunShortId}/variables/`,
+      getVariablesMeta: jobRunShortId => `runinfo/${jobRunShortId}/variables/${jobRunShortId}/meta/`
     }
   }
 }

@@ -59,12 +59,18 @@ export default defineComponent({
       },
       {
         id: 4,
+        name: 'Variables',
+        show: !context.root.isNotBeta,
+        to: 'workspace-project-jobs-job-jobrun-variables'
+      },
+      {
+        id: 5,
         name: 'Code',
         show: !context.root.isNotBeta,
         to: 'workspace-project-jobs-job-jobrun-code'
       },
       {
-        id: 5,
+        id: 6,
         name: 'Log',
         show: !context.root.isNotBeta,
         to: 'workspace-project-jobs-job-jobrun-log'
