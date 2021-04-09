@@ -29,6 +29,7 @@
     "numeral": "2.0.6",
     "prismjs": "^1.23.0",
     "register-service-worker": "1.7.2",
+    "stringify-with-floats": "^2.0.1",
     "tiptap": "1.32.1",
     "tiptap-extensions": "1.35.1",
     "vue": "2.6.12",
