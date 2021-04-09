@@ -4,8 +4,8 @@
       <div v-on="on" class="cursor--pointer">
         <textarea
           readonly
-          rows="6"
           cols="80"
+          :rows="calcRows"
           v-model="previewJson"
           class="noselect cursor--pointer"
           :style="{ resize: 'none' }"
@@ -87,6 +87,12 @@ export default defineComponent({
       return result
     })
 
+    const calcRows = computed(() => {
+      let preview = getLines(jsonString.value)
+
+      return preview.length > 6 ? 6 : preview.length
+    })
+
     const previewJson = computed(() => {
       let preview = getLines(jsonString.value)
       if (preview.length > 6) {
@@ -110,7 +116,7 @@ export default defineComponent({
       )
     }
 
-    return { menu, maxLength, slicedText, jsonString, previewJson, handleCopy, handleClose }
+    return { menu, maxLength, calcRows, slicedText, jsonString, previewJson, handleCopy, handleClose }
   }
 })
 </script>

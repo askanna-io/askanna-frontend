@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-tooltip top left v-if="!masked">
+    <v-tooltip top left v-if="!masked" content-class="AskAnna-copy-tooltip">
       <template v-slot:activator="{ on, value }">
         <div v-on="on">
           {{ prefix }} {{ sliceText }}
@@ -24,7 +24,7 @@
         </div>
       </template>
 
-      <span>{{ text }}</span>
+      <span class="hover-content" v-html="text" />
     </v-tooltip>
     <v-expand-transition>
       <v-card flat v-show="expand" class="transparent"><div class="expanded" v-html="restOftext" /> </v-card>
@@ -117,6 +117,9 @@ export default defineComponent({
 })
 </script>
 <style>
+.AskAnna-copy-tooltip .hover-content {
+  white-space: break-spaces;
+}
 .expanded {
   white-space: break-spaces;
 }

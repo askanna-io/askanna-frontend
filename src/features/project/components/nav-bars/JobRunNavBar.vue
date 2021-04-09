@@ -51,18 +51,14 @@
 </template>
 <script>
 import useJobStore from '@job/composition/useJobStore'
-import useMoment from '@/core/composition/useMoment'
-import useFetchData from '@/core/composition/useFetchData'
 import JobRunInfo from '@jobrun/components/jobrun/JobRunInfo'
 import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
 import useJobRunStore from '@jobrun/composition/useJobRunStore'
-import useJobRunResults from '@jobs/composition/useJobRunResults'
-import useProjectStore from '@project/composition/useProjectStore'
 
 import JobToolBar from './parts/JobToolBar'
 import JobRunToolBar from './parts/JobRunToolBar'
 import ProjectToolBar from './parts/ProjectToolBar'
-import { defineComponent, onBeforeMount, computed, watch, ref } from '@vue/composition-api'
+import { defineComponent, computed } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'JobRunNavBar',
@@ -104,9 +100,7 @@ export default defineComponent({
 
   setup(props, context) {
     const jobStore = useJobStore()
-    const fetchData = useFetchData()
     const jobRunStore = useJobRunStore()
-    const projectStore = useProjectStore()
 
     const jobName = computed(() => jobStore.job.value.name)
     const end = context.root.$route.name.indexOf('jobs-name') >= 1 ? 5 : 3

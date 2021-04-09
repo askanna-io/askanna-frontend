@@ -5,7 +5,7 @@
         {{ metricRow.value }}
       </div>
     </template>
-    <span>{{ metricRow.value }}</span>
+    <span class="AskAnna-string-type" v-html="metricRow.value" />
   </v-tooltip>
 </template>
 <script>
@@ -68,3 +68,8 @@ export default defineComponent({
   }
 })
 </script>
+<style scoped>
+.AskAnna-string-type {
+  white-space: break-spaces;
+}
+</style>

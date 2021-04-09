@@ -15,7 +15,6 @@ const moduleKeys = featureModules.keys()
 
 for (const modulePath of moduleKeys) {
   const storeModule = featureModules(modulePath)
-
   stores[storeModule.name] = storeModule[storeModule.name]
   persistedStores.push(storeModule.name)
 }

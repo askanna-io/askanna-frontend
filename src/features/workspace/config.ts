@@ -133,6 +133,61 @@ const jobRun = [
         ]
       },
       {
+        path: 'variables',
+        redirect: { name: 'workspace-project-jobs-job-jobrun-variables-table' },
+        component: () =>
+          import(
+            /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-variables" */ './views/project/jobs/job/jobruns/jobrun/variables/index.vue'
+          ),
+        name: 'workspace-project-jobs-job-jobrun-variables',
+        children: [
+          {
+            path: 'table',
+            component: () =>
+              import(
+                /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-variables-table" */ './views/project/jobs/job/jobruns/jobrun/variables/table-view.vue'
+              ),
+            name: 'workspace-project-jobs-job-jobrun-variables-table',
+            meta: {
+              tabValue: 'table'
+            }
+          },
+          {
+            path: 'json',
+            component: () =>
+              import(
+                /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-variables-json" */ './views/project/jobs/job/jobruns/jobrun/variables/json-view.vue'
+              ),
+            name: 'workspace-project-jobs-job-jobrun-variables-json',
+            meta: {
+              tabValue: 'json'
+            }
+          },
+          {
+            path: 'card',
+            component: () =>
+              import(
+                /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-variables-card" */ './views/project/jobs/job/jobruns/jobrun/variables/card-view.vue'
+              ),
+            name: 'workspace-project-jobs-job-jobrun-variables-card',
+            meta: {
+              tabValue: 'card'
+            }
+          },
+          {
+            path: 'grid',
+            component: () =>
+              import(
+                /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-variables-grid" */ './views/project/jobs/job/jobruns/jobrun/variables/grid-view.vue'
+              ),
+            name: 'workspace-project-jobs-job-jobrun-variables-grid',
+            meta: {
+              tabValue: 'grid'
+            }
+          }
+        ]
+      },
+      {
         path: 'code',
         component: () =>
           import(

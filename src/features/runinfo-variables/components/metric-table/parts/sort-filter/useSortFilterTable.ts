@@ -14,9 +14,9 @@ export default function (context: SetupContext) {
     ordering: '',
     label_name: '',
     label_value: '',
-    metric_name: '',
-    variables_type: '',
-    metric_value: ''
+    variable_name: '',
+    variable_type: '',
+    variable_value: ''
   })
 
   const changeState = ({ path, value }: { path: string; value: string }) => {
@@ -26,7 +26,7 @@ export default function (context: SetupContext) {
 
     //change query in params
     context.root.$router.replace({
-      name: 'workspace-project-jobs-job-jobrun-metrics',
+      name: 'workspace-project-jobs-job-jobrun-variables',
       query: { ...context.root.$route.query, [path]: value }
     })
 
@@ -35,9 +35,9 @@ export default function (context: SetupContext) {
     emitSortFilter(state)
   }
 
-  const metricNameParams = ['metric_name']
+  const metricNameParams = ['variable_name']
   const labalParams = ['label_name', 'label_value']
-  const metricValueParams = ['metric_type', 'metric_value']
+  const metricValueParams = ['variable_type', 'variable_value']
 
   const isActiveLabelFilter = computed(() =>
     Object.entries(state)
@@ -75,8 +75,15 @@ export default function (context: SetupContext) {
   provide('isActiveLabelFilter', readonly(isActiveLabelFilter))
 
   const initState = () => {
-    const { ordering = '', metric_name, metric_value, metric_type, label_name, label_value } = context.root.$route.query
-    Object.assign(state, { ordering, metric_name, metric_value, metric_type, label_name, label_value })
+    const {
+      ordering = '',
+      variable_name,
+      variable_value,
+      variable_type,
+      label_name,
+      label_value
+    } = context.root.$route.query
+    Object.assign(state, { ordering, variable_name, variable_value, variable_type, label_name, label_value })
 
     // emit event to parent component
     // the parent is where useSortFilterTable initialized
