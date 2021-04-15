@@ -43,7 +43,7 @@ export const mutations: MutationTree<jobRunState> = {
       results: []
     }
     state.jobRunResult = ''
-    state.jobRunPayload = null
+    state.jobRunPayload = undefined
     state.jobRunLoading = true
     state.resultLoading = true
     state.payLoadLoading = true

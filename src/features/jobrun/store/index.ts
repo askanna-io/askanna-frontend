@@ -12,7 +12,7 @@ export const state: jobRunState = {
   },
   openJobRunResult: false,
   jobRun: new JobRunModel().state,
-  jobRunPayload: null,
+  jobRunPayload: undefined,
   jobRunLoading: true,
   resultLoading: true,
   payLoadLoading: false,

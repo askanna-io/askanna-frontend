@@ -70,12 +70,11 @@
   </div>
 </template>
 <script>
-import { isEmpty } from 'lodash'
 import JobRunPayLoad from './JobRunPayLoad.vue'
 import useJobRunStore from '../../composition/useJobRunStore'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
-import { ref, computed, onBeforeMount, defineComponent } from '@vue/composition-api'
+import { computed, defineComponent } from '@vue/composition-api'
 import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress'
 
 export default defineComponent({
@@ -94,9 +93,7 @@ export default defineComponent({
     const loading = computed(() => jobRunStore.payLoadLoading.value)
     const jobRunPayload = computed(() => jobRunStore.jobRunPayload.value)
     const jobRunPayloadComputed = computed(() => JSON.stringify(jobRunStore.jobRunPayload.value, null, 2))
-    const isJobRunPayloadEmpty = computed(
-      () => (!jobRunPayload.value || isEmpty(jobRunPayload.value)) && !loading.value
-    )
+    const isJobRunPayloadEmpty = computed(() => !jobRunPayload.value && !loading.value)
 
     const handleDownload = async formatType => {
       const { short_uuid } = jobRunStore.jobRun.value
