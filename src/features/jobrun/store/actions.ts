@@ -70,7 +70,7 @@ export const actions: ActionTree<jobRunState, RootState> = {
   async [type.action.getJobRunPayload]({ commit }, uuid) {
     commit(type.mutation.SET_LOADING, { name: stateType.payLoadLoading, value: true })
 
-    let jobRunPayload = {}
+    let jobRunPayload
     try {
       jobRunPayload = await apiService({
         action: api.getJobRunPayload,

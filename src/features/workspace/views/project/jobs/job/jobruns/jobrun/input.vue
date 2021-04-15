@@ -10,29 +10,31 @@ import { watch, computed, defineComponent } from '@vue/composition-api'
 export default defineComponent({
   components: { JobRunInput },
 
-  setup(props, context) {
+  setup() {
     const jobRunStore = useJobRunStore()
+    const jobRunShortId = computed(() => jobRunStore.jobRun.value.short_uuid)
     const payloadUuid = computed(() => jobRunStore.jobRun.value.payload.short_uuid)
 
-    const handleViewPayload = async payloadUuid => {
+    const handleViewPayload = async (jobRunShortId, payloadUuid) => {
       await jobRunStore.setLoading({ name: 'payLoadLoading', value: true })
 
-      if (!payloadUuid) return
+      if (!jobRunShortId) return
 
-      const { short_uuid: jobRunShortId } = jobRunStore.jobRun.value
+      if (!payloadUuid) {
+        await jobRunStore.setLoading({ name: 'payLoadLoading', value: false })
+        return
+      }
 
       if (!jobRunStore.jobRunPayload.value) {
         await jobRunStore.getJobRunPayload({ jobRunShortId, payloadUuid })
       }
-
       await jobRunStore.setLoading({ name: 'payLoadLoading', value: false })
     }
 
-    watch(payloadUuid, async payloadUuid => {
-      await handleViewPayload(payloadUuid)
+    watch(jobRunShortId, jobRunShortId => {
+      handleViewPayload(jobRunShortId, payloadUuid.value)
     })
-
-    handleViewPayload(payloadUuid.value)
+    handleViewPayload(jobRunShortId.value, payloadUuid.value)
   }
 })
 </script>

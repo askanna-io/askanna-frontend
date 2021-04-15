@@ -4,7 +4,7 @@ export interface jobRubData {
   runs: { count: number; results: JobRun[]; next: null | string }
   openJobRunResult: boolean
   jobRun: JobRun
-  jobRunPayload: string | null
+  jobRunPayload: string | null | undefined
   jobRunLoading: Boolean
   resultLoading: Boolean
   payLoadLoading: Boolean
