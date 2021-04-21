@@ -46,6 +46,18 @@ Vue.use(Sticky)
 Vue.use(VueCompositionApi)
 Vue.config.productionTip = false
 
+// global filter
+Vue.filter('capitalize', function (value: string) {
+  if (!value) return ''
+  value = value.toString()
+  return value.charAt(0).toUpperCase() + value.slice(1)
+})
+Vue.filter('lowercase', function (value: string) {
+  if (!value) return ''
+  value = value.toString()
+  return value.charAt(0).toLowerCase() + value.slice(1)
+})
+
 //check if the current user is authenticated
 const notAllowedRouteWithToken = ['signin', 'signup']
 router.beforeEach((to, _, next) => {

@@ -1,5 +1,9 @@
+import moment from 'moment-timezone'
 import { SetupContext } from '@vue/composition-api'
-import moment from 'moment'
+
+interface MillisecondsToStrParams {
+  showSeconds: boolean
+}
 
 export default function (context: SetupContext) {
   const runTimeHours = function (startTime: string, endTime: string) {
@@ -20,8 +24,12 @@ export default function (context: SetupContext) {
     return millisecondsToStr(d)
   }
 
-  const millisecondsToStr = function (milliseconds: number) {
+  const millisecondsToStr = function (milliseconds: number, params: MillisecondsToStrParams = { showSeconds: true }) {
+    const { showSeconds = true } = params
     if (!milliseconds || milliseconds <= 0) return 'less than a second'
+
+    // check if miliseconds not more then 1 minute
+    if (milliseconds <= 60000) return 'within a minute'
 
     let result = ''
     function numberEnding(n: number) {
@@ -36,7 +44,7 @@ export default function (context: SetupContext) {
     }
     const days = Math.floor((temp %= 31536000) / 86400)
     if (days) {
-      result += ` ${days} day${numberEnding(days)}`
+      result += ` ${days} day${numberEnding(days)},`
     }
     const hours = Math.floor((temp %= 86400) / 3600)
     if (hours) {
@@ -44,15 +52,40 @@ export default function (context: SetupContext) {
     }
     const minutes = Math.floor((temp %= 3600) / 60)
     if (minutes) {
-      result += ` ${minutes} minute${numberEnding(minutes)}`
+      const and = hours ? ' and ' : ' '
+      result += `${and}${minutes} minute${numberEnding(minutes)}`
     }
     const seconds = temp % 60
-    if (seconds) {
+    if (seconds && showSeconds) {
       result += ` ${seconds} second${numberEnding(seconds)}`
     }
 
     return result
   }
 
-  return { runTimeHours, ago, seconds, $moment: moment, duratioHumanize }
+  const nextClosestData = (dates: string[]) => {
+    const next = dates
+      .map(function (s) {
+        return moment.utc(s)
+      })
+      .sort(function (m) {
+        return m.valueOf()
+      })
+      .find(function (m) {
+        return m.isAfter()
+      })
+
+    if (next) {
+      return {
+        datatime: next.local().format(' Do MMMM YYYY, h:mm:ss a'),
+        fromNow: millisecondsToStr(moment.duration(moment(next).diff(moment())).asMilliseconds(), {
+          showSeconds: false
+        })
+      }
+    } else {
+      return { nextDatatime: null, fromNow: null }
+    }
+  }
+
+  return { runTimeHours, ago, seconds, $moment: moment, duratioHumanize, nextClosestData }
 }

@@ -26,6 +26,13 @@ interface Job {
   modified: string
   short_uuid: string
   description: string
+  schedules?: Schedule[]
+}
+
+interface Schedule {
+  last_run: string
+  next_run: string
+  raw_definition: string
 }
 
 export const JOB_STORE = 'job'
@@ -95,6 +102,7 @@ export class JobModel {
       status: '',
       created: '',
       modified: '',
+      schedules: [],
       short_uuid: '',
       description: ''
     }

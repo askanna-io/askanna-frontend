@@ -128,10 +128,18 @@ export default defineComponent({
 .cursor--pointer {
   cursor: pointer;
 }
+.hover-text:hover {
+  color: #5d3eb2 !important;
+}
 
 .text--capitalize {
   text-transform: capitalize !important;
 }
+
+.text--lowercase {
+  text-transform: lowercase !important;
+}
+
 .text-body-1 {
   font-size: 16px !important;
 }
@@ -212,5 +220,9 @@ code.lang-shell {
   &--initial .v-btn__content {
     text-transform: initial;
   }
+}
+
+.opacity-1 {
+  opacity: 1 !important;
 }
 </style>
