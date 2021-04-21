@@ -8,6 +8,7 @@
   </div>
 </template>
 <script lang="ts">
+import { get } from 'lodash'
 import useMoment from '@/core/composition/useMoment'
 import JobRunInfoJob from './parts/JobRunInfoJob.vue'
 import JobRunInfoCode from './parts/JobRunInfoCode.vue'
@@ -48,6 +49,10 @@ export default defineComponent({
 
   setup(props, context) {
     const moment = useMoment(context)
+    const triggers = {
+      API: 'API',
+      SCHEDULE: 'Schedule'
+    }
 
     const variables = computed(() => {
       const allVariables = [
@@ -84,7 +89,7 @@ export default defineComponent({
         },
         {
           text: 'Trigger',
-          value: 'API' || props.jobRun.trigger.name,
+          value: get(triggers, `${props.jobRun.trigger}`) || 'API',
           component: 'JobRunInfoText'
         },
         {

@@ -13,7 +13,13 @@
     />
 
     <v-divider />
-    <job-definition :job="job" :lastPackage="lastPackage" @handleGoToCode="handleGoToCode" />
+    <job-definition
+      :job="job"
+      :nextRun="nextRun"
+      :schedules="schedules"
+      :lastPackage="lastPackage"
+      @handleGoToCode="handleGoToCode"
+    />
     <v-divider />
 
     <job-running />
@@ -21,13 +27,15 @@
 </template>
 
 <script>
+import useMoment from '@/core/composition/useMoment'
 import useJobStore from '@job/composition/useJobStore'
+import useCronstrue from '@/core/composition/useCronstrue'
 import useJobRunStore from '@jobrun/composition/useJobRunStore'
 import JobDefinition from '@job/components/overview/JobDefinition'
 import JobRunning from '@/features/job/components/overview/JobRunning'
 import useProjectStore from '@/features/project/composition/useProjectStore'
 
-import { onBeforeMount, defineComponent, onBeforeDestroy } from '@vue/composition-api'
+import { onBeforeMount, defineComponent, computed } from '@vue/composition-api'
 
 export default defineComponent({
   components: {
@@ -35,7 +43,10 @@ export default defineComponent({
     JobDefinition
   },
 
-  setup(rops, context) {
+  setup(props, context) {
+    const cronstrue = useCronstrue()
+    const moment = useMoment(context)
+
     const jobStore = useJobStore()
     const jobRunStore = useJobRunStore()
 
@@ -49,6 +60,18 @@ export default defineComponent({
       await projectStore.getLastPackage(projectId)
     })
 
+    const job = computed(() => jobStore.job.value)
+    const nextRun = computed(() => moment.nextClosestData(job.value.schedules.map(s => s.next_run)))
+    const schedules = computed(() =>
+      job.value.schedules.map(item => {
+        return {
+          ...item,
+          next_run: moment.$moment.tz(item.next_run, item.cron_timezone).local().format(' Do MMMM YYYY, h:mm a'),
+          humanizeFormat: cronstrue.humanizeCron(item.cron_definition)
+        }
+      })
+    )
+
     const handleGoToCode = () =>
       context.root.$router.push({
         name: 'workspace-project-package',
@@ -60,6 +83,9 @@ export default defineComponent({
 
     return {
       ...jobStore,
+      job,
+      nextRun,
+      schedules,
       lastPackage: projectStore.lastPackage,
       handleGoToCode,
       handleOnJobSave,
