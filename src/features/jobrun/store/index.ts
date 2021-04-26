@@ -20,6 +20,11 @@ export const state: jobRunState = {
   jobRunlogLoading: true,
   jobRunArtifactLoading: true,
   jobRunResult: '',
+  jobRunResultPreview: '',
+  isShowPreview: false,
+  jobRunResultExt: 'json',
+  isJobRunResultBig: true,
+  isResultJSON: true,
   jobRunLog: {
     count: 0,
     next: null,

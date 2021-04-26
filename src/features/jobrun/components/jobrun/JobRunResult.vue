@@ -15,6 +15,7 @@
             <v-icon color="secondary" left>mdi-download</v-icon>Download file
           </v-btn>
           <v-btn
+            v-if="isResultJSON"
             small
             :disabled="loading || isJobRunResultEmpty"
             outlined
@@ -26,7 +27,7 @@
           </v-btn>
         </div>
         <div>
-          <v-card class="ml-4" flat width="115" color="grey lighten-4" v-if="jobRunResult.isValidJSON">
+          <v-card class="ml-4" flat width="115" color="grey lighten-4" v-if="isValidJSON">
             <v-select
               dense
               hide-details
@@ -52,27 +53,54 @@
         transition="transition"
         type="list-item-two-line"
       >
-        <the-highlight
-          v-if="!isJobRunResultEmpty"
-          readonly
-          languageName="json"
-          :value="jobRunResultForView"
-          v-scroll:#scroll-target="handleOnScroll"
-        />
+        <div>
+          <job-run-result-preview
+            v-if="!isJobRunResultEmpty"
+            :fileExtension="jobRunResultExt"
+            :dataSource="jobRunResultForView"
+          />
+          <v-flex v-if="!isJobRunResultEmpty && isJobRunResultBig && isShowPreview" class="my-2 mb-0 text-center">
+            <v-btn
+              text
+              small
+              outlined
+              color="secondary"
+              class="mr-1 btn--hover"
+              @click="handleDownload"
+              :disabled="loading || isJobRunResultEmpty"
+            >
+              <v-icon color="secondary" left>mdi-download</v-icon> ...to show the full result, please download the file
+            </v-btn>
+          </v-flex>
+          <v-flex v-if="!isJobRunResultEmpty && !isShowPreview" class="my-2 mb-0 text-center">
+            <v-btn
+              text
+              small
+              outlined
+              color="secondary"
+              class="mr-1 btn--hover"
+              @click="handleDownload"
+              :disabled="loading || isJobRunResultEmpty"
+            >
+              <v-icon color="secondary" left>mdi-download</v-icon>We cannot show a preview of this file. Please download
+              the file.
+            </v-btn>
+          </v-flex>
 
-        <v-alert v-if="isJobRunResultEmpty" class="my-2 mb-0 text-center" dense outlined color="grey">
-          There is no result available for this run.
-        </v-alert>
+          <v-alert v-if="isJobRunResultEmpty" class="my-2 mb-0 text-center" dense outlined color="grey">
+            There is no result available for this run.
+          </v-alert>
+        </div>
       </ask-anna-loading-progress>
     </v-flex>
   </div>
 </template>
 <script>
-import { throttle } from 'lodash'
 import { useWindowSize } from '@u3u/vue-hooks'
 import usePrettyJSON from '@/core/composition/usePrettyJSON'
 import useJobRunStore from '../../composition/useJobRunStore'
 
+import JobRunResultPreview from './result/JobRunResultPreview'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
 import TheHighlight from '@/core/components/highlight/TheHighlight'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
@@ -82,11 +110,10 @@ import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgr
 export default defineComponent({
   name: 'JobRunResult',
 
-  components: { TheHighlight, AskAnnaLoadingProgress },
+  components: { TheHighlight, JobRunResultPreview, AskAnnaLoadingProgress },
 
   setup(_, context) {
     const snackBar = useSnackBar()
-
     const { height } = useWindowSize()
     const prettyJSON = usePrettyJSON()
     const jobRunStore = useJobRunStore()
@@ -96,7 +123,8 @@ export default defineComponent({
       { name: 'Pretty', value: 'pretty' },
       { name: 'Raw', value: 'raw' }
     ]
-    const currentScrollTop = ref(0)
+    const { jobRunId } = context.root.$route.params
+
     const currentView = ref(views[0])
 
     const viewModel = computed({
@@ -109,24 +137,36 @@ export default defineComponent({
       }
     })
 
-    const jobRunResult = computed(() => prettyJSON(jobRunStore.jobRunResult.value, 2))
+    const loading = computed(() => jobRunStore.resultLoading.value)
+    const isResultJSON = computed(() => jobRunStore.isResultJSON.value)
+    const isShowPreview = computed(() => jobRunStore.isShowPreview.value)
     const jobRunResultRaw = computed(() => jobRunStore.jobRunResult.value)
-    const jobRunResultFormated = computed(() => jobRunResult.value.prettyJson)
-    const jobRunResultForView = computed(() =>
-      currentView.value.value === 'raw' ? jobRunResultRaw.value : jobRunResultFormated.value
+    const jobRunResultExt = computed(() => jobRunStore.jobRunResultExt.value)
+
+    const isJobRunResultBig = computed(() => jobRunStore.isJobRunResultBig.value)
+    const isJobRunResultEmpty = computed(() => !jobRunResultPreview.value && !loading.value)
+
+    const jobRunResultPreview = computed(() =>
+      jobRunResultExt.value === 'json'
+        ? prettyJSON(jobRunStore.jobRunResultPreview.value, 2)
+        : jobRunStore.jobRunResultPreview.value
     )
+
+    const isValidJSON = computed(() => jobRunResultPreview.value.isValidJSON)
+
+    const jobRunResultFormated = computed(() => jobRunResultPreview.value.prettyJson)
+    const jobRunResultForView = computed(() => {
+      if (!isResultJSON.value) return jobRunStore.jobRunResultPreview.value
+
+      return currentView.value.value === 'raw' ? jobRunStore.jobRunResultPreview.value : jobRunResultFormated.value
+    })
 
     const jobRunResultSource = computed(() =>
-      currentView.value.value === 'raw' ? jobRunResultRaw.value : jobRunResultFormated.value
+      currentView.value.value === 'raw' ? jobRunResultRaw.value : prettyJSON(jobRunResultRaw.value, 2).prettyJson
     )
 
-    const loading = computed(() => jobRunStore.resultLoading.value)
-    const isJobRunResultEmpty = computed(() => !jobRunResult.value && !loading.value)
-
     onBeforeMount(async () => {
-      const { jobRunId } = context.root.$route.params
-
-      await jobRunStore.getJobRunResult(jobRunId)
+      await jobRunStore.getJobRunResultPreview(jobRunId)
     })
 
     const maxHeight = computed(() => height.value - 150)
@@ -135,46 +175,40 @@ export default defineComponent({
     })
 
     const handleDownload = async () => {
+      // download full version of result without formating
+      await jobRunStore.getJobRunResult(jobRunId)
+
       forceFileDownload.trigger({
-        source: jobRunStore.jobRunResult.value,
-        name: `run_${jobRunStore.jobRun.value.short_uuid}_result.json`
+        source: jobRunResultRaw.value,
+        name: `run_${jobRunStore.jobRun.value.short_uuid}_result.${jobRunResultExt.value}`
       })
     }
 
-    const handleCopy = () => {
+    const handleCopy = async () => {
+      await jobRunStore.getJobRunResult(jobRunId)
+
       context.root.$copyText(jobRunResultSource.value).then(
         () => snackBar.showSnackBar({ message: 'Copied', color: 'success' }),
         () => snackBar.showSnackBar({ message: 'Can not copy', color: 'failed' })
       )
     }
 
-    const onScroll = scrollTop => {
-      if (scrollTop > currentScrollTop.value) {
-        window.scrollTo(0, window.pageYOffset + 10)
-        currentScrollTop.value = scrollTop
-      }
-    }
-
-    const throttled = throttle(onScroll, 1500)
-
-    const handleOnScroll = e => {
-      window.scrollTo(0, window.pageYOffset + 10)
-      throttled(e.target.scrollTop)
-    }
-
     return {
       views,
       loading,
       viewModel,
+      isValidJSON,
       currentView,
-      jobRunResult,
+      isResultJSON,
+      isShowPreview,
       scrollerStyles,
-      jobRunResultForView,
+      jobRunResultExt,
+      isJobRunResultBig,
       isJobRunResultEmpty,
+      jobRunResultForView,
 
       handleCopy,
-      handleDownload,
-      handleOnScroll
+      handleDownload
     }
   }
 })

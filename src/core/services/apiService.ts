@@ -9,8 +9,9 @@ interface ServiceParams {
   params?: any
   method?: Method
   action?: string
-  responseType?: ResponseType
   serviceName?: string
+  responseType?: ResponseType
+  returnFullResponse?: boolean
   transformResponse?: AxiosTransformer | AxiosTransformer[]
 }
 
@@ -23,7 +24,8 @@ const apiService = async ({
   action = 'get',
   transformResponse,
   responseType = 'json',
-  serviceName = 'workspace'
+  serviceName = 'workspace',
+  returnFullResponse = false
 }: ServiceParams) => {
   try {
     const result = await $axios(api.apiUrl() + api.points[serviceName][action](uuid), {
@@ -35,7 +37,10 @@ const apiService = async ({
       transformResponse
     })
 
-    if (result.status === 200 || result.status === 201 || result.status === 204) {
+    if (result.status === 200 || result.status === 201 || result.status === 204 || result.status === 206) {
+      if (returnFullResponse) {
+        return result
+      }
       return result.data
     } else {
       throw result

@@ -91,7 +91,7 @@ export default defineComponent({
       )
     }
 
-    const imgExts = ['jpg', 'png', 'gif']
+    const imgExts = ['jpg', 'png', 'gif', 'jpeg']
     const isIpynb = computed(() => props.currentPath.ext === 'ipynb')
     const isFileImg = computed(() => imgExts.includes(props.currentPath.ext))
     const languageName = computed(() =>

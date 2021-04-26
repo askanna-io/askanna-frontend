@@ -12,6 +12,11 @@ export interface jobRubData {
   jobRunlogLoading: Boolean
   jobRunArtifactLoading: Boolean
   jobRunResult: any
+  jobRunResultExt: string
+  jobRunResultPreview: any
+  isJobRunResultBig: Boolean
+  isResultJSON: Boolean
+  isShowPreview: Boolean
   jobRunLog: {
     count: number
     next: null | string
@@ -93,6 +98,7 @@ export const action = {
   showJobRunResult: 'showJobRunResult',
   closeResultModal: 'closeResultModal',
   getJobRunArtifact: 'getJobRunArtifact',
+  getJobRunResultPreview: 'getJobRunResultPreview',
   getFullVersionJobRunLog: 'getFullVersionJobRunLog',
   getInitialJobRunArtifact: 'getInitialJobRunArtifact'
 }
@@ -116,6 +122,7 @@ export const UPDATE_JOB_RESULT = 'UPDATE_JOB_RESULT'
 export const SET_JOB_RUN_RESULT = 'SET_JOB_RUN_RESULT'
 export const SET_JOB_RUN_PAYLOAD = 'SET_JOB_RUN_PAYLOAD'
 export const SET_JOB_RUN_ARTIFACT = 'SET_JOB_RUN_ARTIFACT'
+export const SET_JOB_RUN_RESULT_PREVIEW = 'SET_JOB_RUN_RESULT_PREVIEW'
 export const SET_JOB_RUN_LOG_FULL_VERSION = 'SET_JOB_RUN_LOG_FULL_VERSION'
 
 export const stateType = {
@@ -125,14 +132,19 @@ export const stateType = {
   jobRunLog: 'jobRunLog',
   fileSource: 'fileSource',
   logLoading: 'logLoading',
+  isResultJSON: 'isResultJSON',
   artifactData: 'artifactData',
   jobRunResult: 'jobRunResult',
   jobRunPayload: 'jobRunPayload',
   jobRunLoading: 'jobRunLoading',
+  isShowPreview: 'isShowPreview',
   resultLoading: 'resultLoading',
   jobRunsLoading: 'jobRunsLoading',
   payLoadLoading: 'payLoadLoading',
+  jobRunResultExt: 'jobRunResultExt',
   jobRunlogLoading: 'jobRunlogLoading',
+  isJobRunResultBig: 'isJobRunResultBig',
+  jobRunResultPreview: 'jobRunResultPreview',
   jobRunLogFullVersion: 'jobRunLogFullVersion',
   jobRunArtifactLoading: 'jobRunArtifactLoading'
 }

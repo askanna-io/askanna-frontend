@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { defineComponent, watch, computed } from '@vue/composition-api'
+import { computed, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'PackageFileImage',

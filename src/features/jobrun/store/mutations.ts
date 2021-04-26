@@ -36,6 +36,14 @@ export const mutations: MutationTree<jobRunState> = {
     state.jobRunResult = data
   },
 
+  [type.SET_JOB_RUN_RESULT_PREVIEW](state, { data, contentExt, isShowPreview, isJobRunResultBig, isResultJSON }) {
+    state.jobRunResultPreview = data
+    state.isResultJSON = isResultJSON
+    state.isShowPreview = isShowPreview
+    state.jobRunResultExt = contentExt || 'json'
+    state.isJobRunResultBig = isJobRunResultBig
+  },
+
   [type.mutation.UPDATE_JOB_RUN_STORE](state) {
     state.runs = {
       count: 0,
@@ -44,9 +52,15 @@ export const mutations: MutationTree<jobRunState> = {
     }
     state.jobRunResult = ''
     state.jobRunPayload = undefined
+    state.isResultJSON = true
     state.jobRunLoading = true
     state.resultLoading = true
     state.payLoadLoading = true
+    state.isShowPreview = false
+    state.jobRunResultPreview = ''
+    state.jobRunResultExt = 'json'
+    state.isJobRunResultBig = true
+
     state.jobRun = new JobRunModel().state
 
     state.jobRunLog = {

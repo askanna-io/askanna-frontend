@@ -87,23 +87,133 @@ export const actions: ActionTree<jobRunState, RootState> = {
     commit(type.mutation.SET_LOADING, { name: stateType.payLoadLoading, value: false })
   },
 
-  async [type.action.getJobRunResult]({ commit }, uuid) {
+  async [type.action.getJobRunResultPreview]({ commit }, uuid) {
     commit(type.mutation.SET_LOADING, { name: stateType.resultLoading, value: true })
+
+    const allowedTextExts = ['plain', 'html']
+    const allowedFileExts = ['jpg', 'png', 'gif', 'jpeg']
+    const allowedToShowPreview = ['xml', 'xslx', 'csv', 'tsv', 'json']
+
+    const exts: any = {
+      xml: 'xml',
+      jpg: 'jpg',
+      png: 'png',
+      gif: 'gif',
+      csv: 'csv',
+      tsv: 'tsv',
+      xls: 'xls',
+      pdf: 'pdf',
+      jpeg: 'jpeg',
+      html: 'html',
+      text: 'text',
+      json: 'json',
+      xlsx: 'xlsx',
+      plain: 'txt',
+      'vnd.ms-excel': 'xls',
+      'vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'xlsx'
+    }
+
+    let response = {
+      data: { type: '', size: 0 },
+      headers: { 'content-type': '', 'content-range': '' }
+    }
+    let contentExt = ''
+    let isResultJSON = true
+    let isShowPreview = false
+    let isJobRunResultBig = true
+    let contentLength: string | number = ''
+
+    try {
+      response = await apiService({
+        uuid,
+        serviceName,
+        responseType: 'text',
+        headers: {
+          range: 'bytes=0-100000'
+        },
+        returnFullResponse: true,
+        action: api.getJobRunResult,
+        transformResponse: [data => data]
+      })
+      // refactore this after backend add result info on get jobrun endpoint
+      // get content length from content range, check if this a big file or not
+      contentExt = response.headers['content-type'].split(',')[0].split('/')[1]
+      contentLength = response.headers['content-range'].split('/')[1]
+
+      isResultJSON = contentExt === 'json'
+      isJobRunResultBig = Number(contentLength) >= 100000
+
+      // get result for files
+      if (allowedTextExts.includes(contentExt) && !isJobRunResultBig) {
+        response = await apiService({
+          uuid,
+          serviceName,
+          responseType: 'text',
+          returnFullResponse: true,
+          action: api.getJobRunResult
+        })
+        isResultJSON = false
+        isJobRunResultBig = false
+      }
+
+      // get result for files
+      if (allowedFileExts.includes(contentExt)) {
+        response = await apiService({
+          uuid,
+          serviceName,
+          responseType: 'blob',
+          returnFullResponse: true,
+          action: api.getJobRunResult
+        })
+        isShowPreview = true
+        isResultJSON = false
+        isJobRunResultBig = false
+        contentLength = response.data?.size
+        contentExt = response.data.type.split('/')[1]
+      }
+    } catch (e) {
+      logger.error(commit, 'Error on get preview of jobrun result  in getJobRunResultPreview action.\nError: ', e)
+      commit(type.mutation.SET_LOADING, { name: stateType.resultLoading, value: false })
+
+      return
+    }
+
+    if (allowedToShowPreview.includes(contentExt)) {
+      isShowPreview = true
+    }
+    contentExt = exts[contentExt]
+
+    commit(type.SET_JOB_RUN_RESULT_PREVIEW, {
+      data: response.data,
+      contentExt,
+      isResultJSON,
+      isShowPreview,
+      contentLength,
+      isJobRunResultBig
+    })
+    commit(type.mutation.SET_LOADING, { name: stateType.resultLoading, value: false })
+  },
+
+  async [type.action.getJobRunResult]({ state, commit }, uuid) {
+    const responseType = state.jobRunResultExt === 'json' ? 'text' : 'blob'
 
     let jobRunResult = ''
     try {
       jobRunResult = await apiService({
         uuid,
         serviceName,
-        responseType: 'text',
+        responseType: responseType,
         action: api.getJobRunResult,
         transformResponse: [data => data]
+        /*  headers: {
+          contentType: 'application/octet-stream',
+          contentDisposition: 'attachment;filename=report.xls'
+        } */
       })
     } catch (e) {
       logger.error(commit, 'Error on jobRunResult job  in getJobRunResult action.\nError: ', e)
     }
     commit(type.SET_JOB_RUN_RESULT, jobRunResult)
-    commit(type.mutation.SET_LOADING, { name: stateType.resultLoading, value: false })
   },
 
   async [type.action.setLoading]({ commit }, data) {
