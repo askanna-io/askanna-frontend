@@ -3,7 +3,7 @@
 const endFloat = '~AskAnna~float~end~'
 const beginFloat = '~AskAnna~float~start~'
 
-const REG_FLOAT = /[+,-]?\d*\.[0]\,/gm
+const REG_FLOAT = /[+,-]?\d*\.[0]*\s*\,/gm
 const REG_FLOA_DECODE = new RegExp(`"${beginFloat}(.+?)${endFloat}"`, 'g')
 
 export default () => (jsonString: string, space: number) => {
