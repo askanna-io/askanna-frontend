@@ -12,6 +12,7 @@
 
 <script>
 import JobsList from '@/features/jobs/components/JobsList'
+import useJobRunStore from '@jobrun/composition/useJobRunStore'
 import useProjectStore from '@project/composition/useProjectStore'
 import { computed, defineComponent, onBeforeMount } from '@vue/composition-api'
 
@@ -23,10 +24,12 @@ export default defineComponent({
   },
 
   setup(props, context) {
+    const jobRunStore = useJobRunStore()
     const projectStore = useProjectStore()
     const { projectId } = context.root.$route.params
 
     onBeforeMount(async () => {
+      await jobRunStore.resetStore()
       await projectStore.resetProjectJobs()
       await projectStore.getProjectJobs(projectId)
     })
