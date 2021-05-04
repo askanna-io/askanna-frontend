@@ -134,11 +134,11 @@ export default defineComponent({
     const calculateDuration = (item: any) => {
       const currentTime = new Date().toTimeString()
       if (['PENDING', 'IN_PROGRESS', 'SUBMITTED'].indexOf(item.status) !== -1) {
-        return moment.duratioHumanize(item.created, moment.$moment().toString())
+        return moment.durationHumanize(item.created, moment.$moment().toString())
       }
 
       if (['COMPLETED', 'SUCCESS', 'FAILURE', 'FAILED'].indexOf(item.status) !== -1) {
-        return moment.duratioHumanize(item.created, item.modified)
+        return moment.durationHumanize(item.created, item.modified)
       }
 
       return ''
