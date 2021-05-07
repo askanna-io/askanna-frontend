@@ -9,7 +9,7 @@
       :value="peoplePopup"
       :people="people"
       :currentUser="currentUser"
-      :workspaceName="workspace.title"
+      :workspaceName="workspace.name"
       @handleValue="handleValue"
     />
   </div>

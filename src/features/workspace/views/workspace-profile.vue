@@ -23,7 +23,7 @@
           @onUpdateUserProfile="handleOnUpdateUserProfile"
         />
 
-        <v-card-title class="title py-1">{{ workspaceTitle }} workspace</v-card-title>
+        <v-card-title class="title py-1">{{ workspaceName }} workspace</v-card-title>
         <user-workspace-profile
           :workspaceProfile="workspaceProfile"
           @onUpdateWorkSpaceProfile="handleOnUpdateWorkSpaceProfile"
@@ -112,14 +112,14 @@ export default defineComponent({
     )
 
     const userProfile = computed(() => userStore.state.userProfile.value)
-    const workspaceTitle = computed(() => workSpaceStore.workspace.value.title)
+    const workspaceName = computed(() => workSpaceStore.workspace.value.name)
     const workspaceProfile = computed(() => workSpaceStore.state.currentPeople.value)
 
     const loading = computed(() => !workspaceProfile.value.email)
 
     const breadcrumbs = computed(() => [
       {
-        title: workSpaceStore.workspace.value.title,
+        title: workSpaceStore.workspace.value.name,
         to: `/${workSpaceStore.workspace.value.short_uuid}`,
         disabled: false
       },
@@ -246,8 +246,8 @@ export default defineComponent({
       profileForm,
       breadcrumbs,
       userProfile,
+      workspaceName,
       isSaveDisabled,
-      workspaceTitle,
       workspaceProfile,
 
       handleSave,

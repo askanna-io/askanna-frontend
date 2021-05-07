@@ -4,6 +4,7 @@
       <job-runs
         :items="runs"
         :count="count"
+        :itemsPerPage="25"
         :loading="jobRunsLoading"
         :tableClass="'job-sub-table'"
         @onChangeParams="handleChangeParams"
@@ -40,7 +41,7 @@ export default defineComponent({
       await jobRunStore.getRunsJob({
         uuid,
         params: {
-          limit: 5,
+          limit: 25,
           offset: 0
         }
       })

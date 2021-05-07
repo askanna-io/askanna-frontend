@@ -144,6 +144,11 @@ export default defineComponent({
   font-size: 16px !important;
 }
 
+.v-chip.v-chip--clickable.btn--without-text.btn--hover:hover,
+.v-btn.btn--without-text.btn--hover:hover {
+  color: #5d3eb2 !important;
+  border: none !important;
+}
 .v-chip.v-chip--clickable.btn--hover:hover,
 .v-btn.btn--hover:hover {
   color: #5d3eb2 !important;
@@ -154,6 +159,7 @@ export default defineComponent({
 .v-btn.btn--hover:hover i::before {
   color: #5d3eb2 !important;
 }
+
 .v-application .ProseMirror code {
   padding-left: 0;
 }
@@ -224,5 +230,9 @@ code.lang-shell {
 
 .opacity-1 {
   opacity: 1 !important;
+}
+
+.text-transform--initial {
+  text-transform: initial !important;
 }
 </style>

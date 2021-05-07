@@ -61,8 +61,8 @@ interface Invitation {
   object_uuid: string
   workspace: {
     name: string
-    short_uuid: string
     uuid: string
+    short_uuid: string
   }
   role: string
   job_title: string
@@ -71,16 +71,15 @@ interface Invitation {
 }
 interface Workspace {
   uuid: string
-  short_uuid: string
+  deleted: null
   name: string
   status: number
   created: string
   modified: string
-  title: string
+  short_uuid: string
   description: string
   activate_date: string
   deactivate_date: string | null
-  deleted: null
 }
 
 interface Person {
@@ -188,16 +187,15 @@ export class WorkspaceModel {
   static initialState() {
     return {
       uuid: '',
-      short_uuid: '',
       name: '',
       status: 1,
       created: '',
       modified: '',
-      title: '',
+      deleted: null,
+      short_uuid: '',
       description: '',
       activate_date: '',
-      deactivate_date: '',
-      deleted: null
+      deactivate_date: ''
     }
   }
 }
@@ -215,16 +213,16 @@ export class InvitationModel {
   static initialState() {
     return {
       name: '',
-      status: '',
-      email: '',
       uuid: '',
+      role: '',
+      email: '',
+      status: '',
+      job_title: '',
       short_uuid: '',
       object_uuid: '',
+      front_end_url: '',
       workspace: { name: '', short_uuid: '', uuid: '' },
-      role: '',
-      job_title: '',
-      user: { name: null, short_uuid: null, uuid: null },
-      front_end_url: ''
+      user: { name: null, short_uuid: null, uuid: null }
     }
   }
 }

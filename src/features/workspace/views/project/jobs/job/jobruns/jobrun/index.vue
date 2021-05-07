@@ -9,7 +9,7 @@ import useProjectStore from '@project/composition/useProjectStore'
 import { defineComponent, onBeforeMount } from '@vue/composition-api'
 
 export default defineComponent({
-  setup(props, context) {
+  setup(_, context) {
     const jobStore = useJobStore()
     const jobRunStore = useJobRunStore()
     const projectStore = useProjectStore()

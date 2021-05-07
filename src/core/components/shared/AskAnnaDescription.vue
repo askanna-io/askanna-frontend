@@ -243,7 +243,7 @@ export default {
     },
     description: {
       type: String,
-      default: '<p></p>'
+      default: ''
     }
   },
   components: {
@@ -283,7 +283,8 @@ export default {
           new Underline(),
           new History()
         ],
-        content: '<p></p>'
+        content: this.description,
+        onUpdate: ({ getHTML }) => this.$emit('onChange', getHTML())
       })
     }
   },

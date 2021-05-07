@@ -9,7 +9,9 @@
     :class="tableClass"
     :options.sync="options"
     :server-items-length="count"
+    :items-per-page="itemsPerPage"
     @page-count="pageCount = $event"
+    :footer-props="{ itemsPerPageOptions: [5, 10, 15, 25, -1] }"
   >
     <template v-slot:item="{ item }">
       <tr>
@@ -34,6 +36,15 @@
           </router-link>
         </td>
         <td class="text-start">
+          <router-link
+            :class="{ 'h-100': !item.name }"
+            :to="routeLinkParams({ item })"
+            class="table-link table-link--unformated"
+          >
+            {{ item.name }}
+          </router-link>
+        </td>
+        <td class="text-start">
           <router-link class="table-link table-link--unformated" :to="routeLinkParams({ item })">
             <ask-anna-chip-status :status="item.status" />
           </router-link>
@@ -43,6 +54,11 @@
             <b>Started:</b> &nbsp;{{ $moment(item.created).format(' Do MMMM YYYY, h:mm:ss a') }}
             <br />
             <b>Duration:</b> &nbsp;{{ calculateDuration(item) }}<br />
+          </router-link>
+        </td>
+        <td class="text-start">
+          <router-link class="table-link table-link--unformated" :to="routeLinkParams({ item })">
+            <ask-anna-copy :text="item.owner.name" smartSlice :showCopyButton="false" :width="12" />
           </router-link>
         </td>
         <td class="text-start">
@@ -68,7 +84,6 @@ import useMoment from '@/core/composition/useMoment'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
 
 import { ref, watch, defineComponent } from '@vue/composition-api'
-import { metric } from '@/features/metric/store'
 
 export default defineComponent({
   name: 'JobRuns',
@@ -98,6 +113,10 @@ export default defineComponent({
     loading: {
       type: Boolean,
       default: () => false
+    },
+    itemsPerPage: {
+      type: Number,
+      default: () => 5
     }
   },
 
@@ -107,26 +126,54 @@ export default defineComponent({
 
     const page = ref(0)
 
-    const options = ref({ itemsPerPage: 5, page: 1 })
+    const options = ref({ itemsPerPage: props.itemsPerPage, page: 1 })
 
     const pageCount = ref(0)
     const headers = [
       {
-        text: 'Run',
+        text: 'SUUID',
         sortable: false,
         value: 'info',
-        width: '10%',
+        width: '110px',
         class: 'text-left text-subtitle-2 font-weight-bold h-20'
       },
-      { text: 'Status', sortable: false, value: 'status', class: 'text-left text-subtitle-2 font-weight-bold h-20' },
-      { text: 'Timing', sortable: false, value: 'runtime', class: 'text-left text-subtitle-2 font-weight-bold h-20' },
+      {
+        text: 'Name',
+        width: '30%',
+        sortable: false,
+        value: 'name',
+        class: 'text-left text-subtitle-2 font-weight-bold h-20'
+      },
+      {
+        text: 'Status',
+        width: '160px',
+        sortable: false,
+        value: 'status',
+        class: 'text-left text-subtitle-2 font-weight-bold h-20'
+      },
+      {
+        text: 'Timing',
+        width: '265px',
+        sortable: false,
+        value: 'runtime',
+        class: 'text-left text-subtitle-2 font-weight-bold h-20'
+      },
+      {
+        text: 'By',
+        value: 'by',
+        width: '150px',
+        sortable: false,
+        class: 'text-left text-subtitle-2 font-weight-bold h-20'
+      },
       {
         text: 'Input',
+        width: '100px',
         sortable: false,
         value: 'payload',
         class: 'text-left text-subtitle-2 font-weight-bold h-20'
       },
       {
+        width: '120px',
         text: 'Metrics',
         sortable: false,
         value: 'metricsmeta',
@@ -157,7 +204,7 @@ export default defineComponent({
       return ''
     }
 
-    const routeLinkParams = ({ item, name = 'workspace-project-jobs-job-jobrun-input' }) => {
+    const routeLinkParams = ({ item, name = 'workspace-project-jobs-job-jobrun-overview' }) => {
       return {
         name,
         params: {
@@ -213,3 +260,8 @@ export default defineComponent({
   }
 })
 </script>
+<style scoped>
+.h-100 {
+  height: 100%;
+}
+</style>

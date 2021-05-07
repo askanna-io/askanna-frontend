@@ -13,7 +13,7 @@
           >
             <v-icon>mdi-chevron-{{ expand ? 'up' : 'down' }}</v-icon>
           </v-btn>
-          <v-tooltip right>
+          <v-tooltip v-if="showCopyButton" right>
             <template v-slot:activator="{ on }">
               <v-btn icon text x-small v-on="on" v-show="value" @click.stop="handleCopy(text)"
                 ><v-icon>mdi-content-copy</v-icon></v-btn
@@ -72,6 +72,10 @@ export default defineComponent({
     expanded: {
       type: Boolean,
       default: false
+    },
+    showCopyButton: {
+      type: Boolean,
+      default: true
     }
   },
 

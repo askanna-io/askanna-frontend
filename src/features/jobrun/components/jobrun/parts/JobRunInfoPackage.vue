@@ -1,26 +1,27 @@
 <template>
-  <v-tooltip top>
-    <template v-slot:activator="{ on }">
-      <div v-on="on">
-        {{ text }}:<v-btn
-          color="primary"
-          class="px-0 text-body-1"
-          text
-          small
-          :to="{
-            name: 'workspace-project-package',
-            params: { projectId: $route.params.projectId, workspaceId: $route.params.workspaceId, packageId: value }
-          }"
-        >
-          #{{ value.slice(0, 4) }}</v-btn
-        >
-      </div>
-    </template>
-    <span>{{ value }}</span>
-  </v-tooltip>
+  <div>
+    {{ text }}:<v-btn
+      color="primary"
+      class="pl-1 pr-0 text-body-1 text-transform--initial AskAnna-text--initial text-body-1"
+      text
+      x-small
+      :to="{
+        name: 'workspace-project-jobs-job-jobrun-code'
+      }"
+    >
+      {{ value }}</v-btn
+    >
+    <ask-anna-copy-text
+      :text="value"
+      :showText="false"
+      :iconColor="'grey lighten-2'"
+      :buttonType="{ text: true }"
+      :styleClasses="'px-0 white font-weight-regular text--regular body-1'"
+    />
+  </div>
 </template>
 <script>
-import { computed, defineComponent } from '@vue/composition-api'
+import { defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'JobRunInfoPackage',

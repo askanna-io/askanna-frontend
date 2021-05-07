@@ -66,7 +66,7 @@
                     exact
                     @click="handleChangeWorkspace(item)"
                   >
-                    <v-list-item-title>{{ item.title }}</v-list-item-title>
+                    <v-list-item-title>{{ item.name }}</v-list-item-title>
                   </v-list-item>
                 </v-list>
               </v-menu>
@@ -220,7 +220,6 @@ import TheUploadStatus from '@/core/components/uploadStatus/TheUploadStatus'
 import useUploadStatus from '@/core/components/uploadStatus/useUploadStatus'
 
 import { createNamespacedHelpers } from 'vuex'
-import { logout } from '@/core/store/actionTypes'
 import useTitle from '@/core/composition/useTitle'
 import { AUTH_STORE } from '@/core/store/storeTypes'
 import useUserStore from '@/features/user/composition/useUserStore'

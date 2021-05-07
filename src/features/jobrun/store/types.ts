@@ -41,7 +41,10 @@ export interface Package {
 }
 
 export interface JobRun {
+  name: string
+  description: string
   uuid: string
+  short_uuid: string
   payload: {
     duration: number
     short_uuid: string
@@ -87,6 +90,7 @@ export const action = {
   setLoading: 'setLoading',
   resetStore: 'resetStore',
   getRunsJob: 'getRunsJob',
+  udapteJobRun: 'udapteJobRun',
   getJobRunLog: 'getJobRunLog',
   getFileSource: 'getFileSource',
   resetJobRunLog: 'resetJobRunLog',
@@ -163,6 +167,9 @@ export class JobRunModel {
   static initialState() {
     return {
       uuid: '',
+      name: '',
+      description: '',
+      short_uuid: '',
       payload: {
         duration: 0,
         short_uuid: ''

@@ -1,10 +1,34 @@
 <template>
-  <v-container class="ma-0 ml-1" fluid>
+  <v-container class="ma-0 ml-1 pt-0" fluid>
     <v-row>
-      <v-col cols="6" class="pt-0">
+      <v-col cols="5">
+        <v-text-field
+          dense
+          autofocus
+          outlined
+          required
+          :value="run.name"
+          label="Run name (optional)"
+          @input="handleOnInput($event, 'name')"
+        />
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="12" class="pt-0">
+        <ask-anna-description
+          cleared
+          outlined
+          :title="'Run description (optional)'"
+          @onChangeDescription="handleOnInput($event, 'description')"
+        />
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="12" class="pt-6">
         <ask-anna-code
-          :code="code"
-          :title="'JSON data'"
+          :code="run.code"
+          titleWidth="117px"
+          :title="'JSON data (optional)'"
           @validete="handleValidate"
           @onInput="handleOnInput($event, 'code')"
         />
@@ -18,9 +42,9 @@
       </v-col>
     </v-row>
     <v-row v-if="jobRunStatus">
-      <v-col cols="12" sm="6">
+      <v-col cols="12" sm="12">
         <p>
-          You have successfully started the job run. The current status is:
+          You have successfully started the run{{ runName }}. The current status is:
           <ask-anna-chip-status :status="jobRunStatus" /><br />{{ startedTtext }}
         </p>
 
@@ -33,6 +57,7 @@
 </template>
 
 <script>
+import { set } from 'lodash'
 import useMoment from '@/core/composition/useMoment'
 import useJobStore from '@job/composition/useJobStore'
 import AskAnnaCode from '@/core/components/shared/AskAnnaCode'
@@ -51,15 +76,16 @@ export default defineComponent({
 
     jobStore.resetJobRun()
 
-    const code = ref(`{
-
-}`)
+    const run = ref({
+      code: '',
+      name: '',
+      description: ''
+    })
     const timer = ref(null)
-    const isValid = ref(false)
+    const runName = ref(null)
     const polling = ref(null)
+    const isValid = ref(false)
     const startTime = ref(null)
-
-    const { jobId } = context.root.$route.params
 
     const jobRun = computed(() => jobStore.jobrun.value)
     const jobRunId = computed(() => jobStore.jobrun.value.short_uuid)
@@ -71,12 +97,14 @@ export default defineComponent({
         : `The run started ${calculateDuration.value} ago.`
     )
 
-    const handleOnInput = value => (code.value = value)
+    const handleOnInput = (value, path) => set(run.value, path, value)
 
     const handleRunJob = async () => {
-      if (code.value && isValid.value) return
+      if (run.value.code && isValid.value) return
 
-      await jobStore.startJob(code.value)
+      runName.value = run.value.name ? ` "${run.value.name}"` : ''
+
+      await jobStore.startJob({ ...run.value })
       checkStatus()
       timer.value = setInterval(async () => {
         startTime.value = new Date().getTime()
@@ -113,7 +141,8 @@ export default defineComponent({
     })
 
     return {
-      code,
+      run,
+      runName,
       startedTtext,
       jobRunStatus,
       handleRunJob,

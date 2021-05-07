@@ -4,7 +4,7 @@
 
     <v-tabs v-model="currentJobRunTab" left align-with-title>
       <v-tabs-slider color="primary" />
-      <template v-for="tab of jobRunTabs">
+      <template v-for="tab of tabs">
         <v-tab v-if="tab.show" ripple :key="tab.id" :to="{ name: tab.to }">
           {{ tab.name }}
         </v-tab>
@@ -13,7 +13,7 @@
   </v-card-title>
 </template>
 <script>
-import { ref, defineComponent } from '@vue/composition-api'
+import { ref, computed, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'JobRunToolBar',
@@ -26,58 +26,82 @@ export default defineComponent({
     showTitle: {
       type: Boolean,
       default: true
+    },
+    isEditJobRunView: {
+      type: Boolean,
+      default: false
     }
   },
 
   setup(props, context) {
     const currentJobRunTab = ref('workspace-project-jobs-job-jobrun-input')
 
+    const jobRunEditTabs = [
+      {
+        id: 0,
+        name: 'Edit run info',
+        show: true,
+        to: 'workspace-project-jobs-job-jobrun-edit'
+      }
+    ]
+
     const jobRunTabs = [
       {
         id: 0,
+        name: 'Overview',
+        show: !context.root.isNotBeta,
+        to: 'workspace-project-jobs-job-jobrun-overview'
+      },
+      {
+        id: 1,
         name: 'Input',
         show: !context.root.isNotBeta,
         to: 'workspace-project-jobs-job-jobrun-input'
       },
       {
-        id: 1,
+        id: 2,
         name: 'Result',
         show: !context.root.isNotBeta,
         to: 'workspace-project-jobs-job-jobrun-result'
       },
       {
-        id: 2,
+        id: 3,
         name: 'Metrics',
         show: !context.root.isNotBeta,
         to: 'workspace-project-jobs-job-jobrun-metrics'
       },
       {
-        id: 3,
+        id: 4,
         name: 'Artifact',
         show: !context.root.isNotBeta,
         to: 'workspace-project-jobs-job-jobrun-artifact'
       },
       {
-        id: 4,
+        id: 5,
         name: 'Variables',
         show: !context.root.isNotBeta,
         to: 'workspace-project-jobs-job-jobrun-variables'
       },
       {
-        id: 5,
+        id: 6,
         name: 'Code',
         show: !context.root.isNotBeta,
         to: 'workspace-project-jobs-job-jobrun-code'
       },
       {
-        id: 6,
+        id: 7,
         name: 'Log',
         show: !context.root.isNotBeta,
         to: 'workspace-project-jobs-job-jobrun-log'
       }
     ]
 
-    return { jobRunTabs: jobRunTabs.filter(item => item.show), currentJobRunTab }
+    const tabs = computed(() => {
+      const runTabs = props.isEditJobRunView ? jobRunEditTabs : jobRunTabs
+      return runTabs.filter(item => item.show)
+    })
+
+    return { tabs, currentJobRunTab }
   }
 })
 </script>
