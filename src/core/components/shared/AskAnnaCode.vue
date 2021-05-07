@@ -6,7 +6,7 @@
     <div class="v-input__control">
       <div class="v-input__slot">
         <fieldset aria-hidden="true">
-          <legend style="width: 63px;"><span>&#8203;</span></legend>
+          <legend :style="{ width: titleWidth }"><span>&#8203;</span></legend>
         </fieldset>
         <div class="v-text-field__slot">
           <label
@@ -64,6 +64,10 @@ export default defineComponent({
     code: {
       type: String,
       default: ''
+    },
+    titleWidth: {
+      type: String,
+      default: '40px'
     }
   },
   components: {

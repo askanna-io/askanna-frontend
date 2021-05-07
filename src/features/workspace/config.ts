@@ -20,9 +20,10 @@ const jobRun = [
   {
     path: ':jobRunId',
     name: 'workspace-project-jobs-job-jobrun',
-    redirect: { name: 'workspace-project-jobs-job-jobrun-input' },
+    redirect: { name: 'workspace-project-jobs-job-jobrun-overview' },
     meta: {
-      breadcrumb: 'Job run - :jobRunId'
+      title: 'Run: jobRunId',
+      breadcrumb: 'Run - :jobRunId'
     },
     component: () =>
       import(
@@ -31,12 +32,37 @@ const jobRun = [
 
     children: [
       {
+        path: 'edit',
+        component: () =>
+          import(
+            /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-edit" */ './views/project/jobs/job/jobruns/jobrun/edit.vue'
+          ),
+        name: 'workspace-project-jobs-job-jobrun-edit',
+        meta: {
+          title: 'Run: jobRunId'
+        }
+      },
+      {
+        path: 'overview',
+        component: () =>
+          import(
+            /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-overview" */ './views/project/jobs/job/jobruns/jobrun/overview.vue'
+          ),
+        name: 'workspace-project-jobs-job-jobrun-overview',
+        meta: {
+          title: 'Run: jobRunId'
+        }
+      },
+      {
         path: 'input',
         component: () =>
           import(
             /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-input" */ './views/project/jobs/job/jobruns/jobrun/input.vue'
           ),
-        name: 'workspace-project-jobs-job-jobrun-input'
+        name: 'workspace-project-jobs-job-jobrun-input',
+        meta: {
+          title: 'Run: jobRunId'
+        }
       },
       {
         path: 'result',
@@ -44,7 +70,10 @@ const jobRun = [
           import(
             /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-result" */ './views/project/jobs/job/jobruns/jobrun/result.vue'
           ),
-        name: 'workspace-project-jobs-job-jobrun-result'
+        name: 'workspace-project-jobs-job-jobrun-result',
+        meta: {
+          title: 'Run: jobRunId'
+        }
       },
       {
         path: 'metrics',
@@ -54,6 +83,9 @@ const jobRun = [
             /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-metrics" */ './views/project/jobs/job/jobruns/jobrun/metrics/index.vue'
           ),
         name: 'workspace-project-jobs-job-jobrun-metrics',
+        meta: {
+          title: 'Run: jobRunId'
+        },
         children: [
           {
             path: 'table',
@@ -63,7 +95,8 @@ const jobRun = [
               ),
             name: 'workspace-project-jobs-job-jobrun-metrics-table',
             meta: {
-              tabValue: 'table'
+              tabValue: 'table',
+              title: 'Run: jobRunId'
             }
           },
           {
@@ -74,7 +107,8 @@ const jobRun = [
               ),
             name: 'workspace-project-jobs-job-jobrun-metrics-json',
             meta: {
-              tabValue: 'json'
+              tabValue: 'json',
+              title: 'Run: jobRunId'
             }
           },
           {
@@ -85,7 +119,8 @@ const jobRun = [
               ),
             name: 'workspace-project-jobs-job-jobrun-metrics-card',
             meta: {
-              tabValue: 'card'
+              tabValue: 'card',
+              title: 'Run: jobRunId'
             }
           },
           {
@@ -96,7 +131,8 @@ const jobRun = [
               ),
             name: 'workspace-project-jobs-job-jobrun-metrics-grid',
             meta: {
-              tabValue: 'grid'
+              tabValue: 'grid',
+              title: 'Run: jobRunId'
             }
           }
         ]
@@ -115,6 +151,9 @@ const jobRun = [
                 /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-artifact" */ './views/project/jobs/job/jobruns/jobrun/artifact.vue'
               ),
             name: 'workspace-project-jobs-job-jobrun-artifact',
+            meta: {
+              title: 'Run: jobRunId'
+            },
 
             children: [
               {
@@ -125,6 +164,7 @@ const jobRun = [
                   ),
                 name: 'workspace-project-jobs-job-jobrun-artifact-folder',
                 meta: {
+                  title: 'Run: jobRunId',
                   breadcrumb: ':folderName'
                 }
               }
@@ -149,7 +189,8 @@ const jobRun = [
               ),
             name: 'workspace-project-jobs-job-jobrun-variables-table',
             meta: {
-              tabValue: 'table'
+              tabValue: 'table',
+              title: 'Run: jobRunId'
             }
           },
           {
@@ -160,7 +201,8 @@ const jobRun = [
               ),
             name: 'workspace-project-jobs-job-jobrun-variables-json',
             meta: {
-              tabValue: 'json'
+              tabValue: 'json',
+              title: 'Run: jobRunId'
             }
           },
           {
@@ -171,7 +213,8 @@ const jobRun = [
               ),
             name: 'workspace-project-jobs-job-jobrun-variables-card',
             meta: {
-              tabValue: 'card'
+              tabValue: 'card',
+              title: 'Run: jobRunId'
             }
           },
           {
@@ -182,7 +225,8 @@ const jobRun = [
               ),
             name: 'workspace-project-jobs-job-jobrun-variables-grid',
             meta: {
-              tabValue: 'grid'
+              tabValue: 'grid',
+              title: 'Run: jobRunId'
             }
           }
         ]
@@ -211,6 +255,7 @@ const jobRun = [
                   ),
                 name: 'workspace-project-jobs-job-jobrun-code-folder',
                 meta: {
+                  title: 'Run: jobRunId',
                   breadcrumb: ':folderName'
                 }
               }
@@ -236,7 +281,10 @@ const jobRun = [
           import(
             /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-log" */ './views/project/jobs/job/jobruns/jobrun/log.vue'
           ),
-        name: 'workspace-project-jobs-job-jobrun-log'
+        name: 'workspace-project-jobs-job-jobrun-log',
+        meta: {
+          title: 'Oops...we cannot find this package'
+        }
       }
     ]
   }

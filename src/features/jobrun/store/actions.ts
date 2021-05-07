@@ -1,11 +1,13 @@
 import * as type from './types'
 import { ActionTree } from 'vuex'
 import router from '@/core/router'
+import { job } from '@/features/job/store'
 import { logger } from '@/core/plugins/logger'
 import apiService from '@/core/services/apiService'
 import * as rootTypes from '@/core/store/actionTypes'
 import { apiStringify } from '@/core/services/api-settings'
 import { jobRunState, JobRun, JOB_RUN_STORE, stateType } from './types'
+import { mutation as gMutation, GENERAL_STORE } from '@/core/store/general/types'
 
 const root = true
 const serviceName = JOB_RUN_STORE
@@ -48,7 +50,7 @@ export const actions: ActionTree<jobRunState, RootState> = {
   async [type.action.getJobRun]({ commit }, uuid) {
     commit(type.mutation.SET_LOADING, { name: stateType.jobRunLoading, value: true })
 
-    let jobRun = {}
+    let jobRun = { name: '' }
     try {
       jobRun = await apiService({
         action: api.getJobRun,
@@ -65,6 +67,31 @@ export const actions: ActionTree<jobRunState, RootState> = {
 
     commit(type.SET_JOB_RUN, jobRun)
     commit(type.mutation.SET_LOADING, { name: stateType.jobRunLoading, value: false })
+    commit(`${GENERAL_STORE}/${gMutation.SET_BREADCRUMB_PARAMS}`, { jobRunId: jobRun.name }, { root: true })
+  },
+
+  async [type.action.udapteJobRun]({ commit }, { uuid, data }) {
+    let isUpdated = false
+    let jobRun = { name: '' }
+    try {
+      jobRun = await apiService({
+        uuid,
+        data,
+        serviceName,
+        method: 'PATCH',
+        action: api.getJobRun
+      })
+    } catch (e) {
+      logger.error(commit, 'Error on udapte jobRun job  in udapteJobRun action.\nError: ', e)
+
+      return
+    }
+    isUpdated = true
+
+    commit(type.SET_JOB_RUN, jobRun)
+    commit(`${GENERAL_STORE}/${gMutation.SET_BREADCRUMB_PARAMS}`, { jobRunId: jobRun.name }, { root: true })
+
+    return isUpdated
   },
 
   async [type.action.getJobRunPayload]({ commit }, uuid) {

@@ -28,7 +28,7 @@ export const actions: ActionTree<workspaceState, RootState> = {
     }
 
     commit(mutation.SET_WORKSPACE, workspace)
-    commit(`${GENERAL_STORE}/${gMutation.SET_BREADCRUMB_PARAMS}`, { workspaceId: workspace.title }, { root: true })
+    commit(`${GENERAL_STORE}/${gMutation.SET_BREADCRUMB_PARAMS}`, { workspaceId: workspace.name }, { root: true })
   },
 
   async [action.getWorkspaces]({ state, commit }) {
@@ -149,7 +149,7 @@ export const actions: ActionTree<workspaceState, RootState> = {
       logger.success(
         commit,
         `You have successfully invited ${people.map(item => item.email).join(', ')} to join the workspace
-      ${state.workspace.title}`
+      ${state.workspace.name}`
       )
     }
   },
@@ -178,7 +178,7 @@ export const actions: ActionTree<workspaceState, RootState> = {
       logger.success(
         commit,
         `You have successfully re-invited ${response.email} to join the workspace
-      ${state.workspace.title}`
+      ${state.workspace.name}`
       )
     }
   },

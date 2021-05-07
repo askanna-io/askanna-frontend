@@ -7,7 +7,7 @@
       :currentUser="currentUser"
       :settings="workspaceSettings"
       :workspaceUuid="workspace.uuid"
-      :workspaceName="workspace.title"
+      :workspaceName="workspace.name"
       @onSelectPoeple="handleSelectPeople"
     />
     <workspace-people-popup
@@ -15,7 +15,7 @@
       :value="peoplePopup"
       :people="selectedPeople"
       :currentUser="currentUser"
-      :workspaceName="workspace.title"
+      :workspaceName="workspace.name"
       :roleAction="roleAction"
       :isPeopleAdmin="isPeopleAdmin"
       @handleValue="handleValue"

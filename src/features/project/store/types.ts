@@ -35,15 +35,13 @@ export interface ProjectTemplate {
 
 interface Project {
   uuid: string
-  short_uuid: string
   name: string
-  status: string
   flows: any[]
   created: string
   modified: string
-  title: string
-  description: string
   template: string
+  short_uuid: string
+  description: string
 }
 
 export const PROJECT_STORE = 'project'
@@ -95,15 +93,13 @@ export class ProjectModel {
   static initialState() {
     return {
       uuid: '',
-      short_uuid: '',
       name: '',
-      status: '',
+      flows: [],
       created: '',
       modified: '',
-      flows: [],
-      title: '',
-      description: '',
-      template: ''
+      template: '',
+      short_uuid: '',
+      description: ''
     }
   }
 }

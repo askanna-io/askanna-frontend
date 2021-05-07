@@ -51,13 +51,12 @@ export default defineComponent({
       type: Object,
       default: function () {
         return {
-          status: 'UNDIFENED',
           runtime: 0,
           memory: 0,
-          return_payload: null,
-          stdout: null,
           created: '',
-          finished: ''
+          stdout: null,
+          finished: '',
+          return_payload: null
         }
       }
     },
@@ -69,10 +68,9 @@ export default defineComponent({
 
   setup(props, context) {
     const projectStore = useProjectStore()
+
     const menu = ref(false)
     const deleteProjectConfirmPopup = ref(false)
-
-    projectStore.resetProjectData()
 
     const handleMoreOptions = () =>
       context.root.$router.push({
@@ -86,11 +84,6 @@ export default defineComponent({
 
     const handlCloseConfirmDeletePopup = () => {
       deleteProjectConfirmPopup.value = false
-    }
-
-    const handleCancel = () => {
-      projectStore.resetProjectData()
-      menu.value = false
     }
 
     const handleClose = () => {
@@ -109,7 +102,6 @@ export default defineComponent({
     return {
       menu,
       handleClose,
-      handleCancel,
       handleMoreOptions,
       deleteProjectConfirmPopup,
       handleDeleteConfirmPorject,

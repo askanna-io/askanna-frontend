@@ -226,11 +226,10 @@ export default defineComponent({
 
     const handleRegisterPackage = async file => {
       const packageData = await packageStore.registerPackage({
-        project: projectUuid.value,
-        filename: file.name,
         size: file.size,
-        title: file.name,
-        description: file.name
+        filename: file.name,
+        description: file.name,
+        project: projectUuid.value
       })
 
       return packageData

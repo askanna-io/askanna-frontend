@@ -27,7 +27,7 @@ export default defineComponent({
 
     const breadcrumbs = computed(() => [
       {
-        title: workSpaceStore.workspace.value.title,
+        title: workSpaceStore.workspace.value.name,
         to: `/${workSpaceStore.workspace.value.short_uuid}`,
         disabled: false
       },

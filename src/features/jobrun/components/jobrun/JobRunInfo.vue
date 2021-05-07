@@ -1,7 +1,7 @@
 <template>
   <div>
     <div :class="`d-flex align-start flex-column flex-wrap variables--wrapper`">
-      <div v-for="(item, index) in variables" :key="index" class="ma-4">
+      <div v-for="(item, index) in variables" :key="index" class="mx-4 my-2">
         <component :key="index" :text="item.text" :value="item.value" :is="item.component" />
       </div>
     </div>
@@ -16,6 +16,7 @@ import JobRunInfoText from './parts/JobRunInfoText.vue'
 import JobRunInfoStatus from './parts/JobRunInfoStatus.vue'
 import JobRunInfoAvatar from './parts/JobRunInfoAvatar.vue'
 import JobRunInfoPackage from './parts/JobRunInfoPackage.vue'
+import JobRunInfoCopyText from './parts/JobRunInfoCopyText.vue'
 
 import { JobRun, JobRunModel } from '../../store/types'
 import { computed, defineComponent } from '@vue/composition-api'
@@ -29,7 +30,8 @@ export default defineComponent({
     JobRunInfoCode,
     JobRunInfoStatus,
     JobRunInfoAvatar,
-    JobRunInfoPackage
+    JobRunInfoPackage,
+    JobRunInfoCopyText
   },
 
   props: {
@@ -59,62 +61,73 @@ export default defineComponent({
         {
           text: 'Status',
           value: props.jobRun.status,
-          component: 'JobRunInfoStatus'
+          component: 'JobRunInfoStatus',
+          visibility: true
         },
         {
-          text: 'Job',
-          value: props.jobName,
-          component: 'JobRunInfoJob'
-        },
-        {
-          text: 'Code',
-          value: props.jobRun.package.short_uuid,
-          component: 'JobRunInfoPackage'
-        },
-        {
-          text: 'Code',
-          value: '',
-          component: 'JobRunInfoCode'
+          text: 'SUUID',
+          value: props.jobRun.short_uuid,
+          component: 'JobRunInfoCopyText',
+          visibility: true
         },
 
         {
+          text: 'Job',
+          value: props.jobName,
+          component: 'JobRunInfoJob',
+          visibility: true
+        },
+        {
           text: 'Start date',
           value: moment.$moment(props.jobRun.created).format(' Do MMMM YYYY, h:mm:ss a'),
-          component: 'JobRunInfoText'
-        },
-        {
-          text: 'By',
-          value: props.jobRun.owner,
-          component: 'JobRunInfoAvatar'
-        },
-        {
-          text: 'Trigger',
-          value: get(triggers, `${props.jobRun.trigger}`) || 'API',
-          component: 'JobRunInfoText'
+          component: 'JobRunInfoText',
+          visibility: true
         },
         {
           text: 'Duration',
           value: calculateDuration(props.jobRun),
-          component: 'JobRunInfoText'
+          component: 'JobRunInfoText',
+          visibility: true
+        },
+        {
+          text: 'Code',
+          value: props.jobRun.package.short_uuid,
+          component: 'JobRunInfoPackage',
+          visibility: true
+        },
+        {
+          text: 'By',
+          value: props.jobRun.owner,
+          component: 'JobRunInfoAvatar',
+          visibility: true
+        },
+        {
+          text: 'Trigger',
+          value: get(triggers, `${props.jobRun.trigger}`) || 'API',
+          component: 'JobRunInfoText',
+          visibility: true
         },
         {
           text: 'Environment',
           value: props.jobRun.runner.name,
-          component: 'JobRunInfoText'
+          component: 'JobRunInfoText',
+          visibility: true
         },
         {
           text: props.jobRun.runner.cpu_cores > 1 ? 'CPUs' : 'CPU',
           value: props.jobRun.runner.cpu_cores,
-          component: 'JobRunInfoText'
+          component: 'JobRunInfoText',
+          visibility: false
         }
       ]
       interface VariableItem {
         text: string
         value: string | number | object
         component: string
+        visibility: boolean
       }
 
-      return allVariables.filter((item: VariableItem) => item.value)
+      return allVariables.filter((item: VariableItem) => item.visibility && item.value)
     })
 
     const handleGotoJob = () => {
@@ -153,6 +166,6 @@ export default defineComponent({
 </script>
 <style>
 .variables--wrapper {
-  max-height: 200px;
+  max-height: 150px;
 }
 </style>

@@ -1,4 +1,3 @@
-import { set } from 'lodash'
 import { MutationTree } from 'vuex'
 import { mutation, generalState, stateType } from './types'
 

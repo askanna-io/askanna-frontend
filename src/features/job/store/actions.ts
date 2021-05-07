@@ -31,7 +31,7 @@ export const actions: ActionTree<jobState, RootState> = {
     commit(`${GENERAL_STORE}/${gMutation.SET_BREADCRUMB_PARAMS}`, { jobId: job.name }, { root: true })
   },
 
-  async [type.startJob]({ commit, state, dispatch }, data) {
+  async [type.startJob]({ commit, state }, { code, ...params }) {
     let jobRun
     try {
       jobRun = await apiService({
@@ -42,7 +42,8 @@ export const actions: ActionTree<jobState, RootState> = {
         },
         serviceName,
         uuid: state.job.short_uuid,
-        data
+        data: code,
+        params
       })
     } catch (e) {
       logger.error(commit, 'Error on start job  in startJob action.\nError: ', e)

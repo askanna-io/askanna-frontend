@@ -4,7 +4,7 @@
       v-scroll="throttle(onScroll, 1000)"
       :loading="loading"
       :settings="workspaceSettings"
-      :workspaceName="workspace.title"
+      :workspaceName="workspace.name"
       :items="workspaceProjects.results"
     />
 

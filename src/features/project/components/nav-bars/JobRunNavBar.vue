@@ -32,17 +32,29 @@
     <v-divider />
     <v-card flat>
       <v-card-title v-if="!sticked">
-        <span class="title font-weight-light">Job run: #{{ jobRunId }}</span>
+        <span class="title font-weight-light"
+          >Run{{ runName }}
+          <ask-anna-copy-text
+            v-if="!jobRun.name"
+            :text="jobRun.short_uuid"
+            :buttonType="{ text: true }"
+            :styleClasses="'px-0 white title font-weight-light primary--black '"
+          />
+        </span>
       </v-card-title>
+
       <v-divider />
 
       <v-skeleton-loader ref="skeleton" :type="'table-row'" :loading="!jobRun">
-        <job-run-info :jobRun="jobRun" :jobName="jobName" :jobId="jobId" />
-        <v-divider />
-
         <v-row>
           <v-col cols="12" v-if="!sticked">
-            <job-run-tool-bar :showTitle="false" />
+            <v-toolbar dense color="white" flat class="br-r5 ma-3">
+              <job-run-tool-bar :showTitle="false" :isEditJobRunView="isEditJobRunView" />
+
+              <v-spacer />
+
+              <job-run-menu-popup v-if="!isEditJobRunView" :jobrun="jobRun" />
+            </v-toolbar>
           </v-col>
         </v-row>
       </v-skeleton-loader>
@@ -56,8 +68,10 @@ import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
 import useJobRunStore from '@jobrun/composition/useJobRunStore'
 
 import JobToolBar from './parts/JobToolBar'
+
 import JobRunToolBar from './parts/JobRunToolBar'
 import ProjectToolBar from './parts/ProjectToolBar'
+import JobRunMenuPopup from './parts/JobRunMenuPopup'
 import { defineComponent, computed } from '@vue/composition-api'
 
 export default defineComponent({
@@ -67,7 +81,8 @@ export default defineComponent({
     JobToolBar,
     JobRunInfo,
     JobRunToolBar,
-    ProjectToolBar
+    ProjectToolBar,
+    JobRunMenuPopup
   },
 
   props: {
@@ -111,13 +126,19 @@ export default defineComponent({
     const { jobId, jobRunId } = context.root.$route.params
     const jobRun = computed(() => jobRunStore.jobRun.value)
 
+    const runName = computed(() => (jobRun.value.name ? `: ${jobRun.value.name}` : ':'))
+
+    const isEditJobRunView = computed(() => context.root.$route.name === 'workspace-project-jobs-job-jobrun-edit')
+
     return {
       jobId,
       jobRun,
       jobName,
+      runName,
       onStick,
       jobRunId,
-      breadcrumbs
+      breadcrumbs,
+      isEditJobRunView
     }
   }
 })
