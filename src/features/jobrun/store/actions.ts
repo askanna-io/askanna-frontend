@@ -119,7 +119,7 @@ export const actions: ActionTree<jobRunState, RootState> = {
 
     const allowedTextExts = ['plain', 'html']
     const allowedFileExts = ['jpg', 'png', 'gif', 'jpeg']
-    const allowedToShowPreview = ['xml', 'xslx', 'csv', 'tsv', 'json']
+    const allowedToShowPreview = ['xml', 'xslx', 'csv', 'tsv', 'json', 'html']
 
     const exts: any = {
       xml: 'xml',
