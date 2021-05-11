@@ -81,6 +81,7 @@
 
 <script>
 import useMoment from '@/core/composition/useMoment'
+import useNumeral from '@/core/composition/useNumeral'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
 
 import { ref, watch, defineComponent } from '@vue/composition-api'
@@ -121,6 +122,7 @@ export default defineComponent({
   },
 
   setup(props, context) {
+    const numeral = useNumeral()
     const snackBar = useSnackBar()
     const moment = useMoment(context)
 
@@ -218,7 +220,7 @@ export default defineComponent({
     const getPayloadTitle = payload => {
       let title = 'No input'
       if (payload.lines >= 1) {
-        title = `${payload.lines} line${payload.lines > 1 ? 's' : ''}`
+        title = `${numeral.numberFormated(payload.lines)} line${payload.lines > 1 ? 's' : ''}`
       }
       return title
     }
@@ -226,7 +228,7 @@ export default defineComponent({
     const getMetricTitle = count => {
       let title = 'No metrics'
       if (count >= 1) {
-        title = `${count} metric${count > 1 ? 's' : ''}`
+        title = `${numeral.numberFormated(count)} metric${count > 1 ? 's' : ''}`
       }
       return title
     }
