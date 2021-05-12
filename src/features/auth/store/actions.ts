@@ -22,7 +22,16 @@ export const actions: ActionTree<AuthState, RootState> = {
     axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
 
     try {
-      const result = await axios.post(url, { username, password })
+      const result = await axios.post(
+        url,
+        { username, password },
+        {
+          headers: {
+            'askanna-agent': 'webui',
+            'askanna-agent-version': process.env.VERSION
+          }
+        }
+      )
       const { data } = result
 
       commit(mt.SET_AUTH, data)

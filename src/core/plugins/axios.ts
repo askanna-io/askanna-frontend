@@ -14,6 +14,8 @@ $axios.interceptors.request.use(
 
     if (token) {
       config.headers.Authorization = `Token ${token}`
+      config.headers['askanna-agent'] = 'webui'
+      config.headers['askanna-agent-version'] = process.env.VERSION
     }
 
     return config
