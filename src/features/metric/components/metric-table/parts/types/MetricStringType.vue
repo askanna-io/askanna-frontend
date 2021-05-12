@@ -46,12 +46,6 @@ export default defineComponent({
 
       const width = divRef.clientWidth || divRef.scrollWidth
 
-      if (props.isLabel) {
-        nudgeLeft.value = 10
-
-        return
-      }
-
       if (props.metricRow.value.length > 60) {
         nudgeLeft.value = width / 2 - 80
       } else {
