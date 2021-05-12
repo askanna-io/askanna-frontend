@@ -132,8 +132,6 @@ export default defineComponent({
 
     const { projectId: projectShortUuid, workspaceId } = context.root.$route.params
 
-    const projectUuid = computed(() => projectStore.project.value.uuid)
-
     const token = localStorage.getItem('token')
     const uploadHeaders = { Authorization: `Token ${token}` }
 
@@ -229,7 +227,7 @@ export default defineComponent({
         size: file.size,
         filename: file.name,
         description: file.name,
-        project: projectUuid.value
+        project: projectShortUuid
       })
 
       return packageData
@@ -245,8 +243,7 @@ export default defineComponent({
           filename: r.offset + 1,
           size: r.fileObjSize,
           file_no: r.offset + 1,
-          is_last: isLastChunk,
-          package: uuid
+          is_last: isLastChunk
         }
       })
 
