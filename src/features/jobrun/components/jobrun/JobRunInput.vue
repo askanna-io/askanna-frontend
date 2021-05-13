@@ -1,6 +1,6 @@
 <template>
-  <div class="px-4">
-    <v-toolbar v-if="!isJobRunPayloadEmpty" dense flat color="grey lighten-4" class="br-r4">
+  <div>
+    <v-toolbar v-if="!isJobRunPayloadEmpty" dense flat color="grey lighten-4">
       <v-flex class="d-flex">
         <div class="mr-auto d-flex align-center">
           Payload
@@ -59,10 +59,10 @@
         </div>
       </v-flex>
     </v-toolbar>
-    <v-flex class="mb-4">
-      <ask-anna-loading-progress :type="'table-row'" :loading="loading" fullWidth>
+    <v-flex>
+      <ask-anna-loading-progress classes="mx-4 mb-4" :type="'table-row'" :loading="loading" fullWidth>
         <job-run-pay-load v-if="!isJobRunPayloadEmpty" :file="jobRunPayloadComputed" />
-        <v-alert v-if="isJobRunPayloadEmpty" class="my-2 mb-0 text-center" color="grey" dense outlined>
+        <v-alert v-if="isJobRunPayloadEmpty" class="ma-4 text-center" color="grey" dense outlined>
           There is no input available for this run.
         </v-alert>
       </ask-anna-loading-progress>

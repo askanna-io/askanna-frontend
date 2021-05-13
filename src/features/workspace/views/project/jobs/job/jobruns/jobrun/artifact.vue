@@ -1,5 +1,5 @@
 <template>
-  <ask-anna-loading-progress :loading="jobRunArtifactLoading">
+  <ask-anna-loading-progress :loading="jobRunArtifactLoading" classes="mx-4 mb-4" fullWidth>
     <v-row align="center" justify="center">
       <v-col cols="12" class="pt-0 pb-0">
         <package-toolbar

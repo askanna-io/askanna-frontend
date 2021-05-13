@@ -1,6 +1,6 @@
 <template>
-  <div class="px-4">
-    <v-toolbar v-if="!logNoAvailable" dense flat color="grey lighten-4" class="br-r4">
+  <div>
+    <v-toolbar v-if="!logNoAvailable" dense flat color="grey lighten-4">
       <v-flex class="d-flex">
         <div class="mr-auto d-flex align-center"></div>
         <div>
@@ -40,16 +40,17 @@
         </div>
       </v-flex>
     </v-toolbar>
-    <v-flex :style="scrollerStyles" class="mb-4 overflow-y-auto" id="scroll-target">
+    <v-flex :style="scrollerStyles" class="overflow-y-auto" id="scroll-target">
       <ask-anna-loading-progress
         :loading="loading"
         fullWidth
-        transition="transition"
         height="94"
+        classes="mx-4 mb-4"
+        transition="transition"
         type="list-item-two-line"
       >
         <the-highlight v-if="!logNoAvailable" :value="logs" v-scroll:#scroll-target="throttle(onScroll, 1500)" />
-        <v-alert v-else class="my-2 mb-0 text-center" dense outlined color="grey">
+        <v-alert v-else class="ma-4 text-center" dense outlined color="grey">
           There is no log available for this run.
         </v-alert>
       </ask-anna-loading-progress>
