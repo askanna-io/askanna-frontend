@@ -1,5 +1,5 @@
 <template>
-  <ask-anna-loading-progress :type="'table-row'" :loading="loading">
+  <ask-anna-loading-progress classes="mx-4 mb-4" :type="'table-row'" :loading="loading">
     <div>
       <variables-table-view
         v-if="items.length || isSorted"
@@ -13,7 +13,7 @@
         @onSort="handleOnSort"
         @onScroll="handleOnScroll"
       />
-      <v-alert v-else class="mt-2 text-center" dense outlined color="grey">
+      <v-alert v-else class="ma-4 text-center" dense outlined color="grey">
         There are no variables available for this run.
       </v-alert>
     </div>

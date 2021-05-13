@@ -1,6 +1,6 @@
 <template>
-  <v-flex :style="scrollerStyles" class="mb-4 overflow-y-auto" id="scroll-target">
-    <ask-anna-loading-progress :type="'table-row'" :loading="loading">
+  <v-flex :style="scrollerStyles" class="overflow-y-auto" id="scroll-target">
+    <ask-anna-loading-progress :type="'table-row'" classes="mx-4" :loading="loading">
       <metric-json-view :jsonString="metricJSON" class="mb-3" v-scroll:#scroll-target="handleOnScroll" />
     </ask-anna-loading-progress>
   </v-flex>

@@ -1,6 +1,11 @@
 <template>
   <div>
-    <v-card v-if="isLoading" outlined class="pb-2" :class="{ 'ma-0 my-2': fullWidth, 'ma-2 my-4': !fullWidth }">
+    <v-card
+      v-if="isLoading"
+      outlined
+      class="pb-2"
+      :class="([{ 'ma-0 my-2': fullWidth, 'ma-2 my-4': !fullWidth }, classes])"
+    >
       <v-card-text class="text-center">
         <p class="mb-1">{{ loadingTitle }}</p>
 
@@ -27,6 +32,10 @@ export default defineComponent({
   name: 'AskAnnaLoadingProgress',
 
   props: {
+    classes: {
+      type: String,
+      default: ''
+    },
     fullWidth: {
       type: Boolean,
       default: false

@@ -1,60 +1,50 @@
 <template>
-  <div class="px-4">
-    <v-card flat>
-      <v-toolbar
-        v-if="!disabledTools || isFiltered"
-        flat
-        dense
-        color="grey lighten-4"
-        :class="{ 'br-r4': !sticked }"
-        sticky-offset="{top: 48, bottom: 10}"
-      >
-        <v-flex class="d-flex">
-          <div class="mr-auto d-flex align-center"></div>
+  <div>
+    <v-toolbar
+      v-if="!disabledTools || isFiltered"
+      flat
+      dense
+      color="grey lighten-4"
+      sticky-offset="{top: 48, bottom: 10}"
+    >
+      <v-flex class="d-flex">
+        <div class="mr-auto d-flex align-center"></div>
 
-          <div>
-            <v-btn
-              small
-              outlined
-              color="secondary"
-              class="mr-1 btn--hover"
-              @click="handleDownload"
-              :disabled="disabledTools"
-            >
-              <v-icon color="secondary" left>mdi-download</v-icon>Download JSON
-            </v-btn>
-            <v-btn
-              small
-              outlined
-              color="secondary"
-              @click="handleCopy"
-              class="mr-1 btn--hover"
-              :disabled="disabledTools"
-            >
-              <v-icon color="secondary" left>mdi-content-copy</v-icon>Copy JSON
-            </v-btn>
-          </div>
+        <div>
+          <v-btn
+            small
+            outlined
+            color="secondary"
+            class="mr-1 btn--hover"
+            @click="handleDownload"
+            :disabled="disabledTools"
+          >
+            <v-icon color="secondary" left>mdi-download</v-icon>Download JSON
+          </v-btn>
+          <v-btn small outlined color="secondary" @click="handleCopy" class="mr-1 btn--hover" :disabled="disabledTools">
+            <v-icon color="secondary" left>mdi-content-copy</v-icon>Copy JSON
+          </v-btn>
+        </div>
 
-          <v-card class="ml-4" flat width="115" color="grey lighten-4">
-            <v-select
-              dense
-              hide-details
-              return-object
-              :items="views"
-              persistent-hint
-              item-text="name"
-              item-value="value"
-              v-model="viewModel"
-              :disabled="disabledTools"
-              :menu-props="{ bottom: true, offsetY: true }"
-            >
-              <template v-slot:selection="{ item }"> View: {{ item.name }} </template>
-            </v-select>
-          </v-card>
-        </v-flex>
-      </v-toolbar>
-      <router-view />
-    </v-card>
+        <v-card class="ml-4" flat width="115" color="grey lighten-4">
+          <v-select
+            dense
+            hide-details
+            return-object
+            :items="views"
+            persistent-hint
+            item-text="name"
+            item-value="value"
+            v-model="viewModel"
+            :disabled="disabledTools"
+            :menu-props="{ bottom: true, offsetY: true }"
+          >
+            <template v-slot:selection="{ item }"> View: {{ item.name }} </template>
+          </v-select>
+        </v-card>
+      </v-flex>
+    </v-toolbar>
+    <router-view />
   </div>
 </template>
 
