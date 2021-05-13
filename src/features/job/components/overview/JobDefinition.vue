@@ -33,7 +33,7 @@
             <ul class="list--unformated">
               <li class="hover-text" v-for="(item, i) in schedules" :key="i" height="20">
                 <v-tooltip top left :content-class="'opacity-1'">
-                  <template v-slot:activator="{ on }">
+                  <template v-slot:activator="{ on, value }">
                     <span class="hover-text" v-on="on">
                       <template v-if="isMultipleSchedules"
                         >{{ i + 1 }}. {{ item.humanizeFormat.value | capitalize }}</template
@@ -41,11 +41,25 @@
                       <template v-else>
                         {{ item.humanizeFormat.value | lowercase }}
                       </template>
+                      <v-icon
+                        v-if="item.isDifferentTimeZone"
+                        left
+                        dense
+                        dark
+                        class="ma-0"
+                        :color="getColor(value)"
+                        :class="{ 'pl-1': isMultipleSchedules }"
+                        >mdi-map-clock-outline</v-icon
+                      >
                     </span>
                   </template>
                   <div>
                     <span>Definition: {{ item.raw_definition }}</span
                     ><br />
+                    <template>
+                      <span>Timezone: {{ item.cron_timezone }}</span
+                      ><br />
+                    </template>
                     <span>Next:{{ item.next_run }}</span>
                   </div>
                 </v-tooltip>
@@ -104,9 +118,11 @@ export default defineComponent({
     const title = computed(() => (isMultipleSchedules.value ? 'Schedules' : 'Schedule'))
     const prefix = computed(() => (props.nextRun.fromNow === 'within a minute' ? '' : 'in '))
 
+    const getColor = active => (active ? 'primary' : 'grey lighten-2')
+
     const handleGoToCode = () => context.emit('handleGoToCode')
 
-    return { title, prefix, isMultipleSchedules, handleGoToCode }
+    return { title, prefix, getColor, isMultipleSchedules, handleGoToCode }
   }
 })
 </script>
