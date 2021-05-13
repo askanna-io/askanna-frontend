@@ -123,17 +123,16 @@ export default defineComponent({
       { name: 'Pretty', value: 'pretty' },
       { name: 'Raw', value: 'raw' }
     ]
-    const { jobRunId } = context.root.$route.params
+    const { view, jobRunId } = context.root.$route.params
 
     const currentView = ref(views[0])
 
     const viewModel = computed({
-      get: () => {
-        return currentView.value
-      },
+      get: () => currentView.value,
       set: view => {
         if (view.value === currentView.value.value) return
         currentView.value = view
+        context.root.$router.push({ name: 'workspace-project-jobs-job-jobrun-result', params: { view: view.value } })
       }
     })
 
@@ -166,6 +165,9 @@ export default defineComponent({
     )
 
     onBeforeMount(async () => {
+      if (view) {
+        currentView.value = views.find(el => el.value === view) || views[0]
+      }
       await jobRunStore.getJobRunResultPreview(jobRunId)
     })
 
