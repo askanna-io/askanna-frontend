@@ -63,13 +63,12 @@ export default defineComponent({
     const job = computed(() => jobStore.job.value)
     const nextRun = computed(() => moment.nextClosestData(job.value.schedules.map(s => s.next_run)))
     const schedules = computed(() =>
-      job.value.schedules.map(item => {
-        return {
-          ...item,
-          next_run: moment.$moment.tz(item.next_run, item.cron_timezone).local().format(' Do MMMM YYYY, h:mm a'),
-          humanizeFormat: cronstrue.humanizeCron(item.cron_definition)
-        }
-      })
+      job.value.schedules.map(item => ({
+        ...item,
+        next_run: moment.$moment.tz(item.next_run, item.cron_timezone).local().format(' Do MMMM YYYY, h:mm a'),
+        humanizeFormat: cronstrue.humanizeCron(item.cron_definition),
+        isDifferentTimeZone: moment.checkIfTimeZoneEq(item.cron_timezone)
+      }))
     )
 
     const handleGoToCode = () =>

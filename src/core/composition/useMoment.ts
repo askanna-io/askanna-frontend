@@ -104,5 +104,7 @@ export default function (context: SetupContext) {
     }
   }
 
-  return { runTimeHours, ago, seconds, $moment: moment, durationHumanize, nextClosestData }
+  const checkIfTimeZoneEq = (timezone: string) => timezone !== moment.tz.guess()
+
+  return { runTimeHours, ago, seconds, $moment: moment, durationHumanize, nextClosestData, checkIfTimeZoneEq }
 }
