@@ -53,7 +53,11 @@ export default defineComponent({
     const moment = useMoment(context)
     const triggers = {
       API: 'API',
-      SCHEDULE: 'Schedule'
+      CLI: 'CLI',
+      WORKER: 'Worker',
+      SCHEDULE: 'Schedule',
+      WEBUI: 'Web interface',
+      'PYTHON-SDK': 'Python SDK'
     }
 
     const variables = computed(() => {
@@ -103,7 +107,7 @@ export default defineComponent({
         },
         {
           text: 'Trigger',
-          value: get(triggers, `${props.jobRun.trigger}`) || 'API',
+          value: get(triggers, `${props.jobRun.trigger}`) || props.jobRun.trigger,
           component: 'JobRunInfoText',
           visibility: true
         },
