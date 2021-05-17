@@ -73,7 +73,7 @@
               <v-icon color="secondary" left>mdi-download</v-icon> ...to show the full result, please download the file
             </v-btn>
           </v-flex>
-          <v-flex v-if="!isJobRunResultEmpty && !isShowPreview" class="my-2 mb-0 text-center">
+          <v-flex v-if="!isJobRunResultEmpty && !isShowPreview" class="my-2 mb-2 text-center">
             <v-btn
               text
               small
