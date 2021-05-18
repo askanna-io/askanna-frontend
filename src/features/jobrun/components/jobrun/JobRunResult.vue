@@ -60,7 +60,7 @@
             :fileExtension="jobRunResultExt"
             :dataSource="jobRunResultForView"
           />
-          <v-flex v-if="!isJobRunResultEmpty && isJobRunResultBig && isShowPreview" class="my-2 mb-0 text-center">
+          <v-flex v-if="!isJobRunResultEmpty && isJobRunResultBig && isShowPreview" class="my-2 mb-2 text-center">
             <v-btn
               text
               small
