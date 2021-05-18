@@ -62,7 +62,10 @@
           </router-link>
         </td>
         <td class="text-start">
-          <router-link class="table-link table-link--unformated" :to="routeLinkParams({ item })">
+          <router-link
+            class="table-link table-link--unformated"
+            :to="routeLinkParams({ item, name: 'workspace-project-jobs-job-jobrun-input' })"
+          >
             {{ getPayloadTitle(item.payload) }}
           </router-link>
         </td>
