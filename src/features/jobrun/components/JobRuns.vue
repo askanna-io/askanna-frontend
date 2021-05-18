@@ -27,7 +27,7 @@
                         ><v-icon>mdi-content-copy</v-icon></v-btn
                       >
                     </template>
-                    <span>Copy run UUID</span>
+                    <span>Copy run SUUID</span>
                   </v-tooltip>
                 </div>
               </template>

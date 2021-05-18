@@ -49,7 +49,7 @@
                         ><v-icon>mdi-content-copy</v-icon></v-btn
                       >
                     </template>
-                    <span>Copy package UUID</span>
+                    <span>Copy package SUUID</span>
                   </v-tooltip>
                 </div>
               </template>
@@ -171,7 +171,7 @@ export default defineComponent({
 
     const headers = [
       {
-        text: 'UUID',
+        text: 'SUUID',
         value: 'short_uuid',
         sortable: false,
         width: '10%',
