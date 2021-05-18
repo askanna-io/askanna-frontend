@@ -117,9 +117,9 @@ export const actions: ActionTree<jobRunState, RootState> = {
   async [type.action.getJobRunResultPreview]({ commit }, uuid) {
     commit(type.mutation.SET_LOADING, { name: stateType.resultLoading, value: true })
 
-    const allowedTextExts = ['plain', 'html']
+    const allowedTextExts = ['plain', 'html', 'text/plain']
     const allowedFileExts = ['jpg', 'png', 'gif', 'jpeg']
-    const allowedToShowPreview = ['xml', 'xslx', 'csv', 'tsv', 'json', 'html']
+    const allowedToShowPreview = ['xml', 'xslx', 'csv', 'tsv', 'json', 'html', 'txt', 'text/plain', 'plain']
 
     const exts: any = {
       xml: 'xml',
@@ -136,6 +136,7 @@ export const actions: ActionTree<jobRunState, RootState> = {
       json: 'json',
       xlsx: 'xlsx',
       plain: 'txt',
+      'text/plain': 'txt',
       'vnd.ms-excel': 'xls',
       'vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'xlsx'
     }
