@@ -57,7 +57,7 @@ export default defineComponent({
 
     const headers = ref([
       {
-        text: 'UUID',
+        text: 'SUUID',
         align: 'start',
         sortable: false,
         value: 'short_uuid',
