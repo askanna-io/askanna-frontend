@@ -139,7 +139,7 @@ export default defineComponent({
 
     const { projectId: uuid } = context.root.$route.params
 
-    const next = computed(() => packagesStore.state.projectPackages.value.next)
+    const next = computed(() => packagesStore.projectPackages.value.next)
 
     const query = useQuery({
       next,
