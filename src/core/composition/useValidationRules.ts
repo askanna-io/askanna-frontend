@@ -14,7 +14,7 @@ const rules: Rules = {
     return (v: any) => !!v || `${errorMessage}`
   },
   max: (errorMessage, maxLength = 100) => {
-    return v => v.length <= maxLength || `${errorMessage}`
+    return v => (!v ? `${errorMessage}` : v.length <= maxLength || `${errorMessage}`)
   },
   min: (errorMessage, minLength = 3) => {
     return v => (!v ? `${errorMessage}` : v.length >= minLength || `${errorMessage}`)
