@@ -245,7 +245,9 @@ const jobRun = [
                 /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-code" */ './views/project/jobs/job/jobruns/jobrun/code.vue'
               ),
             name: 'workspace-project-jobs-job-jobrun-code',
-
+            meta: {
+              title: 'Run: jobRunId'
+            },
             children: [
               {
                 path: ':folderName(.*)',
@@ -283,7 +285,7 @@ const jobRun = [
           ),
         name: 'workspace-project-jobs-job-jobrun-log',
         meta: {
-          title: 'Oops...we cannot find this package'
+          title: 'Run: jobRunId'
         }
       }
     ]
