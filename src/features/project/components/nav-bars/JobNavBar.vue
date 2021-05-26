@@ -31,19 +31,43 @@
       </template>
     </v-breadcrumbs>
     <v-divider />
-    <job-tool-bar v-if="!sticked" :jobName="job.name" :projectName="project.name" />
+    <v-card flat>
+      <v-card-title v-if="!sticked">
+        <span class="title font-weight-light">Job:{{ job.name }} </span>
+      </v-card-title>
+
+      <v-divider />
+      <v-row>
+        <v-col cols="12" v-if="!sticked">
+          <v-toolbar dense color="white" flat class="br-r5 ma-3">
+            <job-tool-bar
+              v-if="!sticked"
+              :showTitle="false"
+              :jobName="job.name"
+              :projectName="project.name"
+              :isEditJobView="isEditJobView"
+            />
+
+            <v-spacer />
+
+            <job-menu-popup v-if="!isEditJobView" :job="job" />
+          </v-toolbar>
+        </v-col>
+      </v-row>
+    </v-card>
   </div>
 </template>
 <script>
 import JobToolBar from './parts/JobToolBar'
+import JobMenuPopup from './parts/JobMenuPopup'
 import ProjectToolBar from './parts/ProjectToolBar'
 import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
-import { defineComponent, ref } from '@vue/composition-api'
+import { ref, computed, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'JobNavBar',
 
-  components: { JobToolBar, ProjectToolBar },
+  components: { JobToolBar, JobMenuPopup, ProjectToolBar },
 
   props: {
     job: {
@@ -76,14 +100,16 @@ export default defineComponent({
   setup(props, context) {
     const currentProjectTab = ref('')
     const isShowProjectBar = ref(false)
-    const end = context.root.$route.name.indexOf('jobs-name') >= 1 ? 5 : 3
     const breadcrumbs = useBreadcrumbs(context, { start: 0, end: 5 })
 
     const onStick = data => props.handleOnStick(data.sticked)
 
+    const isEditJobView = computed(() => context.root.$route.name === 'workspace-project-job-edit')
+
     return {
       onStick,
       breadcrumbs,
+      isEditJobView,
       isShowProjectBar,
       currentProjectTab
     }

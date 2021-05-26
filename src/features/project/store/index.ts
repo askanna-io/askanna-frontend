@@ -16,12 +16,15 @@ export const state: projectState = {
     offset: 0
   },
   jobsLoading: true,
-  lastPackage: null,
+  lastPackage: {
+    short_uuid: ''
+  },
   menu: {
     isSticked: true,
     isShowProjectBar: false,
     sticked: false
   },
+  projectLoading: true,
   projectsLoading: true,
   projectTemplates: [
     {

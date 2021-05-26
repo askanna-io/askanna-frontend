@@ -3,7 +3,6 @@ import { ActionTree } from 'vuex'
 import router from '@/core/router'
 import { logger } from '@/core/plugins/logger'
 import apiService from '@/core/services/apiService'
-import * as rootTypes from '@/core/store/actionTypes'
 import { apiStringify } from '@/core/services/api-settings'
 
 import { projectState, PROJECT_STORE, action, mutation, ProjectModel } from './types'
@@ -13,7 +12,9 @@ const serviceName = PROJECT_STORE
 const api = apiStringify(serviceName)
 
 export const actions: ActionTree<projectState, RootState> = {
-  async [action.getProject]({ commit, dispatch }, uuid) {
+  async [action.getProject]({ commit }, uuid) {
+    commit(mutation.SET_LOADING, { name: 'projectLoading', value: true })
+
     let project
     try {
       project = await apiService({
@@ -32,6 +33,7 @@ export const actions: ActionTree<projectState, RootState> = {
 
     commit(mutation.SET_PROJECT, project)
     commit(`${GENERAL_STORE}/${gMutation.SET_BREADCRUMB_PARAMS}`, { projectId: project.name }, { root: true })
+    commit(mutation.SET_LOADING, { name: 'projectLoading', value: false })
   },
 
   async [action.getProjects]({ state, commit }) {
@@ -167,23 +169,24 @@ export const actions: ActionTree<projectState, RootState> = {
     return project
   },
 
-  async [action.updateProject]({ commit, state }, uuid) {
+  async [action.updateProject]({ commit, state }, data) {
     let project
     try {
       project = await apiService({
         action: api.update,
         method: 'put',
         serviceName,
-        uuid,
-        data: state.project
+        uuid: state.project.short_uuid,
+        data
       })
     } catch (error) {
       logger.error(commit, 'Error on update project in updateProject action.\nError: ', error)
 
-      return
+      return project
     }
 
     commit(mutation.SET_PROJECT, project)
+    return project
   },
 
   [action.setProject]({ commit }, data) {

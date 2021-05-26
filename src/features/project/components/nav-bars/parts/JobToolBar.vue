@@ -1,9 +1,9 @@
 <template>
   <v-card-title>
-    <span class="font-weight-light">Job: {{ jobName }}</span>
+    <span v-if="showTitle" class="title font-weight-light">Job: {{ jobName }}</span>
     <v-tabs v-model="currentTab" left align-with-title>
       <v-tabs-slider color="primary" />
-      <template v-for="tab of jobTools">
+      <template v-for="tab of tabs">
         <v-tab
           v-if="tab.show"
           :key="tab.id"
@@ -17,7 +17,7 @@
   </v-card-title>
 </template>
 <script>
-import { ref, defineComponent } from '@vue/composition-api'
+import { ref, computed, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'JobToolBar',
@@ -27,14 +27,32 @@ export default defineComponent({
       type: String,
       default: ''
     },
+    showTitle: {
+      type: Boolean,
+      default: true
+    },
     jobName: {
       type: String,
       default: ''
+    },
+    isEditJobView: {
+      type: Boolean,
+      default: false
     }
   },
 
   setup(props, context) {
     const currentTab = ref('job-overview')
+
+    const jobRunEditTabs = [
+      {
+        id: 0,
+        name: 'Edit job',
+        show: true,
+        to: 'workspace-project-job-edit'
+      }
+    ]
+
     const jobTools = [
       {
         id: 0,
@@ -63,7 +81,12 @@ export default defineComponent({
       }
     ]
 
-    return { jobTools, currentTab }
+    const tabs = computed(() => {
+      const runTabs = props.isEditJobView ? jobRunEditTabs : jobTools
+      return runTabs.filter(item => item.show)
+    })
+
+    return { tabs, currentTab }
   }
 })
 </script>

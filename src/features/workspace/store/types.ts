@@ -119,6 +119,7 @@ export const action = {
   getWorkspace: 'getWorkspace',
   getWorkspaces: 'getWorkspaces',
   changeSettings: 'changeSettings',
+  updateWorkspace: 'updateWorkspace',
   getPeopleAvatar: 'getPeopleAvatar',
   setPeopleAvatar: 'setPeopleAvatar',
   sendInvitations: 'sendInvitations',

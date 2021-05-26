@@ -1,71 +1,85 @@
 <template>
   <div class="AskAnna--job-definition">
     <v-card-title>Definition</v-card-title>
-    <v-container class="ma-1" fluid>
+    <v-container class="mx-1 py-0" fluid>
       <v-row>
         <v-col cols="2" sm="6">
-          <span>Code: </span>
-          <v-tooltip top>
-            <template v-slot:activator="{ on }">
-              <span v-on="on">
-                <a v-if="lastPackage && lastPackage.short_uuid" @click="handleGoToCode" class="text-body-1"
-                  >#{{ lastPackage.short_uuid.slice(0, 4) }}</a
+          <v-row>
+            <v-col cols="12"><JobRunInfoCopyText text="SUUID" :value="job.short_uuid" /></v-col>
+            <v-col cols="12">
+              <div class="code-wrapper">
+                Code:<v-btn
+                  color="primary"
+                  class="pl-1 pr-0 text-body-1 text-transform--initial AskAnna-text--initial text-body-1"
+                  text
+                  x-small
+                  @click="handleGoToCode"
                 >
-              </span>
-            </template>
-            <span>{{ lastPackage && lastPackage.short_uuid }}</span>
-          </v-tooltip>
+                  {{ lastPackage.short_uuid }}</v-btn
+                >
+                <ask-anna-copy-text
+                  :text="lastPackage.short_uuid"
+                  :showText="false"
+                  :iconColor="'grey lighten-2'"
+                  :buttonType="{ text: true }"
+                  :styleClasses="'px-0 white font-weight-regular text--regular body-1'"
+                />
+              </div>
+            </v-col>
+            <v-col cols="12"> <span>Environment: </span>{{ job.environment }} </v-col>
+          </v-row>
         </v-col>
-        <v-col v-if="nextRun.datatime" cols="6" sm="6">
-          <v-tooltip top left>
-            <template v-slot:activator="{ on }">
-              <span class="hover-text" v-on="on"><span> Next run at </span>{{ nextRun.datatime }}</span>
-            </template>
-            <span>which is {{ prefix }}{{ nextRun.fromNow }}</span>
-          </v-tooltip>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="2" sm="6"> <span>Environment: </span>{{ job.environment }} </v-col>
-        <v-col v-if="job.schedules.length" cols="6" sm="6">
-          <v-flex class="d-flex">
-            <span>{{ title }}:</span>
-            <ul class="list--unformated">
-              <li class="hover-text" v-for="(item, i) in schedules" :key="i" height="20">
-                <v-tooltip top left :content-class="'opacity-1'">
-                  <template v-slot:activator="{ on, value }">
-                    <span class="hover-text" v-on="on">
-                      <template v-if="isMultipleSchedules"
-                        >{{ i + 1 }}. {{ item.humanizeFormat.value | capitalize }}</template
-                      >
-                      <template v-else>
-                        {{ item.humanizeFormat.value | lowercase }}
+        <v-col cols="2" sm="6">
+          <v-row>
+            <v-col v-if="nextRun.datatime" cols="12">
+              <v-tooltip top left>
+                <template v-slot:activator="{ on }">
+                  <span class="hover-text" v-on="on"><span> Next run at </span>{{ nextRun.datatime }}</span>
+                </template>
+                <span>which is {{ prefix }}{{ nextRun.fromNow }}</span>
+              </v-tooltip>
+            </v-col>
+            <v-col v-if="job.schedules.length" cols="12">
+              <v-flex class="d-flex">
+                <span>{{ title }}:</span>
+                <ul class="list--unformated">
+                  <li class="hover-text" v-for="(item, i) in schedules" :key="i" height="20">
+                    <v-tooltip top left :content-class="'opacity-1'">
+                      <template v-slot:activator="{ on, value }">
+                        <span class="hover-text" v-on="on">
+                          <template v-if="isMultipleSchedules"
+                            >{{ i + 1 }}. {{ item.humanizeFormat.value | capitalize }}</template
+                          >
+                          <template v-else>
+                            {{ item.humanizeFormat.value | lowercase }}
+                          </template>
+                          <v-icon
+                            v-if="item.isDifferentTimeZone"
+                            left
+                            dense
+                            dark
+                            class="ma-0"
+                            :color="getColor(value)"
+                            :class="{ 'pl-1': isMultipleSchedules }"
+                            >mdi-map-clock-outline</v-icon
+                          >
+                        </span>
                       </template>
-                      <v-icon
-                        v-if="item.isDifferentTimeZone"
-                        left
-                        dense
-                        dark
-                        class="ma-0"
-                        :color="getColor(value)"
-                        :class="{ 'pl-1': isMultipleSchedules }"
-                        >mdi-map-clock-outline</v-icon
-                      >
-                    </span>
-                  </template>
-                  <div>
-                    <span>Definition: {{ item.raw_definition }}</span
-                    ><br />
-                    <template>
-                      <span>Timezone: {{ item.cron_timezone }}</span
-                      ><br />
-                    </template>
-                    <span>Next:{{ item.next_run }}</span>
-                  </div>
-                </v-tooltip>
-              </li>
-            </ul>
-          </v-flex>
+                      <div>
+                        <span>Definition: {{ item.raw_definition }}</span
+                        ><br />
+                        <template>
+                          <span>Timezone: {{ item.cron_timezone }}</span
+                          ><br />
+                        </template>
+                        <span>Next:{{ item.next_run }}</span>
+                      </div>
+                    </v-tooltip>
+                  </li>
+                </ul>
+              </v-flex>
+            </v-col>
+          </v-row>
         </v-col>
       </v-row>
     </v-container>
@@ -73,10 +87,13 @@
 </template>
 
 <script>
+import JobRunInfoCopyText from '@/features/jobrun/components/jobrun/parts/JobRunInfoCopyText'
 import { computed, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'JobDefinition',
+
+  components: { JobRunInfoCopyText },
 
   props: {
     job: {
@@ -130,5 +147,9 @@ export default defineComponent({
 .list--unformated {
   list-style-type: none;
   padding-left: 3px;
+}
+.code-wrapper {
+  display: flex;
+  align-items: baseline;
 }
 </style>

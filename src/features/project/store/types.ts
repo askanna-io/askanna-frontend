@@ -12,6 +12,7 @@ export interface ProjectState {
     offset: number
   }
   jobsLoading: Boolean
+  projectLoading: Boolean
   lastPackage: any
   menu: {
     isSticked: boolean
