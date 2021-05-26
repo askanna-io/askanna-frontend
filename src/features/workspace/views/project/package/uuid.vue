@@ -34,7 +34,7 @@
                 </v-btn>
 
                 <v-btn small outlined color="secondary" class="btn--hover" @click="handleHistory()">
-                  <v-icon color="secondary">mdi-history</v-icon>History
+                  <v-icon color="secondary" left>mdi-history</v-icon>History
                 </v-btn>
               </div>
             </v-slide-y-transition>
