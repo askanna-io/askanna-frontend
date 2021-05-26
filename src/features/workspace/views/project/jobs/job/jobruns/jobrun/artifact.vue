@@ -32,7 +32,13 @@
           </template>
         </package-toolbar>
 
-        <package-file v-if="file" :file="file" :fileSource="fileSource" :currentPath="currentPath" :sticked="sticked" />
+        <package-file
+          v-if="filePath"
+          :file="file"
+          :sticked="sticked"
+          :fileSource="fileSource"
+          :currentPath="currentPath"
+        />
         <package-tree
           v-else
           :items="treeView"
@@ -117,6 +123,10 @@ export default defineComponent({
       return parentPathTemp
     })
 
+    const filePath = computed(() =>
+      currentPath.value && !currentPath.value.is_dir && currentPath.value.name !== '' ? currentPath.value.path : ''
+    )
+
     const treeView = computed(() => {
       const tree = jobRunStore.artifactData.value.files.filter(item => item.parent === path.value)
 
@@ -124,17 +134,10 @@ export default defineComponent({
     })
 
     const getRoutePath = item => {
-      let path = `/${workspaceId}/project/${projectId}/jobs/${jobId}/runs/${jobRunId}/artifact/${folderName}/${item.name}`
-      if (item.parent === '/') {
-        path = `/${workspaceId}/project/${projectId}/jobs/${jobId}/runs/${jobRunId}/artifact/${item.name}`
-      }
+      let path = `/${workspaceId}/project/${projectId}/jobs/${jobId}/runs/${jobRunId}/artifact/${item.path}`
 
       if (typeof item.path === 'undefined') {
         path = `/${workspaceId}/project/${projectId}/jobs/${jobId}/runs/${jobRunId}/artifact/`
-      }
-
-      if (item.is_dir) {
-        path = `/${workspaceId}/project/${projectId}/jobs/${jobId}/runs/${jobRunId}/artifact/${item.path}`
       }
 
       return { path }
@@ -174,10 +177,9 @@ export default defineComponent({
 
     watchEffect(async () => {
       if (!currentPath.value || (currentPath.value && currentPath.value.is_dir)) await jobRunStore.resetFile()
-      const filePath =
-        currentPath.value && !currentPath.value.is_dir && currentPath.value.name !== '' ? currentPath.value.path : ''
-      if (filePath === '') return
-      await jobRunStore.getFileSource(filePath)
+
+      if (filePath.value === '') return
+      await jobRunStore.getFileSource(filePath.value)
     })
 
     const fileSource = computed(() => jobRunStore.fileSource.value)
@@ -185,6 +187,7 @@ export default defineComponent({
 
     return {
       file,
+      filePath,
       sticked,
       treeView,
       FileIcons,

@@ -2,12 +2,7 @@
   <ask-anna-loading-progress :loading="packageLoading && !isProcessing">
     <v-row align="center" justify="center">
       <v-col cols="12" class="pt-0 pb-0">
-        <package-toolbar
-          v-if="treeView.length"
-          :breadcrumbs="breadcrumbs"
-          v-sticky="sticked"
-          sticky-offset="{top: 52, bottom: 10}"
-        >
+        <package-toolbar :breadcrumbs="breadcrumbs" v-sticky="sticked" sticky-offset="{top: 52, bottom: 10}">
           <template v-slot:left>
             <v-tooltip top>
               <template v-slot:activator="{ on }">
@@ -36,11 +31,11 @@
         </template>
         <template v-else>
           <package-file
-            v-if="file"
+            v-if="filePath"
             :file="file"
+            :sticked="sticked"
             :fileSource="fileSource"
             :currentPath="currentPath"
-            :sticked="sticked"
           />
           <package-tree v-else :items="treeView" :height="calcHeight" :getRoutePath="getRoutePath" />
         </template>
@@ -51,10 +46,10 @@
 
 <script>
 import { useWindowSize } from '@u3u/vue-hooks'
+import { FileIcons } from '@package/utils/index'
 import { defineComponent } from '@vue/composition-api'
 import PackageFile from '@package/components/PackageFile'
 import PackageTree from '@package/components/PackageTree'
-import { headers, FileIcons } from '@package/utils/index'
 import useProjectStore from '@project/composition/useProjectStore'
 import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
 import PackageToolbar from '@/features/package/components/PackageToolbar'
@@ -74,7 +69,7 @@ export default defineComponent({
     PackageProcessing: () => import('@/features/package/components/PackageProcessing.vue')
   },
 
-  setup(props, context) {
+  setup(_, context) {
     const { height } = useWindowSize()
     const jobRunStore = useJobRunStore()
     const packageStore = usePackageStore()
@@ -149,6 +144,9 @@ export default defineComponent({
       return current
     })
 
+    const filePath = computed(() =>
+      currentPath.value && !currentPath.value.is_dir && currentPath.value.name !== '' ? currentPath.value.path : ''
+    )
     const parentPath = computed(() => {
       let parentPathTemp
       if (currentPath.value && currentPath.value.is_dir && path.value !== '/') {
@@ -172,17 +170,10 @@ export default defineComponent({
     })
 
     const getRoutePath = item => {
-      let path = `/${workspaceId}/project/${projectId}/jobs/${jobId}/runs/${jobRunId}/code/${folderName}/${item.name}`
-      if (item.parent === '/') {
-        path = `/${workspaceId}/project/${projectId}/jobs/${jobId}/runs/${jobRunId}/code/${item.name}`
-      }
+      let path = `/${workspaceId}/project/${projectId}/jobs/${jobId}/runs/${jobRunId}/code/${item.path}`
 
       if (typeof item.path === 'undefined') {
         path = `/${workspaceId}/project/${projectId}/jobs/${jobId}/runs/${jobRunId}/code/`
-      }
-
-      if (item.is_dir) {
-        path = `/${workspaceId}/project/${projectId}/jobs/${jobId}/runs/${jobRunId}/code/${item.path}`
       }
 
       return { path }
@@ -206,16 +197,15 @@ export default defineComponent({
 
     watchEffect(() => {
       packageStore.resetFile()
-      const filePath =
-        currentPath.value && !currentPath.value.is_dir && currentPath.value.name !== '' ? currentPath.value.path : ''
 
-      if (filePath === '') return
-      packageStore.getFileSource(filePath)
+      if (filePath.value === '') return
+      packageStore.getFileSource(filePath.value)
     })
 
     return {
       file,
       sticked,
+      filePath,
       fileSource: packageStore.fileSource,
       packageLoading: packageStore.packageLoading,
       treeView,
