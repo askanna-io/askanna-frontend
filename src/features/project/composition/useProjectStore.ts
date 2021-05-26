@@ -11,6 +11,7 @@ export default function () {
       projectJobs: 'projectJobs',
       jobsLoading: 'jobsLoading',
       lastPackage: 'lastPackage',
+      projectLoading: 'projectLoading',
       projectTemplates: 'projectTemplates'
     })
   }

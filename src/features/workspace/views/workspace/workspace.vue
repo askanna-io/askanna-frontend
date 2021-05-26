@@ -1,16 +1,10 @@
 <template>
-  <div>
-    <workspace-project-list
-      v-scroll="throttle(onScroll, 1000)"
-      :loading="loading"
-      :settings="workspaceSettings"
-      :workspaceName="workspace.name"
-      :items="workspaceProjects.results"
-    />
-
-    <ask-anna-divider v-if="isNotBeta" text="Latest Activity" />
-    <ask-anna-time-lines v-if="isNotBeta" text="Latest Activity" />
-  </div>
+  <workspace-project-list
+    v-scroll="throttle(onScroll, 1000)"
+    :settings="workspaceSettings"
+    :workspaceName="workspace.name"
+    :items="workspaceProjects.results"
+  />
 </template>
 <script>
 import { throttle } from 'lodash'
@@ -37,12 +31,9 @@ export default defineComponent({
       storeAction: workspaceStore.actions.getWorkpaceProjects
     })
 
-    const loading = computed(() => workspaceStore.loading.value.projects)
-
     const onScroll = e => query.onScroll(e.target.documentElement.scrollTop)
 
     return {
-      loading,
       throttle,
       onScroll,
       workspace: workspaceStore.workspace,

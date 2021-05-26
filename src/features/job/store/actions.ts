@@ -1,7 +1,7 @@
 import * as type from './types'
 import { ActionTree } from 'vuex'
 import router from '@/core/router'
-import { jobState, JOB_STORE } from './types'
+import { jobState, JOB_STORE, stateType } from './types'
 import { logger } from '@/core/plugins/logger'
 import apiService from '@/core/services/apiService'
 import { apiStringify } from '@/core/services/api-settings'
@@ -12,6 +12,8 @@ const api = apiStringify(serviceName)
 
 export const actions: ActionTree<jobState, RootState> = {
   async [type.action.getJob]({ commit }, id) {
+    commit(type.mutation.SET_LOADING, { name: stateType.jobLoading, value: true })
+
     let job
     try {
       job = await apiService({
@@ -29,6 +31,7 @@ export const actions: ActionTree<jobState, RootState> = {
 
     commit(type.SET_JOB, job)
     commit(`${GENERAL_STORE}/${gMutation.SET_BREADCRUMB_PARAMS}`, { jobId: job.name }, { root: true })
+    commit(type.mutation.SET_LOADING, { name: stateType.jobLoading, value: false })
   },
 
   async [type.startJob]({ commit, state }, { code, ...params }) {
@@ -178,7 +181,9 @@ export const actions: ActionTree<jobState, RootState> = {
     return info
   },
 
-  async [type.updateJob]({ state: { job }, commit }) {
+  async [type.updateJob]({ state: { job }, commit }, data) {
+    let isUpdated = false
+
     let updatedJob
     try {
       updatedJob = await apiService({
@@ -186,18 +191,18 @@ export const actions: ActionTree<jobState, RootState> = {
         method: 'put',
         serviceName,
         uuid: job.short_uuid,
-        data: {
-          name: job.name,
-          title: job.title || 'job title',
-          description: job.description
-        }
+        data
       })
     } catch (e) {
+      isUpdated = false
       logger.error(commit, 'Error on update job  in updateJob action.\nError: ', e)
-      return
+      return isUpdated
     }
     logger.success(commit, 'Job was updated')
     commit(type.UPDATE_JOB, updatedJob)
+
+    isUpdated = true
+    return isUpdated
   },
 
   async [type.action.resetStore]({ commit }) {

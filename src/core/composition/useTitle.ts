@@ -12,7 +12,7 @@ export default function (context: SetupContext) {
       // replace uuid to name
       Object.entries(context.root.$route.params).forEach(([key, value]) => {
         //@ts-expect-error: Let's ignore a single compiler error
-        const name = generalStore.breadcrumbParams.value.jobRunId
+        const name = generalStore.breadcrumbParams.value[key]
         pageTitle = pageTitle.replace(key, name || value)
       })
       return pageTitle

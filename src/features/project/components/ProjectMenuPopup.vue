@@ -17,17 +17,33 @@
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-toolbar>
-
         <v-card-actions>
-          <v-btn block small outlined text color="error" class="btn--hover" @click="handleOpenConfirmDeleteProject">
-            Remove this project
-          </v-btn>
+          <v-row dense class="mx-2">
+            <v-col cols="12">
+              <v-btn
+                block
+                small
+                color="secondary"
+                outlined
+                text
+                class="btn--hover"
+                @click="handleOpenConfirmEditProject"
+              >
+                Edit this project
+              </v-btn>
+            </v-col>
+            <v-col cols="12">
+              <v-btn block small outlined text color="error" class="btn--hover" @click="handleOpenConfirmDeleteProject">
+                Remove this project
+              </v-btn>
+            </v-col>
+          </v-row>
         </v-card-actions>
       </v-card>
     </v-menu>
     <confirm-delete-project-popup
-      :value="deleteProjectConfirmPopup"
       :projectName="project.name"
+      :value="deleteProjectConfirmPopup"
       @onClose="handlCloseConfirmDeletePopup"
       @onDeleteConfirm="handleDeleteConfirmPorject"
     />
@@ -35,7 +51,7 @@
 </template>
 
 <script>
-import { ref, computed, defineComponent } from '@vue/composition-api'
+import { ref, defineComponent } from '@vue/composition-api'
 import useProjectStore from '@/features/project/composition/useProjectStore'
 import ConfirmDeleteProjectPopup from '@/features/project/components/popup/ConfirmDeleteProjectPopup'
 
@@ -63,6 +79,10 @@ export default defineComponent({
     routeToRedirect: {
       type: String,
       default: () => ''
+    },
+    routeBackTo: {
+      type: String,
+      default: () => 'workspace'
     }
   },
 
@@ -90,6 +110,12 @@ export default defineComponent({
       menu.value = false
     }
 
+    const handleOpenConfirmEditProject = () =>
+      context.root.$router.push({
+        name: 'workspace-project-edit',
+        params: { projectId: props.project.short_uuid, routeBackTo: props.routeBackTo }
+      })
+
     const handleDeleteConfirmPorject = async () => {
       await projectStore.deleteProject(props.project)
       deleteProjectConfirmPopup.value = false
@@ -105,6 +131,7 @@ export default defineComponent({
       handleMoreOptions,
       deleteProjectConfirmPopup,
       handleDeleteConfirmPorject,
+      handleOpenConfirmEditProject,
       handlCloseConfirmDeletePopup,
       handleOpenConfirmDeleteProject,
       projectName: projectStore.projectName

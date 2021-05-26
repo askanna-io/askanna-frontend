@@ -6,6 +6,7 @@ import { jobState, JOB_STORE, JobModel, JobRunModel } from './types'
 
 export const state: jobState = {
   job: new JobModel().state,
+  jobLoading: true,
   result: '',
   jobrun: new JobRunModel().state
 }
