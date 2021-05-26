@@ -1,10 +1,11 @@
 import { map } from 'lodash'
 import { ActionTree } from 'vuex'
 import router from '@/core/router'
+import VueRouter from 'vue-router'
 import { logger } from '@/core/plugins/logger'
 import apiService from '@/core/services/apiService'
-import * as rootTypes from '@/core/store/actionTypes'
 import { apiStringify } from '@/core/services/api-settings'
+const { isNavigationFailure, NavigationFailureType } = VueRouter
 
 import { projectState, PROJECT_STORE, action, mutation, ProjectModel } from './types'
 import { mutation as gMutation, GENERAL_STORE } from '@/core/store/general/types'
@@ -13,7 +14,7 @@ const serviceName = PROJECT_STORE
 const api = apiStringify(serviceName)
 
 export const actions: ActionTree<projectState, RootState> = {
-  async [action.getProject]({ commit, dispatch }, uuid) {
+  async [action.getProject]({ commit }, uuid) {
     let project
     try {
       project = await apiService({
@@ -25,7 +26,12 @@ export const actions: ActionTree<projectState, RootState> = {
       logger.error(commit, 'Error on load project  in getProject action.\nError: ', error)
 
       project = new ProjectModel().state
-      router.push({ name: 'project-does-not-exist' })
+
+      router.push({ name: 'project-does-not-exist' }).catch(failure => {
+        if (isNavigationFailure(failure, NavigationFailureType.redirected)) {
+          logger.error(commit, 'Error on redirect to workspace-project-does-not-exist.\nError: ', failure)
+        }
+      })
 
       return
     }
