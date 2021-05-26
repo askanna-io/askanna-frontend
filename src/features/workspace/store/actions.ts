@@ -1,11 +1,13 @@
 import { get, map } from 'lodash'
 import { ActionTree } from 'vuex'
 import router from '@/core/router'
+import VueRouter from 'vue-router'
 import { logger } from '@/core/plugins/logger'
 import apiService from '@/core/services/apiService'
 import { apiStringify } from '@/core/services/api-settings'
+const { isNavigationFailure, NavigationFailureType } = VueRouter
+import { workspaceState, WORKSPACE_STORE, action, mutation } from './types'
 import { mutation as gMutation, GENERAL_STORE } from '@/core/store/general/types'
-import { workspaceState, WORKSPACE_STORE, stateType, action, mutation } from './types'
 
 const serviceName = WORKSPACE_STORE
 const api = apiStringify(serviceName)
@@ -22,9 +24,11 @@ export const actions: ActionTree<workspaceState, RootState> = {
     } catch (error) {
       logger.error(commit, 'Error on load workspace in getWorkspace action.\nError: ', error)
 
-      router.push({ name: 'workspace-does-not-exist' })
-
-      return
+      return router.push({ name: 'workspace-does-not-exist' }).catch(failure => {
+        if (isNavigationFailure(failure, NavigationFailureType.redirected)) {
+          logger.error(commit, 'Error on to redirect to workspace-does-not-exist.\nError: ', failure)
+        }
+      })
     }
 
     commit(mutation.SET_WORKSPACE, workspace)
