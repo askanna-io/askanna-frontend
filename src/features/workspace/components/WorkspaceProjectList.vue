@@ -20,6 +20,20 @@
         </div>
       </div>
     </template>
+    <template v-slot:no-data
+      ><v-alert class="mt-2 text-center" dense outlined color="grey">
+        There are no projects in this workspace. So, let's create one. You can easily do this with the option "+ CREATE
+        PROJECT" in the grey bar.<br />
+        <router-link
+          :to="{
+            name: 'workspace-new-project',
+            params: { workspaceId: $route.params.workspaceId }
+          }"
+        >
+          Or click here to create a new project.</router-link
+        >
+      </v-alert></template
+    >
   </v-data-iterator>
 </template>
 <script>
