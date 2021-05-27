@@ -50,6 +50,7 @@ import { FileIcons } from '@package/utils/index'
 import { defineComponent } from '@vue/composition-api'
 import PackageFile from '@package/components/PackageFile'
 import PackageTree from '@package/components/PackageTree'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useProjectStore from '@project/composition/useProjectStore'
 import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
 import PackageToolbar from '@/features/package/components/PackageToolbar'
@@ -74,6 +75,7 @@ export default defineComponent({
     const jobRunStore = useJobRunStore()
     const packageStore = usePackageStore()
     const projectStore = useProjectStore()
+    const router = useRouterAskAnna(context)
 
     const packagesStore = usePackagesStore(context)
     const forceFileDownload = useForceFileDownload()
@@ -189,7 +191,7 @@ export default defineComponent({
     }
 
     const handeBackToPackageRoot = () => {
-      context.root.$router.push({
+      router.push({
         name: 'workspace-project-jobs-job-jobrun-code',
         params: { workspaceId, projectId, packageId, jobId, jobRunId }
       })

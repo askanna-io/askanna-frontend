@@ -37,8 +37,10 @@
 
 <script lang="ts">
 import useAuthStore from '../../../composition/useAuthStore'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useValidationRules from '@/core/composition/useValidationRules'
-import { ref, watch, reactive, computed, defineComponent, onMounted, toRefs } from '@vue/composition-api'
+
+import { ref, watch, reactive, computed, defineComponent, toRefs } from '@vue/composition-api'
 
 type VForm = Vue & {
   reset: () => void
@@ -49,8 +51,9 @@ type VForm = Vue & {
 export default defineComponent({
   name: 'ResetForm',
 
-  setup(rops, context) {
+  setup(_, context) {
     const authStore = useAuthStore()
+    const router = useRouterAskAnna(context)
     const validationRules = useValidationRules()
 
     const { token, uid } = context.root.$route.query
@@ -83,7 +86,7 @@ export default defineComponent({
         return
       }
       isPasswordReset.value = true
-      setTimeout(() => context.root.$router.push({ name: 'signin' }), 3000)
+      setTimeout(() => router.push({ name: 'signin' }), 3000)
     }
 
     const handleGoToLogin = () => context.emit('onOpenLogin')

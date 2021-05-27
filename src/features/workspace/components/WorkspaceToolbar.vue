@@ -34,6 +34,7 @@
 </template>
 <script>
 import { reactive, defineComponent } from '@vue/composition-api'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import CreateProjectPopup from '@/features/project/components/CreateProjectPopup'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 
@@ -53,7 +54,8 @@ export default defineComponent({
 
   components: { CreateProjectPopup },
 
-  setup(props, context) {
+  setup(_, context) {
+    const router = useRouterAskAnna(context)
     const workspaceStore = useWorkspaceStore()
 
     const state = reactive({
@@ -63,7 +65,7 @@ export default defineComponent({
     const items = [{ title: 'People', to: 'workspace-people' }]
 
     const handleMenuClick = item => {
-      context.root.$router.push({
+      router.push({
         name: item.to,
         params: context.root.$route.params
       })

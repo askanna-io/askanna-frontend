@@ -112,6 +112,7 @@ import useMoment from '@/core/composition/useMoment'
 import useSlicedText from '@/core/composition/useSlicedText'
 import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import usePackagesStore from '@packages/composition/usePackagesStore'
 import PackageToolbar from '@/features/package/components/PackageToolbar'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
@@ -125,12 +126,13 @@ export default defineComponent({
     PackageToolbar
   },
 
-  setup(props, context) {
+  setup(_, context) {
     const snackBar = useSnackBar()
     const moment = useMoment(context)
     const { width } = useWindowSize()
     const slicedText = useSlicedText()
     const projectStore = useProjectStore()
+    const router = useRouterAskAnna(context)
     const packagesStore = usePackagesStore(context)
     const forceFileDownload = useForceFileDownload()
     const breadcrumbs = useBreadcrumbs(context, { start: 3 })
@@ -207,7 +209,7 @@ export default defineComponent({
     ]
 
     const handleClickRow = ({ short_uuid, versionId }) => {
-      context.root.$router.push({
+      router.push({
         name: 'workspace-project-package-folder',
         params: { projectId: context.root.$route.params.projectId, packageId: short_uuid, versionId, folderName: '' }
       })
@@ -223,7 +225,7 @@ export default defineComponent({
 
     const handeBackToPackageRoot = () => {
       const { workspaceId, projectId, packageId } = context.root.$route.params
-      context.root.$router.push({
+      router.push({
         name: 'workspace-project-package',
         params: { workspaceId, projectId, packageId }
       })

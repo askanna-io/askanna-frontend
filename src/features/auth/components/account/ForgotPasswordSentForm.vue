@@ -43,6 +43,7 @@
 
 <script lang="ts">
 import useAuthStore from '../../composition/useAuthStore'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useValidationRules from '@/core/composition/useValidationRules'
 import { ref, watch, reactive, computed, defineComponent, onMounted, toRefs } from '@vue/composition-api'
 
@@ -55,8 +56,9 @@ type VForm = Vue & {
 export default defineComponent({
   name: 'ForgotPasswordSentForm',
 
-  setup(rops, context) {
+  setup(_, context) {
     const authStore = useAuthStore()
+    const router = useRouterAskAnna(context)
     const validationRules = useValidationRules()
 
     const username = ref('')
@@ -89,7 +91,7 @@ export default defineComponent({
       isSent.value = true
     }
 
-    const handleGoToLogin = () => context.root.$router.push({ name: 'signin' })
+    const handleGoToLogin = () => router.push({ name: 'signin' })
 
     const resetError = () => {
       errorData.error = { email: '', username: '' }

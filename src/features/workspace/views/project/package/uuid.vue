@@ -75,14 +75,14 @@ import { FileIcons } from '@package/utils/index'
 import { defineComponent } from '@vue/composition-api'
 import PackageFile from '@package/components/PackageFile'
 import PackageTree from '@package/components/PackageTree'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useProjectStore from '@project/composition/useProjectStore'
+import PackageToolbar from '@/features/package/components/PackageToolbar'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
 import usePackageStore from '@/features/package/composition/usePackageStore'
 import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
 import usePackagesStore from '@/features/packages/composition/usePackagesStore'
 import { ref, watch, watchEffect, onBeforeMount, onUnmounted, computed } from '@vue/composition-api'
-
-import PackageToolbar from '@/features/package/components/PackageToolbar'
 
 export default defineComponent({
   name: 'PackageUuid',
@@ -99,6 +99,7 @@ export default defineComponent({
     const { height } = useWindowSize()
     const packageStore = usePackageStore()
     const projectStore = useProjectStore()
+    const router = useRouterAskAnna(context)
 
     const packagesStore = usePackagesStore(context)
     const forceFileDownload = useForceFileDownload()
@@ -113,7 +114,7 @@ export default defineComponent({
 
     onBeforeMount(async () => {
       if (packageId === 'new-package') {
-        context.root.$router.push({
+        router.push({
           name: 'workspace-project-package-new',
           params: { ...context.root.$route.params }
         })
@@ -201,7 +202,7 @@ export default defineComponent({
     }
 
     const handleHistory = () => {
-      context.root.$router.push({
+      router.push({
         name: 'workspace-project-code-package-history',
         params: { projectId, packageId }
       })
@@ -219,7 +220,7 @@ export default defineComponent({
     const handleReplace = () => (isRaplace.value = !isRaplace.value)
 
     const handeBackToPackageRoot = () => {
-      context.root.$router.push({
+      router.push({
         name: 'workspace-project-package',
         params: { workspaceId, projectId, packageId }
       })
