@@ -43,19 +43,22 @@
 
 <script>
 import { ref, defineComponent } from '@vue/composition-api'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useProjectStore from '@/features/project/composition/useProjectStore'
 
 export default defineComponent({
   name: 'CreateProjectPopup',
 
-  setup(props, context) {
+  setup(_, context) {
     const projectStore = useProjectStore()
+    const router = useRouterAskAnna(context)
+
     const menu = ref(false)
 
     projectStore.resetProjectData()
 
     const handleMoreOptions = () =>
-      context.root.$router.push({
+      router.push({
         name: 'workspace-new-project',
         params: { workspaceId: context.root.$route.params.workspaceId }
       })

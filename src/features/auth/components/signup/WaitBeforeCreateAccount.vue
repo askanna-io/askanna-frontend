@@ -9,13 +9,15 @@
 </template>
 
 <script>
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import usePrepareAccount from '../../composition/usePrepareAccount'
 import { ref, inject, computed, onBeforeMount, onUnmounted, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'WaitBeforeCreateAccount',
 
-  setup(rops, context) {
+  setup(_, context) {
+    const router = useRouterAskAnna(context)
     const prepareAccount = usePrepareAccount(context)
 
     const authData = inject('authData')
@@ -29,7 +31,7 @@ export default defineComponent({
 
         if (isReady.value) {
           clearInterval(polling.value)
-          context.root.$router.push({ name: 'workspace', params: { workspaceId: prepareAccount.workspaceId.value } })
+          router.push({ name: 'workspace', params: { workspaceId: prepareAccount.workspaceId.value } })
         }
       }, 5000)
     }

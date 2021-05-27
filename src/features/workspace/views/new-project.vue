@@ -27,28 +27,28 @@
     <project
       :projectData="projectData"
       :projectTemplates="projectTemplates"
-      @handleOnInput="handleOnInput"
       @handleCreate="handleCreate"
       @handleCancel="handleCancel"
+      @handleOnInput="handleOnInput"
     />
   </v-card>
 </template>
 
 <script>
 import Project from '@/features/project/components/Project'
-import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import AskAnnaCopyText from '@/core/components/shared/AskAnnaCopyText'
-
 import useProjectStore from '@/features/project/composition/useProjectStore'
+import { computed, onBeforeMount, defineComponent } from '@vue/composition-api'
 import useWorkSpaceStore from '@/features/workspace/composition/useWorkSpaceStore'
-import { computed, reactive, onBeforeMount, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'new-project',
 
   components: { Project, AskAnnaCopyText },
 
-  setup(props, context) {
+  setup(_, context) {
+    const router = useRouterAskAnna(context)
     const projectStore = useProjectStore(context)
     const workSpaceStore = useWorkSpaceStore(context)
 
@@ -74,28 +74,29 @@ export default defineComponent({
     ])
 
     const handleOnInput = data => projectStore.setProject(data)
-    const handleCreate = async data => {
+    const handleCreate = async () => {
       const project = await projectStore.createProjectFullWay(context.root.$route.params.workspaceId)
       if (project && project.short_uuid) {
-        context.root.$router.push({
+        router.push({
           name: 'workspace-project-package-new',
           params: { projectId: project.short_uuid, workspaceId: project.workspace.short_uuid, packageId: 'new-package' }
         })
       }
     }
-    const handleCancel = data => {
+    const handleCancel = () => {
       projectStore.resetProjectData()
       context.root.$router.go(-1)
     }
 
     return {
       projectName,
-      projectTemplates: projectStore.projectTemplates,
+      breadcrumbs,
       projectData: projectStore.project,
-      handleOnInput,
+      projectTemplates: projectStore.projectTemplates,
+
       handleCreate,
       handleCancel,
-      breadcrumbs
+      handleOnInput
     }
   }
 })

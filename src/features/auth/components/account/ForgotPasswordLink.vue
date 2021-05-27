@@ -5,12 +5,15 @@
 </template>
 <script>
 import { defineComponent } from '@vue/composition-api'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 
 export default defineComponent({
   name: 'ForgotPasswordLink',
 
-  setup(props, context) {
-    const handleOpenForgotPage = () => context.root.$router.push({ name: 'forgot-password' })
+  setup(_, context) {
+    const router = useRouterAskAnna(context)
+
+    const handleOpenForgotPage = () => router.push({ name: 'forgot-password' })
 
     return {
       handleOpenForgotPage

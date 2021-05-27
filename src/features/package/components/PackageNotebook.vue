@@ -34,6 +34,7 @@ export default defineComponent({
     const nb = Nb()
 
     const notebookHtml = computed(() => {
+      if (!props.file) return
       const notebook = nb.parse(JSON.parse(props.file))
       const rendered = notebook.render()
 

@@ -6,6 +6,7 @@
 
 <script>
 import VueRouter from 'vue-router'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useUserStore from '@/features/user/composition/useUserStore'
 import usePrepareAccount from '@/features/auth/composition/usePrepareAccount'
 import WorkspaceNotReady from '@/features/workspace/components/WorkspaceNotReady'
@@ -20,8 +21,10 @@ export default defineComponent({
     AskAnnaLoadingProgress
   },
 
-  setup(props, context) {
+  setup(_, context) {
     const userStore = useUserStore()
+    const router = useRouterAskAnna(context)
+
     const prepareAccount = usePrepareAccount(context)
 
     const authData = computed(() => {
@@ -46,20 +49,14 @@ export default defineComponent({
         window.localStorage.setItem('back_after_login', '')
 
         //check if user need redirect to last visited page
-        const { isNavigationFailure, NavigationFailureType } = VueRouter
 
         if (backAfterUrl && backAfterUrl !== '/') {
-          context.root.$router
-            .push({ path: backAfterUrl, params: { workspaceId: prepareAccount.workspaceId.value } })
-            .catch(failure => {
-              if (isNavigationFailure(failure, NavigationFailureType.duplicated)) {
-                return
-              }
-            })
+          router.push({ path: backAfterUrl, params: { workspaceId: prepareAccount.workspaceId.value } })
+
           return
         }
 
-        context.root.$router.push({ name: 'workspace', params: { workspaceId: prepareAccount.workspaceId.value } })
+        router.push({ name: 'workspace', params: { workspaceId: prepareAccount.workspaceId.value } })
       }
 
       loading.value = false

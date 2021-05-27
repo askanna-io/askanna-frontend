@@ -31,10 +31,10 @@ import useMoment from '@/core/composition/useMoment'
 import useJobStore from '@job/composition/useJobStore'
 import useCronstrue from '@/core/composition/useCronstrue'
 import useJobRunStore from '@jobrun/composition/useJobRunStore'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import JobDefinition from '@job/components/overview/JobDefinition'
 import JobRunning from '@/features/job/components/overview/JobRunning'
 import useProjectStore from '@/features/project/composition/useProjectStore'
-
 import { onBeforeMount, defineComponent, computed } from '@vue/composition-api'
 
 export default defineComponent({
@@ -43,14 +43,14 @@ export default defineComponent({
     JobDefinition
   },
 
-  setup(props, context) {
+  setup(_, context) {
+    const jobStore = useJobStore()
     const cronstrue = useCronstrue()
     const moment = useMoment(context)
-
-    const jobStore = useJobStore()
     const jobRunStore = useJobRunStore()
-
     const projectStore = useProjectStore()
+    const router = useRouterAskAnna(context)
+
     const { jobId, workspaceId, projectId } = context.root.$route.params
 
     onBeforeMount(async () => {
@@ -72,7 +72,7 @@ export default defineComponent({
     )
 
     const handleGoToCode = () =>
-      context.root.$router.push({
+      router.push({
         name: 'workspace-project-package',
         params: { projectId, workspaceId, packageId: projectStore.lastPackage.value.short_uuid }
       })
@@ -86,6 +86,7 @@ export default defineComponent({
       nextRun,
       schedules,
       lastPackage: projectStore.lastPackage,
+
       handleGoToCode,
       handleOnJobSave,
       handleChangeDescription

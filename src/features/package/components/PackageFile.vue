@@ -20,18 +20,22 @@
       </v-toolbar>
       <package-file-image v-if="isFileImg" :fileSource="fileSource" />
       <package-notebook v-else-if="isIpynb" :file="file" :fileSource="fileSource" />
-      <the-highlight v-else :value="fileComputed" :languageName="languageName" />
+      <the-highlight v-else-if="fileComputed" :value="fileComputed" :languageName="languageName" />
+      <v-alert v-else class="ma-4 text-center" dense outlined color="grey">
+        This file is empty.
+      </v-alert>
     </v-col>
   </v-row>
 </template>
 
 <script>
+import useCopy from '@/core/composition/useCopy'
 import PackageNotebook from './PackageNotebook'
 import PackageFileImage from './PackageFileImage'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
 import useSizeHumanize from '@/core/composition/useSizeHumanize'
+import { defineComponent, computed } from '@vue/composition-api'
 import TheHighlight from '@/core/components/highlight/TheHighlight'
-import { defineComponent, watch, computed } from '@vue/composition-api'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
 
 export default defineComponent({
@@ -73,6 +77,7 @@ export default defineComponent({
 
   setup(props, context) {
     const allowedLangs = ['json', 'md', 'py', 'txt', 'yml', 'ini', 'toml', 'markdown']
+    const copy = useCopy(context)
     const snackBar = useSnackBar()
     const sizeHumanize = useSizeHumanize()
     const forceFileDownload = useForceFileDownload()
@@ -81,14 +86,7 @@ export default defineComponent({
     const handleBack = () => context.root.$router.back(-1)
 
     const handleCopy = () => {
-      context.root.$copyText(props.file).then(
-        function (e) {
-          snackBar.showSnackBar({ message: 'Copied', color: 'success' })
-        },
-        function (e) {
-          snackBar.showSnackBar({ message: 'Can not copy', color: 'failed' })
-        }
-      )
+      copy.handleCopyText(props.file || ' ')
     }
 
     const imgExts = ['jpg', 'png', 'gif', 'jpeg']

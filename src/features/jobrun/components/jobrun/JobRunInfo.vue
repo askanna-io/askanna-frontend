@@ -17,6 +17,7 @@ import JobRunInfoStatus from './parts/JobRunInfoStatus.vue'
 import JobRunInfoAvatar from './parts/JobRunInfoAvatar.vue'
 import JobRunInfoPackage from './parts/JobRunInfoPackage.vue'
 import JobRunInfoCopyText from './parts/JobRunInfoCopyText.vue'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 
 import { JobRun, JobRunModel } from '../../store/types'
 import { computed, defineComponent } from '@vue/composition-api'
@@ -51,6 +52,8 @@ export default defineComponent({
 
   setup(props, context) {
     const moment = useMoment(context)
+    const router = useRouterAskAnna(context)
+
     const triggers = {
       API: 'API',
       CLI: 'CLI',
@@ -135,7 +138,7 @@ export default defineComponent({
     })
 
     const handleGotoJob = () => {
-      context.root.$router.push({
+      router.push({
         name: 'workspace-project-job-overiew',
         params: { ...context.root.$route.params }
       })

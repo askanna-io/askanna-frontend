@@ -67,10 +67,12 @@ router.beforeEach((to, _, next) => {
   const isRequiresAuth = to.matched.some(route => route.meta.requiresAuth)
   const isNotAllowedWithToken = notAllowedRouteWithToken.some(route => route === to.name)
 
-  if (isRequiresAuth && !token) {
+  if (isRequiresAuth && !token && to.name !== 'signin') {
     window.localStorage.setItem('back_after_login', window.location.pathname)
 
-    next('signin')
+    next({
+      name: 'signin'
+    })
   } else if (token && isNotAllowedWithToken) {
     next('/')
   } else {
