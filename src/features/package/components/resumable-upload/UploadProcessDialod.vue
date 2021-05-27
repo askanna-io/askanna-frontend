@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import { ref, watch, computed, defineComponent } from '@vue/composition-api'
 import useUploadStatus from '@/core/components/uploadStatus/useUploadStatus'
 
@@ -54,6 +55,7 @@ export default defineComponent({
   setup(props, context) {
     const dialog = ref(true)
     const uploadStatus = useUploadStatus()
+    const router = useRouterAskAnna(context)
 
     watch(dialog, async dialog => {
       if (!dialog) context.emit('confirmationClosed')
@@ -63,7 +65,7 @@ export default defineComponent({
 
     const handleOpenPackage = () => {
       const { projectId, packageId } = props
-      context.root.$router.push({
+      router.push({
         name: 'workspace-project-package',
         params: {
           projectId,

@@ -65,6 +65,7 @@ import { useWindowSize } from '@u3u/vue-hooks'
 import { JobsListHeaders } from '../utils/index'
 import JobRuns from '@jobrun/components/JobRuns'
 import useMoment from '@/core/composition/useMoment'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useJobRunStore from '../../jobrun/composition/useJobRunStore'
 import { ref, computed, defineComponent } from '@vue/composition-api'
 import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress'
@@ -88,6 +89,7 @@ export default defineComponent({
     const moment = useMoment(context)
     const { height } = useWindowSize()
     const jobRunStore = useJobRunStore()
+    const router = useRouterAskAnna(context)
 
     const expanded = ref([])
     const selection = ref(2)
@@ -107,7 +109,7 @@ export default defineComponent({
     })
 
     const handleJobClick = item => {
-      context.root.$router.push({
+      router.push({
         name: 'workspace-project-job-overiew',
         params: { ...context.root.$route.params, jobId: item.short_uuid || 'jobname' }
       })

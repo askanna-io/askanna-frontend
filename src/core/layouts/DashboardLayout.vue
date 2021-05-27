@@ -220,30 +220,30 @@
 <script>
 import '@/core/plugins/intercom.js'
 import useProjectStore from '@project/composition/useProjectStore'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
+
 import UpdateApp from '@/core/components/shared/updateApp/UpdateApp'
 import TheUploadStatus from '@/core/components/uploadStatus/TheUploadStatus'
 import useUploadStatus from '@/core/components/uploadStatus/useUploadStatus'
 
-import { createNamespacedHelpers } from 'vuex'
 import useTitle from '@/core/composition/useTitle'
-import { AUTH_STORE } from '@/core/store/storeTypes'
 import useUserStore from '@/features/user/composition/useUserStore'
 import useAuthStore from '../../features/auth/composition/useAuthStore'
-import { ref, computed, defineComponent, onBeforeMount, onUpdated } from '@vue/composition-api'
 import useWorkspaceStore from '../../features/workspace/composition/useWorkSpaceStore'
+import { ref, computed, defineComponent, onBeforeMount, onUpdated } from '@vue/composition-api'
 
-const { mapActions } = createNamespacedHelpers(AUTH_STORE)
 export default defineComponent({
   name: 'DashboardLayout',
 
   components: { UpdateApp, TheUploadStatus },
 
-  setup(props, context) {
+  setup(_, context) {
     useTitle(context)
     const authStore = useAuthStore()
     const userStore = useUserStore()
     const projectStore = useProjectStore()
     const uploadStatus = useUploadStatus()
+    const router = useRouterAskAnna(context)
     const workspaceStore = useWorkspaceStore()
 
     const xsOnly = ref(null)
@@ -257,7 +257,7 @@ export default defineComponent({
 
     const handleChangeWorkspace = ({ short_uuid }) => {
       if (workspaceShortUuid.value === short_uuid && context.root.$route.name === 'workspace') return
-      context.root.$router.push({ path: `/${short_uuid}`, params: { workspace: short_uuid } })
+      router.push({ path: `/${short_uuid}`, params: { workspace: short_uuid } })
     }
 
     const onResize = () => {

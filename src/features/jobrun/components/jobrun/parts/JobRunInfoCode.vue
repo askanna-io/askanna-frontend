@@ -5,6 +5,7 @@
 </template>
 <script>
 import { defineComponent } from '@vue/composition-api'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 
 export default defineComponent({
   name: 'JobRunInfoCode',
@@ -20,9 +21,11 @@ export default defineComponent({
     }
   },
 
-  setup(props, context) {
+  setup(_, context) {
+    const router = useRouterAskAnna(context)
+
     const handleGotoCode = () => {
-      context.root.$router.push({
+      router.push({
         name: 'workspace-project-job-overiew',
         params: { ...context.root.$route.params }
       })

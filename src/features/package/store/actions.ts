@@ -1,11 +1,13 @@
 import * as type from './types'
 import { ActionTree } from 'vuex'
 import router from '@/core/router'
+import VueRouter from 'vue-router'
 import { logger } from '@/core/plugins/logger'
-import { PackageState, PACKAGE_STORE, packageServiceName } from './types'
-import { apiStringify } from '@/core/services/api-settings'
-import * as rootTypes from '@/core/store/actionTypes'
 import apiService from '@/core/services/apiService'
+import * as rootTypes from '@/core/store/actionTypes'
+import { PackageState, packageServiceName } from './types'
+import { apiStringify } from '@/core/services/api-settings'
+const { isNavigationFailure, NavigationFailureType } = VueRouter
 
 const root = true
 const serviceName = packageServiceName
@@ -37,7 +39,11 @@ export const actions: ActionTree<PackageState, RootState> = {
       }
 
       const name = failedRoute || 'workspace-project-code-does-not-exist'
-      router.push({ name })
+      router.push({ name }).catch(failure => {
+        if (isNavigationFailure(failure, NavigationFailureType.redirected)) {
+          logger.error(commit, 'Error on redirect to workspace-project-code-does-not-exist.\nError: ', failure)
+        }
+      })
 
       if (loading) commit(type.SET_LOADING, { name: 'packageLoading', value: false })
 

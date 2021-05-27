@@ -1,9 +1,11 @@
 import useAuthStore from './useAuthStore'
 import { ref, SetupContext } from '@vue/composition-api'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 
 export default function (context: SetupContext) {
   const authStore = useAuthStore()
+  const router = useRouterAskAnna(context)
   const workspaceStore = useWorkspaceStore()
 
   const IsAccountReady = ref(false)
@@ -22,7 +24,6 @@ export default function (context: SetupContext) {
       return true
     }
 
-    // await authStore.actions.logout(false)
     return false
   }
 
@@ -32,14 +33,12 @@ export default function (context: SetupContext) {
     if (username && password) {
       const user = await loginUser({ username, password })
       if (!user || !user.key) {
-        // context.root.$router.push({ name: 'signin' })
-
         return
       }
     }
 
     if (!authStore.state.authToken.value) {
-      context.root.$router.push({ name: 'signin' })
+      router.push({ name: 'signin' })
 
       return
     }

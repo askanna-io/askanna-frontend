@@ -50,6 +50,7 @@
 
 <script>
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useMetricStore from '@/features/metric/composition/useMetricStore'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
 import useProjectStore from '@/features/project/composition/useProjectStore'
@@ -58,10 +59,11 @@ import { ref, computed, defineComponent, onBeforeMount } from '@vue/composition-
 export default defineComponent({
   name: 'metric-index',
 
-  setup(props, context) {
+  setup(_, context) {
     const snackBar = useSnackBar()
     const metricStore = useMetricStore()
     const projectStore = useProjectStore()
+    const router = useRouterAskAnna(context)
     const forceFileDownload = useForceFileDownload()
 
     const { jobRunId: uuid } = context.root.$route.params
@@ -88,7 +90,7 @@ export default defineComponent({
       set: view => {
         if (view.value === currentView.value.value) return
         currentView.value = view
-        context.root.$router.push({ name: `workspace-project-jobs-job-jobrun-metrics-${view.value}` })
+        router.push({ name: `workspace-project-jobs-job-jobrun-metrics-${view.value}` })
       }
     })
 
