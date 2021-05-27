@@ -55,15 +55,15 @@
 import { useWindowSize } from '@u3u/vue-hooks'
 import { FileIcons } from '@package/utils/index'
 import { defineComponent } from '@vue/composition-api'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import PackageTree from '@/features/package/components/PackageTree'
 import useProjectStore from '@project/composition/useProjectStore'
 import PackageFile from '@/features/package/components/PackageFile'
 import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
 import PackageToolbar from '@/features/package/components/PackageToolbar'
+import { watchEffect, onBeforeMount, computed } from '@vue/composition-api'
 import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
 import useTriggerFileDownload from '@/core/composition/useTriggerFileDownload'
-
-import { watchEffect, onBeforeMount, computed } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'PackageUuid',
@@ -74,10 +74,11 @@ export default defineComponent({
     PackageToolbar
   },
 
-  setup(props, context) {
+  setup(_, context) {
     const { height } = useWindowSize()
     const jobRunStore = useJobRunStore()
     const projectStore = useProjectStore()
+    const router = useRouterAskAnna(context)
 
     const triggerFileDownload = useTriggerFileDownload()
     const breadcrumbs = usePackageBreadcrumbs(context, { start: 8, end: 9 })
@@ -154,7 +155,7 @@ export default defineComponent({
     }
 
     const handeBackToPackageRoot = () => {
-      context.root.$router.push({
+      router.push({
         name: 'workspace-project-jobs-job-jobrun-artifact',
         params: { workspaceId, projectId, jobId, jobRunId }
       })

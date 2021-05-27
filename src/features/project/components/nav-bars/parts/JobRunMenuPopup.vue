@@ -37,6 +37,7 @@
 </template>
 
 <script>
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import { ref, defineComponent, computed } from '@vue/composition-api'
 import ConfirmDeleteProjectPopup from '@/features/project/components/popup/ConfirmDeleteProjectPopup'
 
@@ -60,13 +61,15 @@ export default defineComponent({
     }
   },
 
-  setup(props, context) {
+  setup(_, context) {
     const menu = ref(false)
+    const router = useRouterAskAnna(context)
+
     const editJobRunRouteName = 'workspace-project-jobs-job-jobrun-edit'
 
     const disabledButtonEditJobRun = computed(() => context.root.$route.name === editJobRunRouteName)
     const handlerOpenEditRunPage = async () => {
-      context.root.$router.push({ name: editJobRunRouteName })
+      router.push({ name: editJobRunRouteName })
       handleClose()
     }
 

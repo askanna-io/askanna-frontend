@@ -61,6 +61,7 @@
 
 <script>
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
 import useProjectStore from '@/features/project/composition/useProjectStore'
 import { ref, computed, defineComponent, onBeforeMount } from '@vue/composition-api'
@@ -69,8 +70,9 @@ import useRuninfoVariablesStore from '@/features/runinfo-variables/composition/u
 export default defineComponent({
   name: 'variables-index',
 
-  setup(props, context) {
+  setup(_, context) {
     const snackBar = useSnackBar()
+    const router = useRouterAskAnna(context)
     const runinfoVariablesStore = useRuninfoVariablesStore()
 
     const projectStore = useProjectStore()
@@ -110,7 +112,7 @@ export default defineComponent({
       set: view => {
         if (view.value === currentView.value.value) return
         currentView.value = view
-        context.root.$router.push({ name: `workspace-project-jobs-job-jobrun-variables-${view.value}` })
+        router.push({ name: `workspace-project-jobs-job-jobrun-variables-${view.value}` })
       }
     })
 

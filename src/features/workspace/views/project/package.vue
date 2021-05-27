@@ -3,12 +3,14 @@
 </template>
 
 <script>
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useProjectStore from '@/features/project/composition/useProjectStore'
 import { onBeforeMount, onBeforeUpdate, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
-  setup(props, context) {
+  setup(_, context) {
     const projectStore = useProjectStore()
+    const router = useRouterAskAnna(context)
 
     onBeforeMount(() => {
       gotoPackage()
@@ -31,7 +33,7 @@ export default defineComponent({
             : 'new-package'
         }
 
-        context.root.$router.push({
+        router.push({
           name: 'workspace-project-package',
           params: {
             projectId,
