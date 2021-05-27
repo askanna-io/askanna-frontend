@@ -3,12 +3,14 @@
 </template>
 
 <script>
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import { onUpdated, onBeforeMount, defineComponent } from '@vue/composition-api'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 
 export default defineComponent({
-  setup(props, context) {
+  setup(_, context) {
     const reShortUuid = /[0-9a-zA-Z]{4}\-[0-9a-zA-Z]{4}\-[0-9a-zA-Z]{4}\-[0-9a-zA-Z]{4}$/g
+    const router = useRouterAskAnna(context)
     const workspaceStore = useWorkspaceStore()
 
     const initWorkspace = async workspaceId => {
@@ -22,7 +24,7 @@ export default defineComponent({
         await workspaceStore.getInitialWorkpaceProjects({ params: { limit: 99, offset: 0 } })
         await workspaceStore.actions.getInitialWorkpacePeople({ workspaceId })
       } else {
-        context.root.$router.push({ path: `/` })
+        router.push({ path: `/` })
       }
     }
 
@@ -39,7 +41,7 @@ export default defineComponent({
 
       if (workspaceId === 'workspace' && workspaceStore.workspaces.value.results.length) {
         workspaceId = workspaceStore.workspaces.value.results[0].short_uuid
-        context.root.$router.push({ path: `/${workspaceId}` })
+        router.push({ path: `/${workspaceId}` })
       }
 
       //get current workspace, first project, people

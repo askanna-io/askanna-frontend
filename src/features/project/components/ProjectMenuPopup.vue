@@ -52,6 +52,7 @@
 
 <script>
 import { ref, defineComponent } from '@vue/composition-api'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useProjectStore from '@/features/project/composition/useProjectStore'
 import ConfirmDeleteProjectPopup from '@/features/project/components/popup/ConfirmDeleteProjectPopup'
 
@@ -88,12 +89,13 @@ export default defineComponent({
 
   setup(props, context) {
     const projectStore = useProjectStore()
+    const router = useRouterAskAnna(context)
 
     const menu = ref(false)
     const deleteProjectConfirmPopup = ref(false)
 
     const handleMoreOptions = () =>
-      context.root.$router.push({
+      router.push({
         name: 'workspace-new-project',
         params: { workspaceId: context.root.$route.params.workspaceId }
       })
@@ -121,7 +123,7 @@ export default defineComponent({
       deleteProjectConfirmPopup.value = false
       menu.value = false
       if (props.routeToRedirect) {
-        context.root.$router.push({ name: props.routeToRedirect })
+        router.push({ name: props.routeToRedirect })
       }
     }
 

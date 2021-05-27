@@ -1,10 +1,12 @@
 import * as type from './types'
 import { ActionTree } from 'vuex'
 import router from '@/core/router'
+import VueRouter from 'vue-router'
 import { jobState, JOB_STORE, stateType } from './types'
 import { logger } from '@/core/plugins/logger'
 import apiService from '@/core/services/apiService'
 import { apiStringify } from '@/core/services/api-settings'
+const { isNavigationFailure, NavigationFailureType } = VueRouter
 import { mutation as gMutation, GENERAL_STORE } from '@/core/store/general/types'
 
 const serviceName = JOB_STORE
@@ -24,7 +26,11 @@ export const actions: ActionTree<jobState, RootState> = {
     } catch (error) {
       logger.error(commit, 'Error on load job  in getJob action.\nError: ', error)
 
-      router.push({ name: 'workspace-project-job-does-not-exist' })
+      router.push({ name: 'workspace-project-job-does-not-exist' }).catch(failure => {
+        if (isNavigationFailure(failure, NavigationFailureType.redirected)) {
+          logger.error(commit, 'Error on redirect to workspace-project-job-does-not-exist.\nError: ', failure)
+        }
+      })
 
       return
     }

@@ -100,9 +100,9 @@
 import { useWindowSize } from '@u3u/vue-hooks'
 import usePrettyJSON from '@/core/composition/usePrettyJSON'
 import useJobRunStore from '../../composition/useJobRunStore'
-
 import JobRunResultPreview from './result/JobRunResultPreview'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import TheHighlight from '@/core/components/highlight/TheHighlight'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
 import { ref, computed, defineComponent, onBeforeMount } from '@vue/composition-api'
@@ -118,6 +118,7 @@ export default defineComponent({
     const { height } = useWindowSize()
     const prettyJSON = usePrettyJSON()
     const jobRunStore = useJobRunStore()
+    const router = useRouterAskAnna(context)
     const forceFileDownload = useForceFileDownload()
 
     const views = [
@@ -133,7 +134,7 @@ export default defineComponent({
       set: view => {
         if (view.value === currentView.value.value) return
         currentView.value = view
-        context.root.$router.push({ name: 'workspace-project-jobs-job-jobrun-result', params: { view: view.value } })
+        router.push({ name: 'workspace-project-jobs-job-jobrun-result', params: { view: view.value } })
       }
     })
 

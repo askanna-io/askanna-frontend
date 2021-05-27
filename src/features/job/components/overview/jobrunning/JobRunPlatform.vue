@@ -61,6 +61,7 @@ import { set } from 'lodash'
 import useMoment from '@/core/composition/useMoment'
 import useJobStore from '@job/composition/useJobStore'
 import AskAnnaCode from '@/core/components/shared/AskAnnaCode'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import { ref, computed, onUnmounted, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
@@ -70,9 +71,10 @@ export default defineComponent({
     AskAnnaCode
   },
 
-  setup(props, context) {
+  setup(_, context) {
     const jobStore = useJobStore()
     const moment = useMoment(context)
+    const router = useRouterAskAnna(context)
 
     jobStore.resetJobRun()
 
@@ -114,7 +116,7 @@ export default defineComponent({
     const handleValidate = async error => (isValid.value = error)
 
     const hadnleOpenJobRun = () => {
-      context.root.$router.push({
+      router.push({
         name: 'workspace-project-jobs-job-jobrun',
         params: { ...context.root.$route.params, jobRunId: jobRunId.value }
       })

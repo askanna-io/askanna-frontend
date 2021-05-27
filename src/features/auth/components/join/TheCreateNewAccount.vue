@@ -71,6 +71,7 @@
 
 <script>
 import useAuthStore from '../../composition/useAuthStore'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useValidationRules from '@/core/composition/useValidationRules'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 import { ref, watch, toRefs, reactive, computed, defineComponent } from '@vue/composition-api'
@@ -78,8 +79,9 @@ import { ref, watch, toRefs, reactive, computed, defineComponent } from '@vue/co
 export default defineComponent({
   name: 'TheCreateNewAccount',
 
-  setup(rops, context) {
+  setup(_, context) {
     const authStore = useAuthStore()
+    const router = useRouterAskAnna(context)
     const workspaceStore = useWorkspaceStore()
     const validationRules = useValidationRules()
 
@@ -158,7 +160,7 @@ export default defineComponent({
       if (invatation && invatation.status === 'accepted') {
         step.value = 3
 
-        setTimeout(() => context.root.$router.push({ name: 'workspace', params: { workspaceId } }), 1000)
+        setTimeout(() => router.push({ name: 'workspace', params: { workspaceId } }), 1000)
 
         return
       }

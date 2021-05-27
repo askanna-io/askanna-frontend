@@ -56,15 +56,17 @@
 </template>
 
 <script>
-import { set, isEqual } from 'lodash'
-import useSnackBar from '@/core/components/snackBar/useSnackBar'
+import { set } from 'lodash'
 import useJobRunStore from '@jobrun/composition/useJobRunStore'
+import useSnackBar from '@/core/components/snackBar/useSnackBar'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import { ref, watch, computed, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   setup(_, context) {
     const snackBar = useSnackBar()
     const jobRunStore = useJobRunStore()
+    const router = useRouterAskAnna(context)
 
     const jobRun = computed(() => jobRunStore.jobRun.value)
     const loading = computed(() => jobRunStore.jobRunLoading.value)
@@ -89,12 +91,12 @@ export default defineComponent({
     }
 
     const handleClose = () =>
-      context.root.$router.push({
+      router.push({
         name: 'workspace-project-jobs-job-jobrun-overview'
       })
 
     const hadnleOpenJobRun = () => {
-      context.root.$router.push({
+      router.push({
         name: 'workspace-project-jobs-job-jobrun'
       })
     }

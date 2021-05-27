@@ -32,6 +32,7 @@
   </v-toolbar>
 </template>
 <script>
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import { reactive, computed, defineComponent } from '@vue/composition-api'
 import CreateProjectPopup from '@/features/project/components/CreateProjectPopup'
 
@@ -51,7 +52,9 @@ export default defineComponent({
 
   components: { CreateProjectPopup },
 
-  setup(props, context) {
+  setup(_, context) {
+    const router = useRouterAskAnna(context)
+
     const state = reactive({
       menu: false
     })
@@ -66,7 +69,7 @@ export default defineComponent({
     const menuItems = computed(() => (isEditWorkspaceView.value ? editItems : fulleItems))
 
     const handleMenuClick = item => {
-      context.root.$router.push({
+      router.push({
         name: item.to,
         params: context.root.$route.params
       })

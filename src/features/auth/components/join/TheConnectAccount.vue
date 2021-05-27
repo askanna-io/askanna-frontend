@@ -60,6 +60,7 @@ import { get } from 'lodash'
 import useAuthStore from '../../composition/useAuthStore'
 import JoinExistingAccountPopup from './JoinExistingAccountPopup'
 import useValidationRules from '@/core/composition/useValidationRules'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 import { ref, reactive, computed, defineComponent, onMounted, toRefs } from '@vue/composition-api'
 
@@ -68,8 +69,9 @@ export default defineComponent({
 
   components: { JoinExistingAccountPopup },
 
-  setup(props, context) {
+  setup(_, context) {
     const authStore = useAuthStore()
+    const router = useRouterAskAnna(context)
     const workspaceStore = useWorkspaceStore()
 
     const validationRules = useValidationRules()
@@ -97,7 +99,7 @@ export default defineComponent({
 
     const joinToWorkpase = () => {
       step.value = 2
-      setTimeout(() => context.root.$router.push({ name: 'workspace', params: { workspaceId } }), 1000)
+      setTimeout(() => router.push({ name: 'workspace', params: { workspaceId } }), 1000)
     }
 
     const handleLogin = async () => {

@@ -34,7 +34,7 @@
                 </v-btn>
 
                 <v-btn small outlined color="secondary" class="btn--hover" @click="handleHistory()">
-                  <v-icon color="secondary">mdi-history</v-icon>History
+                  <v-icon color="secondary" left>mdi-history</v-icon>History
                 </v-btn>
               </div>
             </v-slide-y-transition>
@@ -54,11 +54,11 @@
         </template>
         <template v-else>
           <package-file
-            v-if="file"
+            v-if="filePath"
             :file="file"
+            :sticked="sticked"
             :fileSource="fileSource"
             :currentPath="currentPath"
-            :sticked="sticked"
           />
           <template v-else>
             <package-tree v-if="!isProcessing" :items="treeView" :height="calcHeight" :getRoutePath="getRoutePath" />
@@ -71,17 +71,18 @@
 
 <script>
 import { useWindowSize } from '@u3u/vue-hooks'
+import { FileIcons } from '@package/utils/index'
 import { defineComponent } from '@vue/composition-api'
 import PackageFile from '@package/components/PackageFile'
 import PackageTree from '@package/components/PackageTree'
-import { headers, FileIcons } from '@package/utils/index'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useProjectStore from '@project/composition/useProjectStore'
-import usePackagesStore from '@/features/packages/composition/usePackagesStore'
 import PackageToolbar from '@/features/package/components/PackageToolbar'
-import { ref, watch, watchEffect, onBeforeMount, onUnmounted, computed } from '@vue/composition-api'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
 import usePackageStore from '@/features/package/composition/usePackageStore'
 import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
+import usePackagesStore from '@/features/packages/composition/usePackagesStore'
+import { ref, watch, watchEffect, onBeforeMount, onUnmounted, computed } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'PackageUuid',
@@ -94,10 +95,11 @@ export default defineComponent({
     ResumableUpload: () => import('@/features/package/components/resumable-upload/ResumableUpload.vue')
   },
 
-  setup(props, context) {
+  setup(_, context) {
     const { height } = useWindowSize()
     const packageStore = usePackageStore()
     const projectStore = useProjectStore()
+    const router = useRouterAskAnna(context)
 
     const packagesStore = usePackagesStore(context)
     const forceFileDownload = useForceFileDownload()
@@ -112,7 +114,7 @@ export default defineComponent({
 
     onBeforeMount(async () => {
       if (packageId === 'new-package') {
-        context.root.$router.push({
+        router.push({
           name: 'workspace-project-package-new',
           params: { ...context.root.$route.params }
         })
@@ -190,24 +192,17 @@ export default defineComponent({
     })
 
     const getRoutePath = item => {
-      let path = `/${workspaceId}/project/${projectId}/code/${packageId}/${folderName}/${item.name}`
-      if (item.parent === '/') {
-        path = `/${workspaceId}/project/${projectId}/code/${packageId}/${item.name}`
-      }
+      let path = `/${workspaceId}/project/${projectId}/code/${packageId}/${item.path}`
 
       if (typeof item.path === 'undefined') {
         path = `/${workspaceId}/project/${projectId}/code/${packageId}`
-      }
-
-      if (item.is_dir) {
-        path = `/${workspaceId}/project/${projectId}/code/${packageId}/${item.path}`
       }
 
       return { path }
     }
 
     const handleHistory = () => {
-      context.root.$router.push({
+      router.push({
         name: 'workspace-project-code-package-history',
         params: { projectId, packageId }
       })
@@ -225,7 +220,7 @@ export default defineComponent({
     const handleReplace = () => (isRaplace.value = !isRaplace.value)
 
     const handeBackToPackageRoot = () => {
-      context.root.$router.push({
+      router.push({
         name: 'workspace-project-package',
         params: { workspaceId, projectId, packageId }
       })
@@ -243,13 +238,15 @@ export default defineComponent({
       }
     )
 
+    const filePath = computed(() =>
+      currentPath.value && !currentPath.value.is_dir && currentPath.value.name !== '' ? currentPath.value.path : ''
+    )
+
     watchEffect(async () => {
       packageStore.resetFile()
-      const filePath =
-        currentPath.value && !currentPath.value.is_dir && currentPath.value.name !== '' ? currentPath.value.path : ''
 
-      if (filePath === '') return
-      packageStore.getFileSource(filePath)
+      if (filePath.value === '') return
+      packageStore.getFileSource(filePath.value)
     })
 
     const packageLoading = computed(() => packageStore.packageLoading.value)
@@ -257,6 +254,7 @@ export default defineComponent({
     return {
       file,
       sticked,
+      filePath,
       fileSource: packageStore.fileSource,
       treeView,
       packageId,
