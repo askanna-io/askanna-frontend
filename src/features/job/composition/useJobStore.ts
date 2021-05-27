@@ -6,7 +6,8 @@ export default function () {
     ...useState(JOB_STORE, {
       job: 'job',
       result: 'result',
-      jobrun: 'jobrun'
+      jobrun: 'jobrun',
+      jobLoading: 'jobLoading'
     })
   }
 

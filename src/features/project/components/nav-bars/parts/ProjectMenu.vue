@@ -1,7 +1,7 @@
 <template>
   <v-tabs left align-with-title>
     <v-tabs-slider color="primary" optional />
-    <template v-for="tab of projectTools">
+    <template v-for="tab of tabs">
       <v-tab
         v-if="tab.show"
         ripple
@@ -14,7 +14,7 @@
   </v-tabs>
 </template>
 <script>
-import { defineComponent } from '@vue/composition-api'
+import { computed, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'ProjectMenu',
@@ -23,11 +23,24 @@ export default defineComponent({
     projectName: {
       type: String,
       default: ''
+    },
+    isEditProjectView: {
+      type: Boolean,
+      default: false
     }
   },
 
   setup(props, context) {
-    const projectTools = [
+    const projectEditTabs = [
+      {
+        id: 0,
+        name: 'Edit project',
+        to: 'workspace-project-edit',
+        show: true
+      }
+    ]
+
+    const projectTabs = [
       {
         id: 0,
         name: 'Activity',
@@ -62,7 +75,12 @@ export default defineComponent({
       }
     ]
 
-    return { projectTools: projectTools.filter(item => item.show), routerParams: context.root.$route.params }
+    const tabs = computed(() => {
+      const currentTabs = props.isEditProjectView ? projectEditTabs : projectTabs
+      return currentTabs.filter(item => item.show)
+    })
+
+    return { tabs, routerParams: context.root.$route.params }
   }
 })
 </script>

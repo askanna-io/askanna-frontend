@@ -4,6 +4,7 @@ export interface jobData {
   job: Job
   result: string
   jobrun: JobRun
+  jobLoading: Boolean
 }
 
 interface JobRun {
@@ -37,6 +38,9 @@ interface Schedule {
 
 export const JOB_STORE = 'job'
 
+export const stateType = {
+  jobLoading: 'jobLoading'
+}
 // actions
 export const action = {
   addJob: 'addJob',
@@ -61,6 +65,7 @@ export const action = {
 export const mutation = {
   CHANGE_JOB: 'CHANGE_JOB',
   SET_JOB_RUN: 'SET_JOB_RUN',
+  SET_LOADING: 'SET_LOADING',
   RESET_JOB_RUN: 'RESET_JOB_RUN',
   RESET_JOB_STORE: 'RESET_JOB_STORE',
   SET_RESULT_MODAL: 'SET_RESULT_MODAL',

@@ -1,6 +1,6 @@
 <template>
   <v-toolbar color="grey lighten-4" flat dense class="br-r5">
-    <v-toolbar-title> {{ title }}</v-toolbar-title>
+    <v-toolbar-title> {{ title }}{{ isEditWorkspaceView ? ' - Edit mode' : '' }}</v-toolbar-title>
     <v-spacer />
     <v-spacer />
     <v-spacer />
@@ -9,14 +9,13 @@
     <create-project-popup />
 
     <v-menu
+      bottom
+      offset-y
       v-model="menu"
+      :nudge-width="100"
       class="workspace-menu"
       data-test="workspace-menu"
-      transition="slide-y-transition"
-      bottom
       :close-on-content-click="false"
-      :nudge-width="100"
-      offset-y
     >
       <template v-slot:activator="{ on }">
         <v-btn small icon v-on="on" data-test="workspace-menu-activate-btn">
@@ -25,7 +24,7 @@
       </template>
 
       <v-list>
-        <v-list-item v-for="(item, index) in items" :key="index" @click="handleMenuClick(item)">
+        <v-list-item v-for="(item, index) in menuItems" :key="index" @click="handleMenuClick(item)">
           <v-list-item-title>{{ item.title }}</v-list-item-title>
         </v-list-item>
       </v-list>
@@ -33,9 +32,8 @@
   </v-toolbar>
 </template>
 <script>
-import { reactive, defineComponent } from '@vue/composition-api'
+import { reactive, computed, defineComponent } from '@vue/composition-api'
 import CreateProjectPopup from '@/features/project/components/CreateProjectPopup'
-import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 
 export default defineComponent({
   name: 'WorkspaceToolbar',
@@ -54,13 +52,18 @@ export default defineComponent({
   components: { CreateProjectPopup },
 
   setup(props, context) {
-    const workspaceStore = useWorkspaceStore()
-
     const state = reactive({
       menu: false
     })
 
-    const items = [{ title: 'People', to: 'workspace-people' }]
+    const editItems = [{ title: 'People', to: 'workspace-people' }]
+    const fulleItems = [
+      { title: 'Edit workspace', to: 'workspace-edit' },
+      { title: 'People', to: 'workspace-people' }
+    ]
+
+    const isEditWorkspaceView = computed(() => context.root.$route.name === 'workspace-edit')
+    const menuItems = computed(() => (isEditWorkspaceView.value ? editItems : fulleItems))
 
     const handleMenuClick = item => {
       context.root.$router.push({
@@ -68,13 +71,12 @@ export default defineComponent({
         params: context.root.$route.params
       })
     }
-    const handleChangeProjectView = projectView => workspaceStore.changeSettings({ projectView })
 
     return {
-      items,
-      menu: state.menu,
+      menuItems,
       handleMenuClick,
-      handleChangeProjectView
+      menu: state.menu,
+      isEditWorkspaceView
     }
   }
 })
