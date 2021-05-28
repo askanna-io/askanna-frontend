@@ -37,12 +37,7 @@
             </v-list>
           </v-navigation-drawer>
           <div md="auto" sm="12" text-sm-center>
-            <v-btn
-              text
-              class="pa-0"
-              color="transparent"
-              :to="{ name: 'workspace', params: { workspaceId: $route.params.workspaceId } }"
-            >
+            <v-btn class="pa-0" :to="{ name: 'workspace', params: { ...$route.params } }" text color="transparent">
               <img alt="AskAnna logo" src="@/assets/logo.svg" class="logo" />
             </v-btn>
           </div>
@@ -52,10 +47,10 @@
                 <template v-slot:activator="{ on }">
                   <v-btn
                     v-if="workspaces.length <= 1"
-                    dark
-                    text
                     small
+                    dark
                     class="mx-1 white--text"
+                    text
                     :to="{ name: 'workspace' }"
                   >
                     Workspace
@@ -251,12 +246,11 @@ export default defineComponent({
     const workspaces = computed(() => workspaceStore.workspaces.value.results)
     const workspaceProfile = computed(() => workspaceStore.state.currentPeople.value)
 
+    const showAppBarIcon = computed(() => !context.root.$route.meta?.hideAppBarIcon)
     const workspaceShortUuid = computed(() => workspaceStore.workspace.value.short_uuid)
 
-    const showAppBarIcon = computed(() => context.root.$route.name !== 'workspace')
-
     const handleChangeWorkspace = ({ short_uuid }) => {
-      if (workspaceShortUuid.value === short_uuid && context.root.$route.name === 'workspace') return
+      if (workspaceShortUuid.value === short_uuid) return
       router.push({ path: `/${short_uuid}`, params: { workspace: short_uuid } })
     }
 
