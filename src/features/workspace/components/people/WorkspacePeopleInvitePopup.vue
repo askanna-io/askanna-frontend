@@ -8,15 +8,16 @@
         </v-btn>
       </template>
       <v-card>
-        <v-app-bar flat dense white--text color="white">
-          <v-card-title class="pb-0 pl-0">Invite more people to {{ workspaceName }}</v-card-title>
-
+        <v-toolbar flat dense white--text color="white">
+          <v-toolbar-title class="px-0"
+            >Invite more people to <span class="primary--text">{{ title }}</span></v-toolbar-title
+          >
           <v-spacer />
 
-          <v-btn class="pa-2 mt-5" icon @click="handleCancel">
+          <v-btn icon @click="handleCancel">
             <v-icon>mdi-close</v-icon>
           </v-btn>
-        </v-app-bar>
+        </v-toolbar>
         <v-container id="scroll-target" style="max-height: 400px;" class="pl-1 pt-0 overflow-y-auto">
           <v-row no-gutters>
             <v-col class="pa-2" cols="12">
@@ -103,6 +104,7 @@
 </template>
 
 <script>
+import useSlicedText from '@/core/composition/useSlicedText'
 import useValidationRules from '@/core/composition/useValidationRules'
 import { ref, computed, defineComponent } from '@vue/composition-api'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
@@ -123,11 +125,12 @@ export default defineComponent({
 
     const menu = ref(false)
     const loading = ref(false)
+    const slicedText = useSlicedText()
+
     const invitationItems = ref([])
-    const isNewRawAdded = ref(false)
     const loadingText = ref('Sending...')
 
-    const { workspaceId } = context.root.$route.params
+    const title = computed(() => slicedText(props.workspaceName, 27))
 
     const invitationBtnText = computed(() =>
       invitationItems.value.length > 1 ? 'Send invitations' : 'Send invitation'
@@ -203,6 +206,7 @@ export default defineComponent({
 
     return {
       menu,
+      title,
       loading,
       getStyle,
       loadingText,
