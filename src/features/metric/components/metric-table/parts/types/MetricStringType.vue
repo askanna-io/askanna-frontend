@@ -44,8 +44,7 @@ export default defineComponent({
     watch(divRef, async divRef => {
       if (!divRef) return
 
-      const width = divRef.clientWidth || divRef.scrollWidth
-
+      let width = divRef.clientWidth || divRef.scrollWidth
       if (props.metricRow.value.length > 60) {
         nudgeLeft.value = width / 2 - 80
       } else {
@@ -54,6 +53,9 @@ export default defineComponent({
 
       if (!props.isLabels) {
         nudgeLeft.value = 400
+      }
+      if (width > 1000) {
+        width = 600
       }
       divStyles.value = { maxWidth: `${width}px`, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }
     })
