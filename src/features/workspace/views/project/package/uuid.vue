@@ -18,7 +18,7 @@
           </template>
           <template v-slot:rigth>
             <v-slide-y-transition>
-              <div v-if="!file">
+              <div v-if="!filePath">
                 <v-btn small outlined color="secondary" class="mr-1 btn--hover" @click="handleDownload()">
                   <v-icon color="secondary" left>mdi-download</v-icon>Download
                 </v-btn>
