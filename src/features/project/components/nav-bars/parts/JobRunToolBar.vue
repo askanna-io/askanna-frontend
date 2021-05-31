@@ -1,6 +1,6 @@
 <template>
   <v-card-title>
-    <span v-if="showTitle" class="title font-weight-light">Job run: #{{ jobRunId }}</span>
+    <span v-if="showTitle" class="title font-weight-light">Run: #{{ jobRunId }}</span>
 
     <v-tabs v-model="currentJobRunTab" left align-with-title>
       <v-tabs-slider color="primary" />
