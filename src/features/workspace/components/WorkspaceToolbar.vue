@@ -33,7 +33,7 @@
 </template>
 <script>
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import { reactive, computed, defineComponent } from '@vue/composition-api'
+import { ref, computed, defineComponent } from '@vue/composition-api'
 import CreateProjectPopup from '@/features/project/components/CreateProjectPopup'
 
 export default defineComponent({
@@ -55,9 +55,7 @@ export default defineComponent({
   setup(_, context) {
     const router = useRouterAskAnna(context)
 
-    const state = reactive({
-      menu: false
-    })
+    const menu = ref(false)
 
     const editItems = [{ title: 'People', to: 'workspace-people' }]
     const fulleItems = [
@@ -69,6 +67,8 @@ export default defineComponent({
     const menuItems = computed(() => (isEditWorkspaceView.value ? editItems : fulleItems))
 
     const handleMenuClick = item => {
+      menu.value = false
+
       router.push({
         name: item.to,
         params: context.root.$route.params
@@ -76,9 +76,9 @@ export default defineComponent({
     }
 
     return {
+      menu,
       menuItems,
       handleMenuClick,
-      menu: state.menu,
       isEditWorkspaceView
     }
   }
