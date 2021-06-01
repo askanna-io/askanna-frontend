@@ -103,7 +103,9 @@ export default defineComponent({
     const currentPath = computed(() => {
       const pathArray = path.value.split('/')
       const fileName = pathArray.pop()
-      const current = jobRunStore.artifactData.value.files.find(item => item.name === fileName)
+      const current = jobRunStore.artifactData.value.files.find(
+        item => item.name === fileName && item.path === path.value
+      )
 
       return current
     })
