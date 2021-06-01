@@ -173,7 +173,7 @@ export default defineComponent({
       await jobRunStore.getJobRunResultPreview(jobRunId)
     })
 
-    const maxHeight = computed(() => height.value - 150)
+    const maxHeight = computed(() => height.value - 110)
     const scrollerStyles = computed(() => {
       return { 'max-height': `${maxHeight.value}px` }
     })
