@@ -141,7 +141,9 @@ export default defineComponent({
     const currentPath = computed(() => {
       const pathArray = path.value.split('/')
       const fileName = pathArray.pop()
-      const current = packageStore.packageData.value.files.find(item => item.name === fileName)
+      const current = packageStore.packageData.value.files.find(
+        item => item.name === fileName && item.path === path.value
+      )
 
       return current
     })
