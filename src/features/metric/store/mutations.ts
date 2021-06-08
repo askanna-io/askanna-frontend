@@ -23,7 +23,20 @@ export const mutations: MutationTree<metricState> = {
       results: [...state.metricJSON.results, ...results]
     }
   },
-
+  [mutation.CLEAR_METRIC](state) {
+    state.metrics = {
+      count: 0,
+      next: null,
+      results: []
+    }
+    state.metricFullData = ''
+    state.metricLabels = []
+    state.metricJSON = {
+      count: 0,
+      next: null,
+      results: []
+    }
+  },
   [mutation.SET_METRIC_FULL_DATA](state, data) {
     state.metricFullData = JSON.stringify(data, null, 2)
   },

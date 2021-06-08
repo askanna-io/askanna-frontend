@@ -120,6 +120,7 @@ export default defineComponent({
     }
 
     onBeforeMount(async () => {
+      await metricStore.actions.clearMetric()
       const view = context.root.$route.meta.tabValue
       if (view) {
         currentView.value = views.find(item => item.value === view)
