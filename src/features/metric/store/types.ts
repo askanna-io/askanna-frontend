@@ -43,6 +43,7 @@ export const METRIC_STORE = 'metric'
 export const action = {
   getMetric: 'getMetric',
   setLoading: 'setLoading',
+  clearMetric: 'clearMetric',
   setIsFiltered: 'setIsFiltered',
   getMetricJSON: 'getMetricJSON',
   getMetricLabels: 'getMetricLabels',
@@ -54,6 +55,7 @@ export const action = {
 export const mutation = {
   SET_METRIC: 'SET_METRIC',
   SET_LOADING: 'SET_LOADING',
+  CLEAR_METRIC: 'CLEAR_METRIC',
   SET_IS_FILTERED: 'SET_IS_FILTERED',
   SET_METRIC_INIT: 'SET_METRIC_INIT',
   SET_METRIC_JSON: 'SET_METRIC_JSON',
