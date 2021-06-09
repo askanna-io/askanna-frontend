@@ -135,19 +135,18 @@ export default defineComponent({
     const router = useRouterAskAnna(context)
     const packagesStore = usePackagesStore(context)
     const forceFileDownload = useForceFileDownload()
-    const breadcrumbs = useBreadcrumbs(context, { start: 3 })
+    const breadcrumbs = useBreadcrumbs(context, { start: 2 })
 
     const sticked = computed(() => !projectStore.stickedVM.value)
-
-    const { projectId: uuid } = context.root.$route.params
-
     const next = computed(() => packagesStore.projectPackages.value.next)
+    const packageId = computed(() => projectStore.project.value.package.short_uuid)
+    const { projectId } = context.root.$route.params
 
     const query = useQuery({
       next,
-      uuid,
       limit: 18,
       offset: 100,
+      uuid: projectId,
       storeAction: packagesStore.getProjectPackages
     })
 
@@ -155,7 +154,7 @@ export default defineComponent({
 
     onBeforeMount(async () => {
       await packagesStore.resetStore()
-      await packagesStore.getInitialProjectPackages({ params: { limit: 100, offset: 0 }, uuid })
+      await packagesStore.getInitialProjectPackages({ params: { limit: 100, offset: 0 }, uuid: projectId })
     })
 
     const sortBy = (a, b) => {
@@ -224,10 +223,10 @@ export default defineComponent({
     }
 
     const handeBackToPackageRoot = () => {
-      const { workspaceId, projectId, packageId } = context.root.$route.params
+      const { workspaceId, projectId } = context.root.$route.params
       router.push({
-        name: 'workspace-project-package',
-        params: { workspaceId, projectId, packageId }
+        name: 'workspace-project-code',
+        params: { workspaceId, projectId, folderName: '' }
       })
     }
 
@@ -261,13 +260,13 @@ export default defineComponent({
       throttle,
       onScroll,
       maxLength,
+      packageId,
       slicedText,
       handleCopy,
       breadcrumbs,
       handleClickRow,
       handleDownload,
-      handeBackToPackageRoot,
-      packageId: context.root.$route.params.packageId
+      handeBackToPackageRoot
     }
   }
 })

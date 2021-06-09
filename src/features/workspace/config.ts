@@ -294,13 +294,39 @@ const jobRun = [
 
 const packageRoutes = [
   {
-    path: 'new-package',
-    component: () =>
-      import(/* webpackChunkName: "workspace-project-package-new" */ './views/project/package/new-package.vue'),
-    name: 'workspace-project-package-new',
+    path: '',
+    component: () => import(/* webpackChunkName: "workspace-project-code" */ './views/project/package/code.vue'),
     meta: {
+      useProjectPackageId: true,
       hideAppBarIcon: true
-    }
+    },
+    children: [
+      {
+        path: '',
+        name: 'workspace-project-code',
+        components: {
+          default: () => import(/* webpackChunkName: "workspace-project-package" */ './views/project/package/uuid.vue'),
+          newPackage: () =>
+            import(/* webpackChunkName: "workspace-project-package-new" */ './views/project/package/new-package.vue')
+        },
+        meta: {
+          useProjectPackageId: true,
+          hideAppBarIcon: true
+        }
+      },
+      {
+        path: 'history',
+        component: () =>
+          import(
+            /* webpackChunkName: "workspace-project-code-package-history" */ './views/project/package/history.vue'
+          ),
+        name: 'workspace-project-code-package-history',
+        meta: {
+          breadcrumb: 'History',
+          hideAppBarIcon: true
+        }
+      }
+    ]
   },
   {
     path: ':packageId',
@@ -319,20 +345,10 @@ const packageRoutes = [
         children: [],
         meta: {
           hideAppBarIcon: true
-        }
+        },
+        props: true
       },
-      {
-        path: 'history',
-        component: () =>
-          import(
-            /* webpackChunkName: "workspace-project-code-package-history" */ './views/project/package/history.vue'
-          ),
-        name: 'workspace-project-code-package-history',
-        meta: {
-          breadcrumb: 'History',
-          hideAppBarIcon: true
-        }
-      },
+
       {
         path: ':folderName(.*)',
         component: () =>
@@ -584,7 +600,6 @@ export default {
             },
             {
               path: 'code',
-              name: 'workspace-project-code',
               component: () =>
                 import(/* webpackChunkName: "workspace-project-package" */ './views/project/package.vue'),
               children: packageRoutes,

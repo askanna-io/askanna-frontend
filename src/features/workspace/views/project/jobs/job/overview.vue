@@ -66,7 +66,7 @@ export default defineComponent({
 
     const handleGoToCode = () =>
       router.push({
-        name: 'workspace-project-package',
+        name: 'workspace-project-code',
         params: { projectId, workspaceId, packageId: projectStore.lastPackage.value.short_uuid }
       })
 

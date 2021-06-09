@@ -43,6 +43,11 @@ interface Project {
   template: string
   short_uuid: string
   description: string
+  package: {
+    name: string
+    uuid: string
+    short_uuid: string
+  }
 }
 
 export const PROJECT_STORE = 'project'
@@ -100,7 +105,12 @@ export class ProjectModel {
       modified: '',
       template: '',
       short_uuid: '',
-      description: ''
+      description: '',
+      package: {
+        name: '',
+        uuid: '',
+        short_uuid: ''
+      }
     }
   }
 }

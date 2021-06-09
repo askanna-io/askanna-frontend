@@ -10,10 +10,14 @@
                   <a v-if="currentPath" @click="handeBackToPackageRoot" class="text-body-2"
                     >Package #{{ packageId.slice(0, 4) }}<v-icon small>mdi-chevron-right</v-icon></a
                   >
-                  <span class="text-body-2" v-else> Package #{{ packageId.slice(0, 4) }}</span>
+                  <span class="text-body-2" v-else>
+                    Package #{{ packageId.slice(0, 4) }}{{ isLastPackage ? ' (latest)' : '' }}</span
+                  >
                 </div>
               </template>
               <span>{{ packageId }}</span>
+              <br />
+              <span>{{ createdDate }}</span>
             </v-tooltip>
           </template>
           <template v-slot:rigth>
@@ -45,6 +49,7 @@
             v-if="isRaplace"
             isReplace
             @cancelUpload="handleReplace"
+            @onCloseOutside="handleCloseOutside"
             class="py-2 px-4"
             :id="packageId"
           />
@@ -72,6 +77,7 @@
 <script>
 import { useWindowSize } from '@u3u/vue-hooks'
 import { FileIcons } from '@package/utils/index'
+import useMoment from '@/core/composition/useMoment'
 import { defineComponent } from '@vue/composition-api'
 import PackageFile from '@package/components/PackageFile'
 import PackageTree from '@package/components/PackageTree'
@@ -96,6 +102,7 @@ export default defineComponent({
   },
 
   setup(_, context) {
+    const moment = useMoment(context)
     const { height } = useWindowSize()
     const packageStore = usePackageStore()
     const projectStore = useProjectStore()
@@ -107,36 +114,27 @@ export default defineComponent({
 
     const polling = ref(null)
     const isRaplace = ref(false)
+
     const file = computed(() => packageStore.file.value)
-    const { workspaceId, projectId, packageId = 'new-package', folderName = '' } = context.root.$route.params
-
     const sticked = computed(() => !projectStore.stickedVM.value)
-
-    onBeforeMount(async () => {
-      if (packageId === 'new-package') {
-        router.push({
-          name: 'workspace-project-package-new',
-          params: { ...context.root.$route.params }
-        })
-        return
-      }
-      await getPackage()
-      if (isProcessing.value) {
-        pollData()
-      }
-    })
-
-    onUnmounted(() => {
-      clearInterval(polling.value)
-    })
+    const { useProjectPackageId = false } = context.root.$route.meta
+    const packageLoading = computed(() => packageStore.packageLoading.value)
+    const projectIdCd = computed(() => projectStore.project.value.short_uuid)
+    const createdDate = computed(() =>
+      moment.$moment(packageStore.packageData.value.created).format(' Do MMMM YYYY, h:mm:ss a')
+    )
+    const packageIdCd = computed(() => projectStore.project.value.package.short_uuid)
+    const isLastPackage = computed(() => packageIdCd.value === packageStore.packageData.value.short_uuid)
+    const { workspaceId, projectId, packageId: packageIdFromRoute = '', folderName = '' } = context.root.$route.params
+    const packageId = computed(() => (useProjectPackageId ? packageIdCd.value : packageIdFromRoute))
 
     const getPackage = async (loading = true) => {
-      const { projectId, packageId = 'new-package', folderName = '' } = context.root.$route.params
+      if (!packageId.value || !projectId) return
 
       await packageStore.getPackage({
         loading,
         projectId,
-        packageId,
+        packageId: packageId.value,
         folderName
       })
     }
@@ -159,7 +157,9 @@ export default defineComponent({
       let a = context.root.$route.params.folderName || '/'
       return a
     })
-    const isProcessing = computed(() => packageStore.processingList.value.find(item => item.packageId === packageId))
+    const isProcessing = computed(() =>
+      packageStore.processingList.value.find(item => item.packageId === packageId.value)
+    )
 
     const currentPath = computed(() => {
       const pathArray = path.value.split('/')
@@ -194,10 +194,10 @@ export default defineComponent({
     })
 
     const getRoutePath = item => {
-      let path = `/${workspaceId}/project/${projectId}/code/${packageId}/${item.path}`
+      let path = `/${workspaceId}/project/${projectId}/code/${packageId.value}/${item.path}`
 
       if (typeof item.path === 'undefined') {
-        path = `/${workspaceId}/project/${projectId}/code/${packageId}`
+        path = `/${workspaceId}/project/${projectId}/code/${packageId.value}`
       }
 
       return { path }
@@ -206,7 +206,7 @@ export default defineComponent({
     const handleHistory = () => {
       router.push({
         name: 'workspace-project-code-package-history',
-        params: { projectId, packageId }
+        params: { projectId, packageId: packageId.value }
       })
     }
 
@@ -223,17 +223,28 @@ export default defineComponent({
 
     const handeBackToPackageRoot = () => {
       router.push({
-        name: 'workspace-project-package',
-        params: { workspaceId, projectId, packageId }
+        name: 'workspace-project-code',
+        params: { workspaceId, projectId, packageId: packageId.value }
       })
+    }
+
+    const handleCloseOutside = async () => {
+      const project = await projectStore.getProject(context.root.$route.params.projectId)
+      if (!project.package.short_uuid || !project.short_uuid) return
+
+      await packageStore.getPackage({
+        loading: true,
+        projectId: project.short_uuid,
+        packageId: project.package.short_uuid
+      })
+      isRaplace.value = false
     }
 
     // check if current package the same as in store
     watch(
       () => context.root.$route,
       async () => {
-        const { packageId } = context.root.$route.params
-        if (packageId !== packageStore.packageData.value.short_uuid) {
+        if (useProjectPackageId) {
           isRaplace.value = false
           await getPackage()
         }
@@ -245,13 +256,21 @@ export default defineComponent({
     )
 
     watchEffect(async () => {
-      packageStore.resetFile()
-
       if (filePath.value === '') return
       packageStore.getFileSource(filePath.value)
     })
 
-    const packageLoading = computed(() => packageStore.packageLoading.value)
+    onBeforeMount(async () => {
+      await getPackage()
+      if (isProcessing.value) {
+        pollData()
+      }
+    })
+    watch(projectIdCd, async () => getPackage())
+
+    onUnmounted(() => {
+      clearInterval(polling.value)
+    })
 
     return {
       file,
@@ -263,14 +282,18 @@ export default defineComponent({
       FileIcons,
       isRaplace,
       calcHeight,
+      createdDate,
       breadcrumbs,
       currentPath,
       isProcessing,
       getRoutePath,
+      isLastPackage,
+
       handleReplace,
       handleHistory,
       packageLoading,
       handleDownload,
+      handleCloseOutside,
       handeBackToPackageRoot
     }
   }

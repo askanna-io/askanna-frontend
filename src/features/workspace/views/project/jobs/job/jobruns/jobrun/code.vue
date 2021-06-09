@@ -99,7 +99,7 @@ export default defineComponent({
       }
       const packageId = jobRunStore.jobRun.value.package.short_uuid
 
-      if (packageId === 'new-package') {
+      if (packageId === '') {
         return
       }
 

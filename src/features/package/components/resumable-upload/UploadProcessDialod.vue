@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" max-width="500px">
+  <v-dialog v-model="dialog" max-width="500px" @click:outside="handleCloseOutside">
     <v-card>
       <v-card-title>
         Successfully started the upload
@@ -61,20 +61,15 @@ export default defineComponent({
       if (!dialog) context.emit('confirmationClosed')
     })
 
+    const handleCloseOutside = () => context.emit('onCloseOutside')
+
     const iconStatus = computed(() => uploadStatus.iconStatus.value)
 
     const handleOpenPackage = () => {
-      const { projectId, packageId } = props
-      router.push({
-        name: 'workspace-project-package',
-        params: {
-          projectId,
-          packageId
-        }
-      })
+      location.reload()
     }
 
-    return { dialog, iconStatus, handleOpenPackage }
+    return { dialog, iconStatus, handleCloseOutside, handleOpenPackage }
   }
 })
 </script>

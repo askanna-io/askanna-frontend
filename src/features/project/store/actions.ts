@@ -41,6 +41,8 @@ export const actions: ActionTree<projectState, RootState> = {
     commit(mutation.SET_PROJECT, project)
     commit(`${GENERAL_STORE}/${gMutation.SET_BREADCRUMB_PARAMS}`, { projectId: project.name }, { root: true })
     commit(mutation.SET_LOADING, { name: 'projectLoading', value: false })
+
+    return project
   },
 
   async [action.getProjects]({ state, commit }) {
@@ -167,7 +169,7 @@ export const actions: ActionTree<projectState, RootState> = {
     commit(mutation.UPDATE_PROJECTS, project)
     commit(
       'workspace/SET_WORKSPACE_PROJECTS',
-      { results: [{ ...project, lastPackage: { short_uuid: 'new-package' } }] },
+      { results: [{ ...project, lastPackage: { short_uuid: '' } }] },
       { root: true }
     )
 

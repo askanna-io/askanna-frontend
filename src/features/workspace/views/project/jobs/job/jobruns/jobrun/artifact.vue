@@ -85,14 +85,7 @@ export default defineComponent({
 
     const file = computed(() => jobRunStore.file.value)
 
-    const {
-      jobId,
-      jobRunId,
-      projectId,
-      workspaceId,
-      folderName = '',
-      packageId = 'new-package'
-    } = context.root.$route.params
+    const { jobId, jobRunId, projectId, workspaceId } = context.root.$route.params
 
     const sticked = computed(() => !projectStore.stickedVM.value)
 
