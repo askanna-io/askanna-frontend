@@ -35,7 +35,7 @@
             depressed
             text
             :to="{
-              name: 'workspace-project-package',
+              name: 'workspace-project-code',
               params: {
                 projectId: item.projectId,
                 packageId: item.packageId

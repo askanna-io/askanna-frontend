@@ -51,6 +51,7 @@
         :projectId="projectShortUuid"
         :packageId="packageShortUuid"
         :isUploadFinish="isUploadFinish"
+        @onCloseOutside="handleCloseOutside"
         @confirmationClosed="handleConfirmationClosed"
       />
     </v-col>
@@ -312,6 +313,8 @@ export default defineComponent({
     const handleCancel = () => context.emit('cancelUpload')
     const getIndex = () => Date.now()
 
+    const handleCloseOutside = () => context.emit('onCloseOutside')
+
     return {
       progress,
       draggable,
@@ -324,12 +327,13 @@ export default defineComponent({
       uploadContainer,
       projectShortUuid,
       packageShortUuid,
+      handleDeleteFile,
       showConfirmation,
       handleStartUpload,
+      handleCloseOutside,
       handleConfirmUpload,
       handleCancelUploadStarted,
       fileRecordsForUpload,
-      handleDeleteFile,
       getIndex,
       handleConfirmationClosed
     }

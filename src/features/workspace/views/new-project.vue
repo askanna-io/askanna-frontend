@@ -78,8 +78,8 @@ export default defineComponent({
       const project = await projectStore.createProjectFullWay(context.root.$route.params.workspaceId)
       if (project && project.short_uuid) {
         router.push({
-          name: 'workspace-project-package-new',
-          params: { projectId: project.short_uuid, workspaceId: project.workspace.short_uuid, packageId: 'new-package' }
+          name: 'workspace-project-code',
+          params: { projectId: project.short_uuid, workspaceId: project.workspace.short_uuid, packageId: '' }
         })
       }
     }

@@ -7,7 +7,12 @@
         </template>
       </package-toolbar>
       <v-expand-transition>
-        <resumable-upload @cancelUpload="handleReplace" class="py-2 px-4" :id="packageId" />
+        <resumable-upload
+          @cancelUpload="handleReplace"
+          @onCloseOutside="handleCloseOutside"
+          class="py-2 px-4"
+          :id="packageId"
+        />
       </v-expand-transition>
       <template v-if="isProcessing">
         <package-processing />
@@ -19,6 +24,7 @@
 <script>
 import { useWindowSize } from '@u3u/vue-hooks'
 import usePackages from '@packages/composition/usePackages'
+import useProjectStore from '@project/composition/useProjectStore'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import { ref, computed, defineComponent } from '@vue/composition-api'
 import PackageToolbar from '@/features/package/components/PackageToolbar'
@@ -38,11 +44,12 @@ export default defineComponent({
     usePackages(context)
     const { height } = useWindowSize()
     const packageStore = usePackageStore()
+    const projectStore = useProjectStore()
     const router = useRouterAskAnna(context)
     const breadcrumbs = usePackageBreadcrumbs(context)
 
     const isRaplace = ref(false)
-    const { workspaceId, projectId, packageId = 'new-package' } = context.root.$route.params
+    const { workspaceId, projectId, packageId = '' } = context.root.$route.params
 
     const calcHeight = computed(() => height.value - 370)
     const isProcessing = computed(() => packageStore.processingList.value.find(item => item.packageId === packageId))
@@ -51,9 +58,21 @@ export default defineComponent({
 
     const handeBackToPackageRoot = () => {
       router.push({
-        name: 'workspace-project-package',
+        name: 'workspace-project-code',
         params: { workspaceId, projectId, packageId }
       })
+    }
+
+    const handleCloseOutside = async () => {
+      const project = await projectStore.getProject(context.root.$route.params.projectId)
+      if (!project.package.short_uuid || !project.short_uuid) return
+
+      await packageStore.getPackage({
+        loading: true,
+        projectId: project.short_uuid,
+        packageId: project.package.short_uuid
+      })
+      isRaplace.value = false
     }
 
     return {
@@ -62,6 +81,7 @@ export default defineComponent({
       breadcrumbs,
       isProcessing,
       handleReplace,
+      handleCloseOutside,
       handeBackToPackageRoot
     }
   }

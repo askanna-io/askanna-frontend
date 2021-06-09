@@ -6,7 +6,8 @@
         v-if="tab.show"
         ripple
         :key="tab.id"
-        :to="{ name: tab.to, params: { title: `${tab.name} - ${projectName}`, ...routerParams } }"
+        @click="handleClick(tab.handler)"
+        :to="{ name: tab.to, params: { title: `${tab.name} - ${projectName}`, ...routerParams, ...tab.params } }"
       >
         {{ tab.name }}
       </v-tab>
@@ -14,7 +15,10 @@
   </v-tabs>
 </template>
 <script>
+import { invoke } from 'lodash'
 import { computed, defineComponent } from '@vue/composition-api'
+import useProjectStore from '@project/composition/useProjectStore'
+import usePackageStore from '@/features/package/composition/usePackageStore'
 
 export default defineComponent({
   name: 'ProjectMenu',
@@ -31,6 +35,9 @@ export default defineComponent({
   },
 
   setup(props, context) {
+    const packageStore = usePackageStore()
+    const projectStore = useProjectStore()
+
     const projectEditTabs = [
       {
         id: 0,
@@ -51,7 +58,9 @@ export default defineComponent({
         id: 1,
         name: 'Code',
         to: 'workspace-project-code',
-        show: !context.root.isNotBeta
+        show: !context.root.isNotBeta,
+        params: { folderName: '' },
+        handler: 'getProject'
       },
       {
         id: 2,
@@ -75,12 +84,31 @@ export default defineComponent({
       }
     ]
 
+    const projectId = computed(() => projectStore.project.value.short_uuid)
+    const packageId = computed(() => projectStore.project.value.package.short_uuid)
+
     const tabs = computed(() => {
       const currentTabs = props.isEditProjectView ? projectEditTabs : projectTabs
       return currentTabs.filter(item => item.show)
     })
 
-    return { tabs, routerParams: context.root.$route.params }
+    const handlers = {
+      getProject: async () => {
+        if (!projectId.value) return
+        await projectStore.getProject(context.root.$route.params.projectId)
+
+        if (!packageId.value) return
+        await packageStore.getPackage({
+          loading: true,
+          projectId: projectId.value,
+          packageId: packageId.value
+        })
+      }
+    }
+
+    const handleClick = handler => invoke(handlers, handler)
+
+    return { tabs, routerParams: context.root.$route.params, handleClick }
   }
 })
 </script>
