@@ -3,14 +3,7 @@
     <v-card-title>Description</v-card-title>
     <v-divider />
 
-    <ask-anna-description
-      class="mx-2"
-      preview
-      :onLiveMode="false"
-      :description="job.description"
-      @onSave="handleOnJobSave"
-      @onChangeDescription="handleChangeDescription"
-    />
+    <ask-anna-description class="mx-2" preview readonly :description="job.description" />
 
     <v-divider />
     <job-definition
@@ -73,12 +66,9 @@ export default defineComponent({
 
     const handleGoToCode = () =>
       router.push({
-        name: 'workspace-project-package',
+        name: 'workspace-project-code',
         params: { projectId, workspaceId, packageId: projectStore.lastPackage.value.short_uuid }
       })
-
-    const handleOnJobSave = () => jobStore.updateJob()
-    const handleChangeDescription = data => jobStore.changeJob(data)
 
     return {
       ...jobStore,
@@ -86,10 +76,7 @@ export default defineComponent({
       nextRun,
       schedules,
       lastPackage: projectStore.lastPackage,
-
-      handleGoToCode,
-      handleOnJobSave,
-      handleChangeDescription
+      handleGoToCode
     }
   }
 })

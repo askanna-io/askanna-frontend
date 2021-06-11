@@ -1,8 +1,8 @@
 <script>
 import ResultHTML from './types/ResultHTML'
 import ResultJSON from './types/ResultJSON'
-import ResultImage from './types/ResultImage'
 import ResultDownloadableFile from './types/ResultDownloadableFile'
+import PackageFileImage from '@/features/package/components/PackageFileImage'
 
 import { defineComponent } from '@vue/composition-api'
 
@@ -29,11 +29,11 @@ export default defineComponent({
       xml: ResultJSON,
       csv: ResultJSON,
       html: ResultHTML,
-      png: ResultImage,
-      jpg: ResultImage,
       json: ResultJSON,
-      jpeg: ResultImage,
       plain: ResultJSON,
+      png: PackageFileImage,
+      jpg: PackageFileImage,
+      jpeg: PackageFileImage,
       xls: ResultDownloadableFile,
       pdf: ResultDownloadableFile,
       xlsx: ResultDownloadableFile

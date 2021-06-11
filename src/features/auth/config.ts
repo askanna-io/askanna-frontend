@@ -3,6 +3,9 @@ export default {
     {
       path: '/',
       name: 'check-access',
+      meta: {
+        hideAppBarIcon: true
+      },
       component: () => import(/* webpackChunkName: "check-access" */ './views/check-access.vue')
     },
     {

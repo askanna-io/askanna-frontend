@@ -1,7 +1,7 @@
 <template>
   <span class="ask-anna-copy-text">
     <code v-if="showText" :class="styleClasses">{{ text }}</code>
-    <v-tooltip top>
+    <v-tooltip v-if="showTooltip" top>
       <template v-slot:activator="{ on }">
         <v-btn
           v-on="on"
@@ -49,6 +49,10 @@ export default defineComponent({
       default: () => 'px-2 mr-2 primary text--white'
     },
     showText: {
+      type: Boolean,
+      default: () => true
+    },
+    showTooltip: {
       type: Boolean,
       default: () => true
     },

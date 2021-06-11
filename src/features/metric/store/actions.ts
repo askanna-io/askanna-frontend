@@ -86,5 +86,9 @@ export const actions: ActionTree<metricState, RootState> = {
 
   async [ac.setIsFiltered]({ commit }, val) {
     commit(mt.SET_IS_FILTERED, val)
+  },
+
+  async [ac.clearMetric]({ commit }, val) {
+    commit(mt.CLEAR_METRIC, val)
   }
 }

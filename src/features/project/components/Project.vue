@@ -8,11 +8,11 @@
               @input="handleOnInput($event, 'name')"
               :value="projectData.name"
               :rules="[RULE.required('Project name is required')]"
-              autofocus
-              label="Project name"
-              outlined
               dense
+              autofocus
+              outlined
               required
+              label="Project name"
             />
           </v-col>
         </v-row>
@@ -21,7 +21,10 @@
             <ask-anna-description
               cleared
               outlined
+              onInputMode
+              :description="projectData.description"
               :title="'Project description (optional)'"
+              @onChange="handleOnChange"
               @onChangeDescription="handleOnInput($event, 'description')"
             />
           </v-col>
@@ -44,8 +47,16 @@
         </v-row>
         <v-row>
           <v-col cols="6">
-            <v-btn small outlined text color="secondary" class="ma-2 btn--hover" @click="handleCreate">
-              Create
+            <v-btn
+              text
+              small
+              outlined
+              color="secondary"
+              class="mr-2 btn--hover"
+              @click="handleCreate"
+              :disabled="isStateNotChanged"
+            >
+              {{ saveButtonText }}
             </v-btn>
             <v-btn small outlined text color="secondary" class="ma-2 btn--hover" @click="handleCancel">
               Cancel
@@ -67,24 +78,27 @@ export default defineComponent({
   props: {
     projectData: {
       type: Object,
-      default: function () {
-        return {
-          name: '',
-          workspace: '',
-          template: ''
-        }
-      }
+      default: () => ({
+        name: '',
+        template: '',
+        workspace: '',
+        short_uuid: ''
+      })
     },
     projectTemplates: {
       type: Array,
-      default: function () {
-        return []
-      }
+      default: () => []
+    },
+    saveButtonText: {
+      type: String,
+      default: () => 'Create'
     }
   },
 
   setup(props, context) {
     const validationRules = useValidationRules()
+
+    const isStateNotChanged = ref(true)
 
     const template = computed({
       get: () => props.projectData.template,
@@ -93,7 +107,10 @@ export default defineComponent({
     const isFormValid = ref(false)
     const newProjectForm = ref(null)
 
-    const handleOnInput = (value, path) => context.emit('handleOnInput', { path, value })
+    const handleOnInput = (value, path) => {
+      isStateNotChanged.value = false
+      context.emit('handleOnInput', { path, value })
+    }
 
     const handleCreate = () => {
       if (!newProjectForm.value.validate()) {
@@ -103,18 +120,22 @@ export default defineComponent({
     }
 
     const handleCancel = () => context.emit('handleCancel')
+    const handleOnChange = () => (isStateNotChanged.value = false)
 
     const reset = () => newProjectForm.value.reset()
     const resetValidation = () => newProjectForm.value.resetValidation()
 
     return {
-      isFormValid,
-      RULE: validationRules.RULES,
-      newProjectForm,
       template,
-      handleOnInput,
+      isFormValid,
+      newProjectForm,
+      isStateNotChanged,
+      RULE: validationRules.RULES,
+
       handleCreate,
-      handleCancel
+      handleCancel,
+      handleOnInput,
+      handleOnChange
     }
   }
 })

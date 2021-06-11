@@ -294,25 +294,25 @@ const jobRun = [
 
 const packageRoutes = [
   {
-    path: 'new-package',
-    component: () =>
-      import(/* webpackChunkName: "workspace-project-package-new" */ './views/project/package/new-package.vue'),
-    name: 'workspace-project-package-new'
-  },
-  {
-    path: ':packageId',
-    component: () =>
-      import(/* webpackChunkName: "workspace-project-package-uuid" */ './views/project/package/index.vue'),
+    path: '',
+    component: () => import(/* webpackChunkName: "workspace-project-code" */ './views/project/package/code.vue'),
     meta: {
-      breadcrumb: 'Code - :packageId'
+      useProjectPackageId: true,
+      hideAppBarIcon: true
     },
     children: [
       {
         path: '',
-        name: 'workspace-project-package',
-
-        component: () => import(/* webpackChunkName: "workspace-project-package" */ './views/project/package/uuid.vue'),
-        children: []
+        name: 'workspace-project-code',
+        components: {
+          default: () => import(/* webpackChunkName: "workspace-project-package" */ './views/project/package/uuid.vue'),
+          newPackage: () =>
+            import(/* webpackChunkName: "workspace-project-package-new" */ './views/project/package/new-package.vue')
+        },
+        meta: {
+          useProjectPackageId: true,
+          hideAppBarIcon: true
+        }
       },
       {
         path: 'history',
@@ -322,16 +322,41 @@ const packageRoutes = [
           ),
         name: 'workspace-project-code-package-history',
         meta: {
-          breadcrumb: 'History'
+          breadcrumb: 'History',
+          hideAppBarIcon: true
         }
+      }
+    ]
+  },
+  {
+    path: ':packageId',
+    component: () =>
+      import(/* webpackChunkName: "workspace-project-package-uuid" */ './views/project/package/index.vue'),
+    meta: {
+      breadcrumb: 'Code - :packageId',
+      hideAppBarIcon: true
+    },
+    children: [
+      {
+        path: '',
+        name: 'workspace-project-package',
+
+        component: () => import(/* webpackChunkName: "workspace-project-package" */ './views/project/package/uuid.vue'),
+        children: [],
+        meta: {
+          hideAppBarIcon: true
+        },
+        props: true
       },
+
       {
         path: ':folderName(.*)',
         component: () =>
           import(/* webpackChunkName: "workspace-project-package-folder" */ './views/project/package/uuid.vue'),
         name: 'workspace-project-package-folder',
         meta: {
-          breadcrumb: ':folderName'
+          breadcrumb: ':folderName',
+          hideAppBarIcon: true
         },
         children: []
       }
@@ -345,7 +370,8 @@ const JobRoutes = [
     component: () => import(/* webpackChunkName: "workspace-project-uuid-jobs" */ './views/project/jobs/jobs.vue'),
     name: 'workspace-project-jobs',
     meta: {
-      breadcrumb: 'Packages'
+      breadcrumb: 'Packages',
+      hideAppBarIcon: true
     }
   },
   {
@@ -407,6 +433,15 @@ const JobRoutes = [
         meta: {
           breadcrumb: 'Tokens'
         }
+      },
+      {
+        path: 'edit',
+        component: () =>
+          import(/* webpackChunkName: "workspace-project-job-edit" */ './views/project/jobs/job/edit.vue'),
+        name: 'workspace-project-job-edit',
+        meta: {
+          breadcrumb: 'Edit'
+        }
       }
     ]
   }
@@ -420,31 +455,57 @@ export default {
         import(/* webpackChunkName: "workspace-does-not-exist" */ './views/workspace-does-not-exist.vue'),
       name: 'workspace-does-not-exist',
       meta: {
-        title: 'Oops...we cannot find this workspace',
-        breadcrumb: 'Workspace does not exist'
+        hideAppBarIcon: true,
+        breadcrumb: 'Workspace does not exist',
+        title: 'Oops...we cannot find this workspace'
       }
     },
     {
       path: '/:workspaceId',
-      component: () => import(/* webpackChunkName: "workspace-index" */ './views/index.vue'),
+      component: () => import(/* webpackChunkName: "workspace" */ './views/index.vue'),
       meta: {
-        breadcrumb: 'Workspace - :workspaceId',
-        requiresAuth: true
+        requiresAuth: true,
+        hideAppBarIcon: true,
+        title: 'Workspace: workspaceId',
+        breadcrumb: 'Workspace - :workspaceId'
       },
       children: [
         {
           path: '',
-          component: () => import(/* webpackChunkName: "workspace" */ './views/workspace.vue'),
-          name: 'workspace',
+          component: () => import(/* webpackChunkName: "workspace-index" */ './views/workspace/index.vue'),
           meta: {
-            breadcrumb: 'Workspace'
-          }
+            hideAppBarIcon: true,
+            breadcrumb: 'Workspace',
+            title: 'Workspace: workspaceId'
+          },
+          children: [
+            {
+              path: '',
+              component: () => import(/* webpackChunkName: "workspace" */ './views/workspace/workspace.vue'),
+              name: 'workspace',
+              meta: {
+                hideAppBarIcon: true,
+                breadcrumb: 'Workspace',
+                title: 'Workspace: workspaceId'
+              }
+            },
+            {
+              path: 'edit',
+              component: () => import(/* webpackChunkName: "workspace-edit" */ './views/workspace/workspace-edit.vue'),
+              name: 'workspace-edit',
+              meta: {
+                hideAppBarIcon: true,
+                breadcrumb: 'Workspace edit'
+              }
+            }
+          ]
         },
         {
           path: 'people',
           component: () => import(/* webpackChunkName: "workspace-people" */ './views/people.vue'),
           name: 'workspace-people',
           meta: {
+            hideAppBarIcon: true,
             breadcrumb: 'People'
           }
         },
@@ -453,6 +514,7 @@ export default {
           component: () => import(/* webpackChunkName: "workspace-new-project" */ './views/new-project.vue'),
           name: 'workspace-new-project',
           meta: {
+            hideAppBarIcon: true,
             breadcrumb: 'New project - :workspaceId'
           }
         },
@@ -462,6 +524,7 @@ export default {
             import(/* webpackChunkName: "project-does-not-exist" */ './views/project-does-not-exist.vue'),
           name: 'project-does-not-exist',
           meta: {
+            hideAppBarIcon: true,
             title: 'Oops...we cannot find this project',
             breadcrumb: 'Project does not exist'
           }
@@ -471,13 +534,16 @@ export default {
           component: () => import(/* webpackChunkName: "workspace-profile" */ './views/workspace-profile.vue'),
           name: 'workspace-profile',
           meta: {
+            hideAppBarIcon: true,
             breadcrumb: 'Profile'
           }
         },
+
         {
           path: 'project/:projectId',
           component: () => import(/* webpackChunkName: "workspace-project" */ './views/project/index.vue'),
           meta: {
+            hideAppBarIcon: true,
             breadcrumb: 'Project - :projectId'
           },
 
@@ -486,10 +552,8 @@ export default {
               path: '',
               name: 'workspace-project',
               redirect: { name: 'workspace-project-code' },
-              component: () =>
-                import(/* webpackChunkName: "workspace-project-uuid-activity" */ './views/project/uuid-project.vue'),
               meta: {
-                breadcrumb: 'Project - :projectId'
+                hideAppBarIcon: true
               }
             },
             {
@@ -498,6 +562,7 @@ export default {
                 import(/* webpackChunkName: "workspace-project-uuid-activity" */ './views/project/activity.vue'),
               name: 'workspace-project-activity',
               meta: {
+                hideAppBarIcon: true,
                 breadcrumb: 'Activity'
               }
             },
@@ -506,7 +571,8 @@ export default {
               component: () =>
                 import(/* webpackChunkName: "workspace-project-uuid-jobs-index" */ './views/project/jobs/index.vue'),
               meta: {
-                breadcrumb: 'Jobs'
+                breadcrumb: 'Jobs',
+                hideAppBarIcon: true
               },
               children: JobRoutes
             },
@@ -516,6 +582,7 @@ export default {
               component: () =>
                 import(/* webpackChunkName: "workspace-project-variables" */ './views/project/variables.vue'),
               meta: {
+                hideAppBarIcon: true,
                 breadcrumb: 'Variables'
               }
             },
@@ -527,15 +594,18 @@ export default {
                 ),
               name: 'workspace-project-documentation',
               meta: {
+                hideAppBarIcon: true,
                 breadcrumb: 'Documentation'
               }
             },
             {
               path: 'code',
-              name: 'workspace-project-code',
               component: () =>
                 import(/* webpackChunkName: "workspace-project-package" */ './views/project/package.vue'),
-              children: packageRoutes
+              children: packageRoutes,
+              meta: {
+                hideAppBarIcon: true
+              }
             },
             {
               path: 'code-does-not-exist',
@@ -545,8 +615,19 @@ export default {
                 ),
               name: 'workspace-project-code-does-not-exist',
               meta: {
+                hideAppBarIcon: true,
                 title: 'Oops...we cannot find this package',
                 breadcrumb: 'Package does not exist'
+              }
+            },
+            {
+              path: 'edit',
+              name: 'workspace-project-edit',
+              component: () =>
+                import(/* webpackChunkName: "workspace-project-edit" */ './views/project/project-edit.vue'),
+              meta: {
+                breadcrumb: 'Edit',
+                hideAppBarIcon: true
               }
             }
           ]

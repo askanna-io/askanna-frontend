@@ -15,6 +15,8 @@ const api = apiStringify(serviceName)
 
 export const actions: ActionTree<projectState, RootState> = {
   async [action.getProject]({ commit }, uuid) {
+    commit(mutation.SET_LOADING, { name: 'projectLoading', value: true })
+
     let project
     try {
       project = await apiService({
@@ -38,6 +40,9 @@ export const actions: ActionTree<projectState, RootState> = {
 
     commit(mutation.SET_PROJECT, project)
     commit(`${GENERAL_STORE}/${gMutation.SET_BREADCRUMB_PARAMS}`, { projectId: project.name }, { root: true })
+    commit(mutation.SET_LOADING, { name: 'projectLoading', value: false })
+
+    return project
   },
 
   async [action.getProjects]({ state, commit }) {
@@ -164,7 +169,7 @@ export const actions: ActionTree<projectState, RootState> = {
     commit(mutation.UPDATE_PROJECTS, project)
     commit(
       'workspace/SET_WORKSPACE_PROJECTS',
-      { results: [{ ...project, lastPackage: { short_uuid: 'new-package' } }] },
+      { results: [{ ...project, lastPackage: { short_uuid: '' } }] },
       { root: true }
     )
 
@@ -173,23 +178,24 @@ export const actions: ActionTree<projectState, RootState> = {
     return project
   },
 
-  async [action.updateProject]({ commit, state }, uuid) {
+  async [action.updateProject]({ commit, state }, data) {
     let project
     try {
       project = await apiService({
         action: api.update,
         method: 'put',
         serviceName,
-        uuid,
-        data: state.project
+        uuid: state.project.short_uuid,
+        data
       })
     } catch (error) {
       logger.error(commit, 'Error on update project in updateProject action.\nError: ', error)
 
-      return
+      return project
     }
 
     commit(mutation.SET_PROJECT, project)
+    return project
   },
 
   [action.setProject]({ commit }, data) {

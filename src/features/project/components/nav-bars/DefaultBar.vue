@@ -13,7 +13,7 @@
       <v-card v-if="sticked" :class="{ 'ma-3': sticked }">
         <v-card-title transition="slide-y-transition">
           <v-toolbar dense color="white" flat class="br-r5">
-            <project-menu :projectName="project.name" />
+            <project-menu :projectName="project.name" :isEditProjectView="isEditProjectView" />
             <v-spacer />
           </v-toolbar>
         </v-card-title>
@@ -27,27 +27,30 @@
         </v-breadcrumbs-item>
       </template>
     </v-breadcrumbs>
-    <v-divider />
+    <v-divider v-if="!isEditProjectView" />
 
-    <v-card-title>
+    <v-card-title v-if="!isEditProjectView">
       <v-icon large left>
         mdi-semantic-web
       </v-icon>
       <span class="title font-weight-light">{{ project.name }}</span>
     </v-card-title>
 
-    <v-card-text class="ask-anna--editor ProseMirror">
-      <ask-anna-description readonly :description="project.description" />
-    </v-card-text>
+    <ask-anna-description v-if="!isEditProjectView" readonly :description="project.description" />
     <v-divider v-if="!sticked" />
     <v-card :flat="!sticked" :class="{ 'ma-3': sticked }">
       <v-slide-y-transition>
         <div v-if="!sticked">
           <v-toolbar dense color="white" flat class="br-r5 ma-3">
-            <project-menu :projectName="project.name" />
+            <project-menu :projectName="project.name" :isEditProjectView="isEditProjectView" />
             <v-spacer />
 
-            <project-menu-popup :project="project" :routeToRedirect="'workspace'" />
+            <project-menu-popup
+              v-if="!isEditProjectView"
+              :project="project"
+              :routeToRedirect="'workspace'"
+              :routeBackTo="'workspace-project'"
+            />
           </v-toolbar>
         </div>
       </v-slide-y-transition>
@@ -56,7 +59,7 @@
 </template>
 <script>
 import ProjectMenu from './parts/ProjectMenu'
-import { ref, defineComponent } from '@vue/composition-api'
+import { ref, computed, defineComponent } from '@vue/composition-api'
 import ProjectMenuPopup from '@/features/project/components/ProjectMenuPopup'
 
 export default defineComponent({
@@ -98,7 +101,9 @@ export default defineComponent({
       props.handleOnStick(data.sticked)
     }
 
-    return { onStick, refToolbar, routerParams: context.root.$route.params }
+    const isEditProjectView = computed(() => context.root.$route.name === 'workspace-project-edit')
+
+    return { onStick, refToolbar, isEditProjectView, routerParams: context.root.$route.params }
   }
 })
 </script>

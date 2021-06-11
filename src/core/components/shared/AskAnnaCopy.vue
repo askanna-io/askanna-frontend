@@ -109,7 +109,7 @@ export default defineComponent({
     })
 
     const rowWidth = computed(() => (delta.value * props.width) / 100 / 8)
-    const isSliced = computed(() => props.text.length > rowWidth.value)
+    const isSliced = computed(() => props.text?.length > rowWidth.value)
 
     const sliceText = computed(() =>
       props.smartSlice ? slicedText(props.text, rowWidth.value) : props.text.slice(0, props.show)

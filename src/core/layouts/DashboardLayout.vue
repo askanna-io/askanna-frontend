@@ -246,9 +246,8 @@ export default defineComponent({
     const workspaces = computed(() => workspaceStore.workspaces.value.results)
     const workspaceProfile = computed(() => workspaceStore.state.currentPeople.value)
 
+    const showAppBarIcon = computed(() => !context.root.$route.meta?.hideAppBarIcon)
     const workspaceShortUuid = computed(() => workspaceStore.workspace.value.short_uuid)
-
-    const showAppBarIcon = computed(() => context.root.$route.name !== 'workspace')
 
     const handleChangeWorkspace = ({ short_uuid }) => {
       if (workspaceShortUuid.value === short_uuid) return

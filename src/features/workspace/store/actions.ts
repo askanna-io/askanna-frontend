@@ -35,6 +35,28 @@ export const actions: ActionTree<workspaceState, RootState> = {
     commit(`${GENERAL_STORE}/${gMutation.SET_BREADCRUMB_PARAMS}`, { workspaceId: workspace.name }, { root: true })
   },
 
+  async [action.updateWorkspace]({ state, commit }, data) {
+    let workspace
+    try {
+      workspace = await apiService({
+        data,
+        serviceName,
+        method: 'put',
+        action: api.get,
+        uuid: state.workspace.short_uuid
+      })
+    } catch (error) {
+      logger.error(commit, 'Error on update workspace in getWorkspace action.\nError: ', error)
+
+      return workspace
+    }
+
+    commit(mutation.SET_WORKSPACE, workspace)
+    commit(`${GENERAL_STORE}/${gMutation.SET_BREADCRUMB_PARAMS}`, { workspaceId: workspace.name }, { root: true })
+
+    return workspace
+  },
+
   async [action.getWorkspaces]({ state, commit }) {
     commit(mutation.SET_LOADING, { workspaces: true })
     let workspaces

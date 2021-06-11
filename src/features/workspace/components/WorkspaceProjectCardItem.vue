@@ -3,11 +3,11 @@
     class="mx-auto h-100"
     :elevation="hover ? 16 : 2"
     :to="{
-      name: 'workspace-project-package',
+      name: 'workspace-project-code',
       params: {
         title: `${project.name} - ${workspaceName}`,
         projectId: project.short_uuid,
-        packageId: (project.package && project.package.short_uuid) || 'new-package'
+        packageId: (project.package && project.package.short_uuid) || ''
       }
     }"
   >

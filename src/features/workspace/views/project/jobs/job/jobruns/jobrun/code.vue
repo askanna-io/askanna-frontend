@@ -18,7 +18,7 @@
           </template>
           <template v-slot:rigth>
             <v-slide-y-transition>
-              <div v-if="!file">
+              <div v-if="!filePath">
                 <v-btn small outlined color="secondary" class="mr-1 btn--hover" @click="handleDownload()">
                   <v-icon color="secondary" left>mdi-download</v-icon>Download
                 </v-btn>
@@ -58,7 +58,7 @@ import useForceFileDownload from '@/core/composition/useForceFileDownload'
 import usePackageStore from '@/features/package/composition/usePackageStore'
 import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
 import usePackagesStore from '@/features/packages/composition/usePackagesStore'
-import { ref, watchEffect, onBeforeMount, onUnmounted, computed } from '@vue/composition-api'
+import { ref, watch, onBeforeMount, onUnmounted, computed } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'PackageUuid',
@@ -99,7 +99,7 @@ export default defineComponent({
       }
       const packageId = jobRunStore.jobRun.value.package.short_uuid
 
-      if (packageId === 'new-package') {
+      if (packageId === '') {
         return
       }
 
@@ -141,7 +141,9 @@ export default defineComponent({
     const currentPath = computed(() => {
       const pathArray = path.value.split('/')
       const fileName = pathArray.pop()
-      const current = packageStore.packageData.value.files.find(item => item.name === fileName)
+      const current = packageStore.packageData.value.files.find(
+        item => item.name === fileName && item.path === path.value
+      )
 
       return current
     })
@@ -197,11 +199,10 @@ export default defineComponent({
       })
     }
 
-    watchEffect(() => {
-      packageStore.resetFile()
+    watch(filePath, async filePath => {
+      if (filePath === '') return
 
-      if (filePath.value === '') return
-      packageStore.getFileSource(filePath.value)
+      packageStore.getFileSource(filePath)
     })
 
     return {

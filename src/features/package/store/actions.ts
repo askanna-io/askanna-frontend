@@ -58,6 +58,8 @@ export const actions: ActionTree<PackageState, RootState> = {
   },
 
   async [type.getFileSource]({ dispatch, state, commit }, path) {
+    commit(type.SET_LOADING, { name: 'packageLoading', value: true })
+
     if (!path) return commit(type.SET_FILE, '')
     if (!state.packageData) return commit(type.SET_FILE, '')
     commit(type.RESET_FILE_FILESOURCE)
@@ -81,6 +83,7 @@ export const actions: ActionTree<PackageState, RootState> = {
     const file = await fileSource.text()
 
     commit(type.SET_FILE, { file, fileSource })
+    commit(type.SET_LOADING, { name: 'packageLoading', value: false })
   },
 
   async [type.resetFile]({ commit }) {

@@ -23,7 +23,7 @@
           </template>
           <template v-slot:rigth>
             <v-slide-y-transition>
-              <div v-if="!file">
+              <div v-if="!filePath">
                 <v-btn small outlined color="secondary" class="mr-1 btn--hover" @click="handleDownload()">
                   <v-icon color="secondary" left>mdi-download</v-icon>Download
                 </v-btn>
@@ -61,7 +61,7 @@ import useProjectStore from '@project/composition/useProjectStore'
 import PackageFile from '@/features/package/components/PackageFile'
 import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
 import PackageToolbar from '@/features/package/components/PackageToolbar'
-import { watchEffect, onBeforeMount, computed } from '@vue/composition-api'
+import { watch, onBeforeMount, computed } from '@vue/composition-api'
 import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
 import useTriggerFileDownload from '@/core/composition/useTriggerFileDownload'
 
@@ -85,14 +85,7 @@ export default defineComponent({
 
     const file = computed(() => jobRunStore.file.value)
 
-    const {
-      jobId,
-      jobRunId,
-      projectId,
-      workspaceId,
-      folderName = '',
-      packageId = 'new-package'
-    } = context.root.$route.params
+    const { jobId, jobRunId, projectId, workspaceId } = context.root.$route.params
 
     const sticked = computed(() => !projectStore.stickedVM.value)
 
@@ -103,7 +96,9 @@ export default defineComponent({
     const currentPath = computed(() => {
       const pathArray = path.value.split('/')
       const fileName = pathArray.pop()
-      const current = jobRunStore.artifactData.value.files.find(item => item.name === fileName)
+      const current = jobRunStore.artifactData.value.files.find(
+        item => item.name === fileName && item.path === path.value
+      )
 
       return current
     })
@@ -176,11 +171,12 @@ export default defineComponent({
       })
     })
 
-    watchEffect(async () => {
+    watch(filePath, async filePath => {
       if (!currentPath.value || (currentPath.value && currentPath.value.is_dir)) await jobRunStore.resetFile()
 
-      if (filePath.value === '') return
-      await jobRunStore.getFileSource(filePath.value)
+      if (filePath === '') return
+
+      await jobRunStore.getFileSource(filePath)
     })
 
     const fileSource = computed(() => jobRunStore.fileSource.value)
