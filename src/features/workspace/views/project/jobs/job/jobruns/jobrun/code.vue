@@ -58,7 +58,7 @@ import useForceFileDownload from '@/core/composition/useForceFileDownload'
 import usePackageStore from '@/features/package/composition/usePackageStore'
 import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
 import usePackagesStore from '@/features/packages/composition/usePackagesStore'
-import { ref, watchEffect, onBeforeMount, onUnmounted, computed } from '@vue/composition-api'
+import { ref, watch, onBeforeMount, onUnmounted, computed } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'PackageUuid',
@@ -199,11 +199,10 @@ export default defineComponent({
       })
     }
 
-    watchEffect(() => {
-      packageStore.resetFile()
+    watch(filePath, async filePath => {
+      if (filePath === '') return
 
-      if (filePath.value === '') return
-      packageStore.getFileSource(filePath.value)
+      packageStore.getFileSource(filePath)
     })
 
     return {

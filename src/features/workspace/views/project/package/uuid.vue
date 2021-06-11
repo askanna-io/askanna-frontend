@@ -88,7 +88,7 @@ import useForceFileDownload from '@/core/composition/useForceFileDownload'
 import usePackageStore from '@/features/package/composition/usePackageStore'
 import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
 import usePackagesStore from '@/features/packages/composition/usePackagesStore'
-import { ref, watch, watchEffect, onBeforeMount, onUnmounted, computed } from '@vue/composition-api'
+import { ref, watch, onBeforeMount, onUnmounted, computed } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'PackageUuid',
@@ -118,7 +118,6 @@ export default defineComponent({
     const file = computed(() => packageStore.file.value)
     const sticked = computed(() => !projectStore.stickedVM.value)
     const { useProjectPackageId = false } = context.root.$route.meta
-    const packageLoading = computed(() => packageStore.packageLoading.value)
     const projectIdCd = computed(() => projectStore.project.value.short_uuid)
     const createdDate = computed(() =>
       moment.$moment(packageStore.packageData.value.created).format(' Do MMMM YYYY, h:mm:ss a')
@@ -251,14 +250,11 @@ export default defineComponent({
       }
     )
 
+    const packageLoading = computed(() => packageStore.packageLoading.value)
+
     const filePath = computed(() =>
       currentPath.value && !currentPath.value.is_dir && currentPath.value.name !== '' ? currentPath.value.path : ''
     )
-
-    watchEffect(async () => {
-      if (filePath.value === '') return
-      packageStore.getFileSource(filePath.value)
-    })
 
     onBeforeMount(async () => {
       await getPackage()
@@ -266,10 +262,17 @@ export default defineComponent({
         pollData()
       }
     })
-    watch(projectIdCd, async () => getPackage())
+
+    watch(projectIdCd, async () => !packageLoading.value && getPackage())
 
     onUnmounted(() => {
       clearInterval(polling.value)
+    })
+
+    watch(currentPath, async currentPath => {
+      packageStore.resetFile()
+      if (!filePath.value) return
+      packageStore.getFileSource(filePath.value)
     })
 
     return {
