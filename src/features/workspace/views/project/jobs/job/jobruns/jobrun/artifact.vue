@@ -61,7 +61,7 @@ import useProjectStore from '@project/composition/useProjectStore'
 import PackageFile from '@/features/package/components/PackageFile'
 import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
 import PackageToolbar from '@/features/package/components/PackageToolbar'
-import { watchEffect, onBeforeMount, computed } from '@vue/composition-api'
+import { watch, onBeforeMount, computed } from '@vue/composition-api'
 import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
 import useTriggerFileDownload from '@/core/composition/useTriggerFileDownload'
 
@@ -171,11 +171,12 @@ export default defineComponent({
       })
     })
 
-    watchEffect(async () => {
+    watch(filePath, async filePath => {
       if (!currentPath.value || (currentPath.value && currentPath.value.is_dir)) await jobRunStore.resetFile()
 
-      if (filePath.value === '') return
-      await jobRunStore.getFileSource(filePath.value)
+      if (filePath === '') return
+
+      await jobRunStore.getFileSource(filePath)
     })
 
     const fileSource = computed(() => jobRunStore.fileSource.value)

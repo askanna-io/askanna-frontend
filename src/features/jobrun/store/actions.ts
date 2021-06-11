@@ -336,6 +336,8 @@ export const actions: ActionTree<jobRunState, RootState> = {
   },
 
   async [type.action.getFileSource]({ dispatch, state, commit }, path) {
+    commit(type.mutation.SET_LOADING, { name: stateType.jobRunArtifactLoading, value: true })
+
     if (!path) return commit(type.mutation.SET_FILE, '')
     if (!state.artifactData) return commit(type.mutation.SET_FILE, '')
 
@@ -360,6 +362,7 @@ export const actions: ActionTree<jobRunState, RootState> = {
     const file = await fileSource.text()
 
     commit(type.mutation.SET_FILE, { file, fileSource })
+    commit(type.mutation.SET_LOADING, { name: stateType.jobRunArtifactLoading, value: false })
   },
 
   async [type.action.resetFile]({ commit }) {
