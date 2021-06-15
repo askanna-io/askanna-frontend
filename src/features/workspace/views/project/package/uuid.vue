@@ -212,7 +212,7 @@ export default defineComponent({
     const handleDownload = async () => {
       const packageData = packageStore.packageData.value
       const source = await packagesStore.downloadPackage({
-        projectId: packageData.project,
+        projectId,
         packageId: packageData.short_uuid
       })
       forceFileDownload.trigger({ source, name: packageData.filename })
