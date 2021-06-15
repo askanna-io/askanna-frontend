@@ -2,21 +2,28 @@
   <v-menu v-model="menu" :close-on-content-click="false" offset-y top>
     <template v-slot:activator="{ on }">
       <div v-on="on" class="cursor--pointer">
-        <textarea
-          readonly
-          cols="80"
-          :rows="calcRows"
-          v-model="previewJson"
-          class="noselect cursor--pointer"
-          :style="{ resize: 'none' }"
-        />
+        <v-tooltip top left :nudge-left="100">
+          <template v-slot:activator="{ on }">
+            <div v-on="on">
+              <textarea
+                readonly
+                cols="80"
+                :rows="calcRows"
+                v-model="previewJson"
+                class="noselect cursor--pointer"
+                :style="{ resize: 'none' }"
+              />
+            </div>
+          </template>
+          <span>Click to see the value</span>
+        </v-tooltip>
       </div>
     </template>
     <v-card>
       <v-app-bar dense height="40" flat>
         <v-spacer />
         <v-btn small outlined color="secondary" @click="handleCopy" class="mr-1 btn--hover">
-          <v-icon color="secondary" left>mdi-content-copy</v-icon>Copy JSON
+          <v-icon color="secondary" left>mdi-content-copy</v-icon>Copy
         </v-btn>
         <v-btn small icon @click="handleClose">
           <v-icon>mdi-close</v-icon>
