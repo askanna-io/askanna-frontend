@@ -53,6 +53,7 @@ export default defineComponent({
       float: MetricFloatType,
       string: MetricStringType,
       boolean: MetricBooleanType,
+      list: MetricDictionaryType,
       integer: MetricIntegerType,
       datetime: MetricDateTimeType,
       dictionary: MetricDictionaryType
