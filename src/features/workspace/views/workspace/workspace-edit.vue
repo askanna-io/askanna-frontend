@@ -22,6 +22,7 @@
               cleared
               outlined
               onInputMode
+              :headerHeight="215"
               :description="workspaceState.description"
               :title="'Workspace description (optional)'"
               @onChange="handleOnChange"

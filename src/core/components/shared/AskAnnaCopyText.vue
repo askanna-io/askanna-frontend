@@ -46,7 +46,7 @@ export default defineComponent({
     },
     styleClasses: {
       type: String,
-      default: () => 'px-2 mr-2 primary text--white'
+      default: () => 'px-2 mr-2 py-0 primary text--white'
     },
     showText: {
       type: Boolean,

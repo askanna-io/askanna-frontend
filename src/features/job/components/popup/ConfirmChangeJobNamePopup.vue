@@ -13,8 +13,8 @@
         </v-btn>
       </v-toolbar>
       <v-card-text>
-        You are about to change the name of job <b>{{ name }}</b>.
-        If you want to run a job in AskAnna via a configuration in
+        You are about to change the name of job <b>{{ name }}</b
+        >. If you want to run a job in AskAnna via a configuration in
         <ask-anna-copy-text styleClasses="px-2 primary text--white" :showTooltip="false" text="askanna.yml" />, you need
         to make sure that you have specified a job with the same name in your config file.
         <br />
@@ -24,7 +24,8 @@
         configuration, you will not be able to run this job till you updated the config file.
         <br />
         <br />
-        Please confirm that you want to change the name of job <b>{{ name }}</b>.
+        Please confirm that you want to change the name of job <b>{{ name }}</b
+        >.
       </v-card-text>
       <v-card-actions class="ml-5">
         <v-btn small outlined text color="secondary" class="mr-1 btn--hover" @click="confirmChange"
