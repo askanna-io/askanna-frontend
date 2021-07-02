@@ -28,6 +28,10 @@ export default defineComponent({
 })
 </script>
 <style lang="scss">
+#app .row {
+  margin-top: 0;
+  margin-bottom: 0;
+}
 .ask-anna-btn-loader {
   animation: loader 1s infinite;
   display: flex;
@@ -144,6 +148,16 @@ export default defineComponent({
   font-size: 16px !important;
 }
 
+.v-application .primary-text--hover:not([disabled]):hover {
+  color: var(--v-primary-base) !important;
+  caret-color: var(--v-primary-base) !important;
+}
+
+.v-application .white-text--hover:not([disabled]):hover {
+  color: #ffffff !important;
+  caret-color: #ffffff !important;
+}
+
 .v-chip.v-chip--clickable.btn--without-text.btn--hover:hover,
 .v-btn.btn--without-text.btn--hover:hover {
   color: #5d3eb2 !important;
@@ -158,6 +172,11 @@ export default defineComponent({
 .btn--hover:hover .v-avatar .v-avatar--left,
 .v-btn.btn--hover:hover i::before {
   color: #5d3eb2 !important;
+}
+
+.v-application code,
+.v-application kbd {
+  font-weight: 700 !important;
 }
 
 .v-application .ProseMirror code {
@@ -178,11 +197,8 @@ code.lang-shell {
   border-color: #5d3eb2 !important;
 }
 
-.ask-anna--editor code {
-  font-family: monospace !important;
-  background: none !important;
+.ask-anna-copy-text code {
   color: #ffffff !important;
-  font-size: 14px !important;
 }
 
 .img--rounded {

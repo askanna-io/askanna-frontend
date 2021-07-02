@@ -8,7 +8,7 @@ export default function (context: SetupContext) {
 
   const getTitle = function () {
     const title = computed(() => {
-      let pageTitle = context.root.$route.meta.title || context.root.$route.params.title || ''
+      let pageTitle = context?.root?.$route?.meta?.title || context.root.$route.params.title || ''
       // replace uuid to name
       Object.entries(context.root.$route.params).forEach(([key, value]) => {
         //@ts-expect-error: Let's ignore a single compiler error
