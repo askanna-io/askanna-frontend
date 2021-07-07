@@ -2,7 +2,7 @@
   <v-menu v-model="menu" :close-on-content-click="false" offset-y top>
     <template v-slot:activator="{ on }">
       <div v-on="on" class="cursor--pointer">
-        <v-tooltip top left :nudge-left="100">
+        <v-tooltip top left :nudge-left="100" content-class="opacity-1">
           <template v-slot:activator="{ on }">
             <div v-on="on">
               <textarea

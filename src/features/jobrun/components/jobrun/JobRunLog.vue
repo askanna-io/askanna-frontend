@@ -4,7 +4,7 @@
       <v-flex class="d-flex">
         <div class="mr-auto d-flex align-center"></div>
         <div>
-          <v-tooltip top>
+          <v-tooltip top content-class="opacity-1">
             <template v-slot:activator="{ on }">
               <v-btn
                 v-on="on"
@@ -21,7 +21,7 @@
             <span>Download</span>
           </v-tooltip>
 
-          <v-tooltip top>
+          <v-tooltip top content-class="opacity-1">
             <template v-slot:activator="{ on }">
               <v-btn
                 v-on="on"

@@ -119,32 +119,13 @@ export const actions: ActionTree<jobRunState, RootState> = {
     commit(type.mutation.SET_LOADING, { name: stateType.payLoadLoading, value: false })
   },
 
-  async [type.action.getJobRunResultPreview]({ commit }, uuid) {
+  async [type.action.getJobRunResultPreview]({ commit, state }, uuid) {
+    const { result } = state.jobRun
     commit(type.mutation.SET_LOADING, { name: stateType.resultLoading, value: true })
 
-    const allowedTextExts = ['plain', 'html', 'text/plain']
     const allowedFileExts = ['jpg', 'png', 'gif', 'jpeg']
-    const allowedToShowPreview = ['xml', 'xslx', 'csv', 'tsv', 'json', 'html', 'txt', 'text/plain', 'plain']
-
-    const exts: any = {
-      xml: 'xml',
-      jpg: 'jpg',
-      png: 'png',
-      gif: 'gif',
-      csv: 'csv',
-      tsv: 'tsv',
-      xls: 'xls',
-      pdf: 'pdf',
-      jpeg: 'jpeg',
-      html: 'html',
-      text: 'text',
-      json: 'json',
-      xlsx: 'xlsx',
-      plain: 'txt',
-      'text/plain': 'txt',
-      'vnd.ms-excel': 'xls',
-      'vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'xlsx'
-    }
+    const allowedTextExts = ['txt', 'plain', 'html', 'tsv']
+    const allowedToShowPreview = ['xml', 'xslx', 'csv', 'tsv', 'json', 'html', 'txt', 'plain']
 
     let response = {
       data: { type: '', size: 0 },
@@ -168,10 +149,9 @@ export const actions: ActionTree<jobRunState, RootState> = {
         action: api.getJobRunResult,
         transformResponse: [data => data]
       })
-      // refactore this after backend add result info on get jobrun endpoint
-      // get content length from content range, check if this a big file or not
-      contentExt = response.headers['content-type'].split(',')[0].split('/')[1]
-      contentLength = response.headers['content-range'].split('/')[1]
+
+      contentLength = result.size
+      contentExt = result.extension
 
       isResultJSON = contentExt === 'json'
       isJobRunResultBig = Number(contentLength) >= 100000
@@ -201,8 +181,6 @@ export const actions: ActionTree<jobRunState, RootState> = {
         isShowPreview = true
         isResultJSON = false
         isJobRunResultBig = false
-        contentLength = response.data?.size
-        contentExt = response.data.type.split('/')[1]
       }
     } catch (e) {
       logger.error(commit, 'Error on get preview of jobrun result  in getJobRunResultPreview action.\nError: ', e)
@@ -214,7 +192,6 @@ export const actions: ActionTree<jobRunState, RootState> = {
     if (allowedToShowPreview.includes(contentExt)) {
       isShowPreview = true
     }
-    contentExt = exts[contentExt]
 
     commit(type.SET_JOB_RUN_RESULT_PREVIEW, {
       data: response.data,

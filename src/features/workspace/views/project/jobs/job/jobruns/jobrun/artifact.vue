@@ -9,7 +9,7 @@
           sticky-offset="{top: 52, bottom: 10}"
         >
           <template v-slot:left>
-            <v-tooltip top>
+            <v-tooltip top content-class="opacity-1">
               <template v-slot:activator="{ on }">
                 <div v-on="on">
                   <a v-if="currentPath" @click="handeBackToPackageRoot" class="text-body-2"

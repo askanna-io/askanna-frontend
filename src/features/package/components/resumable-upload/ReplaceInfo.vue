@@ -7,7 +7,7 @@
         <p>
           If you want to replace this code package, you are in the right place. Below you can find instructions on how
           you can use the AskAnna CLI (<code class="px-2 mr-2 text-primary">{{ cliInstall }}</code>
-          <v-tooltip top>
+          <v-tooltip top content-class="opacity-1">
             <template v-slot:activator="{ on }">
               <v-btn x-small v-on="on" outlined color="secondary" @click.stop="handleCopy(cliInstall)">
                 <v-icon small color="secondary">mdi-content-copy</v-icon>Copy
@@ -24,7 +24,7 @@
         <div>COMMAND LINE INSTRUCTIONS</div>
         <p>
           If you have installed the AskAnna CLI (<code class="px-2 mr-2 text-primary">{{ cliInstall }}</code>
-          <v-tooltip top>
+          <v-tooltip top content-class="opacity-1">
             <template v-slot:activator="{ on }">
               <v-btn x-small v-on="on" outlined color="secondary" @click.stop="handleCopy(cliInstall)">
                 <v-icon small color="secondary">mdi-content-copy</v-icon>Copy
@@ -46,7 +46,7 @@
         </p>
         <p>
           <code class="px-2 mr-2 text-primary">{{ projectUrl }}</code>
-          <v-tooltip top>
+          <v-tooltip top content-class="opacity-1">
             <template v-slot:activator="{ on }">
               <v-btn x-small v-on="on" outlined color="secondary" @click.stop="handleCopy(projectUrl)">
                 <v-icon small color="secondary">mdi-content-copy</v-icon>Copy
@@ -58,7 +58,7 @@
         <p>
           In your terminal, make sure you are in one of the project directories. Now you can run
           <code class="px-2 mr-2">{{ askannaPush }}</code>
-          <v-tooltip top>
+          <v-tooltip top content-class="opacity-1">
             <template v-slot:activator="{ on }">
               <v-btn v-on="on" x-small outlined color="secondary" @click.stop="handleCopy(askannaPush)">
                 <v-icon small color="secondary">mdi-content-copy</v-icon>Copy
@@ -68,7 +68,7 @@
           </v-tooltip>
           and follow the instructions in the terminal. If you don’t want to confirm that you want to replace the current
           package version, you can use <code class="px-2 mr-2">{{ askannaPushForce }}</code>
-          <v-tooltip top>
+          <v-tooltip top content-class="opacity-1">
             <template v-slot:activator="{ on }">
               <v-btn v-on="on" x-small outlined color="secondary" @click.stop="handleCopy(askannaPushForce)">
                 <v-icon small color="secondary">mdi-content-copy</v-icon>Copy
@@ -80,7 +80,7 @@
         <p>
           Optionally you can add a description to the version you push via
           <code class="px-2 mr-2">{{ askannaPushWithMessage }}</code>
-          <v-tooltip top>
+          <v-tooltip top content-class="opacity-1">
             <template v-slot:activator="{ on }">
               <v-btn v-on="on" x-small outlined color="secondary" @click.stop="handleCopy(askannaPushWithMessage)">
                 <v-icon small color="secondary">mdi-content-copy</v-icon>Copy

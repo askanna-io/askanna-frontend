@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-tooltip top left v-if="!masked" content-class="AskAnna-copy-tooltip">
+    <v-tooltip top left v-if="!masked" content-class="AskAnna-copy-tooltip opacity-1">
       <template v-slot:activator="{ on, value }">
         <div v-on="on">
           {{ prefix }} {{ sliceText }}
@@ -13,7 +13,7 @@
           >
             <v-icon>mdi-chevron-{{ expand ? 'up' : 'down' }}</v-icon>
           </v-btn>
-          <v-tooltip v-if="showCopyButton" right>
+          <v-tooltip v-if="showCopyButton" right content-class="opacity-1">
             <template v-slot:activator="{ on }">
               <v-btn icon text x-small v-on="on" v-show="value" @click.stop="handleCopy(text)"
                 ><v-icon>mdi-content-copy</v-icon></v-btn

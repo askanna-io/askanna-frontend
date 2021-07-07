@@ -89,20 +89,20 @@ export const api: ApiSettings = {
       stop: id => `job/${id}/stop/`,
       result: id => `job/${id}/result/`,
       runs: id => `job/${id}/runs/`,
-      getJobRun: id => `jobrun/${id}/`,
+      getJobRun: id => `runinfo/${id}/`,
       jobrunStatus: id => `status/${id}/`,
-      getJobRunPayload: ({ jobRunShortId, payloadUuid }) => `jobrun/${jobRunShortId}/payload/${payloadUuid}/`
+      getJobRunPayload: ({ jobRunShortId, payloadUuid }) => `runinfo/${jobRunShortId}/payload/${payloadUuid}/`
     },
     jobrun: {
-      get: id => `jobrun/${id}/`,
+      get: id => `runinfo/${id}/`,
       runs: id => `job/${id}/runs/`,
-      getJobRun: id => `jobrun/${id}/`,
+      getJobRun: id => `runinfo/${id}/`,
       getJobRunResult: id => `result/${id}/`,
       getJobRunLog: id => `log/${id}/`,
       getDownloadLink: ({ jobRunShortId, artifactShortId }) =>
-        `jobrun/${jobRunShortId}/artifact/${artifactShortId}/download/`,
-      getJobRunPayload: ({ jobRunShortId, payloadUuid }) => `jobrun/${jobRunShortId}/payload/${payloadUuid}/`,
-      getJobRunArtifact: ({ jobRunShortId, artifactShortId }) => `jobrun/${jobRunShortId}/artifact/${artifactShortId}/`
+        `runinfo/${jobRunShortId}/artifact/${artifactShortId}/download/`,
+      getJobRunPayload: ({ jobRunShortId, payloadUuid }) => `runinfo/${jobRunShortId}/payload/${payloadUuid}/`,
+      getJobRunArtifact: ({ jobRunShortId, artifactShortId }) => `runinfo/${jobRunShortId}/artifact/${artifactShortId}/`
     },
     workspace: {
       get: id => `workspace/${id}/`,

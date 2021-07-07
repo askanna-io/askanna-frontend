@@ -36,6 +36,20 @@ export default function (context: SetupContext) {
     return millisecondsToStr(d, params)
   }
 
+  const durationHumanizeBySecond = function (
+    seconds: string,
+    params: MillisecondsToStrParams = {
+      showSeconds: true,
+      showLessMinuteText: false,
+      minuteSeparation: ', ',
+      secondSeparation: ' and '
+    }
+  ) {
+    const d = moment.duration(seconds, 'seconds').asMilliseconds()
+
+    return millisecondsToStr(d, params)
+  }
+
   const millisecondsToStr = function (milliseconds: number, params: MillisecondsToStrParams) {
     const { showSeconds = true, showLessMinuteText = true, minuteSeparation = ' and ', secondSeparation = '' } = params
 
@@ -106,5 +120,14 @@ export default function (context: SetupContext) {
 
   const checkIfTimeZoneEq = (timezone: string) => timezone !== moment.tz.guess()
 
-  return { runTimeHours, ago, seconds, $moment: moment, durationHumanize, nextClosestData, checkIfTimeZoneEq }
+  return {
+    runTimeHours,
+    ago,
+    seconds,
+    $moment: moment,
+    durationHumanize,
+    durationHumanizeBySecond,
+    nextClosestData,
+    checkIfTimeZoneEq
+  }
 }

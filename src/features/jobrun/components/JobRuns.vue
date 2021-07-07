@@ -17,11 +17,11 @@
       <tr>
         <td class="text-start">
           <router-link class="table-link table-link--unformated" :to="routeLinkParams({ item })">
-            <v-tooltip top>
+            <v-tooltip top content-class="opacity-1">
               <template v-slot:activator="{ on, value }">
                 <div v-on="on">
                   <v-btn class="px-0" text small>#{{ item.short_uuid.slice(0, 4) }}</v-btn>
-                  <v-tooltip right>
+                  <v-tooltip right content-class="opacity-1">
                     <template v-slot:activator="{ on }">
                       <v-btn icon text x-small v-on="on" v-show="value" @click.prevent="handleCopy(item.short_uuid)"
                         ><v-icon>mdi-content-copy</v-icon></v-btn
@@ -158,7 +158,7 @@ export default defineComponent({
       },
       {
         text: 'Timing',
-        width: '265px',
+        width: '270px',
         sortable: false,
         value: 'runtime',
         class: 'text-left text-subtitle-2 font-weight-bold h-20'
@@ -197,17 +197,7 @@ export default defineComponent({
       )
     }
 
-    const calculateDuration = item => {
-      const currentTime = new Date().toTimeString()
-      if (['PENDING', 'IN_PROGRESS', 'SUBMITTED'].indexOf(item.status) !== -1) {
-        return moment.durationHumanize(item.created, moment.$moment())
-      }
-
-      if (['COMPLETED', 'SUCCESS', 'FAILURE', 'FAILED'].indexOf(item.status) !== -1) {
-        return moment.durationHumanize(item.created, item.modified)
-      }
-      return ''
-    }
+    const calculateDuration = item => moment.durationHumanizeBySecond(item.duration)
 
     const routeLinkParams = ({ item, name = 'workspace-project-jobs-job-jobrun-overview' }) => {
       return {

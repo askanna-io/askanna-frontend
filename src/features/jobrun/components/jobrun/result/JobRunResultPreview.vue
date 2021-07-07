@@ -28,6 +28,7 @@ export default defineComponent({
       txt: ResultJSON,
       xml: ResultJSON,
       csv: ResultJSON,
+      tsv: ResultJSON,
       html: ResultHTML,
       json: ResultJSON,
       plain: ResultJSON,

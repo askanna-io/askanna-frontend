@@ -6,7 +6,7 @@
           Payload
         </div>
         <div>
-          <v-tooltip top>
+          <v-tooltip top content-class="opacity-1">
             <template v-slot:activator="{ on }">
               <v-btn
                 small
@@ -23,7 +23,7 @@
             <span>Download raw</span>
           </v-tooltip>
 
-          <v-tooltip top>
+          <v-tooltip top content-class="opacity-1">
             <template v-slot:activator="{ on }">
               <v-btn
                 v-on="on"
@@ -40,7 +40,7 @@
             <span>Download formated</span>
           </v-tooltip>
 
-          <v-tooltip top>
+          <v-tooltip top content-class="opacity-1">
             <template v-slot:activator="{ on }">
               <v-btn
                 v-on="on"

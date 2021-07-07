@@ -4,7 +4,7 @@
       <v-col cols="12" class="pt-0 pb-0">
         <package-toolbar :breadcrumbs="breadcrumbs" v-sticky="sticked" sticky-offset="{top: 52, bottom: 10}">
           <template v-slot:left>
-            <v-tooltip top>
+            <v-tooltip top content-class="opacity-1">
               <template v-slot:activator="{ on }">
                 <div v-on="on">
                   <a v-if="currentPath" @click="handeBackToPackageRoot" class="text-body-2"
@@ -215,7 +215,7 @@ export default defineComponent({
         projectId,
         packageId: packageData.short_uuid
       })
-      forceFileDownload.trigger({ source, name: packageData.filename })
+      forceFileDownload.trigger({ source, name: `code_${packageData.short_uuid}_${packageData.filename}` })
     }
 
     const handleReplace = () => (isRaplace.value = !isRaplace.value)

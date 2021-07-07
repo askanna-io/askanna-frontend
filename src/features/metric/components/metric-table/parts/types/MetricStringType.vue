@@ -1,5 +1,5 @@
 <template>
-  <v-tooltip top :nudge-left="nudgeLeft">
+  <v-tooltip top :nudge-left="nudgeLeft" content-class="opacity-1">
     <template v-slot:activator="{ on }">
       <div v-on="on" ref="divRef" :style="divStyles">
         {{ metricRow.value }}
