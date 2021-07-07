@@ -6,9 +6,9 @@
       </div>
     </template>
     <template v-if="fullMode">
-      <div>Image name: {{ value.image.name }}</div>
-      <div>Image tag: {{ value.image.tag || 'not provided' }}</div>
-      <div>Image digest: {{ value.image.digest }}</div>
+      <div>Image name: {{ imageComputed.name }}</div>
+      <div>Image tag: {{ imageComputed.tag || 'not provided' }}</div>
+      <div>Image digest: {{ imageComputed.digest }}</div>
       <div>Time zone: {{ value.timezone }}</div>
     </template>
     <template v-else>
@@ -59,9 +59,15 @@ export default defineComponent({
     const envName = computed(() =>
       value.image?.tag && value.image?.name ? `${value.image?.name}:${value.image?.tag}` : ''
     )
+
+    const imageComputed = computed(() => ({
+      name: value.image?.name || '',
+      tag: value.image?.tag || '',
+      digest: value.image?.digest || ''
+    }))
     const envNameSliced = computed(() => slicedStartText(envName.value || value.name || value.image?.name, 35))
 
-    return { envNameSliced }
+    return { envNameSliced, imageComputed }
   }
 })
 </script>
