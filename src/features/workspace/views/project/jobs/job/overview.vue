@@ -7,6 +7,7 @@
 
     <v-divider />
     <job-definition
+      v-if="job.short_uuid"
       :job="job"
       :nextRun="nextRun"
       :schedules="schedules"
@@ -28,7 +29,7 @@ import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import JobDefinition from '@job/components/overview/JobDefinition'
 import JobRunning from '@/features/job/components/overview/JobRunning'
 import useProjectStore from '@/features/project/composition/useProjectStore'
-import { onBeforeMount, defineComponent, computed } from '@vue/composition-api'
+import { watch, onBeforeMount, defineComponent, computed } from '@vue/composition-api'
 
 export default defineComponent({
   components: {
@@ -46,11 +47,15 @@ export default defineComponent({
 
     const { jobId, workspaceId, projectId } = context.root.$route.params
 
-    onBeforeMount(async () => {
-      await jobStore.resetStore()
-      await jobRunStore.resetStore()
-      await jobStore.getJob(jobId)
-      await projectStore.getLastPackage(projectId)
+    onBeforeMount(() => {
+      const fetchData = async () => {
+        await jobStore.resetStore()
+        await jobRunStore.resetStore()
+        await jobStore.getJob(jobId)
+        await projectStore.getLastPackage(projectId)
+      }
+
+      fetchData()
     })
 
     const job = computed(() => jobStore.job.value)

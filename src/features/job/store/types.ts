@@ -24,8 +24,10 @@ interface Job {
   title: string
   status: string
   created: string
+  timezone: string
   modified: string
   short_uuid: string
+  environment: string
   description: string
   schedules?: Schedule[]
 }
@@ -107,7 +109,9 @@ export class JobModel {
       status: '',
       created: '',
       modified: '',
+      timezone: '',
       schedules: [],
+      environment: '',
       short_uuid: '',
       description: ''
     }

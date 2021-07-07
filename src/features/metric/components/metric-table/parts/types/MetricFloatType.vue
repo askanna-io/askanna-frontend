@@ -1,5 +1,5 @@
 <template>
-  <v-tooltip top left :nudge-left="nudgeLeft">
+  <v-tooltip top left :nudge-left="nudgeLeft" content-class="opacity-1">
     <template v-slot:activator="{ on }">
       <div v-on="on" ref="divRef">
         {{ slicedNumber }}

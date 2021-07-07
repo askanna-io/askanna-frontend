@@ -1,7 +1,7 @@
 <template>
   <span class="ask-anna-copy-text">
     <code v-if="showText" :class="styleClasses">{{ text }}</code>
-    <v-tooltip v-if="showTooltip" top>
+    <v-tooltip v-if="showTooltip" top content-class="opacity-1">
       <template v-slot:activator="{ on }">
         <v-btn
           v-on="on"

@@ -42,8 +42,9 @@ export interface Package {
 
 export interface JobRun {
   name: string
-  description: string
   uuid: string
+  duration: number
+  description: string
   short_uuid: string
   payload: {
     duration: number
@@ -78,6 +79,24 @@ export interface JobRun {
   }
   trigger: {
     name: string
+  }
+  result: {
+    extension: string
+    lines: number
+    mimetype: string
+    original_name: string
+    size: number
+  }
+  environment: {
+    description?: string
+    image: {
+      digest: string
+      name: string
+      tag: string
+    }
+    name: string
+    label?: string
+    timezone: string
   }
 }
 
@@ -168,6 +187,7 @@ export class JobRunModel {
     return {
       uuid: '',
       name: '',
+      duration: 0,
       description: '',
       short_uuid: '',
       payload: {
@@ -213,7 +233,21 @@ export class JobRunModel {
       count: 0,
       keys: [],
       labels: [],
-      size: 0
+      size: 0,
+      result: {
+        size: 0,
+        lines: 0,
+        mimetype: '',
+        extension: '',
+        original_name: ''
+      },
+      environment: {
+        name: '',
+        label: '',
+        timezone: '',
+        description: '',
+        image: { name: '', tag: '', digest: '' }
+      }
     }
   }
 }

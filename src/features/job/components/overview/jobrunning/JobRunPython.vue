@@ -6,7 +6,7 @@
           Shell
         </div>
         <div>
-          <v-tooltip top>
+          <v-tooltip top content-class="opacity-1">
             <template v-slot:activator="{ on }">
               <v-btn class="mr-1 btn--hover" small v-on="on" outlined color="secondary" @click="handleCopy()">
                 <v-icon left color="secondary">mdi-content-copy</v-icon>Copy

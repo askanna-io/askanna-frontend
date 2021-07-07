@@ -3,7 +3,7 @@
     <v-card-title>Definition</v-card-title>
     <v-container class="mx-1 py-0" fluid>
       <v-row>
-        <v-col cols="2" sm="6">
+        <v-col cols="2" :sm="job.schedules.length ? 6 : 12">
           <v-row>
             <v-col cols="12"><JobRunInfoCopyText text="SUUID" :value="job.short_uuid" /></v-col>
             <v-col cols="12">
@@ -18,23 +18,31 @@
                   {{ lastPackage.short_uuid }}</v-btn
                 >
                 <ask-anna-copy-text
-                  :text="lastPackage.short_uuid"
                   :showText="false"
                   :iconColor="'grey lighten-2'"
                   :buttonType="{ text: true }"
+                  :text="lastPackage.short_uuid"
                   :styleClasses="'px-0 white font-weight-regular text--regular body-1'"
                 />
               </div>
             </v-col>
-            <v-col cols="12"> <span>Environment: </span>{{ job.environment }} </v-col>
+            <v-col cols="12"
+              ><job-run-info-env
+                text="Environment"
+                :fullMode="false"
+                :value="environment"
+                :nudgeLeft="nudgeLeft"
+                :fullValue="!job.schedules.length"
+              />
+            </v-col>
           </v-row>
         </v-col>
         <v-col cols="2" sm="6">
           <v-row>
             <v-col v-if="nextRun.datatime" cols="12">
-              <v-tooltip top left>
+              <v-tooltip top left content-class="opacity-1">
                 <template v-slot:activator="{ on }">
-                  <span class="hover-text" v-on="on"><span> Next run at </span>{{ nextRun.datatime }}</span>
+                  <span class="hover-text" v-on="on"><span>Next run at </span>{{ nextRun.datatime }}</span>
                 </template>
                 <span>which is {{ prefix }}{{ nextRun.fromNow }}</span>
               </v-tooltip>
@@ -44,7 +52,7 @@
                 <span>{{ title }}:</span>
                 <ul class="list--unformated">
                   <li class="hover-text" v-for="(item, i) in schedules" :key="i" height="20">
-                    <v-tooltip top left :content-class="'opacity-1'">
+                    <v-tooltip top left content-class="opacity-1">
                       <template v-slot:activator="{ on, value }">
                         <span class="hover-text" v-on="on">
                           <template v-if="isMultipleSchedules"
@@ -69,7 +77,7 @@
                         <span>Definition: {{ item.raw_definition }}</span
                         ><br />
                         <template>
-                          <span>Timezone: {{ item.cron_timezone }}</span
+                          <span>Time zone: {{ item.cron_timezone }}</span
                           ><br />
                         </template>
                         <span>Next:{{ item.next_run }}</span>
@@ -87,20 +95,22 @@
 </template>
 
 <script>
-import JobRunInfoCopyText from '@/features/jobrun/components/jobrun/parts/JobRunInfoCopyText'
 import { computed, defineComponent } from '@vue/composition-api'
+import JobRunInfoEnv from '@/features/jobrun/components/jobrun/parts/JobRunInfoEnv'
+import JobRunInfoCopyText from '@/features/jobrun/components/jobrun/parts/JobRunInfoCopyText'
 
 export default defineComponent({
   name: 'JobDefinition',
 
-  components: { JobRunInfoCopyText },
+  components: { JobRunInfoEnv, JobRunInfoCopyText },
 
   props: {
     job: {
       type: Object,
       default: () => {
         return {
-          env_variables: ''
+          timezone: '',
+          environment: ''
         }
       }
     },
@@ -134,12 +144,15 @@ export default defineComponent({
     const isMultipleSchedules = computed(() => props.job.schedules.length > 1)
     const title = computed(() => (isMultipleSchedules.value ? 'Schedules' : 'Schedule'))
     const prefix = computed(() => (props.nextRun.fromNow === 'within a minute' ? '' : 'in '))
+    const environment = computed(() => ({ name: props.job.environment, timezone: props.job.timezone }))
+
+    const nudgeLeft = computed(() => (environment.value.name.length > 30 ? 0 : 150))
 
     const getColor = active => (active ? 'primary' : 'grey lighten-2')
 
     const handleGoToCode = () => context.emit('handleGoToCode')
 
-    return { title, prefix, getColor, isMultipleSchedules, handleGoToCode }
+    return { title, prefix, nudgeLeft, environment, getColor, isMultipleSchedules, handleGoToCode }
   }
 })
 </script>

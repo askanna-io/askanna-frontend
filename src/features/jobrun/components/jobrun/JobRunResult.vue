@@ -98,6 +98,7 @@
 </template>
 <script>
 import { useWindowSize } from '@u3u/vue-hooks'
+import { JobRun, JobRunModel } from '../../store/types'
 import usePrettyJSON from '@/core/composition/usePrettyJSON'
 import useJobRunStore from '../../composition/useJobRunStore'
 import JobRunResultPreview from './result/JobRunResultPreview'
@@ -111,9 +112,16 @@ import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgr
 export default defineComponent({
   name: 'JobRunResult',
 
+  props: {
+    jobRun: {
+      type: Object,
+      default: new JobRunModel().state
+    }
+  },
+
   components: { TheHighlight, JobRunResultPreview, AskAnnaLoadingProgress },
 
-  setup(_, context) {
+  setup(props, context) {
     const snackBar = useSnackBar()
     const { height } = useWindowSize()
     const prettyJSON = usePrettyJSON()
@@ -184,8 +192,10 @@ export default defineComponent({
 
       forceFileDownload.trigger({
         source: jobRunResultRaw.value,
-        name: `run_${jobRunStore.jobRun.value.short_uuid}_result.${jobRunResultExt.value}`
+        name: `run_${jobRunStore.jobRun.value.short_uuid}_result_${jobRunStore.jobRun.value.result.original_name}`
       })
+
+      //run_{run_suuid}_result_{original_name}
     }
 
     const handleCopy = async () => {

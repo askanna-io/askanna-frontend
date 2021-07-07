@@ -15,7 +15,7 @@
           <template v-slot:top>
             <package-toolbar v-sticky="sticked" sticky-offset="{top: 52, bottom: 10}" :breadcrumbs="breadcrumbs">
               <template v-slot:left>
-                <v-tooltip top>
+                <v-tooltip top content-class="opacity-1">
                   <template v-slot:activator="{ on }">
                     <div v-on="on">
                       <a @click="handeBackToPackageRoot" class="text-body-2"
@@ -29,7 +29,7 @@
             </package-toolbar>
           </template>
           <template v-slot:item.filename="{ item }">
-            <v-tooltip top>
+            <v-tooltip top content-class="opacity-1">
               <template v-slot:activator="{ on }">
                 <div v-on="on">
                   {{ slicedText(item.filename, maxLength) }}
@@ -39,11 +39,11 @@
             </v-tooltip>
           </template>
           <template v-slot:item.short_uuid="{ item }">
-            <v-tooltip top>
+            <v-tooltip top content-class="opacity-1">
               <template v-slot:activator="{ on, value }">
                 <div v-on="on">
                   <v-btn class="px-0" text small>#{{ item.short_uuid.slice(0, 4) }}</v-btn>
-                  <v-tooltip right>
+                  <v-tooltip right content-class="opacity-1">
                     <template v-slot:activator="{ on }">
                       <v-btn icon text x-small v-on="on" v-show="value" @click.stop="handleCopy(item.short_uuid)"
                         ><v-icon>mdi-content-copy</v-icon></v-btn
@@ -60,7 +60,7 @@
             {{ $moment(item.created).format(' Do MMMM YYYY, h:mm:ss a') }}
           </template>
           <template v-slot:item.created_by="{ item }">
-            <v-tooltip top>
+            <v-tooltip top content-class="opacity-1">
               <template v-slot:activator="{ on }">
                 <div v-on="on">
                   {{ slicedText(item.created_by.name, maxLength) }}
@@ -70,11 +70,11 @@
             </v-tooltip>
           </template>
           <template v-slot:item.description="{ item }">
-            <v-tooltip top>
+            <v-tooltip top content-class="opacity-1">
               <template v-slot:activator="{ on, value }">
                 <div v-on="on">
                   {{ slicedText(item.description, maxLength) }}
-                  <v-tooltip right>
+                  <v-tooltip right content-class="opacity-1">
                     <template v-slot:activator="{ on }">
                       <v-btn icon text x-small v-on="on" v-show="value"></v-btn>
                     </template>
@@ -85,7 +85,7 @@
             </v-tooltip>
           </template>
           <template v-slot:item.uuid="{ item }">
-            <v-tooltip top>
+            <v-tooltip top content-class="opacity-1">
               <template v-slot:activator="{ on }">
                 <div v-on="on">
                   <v-btn outlined label small class="btn--hover" color="secondary" @click.stop="handleDownload(item)">
@@ -219,7 +219,7 @@ export default defineComponent({
         projectId: packageData.project.short_uuid,
         packageId: packageData.short_uuid
       })
-      forceFileDownload.trigger({ source, name: packageData.filename })
+      forceFileDownload.trigger({ source, name: `code_${packageData.short_uuid}_${packageData.filename}` })
     }
 
     const handeBackToPackageRoot = () => {
