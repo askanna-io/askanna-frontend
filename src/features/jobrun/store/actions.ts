@@ -239,6 +239,8 @@ export const actions: ActionTree<jobRunState, RootState> = {
   },
 
   async [type.action.getJobRunLog]({ commit }, { uuid, params }) {
+    commit(type.mutation.SET_LOADING, { name: stateType.jobRunlogScrollLoading, value: true })
+
     let jobRunLog = {
       next: 0,
       count: 0,
@@ -255,6 +257,7 @@ export const actions: ActionTree<jobRunState, RootState> = {
       logger.error(commit, 'Error on jobrun log in getJobRunLog action.\nError: ', e)
     }
     commit(type.SET_JOB_RUN_LOG, jobRunLog)
+    commit(type.mutation.SET_LOADING, { name: stateType.jobRunlogScrollLoading, value: false })
   },
 
   async [type.action.getFullVersionJobRunLog]({ commit }, uuid) {

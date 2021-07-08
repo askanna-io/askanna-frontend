@@ -11,6 +11,7 @@ export interface jobRubData {
   jobRunsLoading: Boolean
   jobRunlogLoading: Boolean
   jobRunArtifactLoading: Boolean
+  jobRunlogScrollLoading: Boolean
   jobRunResult: any
   jobRunResultExt: string
   jobRunResultPreview: any
@@ -169,7 +170,8 @@ export const stateType = {
   isJobRunResultBig: 'isJobRunResultBig',
   jobRunResultPreview: 'jobRunResultPreview',
   jobRunLogFullVersion: 'jobRunLogFullVersion',
-  jobRunArtifactLoading: 'jobRunArtifactLoading'
+  jobRunArtifactLoading: 'jobRunArtifactLoading',
+  jobRunlogScrollLoading: 'jobRunlogScrollLoading'
 }
 
 export class JobRunModel {

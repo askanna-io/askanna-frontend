@@ -90,7 +90,7 @@ export default defineComponent({
 
     const calculateDuration = computed(() => {
       if (isFinished.value) {
-        return moment.durationHumanizeBySecond(props.jobRunStatus.duration.toString())
+        return moment.durationHumanizeBySecond(props.jobRunStatus.duration?.toString())
       }
       return moment.durationHumanize(props.jobRunStatus.created, startTime.value)
     })
