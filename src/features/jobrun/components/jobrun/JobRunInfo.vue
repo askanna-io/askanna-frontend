@@ -24,7 +24,7 @@ import JobRunInfoCopyText from './parts/JobRunInfoCopyText.vue'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 
 import { JobRun, JobRunModel } from '../../store/types'
-import { computed, defineComponent } from '@vue/composition-api'
+import { ref, computed, onUnmounted, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'JobRunInfo',
@@ -52,6 +52,14 @@ export default defineComponent({
     jobName: {
       type: String,
       default: ''
+    },
+    jobRunStatus: {
+      type: Object,
+      default: () => ({
+        status: '',
+        updated: '',
+        duration: ''
+      })
     }
   },
 
@@ -59,6 +67,13 @@ export default defineComponent({
     const moment = useMoment(context)
     const groupArray = useGroupArray()
     const router = useRouterAskAnna(context)
+
+    const timer: any = ref(null)
+    const startTime: any = ref(null)
+
+    timer.value = setInterval(async () => {
+      startTime.value = new Date().getTime()
+    }, 1000)
 
     const triggers = {
       API: 'API',
@@ -69,11 +84,22 @@ export default defineComponent({
       'PYTHON-SDK': 'Python SDK'
     }
 
+    const isFinished = computed(
+      () => props.jobRunStatus.status === 'failed' || props.jobRunStatus.status === 'finished'
+    )
+
+    const calculateDuration = computed(() => {
+      if (isFinished.value) {
+        return moment.durationHumanizeBySecond(props.jobRunStatus.duration.toString())
+      }
+      return moment.durationHumanize(props.jobRunStatus.created, startTime.value)
+    })
+
     const variables = computed(() => {
       const allVariables = [
         {
           text: 'Status',
-          value: props.jobRun.status,
+          value: props.jobRunStatus.status,
           component: 'JobRunInfoStatus',
           visibility: true
         },
@@ -98,7 +124,7 @@ export default defineComponent({
         },
         {
           text: 'Duration',
-          value: calculateDuration(props.jobRun.duration),
+          value: calculateDuration.value,
           component: 'JobRunInfoText',
           visibility: true
         },
@@ -147,7 +173,9 @@ export default defineComponent({
       })
     }
 
-    const calculateDuration = (seconds: any) => moment.durationHumanizeBySecond(seconds)
+    onUnmounted(() => {
+      clearInterval(timer.value)
+    })
 
     return {
       variables,

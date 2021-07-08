@@ -41,6 +41,8 @@
             :styleClasses="'px-0 white title font-weight-light primary--black '"
           />
         </span>
+        <v-spacer />
+        <job-run-info-status class="title font-weight-light" text="" :value="jobRunStatus" />
       </v-card-title>
 
       <v-divider />
@@ -63,26 +65,26 @@
 </template>
 <script>
 import useJobStore from '@job/composition/useJobStore'
-import JobRunInfo from '@jobrun/components/jobrun/JobRunInfo'
 import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
 import useJobRunStore from '@jobrun/composition/useJobRunStore'
 
 import JobToolBar from './parts/JobToolBar'
-
 import JobRunToolBar from './parts/JobRunToolBar'
 import ProjectToolBar from './parts/ProjectToolBar'
 import JobRunMenuPopup from './parts/JobRunMenuPopup'
-import { defineComponent, computed } from '@vue/composition-api'
+import JobRunInfoStatus from '@/features/jobrun/components/jobrun/parts/JobRunInfoStatus'
+
+import { ref, computed, onUnmounted, defineComponent, onBeforeMount } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'JobRunNavBar',
 
   components: {
     JobToolBar,
-    JobRunInfo,
     JobRunToolBar,
     ProjectToolBar,
-    JobRunMenuPopup
+    JobRunMenuPopup,
+    JobRunInfoStatus
   },
 
   props: {
@@ -116,19 +118,39 @@ export default defineComponent({
   setup(props, context) {
     const jobStore = useJobStore()
     const jobRunStore = useJobRunStore()
-
-    const jobName = computed(() => jobStore.job.value.name)
-    const end = context.root.$route.name.indexOf('jobs-name') >= 1 ? 5 : 3
     const breadcrumbs = useBreadcrumbs(context, { start: 0, end: 6 })
+
+    const polling = ref(null)
+
+    const { jobId, jobRunId } = context.root.$route.params
+    const jobName = computed(() => jobStore.job.value.name)
+    const jobRun = computed(() => jobRunStore.jobRun.value)
+    const jobRunStatus = computed(() => jobStore.jobrun.value.status)
+    const runName = computed(() => (jobRun.value.name ? `: ${jobRun.value.name}` : ':'))
+
+    const isFinished = computed(() => jobRunStatus.value === 'failed' || jobRunStatus.value === 'finished')
+    const isEditJobRunView = computed(() => context.root.$route.name === 'workspace-project-jobs-job-jobrun-edit')
 
     const onStick = data => props.handleOnStick(data.sticked)
 
-    const { jobId, jobRunId } = context.root.$route.params
-    const jobRun = computed(() => jobRunStore.jobRun.value)
+    const checkStatus = () => {
+      polling.value = setInterval(async () => {
+        await jobStore.getJobRunStatus(jobRunId)
+        if (isFinished.value) {
+          clearInterval(polling.value)
+        }
+      }, 5000)
+    }
+    const fetchData = async () => await jobStore.getJobRunStatus(jobRunId)
 
-    const runName = computed(() => (jobRun.value.name ? `: ${jobRun.value.name}` : ':'))
+    onBeforeMount(() => {
+      fetchData()
+      checkStatus()
+    })
 
-    const isEditJobRunView = computed(() => context.root.$route.name === 'workspace-project-jobs-job-jobrun-edit')
+    onUnmounted(() => {
+      clearInterval(polling.value)
+    })
 
     return {
       jobId,
@@ -138,6 +160,7 @@ export default defineComponent({
       onStick,
       jobRunId,
       breadcrumbs,
+      jobRunStatus,
       isEditJobRunView
     }
   }

@@ -1,5 +1,8 @@
 <template>
-  <pre ref="codeWrapper" class="ask-anna-highlight"><code class="lang-shell hljs" v-html="highlighted"></code></pre>
+  <pre
+    ref="codeWrapper"
+    class="ask-anna-highlight"
+  ><code class="lang-shell hljs" :class="{ 'loading': loading }" v-html="highlighted"></code></pre>
 </template>
 
 <script>
@@ -12,6 +15,10 @@ export default defineComponent({
   name: 'TheHighlight',
 
   props: {
+    loading: {
+      type: Boolean,
+      default: false
+    },
     value: String,
     languageName: {
       type: String,
@@ -42,7 +49,7 @@ export default defineComponent({
 })
 </script>
 
-<style>
+<style lang="scss">
 /*
 
 Atom One Dark by Daniel Gamage
@@ -99,6 +106,9 @@ hue-6-2: #e6c07b
 .ask-anna-highlight code {
   white-space: pre-wrap;
   overflow: auto;
+  &.loading {
+    padding-bottom: 35px !important;
+  }
 }
 .ask-anna-highlight .hljs {
   display: block;
