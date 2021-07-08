@@ -49,7 +49,16 @@
         transition="transition"
         type="list-item-two-line"
       >
-        <the-highlight v-if="!logNoAvailable" :value="logs" v-scroll:#scroll-target="throttle(onScroll, 1500)" />
+        <div v-if="!logNoAvailable" class="logs-wrapper">
+          <the-highlight
+            ref="logRef"
+            :value="logs"
+            :loading="!isFinished"
+            v-scroll:#scroll-target="throttle(onScroll, 1500)"
+          />
+          <ask-anna-loading-dots-flashing v-if="!isFinished" />
+        </div>
+
         <v-alert v-else class="ma-4 text-center" dense outlined color="grey">
           There is no log available for this run.
         </v-alert>
@@ -59,28 +68,42 @@
 </template>
 
 <script>
+import goTo from 'vuetify/lib/services/goto'
+
 import { throttle } from 'lodash'
 import { useWindowSize } from '@u3u/vue-hooks'
 import useQuery from '@/core/composition/useQuery'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
+import useJobStore from '@/features/job/composition/useJobStore'
 import TheHighlight from '@/core/components/highlight/TheHighlight'
+
 import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
 import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress'
-import { computed, onBeforeMount, defineComponent } from '@vue/composition-api'
+import AskAnnaLoadingDotsFlashing from '@/core/components/shared/AskAnnaLoadingDotsFlashing'
+import { ref, computed, onBeforeMount, onUnmounted, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'JobRunLog',
 
   components: {
     TheHighlight,
-    AskAnnaLoadingProgress
+    AskAnnaLoadingProgress,
+    AskAnnaLoadingDotsFlashing
   },
 
-  setup(props, context) {
+  setup(_, context) {
+    const jobStore = useJobStore()
     const snackBar = useSnackBar()
     const { height } = useWindowSize()
     const jobRunStore = useJobRunStore()
+
+    const logRef = ref(null)
+    const polling = ref(null)
+
+    const jobRunStatus = computed(() => jobStore.jobrun.value.status)
+    const isFinished = computed(() => jobRunStatus.value === 'failed' || jobRunStatus.value === 'finished')
+
     const next = computed(() => jobRunStore.jobRunLog.value.next)
     const jobRunId = computed(() => context.root.$route.params.jobRunId)
 
@@ -93,10 +116,7 @@ export default defineComponent({
     })
     const forceFileDownload = useForceFileDownload()
 
-    onBeforeMount(async () => {
-      jobRunStore.resetJobRunLog()
-      jobRunStore.getInitJobRunLog({ uuid: jobRunId.value, params: { limit: 200, offset: 0 } })
-    })
+    const count = computed(() => jobRunStore.jobRunLog.value.count)
 
     const logs = computed(() => {
       if (!jobRunStore.jobRunLog.value.results) return ''
@@ -158,11 +178,38 @@ export default defineComponent({
       await jobRunStore.getFullVersionJobRunLog(jobRunId.value)
     }
 
+    const checkLogs = async () => {
+      polling.value = setInterval(async () => {
+        await jobRunStore.getJobRunLog({ uuid: jobRunId.value, params: { limit: 1000, offset: count.value } })
+        // scroll window and log container to bottom
+        goTo(logRef.value.$el.scrollHeight)
+        goTo(logRef.value.$el.scrollHeight, { container: '#scroll-target' })
+
+        if (isFinished.value) {
+          clearInterval(polling.value)
+        }
+      }, 5000)
+    }
+
+    onBeforeMount(() => {
+      jobRunStore.resetJobRunLog()
+      jobRunStore.getInitJobRunLog({ uuid: jobRunId.value, params: { limit: 200, offset: 0 } })
+      checkLogs()
+    })
+
+    //watch(jobRunStatus, jobRunStatus => jobRunStatus && isFinished.value && clearInterval(polling.value))
+
+    onUnmounted(() => {
+      clearInterval(polling.value)
+    })
+
     return {
       logs,
+      logRef,
       loading,
       throttle,
       onScroll,
+      isFinished,
       handleCopy,
       logNoAvailable,
       scrollerStyles,
@@ -171,3 +218,8 @@ export default defineComponent({
   }
 })
 </script>
+<style scoped lang="scss">
+.logs-wrapper {
+  position: relative;
+}
+</style>

@@ -3,7 +3,7 @@
     <ask-anna-loading-progress :type="'table-row'" :loading="loading" fullWidth>
       <v-card flat>
         <v-card-title>Information:</v-card-title>
-        <job-run-info :jobRun="jobRun" :jobName="jobName" :jobId="jobId" />
+        <job-run-info :jobId="jobId" :jobRun="jobRun" :jobName="jobName" :jobRunStatus="jobRunStatus" />
         <template v-if="isDescriptionNotEmpty">
           <v-card-title class="mt-3">Description:</v-card-title>
 
@@ -37,9 +37,11 @@ export default defineComponent({
     const { jobId } = context.root.$route.params
 
     const jobName = computed(() => jobStore.job.value.name)
+    const jobRun = computed(() => jobRunStore.jobRun.value)
     const loading = computed(() => jobRunStore.jobRunLoading.value)
 
-    const jobRun = computed(() => jobRunStore.jobRun.value)
+    const jobRunStatus = computed(() => jobStore.jobrun.value)
+
     const description = computed(() => jobRunStore.jobRun.value.description)
     const isDescriptionNotEmpty = computed(() => description.value && description.value !== '<p></p>')
 
@@ -49,6 +51,7 @@ export default defineComponent({
       jobName,
       loading,
       description,
+      jobRunStatus,
       isDescriptionNotEmpty
     }
   }
