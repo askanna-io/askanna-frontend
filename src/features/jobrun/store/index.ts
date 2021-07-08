@@ -33,7 +33,8 @@ export const state: jobRunState = {
   jobRunLogFullVersion: [],
   artifactData: new ArtifactModel().state,
   file: '',
-  fileSource: new Blob()
+  fileSource: new Blob(),
+  jobRunlogScrollLoading: false
 }
 
 const namespaced: boolean = true

@@ -81,7 +81,7 @@ import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
 import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress'
 import AskAnnaLoadingDotsFlashing from '@/core/components/shared/AskAnnaLoadingDotsFlashing'
-import { ref, computed, onBeforeMount, onUnmounted, defineComponent } from '@vue/composition-api'
+import { ref, watch, computed, onBeforeMount, onUnmounted, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'JobRunLog',
@@ -115,8 +115,6 @@ export default defineComponent({
       storeAction: jobRunStore.getJobRunLog
     })
     const forceFileDownload = useForceFileDownload()
-
-    const count = computed(() => jobRunStore.jobRunLog.value.count)
 
     const logs = computed(() => {
       if (!jobRunStore.jobRunLog.value.results) return ''
@@ -171,33 +169,44 @@ export default defineComponent({
       forceFileDownload.trigger({ source: fullLog.value, name: `run_${jobRunStore.jobRun.value.short_uuid}_log.txt` })
     }
 
-    const onScroll = e => query.onScroll(e.target.scrollTop)
+    const onScroll = e => {
+      if (!isFinished.value) return
+
+      query.onScroll(e.target.scrollTop)
+    }
 
     const getFullJobRun = async () => {
-      if (fullLog.value) return
+      if (fullLog.value && isFinished.value) return
       await jobRunStore.getFullVersionJobRunLog(jobRunId.value)
     }
 
     const checkLogs = async () => {
       polling.value = setInterval(async () => {
-        await jobRunStore.getJobRunLog({ uuid: jobRunId.value, params: { limit: 1000, offset: count.value } })
+        await jobRunStore.getJobRunLog({
+          uuid: jobRunId.value,
+          params: { limit: 1000, offset: jobRunStore.jobRunLog.value.results.length }
+        })
         // scroll window and log container to bottom
         goTo(logRef.value.$el.scrollHeight)
         goTo(logRef.value.$el.scrollHeight, { container: '#scroll-target' })
 
-        if (isFinished.value) {
+        if (logNoAvailable.value || isFinished.value) {
           clearInterval(polling.value)
         }
       }, 5000)
     }
 
-    onBeforeMount(() => {
-      jobRunStore.resetJobRunLog()
-      jobRunStore.getInitJobRunLog({ uuid: jobRunId.value, params: { limit: 200, offset: 0 } })
-      checkLogs()
-    })
+    const fetchData = async () => {
+      await jobRunStore.resetJobRunLog()
+      await jobRunStore.getInitJobRunLog({ uuid: jobRunId.value, params: { limit: 200, offset: 0 } })
+      await checkLogs()
+    }
 
-    //watch(jobRunStatus, jobRunStatus => jobRunStatus && isFinished.value && clearInterval(polling.value))
+    onBeforeMount(() => fetchData())
+
+    watch(jobRunStatus, (jobRunStatus, jobRunStatusOld) => {
+      if (!jobRunStatusOld && isFinished.value) jobRunStatus && isFinished.value && clearInterval(polling.value)
+    })
 
     onUnmounted(() => {
       clearInterval(polling.value)
@@ -210,6 +219,7 @@ export default defineComponent({
       throttle,
       onScroll,
       isFinished,
+
       handleCopy,
       logNoAvailable,
       scrollerStyles,
