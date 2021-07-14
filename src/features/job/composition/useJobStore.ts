@@ -7,7 +7,8 @@ export default function () {
       job: 'job',
       result: 'result',
       jobrun: 'jobrun',
-      jobLoading: 'jobLoading'
+      jobLoading: 'jobLoading',
+      jobRunStatusLoading: 'jobRunStatusLoading'
     })
   }
 

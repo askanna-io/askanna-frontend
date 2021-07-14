@@ -53,19 +53,21 @@ export default defineComponent({
     }
   },
 
-  setup({ value }) {
+  setup(props) {
     const slicedStartText = useStartSlicedText()
 
     const envName = computed(() =>
-      value.image?.tag && value.image?.name ? `${value.image?.name}:${value.image?.tag}` : ''
+      props.value.image?.tag && props.value.image?.name ? `${props.value.image?.name}:${props.value.image?.tag}` : ''
     )
 
     const imageComputed = computed(() => ({
-      name: value.image?.name || '',
-      tag: value.image?.tag || '',
-      digest: value.image?.digest || ''
+      name: props.value.image?.name || '',
+      tag: props.value.image?.tag || '',
+      digest: props.value.image?.digest || ''
     }))
-    const envNameSliced = computed(() => slicedStartText(envName.value || value.name || value.image?.name, 35))
+    const envNameSliced = computed(() => {
+      return slicedStartText(envName.value || props.value.name || props.value.image?.name, 35)
+    })
 
     return { envNameSliced, imageComputed }
   }

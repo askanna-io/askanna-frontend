@@ -1,6 +1,7 @@
 import * as type from './types'
 import { ActionTree } from 'vuex'
 import router from '@/core/router'
+import { throttle, debounce } from 'lodash'
 import VueRouter from 'vue-router'
 import { logger } from '@/core/plugins/logger'
 import apiService from '@/core/services/apiService'
@@ -239,7 +240,11 @@ export const actions: ActionTree<jobRunState, RootState> = {
   },
 
   async [type.action.getJobRunLog]({ commit }, { uuid, params }) {
-    commit(type.mutation.SET_LOADING, { name: stateType.jobRunlogScrollLoading, value: true })
+    const turnOnScrollLoading = function () {
+      commit(type.mutation.SET_LOADING, { name: stateType.jobRunlogScrollLoading, value: true })
+    }
+    const throttled = debounce(turnOnScrollLoading, 1000, { trailing: false, leading: true })
+    throttled()
 
     let jobRunLog = {
       next: 0,
@@ -257,7 +262,13 @@ export const actions: ActionTree<jobRunState, RootState> = {
       logger.error(commit, 'Error on jobrun log in getJobRunLog action.\nError: ', e)
     }
     commit(type.SET_JOB_RUN_LOG, jobRunLog)
-    commit(type.mutation.SET_LOADING, { name: stateType.jobRunlogScrollLoading, value: false })
+
+    const turnOffScrollLoading = function () {
+      commit(type.mutation.SET_LOADING, { name: stateType.jobRunlogScrollLoading, value: false })
+    }
+    const throttledOff = debounce(turnOffScrollLoading, 2000, { trailing: false, leading: true })
+
+    throttledOff()
   },
 
   async [type.action.getFullVersionJobRunLog]({ commit }, uuid) {

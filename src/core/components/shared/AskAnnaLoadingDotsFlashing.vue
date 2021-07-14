@@ -1,5 +1,5 @@
 <template>
-  <div class="col-3 dot-flashing-wrapper">
+  <div class="col-3 dot-flashing-wrapper" :class="wrapperClasses">
     <div class="snippet" data-title=".dot-flashing">
       <div class="stage">
         <div class="dot-flashing"></div>
@@ -12,14 +12,37 @@
 import { defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
-  name: 'AskAnnaLoadingDotsFlashing'
+  name: 'AskAnnaLoadingDotsFlashing',
+
+  props: {
+    inline: {
+      type: Boolean,
+      default: false
+    }
+  },
+  setup(props) {
+    const wrapperClasses = {
+      absolute: !props.inline,
+      'd-inline-flex': props.inline
+    }
+
+    return { wrapperClasses }
+  }
 })
 </script>
 <style scoped lang="scss">
 .dot-flashing-wrapper {
-  padding-left: 32px;
-  position: absolute;
   bottom: 5px;
+
+  &.absolute {
+    padding-left: 32px;
+    position: absolute;
+  }
+
+  &.d-inline-flex {
+    padding: 0;
+    padding-left: 20px;
+  }
 }
 .dot-flashing {
   position: relative;

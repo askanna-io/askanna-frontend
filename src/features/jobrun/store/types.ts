@@ -44,7 +44,7 @@ export interface Package {
 export interface JobRun {
   name: string
   uuid: string
-  duration: number
+  duration: number | null
   description: string
   short_uuid: string
   payload: {
@@ -189,7 +189,7 @@ export class JobRunModel {
     return {
       uuid: '',
       name: '',
-      duration: 0,
+      duration: null,
       description: '',
       short_uuid: '',
       payload: {

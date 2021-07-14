@@ -21,6 +21,7 @@ export const mutations: MutationTree<jobState> = {
     state.result = ''
     state.job = new JobModel().state
     state.jobLoading = true
+    state.jobRunStatusLoading = true
   },
 
   [type.mutation.RESET_JOB_RUN](state) {

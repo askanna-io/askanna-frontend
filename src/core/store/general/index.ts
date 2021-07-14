@@ -11,7 +11,8 @@ export const state: generalState = {
     jobRunId: '',
     projectId: '',
     workspaceId: ''
-  }
+  },
+  interval: new Map()
 }
 
 const namespaced: boolean = true
