@@ -64,12 +64,14 @@ export const actions: ActionTree<jobState, RootState> = {
   },
 
   async [type.action.getJobRunStatus]({ commit, state }, jobRunShortUuid) {
+    commit(type.mutation.SET_LOADING, { name: stateType.jobRunStatusLoading, value: true })
+
     let status
     try {
       status = await apiService({
         action: api.jobrunStatus,
         serviceName,
-        uuid: state.jobrun.short_uuid || jobRunShortUuid
+        uuid: jobRunShortUuid || state.jobrun.short_uuid
       })
     } catch (e) {
       logger.error(commit, 'Error on getjob run status in getJobRunStatus action.\nError: ', e)
@@ -77,6 +79,7 @@ export const actions: ActionTree<jobState, RootState> = {
     }
 
     commit(type.mutation.SET_JOB_RUN, status)
+    commit(type.mutation.SET_LOADING, { name: stateType.jobRunStatusLoading, value: false })
   },
 
   async [type.action.stopJob]({ commit }, id) {

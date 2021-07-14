@@ -3,7 +3,13 @@
     <v-card v-for="(group, index) in variables" :key="index" flat width="33.3%">
       <v-row no-gutters>
         <v-col class="mb-4" v-for="(item, index2) in group" :key="`${index}-${index2}`" cols="12">
-          <component :key="index2" :text="item.text" :value="item.value" :is="item.component" />
+          <component
+            :key="index2"
+            :text="item.text"
+            :value="item.value"
+            :is="item.component"
+            :loading="loadingStatus"
+          />
         </v-col>
       </v-row>
     </v-card>
@@ -53,6 +59,10 @@ export default defineComponent({
       type: String,
       default: ''
     },
+    loadingStatus: {
+      type: Boolean,
+      default: true
+    },
     jobRunStatus: {
       type: Object,
       default: () => ({
@@ -73,7 +83,7 @@ export default defineComponent({
 
     timer.value = setInterval(async () => {
       startTime.value = new Date().getTime()
-    }, 1000)
+    }, 300)
 
     const triggers = {
       API: 'API',
@@ -148,7 +158,7 @@ export default defineComponent({
         },
         {
           text: 'Environment',
-          value: props.jobRun.environment,
+          value: props.jobRunStatus.environment,
           component: 'JobRunInfoEnv',
           visibility: true
         }
@@ -160,10 +170,7 @@ export default defineComponent({
         visibility: boolean
       }
 
-      return groupArray(
-        allVariables.filter((item: VariableItem) => item.visibility && item.value),
-        3
-      )
+      return groupArray(allVariables, 3)
     })
 
     const handleGotoJob = () => {

@@ -4,9 +4,10 @@
 
 <script>
 import useJobStore from '@job/composition/useJobStore'
+import useInterval from '@/core/composition/useInterval'
 import useJobRunStore from '@jobrun/composition/useJobRunStore'
 import useProjectStore from '@project/composition/useProjectStore'
-import { ref, computed, defineComponent, onUnmounted, onBeforeMount } from '@vue/composition-api'
+import { computed, watchEffect, defineComponent, onBeforeMount } from '@vue/composition-api'
 
 export default defineComponent({
   setup(_, context) {
@@ -14,41 +15,47 @@ export default defineComponent({
     const jobRunStore = useJobRunStore()
     const projectStore = useProjectStore()
 
-    const { jobId, projectId, jobRunId } = context.root.$route.params
-
-    const polling = ref(null)
+    const { isSet, setIntervalFn, clearIntervalFn } = useInterval()
 
     const jobRunStatus = computed(() => jobStore.jobrun.value.status)
     const isFinished = computed(() => jobRunStatus.value === 'failed' || jobRunStatus.value === 'finished')
 
     const checkStatus = () => {
-      polling.value = setInterval(async () => {
+      if (isSet('checkStatus')) return
+      setIntervalFn('checkStatus', async () => {
+        const { jobRunId } = context.root.$route.params
+
         await jobStore.getJobRunStatus(jobRunId)
         if (isFinished.value) {
-          clearInterval(polling.value)
           await jobRunStore.getJobRun(jobRunId)
+          clearIntervalFn('checkStatus')
         }
-      }, 5000)
+      })
     }
+
     const fetchData = async () => {
+      const { jobId, projectId, jobRunId } = context.root.$route.params
+
       if (jobStore.job.value.short_uuid !== jobId) {
         await projectStore.resetProjectJobs()
         await projectStore.getProjectJobs(projectId)
 
         await jobStore.getJob(jobId)
       }
-
       await jobRunStore.getJobRun(jobRunId)
       await jobStore.getJobRunStatus(jobRunId)
     }
 
     onBeforeMount(() => {
       fetchData()
-      checkStatus()
     })
 
-    onUnmounted(() => {
-      clearInterval(polling.value)
+    const stopWatchRunStatus = watchEffect(() => {
+      if (jobRunStatus.value && !isFinished.value) {
+        checkStatus()
+
+        stopWatchRunStatus && stopWatchRunStatus()
+      }
     })
   }
 })

@@ -2,18 +2,24 @@
   <div>
     <v-toolbar v-if="!logNoAvailable" dense flat color="grey lighten-4">
       <v-flex class="d-flex">
+        <ask-anna-chip-play-stop
+          v-if="!isFinished && jobRunStatus"
+          :value="isAutoUpdateLog"
+          @onClick="handleAutoUpdate"
+        />
+
         <div class="mr-auto d-flex align-center"></div>
         <div>
           <v-tooltip top content-class="opacity-1">
             <template v-slot:activator="{ on }">
               <v-btn
                 v-on="on"
-                :disabled="loading || logNoAvailable"
                 small
                 outlined
                 color="secondary"
                 class="mr-1 btn--hover"
                 @click="handleDownload()"
+                :disabled="loading || logNoAvailable"
               >
                 <v-icon left color="secondary">mdi-download</v-icon>Download
               </v-btn>
@@ -25,12 +31,12 @@
             <template v-slot:activator="{ on }">
               <v-btn
                 v-on="on"
-                :disabled="loading || logNoAvailable"
                 small
                 outlined
                 color="secondary"
                 class="mr-1 btn--hover"
                 @click="handleCopy()"
+                :disabled="loading || logNoAvailable"
               >
                 <v-icon left color="secondary">mdi-content-copy</v-icon>Copy
               </v-btn>
@@ -42,9 +48,9 @@
     </v-toolbar>
     <v-flex :style="scrollerStyles" class="overflow-y-auto" id="scroll-target">
       <ask-anna-loading-progress
-        :loading="loading"
         fullWidth
         height="94"
+        :loading="loading"
         classes="mx-4 mb-4"
         transition="transition"
         type="list-item-two-line"
@@ -53,10 +59,10 @@
           <the-highlight
             ref="logRef"
             :value="logs"
-            :loading="!isFinished"
+            :loading="isLoadingLogs"
             v-scroll:#scroll-target="throttle(onScroll, 1500)"
           />
-          <ask-anna-loading-dots-flashing v-if="!isFinished" />
+          <ask-anna-loading-dots-flashing v-if="isLoadingLogs" />
         </div>
 
         <v-alert v-else class="ma-4 text-center" dense outlined color="grey">
@@ -68,41 +74,49 @@
 </template>
 
 <script>
-import goTo from 'vuetify/lib/services/goto'
-
 import { throttle } from 'lodash'
+import goTo from 'vuetify/lib/services/goto'
 import { useWindowSize } from '@u3u/vue-hooks'
+import useCopy from '@/core/composition/useCopy'
 import useQuery from '@/core/composition/useQuery'
-import useSnackBar from '@/core/components/snackBar/useSnackBar'
 import useJobStore from '@/features/job/composition/useJobStore'
 import TheHighlight from '@/core/components/highlight/TheHighlight'
-
 import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
+import AskAnnaChipPlayStop from '@/core/components/shared/AskAnnaChipPlayStop'
 import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress'
 import AskAnnaLoadingDotsFlashing from '@/core/components/shared/AskAnnaLoadingDotsFlashing'
-import { ref, watch, computed, onBeforeMount, onUnmounted, defineComponent } from '@vue/composition-api'
+import { ref, watchEffect, computed, onBeforeMount, onUnmounted, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'JobRunLog',
 
   components: {
     TheHighlight,
+    AskAnnaChipPlayStop,
     AskAnnaLoadingProgress,
     AskAnnaLoadingDotsFlashing
   },
 
   setup(_, context) {
+    const copy = useCopy(context)
     const jobStore = useJobStore()
-    const snackBar = useSnackBar()
     const { height } = useWindowSize()
     const jobRunStore = useJobRunStore()
+    const forceFileDownload = useForceFileDownload()
 
     const logRef = ref(null)
     const polling = ref(null)
+    const scrollLoading = ref(false)
+    const isAutoUpdateLog = ref(true)
+    const isCheckStatusRuning = ref(false)
 
     const jobRunStatus = computed(() => jobStore.jobrun.value.status)
     const isFinished = computed(() => jobRunStatus.value === 'failed' || jobRunStatus.value === 'finished')
+
+    const isLoadingLogs = computed(
+      () => (!isFinished.value || scrollLoading.value) && jobRunStatus.value && isAutoUpdateLog.value
+    )
 
     const next = computed(() => jobRunStore.jobRunLog.value.next)
     const jobRunId = computed(() => context.root.$route.params.jobRunId)
@@ -114,8 +128,8 @@ export default defineComponent({
       uuid: jobRunId.value,
       storeAction: jobRunStore.getJobRunLog
     })
-    const forceFileDownload = useForceFileDownload()
 
+    const countLogs = computed(() => jobRunStore.jobRunLog.value.count)
     const logs = computed(() => {
       if (!jobRunStore.jobRunLog.value.results) return ''
 
@@ -145,22 +159,18 @@ export default defineComponent({
     })
 
     const maxHeight = computed(() => height.value - 270)
-    const scrollerStyles = computed(() => {
-      return { 'max-height': `${maxHeight.value}px` }
-    })
     const loading = computed(() => jobRunStore.jobRunlogLoading.value)
+    const scrollerStyles = computed(() => ({ 'max-height': `${maxHeight.value}px` }))
     const logNoAvailable = computed(() => !jobRunStore.jobRunLog.value.results.length && !loading.value)
+
+    const handleAutoUpdate = () => {
+      scrollLoading.value = true
+      isAutoUpdateLog.value = !isAutoUpdateLog.value
+    }
 
     const handleCopy = async () => {
       await getFullJobRun()
-      context.root.$copyText(fullLog.value).then(
-        function (e) {
-          snackBar.showSnackBar({ message: 'Copied', color: 'success' })
-        },
-        function (e) {
-          snackBar.showSnackBar({ message: 'Can not copy', color: 'failed' })
-        }
-      )
+      copy.handleCopyText(fullLog.value)
     }
 
     const handleDownload = async () => {
@@ -171,7 +181,7 @@ export default defineComponent({
 
     const onScroll = e => {
       if (!isFinished.value) return
-
+      scrollLoading.value = true
       query.onScroll(e.target.scrollTop)
     }
 
@@ -180,13 +190,14 @@ export default defineComponent({
       await jobRunStore.getFullVersionJobRunLog(jobRunId.value)
     }
 
-    const checkLogs = async () => {
+    const checkLogs = () => {
       polling.value = setInterval(async () => {
+        if (!isAutoUpdateLog.value) return
+        // scroll window and log container to bottom
         await jobRunStore.getJobRunLog({
           uuid: jobRunId.value,
           params: { limit: 1000, offset: jobRunStore.jobRunLog.value.results.length }
         })
-        // scroll window and log container to bottom
         goTo(logRef.value.$el.scrollHeight)
         goTo(logRef.value.$el.scrollHeight, { container: '#scroll-target' })
 
@@ -199,17 +210,28 @@ export default defineComponent({
     const fetchData = async () => {
       await jobRunStore.resetJobRunLog()
       await jobRunStore.getInitJobRunLog({ uuid: jobRunId.value, params: { limit: 200, offset: 0 } })
-      await checkLogs()
     }
 
     onBeforeMount(() => fetchData())
 
-    watch(jobRunStatus, (jobRunStatus, jobRunStatusOld) => {
-      if (!jobRunStatusOld && isFinished.value) jobRunStatus && isFinished.value && clearInterval(polling.value)
+    watchEffect(() => {
+      // check status, eneable auto-update logs
+      if (!isCheckStatusRuning.value && jobRunStatus.value && !isFinished.value) {
+        checkLogs()
+        isCheckStatusRuning.value = true
+      }
+
+      // disable load animation logic
+      if (isFinished.value && countLogs.value === jobRunStore.jobRunLog.value.results.length) {
+        scrollLoading.value = false
+
+        return
+      }
     })
 
     onUnmounted(() => {
       clearInterval(polling.value)
+      isCheckStatusRuning.value = false
     })
 
     return {
@@ -219,11 +241,16 @@ export default defineComponent({
       throttle,
       onScroll,
       isFinished,
-
-      handleCopy,
+      jobRunStatus,
+      isLoadingLogs,
+      scrollLoading,
       logNoAvailable,
       scrollerStyles,
-      handleDownload
+      isAutoUpdateLog,
+
+      handleCopy,
+      handleDownload,
+      handleAutoUpdate
     }
   }
 })

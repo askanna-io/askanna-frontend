@@ -3,7 +3,13 @@
     <ask-anna-loading-progress :type="'table-row'" :loading="loading" fullWidth>
       <v-card flat>
         <v-card-title>Information:</v-card-title>
-        <job-run-info :jobId="jobId" :jobRun="jobRun" :jobName="jobName" :jobRunStatus="jobRunStatus" />
+        <job-run-info
+          :jobId="jobId"
+          :jobRun="jobRun"
+          :jobName="jobName"
+          :jobRunStatus="jobRunStatus"
+          :loadingStatus="loadingStatus"
+        />
         <template v-if="isDescriptionNotEmpty">
           <v-card-title class="mt-3">Description:</v-card-title>
 
@@ -20,7 +26,7 @@ import JobRunInfo from '@jobrun/components/jobrun/JobRunInfo'
 import useJobRunStore from '@jobrun/composition/useJobRunStore'
 import AskAnnaDescription from '@/core/components/shared/AskAnnaDescription'
 
-import { defineComponent, computed } from '@vue/composition-api'
+import { computed, defineComponent, onBeforeMount } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'Overview',
@@ -34,16 +40,23 @@ export default defineComponent({
     const jobStore = useJobStore()
     const jobRunStore = useJobRunStore()
 
-    const { jobId } = context.root.$route.params
+    const { jobId, jobRunId } = context.root.$route.params
 
     const jobName = computed(() => jobStore.job.value.name)
+    const jobRunStatus = computed(() => jobStore.jobrun.value)
+    const loadingStatus = computed(() => jobStore.jobRunStatusLoading.value)
+
     const jobRun = computed(() => jobRunStore.jobRun.value)
     const loading = computed(() => jobRunStore.jobRunLoading.value)
 
-    const jobRunStatus = computed(() => jobStore.jobrun.value)
-
     const description = computed(() => jobRunStore.jobRun.value.description)
     const isDescriptionNotEmpty = computed(() => description.value && description.value !== '<p></p>')
+
+    const fetchData = async () => {
+      await jobStore.getJobRunStatus(jobRunId)
+    }
+
+    fetchData()
 
     return {
       jobId,
@@ -52,6 +65,7 @@ export default defineComponent({
       loading,
       description,
       jobRunStatus,
+      loadingStatus,
       isDescriptionNotEmpty
     }
   }

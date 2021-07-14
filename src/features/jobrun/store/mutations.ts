@@ -2,6 +2,7 @@ import { MutationTree } from 'vuex'
 import { File, JobRunModel, jobRunState, ArtifactModel } from './types'
 import * as type from './types'
 import { isArray, set } from 'lodash'
+import { debounce } from 'lodash'
 
 export const mutations: MutationTree<jobRunState> = {
   [type.SET_JOB_RUN](state, data) {

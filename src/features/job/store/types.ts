@@ -4,7 +4,8 @@ export interface jobData {
   job: Job
   result: string
   jobrun: JobRun
-  jobLoading: Boolean
+  jobLoading: boolean
+  jobRunStatusLoading: boolean
 }
 
 interface JobRun {
@@ -16,6 +17,13 @@ interface JobRun {
   next_url: string
   short_uuid: string
   message_type: string
+  environment: {
+    name: string
+    label: string
+    timezone: string
+    description: string
+    image: { name: string; tag: string; digest: string }
+  }
 }
 
 interface Job {
@@ -41,7 +49,8 @@ interface Schedule {
 export const JOB_STORE = 'job'
 
 export const stateType = {
-  jobLoading: 'jobLoading'
+  jobLoading: 'jobLoading',
+  jobRunStatusLoading: 'jobRunStatusLoading'
 }
 // actions
 export const action = {
@@ -138,7 +147,14 @@ export class JobRunModel {
       next_url: '',
       finished: '',
       short_uuid: '',
-      message_type: ''
+      message_type: '',
+      environment: {
+        name: '',
+        label: '',
+        timezone: '',
+        description: '',
+        image: { name: '', tag: '', digest: '' }
+      }
     }
   }
 }
