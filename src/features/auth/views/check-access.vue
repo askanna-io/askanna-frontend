@@ -68,12 +68,14 @@ export default defineComponent({
       }, 5000)
     }
 
-    onBeforeMount(async () => {
+    const fetchData = async () => {
       await checkWorkspace()
       if (isReady.value) return
 
       checkReadyCycle()
-    })
+    }
+
+    onBeforeMount(() => fetchData())
 
     onUnmounted(() => {
       clearInterval(polling.value)

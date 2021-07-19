@@ -85,10 +85,12 @@ export default defineComponent({
     const throttled = throttle(query.onScroll, 350)
     const handleOnScroll = e => throttled(e.target.scrollTop)
 
-    onBeforeMount(async () => {
+    const fetchData = async () => {
       await metricStore.actions.getMetricLabels(uuid)
       await metricStore.actions.getMetricInitial({ uuid, params: { limit: 100, offset: 0 } })
-    })
+    }
+
+    onBeforeMount(() => fetchData())
 
     return {
       items,

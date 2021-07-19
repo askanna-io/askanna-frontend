@@ -54,7 +54,7 @@ export default defineComponent({
     }
   },
 
-  setup(props, context) {
+  setup(props) {
     const speed = ref(10)
     const interval = ref(0)
     const bufferValue = ref(100)
@@ -115,7 +115,7 @@ export default defineComponent({
       }
     )
 
-    onBeforeMount(async () => {
+    onBeforeMount(() => {
       startLoading()
     })
 

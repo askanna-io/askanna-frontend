@@ -10,8 +10,6 @@
 </template>
 
 <script>
-import useCopy from '@/core/composition/useCopy'
-import useSnackBar from '@/core/components/snackBar/useSnackBar'
 import VariableList from '@/features/variables/components/VariableList'
 import VariablePopup from '@/features/variables/components/VariablePopup'
 import { computed, onBeforeMount, defineComponent } from '@vue/composition-api'
@@ -23,11 +21,13 @@ export default defineComponent({
 
   components: { VariableList, VariablePopup, VariableListHeader },
 
-  setup(props, context) {
+  setup(_, context) {
     const variablesStore = useVariablesStore()
     const { projectId } = context.root.$route.params
 
-    onBeforeMount(async () => await variablesStore.getVariables(projectId))
+    const fetchData = async () => await variablesStore.getVariables(projectId)
+
+    onBeforeMount(() => fetchData())
 
     const variables = computed(() => variablesStore.variables.value)
 

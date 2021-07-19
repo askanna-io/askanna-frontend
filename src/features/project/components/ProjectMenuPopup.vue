@@ -32,7 +32,7 @@
                 Edit this project
               </v-btn>
             </v-col>
-            <v-col cols="12">
+            <v-col cols="12" v-if="isCurrentUserAdmin">
               <v-btn block small outlined text color="error" class="btn--hover" @click="handleOpenConfirmDeleteProject">
                 Remove this project
               </v-btn>
@@ -51,9 +51,10 @@
 </template>
 
 <script>
-import { ref, defineComponent } from '@vue/composition-api'
+import { ref, computed, defineComponent } from '@vue/composition-api'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useProjectStore from '@/features/project/composition/useProjectStore'
+import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 import ConfirmDeleteProjectPopup from '@/features/project/components/popup/ConfirmDeleteProjectPopup'
 
 export default defineComponent({
@@ -90,9 +91,12 @@ export default defineComponent({
   setup(props, context) {
     const projectStore = useProjectStore()
     const router = useRouterAskAnna(context)
+    const workspaceStore = useWorkspaceStore()
 
     const menu = ref(false)
     const deleteProjectConfirmPopup = ref(false)
+
+    const isCurrentUserAdmin = computed(() => workspaceStore.currentPeople.value.role === 'WA')
 
     const handleMoreOptions = () =>
       router.push({
@@ -100,17 +104,11 @@ export default defineComponent({
         params: { workspaceId: context.root.$route.params.workspaceId }
       })
 
-    const handleOpenConfirmDeleteProject = async () => {
-      deleteProjectConfirmPopup.value = true
-    }
+    const handleOpenConfirmDeleteProject = async () => (deleteProjectConfirmPopup.value = true)
 
-    const handlCloseConfirmDeletePopup = () => {
-      deleteProjectConfirmPopup.value = false
-    }
+    const handlCloseConfirmDeletePopup = () => (deleteProjectConfirmPopup.value = false)
 
-    const handleClose = () => {
-      menu.value = false
-    }
+    const handleClose = () => (menu.value = false)
 
     const handleOpenConfirmEditProject = () =>
       context.root.$router.push({
@@ -129,6 +127,8 @@ export default defineComponent({
 
     return {
       menu,
+      isCurrentUserAdmin,
+
       handleClose,
       handleMoreOptions,
       deleteProjectConfirmPopup,

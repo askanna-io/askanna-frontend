@@ -256,12 +256,14 @@ export default defineComponent({
       currentPath.value && !currentPath.value.is_dir && currentPath.value.name !== '' ? currentPath.value.path : ''
     )
 
-    onBeforeMount(async () => {
+    const fetchData = async () => {
       await getPackage()
       if (isProcessing.value) {
         pollData()
       }
-    })
+    }
+
+    onBeforeMount(() => fetchData())
 
     watch(projectIdCd, async () => !packageLoading.value && getPackage())
 

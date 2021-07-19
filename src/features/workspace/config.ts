@@ -474,9 +474,7 @@ export default {
           path: '',
           component: () => import(/* webpackChunkName: "workspace-index" */ './views/workspace/index.vue'),
           meta: {
-            hideAppBarIcon: true,
-            breadcrumb: 'Workspace',
-            title: 'Workspace: workspaceId'
+            hideAppBarIcon: true
           },
           children: [
             {
@@ -495,7 +493,7 @@ export default {
               name: 'workspace-edit',
               meta: {
                 hideAppBarIcon: true,
-                breadcrumb: 'Workspace edit'
+                breadcrumb: 'Edit'
               }
             }
           ]

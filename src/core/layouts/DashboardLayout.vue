@@ -262,9 +262,9 @@ export default defineComponent({
       uploadStatus.showHideSnackBar()
     }
 
-    onBeforeMount(async () => {
-      await userStore.actions.getUserProfile()
-    })
+    const fetchData = async () => await userStore.actions.getUserProfile()
+
+    onBeforeMount(() => fetchData())
 
     onUpdated(() => {
       if (process.env.VUE_APP_INTERCOM === 'on') {

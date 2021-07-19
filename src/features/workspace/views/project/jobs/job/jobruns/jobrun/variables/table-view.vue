@@ -89,11 +89,12 @@ export default defineComponent({
     const throttled = throttle(query.onScroll, 350)
     const handleOnScroll = e => throttled(e.target.scrollTop)
 
-    onBeforeMount(async () => {
+    const fetchData = async () => {
       await runinfoVariablesStore.actions.setIsFiltered(false)
-      //await runinfoVariablesStore.actions.getVariablesLabels(uuid)
       await runinfoVariablesStore.actions.getVariablesInitial({ uuid, params: { limit: 100, offset: 0 } })
-    })
+    }
+
+    onBeforeMount(() => fetchData())
 
     return {
       items,

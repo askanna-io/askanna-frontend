@@ -19,33 +19,49 @@
         </v-toolbar>
 
         <v-card-actions>
-          <v-btn
-            text
-            block
-            small
-            outlined
-            class="btn--hover"
-            @click="handlerOpenEditRunPage"
-            :disabled="disabledButtonEditJobRun"
-          >
-            Edit run info
-          </v-btn>
+          <v-row dense class="mx-2">
+            <v-col cols="12">
+              <v-btn
+                text
+                block
+                small
+                outlined
+                class="btn--hover"
+                @click="handlerOpenEditRunPage"
+                :disabled="disabledButtonEditJobRun"
+              >
+                Edit run info
+              </v-btn>
+            </v-col>
+            <v-col cols="12">
+              <v-btn small outlined text block color="error" class="btn--hover" @click="handleOpenConfirmDeleteRun"
+                >Remove this run
+              </v-btn>
+            </v-col>
+          </v-row>
         </v-card-actions>
       </v-card>
     </v-menu>
+    <confirm-delete-run-popup
+      :runInfo="jobrun"
+      :value="deleteRunConfirmPopup"
+      @onClose="handlCloseConfirmDeletePopup"
+      @onDeleteConfirm="handleDeleteConfirmRun"
+    />
   </div>
 </template>
 
 <script>
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import { ref, defineComponent, computed } from '@vue/composition-api'
-import ConfirmDeleteProjectPopup from '@/features/project/components/popup/ConfirmDeleteProjectPopup'
+import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
+import ConfirmDeleteRunPopup from '@/features/project/components/popup/ConfirmDeleteRunPopup'
 
 export default defineComponent({
   name: 'JobRunMenuPopup',
 
   components: {
-    ConfirmDeleteProjectPopup
+    ConfirmDeleteRunPopup
   },
 
   props: {
@@ -61,9 +77,12 @@ export default defineComponent({
     }
   },
 
-  setup(_, context) {
-    const menu = ref(false)
+  setup(props, context) {
+    const jobRunStore = useJobRunStore()
     const router = useRouterAskAnna(context)
+
+    const menu = ref(false)
+    const deleteRunConfirmPopup = ref(false)
 
     const editJobRunRouteName = 'workspace-project-jobs-job-jobrun-edit'
 
@@ -77,12 +96,29 @@ export default defineComponent({
       menu.value = false
     }
 
+    const handleOpenConfirmDeleteRun = async () => (deleteRunConfirmPopup.value = true)
+
+    const handlCloseConfirmDeletePopup = () => (deleteRunConfirmPopup.value = false)
+
+    const handleDeleteConfirmRun = async () => {
+      const isDeleted = await jobRunStore.deleteRunInfo(props.jobrun)
+      deleteRunConfirmPopup.value = false
+      menu.value = false
+      if (isDeleted) {
+        router.push({ name: 'workspace-project-job-jobruns' })
+      }
+    }
+
     return {
       menu,
+      deleteRunConfirmPopup,
       disabledButtonEditJobRun,
 
       handleClose,
-      handlerOpenEditRunPage
+      handlerOpenEditRunPage,
+      handleDeleteConfirmRun,
+      handleOpenConfirmDeleteRun,
+      handlCloseConfirmDeletePopup
     }
   }
 })

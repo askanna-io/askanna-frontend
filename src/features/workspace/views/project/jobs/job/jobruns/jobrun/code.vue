@@ -90,7 +90,7 @@ export default defineComponent({
 
     const sticked = computed(() => !projectStore.stickedVM.value)
 
-    onBeforeMount(async () => {
+    const fetchData = async () => {
       const { jobRunId } = context.root.$route.params
 
       if (jobRunStore.jobRun.value.short_uuid !== jobRunId) {
@@ -107,7 +107,9 @@ export default defineComponent({
       if (isProcessing.value) {
         pollData()
       }
-    })
+    }
+
+    onBeforeMount(() => fetchData())
 
     onUnmounted(() => {
       clearInterval(polling.value)

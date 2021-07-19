@@ -49,9 +49,8 @@ export default defineComponent({
       throttled(e.target.scrollTop)
     }
 
-    onBeforeMount(async () => {
-      await metricStore.actions.getMetricJSON({ uuid, params: { limit: 10, offset: 0 } })
-    })
+    const fetchData = async () => await metricStore.actions.getMetricJSON({ uuid, params: { limit: 10, offset: 0 } })
+    onBeforeMount(() => fetchData())
 
     return { loading, metricJSON, scrollerStyles, handleOnScroll }
   }

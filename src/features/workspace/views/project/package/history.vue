@@ -152,10 +152,12 @@ export default defineComponent({
 
     const onScroll = e => query.onScroll(e.target.documentElement.scrollTop)
 
-    onBeforeMount(async () => {
+    const fetchData = async () => {
       await packagesStore.resetStore()
       await packagesStore.getInitialProjectPackages({ params: { limit: 100, offset: 0 }, uuid: projectId })
-    })
+    }
+
+    onBeforeMount(() => fetchData())
 
     const sortBy = (a, b) => {
       const nameA = a.name.toUpperCase()

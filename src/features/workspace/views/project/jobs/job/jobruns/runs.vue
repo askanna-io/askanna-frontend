@@ -33,11 +33,11 @@ export default defineComponent({
     const jobStore = useJobStore()
     const jobRunStore = useJobRunStore()
 
-    onBeforeMount(async () => {
-      jobStore.resetStore()
-      jobRunStore.resetStore()
+    const fetchData = async () => {
+      await jobStore.resetStore()
+      await jobRunStore.resetStore()
 
-      jobStore.getJob(uuid)
+      await jobStore.getJob(uuid)
       await jobRunStore.getRunsJob({
         uuid,
         params: {
@@ -47,7 +47,9 @@ export default defineComponent({
       })
 
       loading.value = false
-    })
+    }
+
+    onBeforeMount(() => fetchData())
 
     const runs = computed(() => jobRunStore.runs.value.results)
     const count = computed(() => jobRunStore.runs.value.count)

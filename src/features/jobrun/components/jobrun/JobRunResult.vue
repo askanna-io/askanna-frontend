@@ -174,12 +174,14 @@ export default defineComponent({
       currentView.value.value === 'raw' ? jobRunResultRaw.value : prettyJSON(jobRunResultRaw.value, 2).prettyJson
     )
 
-    onBeforeMount(async () => {
+    const fetchData = async () => {
       if (view) {
         currentView.value = views.find(el => el.value === view) || views[0]
       }
       await jobRunStore.getJobRunResultPreview(jobRunId)
-    })
+    }
+
+    onBeforeMount(() => fetchData())
 
     const maxHeight = computed(() => height.value - 110)
     const scrollerStyles = computed(() => {

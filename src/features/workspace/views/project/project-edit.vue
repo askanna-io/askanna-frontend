@@ -43,9 +43,9 @@ export default defineComponent({
       description: project.value.description
     })
 
-    onBeforeMount(async () => {
-      projectStore.getProjectTemplates()
-    })
+    const fetchData = async () => projectStore.getProjectTemplates()
+
+    onBeforeMount(() => fetchData())
 
     const handleOnInput = ({ path, value }) => {
       set(projectState.value, path, value)

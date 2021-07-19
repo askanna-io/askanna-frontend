@@ -61,6 +61,7 @@ export const action = {
   pauseJob: 'pauseJob',
   resetJob: 'resetJob',
   startJob: 'startJob',
+  deleteJob: 'deleteJob',
   updateJob: 'updateJob',
   getJobRun: 'getJobRun',
   removeJob: 'removeJob',

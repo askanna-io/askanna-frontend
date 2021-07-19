@@ -119,13 +119,15 @@ export default defineComponent({
       forceFileDownload.trigger({ source: metricFullData.value, name: `run_${uuid}_metrics.json` })
     }
 
-    onBeforeMount(async () => {
+    const fetchData = async () => {
       await metricStore.actions.clearMetric()
       const view = context.root.$route.meta.tabValue
       if (view) {
         currentView.value = views.find(item => item.value === view)
       }
-    })
+    }
+
+    onBeforeMount(() => fetchData())
 
     return {
       items,

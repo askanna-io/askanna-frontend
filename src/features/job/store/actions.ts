@@ -224,5 +224,21 @@ export const actions: ActionTree<jobState, RootState> = {
 
   async [type.action.changeJob]({ commit }, data) {
     commit(type.UPDATE_JOB, data)
+  },
+
+  async [type.action.deleteJob]({ commit }, { short_uuid: uuid, name }) {
+    try {
+      await apiService({
+        uuid,
+        action: api.delete,
+        method: 'delete',
+        serviceName
+      })
+      logger.success(commit, `You have successfully deleted the job ${name}`)
+
+      return true
+    } catch (error) {
+      logger.error(commit, 'Error on delete job in deleteJob action.\nError: ', error)
+    }
   }
 }

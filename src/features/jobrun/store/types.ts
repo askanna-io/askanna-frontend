@@ -112,6 +112,7 @@ export const action = {
   getRunsJob: 'getRunsJob',
   udapteJobRun: 'udapteJobRun',
   getJobRunLog: 'getJobRunLog',
+  deleteRunInfo: 'deleteRunInfo',
   getFileSource: 'getFileSource',
   resetJobRunLog: 'resetJobRunLog',
   downloadPackage: 'downloadPackage',
