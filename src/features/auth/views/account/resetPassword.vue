@@ -55,7 +55,7 @@ export default defineComponent({
     const loading = ref(true)
     const isInvitationValid = ref(false)
 
-    onBeforeMount(async () => {
+    const fetchData = async () => {
       loading.value = true
       const tokenStatus = await authStore.actions.validateResetToken({
         uid,
@@ -66,7 +66,9 @@ export default defineComponent({
         isInvitationValid.value = true
       }
       loading.value = false
-    })
+    }
+
+    onBeforeMount(() => fetchData())
 
     return {
       loading,

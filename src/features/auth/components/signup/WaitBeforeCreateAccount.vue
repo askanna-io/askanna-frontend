@@ -25,7 +25,7 @@ export default defineComponent({
     const polling = ref(null)
     const isReady = computed(() => prepareAccount.IsAccountReady.value)
 
-    const checkIsReady = () => {
+    const checkIsReady = async () => {
       polling.value = setInterval(async () => {
         await prepareAccount.checkIfWorkspaceIsReady({ ...authData.value })
 
@@ -36,9 +36,7 @@ export default defineComponent({
       }, 5000)
     }
 
-    onBeforeMount(async () => {
-      checkIsReady()
-    })
+    onBeforeMount(() => checkIsReady())
 
     onUnmounted(() => {
       clearInterval(polling.value)

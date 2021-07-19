@@ -50,7 +50,7 @@ export default defineComponent({
       () => Boolean(workspaceStore.invitation.value.email) && workspaceStore.invitation.value.status !== 'accepted'
     )
 
-    onBeforeMount(async () => {
+    const fetchData = async () => {
       loading.value = true
       await authStore.actions.logout(false)
       await workspaceStore.getInvitetionInfo({
@@ -59,7 +59,9 @@ export default defineComponent({
         workspaceId
       })
       loading.value = false
-    })
+    }
+
+    onBeforeMount(() => fetchData())
 
     return {
       loading,

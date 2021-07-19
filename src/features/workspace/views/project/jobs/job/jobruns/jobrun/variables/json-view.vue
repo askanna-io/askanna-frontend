@@ -52,9 +52,10 @@ export default defineComponent({
       throttled(e.target.scrollTop)
     }
 
-    onBeforeMount(async () => {
+    const fetchData = async () =>
       await runinfoVariablesStore.actions.getVariablesJSON({ uuid, params: { limit: 10, offset: 0 } })
-    })
+
+    onBeforeMount(() => fetchData())
 
     return { loading, variablesJSON, scrollerStyles, handleOnScroll }
   }

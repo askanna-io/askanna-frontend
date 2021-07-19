@@ -28,8 +28,8 @@ export default defineComponent({
       }
     }
 
-    onBeforeMount(async () => {
-      workspaceStore.reset()
+    const fetchData = async () => {
+      await workspaceStore.reset()
 
       // get workspaces if they not in store
       if (!workspaceStore.workspaces.value.count) {
@@ -50,7 +50,9 @@ export default defineComponent({
       } else {
         setTimeout(() => workspaceStore.setLoading({ projects: false }), 100)
       }
-    })
+    }
+
+    onBeforeMount(() => fetchData())
 
     onUpdated(async () => {
       const { workspaceId } = context.root.$route.params

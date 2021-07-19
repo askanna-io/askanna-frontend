@@ -23,16 +23,18 @@ export default defineComponent({
     JobsList
   },
 
-  setup(props, context) {
+  setup(_, context) {
     const jobRunStore = useJobRunStore()
     const projectStore = useProjectStore()
     const { projectId } = context.root.$route.params
 
-    onBeforeMount(async () => {
+    const fetchData = async () => {
       await jobRunStore.resetStore()
       await projectStore.resetProjectJobs()
       await projectStore.getProjectJobs(projectId)
-    })
+    }
+
+    onBeforeMount(() => fetchData())
 
     const projectJobs = computed(() => projectStore.projectJobs.value)
 

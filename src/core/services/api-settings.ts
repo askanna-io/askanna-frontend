@@ -80,7 +80,7 @@ export const api: ApiSettings = {
       add: () => 'job/',
       get: id => `job/${id}/`,
       update: id => `job/${id}/`,
-      remove: id => `job/${id}/`,
+      delete: id => `job/${id}/`,
       info: id => `job/${id}/info/`,
       kill: id => `job/${id}/kill/`,
       pause: id => `job/${id}/pause/`,
@@ -96,6 +96,7 @@ export const api: ApiSettings = {
     jobrun: {
       get: id => `runinfo/${id}/`,
       runs: id => `job/${id}/runs/`,
+      delete: id => `runinfo/${id}/`,
       getJobRun: id => `runinfo/${id}/`,
       getJobRunResult: id => `result/${id}/`,
       getJobRunLog: id => `log/${id}/`,

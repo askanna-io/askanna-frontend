@@ -6,7 +6,7 @@
     <v-spacer />
     <v-spacer />
 
-    <create-project-popup />
+    <create-project-popup v-if="!isEditWorkspaceView" />
 
     <v-menu
       bottom
@@ -24,9 +24,11 @@
       </template>
 
       <v-list>
-        <v-list-item v-for="(item, index) in menuItems" :key="index" @click="handleMenuClick(item)">
-          <v-list-item-title>{{ item.title }}</v-list-item-title>
-        </v-list-item>
+        <template v-for="(item, index) in menuItems">
+          <v-list-item v-if="item.isVisible" @click="handleMenuClick(item)" :key="index">
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item>
+        </template>
       </v-list>
     </v-menu>
   </v-toolbar>
@@ -47,27 +49,35 @@ export default defineComponent({
     workspaceUuid: {
       type: String,
       default: ''
+    },
+    isCurrentUserAdmin: {
+      type: Boolean,
+      default: () => false
     }
   },
 
   components: { CreateProjectPopup },
 
-  setup(_, context) {
+  setup(props, context) {
     const router = useRouterAskAnna(context)
 
     const menu = ref(false)
 
-    const editItems = [{ title: 'People', to: 'workspace-people' }]
-    const fulleItems = [
-      { title: 'Edit workspace', to: 'workspace-edit' },
-      { title: 'People', to: 'workspace-people' }
-    ]
+    const menuItems = computed(() => [
+      { title: 'Edit workspace', to: 'workspace-edit', isVisible: true },
+      { title: 'Remove workspace', onClick: 'onOpenWorkspaceRemove', isVisible: props.isCurrentUserAdmin },
+      { title: 'People', to: 'workspace-people', isVisible: true }
+    ])
 
     const isEditWorkspaceView = computed(() => context.root.$route.name === 'workspace-edit')
-    const menuItems = computed(() => (isEditWorkspaceView.value ? editItems : fulleItems))
 
     const handleMenuClick = item => {
       menu.value = false
+
+      if (item.onClick) {
+        context.emit(item.onClick)
+        return
+      }
 
       router.push({
         name: item.to,

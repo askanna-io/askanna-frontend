@@ -19,32 +19,49 @@
         </v-toolbar>
 
         <v-card-actions>
-          <v-btn
-            text
-            block
-            small
-            outlined
-            class="btn--hover"
-            @click="handlerOpenEditJobPage"
-            :disabled="disabledButtonEditJob"
-          >
-            Edit job
-          </v-btn>
+          <v-row dense class="mx-2">
+            <v-col cols="12">
+              <v-btn
+                text
+                block
+                small
+                outlined
+                class="btn--hover"
+                @click="handlerOpenEditJobPage"
+                :disabled="disabledButtonEditJob"
+              >
+                Edit job
+              </v-btn>
+            </v-col>
+            <v-col cols="12">
+              <v-btn small outlined text block color="error" class="btn--hover" @click="handleOpenConfirmDeleteJob"
+                >Remove this job
+              </v-btn>
+            </v-col>
+          </v-row>
         </v-card-actions>
       </v-card>
     </v-menu>
+    <confirm-delete-job-popup
+      :jobName="job.name"
+      :value="deleteJobConfirmPopup"
+      @onClose="handlCloseConfirmDeletePopup"
+      @onDeleteConfirm="handleDeleteConfirmJob"
+    />
   </div>
 </template>
 
 <script>
+import useJobStore from '@/features/job/composition/useJobStore'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import { ref, defineComponent, computed } from '@vue/composition-api'
-import ConfirmDeleteProjectPopup from '@/features/project/components/popup/ConfirmDeleteProjectPopup'
+import ConfirmDeleteJobPopup from '@/features/project/components/popup/ConfirmDeleteJobPopup'
 
 export default defineComponent({
   name: 'JobMenuPopup',
 
   components: {
-    ConfirmDeleteProjectPopup
+    ConfirmDeleteJobPopup
   },
 
   props: {
@@ -61,25 +78,47 @@ export default defineComponent({
   },
 
   setup(props, context) {
+    const jobStore = useJobStore()
+    const router = useRouterAskAnna(context)
+
     const menu = ref(false)
+    const deleteJobConfirmPopup = ref(false)
+
     const editJobRouteName = 'workspace-project-job-edit'
 
     const disabledButtonEditJob = computed(() => context.root.$route.name === editJobRouteName)
+
     const handlerOpenEditJobPage = async () => {
-      context.root.$router.push({ name: editJobRouteName })
+      router.push({ name: editJobRouteName })
       handleClose()
     }
 
-    const handleClose = () => {
+    const handleOpenConfirmDeleteJob = async () => (deleteJobConfirmPopup.value = true)
+
+    const handlCloseConfirmDeletePopup = () => (deleteJobConfirmPopup.value = false)
+
+    const handleClose = () => (menu.value = false)
+
+    const handleDeleteConfirmJob = async () => {
+      const isDeleted = await jobStore.deleteJob(props.job)
+
+      deleteJobConfirmPopup.value = false
       menu.value = false
+      if (isDeleted) {
+        router.push({ name: 'workspace-project-jobs' })
+      }
     }
 
     return {
       menu,
+      deleteJobConfirmPopup,
       disabledButtonEditJob,
 
       handleClose,
-      handlerOpenEditJobPage
+      handleDeleteConfirmJob,
+      handlerOpenEditJobPage,
+      handleOpenConfirmDeleteJob,
+      handlCloseConfirmDeletePopup
     }
   }
 })

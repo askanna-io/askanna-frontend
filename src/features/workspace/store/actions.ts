@@ -409,5 +409,24 @@ export const actions: ActionTree<workspaceState, RootState> = {
     }
 
     return result
+  },
+
+  async [action.deleteWorkspace]({ commit }, workspace) {
+    try {
+      await apiService({
+        action: api.delete,
+        method: 'delete',
+        serviceName,
+        uuid: workspace.short_uuid
+      })
+
+      logger.success(commit, `You have successfully deleted the workspace ${workspace.name}`)
+
+      return true
+    } catch (error) {
+      logger.error(commit, 'Error on delete workspace in deleteWorkspace action.\nError: ', error)
+
+      return
+    }
   }
 }

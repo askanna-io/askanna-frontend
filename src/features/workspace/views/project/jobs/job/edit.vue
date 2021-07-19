@@ -85,10 +85,12 @@ export default defineComponent({
     const isNameChanged = ref(false)
     const showConfirmPopup = ref(false)
 
-    onBeforeMount(async () => {
+    const fetchData = async () => {
       await jobStore.resetStore()
       await jobStore.getJob(jobId)
-    })
+    }
+
+    onBeforeMount(() => fetchData())
 
     const job = computed(() => jobStore.job.value)
     const loading = computed(() => jobStore.jobLoading.value)

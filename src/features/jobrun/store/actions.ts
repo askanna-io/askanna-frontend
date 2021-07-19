@@ -380,5 +380,21 @@ export const actions: ActionTree<jobRunState, RootState> = {
     }
 
     return packageTarget.target || ''
+  },
+
+  async [type.action.deleteRunInfo]({ commit }, { short_uuid: uuid, name }) {
+    try {
+      await apiService({
+        uuid,
+        action: api.delete,
+        method: 'delete',
+        serviceName
+      })
+      logger.success(commit, `You have successfully deleted the run ${name || uuid}`)
+
+      return true
+    } catch (error) {
+      logger.error(commit, 'Error on delete runInfo in deleteRunInfo action.\nError: ', error)
+    }
   }
 }

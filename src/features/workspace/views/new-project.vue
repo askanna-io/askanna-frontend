@@ -52,9 +52,9 @@ export default defineComponent({
     const projectStore = useProjectStore(context)
     const workSpaceStore = useWorkSpaceStore(context)
 
-    onBeforeMount(async () => {
-      projectStore.getProjectTemplates()
-    })
+    const fetchData = async () => await projectStore.getProjectTemplates()
+
+    onBeforeMount(() => fetchData())
 
     const projectName = computed(() =>
       projectStore.project.value.name ? `"${projectStore.project.value.name}"` : '"project name"'

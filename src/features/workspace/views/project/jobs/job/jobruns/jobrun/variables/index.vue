@@ -141,7 +141,7 @@ export default defineComponent({
       forceFileDownload.trigger({ source: variablesFullData.value, name: `run_${uuid}_variables.json` })
     }
 
-    onBeforeMount(async () => {
+    onBeforeMount(() => {
       const view = context.root.$route.meta.tabValue
       if (view) {
         currentView.value = views.find(item => item.value === view)

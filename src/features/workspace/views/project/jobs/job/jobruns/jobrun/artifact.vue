@@ -156,7 +156,7 @@ export default defineComponent({
       })
     }
 
-    onBeforeMount(async () => {
+    const fetchData = async () => {
       const { jobRunId } = context.root.$route.params
 
       if (jobRunStore.jobRun.value.short_uuid !== jobRunId) {
@@ -169,7 +169,9 @@ export default defineComponent({
           artifactShortId: jobRunStore.jobRun.value.artifact.short_uuid
         }
       })
-    })
+    }
+
+    onBeforeMount(() => fetchData())
 
     watch(filePath, async filePath => {
       if (!currentPath.value || (currentPath.value && currentPath.value.is_dir)) await jobRunStore.resetFile()
