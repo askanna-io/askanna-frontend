@@ -1,4 +1,34 @@
+const fs = require('fs')
 const path = require('path')
+const yaml = require('js-yaml')
+
+const createAskAnnaConfig = () => {
+  // eslint-disable-next-line no-console
+  console.log('start create askanna-config.yml......')
+
+  const data = {
+    'askanna-remote': process.env.VUE_APP_API_URL
+  }
+  try {
+    const yamlStr = yaml.dump(data)
+    fs.writeFileSync('./dist/askanna-config.yml', yamlStr, 'utf8')
+
+    // eslint-disable-next-line no-console
+    console.log('finish create askanna-config.yml.')
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.log('error on create askanna-config.yml.:', error)
+  }
+}
+
+const handlerAfterCompilerDoneHook = function (cb) {
+  this.apply = function (compiler) {
+    if (compiler.hooks && compiler.hooks.done) {
+      compiler.hooks.done.tap('webpack-arbitrary-code', cb)
+    }
+  }
+}
+
 module.exports = {
   pwa: {
     name: 'AskAnna',
@@ -22,6 +52,7 @@ module.exports = {
     disableHostCheck: true
   },
   configureWebpack: {
+    plugins: [new handlerAfterCompilerDoneHook(createAskAnnaConfig)],
     resolve: {
       extensions: ['.ts', '.js'],
       alias: {

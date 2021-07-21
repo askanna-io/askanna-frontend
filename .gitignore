@@ -25,6 +25,7 @@ package-lock.json
 *.njsproj
 *.sln
 *.sw?
+.lh
 
 package-lock.json
 /src/core/services/api-settings-1.ts
