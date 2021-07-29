@@ -34,10 +34,10 @@
   </v-menu>
 </template>
 <script>
+import useCopy from '@/core/composition/useCopy'
 import useSlicedText from '@/core/composition/useSlicedText'
-import useSnackBar from '@/core/components/snackBar/useSnackBar'
-import { ref, computed, defineComponent } from '@vue/composition-api'
 import TheHighlight from '@/core/components/highlight/TheHighlight'
+import { ref, computed, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'MetricDictionaryType',
@@ -65,8 +65,8 @@ export default defineComponent({
 
   components: { TheHighlight },
 
-  setup(props, context) {
-    const snackBar = useSnackBar()
+  setup(props) {
+    const copy = useCopy()
 
     const menu = ref(false)
     const BREAK_LINE_REGEXP = /\r\n|\r|\n/g
@@ -112,16 +112,7 @@ export default defineComponent({
 
     const handleClose = () => (menu.value = false)
 
-    const handleCopy = async () => {
-      context.root.$copyText(jsonString.value).then(
-        function (e) {
-          snackBar.showSnackBar({ message: 'Copied', color: 'success' })
-        },
-        function (e) {
-          snackBar.showSnackBar({ message: 'Can not copy', color: 'failed' })
-        }
-      )
-    }
+    const handleCopy = () => copy.handleCopyText(jsonString.value)
 
     return { menu, maxLength, calcRows, slicedText, jsonString, previewJson, handleCopy, handleClose }
   }

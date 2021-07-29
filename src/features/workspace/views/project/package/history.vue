@@ -107,11 +107,11 @@
 <script>
 import { throttle } from 'lodash'
 import { useWindowSize } from '@u3u/vue-hooks'
+import useCopy from '@/core/composition/useCopy'
 import useQuery from '@/core/composition/useQuery'
 import useMoment from '@/core/composition/useMoment'
 import useSlicedText from '@/core/composition/useSlicedText'
 import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
-import useSnackBar from '@/core/components/snackBar/useSnackBar'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import usePackagesStore from '@packages/composition/usePackagesStore'
 import PackageToolbar from '@/features/package/components/PackageToolbar'
@@ -127,7 +127,7 @@ export default defineComponent({
   },
 
   setup(_, context) {
-    const snackBar = useSnackBar()
+    const copy = useCopy()
     const moment = useMoment(context)
     const { width } = useWindowSize()
     const slicedText = useSlicedText()
@@ -232,16 +232,7 @@ export default defineComponent({
       })
     }
 
-    const handleCopy = id => {
-      context.root.$copyText(id).then(
-        function (e) {
-          snackBar.showSnackBar({ message: 'Copied', color: 'success' })
-        },
-        function (e) {
-          snackBar.showSnackBar({ message: 'Can not copy', color: 'failed' })
-        }
-      )
-    }
+    const handleCopy = id => copy.handleCopyText(id)
 
     const maxLength = computed(() => {
       switch (context.root.$vuetify.breakpoint.name) {

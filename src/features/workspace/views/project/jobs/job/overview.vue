@@ -81,6 +81,7 @@ export default defineComponent({
       nextRun,
       schedules,
       lastPackage: projectStore.lastPackage,
+
       handleGoToCode
     }
   }

@@ -1,15 +1,18 @@
 //@ts-nocheck
-import { SetupContext } from '@vue/composition-api'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
 
-export default function (context: SetupContext) {
+export default () => {
   const snackBar = useSnackBar()
 
   const handleCopyText = (text: string) => {
-    context.root.$copyText(text).then(
-      () => snackBar.showSnackBar({ message: 'Copied', color: 'success' }),
-      () => snackBar.showSnackBar({ message: 'Can not copy', color: 'failed' })
-    )
+    const el = document.createElement('textarea')
+    el.addEventListener('focusin', e => e.stopPropagation())
+    el.value = text
+    document.body.appendChild(el)
+    el.select()
+    document.execCommand('copy')
+    document.body.removeChild(el)
+    snackBar.showSnackBar({ message: 'Copied', color: 'success' })
   }
 
   const handleCopyTextById = (id: string) => {

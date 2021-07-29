@@ -4,7 +4,6 @@ import VueAxios from 'vue-axios'
 import hooks from '@u3u/vue-hooks'
 import Beta from '@/core/plugins/beta'
 import VueFileAgent from 'vue-file-agent'
-import VueClipboard from 'vue-clipboard2'
 import $axios from '@/core/plugins/axios'
 import Sticky from 'vue-sticky-directive'
 import Logger from '@/core/plugins/logger'
@@ -35,7 +34,6 @@ if (process.env.VUE_APP_SENTRY === 'on') {
   })
 }
 
-Vue.use(VueClipboard)
 Vue.use(VueFileAgent)
 // register globally
 Vue.use(Beta)

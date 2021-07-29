@@ -98,11 +98,11 @@
 </template>
 <script>
 import { useWindowSize } from '@u3u/vue-hooks'
-import { JobRun, JobRunModel } from '../../store/types'
+import { JobRunModel } from '../../store/types'
+import useCopy from '@/core/composition/useCopy'
 import usePrettyJSON from '@/core/composition/usePrettyJSON'
 import useJobRunStore from '../../composition/useJobRunStore'
 import JobRunResultPreview from './result/JobRunResultPreview'
-import useSnackBar from '@/core/components/snackBar/useSnackBar'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import TheHighlight from '@/core/components/highlight/TheHighlight'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
@@ -121,8 +121,8 @@ export default defineComponent({
 
   components: { TheHighlight, JobRunResultPreview, AskAnnaLoadingProgress },
 
-  setup(props, context) {
-    const snackBar = useSnackBar()
+  setup(_, context) {
+    const copy = useCopy()
     const { height } = useWindowSize()
     const prettyJSON = usePrettyJSON()
     const jobRunStore = useJobRunStore()
@@ -203,10 +203,7 @@ export default defineComponent({
     const handleCopy = async () => {
       await jobRunStore.getJobRunResult(jobRunId)
 
-      context.root.$copyText(jobRunResultSource.value).then(
-        () => snackBar.showSnackBar({ message: 'Copied', color: 'success' }),
-        () => snackBar.showSnackBar({ message: 'Can not copy', color: 'failed' })
-      )
+      copy.handleCopyText(jobRunResultSource.value)
     }
 
     return {

@@ -24,10 +24,9 @@
 </template>
 
 <script>
+import useCopy from '@/core/composition/useCopy'
 import { apiUrl } from '@/core/services/api-settings'
 import { defineComponent } from '@vue/composition-api'
-import useJobStore from '@job/composition/useJobStore'
-import useSnackBar from '@/core/components/snackBar/useSnackBar'
 import TheHighlight from '@/core/components/highlight/TheHighlight'
 import useAuthStore from '@/features/auth/composition/useAuthStore'
 
@@ -36,9 +35,8 @@ export default defineComponent({
 
   components: { TheHighlight },
 
-  setup(props, context) {
-    const jobStore = useJobStore()
-    const snackBar = useSnackBar()
+  setup(_, context) {
+    const copy = useCopy()
     const authStore = useAuthStore()
 
     const { jobId } = context.root.$route.params
@@ -62,16 +60,7 @@ response = requests.post(url,
 print(response.status_code)
 print(response.json())`
 
-    const handleCopy = () => {
-      context.root.$copyText(pythonCode).then(
-        function (e) {
-          snackBar.showSnackBar({ message: 'Copied', color: 'success' })
-        },
-        function (e) {
-          snackBar.showSnackBar({ message: 'Can not copy', color: 'warning' })
-        }
-      )
-    }
+    const handleCopy = () => copy.handleCopyText(pythonCode)
 
     return {
       pythonCode,

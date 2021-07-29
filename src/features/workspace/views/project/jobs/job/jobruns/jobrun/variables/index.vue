@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import useSnackBar from '@/core/components/snackBar/useSnackBar'
+import useCopy from '@/core/composition/useCopy'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
 import useProjectStore from '@/features/project/composition/useProjectStore'
@@ -71,7 +71,7 @@ export default defineComponent({
   name: 'variables-index',
 
   setup(_, context) {
-    const snackBar = useSnackBar()
+    const copy = useCopy()
     const router = useRouterAskAnna(context)
     const runinfoVariablesStore = useRuninfoVariablesStore()
 
@@ -125,14 +125,7 @@ export default defineComponent({
     const handleCopy = async () => {
       if (!variablesFullData.value) await runinfoVariablesStore.actions.getVariablesFullData({ uuid })
 
-      context.root.$copyText(variablesFullData.value).then(
-        function (e) {
-          snackBar.showSnackBar({ message: 'Copied', color: 'success' })
-        },
-        function (e) {
-          snackBar.showSnackBar({ message: 'Can not copy', color: 'failed' })
-        }
-      )
+      copy.handleCopyText(variablesFullData.value)
     }
 
     const handleDownload = async () => {

@@ -70,11 +70,11 @@
   </div>
 </template>
 <script>
+import useCopy from '@/core/composition/useCopy'
 import JobRunPayLoad from './JobRunPayLoad.vue'
 import useJobRunStore from '../../composition/useJobRunStore'
-import useSnackBar from '@/core/components/snackBar/useSnackBar'
-import useForceFileDownload from '@/core/composition/useForceFileDownload'
 import { computed, defineComponent } from '@vue/composition-api'
+import useForceFileDownload from '@/core/composition/useForceFileDownload'
 import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress'
 
 export default defineComponent({
@@ -85,8 +85,8 @@ export default defineComponent({
     AskAnnaLoadingProgress
   },
 
-  setup(props, context) {
-    const snackBar = useSnackBar()
+  setup() {
+    const copy = useCopy()
     const jobRunStore = useJobRunStore()
     const forceFileDownload = useForceFileDownload()
 
@@ -103,16 +103,7 @@ export default defineComponent({
       forceFileDownload.trigger({ source: jrPayload, name: `run_${short_uuid}_payload.json` })
     }
 
-    const handleCopy = () => {
-      context.root.$copyText(jobRunPayloadComputed.value).then(
-        function (e) {
-          snackBar.showSnackBar({ message: 'Copied', color: 'success' })
-        },
-        function (e) {
-          snackBar.showSnackBar({ message: 'Can not copy', color: 'failed' })
-        }
-      )
-    }
+    const handleCopy = () => copy.handleCopyText(jobRunPayloadComputed.value)
 
     return {
       loading,
