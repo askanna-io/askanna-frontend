@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import useSnackBar from '@/core/components/snackBar/useSnackBar'
+import useCopy from '@/core/composition/useCopy'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useMetricStore from '@/features/metric/composition/useMetricStore'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
@@ -60,7 +60,7 @@ export default defineComponent({
   name: 'metric-index',
 
   setup(_, context) {
-    const snackBar = useSnackBar()
+    const copy = useCopy()
     const metricStore = useMetricStore()
     const projectStore = useProjectStore()
     const router = useRouterAskAnna(context)
@@ -103,14 +103,7 @@ export default defineComponent({
     const handleCopy = async () => {
       if (!metricFullData.value) await metricStore.actions.getMetricFullData({ uuid })
 
-      context.root.$copyText(metricFullData.value).then(
-        function (e) {
-          snackBar.showSnackBar({ message: 'Copied', color: 'success' })
-        },
-        function (e) {
-          snackBar.showSnackBar({ message: 'Can not copy', color: 'failed' })
-        }
-      )
+      copy.handleCopyText(metricFullData.value)
     }
 
     const handleDownload = async () => {

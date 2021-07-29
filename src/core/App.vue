@@ -32,6 +32,10 @@ export default defineComponent({
   margin-top: 0;
   margin-bottom: 0;
 }
+.theme--light.v-card > .v-card__subtitle,
+.theme--light.v-card > .v-card__text .v-window {
+  color: rgba(0, 0, 0, 0.87) !important;
+}
 .ask-anna-btn-loader {
   animation: loader 1s infinite;
   display: flex;
@@ -174,6 +178,10 @@ export default defineComponent({
   color: #5d3eb2 !important;
 }
 
+.primary--hover:hover {
+  color: #5d3eb2 !important;
+}
+
 .v-application code,
 .v-application kbd {
   font-weight: 700 !important;
@@ -232,7 +240,7 @@ code.lang-shell {
 .AskAnna-card {
   &--in-dialog {
     .v-card__text {
-      font-size: 0.95rem;
+      font-size: 16px;
     }
   }
 }

@@ -3,7 +3,7 @@
     <v-card-title>Definition</v-card-title>
     <v-container class="mx-1 py-0" fluid>
       <v-row>
-        <v-col cols="2" :sm="job.schedules.length ? 6 : 12">
+        <v-col cols="2" :sm="job.schedules.length ? 4 : 5">
           <v-row>
             <v-col cols="12"><JobRunInfoCopyText text="SUUID" :value="job.short_uuid" /></v-col>
             <v-col cols="12">
@@ -37,7 +37,7 @@
             </v-col>
           </v-row>
         </v-col>
-        <v-col cols="2" sm="6">
+        <v-col cols="2" :sm="job.schedules.length ? 4 : 5" v-if="job.schedules.length || nextRun.datatime">
           <v-row>
             <v-col v-if="nextRun.datatime" cols="12">
               <v-tooltip top left content-class="opacity-1">
@@ -89,6 +89,19 @@
             </v-col>
           </v-row>
         </v-col>
+        <v-col cols="2" :sm="job.schedules.length ? 4 : 5">
+          <v-row>
+            <v-col cols="12"
+              ><notifications-email
+                title="Notification"
+                :fullMode="false"
+                :nudgeLeft="nudgeLeft"
+                :notifications="job.notifications"
+                :fullValue="!job.schedules.length"
+              />
+            </v-col>
+          </v-row>
+        </v-col>
       </v-row>
     </v-container>
   </div>
@@ -96,13 +109,15 @@
 
 <script>
 import { computed, defineComponent } from '@vue/composition-api'
+
+import NotificationsEmail from './NotificationsEmail.vue'
 import JobRunInfoEnv from '@/features/jobrun/components/jobrun/parts/JobRunInfoEnv'
 import JobRunInfoCopyText from '@/features/jobrun/components/jobrun/parts/JobRunInfoCopyText'
 
 export default defineComponent({
   name: 'JobDefinition',
 
-  components: { JobRunInfoEnv, JobRunInfoCopyText },
+  components: { JobRunInfoEnv, JobRunInfoCopyText, NotificationsEmail },
 
   props: {
     job: {
@@ -110,7 +125,11 @@ export default defineComponent({
       default: () => {
         return {
           timezone: '',
-          environment: ''
+          environment: '',
+          notifications: {
+            all: { email: [] },
+            error: { email: [] }
+          }
         }
       }
     },

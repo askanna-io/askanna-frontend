@@ -38,6 +38,10 @@ interface Job {
   environment: string
   description: string
   schedules?: Schedule[]
+  notifications: {
+    info: { email: string[] }
+    error: { email: string[] }
+  }
 }
 
 interface Schedule {
@@ -123,7 +127,11 @@ export class JobModel {
       schedules: [],
       environment: '',
       short_uuid: '',
-      description: ''
+      description: '',
+      notifications: {
+        info: { email: [] },
+        error: { email: [] }
+      }
     }
   }
 }

@@ -22,8 +22,8 @@
 </template>
 
 <script>
+import useCopy from '@/core/composition/useCopy'
 import { defineComponent } from '@vue/composition-api'
-import useSnackBar from '@/core/components/snackBar/useSnackBar'
 
 export default defineComponent({
   name: 'AskAnnaCopyText',
@@ -63,14 +63,9 @@ export default defineComponent({
   },
 
   setup(props, context) {
-    const snackBar = useSnackBar()
+    const copy = useCopy(context)
 
-    const handleCopy = () => {
-      context.root.$copyText(props.text).then(
-        () => snackBar.showSnackBar({ message: 'Copied', color: 'success' }),
-        () => snackBar.showSnackBar({ message: 'Can not copy', color: 'failed' })
-      )
-    }
+    const handleCopy = () => copy.handleCopyText(props.text)
 
     return { handleCopy }
   }

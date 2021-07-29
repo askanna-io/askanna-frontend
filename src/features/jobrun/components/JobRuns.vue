@@ -83,9 +83,9 @@
 </template>
 
 <script>
+import useCopy from '@/core/composition/useCopy'
 import useMoment from '@/core/composition/useMoment'
 import useNumeral from '@/core/composition/useNumeral'
-import useSnackBar from '@/core/components/snackBar/useSnackBar'
 
 import { ref, watch, defineComponent } from '@vue/composition-api'
 
@@ -125,8 +125,8 @@ export default defineComponent({
   },
 
   setup(props, context) {
+    const copy = useCopy()
     const numeral = useNumeral()
-    const snackBar = useSnackBar()
     const moment = useMoment(context)
 
     const page = ref(0)
@@ -186,16 +186,7 @@ export default defineComponent({
       }
     ]
 
-    const handleCopy = id => {
-      context.root.$copyText(id).then(
-        function (e) {
-          snackBar.showSnackBar({ message: 'Copied', color: 'success' })
-        },
-        function (e) {
-          snackBar.showSnackBar({ message: 'Can not copy', color: 'failed' })
-        }
-      )
-    }
+    const handleCopy = id => copy.handleCopyText(id)
 
     const calculateDuration = item => moment.durationHumanizeBySecond(item.duration)
 

@@ -94,9 +94,9 @@
   </v-card>
 </template>
 <script>
+import useCopy from '@/core/composition/useCopy'
 import { url } from '@/core/services/api-settings'
 import { ref, defineComponent } from '@vue/composition-api'
-import useSnackBar from '@/core/components/snackBar/useSnackBar'
 
 export default defineComponent({
   name: 'ReplaceInfo',
@@ -112,8 +112,8 @@ export default defineComponent({
     }
   },
 
-  setup(props, context) {
-    const snackBar = useSnackBar()
+  setup(props) {
+    const copy = useCopy()
 
     const projectUrl = ref(`push-target: ${url}/${props.workspaceId}/project/${props.projectShortUuid}`)
     const cliInstall = 'pip install askanna'
@@ -121,12 +121,7 @@ export default defineComponent({
     const askannaPushForce = 'askanna push -f'
     const askannaPushWithMessage = 'askanna push -m "a description"'
 
-    const handleCopy = text => {
-      context.root.$copyText(text).then(
-        () => snackBar.showSnackBar({ message: 'Copied', color: 'success' }),
-        () => snackBar.showSnackBar({ message: 'Can not copy', color: 'failed' })
-      )
-    }
+    const handleCopy = text => copy.handleCopyText(text)
 
     return {
       projectUrl,
