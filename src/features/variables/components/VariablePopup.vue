@@ -52,7 +52,7 @@
                   :error-messages="error.value"
                   :rules="[
                     RULE.required('The value is required'),
-                    RULE.max('The maximum length of the variable value is 3,000 characters', 3000)
+                    RULE.max('The maximum length of the variable value is 10,000 characters', 10000)
                   ]"
                   @input="handleSetVariable({ path: 'value', value: $event })"
                 />
