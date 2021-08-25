@@ -12,7 +12,6 @@ The next configuration only has to be done once. Docker compose will use these f
 building the container.
 
 ```shell
-ln -s docker-compose.local.yml docker-compose.override.yml
 ln -s .env.development .env.production.local
 ```
 
@@ -26,7 +25,7 @@ After creating the container, you can open the frontend:
 [http://localhost:8080](http://localhost:8080). Please mind that we don't support HTTPS for local
 development.
 
-If you have changed the Dockerfile or changed something in `package.json`, please allow docker to
+If you have changed the Dockerfile or changed something in `package.json`, please allow Docker to
 rebuild the image:
 
 ```shell
@@ -35,38 +34,30 @@ docker-compose up --build
 
 Any change in the `src` folder will be automatically picked up and rebuild in this modus.
 
-### Developing remotely
+### Change AskAnna backend
 
-It is possible to use a remote Docker instance while developing locally. Information is found the
-[docker-compose.mutagen.yml](./docker-compose.mutagen.yml) file.
+When you develop locally, by default it will use the backend hosted at `https://api.askanna.eu`. In
+the file `.env.development` you can change the value `VUE_APP_API_URL`. For example, if you have
+the AskAnna Backend running locally you could set the value to `http://localhost:8000`.
 
-This method can also be used when developing on a MacOS to improve the app performance.
+### Removing docker-compose setup
 
-## Running build version in docker-compose
+In case you don't want to develop or run `askanna-frontend` locally anymore, or something happened
+which corrupted your installation. You can execute the following to remove `askanna-frontend` from
+your system:
 
-In case we are happy with the work and want to see how this builds into the staging environment,
-one can simulate that by setting the `docker-compose.production.yml` to be the
-`docker-compose.override.yml`:
-
-```shel
-ln -s docker-compose.production.yml docker-compose.override.yml
+```bash
+docker-compose rm --stop -v -f
 ```
 
-And then run:
+This will remove all volumes which where created for `askanna-frontend` to run.
 
-```shell
-docker-compose up --build
-```
-
-In this setup the AskAnna Frontend local production version can be accessed via:
-[askanna.127-0-0-1.nip.io](http://askanna.127-0-0-1.nip.io).
-
-## Development local without Docker
+## Development without Docker
 
 ### Vue specific configuration for docker
 
 In the root folder in the file `vue.config.js` we configured `host` to `0.0.0.0`. When used in a
-non-docker setup, you will be exposing the application publicly on the local network. **BE AWARE**
+non-Docker setup, you will be exposing the application publicly on the local network. **BE AWARE!**
 
 ### Project setup
 

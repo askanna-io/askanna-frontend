@@ -7,7 +7,7 @@ import workspaces from './fixtures/workspaces'
 import { Model, Server, Factory } from 'miragejs'
 
 export function createServer({ environment = 'development' } = {}) {
-  const apiUrl = `${process.env.VUE_APP_API_URL}:${process.env.VUE_APP_API_PORT}/`
+  const apiUrl = `${process.env.VUE_APP_API_URL}/`
 
   const server: Server = new Server({
     environment,
