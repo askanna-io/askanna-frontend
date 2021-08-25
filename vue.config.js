@@ -32,11 +32,16 @@ const handlerAfterCompilerDoneHook = function (cb) {
 module.exports = {
   pwa: {
     name: 'AskAnna',
+    themeColor: '#5d3eb2',
+    msTileColor: '#5d3eb2',
     appleMobileWebAppCapable: 'yes',
-    appleMobileWebAppStatusBarStyle: 'black',
+    appleMobileWebAppStatusBarStyle: 'default',
     workboxPluginMode: 'InjectManifest',
     workboxOptions: {
       swSrc: './src/service-worker.js'
+    },
+    manifestOptions: {
+      background_color: "#5d3eb2"
     }
   },
   chainWebpack: config => {
