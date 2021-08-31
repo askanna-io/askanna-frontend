@@ -26,7 +26,7 @@
       </v-btn>
     </template>
     <template v-slot:no-data>
-      There are no variables available for this project. In case you need a variable, you can easily create one with the
+      There are no variables available for this project. If you need a variable, you can easily create one with the
       option "+ new variable" above this table.
     </template>
   </v-data-table>

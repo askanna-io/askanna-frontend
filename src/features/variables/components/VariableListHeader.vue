@@ -4,10 +4,7 @@
       <v-card-text>
         <p>
           Project variables are applied to every run environment within this project. You can use variables for
-          settings, passwords, tokens, etcetera. Masked variables can be used for sensitive information. By design we
-          will not expose the value of these variables in the web interface.
-        </p>
-        <p>
+          settings, passwords, tokens, etcetera. Masked variables can be used for sensitive information.
           <a
             class="app-link text-decoration-none primary--text font-weight-medium d-inline-block"
             href="https://docs.askanna.io/variables/"
