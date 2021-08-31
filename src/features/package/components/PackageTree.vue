@@ -82,10 +82,3 @@ export default defineComponent({
   }
 })
 </script>
-<style>
-.job-table a {
-  text-decoration: none;
-  display: block;
-  color: inherit;
-}
-</style>

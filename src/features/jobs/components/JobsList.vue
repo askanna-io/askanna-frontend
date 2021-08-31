@@ -2,9 +2,9 @@
   <v-data-table
     show-expand
     fixed-header
+    :hide-default-footer="!jobList.length"
     single-expand
     item-key="short_uuid"
-    no-data-text="For this project, there are no jobs configured."
     class="job-table scrollbar ask-anna-table ask-anna-table--with-links"
     :items="jobList"
     :expanded.sync="expanded"
@@ -12,6 +12,22 @@
     @item-expanded="handleExpand"
     @click:row="handleJobClick"
   >
+    <template v-slot:top>
+      <v-card flat>
+        <v-card-text>
+          A job is a command or a set of commands you want to run in AskAnna. You can use jobs to handle data, get a
+          prediction, train a model, et cetera.
+          <a
+            class="app-link text-decoration-none primary--text font-weight-medium d-inline-block"
+            href="https://docs.askanna.io/jobs/"
+            target="_blank"
+          >
+            Read the documentation</a
+          >
+          for more information about jobs and how you configure them.
+        </v-card-text>
+      </v-card>
+    </template>
     <template v-slot:expanded-item="{ item }">
       <td :colspan="8" class="pa-0">
         <ask-anna-loading-progress v-if="item.runs.count" :type="'table-row'" :loading="loading">
@@ -56,6 +72,11 @@
           >stop<v-avatar right><v-icon>mdi-stop</v-icon></v-avatar></v-chip
         >
       </v-chip-group>
+    </template>
+    <template v-slot:no-data>
+      For this project, there are no jobs configured. Check
+      <a class="ask-anna-link" href="https://docs.askanna.io/jobs/create-job/" target="_blank">the documentation</a>
+      on how you can create a job.
     </template>
   </v-data-table>
 </template>
@@ -166,6 +187,9 @@ export default defineComponent({
 .job-table tr {
   cursor: pointer;
 }
+.job-table .v-data-table__empty-wrapper {
+  cursor: initial !important;
+}
 .job-sub-table .v-data-table__wrapper tr th {
   z-index: 1;
 }
@@ -175,11 +199,5 @@ export default defineComponent({
 
 .v-data-table__expanded.v-data-table__expanded__content {
   box-shadow: none !important;
-}
-
-.job-table a {
-  text-decoration: none;
-  display: block;
-  color: inherit;
 }
 </style>
