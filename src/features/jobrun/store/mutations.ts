@@ -37,12 +37,17 @@ export const mutations: MutationTree<jobRunState> = {
     state.jobRunResult = data
   },
 
-  [type.SET_JOB_RUN_RESULT_PREVIEW](state, { data, contentExt, isShowPreview, isJobRunResultBig, isResultJSON }) {
+  [type.SET_JOB_RUN_RESULT_PREVIEW](
+    state,
+    { data, contentExt, isShowPreview, isJobRunResultBig, isResultJSON, isResultHTML, isResultBigForRawView }
+  ) {
     state.jobRunResultPreview = data
     state.isResultJSON = isResultJSON
+    state.isResultHTML = isResultHTML
     state.isShowPreview = isShowPreview
     state.jobRunResultExt = contentExt || 'json'
     state.isJobRunResultBig = isJobRunResultBig
+    state.isResultBigForRawView = isResultBigForRawView
   },
 
   [type.mutation.UPDATE_JOB_RUN_STORE](state) {
@@ -61,6 +66,7 @@ export const mutations: MutationTree<jobRunState> = {
     state.jobRunResultPreview = ''
     state.jobRunResultExt = 'json'
     state.isJobRunResultBig = true
+    state.isResultBigForRawView = false
 
     state.jobRun = new JobRunModel().state
 

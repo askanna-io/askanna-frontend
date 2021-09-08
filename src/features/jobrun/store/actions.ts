@@ -125,7 +125,7 @@ export const actions: ActionTree<jobRunState, RootState> = {
     commit(type.mutation.SET_LOADING, { name: stateType.resultLoading, value: true })
 
     const allowedFileExts = ['jpg', 'png', 'gif', 'jpeg']
-    const allowedTextExts = ['txt', 'plain', 'html', 'tsv']
+    const allowedTextExts = ['txt', 'plain', 'tsv', 'html']
     const allowedToShowPreview = ['xml', 'xslx', 'csv', 'tsv', 'json', 'html', 'txt', 'plain']
 
     let response = {
@@ -133,9 +133,11 @@ export const actions: ActionTree<jobRunState, RootState> = {
       headers: { 'content-type': '', 'content-range': '' }
     }
     let contentExt = ''
+    let isResultHTML = false
     let isResultJSON = true
     let isShowPreview = false
     let isJobRunResultBig = true
+    let isResultBigForRawView = false
     let contentLength: string | number = ''
 
     try {
@@ -155,7 +157,11 @@ export const actions: ActionTree<jobRunState, RootState> = {
       contentExt = result.extension
 
       isResultJSON = contentExt === 'json'
-      isJobRunResultBig = Number(contentLength) >= 100000
+      isResultHTML = contentExt === 'html'
+
+      const maxLength = isResultHTML ? 5242880 : 100000
+      isResultBigForRawView = Number(contentLength) >= 100000
+      isJobRunResultBig = Number(contentLength) >= maxLength
 
       // get result for files
       if (allowedTextExts.includes(contentExt) && !isJobRunResultBig) {
@@ -198,9 +204,11 @@ export const actions: ActionTree<jobRunState, RootState> = {
       data: response.data,
       contentExt,
       isResultJSON,
+      isResultHTML,
       isShowPreview,
       contentLength,
-      isJobRunResultBig
+      isJobRunResultBig,
+      isResultBigForRawView
     })
     commit(type.mutation.SET_LOADING, { name: stateType.resultLoading, value: false })
   },

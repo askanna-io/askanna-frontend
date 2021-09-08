@@ -27,7 +27,7 @@
           </v-btn>
         </div>
         <div>
-          <v-card class="ml-4" flat width="115" color="grey lighten-4" v-if="isValidJSON">
+          <v-card class="ml-4" flat width="115" color="grey lighten-4" v-if="isValidJSON || isResultHTML">
             <v-select
               dense
               hide-details
@@ -45,7 +45,7 @@
         </div>
       </v-flex>
     </v-toolbar>
-    <v-flex :style="scrollerStyles" class="overflow-y-auto" id="scroll-target">
+    <v-flex ref="scrolllWrapperRef" :style="scrollerStyles" class="overflow-y-auto" id="scroll-target">
       <ask-anna-loading-progress
         :loading="loading"
         fullWidth
@@ -57,10 +57,19 @@
         <div>
           <job-run-result-preview
             v-if="!isJobRunResultEmpty"
+            :view="currentView.value"
+            :maxHeight="`${maxHeight}px`"
             :fileExtension="jobRunResultExt"
             :dataSource="jobRunResultForView"
           />
-          <v-flex v-if="!isJobRunResultEmpty && isJobRunResultBig && isShowPreview" class="my-2 mb-2 text-center">
+          <v-flex
+            v-if="
+              !isJobRunResultEmpty &&
+              (isJobRunResultBig || (isResultBigForRawView && currentView.value === 'raw')) &&
+              isShowPreview
+            "
+            class="my-2 mb-2 text-center"
+          >
             <v-btn
               text
               small
@@ -136,6 +145,7 @@ export default defineComponent({
     const { view, jobRunId } = context.root.$route.params
 
     const currentView = ref(views[0])
+    const scrolllWrapperRef = ref(null)
 
     const viewModel = computed({
       get: () => currentView.value,
@@ -148,11 +158,14 @@ export default defineComponent({
 
     const loading = computed(() => jobRunStore.resultLoading.value)
     const isResultJSON = computed(() => jobRunStore.isResultJSON.value)
+    const isResultHTML = computed(() => jobRunStore.isResultHTML.value)
+
     const isShowPreview = computed(() => jobRunStore.isShowPreview.value)
     const jobRunResultRaw = computed(() => jobRunStore.jobRunResult.value)
     const jobRunResultExt = computed(() => jobRunStore.jobRunResultExt.value)
 
     const isJobRunResultBig = computed(() => jobRunStore.isJobRunResultBig.value)
+    const isResultBigForRawView = computed(() => jobRunStore.isResultBigForRawView.value)
     const isJobRunResultEmpty = computed(() => !jobRunResultPreview.value && !loading.value)
 
     const jobRunResultPreview = computed(() =>
@@ -181,9 +194,8 @@ export default defineComponent({
       await jobRunStore.getJobRunResultPreview(jobRunId)
     }
 
-    onBeforeMount(() => fetchData())
+    const maxHeight = computed(() => height.value - 120)
 
-    const maxHeight = computed(() => height.value - 110)
     const scrollerStyles = computed(() => {
       return { 'max-height': `${maxHeight.value}px` }
     })
@@ -196,8 +208,6 @@ export default defineComponent({
         source: jobRunResultRaw.value,
         name: `run_${jobRunStore.jobRun.value.short_uuid}_result_${jobRunStore.jobRun.value.result.original_name}`
       })
-
-      //run_{run_suuid}_result_{original_name}
     }
 
     const handleCopy = async () => {
@@ -206,19 +216,30 @@ export default defineComponent({
       copy.handleCopyText(jobRunResultSource.value)
     }
 
+    onBeforeMount(() => fetchData())
+
+    // change view of cutted html to raw
+    if (isShowPreview.value && isResultHTML.value && isJobRunResultBig.value) {
+      currentView.value = views[1]
+    }
+
     return {
       views,
       loading,
       viewModel,
+      maxHeight,
       isValidJSON,
       currentView,
       isResultJSON,
+      isResultHTML,
       isShowPreview,
       scrollerStyles,
       jobRunResultExt,
+      scrolllWrapperRef,
       isJobRunResultBig,
       isJobRunResultEmpty,
       jobRunResultForView,
+      isResultBigForRawView,
 
       handleCopy,
       handleDownload

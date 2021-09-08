@@ -5,19 +5,21 @@ export interface jobRubData {
   openJobRunResult: boolean
   jobRun: JobRun
   jobRunPayload: string | null | undefined
-  jobRunLoading: Boolean
-  resultLoading: Boolean
-  payLoadLoading: Boolean
-  jobRunsLoading: Boolean
-  jobRunlogLoading: Boolean
-  jobRunArtifactLoading: Boolean
-  jobRunlogScrollLoading: Boolean
+  jobRunLoading: boolean
+  resultLoading: boolean
+  payLoadLoading: boolean
+  jobRunsLoading: boolean
+  jobRunlogLoading: boolean
+  jobRunArtifactLoading: boolean
+  jobRunlogScrollLoading: boolean
   jobRunResult: any
   jobRunResultExt: string
   jobRunResultPreview: any
-  isJobRunResultBig: Boolean
-  isResultJSON: Boolean
-  isShowPreview: Boolean
+  isJobRunResultBig: boolean
+  isResultBigForRawView: boolean
+  isResultJSON: boolean
+  isResultHTML: boolean
+  isShowPreview: boolean
   jobRunLog: {
     count: number
     next: null | string
@@ -158,6 +160,7 @@ export const stateType = {
   fileSource: 'fileSource',
   logLoading: 'logLoading',
   isResultJSON: 'isResultJSON',
+  isResultHTML: 'isResultHTML',
   artifactData: 'artifactData',
   jobRunResult: 'jobRunResult',
   jobRunPayload: 'jobRunPayload',
@@ -171,6 +174,7 @@ export const stateType = {
   isJobRunResultBig: 'isJobRunResultBig',
   jobRunResultPreview: 'jobRunResultPreview',
   jobRunLogFullVersion: 'jobRunLogFullVersion',
+  isResultBigForRawView: 'isResultBigForRawView',
   jobRunArtifactLoading: 'jobRunArtifactLoading',
   jobRunlogScrollLoading: 'jobRunlogScrollLoading'
 }
