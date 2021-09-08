@@ -12,6 +12,10 @@ export default defineComponent({
   functional: true,
 
   props: {
+    view: {
+      type: String,
+      default: () => 'pretty'
+    },
     dataSource: {
       type: String | Blob,
       default: () => ''
@@ -19,6 +23,10 @@ export default defineComponent({
     fileExtension: {
       type: String,
       default: () => ''
+    },
+    maxHeight: {
+      type: String,
+      default: () => '100vh'
     }
   },
 

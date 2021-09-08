@@ -24,7 +24,9 @@ export const state: jobRunState = {
   isShowPreview: false,
   jobRunResultExt: 'json',
   isJobRunResultBig: true,
+  isResultBigForRawView: false,
   isResultJSON: true,
+  isResultHTML: false,
   jobRunLog: {
     count: 0,
     next: null,

@@ -1,21 +1,58 @@
 <template>
-  <div v-html="dataSource" class="pt-2 px-1" v-scroll:#scroll-target="handleOnScroll" />
+  <div class="pt-2 px-1">
+    <template v-if="view === 'pretty'">
+      <v-alert :value="alert" type="error" dense class="ma-1 pa-0">
+        <template slot="prepend">
+          <v-icon class="pl-2">mdi-alert</v-icon>
+        </template>
+        <v-row align="center" class="ma-0 pa-0">
+          <v-col class="grow">
+            By default, we block JavaScript for security reasons. To continue to run JavaScript at your own risk, please
+            press the allow button.
+          </v-col>
+          <v-col class="shrink">
+            <v-btn @click="handleAllow" outlined small>Allow JavaScript</v-btn>
+          </v-col>
+        </v-row>
+      </v-alert>
+      <div ref="iframeRef" />
+    </template>
+    <the-highlight
+      v-else
+      readonly
+      languageName="html"
+      :value="dataSource.slice(0, 10000)"
+      v-scroll:#scroll-target="handleOnScroll"
+    />
+  </div>
 </template>
 <script>
 import { throttle } from 'lodash'
-import { ref, defineComponent } from '@vue/composition-api'
+import { ref, watch, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'ResultHTML',
 
   props: {
+    view: {
+      type: String,
+      default: () => 'pretty'
+    },
     dataSource: {
       type: String,
       default: () => ''
+    },
+    maxHeight: {
+      type: String,
+      default: () => '100vh'
     }
   },
 
-  setup() {
+  setup(props) {
+    const NOT_ALLOWED_TAGS = ['<script']
+
+    const alert = ref(NOT_ALLOWED_TAGS.some(item => props.dataSource.includes(item)))
+    const iframeRef = ref(null)
     const currentScrollTop = ref(0)
 
     const onScroll = scrollTop => {
@@ -32,9 +69,56 @@ export default defineComponent({
       throttled(e.target.scrollTop)
     }
 
+    const handleAllow = () => {
+      alert.value = false
+
+      initIframe()
+    }
+
+    const removeIframe = () => {
+      while (iframeRef.value.firstChild) {
+        iframeRef.value.removeChild(iframeRef.value.firstChild)
+      }
+    }
+
+    const initIframe = () => {
+      removeIframe()
+      const sandbox = alert.value ? '' : 'allow-scripts allow-same-origin'
+
+      const iframeEl = document.createElement('iframe')
+      iframeEl.setAttribute('height', props.maxHeight)
+
+      iframeEl.setAttribute('class', 'AskAnna-iframe')
+      iframeEl.setAttribute('srcdoc', props.dataSource)
+      iframeEl.setAttribute('sandbox', sandbox)
+
+      iframeEl.onload = () => {
+        if (!alert.value) {
+          iframeEl.contentWindow.onscroll = e => handleOnScroll(e)
+        }
+      }
+
+      iframeRef.value.appendChild(iframeEl)
+    }
+
+    watch(iframeRef, async iframeRef => {
+      if (!iframeRef) return
+      initIframe()
+    })
+
     return {
+      alert,
+      iframeRef,
+
+      handleAllow,
       handleOnScroll
     }
   }
 })
 </script>
+<style>
+.AskAnna-iframe {
+  border: none;
+  width: 100%;
+}
+</style>
