@@ -47,6 +47,9 @@ build_base:
         - compose/Dockerfile.base
         - package.json
         - package-lock.json
+    - if: $CI_COMMIT_BRANCH
+      when: manual
+      allow_failure: true
 
 build_master:
   stage: build-deploy
