@@ -165,7 +165,6 @@ export const actions: ActionTree<projectState, RootState> = {
 
       return project
     }
-    commit(mutation.RESET_PROJECT_DATA)
     commit(mutation.UPDATE_PROJECTS, project)
     commit(
       'workspace/SET_WORKSPACE_PROJECTS',
