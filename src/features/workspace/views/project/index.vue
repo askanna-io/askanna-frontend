@@ -18,7 +18,7 @@
 import useJobStore from '@job/composition/useJobStore'
 import useProject from '@project/composition/useProject'
 import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
-import { computed, onUnmounted, defineComponent } from '@vue/composition-api'
+import { computed, onUnmounted, onBeforeMount, defineComponent } from '@vue/composition-api'
 import ProjectNavBar from '@project/components/nav-bars/ProjectNavBar'
 
 export default defineComponent({
@@ -26,7 +26,7 @@ export default defineComponent({
 
   components: { ProjectNavBar },
 
-  setup(props, context) {
+  setup(_, context) {
     const project = useProject(context)
     const jobStore = useJobStore(context)
 
@@ -36,6 +36,10 @@ export default defineComponent({
     const projectBreadcrumbs = useBreadcrumbs(context, { start: 0, end: end.value })
 
     onUnmounted(() => {
+      project.resetProjectData()
+    })
+
+    onBeforeMount(() => {
       project.resetProjectData()
     })
 

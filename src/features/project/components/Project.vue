@@ -1,18 +1,17 @@
 <template>
   <v-card flat>
-    <v-form ref="newProjectForm">
+    <v-form ref="newProjectForm" @submit.prevent="handleCreate">
       <v-container fluid>
         <v-row>
           <v-col cols="4">
             <v-text-field
-              @input="handleOnInput($event, 'name')"
-              :value="projectData.name"
-              :rules="[RULE.required('Project name is required')]"
               dense
-              autofocus
               outlined
-              required
+              autofocus
               label="Project name"
+              :rules="nameRules"
+              :value="projectData.name"
+              @input="handleOnInput($event, 'name')"
             />
           </v-col>
         </v-row>
@@ -36,12 +35,12 @@
           <v-col class="d-flex" cols="4">
             <v-select
               v-model="template"
-              :items="projectTemplates"
+              dense
               item-text="name"
-              item-value="short_uuid"
               label="Template"
               no-data-text="as"
-              dense
+              item-value="short_uuid"
+              :items="projectTemplates"
             />
           </v-col>
         </v-row>
@@ -53,8 +52,8 @@
               outlined
               color="secondary"
               class="mr-2 btn--hover"
-              @click="handleCreate"
               :disabled="isStateNotChanged"
+              @click="handleCreate"
             >
               {{ saveButtonText }}
             </v-btn>
@@ -96,15 +95,15 @@ export default defineComponent({
   },
 
   setup(props, context) {
-    const validationRules = useValidationRules()
+    const { RULES } = useValidationRules()
 
-    const isStateNotChanged = ref(true)
+    const isStateNotChanged = ref(!props.projectData.name)
+    const nameRules = ref([RULES.required('Project name is required')])
 
     const template = computed({
       get: () => props.projectData.template,
       set: value => context.emit('handleOnInput', { path: 'template', value })
     })
-    const isFormValid = ref(false)
     const newProjectForm = ref(null)
 
     const handleOnInput = (value, path) => {
@@ -116,21 +115,25 @@ export default defineComponent({
       if (!newProjectForm.value.validate()) {
         return
       }
+      nameRules.value = []
+      resetValidation()
       context.emit('handleCreate')
     }
 
-    const handleCancel = () => context.emit('handleCancel')
-    const handleOnChange = () => (isStateNotChanged.value = false)
+    const handleCancel = () => {
+      nameRules.value = []
+      resetValidation()
+      context.emit('handleCancel')
+    }
 
-    const reset = () => newProjectForm.value.reset()
+    const handleOnChange = () => (isStateNotChanged.value = false)
     const resetValidation = () => newProjectForm.value.resetValidation()
 
     return {
       template,
-      isFormValid,
+      nameRules,
       newProjectForm,
       isStateNotChanged,
-      RULE: validationRules.RULES,
 
       handleCreate,
       handleCancel,
