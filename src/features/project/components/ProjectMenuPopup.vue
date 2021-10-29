@@ -75,6 +75,7 @@ export default defineComponent({
           created: '',
           stdout: null,
           finished: '',
+          permission: {},
           return_payload: null
         }
       }
@@ -98,8 +99,8 @@ export default defineComponent({
     const menu = ref(false)
     const deleteProjectConfirmPopup = ref(false)
 
-    const projectRemove = computed(() => permission.getFor(permission.labels.projectRemove))
-    const projectInfoEdit = computed(() => permission.getFor(permission.labels.projectInfoEdit))
+    const projectRemove = computed(() => props.project.permission[permission.labels.projectRemove])
+    const projectInfoEdit = computed(() => props.project.permission[permission.labels.projectInfoEdit])
     const isCurrentUserAdmin = computed(() => workspaceStore.currentPeople.value.role.code === 'WA')
 
     const handleMoreOptions = () =>
