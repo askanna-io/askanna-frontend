@@ -80,8 +80,6 @@ export const actions: ActionTree<workspaceState, RootState> = {
   },
 
   async [action.getInitialWorkpaceProjects]({ commit, dispatch }, data) {
-    // eslint-disable-next-line no-console
-    console.log(data)
     commit(mutation.SET_LOADING, { projects: true })
 
     await dispatch(action.getWorkpaceProjects, { ...data, initial: true })
@@ -389,7 +387,7 @@ export const actions: ActionTree<workspaceState, RootState> = {
         app_id: 'c6wuieqm',
         name: people.name,
         email: people.email,
-        user_id: people.user.short_uuid,
+        user_id: people.membership.user.short_uuid,
         created_at: rootState.user.userProfile.date_joined
       })
     }
