@@ -21,22 +21,34 @@
       <ask-anna-copy :text="item.value" smartSlice :width="35" :masked="item.is_masked" expanded />
     </template>
     <template v-slot:item.actions="{ item }">
-      <v-btn class="my-2 btn--hover" small outlined color="secondary" @click="handleEditItem(item)">
+      <v-btn
+        v-if="projectVariableEdit"
+        class="my-2 btn--hover"
+        small
+        outlined
+        color="secondary"
+        @click="handleEditItem(item)"
+      >
         <v-icon color="secondary" left small class="mr-2">mdi-pencil</v-icon>Edit
       </v-btn>
     </template>
     <template v-slot:no-data>
-      There are no variables available for this project. If you need a variable, you can easily create one with the
-      option "+ new variable" above this table.
+      <template v-if="projectVariableEdit">
+        There are no variables available for this project. In case you need a variable, you can easily create one with
+        the option "+ new variable" above this table.
+      </template>
+      <template v-else>
+        There are no variables available for this project.
+      </template>
     </template>
   </v-data-table>
 </template>
 
 <script>
-import { useWindowSize } from '@u3u/vue-hooks'
+import usePermission from '@/core/composition/usePermission'
 import AskAnnaCopy from '@/core/components/shared/AskAnnaCopy'
 
-import { ref, computed, onBeforeMount, defineComponent } from '@vue/composition-api'
+import { ref, computed, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'VariableList',
@@ -50,10 +62,9 @@ export default defineComponent({
 
   components: { AskAnnaCopy },
 
-  setup(props, context) {
-    const { width } = useWindowSize()
-
-    const modal = ref(null)
+  setup(_, context) {
+    const permission = usePermission()
+    const projectVariableEdit = computed(() => permission.getFor(permission.labels.projectVariableEdit))
 
     const headers = ref([
       {
@@ -85,6 +96,8 @@ export default defineComponent({
 
     return {
       headers,
+      projectVariableEdit,
+
       handleEditItem
     }
   }

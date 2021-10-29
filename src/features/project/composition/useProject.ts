@@ -1,17 +1,24 @@
 import useProjectStore from './useProjectStore'
-import useFetchData from '@/core/composition/useFetchData'
-import { SetupContext, onBeforeMount } from '@vue/composition-api'
+import { SetupContext, onBeforeMount, onUnmounted } from '@vue/composition-api'
 
 export default function (context: SetupContext) {
   const projectStore: any = useProjectStore()
-  const fetchData = useFetchData()
+
+  const fetchData = async (projectId: string) => {
+    await projectStore.getProjectMe(projectId)
+    await projectStore.getProject(projectId)
+  }
 
   onBeforeMount(() => {
     const { projectId } = context.root.$route.params
 
-    if (projectId && projectId !== projectStore.project.value.short_uuid) {
-      fetchData(context, projectStore.getProject(projectId))
-    }
+    projectStore.resetProjectData()
+
+    fetchData(projectId)
+  })
+
+  onUnmounted(() => {
+    projectStore.resetProjectData()
   })
 
   return {

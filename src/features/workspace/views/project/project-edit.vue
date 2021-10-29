@@ -2,19 +2,27 @@
   <ask-anna-loading-progress :type="'table-row'" :loading="loading">
     <v-card class="ma-2" flat>
       <project
+        v-if="projectInfoEdit"
         :projectData="projectState"
         :saveButtonText="'Save my changes'"
         :projectTemplates="projectTemplates"
+        :workspaceProjectVisibility="workspaceProjectVisibility"
         @handleCreate="handleUpdate"
         @handleCancel="handleCancel"
         @handleOnInput="handleOnInput"
       />
+      <v-alert v-else class="mx-2 my-4 text-center" dense outlined>
+        You are not allowed to edit this project. I can bring you back to the project
+        <router-link :to="{ name: 'workspace-project' }" class="ask-anna-link">{{ project.name }}</router-link
+        >.
+      </v-alert>
     </v-card>
   </ask-anna-loading-progress>
 </template>
 
 <script>
 import { set } from 'lodash'
+import usePermission from '@/core/composition/usePermission'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
 import useProjectStore from '@/features/project/composition/useProjectStore'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
@@ -30,6 +38,7 @@ export default defineComponent({
 
   setup(_, context) {
     const snackBar = useSnackBar()
+    const permission = usePermission()
     const workspaceStore = useWorkspaceStore()
     const projectStore = useProjectStore(context)
 
@@ -37,9 +46,12 @@ export default defineComponent({
 
     const project = computed(() => projectStore.project.value)
     const loading = computed(() => projectStore.projectLoading.value)
+    const projectInfoEdit = computed(() => permission.getFor(permission.labels.projectInfoEdit))
+    const workspaceProjectVisibility = computed(() => workspaceStore.state.workspace.value.visibility)
 
     const projectState = ref({
       name: project.value.name,
+      visibility: project.value.visibility,
       description: project.value.description
     })
 
@@ -70,13 +82,17 @@ export default defineComponent({
     watch(project, project => {
       projectState.value = {
         name: project.name,
+        visibility: project.visibility,
         description: project.description
       }
     })
 
     return {
       loading,
+      project,
       projectState,
+      projectInfoEdit,
+      workspaceProjectVisibility,
       projectTemplates: projectStore.projectTemplates,
 
       handleUpdate,

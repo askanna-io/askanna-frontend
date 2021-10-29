@@ -1,3 +1,5 @@
+import { PERMISSIONS_LABELS } from '@/features/workspace/store/const'
+
 const jobRun = [
   {
     path: '',
@@ -39,7 +41,8 @@ const jobRun = [
           ),
         name: 'workspace-project-jobs-job-jobrun-edit',
         meta: {
-          title: 'Run: jobRunId'
+          title: 'Run: jobRunId',
+          permission: PERMISSIONS_LABELS.projectRunEdit
         }
       },
       {
@@ -440,7 +443,8 @@ const JobRoutes = [
           import(/* webpackChunkName: "workspace-project-job-edit" */ './views/project/jobs/job/edit.vue'),
         name: 'workspace-project-job-edit',
         meta: {
-          breadcrumb: 'Edit'
+          breadcrumb: 'Edit',
+          permission: PERMISSIONS_LABELS.projectJobEdit
         }
       }
     ]
@@ -464,7 +468,6 @@ export default {
       path: '/:workspaceId',
       component: () => import(/* webpackChunkName: "workspace" */ './views/index.vue'),
       meta: {
-        requiresAuth: true,
         hideAppBarIcon: true,
         title: 'Workspace: workspaceId',
         breadcrumb: 'Workspace - :workspaceId'
@@ -482,6 +485,7 @@ export default {
               component: () => import(/* webpackChunkName: "workspace" */ './views/workspace/workspace.vue'),
               name: 'workspace',
               meta: {
+                requiresAuth: false,
                 hideAppBarIcon: true,
                 breadcrumb: 'Workspace',
                 title: 'Workspace: workspaceId'
@@ -492,8 +496,9 @@ export default {
               component: () => import(/* webpackChunkName: "workspace-edit" */ './views/workspace/workspace-edit.vue'),
               name: 'workspace-edit',
               meta: {
+                breadcrumb: 'Edit',
                 hideAppBarIcon: true,
-                breadcrumb: 'Edit'
+                permission: PERMISSIONS_LABELS.workspaceInfoEdit
               }
             }
           ]
@@ -513,7 +518,8 @@ export default {
           name: 'workspace-new-project',
           meta: {
             hideAppBarIcon: true,
-            breadcrumb: 'New project - :workspaceId'
+            breadcrumb: 'New project - :workspaceId',
+            permission: PERMISSIONS_LABELS.workspaceProjectCreate
           }
         },
         {
@@ -522,6 +528,7 @@ export default {
             import(/* webpackChunkName: "project-does-not-exist" */ './views/project-does-not-exist.vue'),
           name: 'project-does-not-exist',
           meta: {
+            requiresAuth: false,
             hideAppBarIcon: true,
             title: 'Oops...we cannot find this project',
             breadcrumb: 'Project does not exist'
@@ -532,11 +539,12 @@ export default {
           component: () => import(/* webpackChunkName: "workspace-profile" */ './views/workspace-profile.vue'),
           name: 'workspace-profile',
           meta: {
+            requiresAuth: true,
             hideAppBarIcon: true,
-            breadcrumb: 'Profile'
+            title: 'AskAnna profile',
+            breadcrumb: 'Edit my profile'
           }
         },
-
         {
           path: 'project/:projectId',
           component: () => import(/* webpackChunkName: "workspace-project" */ './views/project/index.vue'),
@@ -625,7 +633,8 @@ export default {
                 import(/* webpackChunkName: "workspace-project-edit" */ './views/project/project-edit.vue'),
               meta: {
                 breadcrumb: 'Edit',
-                hideAppBarIcon: true
+                hideAppBarIcon: true,
+                permission: PERMISSIONS_LABELS.projectInfoEdit
               }
             }
           ]

@@ -70,7 +70,7 @@ export default defineComponent({
 
   setup(props) {
     const dialog = ref(false)
-    const currentTab = ref('workspace-project-job-runnig-curl')
+    const currentTab = ref('workspace-project-job-running-curl')
 
     const isAllSet = computed(() => props.notifications['all'].email.some(item => item))
     const isErrorSet = computed(() => props.notifications['error'].email.some(item => item))

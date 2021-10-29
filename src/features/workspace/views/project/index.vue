@@ -18,7 +18,7 @@
 import useJobStore from '@job/composition/useJobStore'
 import useProject from '@project/composition/useProject'
 import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
-import { computed, onUnmounted, onBeforeMount, defineComponent } from '@vue/composition-api'
+import { computed, defineComponent } from '@vue/composition-api'
 import ProjectNavBar from '@project/components/nav-bars/ProjectNavBar'
 
 export default defineComponent({
@@ -34,14 +34,6 @@ export default defineComponent({
     const jobEnd = computed(() => (context.root.$route.name.indexOf('jobs-name') >= 1 ? 5 : 3))
     const end = computed(() => (context.root.$route.name === 'workspace-project-job-overiew' ? 6 : jobEnd.value))
     const projectBreadcrumbs = useBreadcrumbs(context, { start: 0, end: end.value })
-
-    onUnmounted(() => {
-      project.resetProjectData()
-    })
-
-    onBeforeMount(() => {
-      project.resetProjectData()
-    })
 
     const handleShowProjectBar = () =>
       project.setMenu({ name: 'menu.isShowProjectBar', value: !project.menu.value.isShowProjectBar })

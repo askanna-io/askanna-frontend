@@ -22,7 +22,7 @@ export default defineComponent({
   },
 
   setup(_, context) {
-    const router = useRouterAskAnna(context)
+    const router = useRouterAskAnna()
 
     const handleGotoCode = () => {
       router.push({

@@ -15,7 +15,6 @@
 
 <script>
 import JobRuns from '@jobrun/components/JobRuns'
-import useJobStore from '@job/composition/useJobStore'
 import useJobRunStore from '@jobrun/composition/useJobRunStore'
 import { ref, onBeforeMount, defineComponent, computed } from '@vue/composition-api'
 import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress'
@@ -26,18 +25,13 @@ export default defineComponent({
     AskAnnaLoadingProgress
   },
 
-  setup(rops, context) {
+  setup(_, context) {
     const { jobId: uuid } = context.root.$route.params
 
     const loading = ref(true)
-    const jobStore = useJobStore()
     const jobRunStore = useJobRunStore()
 
     const fetchData = async () => {
-      await jobStore.resetStore()
-      await jobRunStore.resetStore()
-
-      await jobStore.getJob(uuid)
       await jobRunStore.getRunsJob({
         uuid,
         params: {

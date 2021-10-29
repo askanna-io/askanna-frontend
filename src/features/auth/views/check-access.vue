@@ -5,7 +5,6 @@
 </template>
 
 <script>
-import VueRouter from 'vue-router'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useUserStore from '@/features/user/composition/useUserStore'
 import usePrepareAccount from '@/features/auth/composition/usePrepareAccount'
@@ -22,8 +21,10 @@ export default defineComponent({
   },
 
   setup(_, context) {
+    const token = window.localStorage.getItem('token')
+
     const userStore = useUserStore()
-    const router = useRouterAskAnna(context)
+    const router = useRouterAskAnna()
 
     const prepareAccount = usePrepareAccount(context)
 
@@ -49,7 +50,6 @@ export default defineComponent({
         window.localStorage.setItem('back_after_login', '')
 
         //check if user need redirect to last visited page
-
         if (backAfterUrl && backAfterUrl !== '/') {
           router.push({ path: backAfterUrl, params: { workspaceId: prepareAccount.workspaceId.value } })
 
@@ -75,7 +75,7 @@ export default defineComponent({
       checkReadyCycle()
     }
 
-    onBeforeMount(() => fetchData())
+    onBeforeMount(() => token && fetchData())
 
     onUnmounted(() => {
       clearInterval(polling.value)
@@ -97,8 +97,6 @@ export default defineComponent({
 .logo {
   height: 74px;
   margin-bottom: 6px;
-}
-.login-expansion .v-expansion-panel {
 }
 .colored-border {
   border: 1px solid;

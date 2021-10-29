@@ -1,6 +1,6 @@
 <template>
-  <div class="pb-5">
-    <ask-anna-loading-progress :type="'table-row'" :loading="loading" fullWidth>
+  <div :class="{ 'pb-5': projectJobEdit }">
+    <ask-anna-loading-progress v-if="projectJobEdit" :type="'table-row'" :loading="loading" fullWidth>
       <v-card flat>
         <v-container class="ma-0 ml-1 pt-0" fluid>
           <v-row>
@@ -59,13 +59,18 @@
         />
       </v-card>
     </ask-anna-loading-progress>
+    <v-alert v-else class="mx-4 text-center" dense outlined>
+      You are not allowed to edit this job. I can bring you back to the job
+      <router-link :to="{ name: 'workspace-project-job-overiew' }" class="ask-anna-link">{{ job.name }}</router-link
+      >.
+    </v-alert>
   </div>
 </template>
 
 <script>
 import { set } from 'lodash'
 import useJobStore from '@job/composition/useJobStore'
-
+import usePermission from '@/core/composition/usePermission'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
 import useValidationRules from '@/core/composition/useValidationRules'
 import ConfirmChangeJobNamePopup from '@/features/job/components/popup/ConfirmChangeJobNamePopup'
@@ -78,12 +83,15 @@ export default defineComponent({
   setup(_, context) {
     const jobStore = useJobStore()
     const snackBar = useSnackBar()
+    const permission = usePermission()
     const validationRules = useValidationRules()
 
     const { jobId } = context.root.$route.params
 
     const isNameChanged = ref(false)
     const showConfirmPopup = ref(false)
+
+    const projectJobEdit = computed(() => permission.getFor(permission.labels.projectJobEdit))
 
     const fetchData = async () => {
       await jobStore.resetStore()
@@ -147,6 +155,7 @@ export default defineComponent({
       job,
       loading,
       jobState,
+      projectJobEdit,
       showConfirmPopup,
       isStateNotChanged,
       RULE: validationRules.RULES,

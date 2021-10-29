@@ -3,7 +3,8 @@
     <v-form ref="newProjectForm" @submit.prevent="handleCreate">
       <v-container fluid>
         <v-row>
-          <v-col cols="4">
+          <v-col cols="5">
+            <div class="transition-swing text-h5 pt-2 pb-4 font-weight-bold">Project profile</div>
             <v-text-field
               dense
               outlined
@@ -26,6 +27,61 @@
               @onChange="handleOnChange"
               @onChangeDescription="handleOnInput($event, 'description')"
             />
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="12">
+            <div class="transition-swing text-h5 pt-2 pb-3 font-weight-bold">Project settings</div>
+
+            <v-radio-group
+              :value="projectData.visibility"
+              @change="handleOnInput($event, 'visibility')"
+              class="pt-0 mt-0"
+            >
+              <template v-slot:label>
+                <div class="text-subtitle-1 pt-0 font-weight-bold black--text">
+                  Visibility
+                </div>
+              </template>
+              <v-radio value="PRIVATE" :ripple="false">
+                <template v-slot:label>
+                  <div class="primary--black-text">Private</div>
+                </template>
+              </v-radio>
+              <div class="pb-2 pl-8">Only workspace and project members can see this project</div>
+              <v-radio value="PUBLIC" :ripple="false" :disabled="workspaceProjectVisibility === 'PRIVATE'">
+                <template v-slot:label>
+                  <div
+                    class="primary--black-text"
+                    :class="{
+                      'grey--text': projectData.visibility === 'PRIVATE' && workspaceProjectVisibility === 'PRIVATE',
+                      'error--text': projectData.visibility === 'PUBLIC' && workspaceProjectVisibility === 'PRIVATE'
+                    }"
+                  >
+                    Public
+                  </div>
+                </template>
+              </v-radio>
+              <div v-if="workspaceProjectVisibility === 'PUBLIC'" class="pl-8">
+                Anyone on the internet can view this project
+              </div>
+              <template v-else>
+                <div
+                  v-if="projectData.visibility === 'PRIVATE' && workspaceProjectVisibility === 'PRIVATE'"
+                  class="pl-8 grey--text"
+                >
+                  You cannot select this option, because your workspace does not allow public sharing of projects. If
+                  you are a workspace admin, you can change the project visibility in the
+                  <router-link :to="{ name: 'workspace-edit' }" class="ask-anna-link">workspace setting</router-link>.
+                </div>
+                <div v-else class="pl-8 error--text">
+                  Your workspace does not allow public sharing of projects. Your workspace setting will overrule the
+                  project visibility set to public. If you are a workspace admin, you can change the project visibility
+                  in the
+                  <router-link :to="{ name: 'workspace-edit' }" class="ask-anna-link">workspace setting</router-link>.
+                </div>
+              </template>
+            </v-radio-group>
           </v-col>
         </v-row>
         <v-row align="center" v-if="false">
@@ -81,7 +137,8 @@ export default defineComponent({
         name: '',
         template: '',
         workspace: '',
-        short_uuid: ''
+        short_uuid: '',
+        visibility: 'PRIVATE'
       })
     },
     projectTemplates: {
@@ -91,6 +148,10 @@ export default defineComponent({
     saveButtonText: {
       type: String,
       default: () => 'Create'
+    },
+    workspaceProjectVisibility: {
+      type: String,
+      default: () => 'PRIVATE'
     }
   },
 

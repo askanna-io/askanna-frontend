@@ -1,4 +1,4 @@
-import { set } from 'lodash'
+import { set, get } from 'lodash'
 import { mutation } from './types'
 import { MutationTree } from 'vuex'
 import { workspaceState, InvitationModel } from './types'
@@ -76,7 +76,14 @@ export const mutations: MutationTree<workspaceState> = {
   },
 
   [mutation.SET_CURRENT_PEOPLE](state, data) {
-    state.currentPeople = { ...state.currentPeople, ...data }
+    state.currentPeople = {
+      ...state.currentPeople,
+      ...data,
+      permission: {
+        ...state.currentPeople.permission,
+        ...data.permission
+      }
+    }
   },
 
   [mutation.CHANGE_WORKSPACE_PEOPLE](state, item) {

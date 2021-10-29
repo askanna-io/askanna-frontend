@@ -21,26 +21,32 @@
       </div>
     </template>
     <template v-slot:no-data
-      ><v-alert class="mt-2 text-center" dense outlined color="grey">
-        There are no projects in this workspace. So, let's create one. You can easily do this with the option "+ CREATE
-        PROJECT" in the grey bar.<br />
-        <router-link
-          :to="{
-            name: 'workspace-new-project',
-            params: { workspaceId: $route.params.workspaceId }
-          }"
-        >
-          Or click here to create a new project.</router-link
-        >
+      ><v-alert v-if="!loading" class="mt-2 text-center" dense outlined>
+        <template v-if="isWorkspaceViewer">
+          There are no projects in this workspace that you have access to.
+        </template>
+        <template v-else>
+          There are no projects in this workspace. So, let's create one. You can easily do this with the option "+
+          CREATE PROJECT" in the grey bar.<br />
+          <router-link
+            :to="{
+              name: 'workspace-new-project',
+              params: { workspaceId: $route.params.workspaceId }
+            }"
+          >
+            Or click here to create a new project.</router-link
+          >
+        </template>
       </v-alert></template
     >
   </v-data-iterator>
 </template>
 <script>
-import { defineComponent } from '@vue/composition-api'
+import { computed, defineComponent } from '@vue/composition-api'
 import useSanitizeHTML from '@/core/composition/useSanitizeHTML'
 import WorkspaceProjectCardItem from './WorkspaceProjectCardItem.vue'
 import WorkspaceProjectListItem from './WorkspaceProjectListItem.vue'
+import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 
 export default defineComponent({
   name: 'WorkspaceList',
@@ -68,8 +74,13 @@ export default defineComponent({
 
   setup() {
     const sanitizeHTML = useSanitizeHTML()
+    const workspaceStore = useWorkspaceStore()
 
-    return { sanitizeHTML }
+    const loading = computed(() => workspaceStore.loading.value.projects)
+
+    const isWorkspaceViewer = computed(() => workspaceStore.currentPeople.value.role.code === 'WV')
+
+    return { loading, sanitizeHTML, isWorkspaceViewer }
   }
 })
 </script>

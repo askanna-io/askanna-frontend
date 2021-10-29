@@ -52,7 +52,7 @@ import JobRunPlatform from './jobrunning/JobRunPlatform'
 import { ref, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
-  name: 'JobRunnig',
+  name: 'JobRunning',
 
   components: {
     JobRunCurl,
@@ -60,30 +60,30 @@ export default defineComponent({
     JobRunPlatform
   },
 
-  setup(rops, context) {
+  setup(_, context) {
     const versions = ['package v1', 'package v2']
-    const currentTab = ref('workspace-project-job-runnig-curl')
+    const currentTab = ref('workspace-project-job-running-curl')
 
     const tabs = [
       {
         id: 0,
         name: 'Platform',
         component: 'JobRunPlatform',
-        to: 'workspace-project-job-runnig-platform',
+        to: 'workspace-project-job-running-platform',
         show: !context.root.isNotBeta
       },
       {
         id: 1,
         name: 'Curl',
         component: 'JobRunCurl',
-        to: 'workspace-project-job-runnig-curl',
+        to: 'workspace-project-job-running-curl',
         show: !context.root.isNotBeta
       },
       {
         id: 2,
         name: 'Python',
         component: 'JobRunPython',
-        to: 'workspace-project-job-runnig-python',
+        to: 'workspace-project-job-running-python',
         show: !context.root.isNotBeta
       }
     ]

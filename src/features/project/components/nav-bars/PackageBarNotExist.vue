@@ -4,7 +4,7 @@
       <v-toolbar v-if="sticked" ref="refToolbar" dense color="white" class="br-r5 ma-3" :flat="!sticked">
         <v-breadcrumbs v-if="sticked" class="pl-0" :items="projectBreadcrumbs">
           <template v-slot:item="{ item }">
-            <v-breadcrumbs-item :to="item.to" exact>
+            <v-breadcrumbs-item :to="item.to" :exact="item.exact">
               {{ item.title }}
             </v-breadcrumbs-item>
           </template>
@@ -22,7 +22,7 @@
 
     <v-breadcrumbs v-if="!sticked" :items="projectBreadcrumbs">
       <template v-slot:item="{ item }">
-        <v-breadcrumbs-item :to="item.to" exact>
+        <v-breadcrumbs-item :to="item.to" :exact="item.exact">
           {{ item.title }}
         </v-breadcrumbs-item>
       </template>
@@ -55,7 +55,6 @@
 <script>
 import ProjectMenu from './parts/ProjectMenu'
 import { ref, defineComponent } from '@vue/composition-api'
-import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
 import ProjectMenuPopup from '@/features/project/components/ProjectMenuPopup'
 
 export default defineComponent({

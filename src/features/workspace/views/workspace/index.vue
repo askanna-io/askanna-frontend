@@ -3,14 +3,16 @@
     <v-card v-if="isEditWorkspaceView" class="mx-auto mb-3" outlined>
       <v-breadcrumbs :items="breadcrumbs">
         <template v-slot:item="{ item }">
-          <v-breadcrumbs-item :to="item.to" exact>
+          <v-breadcrumbs-item :to="item.to" :exact="item.exact">
             {{ item.title }}
           </v-breadcrumbs-item>
         </template>
       </v-breadcrumbs>
     </v-card>
     <workspace-toolbar
+      :isMember="isMember"
       :title="workspace.name"
+      :isWorkspacePublic="isWorkspacePublic"
       :isCurrentUserAdmin="isCurrentUserAdmin"
       @onOpenWorkspaceRemove="handleOpenWorkspaceRemove"
     />
@@ -39,15 +41,19 @@ export default defineComponent({
   components: { WorkspaceToolbar, ConfirmDeleteWorkspacePopup },
 
   setup(_, context) {
-    const router = useRouterAskAnna(context)
+    const router = useRouterAskAnna()
     const workspaceStore = useWorkspaceStore()
+
     const breadcrumbs = useBreadcrumbs(context, { start: 0, end: 2 })
 
     const deleteWorkspaceConfirmPopup = ref(false)
+    const isWorkspacePublic = computed(() => workspaceStore.getters.isWorkspacePublic.value)
 
     const loading = computed(() => workspaceStore.loading.value.projects)
+    const isMember = computed(() => workspaceStore.workspace.value.is_member)
+
     const isEditWorkspaceView = computed(() => context.root.$route.name === 'workspace-edit')
-    const isCurrentUserAdmin = computed(() => workspaceStore.currentPeople.value.role === 'WA')
+    const isCurrentUserAdmin = computed(() => workspaceStore.currentPeople.value.role.code === 'WA')
 
     const handleOpenWorkspaceRemove = () => (deleteWorkspaceConfirmPopup.value = true)
     const handleCloseWorkspaceRemove = () => (deleteWorkspaceConfirmPopup.value = false)
@@ -63,7 +69,9 @@ export default defineComponent({
 
     return {
       loading,
+      isMember,
       breadcrumbs,
+      isWorkspacePublic,
       isCurrentUserAdmin,
       isEditWorkspaceView,
       deleteWorkspaceConfirmPopup,

@@ -10,6 +10,10 @@ export interface authData {
 
 export const authStoreName = 'auth'
 
+export const gt = {
+  isUserLoggedIn: 'isUserLoggedIn'
+}
+
 export const mt = {
   SET_AUTH: 'SET_AUTH',
   DROP_AUTH: 'DROP_AUTH',

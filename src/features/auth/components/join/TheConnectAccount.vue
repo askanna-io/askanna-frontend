@@ -71,7 +71,7 @@ export default defineComponent({
 
   setup(_, context) {
     const authStore = useAuthStore()
-    const router = useRouterAskAnna(context)
+    const router = useRouterAskAnna()
     const workspaceStore = useWorkspaceStore()
 
     const validationRules = useValidationRules()

@@ -27,6 +27,7 @@
                   <v-icon color="secondary" left>mdi-download</v-icon>Download
                 </v-btn>
                 <v-btn
+                  v-if="projectCodeCreate"
                   small
                   outlined
                   :class="{ 'replace-active': isRaplace }"
@@ -81,6 +82,7 @@ import useMoment from '@/core/composition/useMoment'
 import { defineComponent } from '@vue/composition-api'
 import PackageFile from '@package/components/PackageFile'
 import PackageTree from '@package/components/PackageTree'
+import usePermission from '@/core/composition/usePermission'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useProjectStore from '@project/composition/useProjectStore'
 import PackageToolbar from '@/features/package/components/PackageToolbar'
@@ -103,10 +105,11 @@ export default defineComponent({
 
   setup(_, context) {
     const moment = useMoment(context)
+    const permission = usePermission()
     const { height } = useWindowSize()
     const packageStore = usePackageStore()
     const projectStore = useProjectStore()
-    const router = useRouterAskAnna(context)
+    const router = useRouterAskAnna()
 
     const packagesStore = usePackagesStore(context)
     const forceFileDownload = useForceFileDownload()
@@ -114,6 +117,8 @@ export default defineComponent({
 
     const polling = ref(null)
     const isRaplace = ref(false)
+
+    const projectCodeCreate = computed(() => permission.getFor(permission.labels.projectCodeCreate))
 
     const file = computed(() => packageStore.file.value)
     const sticked = computed(() => !projectStore.stickedVM.value)
@@ -228,6 +233,7 @@ export default defineComponent({
     }
 
     const handleCloseOutside = async () => {
+      await projectStore.getProjectMe(context.root.$route.params.projectId)
       const project = await projectStore.getProject(context.root.$route.params.projectId)
       if (!project.package.short_uuid || !project.short_uuid) return
 
@@ -293,6 +299,7 @@ export default defineComponent({
       isProcessing,
       getRoutePath,
       isLastPackage,
+      projectCodeCreate,
 
       handleReplace,
       handleHistory,

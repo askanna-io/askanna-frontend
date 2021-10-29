@@ -6,8 +6,9 @@
     >
 
     <workspace-people-popup
+      simple
       :value="peoplePopup"
-      :people="people"
+      :people="value"
       :currentUser="currentUser"
       :workspaceName="workspace.name"
       @handleValue="handleValue"
@@ -15,7 +16,7 @@
   </div>
 </template>
 <script>
-import { ref, computed, defineComponent } from '@vue/composition-api'
+import { ref, defineComponent } from '@vue/composition-api'
 
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 import WorkspacePeoplePopup from '@/features/workspace/components/people/WorkspacePeoplePopup.vue'
@@ -34,7 +35,12 @@ export default defineComponent({
         return {
           name: '',
           uuid: '',
-          short_uuid: ''
+          short_uuid: '',
+          job_title: '',
+          role: {
+            name: '',
+            code: ''
+          }
         }
       }
     }
@@ -44,17 +50,15 @@ export default defineComponent({
     WorkspacePeoplePopup
   },
 
-  setup(props, context) {
+  setup() {
     const workspaceStore = useWorkspaceStore()
 
     const peoplePopup = ref(false)
-    const people = computed(() => workspaceStore.workspacePeople.value.find(item => item.name === props.value.name))
 
     const handleValue = value => (peoplePopup.value = value)
     const handleOpenPeoplePopUp = () => (peoplePopup.value = true)
 
     return {
-      people,
       peoplePopup,
       handleValue,
       handleOpenPeoplePopUp,

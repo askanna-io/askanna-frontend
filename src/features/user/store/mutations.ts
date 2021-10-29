@@ -7,6 +7,9 @@ export const mutations: MutationTree<userState> = {
   [mutation.SET_USER_PROFILE](state, data) {
     state.userProfile = data
   },
+  [mutation.SET_GLOBAL_PROFILE](state, data) {
+    state.globalProfile = data
+  },
   [mutation.SET_TEMP_AUTH](state, data) {
     state.tempAuth = data
   },

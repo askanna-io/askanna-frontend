@@ -72,7 +72,7 @@ export default defineComponent({
 
   setup(_, context) {
     const copy = useCopy()
-    const router = useRouterAskAnna(context)
+    const router = useRouterAskAnna()
     const runinfoVariablesStore = useRuninfoVariablesStore()
 
     const projectStore = useProjectStore()

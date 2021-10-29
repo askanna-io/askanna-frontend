@@ -36,6 +36,7 @@
               </v-list-item>
             </v-list>
           </v-navigation-drawer>
+
           <div md="auto" sm="12" text-sm-center>
             <v-btn class="pa-0" :to="{ name: 'workspace', params: { ...$route.params } }" text color="transparent">
               <img alt="AskAnna logo" src="@/assets/logo.svg" class="logo" />
@@ -133,7 +134,7 @@
                   </v-btn>
                 </template>
                 <v-list dense>
-                  <v-list-item :key="'profile'" exact :to="{ name: 'workspace-profile' }">
+                  <v-list-item :key="'profile'" exact :to="profileRoute">
                     Edit my profile
                   </v-list-item>
                   <v-list-item href="https://docs.askanna.io" target="_blank">
@@ -154,7 +155,7 @@
                   </v-btn>
                 </template>
                 <v-list dense>
-                  <v-list-item :key="'profile'" exact :to="{ name: 'workspace-profile' }">
+                  <v-list-item :key="'profile'" exact :to="profileRoute">
                     Edit my profile
                   </v-list-item>
                   <v-list-item href="https://docs.askanna.io" target="_blank">
@@ -167,25 +168,29 @@
               </v-menu>
             </v-flex>
           </div>
+
           <div class="text-right hidden-sm-and-down">
             <v-btn @click="handleShowHideUploadStatus" icon :color="colorStatus">
               <v-icon>{{ iconStatus }}</v-icon>
             </v-btn>
             <span v-if="isNotBeta">Build version:&nbsp;{{ version }}</span>
-            <v-menu transition="slide-y-transition" offset-y close-on-content-click>
+            <v-menu transition="slide-y-transition" min-width="100px" offset-y close-on-content-click>
               <template v-slot:activator="{ on }">
                 <v-btn icon v-on="on">
                   <v-avatar class="ma-2" rounded="35" :size="35" tile>
-                    <v-img class="img--rounded" :src="workspaceProfile.avatar.small" />
+                    <v-img
+                      class="img--rounded"
+                      :src="
+                        (workspaceProfile.membership.avatar && workspaceProfile.membership.avatar.small) ||
+                        globalProfile.avatar.small
+                      "
+                    />
                   </v-avatar>
                 </v-btn>
               </template>
 
               <v-list>
-                <v-list-item v-if="isNotBeta">
-                  <v-list-item-title>Settings</v-list-item-title>
-                </v-list-item>
-                <v-list-item :key="'profile'" exact :to="{ name: 'workspace-profile' }">
+                <v-list-item :key="'profile'" exact :to="profileRoute">
                   Edit my profile
                 </v-list-item>
                 <v-list-item href="https://docs.askanna.io" target="_blank">
@@ -196,6 +201,9 @@
                 </v-list-item>
               </v-list>
             </v-menu>
+            <v-btn v-if="isReview" small icon class="white--text" @click.stop="drawer = !drawer">
+              <v-icon dark>mdi-tune</v-icon>
+            </v-btn>
           </div>
         </div>
       </v-container>
@@ -233,21 +241,32 @@ export default defineComponent({
   components: { UpdateApp, TheUploadStatus },
 
   setup(_, context) {
+    const token = window.localStorage.getItem('token')
+
     useTitle(context)
     const authStore = useAuthStore()
     const userStore = useUserStore()
+    const router = useRouterAskAnna()
     const projectStore = useProjectStore()
     const uploadStatus = useUploadStatus()
-    const router = useRouterAskAnna(context)
     const workspaceStore = useWorkspaceStore()
 
     const xsOnly = ref(null)
     const logout = () => authStore.actions.logout()
     const workspaces = computed(() => workspaceStore.workspaces.value.results)
     const workspaceProfile = computed(() => workspaceStore.state.currentPeople.value)
+    const globalProfile = computed(() => userStore.state.globalProfile.value)
 
+    const isMember = computed(() => workspaceStore.workspace.value.is_member)
     const showAppBarIcon = computed(() => !context.root.$route.meta?.hideAppBarIcon)
     const workspaceShortUuid = computed(() => workspaceStore.workspace.value.short_uuid)
+
+    const profileRoute = computed(() => {
+      if (isMember.value) {
+        return { name: 'workspace-profile', params: { workspaceId: workspaceShortUuid.value } }
+      }
+      return { name: 'profile' }
+    })
 
     const handleChangeWorkspace = ({ short_uuid }) => {
       if (workspaceShortUuid.value === short_uuid) return
@@ -262,7 +281,13 @@ export default defineComponent({
       uploadStatus.showHideSnackBar()
     }
 
-    const fetchData = async () => await userStore.actions.getUserProfile()
+    const fetchData = async () => {
+      await userStore.actions.getGlobalProfile()
+
+      if (token) {
+        await userStore.actions.getUserProfile()
+      }
+    }
 
     onBeforeMount(() => fetchData())
 
@@ -273,6 +298,9 @@ export default defineComponent({
     })
 
     return {
+      isMember,
+      profileRoute,
+      globalProfile,
       showAppBarIcon,
       ...projectStore,
       logout,
@@ -281,8 +309,9 @@ export default defineComponent({
       workspaceProfile,
       iconStatus: uploadStatus.iconStatus,
       colorStatus: uploadStatus.colorStatus,
-      handleShowHideUploadStatus,
-      handleChangeWorkspace
+
+      handleChangeWorkspace,
+      handleShowHideUploadStatus
     }
   },
 

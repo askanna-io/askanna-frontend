@@ -1,6 +1,5 @@
-import useGeneralStore from '@/core/store/general/useGeneralStore'
-
 import { computed, SetupContext } from '@vue/composition-api'
+import useGeneralStore from '@/core/store/general/useGeneralStore'
 
 export default function (context: SetupContext, { start = 0, end = undefined }) {
   const generalStore = useGeneralStore()
@@ -25,9 +24,11 @@ export default function (context: SetupContext, { start = 0, end = undefined }) 
           const name = generalStore.breadcrumbParams.value[key]
           title = title.replace(`:${key}`, name || value)
         })
+
         return {
           title,
           to: path,
+          exact: true,
           disabled: isReachCurrent
         }
       })

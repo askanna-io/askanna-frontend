@@ -21,7 +21,7 @@
       <package-file-image v-if="isFileImg" :dataSource="fileSource" />
       <package-notebook v-else-if="isIpynb" :file="file" :fileSource="fileSource" />
       <the-highlight v-else-if="fileComputed" :value="fileComputed" :languageName="languageName" />
-      <v-alert v-else class="ma-4 text-center" dense outlined color="grey">
+      <v-alert v-else class="ma-4 text-center" dense outlined>
         This file is empty.
       </v-alert>
     </v-col>

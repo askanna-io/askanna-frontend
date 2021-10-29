@@ -1,0 +1,405 @@
+<template>
+  <v-app>
+    <v-app-bar app clipped-left dark color="primary" dense>
+      <v-app-bar-nav-icon v-if="showAppBarIcon" @click.stop="stickedVM = !stickedVM" />
+      <div v-else class="pl-9" />
+      <v-container fluid class="pl-1">
+        <div
+          class="d-flex justify-space-between justify-sm-center align-center justify-md-space-between"
+          justify="space-between"
+          align="center"
+          no-gutters
+        >
+          <v-navigation-drawer v-model="mobileMenu" app absolute temporary>
+            <v-list-item>
+              <v-list-item-avatar>
+                <v-img src="/content/avatars/andrii.gif" />
+              </v-list-item-avatar>
+
+              <v-list-item-content>
+                <v-list-item-title>Adnrii Shapovalov</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+
+            <v-divider />
+
+            <v-list dense>
+              <v-list-item v-for="item in items" :key="item.title" link :to="{ name: item.name }">
+                <v-list-item-icon>
+                  <v-icon>{{ item.icon }}</v-icon>
+                </v-list-item-icon>
+
+                <v-list-item-content>
+                  <v-list-item-title>{{ item.title }}</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+          </v-navigation-drawer>
+
+          <div md="auto" sm="12" text-sm-center>
+            <v-btn class="pa-0" :to="{ name: 'workspace', params: { ...$route.params } }" text color="transparent">
+              <img alt="AskAnna logo" src="@/assets/logo.svg" class="logo" />
+            </v-btn>
+          </div>
+          <div class="text-sm-center ml-sm-6 ml-md-0 d-none d-sm-flex">
+            <v-flex>
+              <v-menu v-model="menu" :close-on-content-click="false" :nudge-width="400" offset-y nudge-bottom="10">
+                <template v-slot:activator="{ on }">
+                  <v-btn small dark class="white--text" text v-on="on" :to="{ path: '/projects' }">
+                    Projects
+                  </v-btn>
+                </template>
+                <v-row class="pr-2 white">
+                  <v-col cols="4">
+                    <v-list dense>
+                      <v-list-item-group v-model="project" color="primary">
+                        <v-list-item v-for="(item, i) in projects" :key="i">
+                          <v-list-item-content>
+                            <v-list-item-title v-text="item.text"></v-list-item-title>
+                          </v-list-item-content>
+                        </v-list-item>
+                      </v-list-item-group>
+                    </v-list>
+                  </v-col>
+                  <v-col cols="8">
+                    <v-alert dense border="left" colored-border color="deep-purple accent-4">
+                      <v-text-field
+                        hide-details
+                        dense
+                        append-icon="fas fa-search"
+                        :height="10"
+                        label="Search"
+                        single-line
+                        outlined
+                      />
+                      <div class="pt-1 subtitle-2">
+                        Frequently visited
+                      </div>
+                      <v-list two-line dense subheader>
+                        <v-list-item v-for="item in projectsList" :key="item.title">
+                          <v-list-item-avatar>
+                            <v-icon :class="[item.iconClass]" v-text="item.icon"></v-icon>
+                          </v-list-item-avatar>
+
+                          <v-list-item-content>
+                            <v-list-item-title v-text="item.title"></v-list-item-title>
+                            <v-list-item-subtitle v-text="item.subtitle"></v-list-item-subtitle>
+                          </v-list-item-content>
+
+                          <v-list-item-action>
+                            <v-btn icon>
+                              <v-icon color="grey lighten-1">fas fa-info-circle</v-icon>
+                            </v-btn>
+                          </v-list-item-action>
+                        </v-list-item>
+                      </v-list>
+                    </v-alert>
+                  </v-col>
+                </v-row>
+              </v-menu>
+
+              <v-menu offset-y>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    v-if="workspaces.length <= 1"
+                    small
+                    dark
+                    class="mx-1 white--text"
+                    text
+                    :to="{ name: 'workspace' }"
+                  >
+                    Workspaces
+                  </v-btn>
+                  <v-btn v-else small class="mx-1 white--text mx-1" input-value="1" text v-on="on" link tag="a">
+                    Workspace
+                  </v-btn>
+                </template>
+                <v-list>
+                  <v-list-item
+                    v-for="(item, index) in workspaces"
+                    :key="index"
+                    exact
+                    @click="handleChangeWorkspace(item)"
+                  >
+                    <v-list-item-title>{{ item.name }}</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+            </v-flex>
+            <v-flex v-if="isNotBeta">
+              <v-menu v-model="menu" :close-on-content-click="false" :nudge-width="400" offset-y nudge-bottom="10">
+                <template v-slot:activator="{ on }">
+                  <v-btn small dark class="white--text" text v-on="on">
+                    Workspaces
+                  </v-btn>
+                </template>
+                <v-row class="pr-2 white">
+                  <v-col cols="4">
+                    <v-list dense>
+                      <v-list-item-group v-model="project" color="primary">
+                        <v-list-item v-for="(item, i) in projects" :key="i">
+                          <v-list-item-content>
+                            <v-list-item-title v-text="item.text"></v-list-item-title>
+                          </v-list-item-content>
+                        </v-list-item>
+                      </v-list-item-group>
+                    </v-list>
+                  </v-col>
+                  <v-col cols="8">
+                    <v-alert dense border="left" colored-border color="primary">
+                      <v-text-field
+                        hide-details
+                        dense
+                        append-icon="fas fa-search"
+                        :height="10"
+                        label="Search"
+                        single-line
+                        outlined
+                      />
+                      <div class="pt-1 subtitle-2">
+                        Frequently visited
+                      </div>
+                      <v-list two-line dense subheader>
+                        <v-list-item v-for="item in projectsList" :key="item.title">
+                          <v-list-item-avatar>
+                            <v-icon :class="[item.iconClass]" v-text="item.icon"></v-icon>
+                          </v-list-item-avatar>
+
+                          <v-list-item-content>
+                            <v-list-item-title v-text="item.title"></v-list-item-title>
+                            <v-list-item-subtitle v-text="item.subtitle"></v-list-item-subtitle>
+                          </v-list-item-content>
+
+                          <v-list-item-action>
+                            <v-btn icon>
+                              <v-icon color="grey lighten-1">fas fa-info-circle</v-icon>
+                            </v-btn>
+                          </v-list-item-action>
+                        </v-list-item>
+                      </v-list>
+                    </v-alert>
+                  </v-col>
+                </v-row>
+              </v-menu>
+              <v-menu v-model="menu2" v-resize="onResize" close-on-content-click :nudge-width="200" offset-x>
+                <template v-slot:activator="{ on }">
+                  <v-btn small icon v-on="on" class="d-md-none">
+                    <v-icon>mdi-dots-vertical</v-icon>
+                  </v-btn>
+                </template>
+                <v-list dense>
+                  <v-list-item :key="'profile'" exact :to="profileRoute">
+                    Edit my profile
+                  </v-list-item>
+                  <v-list-item href="https://docs.askanna.io" target="_blank">
+                    <v-list-item-title>Documentation</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item>
+                    <v-list-item-title @click="logout">Logout</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+            </v-flex>
+
+            <v-flex>
+              <v-menu v-model="menu2" close-on-content-click :nudge-width="200" offset-x>
+                <template v-slot:activator="{ on }">
+                  <v-btn small icon v-on="on" class="d-md-none">
+                    <v-icon>mdi-dots-vertical</v-icon>
+                  </v-btn>
+                </template>
+                <v-list dense>
+                  <v-list-item :key="'profile'" exact :to="profileRoute">
+                    Edit my profile
+                  </v-list-item>
+                  <v-list-item href="https://docs.askanna.io" target="_blank">
+                    <v-list-item-title>Documentation</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item>
+                    <v-list-item-title @click="logout">Logout</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+            </v-flex>
+          </div>
+
+          <div class="text-right hidden-sm-and-down">
+            <v-btn @click="handleShowHideUploadStatus" icon :color="colorStatus">
+              <v-icon>{{ iconStatus }}</v-icon>
+            </v-btn>
+            <span v-if="isNotBeta">Build version:&nbsp;{{ version }}</span>
+            <v-menu transition="slide-y-transition" offset-y close-on-content-click>
+              <template v-slot:activator="{ on }">
+                <v-btn icon v-on="on">
+                  <v-avatar class="ma-2" rounded="35" :size="35" tile>
+                    <v-img class="img--rounded" :src="workspaceProfile.avatar.small" />
+                  </v-avatar>
+                </v-btn>
+              </template>
+
+              <v-list>
+                <v-list-item v-if="isNotBeta">
+                  <v-list-item-title>Settings</v-list-item-title>
+                </v-list-item>
+                <v-list-item :key="'profile'" exact :to="profileRoute">
+                  Edit my profile
+                </v-list-item>
+                <v-list-item href="https://docs.askanna.io" target="_blank">
+                  <v-list-item-title>Documentation</v-list-item-title>
+                </v-list-item>
+                <v-list-item :key="'logout'" exact @click="logout">
+                  Logout
+                </v-list-item>
+              </v-list>
+            </v-menu>
+            <v-btn v-if="isReview" small icon class="white--text" @click.stop="drawer = !drawer">
+              <v-icon dark>mdi-tune</v-icon>
+            </v-btn>
+          </div>
+        </div>
+      </v-container>
+    </v-app-bar>
+
+    <v-main>
+      <v-container class="a-content">
+        <router-view />
+      </v-container>
+      <the-snack-bar />
+      <the-upload-status />
+      <update-app />
+    </v-main>
+  </v-app>
+</template>
+
+<script>
+import '@/core/plugins/intercom.js'
+import useProjectStore from '@project/composition/useProjectStore'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
+
+import UpdateApp from '@/core/components/shared/updateApp/UpdateApp'
+import TheUploadStatus from '@/core/components/uploadStatus/TheUploadStatus'
+import useUploadStatus from '@/core/components/uploadStatus/useUploadStatus'
+
+import useTitle from '@/core/composition/useTitle'
+import useUserStore from '@/features/user/composition/useUserStore'
+import useAuthStore from '../../features/auth/composition/useAuthStore'
+import useWorkspaceStore from '../../features/workspace/composition/useWorkSpaceStore'
+import { ref, computed, defineComponent, onBeforeMount, onUpdated } from '@vue/composition-api'
+
+export default defineComponent({
+  name: 'PublicAuthLayout',
+
+  components: { UpdateApp, TheUploadStatus },
+
+  setup(_, context) {
+    useTitle(context)
+    const authStore = useAuthStore()
+    const userStore = useUserStore()
+    const projectStore = useProjectStore()
+    const uploadStatus = useUploadStatus()
+    const router = useRouterAskAnna(context)
+    const workspaceStore = useWorkspaceStore()
+
+    const xsOnly = ref(null)
+    const logout = () => authStore.actions.logout()
+    const workspaces = computed(() => workspaceStore.workspaces.value.results)
+    const workspaceProfile = computed(() => workspaceStore.state.currentPeople.value)
+    const currentRole = computed(() => workspaceStore.state.currentPeople.value.role.code)
+
+    const showAppBarIcon = computed(() => !context.root.$route.meta?.hideAppBarIcon)
+    const workspaceShortUuid = computed(() => workspaceStore.workspace.value.short_uuid)
+
+    const profileRoute = computed(() => {
+      if (currentRole.value === 'WV') {
+        return { name: 'profile' }
+      }
+      return { name: 'workspace-profile', params: { workspaceId: workspaceShortUuid.value } }
+    })
+
+    const handleChangeWorkspace = ({ short_uuid }) => {
+      if (workspaceShortUuid.value === short_uuid) return
+      router.push({ path: `/${short_uuid}`, params: { workspace: short_uuid } })
+    }
+
+    const onResize = () => {
+      xsOnly.value = context.root.$vuetify.breakpoint.xlOnly || context.root.$vuetify.breakpoint.mdAndDown
+    }
+
+    const handleShowHideUploadStatus = () => {
+      uploadStatus.showHideSnackBar()
+    }
+
+    const fetchData = async () => {
+      await userStore.actions.getGlobalProfile()
+      await userStore.actions.getUserProfile()
+    }
+
+    onBeforeMount(() => fetchData())
+
+    onUpdated(() => {
+      if (process.env.VUE_APP_INTERCOM === 'on') {
+        window.Intercom('update')
+      }
+    })
+
+    return {
+      profileRoute,
+      showAppBarIcon,
+      ...projectStore,
+      logout,
+      onResize,
+      workspaces,
+      workspaceProfile,
+      iconStatus: uploadStatus.iconStatus,
+      colorStatus: uploadStatus.colorStatus,
+
+      handleChangeWorkspace,
+      handleShowHideUploadStatus
+    }
+  },
+
+  data: () => ({
+    mobileMenu: false,
+    project: '',
+    version: process.env.VERSION,
+    menu: false,
+    menu2: false,
+    items: [{ title: 'Workspace', name: 'workspace', icon: 'mdi-view-dashboard' }],
+    projects: [
+      { text: 'Your workspaces', icon: 'fas fa-project-diagram' },
+      { text: 'Shared workspaces', icon: '  ' }
+    ],
+    projectsList: [
+      {
+        icon: 'mdi-semantic-web',
+        iconClass: 'grey lighten-1 white--text',
+        title: 'AskAnna startup',
+        subtitle: 'AskAnna'
+      },
+      {
+        icon: 'mdi-semantic-web',
+        iconClass: 'grey lighten-1 white--text',
+        title: 'AskAnna HQ',
+        subtitle: 'Andrii Shapovalov'
+      },
+      {
+        icon: 'mdi-semantic-web',
+        iconClass: 'grey lighten-1 white--text',
+        title: 'AskAnna Sandbox',
+        subtitle: 'Andrii Shapovalov'
+      }
+    ]
+  })
+})
+</script>
+<style scoped>
+.logo {
+  height: 30px;
+}
+.logo.--mobile {
+  height: 67px;
+}
+.a-content {
+  max-width: 1248px;
+}
+</style>

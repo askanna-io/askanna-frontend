@@ -7,12 +7,18 @@
         </template>
       </package-toolbar>
       <v-expand-transition>
-        <resumable-upload
-          @cancelUpload="handleReplace"
-          @onCloseOutside="handleCloseOutside"
-          class="py-2 px-4"
-          :id="packageId"
-        />
+        <div>
+          <resumable-upload
+            v-if="projectCodeCreate"
+            @cancelUpload="handleReplace"
+            @onCloseOutside="handleCloseOutside"
+            class="py-2 px-4"
+            :id="packageId"
+          />
+          <v-alert v-else class="ma-4 text-center" dense outlined>
+            There is no code pushed to this project.
+          </v-alert>
+        </div>
       </v-expand-transition>
       <template v-if="isProcessing">
         <package-processing />
@@ -23,6 +29,7 @@
 
 <script>
 import { useWindowSize } from '@u3u/vue-hooks'
+import usePermission from '@/core/composition/usePermission'
 import usePackages from '@packages/composition/usePackages'
 import useProjectStore from '@project/composition/useProjectStore'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
@@ -42,14 +49,18 @@ export default defineComponent({
 
   setup(_, context) {
     usePackages(context)
+    const permission = usePermission()
+
     const { height } = useWindowSize()
     const packageStore = usePackageStore()
     const projectStore = useProjectStore()
-    const router = useRouterAskAnna(context)
+    const router = useRouterAskAnna()
     const breadcrumbs = usePackageBreadcrumbs(context)
 
     const isRaplace = ref(false)
     const { workspaceId, projectId, packageId = '' } = context.root.$route.params
+
+    const projectCodeCreate = computed(() => permission.getFor(permission.labels.projectCodeCreate))
 
     const calcHeight = computed(() => height.value - 370)
     const isProcessing = computed(() => packageStore.processingList.value.find(item => item.packageId === packageId))
@@ -64,6 +75,7 @@ export default defineComponent({
     }
 
     const handleCloseOutside = async () => {
+      await projectStore.getProjectMe(context.root.$route.params.projectId)
       const project = await projectStore.getProject(context.root.$route.params.projectId)
       if (!project.package.short_uuid || !project.short_uuid) return
 
@@ -80,6 +92,8 @@ export default defineComponent({
       calcHeight,
       breadcrumbs,
       isProcessing,
+      projectCodeCreate,
+
       handleReplace,
       handleCloseOutside,
       handeBackToPackageRoot

@@ -40,7 +40,7 @@ export default defineComponent({
     AskAnnaLoadingProgress
   },
 
-  setup(props, context) {
+  setup(_, context) {
     const authStore = useAuthStore()
     const workspaceStore = useWorkspaceStore()
     const { token, peopleId, workspaceId } = context.root.$route.params

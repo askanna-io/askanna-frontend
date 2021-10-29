@@ -13,7 +13,7 @@
         @onSort="handleOnSort"
         @onScroll="handleOnScroll"
       />
-      <v-alert v-else class="mt-2 text-center" dense outlined color="grey">
+      <v-alert v-else class="mt-2 text-center" dense outlined>
         There are no metrics available for this run.
       </v-alert>
     </div>

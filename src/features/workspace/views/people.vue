@@ -1,65 +1,73 @@
 <template>
   <div>
     <workspace-people-navbar />
-    <workspace-people-list
-      :loading="loading"
-      :items="workspacePeople"
-      :currentUser="currentUser"
-      :settings="workspaceSettings"
-      :workspaceUuid="workspace.uuid"
-      :workspaceName="workspace.name"
-      @onSelectPoeple="handleSelectPeople"
-    />
-    <workspace-people-popup
-      v-if="peoplePopup"
-      :value="peoplePopup"
-      :people="selectedPeople"
-      :currentUser="currentUser"
-      :workspaceName="workspace.name"
-      :roleAction="roleAction"
-      :isPeopleAdmin="isPeopleAdmin"
-      @handleValue="handleValue"
-      @onChangeRole="handleChangeRole"
-      @onRemovePeople="handleOpenRemovePeople"
-      @onDeleteInivitationPopup="handleDeleteInivitationPopup(true)"
-      @onResendInivitationPopup="handleResendInivitationPopup(true)"
-    />
-    <workspace-people-confirm-delete-popup
-      v-if="peopleConfirmDeletePopup"
-      :value="peopleConfirmDeletePopup"
-      :peopleName="selectedPeople.name"
-      @onDeleteConfirm="handleDeleteItem"
-      @onCloseDeletePopup="handleCloseConfirmDeletePopup"
-    />
-    <workspace-people-confirm-delete-invitation-popup
-      v-if="deleteInvitationConfirmPopup"
-      :peopleName="selectedPeople.name"
-      :value="deleteInvitationConfirmPopup"
-      @onDeleteConfirm="handleDeleteInvitation"
-      @onClose="handleDeleteInivitationPopup(false)"
-    />
-    <workspace-people-confirm-resend-invitation-popup
-      v-if="resendInvitationConfirmPopup"
-      :peopleName="selectedPeople.name"
-      :value="resendInvitationConfirmPopup"
-      @onResendConfirm="handleResendItem"
-      @onClose="handleResendInivitationPopup(false)"
-    />
+    <template v-if="isMember">
+      <workspace-people-list
+        :loading="loading"
+        :items="workspacePeople"
+        :currentUser="currentUser"
+        :settings="workspaceSettings"
+        :workspaceUuid="workspace.uuid"
+        :workspaceName="workspace.name"
+        @onSelectPoeple="handleSelectPeople"
+      />
+      <workspace-people-popup
+        v-if="peoplePopup"
+        :value="peoplePopup"
+        :people="selectedPeople"
+        :currentUser="currentUser"
+        :workspaceName="workspace.name"
+        :roleAction="roleAction"
+        :isPeopleAdmin="isPeopleAdmin"
+        @handleValue="handleValue"
+        @onChangeRole="handleChangeRole"
+        @onRemovePeople="handleOpenRemovePeople"
+        @onDeleteInivitationPopup="handleDeleteInivitationPopup(true)"
+        @onResendInivitationPopup="handleResendInivitationPopup(true)"
+      />
+      <workspace-people-confirm-delete-popup
+        v-if="peopleConfirmDeletePopup"
+        :value="peopleConfirmDeletePopup"
+        :peopleName="selectedPeople.name"
+        @onDeleteConfirm="handleDeleteItem"
+        @onCloseDeletePopup="handleCloseConfirmDeletePopup"
+      />
+      <workspace-people-confirm-delete-invitation-popup
+        v-if="deleteInvitationConfirmPopup"
+        :peopleName="selectedPeople.name"
+        :value="deleteInvitationConfirmPopup"
+        @onDeleteConfirm="handleDeleteInvitation"
+        @onClose="handleDeleteInivitationPopup(false)"
+      />
+      <workspace-people-confirm-resend-invitation-popup
+        v-if="resendInvitationConfirmPopup"
+        :peopleName="selectedPeople.name"
+        :value="resendInvitationConfirmPopup"
+        @onResendConfirm="handleResendItem"
+        @onClose="handleResendInivitationPopup(false)"
+      />
 
-    <workspace-people-confirm-change-role-popup
-      v-if="changeRoleConfirmPopup"
-      :roleAction="roleAction"
-      :peopleName="selectedPeople.name"
-      :isPeopleAdmin="isPeopleAdmin"
-      :value="changeRoleConfirmPopup"
-      @onChangeRoleConfirm="handleConfirmChangeRole"
-      @onClose="handleCloseChangeRolePopup(false)"
-    />
+      <workspace-people-confirm-change-role-popup
+        v-if="changeRoleConfirmPopup"
+        :toRole="changeRoleTo"
+        :fromRole="selectedPeople.role.code"
+        :isPeopleAdmin="isPeopleAdmin"
+        :value="changeRoleConfirmPopup"
+        :peopleName="selectedPeople.name || selectedPeople.email"
+        @onChangeRoleConfirm="handleConfirmChangeRole"
+        @onClose="handleCloseChangeRolePopup(false)"
+      />
+    </template>
+    <v-alert v-else class="text-center" dense outlined>
+      You are not allowed to see the peope list of this workspace. I can bring you back to the workspace
+      <router-link :to="{ name: 'workspace' }" class="ask-anna-link">{{ workspace.name }}</router-link
+      >.
+    </v-alert>
   </div>
 </template>
 <script>
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
-import { ref, provide, readonly, computed, onBeforeMount, defineComponent, reactive } from '@vue/composition-api'
+import { ref, computed, onBeforeMount, defineComponent } from '@vue/composition-api'
 import WorkspacePeopleList from '@/features/workspace/components/people/WorkspacePeopleList.vue'
 import WorkspacePeoplePopup from '@/features/workspace/components/people/WorkspacePeoplePopup.vue'
 import WorkspacePeopleNavbar from '@/features/workspace/components/people/WorkspacePeopleNavbar.vue'
@@ -81,21 +89,22 @@ export default defineComponent({
     WorkspacePeopleConfirmDeleteInvitationPopup
   },
 
-  setup(props, context) {
+  setup(_, context) {
     const workspaceStore = useWorkspaceStore()
     const { workspaceId } = context.root.$route.params
 
+    const changeRoleTo = ref('')
     const peoplePopup = ref(false)
     const selectedPeople = ref(null)
 
     const changeRoleConfirmPopup = ref(false)
     const peopleConfirmDeletePopup = ref(false)
-    const peopleChangeRoleConfirmPopup = ref(false)
     const deleteInvitationConfirmPopup = ref(false)
     const resendInvitationConfirmPopup = ref(false)
 
     const isPeopleAdmin = computed(() => selectedPeople.value.role === 'WA')
     const role = computed(() => (isPeopleAdmin.value ? 'WM' : 'WA'))
+    const isMember = computed(() => workspaceStore.workspace.value.is_member)
     const roleAction = computed(() => (isPeopleAdmin.value ? 'revoke' : 'grant'))
 
     const workspacePeople = computed(() => {
@@ -110,7 +119,7 @@ export default defineComponent({
       if (!people.length) return people
 
       if (role) {
-        people = people.filter(item => item.role === role)
+        people = people.filter(item => item.role?.code === role)
       }
 
       if (status) {
@@ -140,11 +149,14 @@ export default defineComponent({
 
     const handleCloseChangeRolePopup = value => (changeRoleConfirmPopup.value = false)
 
-    const handleChangeRole = async role => (changeRoleConfirmPopup.value = true)
+    const handleChangeRole = async role => {
+      changeRoleTo.value = role
+      changeRoleConfirmPopup.value = true
+    }
 
-    const handleConfirmChangeRole = async () => {
+    const handleConfirmChangeRole = async role => {
       const people = await workspaceStore.actions.changeRole({
-        role: role.value,
+        role,
         peopleId: selectedPeople.value.short_uuid,
         workspaceId: selectedPeople.value.workspace.short_uuid
       })
@@ -174,7 +186,7 @@ export default defineComponent({
       deleteInvitationConfirmPopup.value = false
     }
 
-    const handleCloseConfirmDeletePopup = value => (peopleConfirmDeletePopup.value = false)
+    const handleCloseConfirmDeletePopup = () => (peopleConfirmDeletePopup.value = false)
     const handleDeleteInivitationPopup = value => (deleteInvitationConfirmPopup.value = value)
     const handleResendInivitationPopup = value => (resendInvitationConfirmPopup.value = value)
 
@@ -187,14 +199,23 @@ export default defineComponent({
       peoplePopup.value = false
     }
 
+    const fetchData = async () => {
+      await workspaceStore.actions.getWorkspacePeople({ workspaceId })
+    }
+
+    onBeforeMount(() => fetchData())
+
     return {
       loading,
+      isMember,
       roleAction,
       peoplePopup,
-      handleValue,
+      changeRoleTo,
       isPeopleAdmin,
       selectedPeople,
       workspacePeople,
+
+      handleValue,
       handleDeleteItem,
       handleResendItem,
       handleChangeRole,

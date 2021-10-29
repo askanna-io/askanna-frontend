@@ -1,5 +1,5 @@
 import { set } from 'lodash'
-import { mutation } from './types'
+import { mutation, ProjectVisibility } from './types'
 import { MutationTree } from 'vuex'
 import { projectState, ProjectModel } from './types'
 

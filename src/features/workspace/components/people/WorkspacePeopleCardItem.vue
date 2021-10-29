@@ -15,6 +15,7 @@
           <v-list-item-content>
             <v-list-item-title class="people-title">{{ people.name || people.email }}</v-list-item-title>
             <v-list-item-subtitle>{{ people.job_title }}</v-list-item-subtitle>
+            <v-list-item-subtitle>{{ people.role.name }}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
       </v-col>
@@ -23,7 +24,7 @@
 </template>
 
 <script>
-import { defineComponent } from '@vue/composition-api'
+import { ref, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'WorkspacePeopleCardItem',

@@ -74,7 +74,7 @@ export default defineComponent({
   setup(_, context) {
     const jobStore = useJobStore()
     const moment = useMoment(context)
-    const router = useRouterAskAnna(context)
+    const router = useRouterAskAnna()
 
     jobStore.resetJobRun()
 

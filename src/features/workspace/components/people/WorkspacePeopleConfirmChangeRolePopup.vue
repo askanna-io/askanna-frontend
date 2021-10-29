@@ -4,8 +4,11 @@
       <v-toolbar flat dense white--text color="white">
         <v-toolbar-title class="px-0 toolbar-title">
           <div class="grid-container">
-            <div class="pre">Do you want to {{ roleAction }} admin powers to&nbsp;</div>
-            <div class="long primary--text">{{ peopleName }}</div>
+            <div class="pre">
+              Do you want to make
+              <span class="long primary--text">{{ peopleName }}</span> a workspace
+              {{ roleInfo.title }}
+            </div>
             <div class="mark pre">?</div>
           </div>
         </v-toolbar-title>
@@ -15,44 +18,50 @@
         </v-btn>
       </v-toolbar>
       <v-card-text>
-        You are about to {{ roleAction }} admin powers to <b>{{ peopleName }}</b
-        >. When you {{ roleAction }} these powers, then <b>{{ peopleName }}</b> {{ canTitle }}:
+        <template v-if="roleInfo.canNoLongerTitle">
+          <span v-html="roleInfo.canNoLongerTitle" />
+          <br />
+          <br />
+        </template>
+        <template v-if="roleInfo.canNoLongerPermissions">
+          <ul>
+            <li v-for="(item, index) in roleInfo.canNoLongerPermissions" :key="index">
+              {{ item }}
+            </li>
+          </ul>
+          <br />
+        </template>
+        <template v-if="roleInfo.canTitle">
+          <span v-html="roleInfo.canTitle" />
+        </template>
         <br />
         <br />
-        <ul>
-          <li>
-            Remove workspace members
-          </li>
-          <li>
-            Grant or revoke workspace admin powers
+        <ul v-if="roleInfo.canPermissions">
+          <li v-for="(item, index) in roleInfo.canPermissions" :key="index">
+            {{ item }}
           </li>
         </ul>
         <br />
-        <template v-if="isPeopleAdmin"
-          >When you revoke the admin powers of <b>{{ peopleName }}</b
-          >, he/she will become a workspace member.</template
-        >
       </v-card-text>
       <v-card-actions class="ml-5">
         <v-btn small outlined text color="secondary" class="mr-1 btn--hover" @click="closeDelete">Cancel</v-btn>
-        <v-btn small outlined text :color="colorBtn" class="mr-1 btn--hover" @click="changeRoleConfirm"
-          >{{ roleAction }} admin powers</v-btn
-        >
+        <v-btn small outlined text :color="colorBtn" class="mr-1 btn--hover" @click="changeRoleConfirm">
+          MAKE {{ peopleName }} WORKSPACE {{ roleInfo.title }}
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 <script>
-import useSlicedText from '@/core/composition/useSlicedText'
 import { computed, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'WorkspacePeopleConfirmChangeRolePopup',
 
   props: {
-    role: {
+    fromRole: {
       type: String,
-      default: () => 'WM'
+      default: () => ''
     },
     value: {
       type: Boolean,
@@ -66,15 +75,78 @@ export default defineComponent({
       type: Boolean,
       default: false
     },
-    roleAction: {
+    toRole: {
       type: String,
-      default: () => 'revoke'
+      default: () => ''
     }
   },
 
   setup(props, context) {
-    const slicedText = useSlicedText()
-    const canTitle = computed(() => (props.isPeopleAdmin ? 'can no longer' : 'can'))
+    const rolesHandler = {
+      from_any_to_WA: {
+        title: 'admin',
+        canTitle: `You are about to make <b>${props.peopleName}</b> a workspace admin. When you grant these powers, then <b>${props.peopleName}</b> can:`,
+        canPermissions: [
+          'Remove the workspace',
+          'Create and remove projects',
+          'Invite workspace admins, members and viewers',
+          'Remove workspace admins, members and viewers',
+          'Grant or revoke workspace admin and member powers'
+        ],
+        canNoLongerTitle: '',
+        canNoLongerPermissions: ''
+      },
+      from_WA_to_WM: {
+        title: 'member',
+        canTitle: `As a workspace member, <b>${props.peopleName}</b> can:`,
+        canNoLongerPermissions: [
+          'Remove the workspace and projects',
+          'Invite workspace admins',
+          'Remove workspace admins, members and viewers',
+          'Grant or revoke workspace admin and member powers'
+        ],
+        canNoLongerTitle: `You are about to make <b>${props.peopleName}</b> a workspace member. If you continue, <b>${props.peopleName}</b> is no longer a workspace admin. As a workspace member, <b>${props.peopleName}</b> can no longer:`,
+        canPermissions: ['Create projects', 'Invite workspace members and viewers']
+      },
+      from_WA_to_WV: {
+        title: 'viewer',
+        canTitle: `As a workspace viewer, <b>${props.peopleName}</b> can:`,
+        canPermissions: ['View projects and people'],
+        canNoLongerTitle: `You are about to make <b>${props.peopleName}</b> a workspace viewer. If you continue, <b>${props.peopleName}</b> is no longer a workspace admin. As a workspace viewer, <b>${props.peopleName}</b> can no longer:`,
+        canNoLongerPermissions: [
+          'Remove the workspace',
+          'Create and remove projects',
+          'Invite workspace admins, members and viewers',
+          'Remove workspace admins, members and viewers',
+          'Grant or revoke workspace admin and member powers'
+        ]
+      },
+      from_WM_to_WV: {
+        title: 'viewer',
+        canNoLongerTitle: `You are about to make <b>${props.peopleName}</b> a workspace viewer. If you continue, <b>${props.peopleName}</b> is no longer a workspace member. As a workspace viewer, <b>${props.peopleName}</b> can no longer:`,
+        canNoLongerPermissions: ['Create projects', 'Invite workspace members and viewers'],
+        canTitle: `As a workspace viewer, <b>${props.peopleName}</b> can:`,
+        canPermissions: ['View projects and people']
+      },
+      from_WV_to_WM: {
+        title: 'member',
+        canNoLongerTitle: '',
+        canNoLongerPermissions: '',
+        canTitle: `You are about to make <b>${props.peopleName}</b> a workspace member. When you grant these powers, then <b>${props.peopleName}</b> can:`,
+        canPermissions: [
+          'Create projects',
+          'Invite workspace members and viewers',
+          'Grant or revoke workspace member powers'
+        ]
+      }
+    }
+
+    const roleInfo = computed(() => {
+      const fromRole = props.toRole === 'WA' ? 'any' : props.fromRole
+      const roleFromTo = `from_${fromRole}_to_${props.toRole}`
+
+      return rolesHandler[roleFromTo]
+    })
 
     const valueModel = computed({
       get: () => props.value,
@@ -84,14 +156,14 @@ export default defineComponent({
     const colorBtn = computed(() => (props.isPeopleAdmin ? 'error' : 'secondary'))
 
     const closeDelete = () => context.emit('onClose')
-    const changeRoleConfirm = () => context.emit('onChangeRoleConfirm')
+    const changeRoleConfirm = () => context.emit('onChangeRoleConfirm', props.toRole)
 
     return {
-      name,
+      roleInfo,
       colorBtn,
-      canTitle,
       valueModel,
       closeDelete,
+      rolesHandler,
       changeRoleConfirm
     }
   }
@@ -100,6 +172,7 @@ export default defineComponent({
 <style>
 .pre {
   white-space: pre;
+  display: flex;
 }
 
 .mark {
@@ -112,8 +185,10 @@ export default defineComponent({
 }
 
 .long {
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  max-width: 175px;
   overflow: hidden;
+  white-space: nowrap;
+  display: inline-block;
+  text-overflow: ellipsis;
 }
 </style>

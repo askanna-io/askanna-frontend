@@ -5,7 +5,7 @@
         <v-toolbar v-if="sticked" dense color="white" class="br-r5 ma-3" :flat="!sticked">
           <v-breadcrumbs v-if="sticked" class="pl-0" :items="breadcrumbs">
             <template v-slot:item="{ item }">
-              <v-breadcrumbs-item :to="item.to" exact>
+              <v-breadcrumbs-item :to="item.to" :exact="item.exact">
                 {{ item.title }}
               </v-breadcrumbs-item>
             </template>
@@ -15,7 +15,7 @@
 
       <v-breadcrumbs v-if="!sticked" :items="breadcrumbs">
         <template v-slot:item="{ item }">
-          <v-breadcrumbs-item :to="item.to" exact>
+          <v-breadcrumbs-item :to="item.to" :exact="item.exact">
             {{ item.title }}
           </v-breadcrumbs-item>
         </template>

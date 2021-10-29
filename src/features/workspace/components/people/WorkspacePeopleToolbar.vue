@@ -47,13 +47,13 @@
               <h3>Account types</h3>
             </v-card-subtitle>
             <v-select
-              hide-details
               v-model="activeRoleFilter"
-              :items="roleFilters"
+              hide-details
+              class="pt-0"
+              no-data-text=""
               item-text="name"
               item-value="value"
-              no-data-text=""
-              class="pt-0"
+              :items="roleFilters"
             >
             </v-select>
           </v-card>
@@ -79,13 +79,16 @@
         </v-col>
       </v-row>
     </v-menu>
-    <v-spacer />
-    <workspace-people-invite-popup :workspaceName="title" />
+    <template v-if="workspacePeopleInviteCreate">
+      <v-spacer />
+      <workspace-people-invite-popup :workspaceName="title" />
+    </template>
   </v-toolbar>
 </template>
 <script>
+import usePermission from '@/core/composition/usePermission'
 import WorkspacePeopleInvitePopup from './WorkspacePeopleInvitePopup'
-import { ref, computed, reactive, defineComponent } from '@vue/composition-api'
+import { ref, computed, defineComponent } from '@vue/composition-api'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 
 export default defineComponent({
@@ -100,7 +103,8 @@ export default defineComponent({
 
   components: { WorkspacePeopleInvitePopup },
 
-  setup(props, context) {
+  setup() {
+    const permission = usePermission()
     const workspaceStore = useWorkspaceStore()
 
     const menu = ref(false)
@@ -108,7 +112,7 @@ export default defineComponent({
     const sortMenu = ref(false)
     const filterMenu = ref(false)
 
-    const { workspaceId } = context.root.$route.params
+    const workspacePeopleInviteCreate = computed(() => permission.getFor(permission.labels.workspacePeopleInviteCreate))
 
     const sortItems = [
       { title: 'A to Z', value: { sortBy: 'name', sort: 1 } },
@@ -117,8 +121,9 @@ export default defineComponent({
 
     const roleFilters = [
       { value: '', name: 'All types' },
-      { value: 'WA', name: 'Admin' },
-      { value: 'WM', name: 'Member' }
+      { value: 'WA', name: 'Workspace admin' },
+      { value: 'WM', name: 'Workspace member' },
+      { value: 'WV', name: 'Workspace viewer' }
     ]
 
     const statusFilters = [
@@ -154,6 +159,8 @@ export default defineComponent({
       statusFilters,
       activeRoleFilter,
       activeStatusFilter,
+      workspacePeopleInviteCreate,
+
       handleSort
     }
   }

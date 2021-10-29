@@ -368,8 +368,6 @@
 
 <script>
 import StarterKit from '@tiptap/starter-kit'
-import Document from '@tiptap/extension-document'
-import Paragraph from '@tiptap/extension-paragraph'
 import HardBreak from '@tiptap/extension-hard-break'
 import AskAnnaCodeBlock from './description/AskAnnaCodeBlock.vue'
 import AskAnnaColorPicker from './description/AskAnnaColorPicker.vue'
@@ -378,7 +376,6 @@ import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 import { Editor, EditorContent, VueNodeViewRenderer } from '@tiptap/vue-2'
 
 import lowlight from 'lowlight'
-import Text from '@tiptap/extension-text'
 import TaskList from '@tiptap/extension-task-list'
 import TaskItem from '@tiptap/extension-task-item'
 import Underline from '@tiptap/extension-underline'
@@ -446,9 +443,6 @@ export default defineComponent({
         autofocus: false,
         editable: true,
         extensions: [
-          Text,
-          Document,
-          Paragraph,
           Underline,
           StarterKit,
           TaskList,
@@ -531,12 +525,11 @@ export default defineComponent({
 
     handleEdit() {
       this.editable = !this.editable
-      this.editor.commands.focus()
+      this.editor.focus()
     },
 
     handleOnClickWrapper() {
       this.isFocused = true
-      this.editor.commands.focus()
     },
 
     handleOnBlurWrapper() {

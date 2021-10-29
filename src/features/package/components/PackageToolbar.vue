@@ -9,7 +9,7 @@
               <v-icon>mdi-chevron-right</v-icon>
             </template>
             <template v-slot:item="{ item }">
-              <v-breadcrumbs-item :to="item.to" exact :disabled="item.disabled">
+              <v-breadcrumbs-item :to="item.to" :exact="item.exact" :disabled="item.disabled">
                 {{ item.title }}
               </v-breadcrumbs-item>
             </template>

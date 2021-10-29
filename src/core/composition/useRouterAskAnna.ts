@@ -2,13 +2,16 @@
 import VueRouter from 'vue-router'
 import type { RawLocation } from 'vue-router'
 import { logger } from '@/core/plugins/logger'
-import { SetupContext } from '@vue/composition-api'
+import { useStore, useRouter } from '@u3u/vue-hooks'
 const { isNavigationFailure, NavigationFailureType } = VueRouter
-export default function (context: SetupContext) {
+export default () => {
+  const store = useStore()
+  const { router } = useRouter()
+
   const push = (location: RawLocation) => {
-    context.root.$router.push(location).catch(failure => {
+    router.push(location).catch(failure => {
       if (isNavigationFailure(failure, NavigationFailureType.redirected)) {
-        logger.error(context.root.$store.commit, `Error on redirect to location: ${location}.\nError: `, failure)
+        logger.error(store.value.commit, `Error on redirect to location: ${location}.\nError: `, failure)
       }
     })
   }

@@ -1,6 +1,6 @@
 <template>
-  <div class="pb-5">
-    <ask-anna-loading-progress :type="'table-row'" :loading="loading" fullWidth>
+  <div :class="{ 'pb-5': projectJobEdit }">
+    <ask-anna-loading-progress v-if="projectRunEdit" classes="ma-4" :type="'table-row'" :loading="loading" fullWidth>
       <v-card flat>
         <v-container class="ma-0 ml-1 pt-0" fluid>
           <v-row>
@@ -52,24 +52,34 @@
         </v-container>
       </v-card>
     </ask-anna-loading-progress>
+    <v-alert v-else class="mx-4 text-center" dense outlined>
+      You are not allowed to edit this run. I can bring you back toto the run
+      <router-link :to="{ name: 'workspace-project-jobs-job-jobrun-overview' }" class="ask-anna-link">{{
+        jobRun.name || jobRun.short_uuid
+      }}</router-link
+      >.
+    </v-alert>
   </div>
 </template>
 
 <script>
 import { set } from 'lodash'
+import usePermission from '@/core/composition/usePermission'
 import useJobRunStore from '@jobrun/composition/useJobRunStore'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import { ref, watch, computed, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
-  setup(_, context) {
+  setup() {
     const snackBar = useSnackBar()
+    const permission = usePermission()
+    const router = useRouterAskAnna()
     const jobRunStore = useJobRunStore()
-    const router = useRouterAskAnna(context)
 
     const jobRun = computed(() => jobRunStore.jobRun.value)
     const loading = computed(() => jobRunStore.jobRunLoading.value)
+    const projectRunEdit = computed(() => permission.getFor(permission.labels.projectRunEdit))
 
     const isStateNotChanged = ref(true)
     const run = ref({
@@ -115,6 +125,7 @@ export default defineComponent({
       run,
       jobRun,
       loading,
+      projectRunEdit,
       isStateNotChanged,
 
       handleSave,

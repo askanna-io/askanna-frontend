@@ -55,7 +55,7 @@ export default defineComponent({
   setup(props, context) {
     const dialog = ref(true)
     const uploadStatus = useUploadStatus()
-    const router = useRouterAskAnna(context)
+    const router = useRouterAskAnna()
 
     watch(dialog, async dialog => {
       if (!dialog) context.emit('confirmationClosed')

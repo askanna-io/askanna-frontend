@@ -32,7 +32,7 @@ import { computed, defineComponent } from '@vue/composition-api'
 export default defineComponent({
   name: 'WorkspaceNotReady',
 
-  setup(props, context) {
+  setup() {
     const breadcrumbs = computed(() => [
       {
         title: 'Cannot find a workspace',

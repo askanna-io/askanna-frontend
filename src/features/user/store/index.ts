@@ -12,6 +12,25 @@ export const state: userState = {
     password: undefined,
     short_uuid: ''
   },
+  globalProfile: {
+    uuid: '',
+    name: '',
+    email: '',
+    short_uuid: '',
+    job_title: '',
+    role: {
+      name: '',
+      code: ''
+    },
+    membership: null,
+    avatar: {
+      icon: '',
+      small: '',
+      medium: '',
+      large: ''
+    },
+    permission: undefined
+  },
   tempAuth: {
     username: '',
     password: ''
