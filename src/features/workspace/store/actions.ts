@@ -80,6 +80,8 @@ export const actions: ActionTree<workspaceState, RootState> = {
   },
 
   async [action.getInitialWorkpaceProjects]({ commit, dispatch }, data) {
+    // eslint-disable-next-line no-console
+    console.log(data)
     commit(mutation.SET_LOADING, { projects: true })
 
     await dispatch(action.getWorkpaceProjects, { ...data, initial: true })
