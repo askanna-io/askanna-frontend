@@ -45,6 +45,8 @@ export default defineComponent({
 
       // check rounte param workspaceId, get from store if not present in params
       let { workspaceId } = context.root.$route.params
+      // eslint-disable-next-line no-console
+      console.log(workspaceId)
 
       if (workspaceId === 'workspace' && workspaceStore.workspaces.value.results.length) {
         workspaceId = workspaceStore.workspaces.value.results[0].short_uuid
@@ -62,6 +64,8 @@ export default defineComponent({
     onBeforeMount(() => fetchData())
 
     onUpdated(async () => {
+      // eslint-disable-next-line no-console
+      console.log(token)
       if (!token) return
 
       const { workspaceId } = context.root.$route.params
@@ -70,6 +74,8 @@ export default defineComponent({
 
       setTimeout(() => workspaceStore.setLoading({ projects: false }), 100)
 
+      // eslint-disable-next-line no-console
+      console.log(workspaceId, workspaceStore.workspace.value.short_uuid)
       if (workspaceId !== workspaceStore.workspace.value.short_uuid) {
         await initWorkspace(workspaceId)
       }
