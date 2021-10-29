@@ -65,7 +65,7 @@
           <ask-anna-loading-dots-flashing v-if="isLoadingLogs" />
         </div>
 
-        <v-alert v-else class="ma-4 text-center" dense outlined color="grey">
+        <v-alert v-else class="ma-4 text-center" dense outlined>
           There is no log available for this run.
         </v-alert>
       </ask-anna-loading-progress>

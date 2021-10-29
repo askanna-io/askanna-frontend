@@ -20,7 +20,7 @@
       </v-toolbar-title>
       <v-spacer />
 
-      <project-menu-popup :project="project" />
+      <project-menu-popup v-if="projectInfoEdit" :project="project" />
     </v-toolbar>
 
     <v-card-text class="font-weight-bold project--description">
@@ -51,7 +51,8 @@
 </template>
 
 <script>
-import { defineComponent } from '@vue/composition-api'
+import usePermission from '@/core/composition/usePermission'
+import { computed, defineComponent } from '@vue/composition-api'
 import ProjectMenuPopup from '@/features/project/components/ProjectMenuPopup'
 
 export default defineComponent({
@@ -88,6 +89,13 @@ export default defineComponent({
       type: Boolean,
       default: false
     }
+  },
+
+  setup(props) {
+    const permission = usePermission()
+    const projectInfoEdit = computed(() => props.project.permission[permission.labels.projectInfoEdit])
+
+    return { projectInfoEdit }
   }
 })
 </script>

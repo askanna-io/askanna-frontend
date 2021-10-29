@@ -70,6 +70,22 @@
               </v-chip>
             </v-col>
           </v-row>
+          <v-row no-gutters>
+            <v-col class="pa-2" cols="12">
+              <v-select
+                v-model="selectedAccess"
+                :items="listAccess"
+                dense
+                outlined
+                return-object
+                hide-details
+                item-text="name"
+                item-value="code"
+                persistent-hint
+                label="Invite as"
+              />
+            </v-col>
+          </v-row>
         </v-container>
 
         <v-card-actions>
@@ -80,7 +96,7 @@
             small
             outlined
             color="secondary"
-            class="mr-1 ml-1 btn--hover"
+            class="ml-0 btn--hover"
             @click="handleSentInvitation"
           >
             <v-icon left>
@@ -119,13 +135,27 @@ export default defineComponent({
     }
   },
 
-  setup(props, context) {
+  setup(props) {
+    const slicedText = useSlicedText()
     const workspaceStore = useWorkspaceStore()
     const validationRules = useValidationRules()
 
+    const currentRole = computed(() => workspaceStore.state.currentPeople.value.role.code)
+
     const menu = ref(false)
     const loading = ref(false)
-    const slicedText = useSlicedText()
+    const selectedAccess = ref({ code: 'WM', name: 'member' }) //default member access
+
+    const listAccess = computed(() => {
+      let list = [
+        { code: 'WM', name: 'Workspace member' },
+        { code: 'WV', name: 'Workspace viewer' }
+      ]
+      if (currentRole.value === 'WA') {
+        list = [{ code: 'WA', name: 'Workspace admin' }, ...list]
+      }
+      return list
+    })
 
     const invitationItems = ref([])
     const loadingText = ref('Sending...')
@@ -163,7 +193,7 @@ export default defineComponent({
 
       const emails = invitationItems.value.reduce(reducer, [])
       if (emails.length) {
-        await workspaceStore.sendInvitations(emails)
+        await workspaceStore.sendInvitations({ emails, role: selectedAccess.value.code })
       }
 
       menu.value = false
@@ -209,14 +239,17 @@ export default defineComponent({
       title,
       loading,
       getStyle,
+      listAccess,
       loadingText,
       handleRemove,
       handleCancel,
-      invitationItems,
-      handleOnInput,
       inValidEmails,
       invitedEmails,
+      selectedAccess,
+      invitationItems,
       invitationBtnText,
+
+      handleOnInput,
       handleSentInvitation,
       handleRemoveInvitedEmails,
       handleRemoveInValidEmails

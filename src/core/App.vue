@@ -1,21 +1,25 @@
 <template>
   <v-app>
-    <Layout :layout="layout" />
+    <Layout :layout="layout" :isLoggedIn="isLoggedIn" />
   </v-app>
 </template>
 
 <script>
 import { get } from 'lodash'
+
 import Layout from '@/core/layouts/Layout'
-import { routerConfig, RouterConfig } from './router/routerConfig'
-import { ref, computed, defineComponent, onBeforeMount } from '@vue/composition-api'
+import { routerConfig } from './router/routerConfig'
+import { computed, defineComponent } from '@vue/composition-api'
+import useUserStore from '@/features/user/composition/useUserStore'
 
 export default defineComponent({
   name: 'App',
 
   components: { Layout },
 
-  setup(props, context) {
+  setup(_, context) {
+    const userStore = useUserStore()
+
     const layout = computed(() => {
       const name = context.root.$route.name || 'signin'
 
@@ -23,7 +27,9 @@ export default defineComponent({
       return get(routerConfig, `${name}.layout`) || 'dashboard'
     })
 
-    return { layout }
+    const isLoggedIn = computed(() => !!userStore.state.globalProfile.value.short_uuid)
+
+    return { layout, isLoggedIn }
   }
 })
 </script>
@@ -258,5 +264,20 @@ code.lang-shell {
 
 .text-transform--initial {
   text-transform: initial !important;
+}
+.v-input--is-label-active .v-input--selection-controls__ripple:before {
+  opacity: 0.12 !important;
+}
+.v-input--selection-controls__ripple:before {
+  opacity: 0.04 !important;
+}
+
+.askAnna-avatar-badge .v-badge__badge {
+  z-index: 1;
+}
+
+//colors
+.primary--black-text {
+  color: #000000de !important;
 }
 </style>

@@ -97,7 +97,7 @@
             </v-btn>
           </v-flex>
 
-          <v-alert v-if="isJobRunResultEmpty" class="ma-4 text-center" dense outlined color="grey">
+          <v-alert v-if="isJobRunResultEmpty" class="ma-4 text-center" dense outlined>
             There is no result available for this run.
           </v-alert>
         </div>
@@ -135,7 +135,7 @@ export default defineComponent({
     const { height } = useWindowSize()
     const prettyJSON = usePrettyJSON()
     const jobRunStore = useJobRunStore()
-    const router = useRouterAskAnna(context)
+    const router = useRouterAskAnna()
     const forceFileDownload = useForceFileDownload()
 
     const views = [

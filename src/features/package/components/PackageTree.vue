@@ -34,7 +34,7 @@
       </router-link>
     </template>
     <template v-slot:no-data>
-      <v-alert class="ma-4 text-center" dense outlined color="grey">
+      <v-alert class="ma-4 text-center" dense outlined>
         {{ noDataAvailable }}
       </v-alert>
     </template>

@@ -1,7 +1,5 @@
 import axios from 'axios'
-import { get, map } from 'lodash'
 import { ActionTree } from 'vuex'
-import router from '@/core/router'
 import * as Sentry from '@sentry/browser'
 import { logger } from '@/core/plugins/logger'
 import apiService from '@/core/services/apiService'
@@ -29,11 +27,6 @@ export const actions: ActionTree<userState, RootState> = {
     }
 
     commit(mt.SET_USER_PROFILE, result.data)
-    commit(
-      'workspace/SET_CURRENT_PEOPLE',
-      { user: { short_uuid: result.data.short_uuid }, created_at: result.data.date_joined },
-      { root: true }
-    )
 
     if (process.env.VUE_APP_SENTRY === 'on') {
       const { email, short_uuid: id, username } = result.data
@@ -80,5 +73,60 @@ export const actions: ActionTree<userState, RootState> = {
     commit(mt.SET_ACCOUNTS, accounts)
 
     return accounts
+  },
+
+  async [ac.getGlobalProfile]({ commit }) {
+    let profile
+    try {
+      profile = await apiService({
+        serviceName,
+        action: apiActions.globalProfile
+      })
+    } catch (error) {
+      logger.error(commit, 'Error on get global profile in getGlobalProfile action.\nError: ', error)
+
+      return error
+    }
+
+    commit(mt.SET_GLOBAL_PROFILE, profile)
+  },
+
+  async [ac.updateGlobalProfile]({ commit }, data) {
+    let profile
+    try {
+      profile = await apiService({
+        data,
+        serviceName,
+        method: 'PATCH',
+        action: apiActions.globalProfile
+      })
+    } catch (error) {
+      logger.error(commit, 'Error on update global profile in updateGlobalProfile action.\nError: ', error)
+
+      return error
+    }
+
+    commit(mt.SET_GLOBAL_PROFILE, profile)
+
+    return profile
+  },
+
+  async [ac.updateGlobalAvatar]({ commit }, data) {
+    let result
+
+    try {
+      result = await apiService({
+        data,
+        serviceName,
+        method: 'PATCH',
+        action: apiActions.globalProfileAvatar
+      })
+    } catch (e) {
+      logger.error(commit, 'Error on update global avatar in updateGlobalAvatar action.\nError: ', e)
+
+      return e
+    }
+
+    return result
   }
 }

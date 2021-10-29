@@ -110,7 +110,7 @@ export default defineComponent({
     const moment = useMoment(context)
     const { height } = useWindowSize()
     const jobRunStore = useJobRunStore()
-    const router = useRouterAskAnna(context)
+    const router = useRouterAskAnna()
 
     const expanded = ref([])
     const selection = ref(2)

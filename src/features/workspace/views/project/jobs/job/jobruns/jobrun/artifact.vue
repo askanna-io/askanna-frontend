@@ -78,7 +78,7 @@ export default defineComponent({
     const { height } = useWindowSize()
     const jobRunStore = useJobRunStore()
     const projectStore = useProjectStore()
-    const router = useRouterAskAnna(context)
+    const router = useRouterAskAnna()
 
     const triggerFileDownload = useTriggerFileDownload()
     const breadcrumbs = usePackageBreadcrumbs(context, { start: 8, end: 9 })

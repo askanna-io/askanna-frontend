@@ -75,7 +75,7 @@ export default defineComponent({
     const jobRunStore = useJobRunStore()
     const packageStore = usePackageStore()
     const projectStore = useProjectStore()
-    const router = useRouterAskAnna(context)
+    const router = useRouterAskAnna()
 
     const packagesStore = usePackagesStore(context)
     const forceFileDownload = useForceFileDownload()

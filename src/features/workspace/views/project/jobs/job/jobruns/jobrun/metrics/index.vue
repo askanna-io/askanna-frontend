@@ -63,7 +63,7 @@ export default defineComponent({
     const copy = useCopy()
     const metricStore = useMetricStore()
     const projectStore = useProjectStore()
-    const router = useRouterAskAnna(context)
+    const router = useRouterAskAnna()
     const forceFileDownload = useForceFileDownload()
 
     const { jobRunId: uuid } = context.root.$route.params

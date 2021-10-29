@@ -19,9 +19,7 @@
               </v-avatar>
             </v-col>
             <v-col :class="[people.avatar ? 'pt-1' : 'pt-0']">
-              <v-chip class="role" color="primary">
-                {{ roleName }}
-              </v-chip>
+              <v-chip class="role" color="primary"> {{ roleName }} </v-chip>
             </v-col>
           </v-row>
         </v-container>
@@ -41,7 +39,10 @@
         </v-card-text>
 
         <v-divider />
-        <v-card-actions v-if="people.status === 'invited'" :class="{ 'pb-0': isCurrentUserAdmin }">
+        <v-card-actions
+          v-if="people.status === 'invited' && workspacePeopleInviteRemove"
+          :class="{ 'pb-0': isCurrentUserAdmin }"
+        >
           <v-row dense class="mx-2">
             <v-col cols="6">
               <v-btn small block outlined text color="error" class="btn--hover" @click="handleDeleteInivitationPopup">
@@ -63,7 +64,7 @@
             </v-col>
           </v-row>
         </v-card-actions>
-        <v-card-actions v-if="currentUser.email === people.email">
+        <v-card-actions v-if="currentUser.short_uuid === people.short_uuid">
           <v-row class="mx-2">
             <v-col>
               <v-btn small block outlined text color="secondary" class="btn--hover" :to="{ name: 'workspace-profile' }">
@@ -73,17 +74,35 @@
           </v-row>
         </v-card-actions>
         <v-card-actions
-          v-if="isCurrentUserAdmin && currentUser.email !== people.email"
+          v-if="
+            !simple && (workspacePeopleEdit || workspacePeopleRemove) && currentUser.short_uuid !== people.short_uuid
+          "
           :class="{ 'pt-0': isCurrentUserAdmin && people.status !== 'accepted' }"
         >
           <v-row dense class="mx-2">
-            <v-col class="text-center" cols="12">
+            <v-col v-if="workspacePeopleEdit && buttonsVisible.WA" class="text-center" cols="12">
               <div>
-                <v-btn small block outlined text :color="colorBtn" class="btn--hover" @click="handleChangeRole">
-                  {{ roleAction }} admin powers
+                <v-btn small block outlined text color="secondary" class="btn--hover" @click="handleChangeRole('WA')">
+                  MAKE {{ people.name }} A WORKSPACE ADMIN
                 </v-btn>
               </div>
-              <div v-if="people.status === 'accepted'" :class="{ 'mt-2': people.status === 'accepted' }">
+            </v-col>
+            <v-col v-if="workspacePeopleEdit && buttonsVisible.WM" class="text-center" cols="12">
+              <div>
+                <v-btn small block outlined text color="secondary" class="btn--hover" @click="handleChangeRole('WM')">
+                  MAKE {{ people.name }} A WORKSPACE MEMBER
+                </v-btn>
+              </div>
+            </v-col>
+            <v-col v-if="workspacePeopleEdit && buttonsVisible.WV" class="text-center" cols="12">
+              <div>
+                <v-btn small block outlined text color="secondary" class="btn--hover" @click="handleChangeRole('WV')">
+                  MAKE {{ people.name }} A WORKSPACE VIEWER
+                </v-btn>
+              </div>
+            </v-col>
+            <v-col class="text-center" cols="12" v-if="people.status === 'accepted' && workspacePeopleRemove">
+              <div :class="{ 'mt-2': people.status === 'accepted' }">
                 <v-btn small block outlined text color="error" class="btn--hover" max-width="340" @click="handleRemove">
                   Remove&nbsp;{{ name }}
                 </v-btn>
@@ -96,6 +115,7 @@
   </v-row>
 </template>
 <script>
+import usePermission from '@/core/composition/usePermission'
 import useSlicedText from '@/core/composition/useSlicedText'
 import { ref, computed, defineComponent } from '@vue/composition-api'
 
@@ -109,7 +129,10 @@ export default defineComponent({
         return {
           uuid: '',
           name: '',
-          role: '',
+          role: {
+            name: '',
+            code: ''
+          },
           status: '',
           avatar: '',
           created: '',
@@ -134,7 +157,11 @@ export default defineComponent({
         return {
           email: '',
           name: '',
-          role: ''
+          job_title: '',
+          role: {
+            name: '',
+            code: ''
+          }
         }
       }
     },
@@ -145,11 +172,16 @@ export default defineComponent({
     roleAction: {
       type: String,
       default: () => 'revoke'
+    },
+    simple: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props, context) {
     const dialog = ref(false)
     const slicedText = useSlicedText()
+    const permission = usePermission()
 
     const openVmodel = computed({
       get: () => props.value,
@@ -157,24 +189,34 @@ export default defineComponent({
     })
 
     const roleFilters = {
-      ALL: 'All types',
-      WA: 'Admin',
-      WM: 'Member'
+      WA: 'Workspace admin',
+      WM: 'Workspace member',
+      WV: 'Workspace viewer'
     }
 
     const roleName = computed(() => {
-      const val = props.people.role
+      const val = props.people.role.code
       return roleFilters[val]
     })
+
+    const buttonsVisible = computed(() => ({
+      WA: props.people.role.code !== 'WA',
+      WM: props.people.role.code !== 'WM',
+      WV: props.people.role.code !== 'WV'
+    }))
+
+    const workspacePeopleEdit = computed(() => permission.getFor(permission.labels.workspacePeopleEdit))
+    const workspacePeopleRemove = computed(() => permission.getFor(permission.labels.workspacePeopleRemove))
+    const workspacePeopleInviteRemove = computed(() => permission.getFor(permission.labels.workspacePeopleInviteRemove))
 
     const name = computed(() => slicedText(props.people.name || props.people.email, 30))
 
     const colorBtn = computed(() => (props.isPeopleAdmin ? 'error' : 'secondary'))
 
-    const isCurrentUserAdmin = computed(() => props.currentUser.role === 'WA')
+    const isCurrentUserAdmin = computed(() => props.currentUser.role.code === 'WA')
 
     const handleRemove = value => context.emit('onRemovePeople', value)
-    const handleChangeRole = () => context.emit('onChangeRole')
+    const handleChangeRole = value => context.emit('onChangeRole', value)
     const handleDeleteInivitationPopup = () => context.emit('onDeleteInivitationPopup')
     const handleResendInivitationPopup = () => context.emit('onResendInivitationPopup')
 
@@ -184,6 +226,11 @@ export default defineComponent({
       roleName,
       colorBtn,
       openVmodel,
+      buttonsVisible,
+      workspacePeopleEdit,
+      workspacePeopleRemove,
+      workspacePeopleInviteRemove,
+
       handleRemove,
       handleChangeRole,
       isCurrentUserAdmin,

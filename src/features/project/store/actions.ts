@@ -7,8 +7,9 @@ import apiService from '@/core/services/apiService'
 import { apiStringify } from '@/core/services/api-settings'
 const { isNavigationFailure, NavigationFailureType } = VueRouter
 
-import { projectState, PROJECT_STORE, action, mutation, ProjectModel } from './types'
 import { mutation as gMutation, GENERAL_STORE } from '@/core/store/general/types'
+import { WORKSPACE_STORE, mutation as wMutation } from '@/features/workspace/store/types'
+import { projectState, PROJECT_STORE, action, mutation, ProjectModel, ProjectVisibility } from './types'
 
 const serviceName = PROJECT_STORE
 const api = apiStringify(serviceName)
@@ -40,9 +41,31 @@ export const actions: ActionTree<projectState, RootState> = {
 
     commit(mutation.SET_PROJECT, project)
     commit(`${GENERAL_STORE}/${gMutation.SET_BREADCRUMB_PARAMS}`, { projectId: project.name }, { root: true })
+    commit(
+      `${GENERAL_STORE}/${gMutation.SET_BREADCRUMB_PARAMS}`,
+      { workspaceId: project.workspace.name },
+      { root: true }
+    )
+
     commit(mutation.SET_LOADING, { name: 'projectLoading', value: false })
 
     return project
+  },
+
+  async [action.getProjectMe]({ commit }, uuid) {
+    let projectMe
+    try {
+      projectMe = await apiService({
+        uuid,
+        serviceName,
+        action: api.projectMe
+      })
+    } catch (error) {
+      logger.error(commit, 'Error on load projects in getProjects action.\nError: ', error)
+
+      return
+    }
+    commit(`${WORKSPACE_STORE}/${wMutation.SET_CURRENT_PEOPLE}`, { permission: projectMe.permission }, { root: true })
   },
 
   async [action.getProjects]({ state, commit }) {
@@ -136,7 +159,8 @@ export const actions: ActionTree<projectState, RootState> = {
   async [action.createProjectShortWay]({ dispatch, state }, workspace) {
     const data = {
       name: state.project.name,
-      workspace
+      workspace,
+      visibility: ProjectVisibility.PRIVATE
     }
     dispatch(action.createProject, data)
   },

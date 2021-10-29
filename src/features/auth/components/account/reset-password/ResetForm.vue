@@ -53,7 +53,7 @@ export default defineComponent({
 
   setup(_, context) {
     const authStore = useAuthStore()
-    const router = useRouterAskAnna(context)
+    const router = useRouterAskAnna()
     const validationRules = useValidationRules()
 
     const { token, uid } = context.root.$route.query

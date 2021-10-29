@@ -21,7 +21,7 @@
           @input="handleOnInput"
           accept="image/png, image/jpeg, image/bmp"
         />
-        <v-row no-gutters>
+        <v-row no-gutters v-if="editMode">
           <v-col class="pb-3">
             <v-btn x-small block outlined text color="secondary" class="btn--hover" @click="hanleBrowse">
               Change my image
@@ -40,13 +40,17 @@
 
 <script>
 import defaultAvatar from './avatar'
-import useValidationRules from '@/core/composition/useValidationRules'
-import { ref, watch, reactive, computed, defineComponent } from '@vue/composition-api'
+import { ref, defineComponent } from '@vue/composition-api'
+import useImageUrlToBase64 from '@/core/composition/useImageUrlToBase64'
 
 export default defineComponent({
   name: 'UserWorkspaceProfileAvatar',
 
   props: {
+    editMode: {
+      type: Boolean,
+      default: true
+    },
     workspaceProfile: {
       type: Object,
       default: function () {
@@ -64,7 +68,9 @@ export default defineComponent({
     }
   },
 
-  setup(props, context) {
+  setup(_, context) {
+    const imageUrlToBase64 = useImageUrlToBase64()
+
     const fileInput = ref()
     const avatar = ref(null)
     const imageUrl = ref('')
@@ -72,15 +78,10 @@ export default defineComponent({
     const hanleBrowse = () => context.refs.fileInput.click()
 
     const handleOnInput = e => {
-      const fileObject = (e?.target && e?.target.files[0]) || e
-      const reader = new FileReader()
-
-      reader.onload = () => {
-        imageUrl.value = URL.createObjectURL(fileObject)
-        context.emit('onChangeAvatar', reader.result)
-      }
-
-      reader.readAsDataURL(fileObject)
+      imageUrlToBase64.getBase64(e, ({ url, result }) => {
+        imageUrl.value = url
+        context.emit('onChangeAvatar', result)
+      })
     }
 
     const addFile = e => {
@@ -89,12 +90,10 @@ export default defineComponent({
     }
 
     const handleRemove = async () => {
-      const base64Response = await fetch(defaultAvatar)
-
-      const blob = await base64Response.blob()
-      const file = new File([blob], 'ask-annna-default-gravatar.png', { type: 'image/png', lastModified: new Date() })
-
-      handleOnInput(file)
+      imageUrlToBase64.convertUrlToBase64(defaultAvatar, ({ url, result }) => {
+        imageUrl.value = url
+        context.emit('onChangeAvatar', result)
+      })
     }
 
     return {

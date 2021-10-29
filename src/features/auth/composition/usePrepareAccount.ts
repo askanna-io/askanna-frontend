@@ -1,15 +1,15 @@
 import useAuthStore from './useAuthStore'
-import { ref, SetupContext } from '@vue/composition-api'
+import { ref } from '@vue/composition-api'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 
-export default function (context: SetupContext) {
+export default function () {
   const authStore = useAuthStore()
-  const router = useRouterAskAnna(context)
+  const router = useRouterAskAnna()
   const workspaceStore = useWorkspaceStore()
 
-  const IsAccountReady = ref(false)
   const workspaceId = ref('')
+  const IsAccountReady = ref(false)
 
   const loginUser = async ({ username = '', password = '' }) => {
     return await authStore.actions.login({ username, password, redirect: false })

@@ -34,6 +34,11 @@ export interface ProjectTemplate {
   uuid: string
 }
 
+export const enum ProjectVisibility {
+  PUBLIC = 'PUBLIC',
+  PRIVATE = 'PRIVATE'
+}
+
 interface Project {
   uuid: string
   name: string
@@ -48,6 +53,7 @@ interface Project {
     uuid: string
     short_uuid: string
   }
+  visibility: ProjectVisibility
 }
 
 export const PROJECT_STORE = 'project'
@@ -58,6 +64,7 @@ export const action = {
   addProject: 'addProject',
   getProject: 'getProject',
   getProjects: 'getProjects',
+  getProjectMe: 'getProjectMe',
   createProject: 'createProject',
   deleteProject: 'deleteProject',
   updateProject: 'updateProject',
@@ -110,7 +117,8 @@ export class ProjectModel {
         name: '',
         uuid: '',
         short_uuid: ''
-      }
+      },
+      visibility: ProjectVisibility.PRIVATE
     }
   }
 }

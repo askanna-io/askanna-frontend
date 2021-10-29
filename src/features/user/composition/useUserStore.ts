@@ -1,16 +1,21 @@
-import { useState, useActions, useMutations } from '@u3u/vue-hooks'
-import { USER_STORE, action, mutation } from '../store/types'
+import { USER_STORE, action, mutation, getter } from '../store/types'
+import { useState, useActions, useGetters, useMutations } from '@u3u/vue-hooks'
 
 export default function () {
   const state = {
     ...useState(USER_STORE, {
       tempAuth: 'tempAuth',
-      userProfile: 'userProfile'
+      userProfile: 'userProfile',
+      globalProfile: 'globalProfile'
     })
   }
 
   const actions = {
     ...useActions(USER_STORE, { ...action })
+  }
+
+  const getters = {
+    ...useGetters(USER_STORE, { ...getter })
   }
 
   const mutations = {
@@ -20,6 +25,7 @@ export default function () {
   return {
     state,
     actions,
+    getters,
     mutations
   }
 }

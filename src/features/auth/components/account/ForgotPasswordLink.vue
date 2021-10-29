@@ -10,8 +10,8 @@ import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 export default defineComponent({
   name: 'ForgotPasswordLink',
 
-  setup(_, context) {
-    const router = useRouterAskAnna(context)
+  setup(_) {
+    const router = useRouterAskAnna()
 
     const handleOpenForgotPage = () => router.push({ name: 'forgot-password' })
 

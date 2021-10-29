@@ -62,7 +62,7 @@
     <v-flex>
       <ask-anna-loading-progress classes="mx-4 mb-4" :type="'table-row'" :loading="loading" fullWidth>
         <job-run-pay-load v-if="!isJobRunPayloadEmpty" :file="jobRunPayloadComputed" />
-        <v-alert v-if="isJobRunPayloadEmpty" class="ma-4 text-center" color="grey" dense outlined>
+        <v-alert v-if="isJobRunPayloadEmpty" class="ma-4 text-center" dense outlined>
           There is no input available for this run.
         </v-alert>
       </ask-anna-loading-progress>

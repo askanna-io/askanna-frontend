@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container fluid class="pt-0">
     <v-row dense justify="start">
       <v-col xs="12" sm="6" md="4" lg="4" xl="3">
         <v-text-field
@@ -7,6 +7,7 @@
           outlined
           required
           label="Name"
+          :disabled="!editMode"
           :value="workspaceProfile.name"
           @input="handleOnInput($event, 'name')"
         />
@@ -20,6 +21,7 @@
           outlined
           required
           label="Title"
+          :disabled="!editMode"
           :value="workspaceProfile.job_title"
           @input="handleOnInput($event, 'job_title')"
         />
@@ -35,6 +37,10 @@ export default defineComponent({
   name: 'UserWorkspaceProfile',
 
   props: {
+    editMode: {
+      type: Boolean,
+      default: true
+    },
     workspaceProfile: {
       type: Object,
       default: function () {
@@ -43,16 +49,10 @@ export default defineComponent({
           job_title: ''
         }
       }
-    },
-    projectTemplates: {
-      type: Array,
-      default: function () {
-        return []
-      }
     }
   },
 
-  setup(props, context) {
+  setup(_, context) {
     const handleOnInput = (value, path) => context.emit('onUpdateWorkSpaceProfile', { [path]: value })
 
     return {

@@ -14,9 +14,8 @@
       :lastPackage="lastPackage"
       @handleGoToCode="handleGoToCode"
     />
-    <v-divider />
-
-    <job-running />
+    <v-divider v-if="projectRunCreate" />
+    <job-running v-if="projectRunCreate" />
   </v-card>
 </template>
 
@@ -24,12 +23,12 @@
 import useMoment from '@/core/composition/useMoment'
 import useJobStore from '@job/composition/useJobStore'
 import useCronstrue from '@/core/composition/useCronstrue'
-import useJobRunStore from '@jobrun/composition/useJobRunStore'
+import usePermission from '@/core/composition/usePermission'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import JobDefinition from '@job/components/overview/JobDefinition'
 import JobRunning from '@/features/job/components/overview/JobRunning'
 import useProjectStore from '@/features/project/composition/useProjectStore'
-import { watch, onBeforeMount, defineComponent, computed } from '@vue/composition-api'
+import { onBeforeMount, defineComponent, computed } from '@vue/composition-api'
 
 export default defineComponent({
   components: {
@@ -41,17 +40,17 @@ export default defineComponent({
     const jobStore = useJobStore()
     const cronstrue = useCronstrue()
     const moment = useMoment(context)
-    const jobRunStore = useJobRunStore()
-    const projectStore = useProjectStore()
-    const router = useRouterAskAnna(context)
+    const permission = usePermission()
 
-    const { jobId, workspaceId, projectId } = context.root.$route.params
+    const projectStore = useProjectStore()
+    const router = useRouterAskAnna()
+
+    const projectRunCreate = computed(() => permission.getFor(permission.labels.projectRunCreate))
+
+    const { workspaceId, projectId } = context.root.$route.params
 
     onBeforeMount(() => {
       const fetchData = async () => {
-        await jobStore.resetStore()
-        await jobRunStore.resetStore()
-        await jobStore.getJob(jobId)
         await projectStore.getLastPackage(projectId)
       }
 
@@ -80,6 +79,7 @@ export default defineComponent({
       job,
       nextRun,
       schedules,
+      projectRunCreate,
       lastPackage: projectStore.lastPackage,
 
       handleGoToCode

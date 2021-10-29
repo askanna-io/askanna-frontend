@@ -9,6 +9,7 @@ export interface UserState {
     short_uuid?: string
     old_password?: string
   }
+  globalProfile: GlobalProfile
   tempAuth: {
     username: string
     password: string
@@ -71,12 +72,40 @@ interface Person {
   }
 }
 
+interface GlobalProfile {
+  uuid: string
+  short_uuid: string
+  name: string
+  email: string
+  job_title: string
+  role: {
+    name: string
+    code: string
+  }
+  membership: null
+  permission?: {
+    'askanna.me': boolean
+    'askanna.admin': boolean
+    'askanna.member': boolean
+    'askanna.workspace.create': boolean
+  }
+  avatar: {
+    icon: string
+    small: string
+    medium: string
+    large: string
+  }
+}
+
 export const USER_STORE = 'user'
 
 export const action = {
   getAccounts: 'getAccounts',
   updateProfile: 'updateProfile',
-  getUserProfile: 'getUserProfile'
+  getUserProfile: 'getUserProfile',
+  getGlobalProfile: 'getGlobalProfile',
+  updateGlobalAvatar: 'updateGlobalAvatar',
+  updateGlobalProfile: 'updateGlobalProfile'
 }
 
 export const mutation = {
@@ -84,7 +113,12 @@ export const mutation = {
   SET_TEMP_AUTH: 'SET_TEMP_AUTH',
   DELETE_PASSWORD: 'DELETE_PASSWORD',
   SET_USER_PROFILE: 'SET_USER_PROFILE',
-  DELETE_TEMP_AUTH: 'DELETE_TEMP_AUTH'
+  DELETE_TEMP_AUTH: 'DELETE_TEMP_AUTH',
+  SET_GLOBAL_PROFILE: 'SET_GLOBAL_PROFILE'
+}
+
+export const getter = {
+  globalPermission: 'globalPermission'
 }
 
 export const stateType = {

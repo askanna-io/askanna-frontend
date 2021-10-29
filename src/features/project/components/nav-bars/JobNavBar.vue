@@ -4,7 +4,7 @@
       <v-toolbar v-if="sticked" dense color="white" class="br-r5 ma-3" :flat="!sticked">
         <v-breadcrumbs :items="breadcrumbs" class="pl-0">
           <template v-slot:item="{ item }">
-            <v-breadcrumbs-item :to="item.to" exact>
+            <v-breadcrumbs-item :to="item.to" :exact="item.exact">
               {{ item.title }}
             </v-breadcrumbs-item>
           </template>
@@ -25,7 +25,7 @@
     </div>
     <v-breadcrumbs v-if="!sticked" :items="breadcrumbs">
       <template v-slot:item="{ item }">
-        <v-breadcrumbs-item :to="item.to" exact>
+        <v-breadcrumbs-item :to="item.to" :exact="item.exact">
           {{ item.title }}
         </v-breadcrumbs-item>
       </template>
@@ -50,7 +50,7 @@
 
             <v-spacer />
 
-            <job-menu-popup v-if="!isEditJobView" :job="job" />
+            <job-menu-popup v-if="!isEditJobView && projectJobEdit" :job="job" />
           </v-toolbar>
         </v-col>
       </v-row>
@@ -61,6 +61,7 @@
 import JobToolBar from './parts/JobToolBar'
 import JobMenuPopup from './parts/JobMenuPopup'
 import ProjectToolBar from './parts/ProjectToolBar'
+import usePermission from '@/core/composition/usePermission'
 import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
 import { ref, computed, defineComponent } from '@vue/composition-api'
 
@@ -98,9 +99,13 @@ export default defineComponent({
   },
 
   setup(props, context) {
+    const permission = usePermission()
+
     const currentProjectTab = ref('')
     const isShowProjectBar = ref(false)
     const breadcrumbs = useBreadcrumbs(context, { start: 0, end: 5 })
+
+    const projectJobEdit = computed(() => permission.getFor(permission.labels.projectJobEdit))
 
     const onStick = data => props.handleOnStick(data.sticked)
 
@@ -110,6 +115,7 @@ export default defineComponent({
       onStick,
       breadcrumbs,
       isEditJobView,
+      projectJobEdit,
       isShowProjectBar,
       currentProjectTab
     }

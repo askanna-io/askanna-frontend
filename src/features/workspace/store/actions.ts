@@ -62,9 +62,9 @@ export const actions: ActionTree<workspaceState, RootState> = {
     let workspaces
     try {
       workspaces = await apiService({
-        action: api.list,
         serviceName,
-        params: state.workspaceQuery
+        action: api.list,
+        params: { ...state.workspaceQuery, membership: true }
       })
     } catch (error) {
       logger.error(commit, 'Error on load workspaces in getWorkspaces action.\nError: ', error)
@@ -87,14 +87,14 @@ export const actions: ActionTree<workspaceState, RootState> = {
     commit(mutation.SET_LOADING, { projects: false })
   },
 
-  async [action.getWorkpaceProjects]({ state, commit }, { params, initial }) {
+  async [action.getWorkpaceProjects]({ state, commit }, { workspaceId, params, initial }) {
     let projects
     try {
       projects = await apiService({
         params,
         serviceName,
         action: api.projects,
-        uuid: state.workspace.short_uuid
+        uuid: state.workspace.short_uuid || workspaceId
       })
     } catch (error) {
       logger.error(commit, 'Error on load projects in getWorkpaceProjects action.\nError: ', error)
@@ -124,11 +124,6 @@ export const actions: ActionTree<workspaceState, RootState> = {
     commit(mutation.RESET)
   },
 
-  async [action.getInitialWorkpacePeople]({ dispatch }, data) {
-    await dispatch(action.getWorkspacePeople, data)
-    await dispatch(action.getCurrentPeople)
-  },
-
   async [action.getWorkspacePeople]({ commit }, { workspaceId }) {
     commit(mutation.SET_LOADING, { people: true })
 
@@ -153,10 +148,11 @@ export const actions: ActionTree<workspaceState, RootState> = {
     commit(mutation.SET_WORKSPACE_PARAMS, data)
   },
 
-  async [action.sendInvitations]({ state, commit, dispatch }, data) {
+  async [action.sendInvitations]({ state, commit, dispatch }, { emails, role }) {
     const result = await Promise.all(
-      map(data, async email => {
+      map(emails, async email => {
         const people = await dispatch(action.sendInviteEmail, {
+          role,
           email,
           front_end_url: window.location.origin,
           object_uuid: state.workspace.uuid
@@ -210,10 +206,8 @@ export const actions: ActionTree<workspaceState, RootState> = {
   },
 
   async [action.deleteInvitation]({ commit }, people) {
-    let response
-
     try {
-      response = await apiService({
+      await apiService({
         action: api.acceptInvitetion,
         method: 'DELETE',
         uuid: {
@@ -310,11 +304,11 @@ export const actions: ActionTree<workspaceState, RootState> = {
 
     try {
       people = await apiService({
-        action: api.acceptInvitetion,
-        method: 'PATCH',
-        uuid: { workspaceId: state.workspace.short_uuid, peopleId: state.currentPeople.short_uuid },
+        data,
         serviceName,
-        data
+        method: 'PATCH',
+        action: api.profile,
+        uuid: state.workspace.short_uuid
       })
     } catch (e) {
       logger.error(commit, 'Error on change people in updateWorkspaceProfile action.\nError: ', e)
@@ -371,8 +365,20 @@ export const actions: ActionTree<workspaceState, RootState> = {
     )
   },
 
-  async [action.getCurrentPeople]({ state, commit }) {
-    const people = state.workspacePeople.find(item => item.user.short_uuid === state.currentPeople.user.short_uuid)
+  async [action.getCurrentPeople]({ state, rootState, commit }, { workspaceId }) {
+    let people
+
+    try {
+      people = await apiService({
+        serviceName,
+        action: api.profile,
+        uuid: workspaceId || state.workspace.short_uuid
+      })
+    } catch (e) {
+      logger.error(commit, 'Error on get people in getCurrentPeople action.\nError: ', e)
+
+      return e
+    }
 
     commit(mutation.SET_CURRENT_PEOPLE, people)
 
@@ -382,7 +388,7 @@ export const actions: ActionTree<workspaceState, RootState> = {
         name: people.name,
         email: people.email,
         user_id: people.user.short_uuid,
-        created_at: state.currentPeople.created_at
+        created_at: rootState.user.userProfile.date_joined
       })
     }
   },
@@ -396,9 +402,9 @@ export const actions: ActionTree<workspaceState, RootState> = {
 
     try {
       result = await apiService({
-        action: api.setPeopleAvatar,
+        action: api.profileAvatar,
         method: 'PATCH',
-        uuid: { workspaceId: state.workspace.short_uuid, peopleId: state.currentPeople.short_uuid },
+        uuid: state.workspace.short_uuid,
         serviceName,
         data
       })

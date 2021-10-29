@@ -17,7 +17,7 @@ export default defineComponent({
   name: 'WaitBeforeCreateAccount',
 
   setup(_, context) {
-    const router = useRouterAskAnna(context)
+    const router = useRouterAskAnna()
     const prepareAccount = usePrepareAccount(context)
 
     const authData = inject('authData')

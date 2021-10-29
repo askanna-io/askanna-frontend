@@ -1,6 +1,9 @@
 <template>
   <v-toolbar color="grey lighten-4" flat dense class="br-r5">
-    <v-toolbar-title> {{ title }}{{ isEditWorkspaceView ? ' - Edit mode' : '' }}</v-toolbar-title>
+    <v-toolbar-title v-if="isSignIn"> {{ title }}{{ isEditWorkspaceView ? ' - Edit mode' : '' }}</v-toolbar-title>
+    <v-toolbar-title v-else-if="isWorkspacePublic && !isEditWorkspaceView"> {{ title }}</v-toolbar-title>
+    <v-toolbar-title v-else>Not allowed</v-toolbar-title>
+
     <v-spacer />
     <v-spacer />
     <v-spacer />
@@ -9,6 +12,7 @@
     <create-project-popup v-if="!isEditWorkspaceView" />
 
     <v-menu
+      v-if="menuItems.length"
       bottom
       offset-y
       v-model="menu"
@@ -34,7 +38,9 @@
   </v-toolbar>
 </template>
 <script>
+import usePermission from '@/core/composition/usePermission'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
+
 import { ref, computed, defineComponent } from '@vue/composition-api'
 import CreateProjectPopup from '@/features/project/components/CreateProjectPopup'
 
@@ -42,6 +48,14 @@ export default defineComponent({
   name: 'WorkspaceToolbar',
 
   props: {
+    isMember: {
+      type: Boolean,
+      default: () => false
+    },
+    isWorkspacePublic: {
+      type: Boolean,
+      default: () => true
+    },
     title: {
       type: String,
       default: ''
@@ -59,15 +73,25 @@ export default defineComponent({
   components: { CreateProjectPopup },
 
   setup(props, context) {
-    const router = useRouterAskAnna(context)
+    const permission = usePermission()
+    const router = useRouterAskAnna()
 
     const menu = ref(false)
-
-    const menuItems = computed(() => [
-      { title: 'Edit workspace', to: 'workspace-edit', isVisible: true },
-      { title: 'Remove workspace', onClick: 'onOpenWorkspaceRemove', isVisible: props.isCurrentUserAdmin },
-      { title: 'People', to: 'workspace-people', isVisible: true }
-    ])
+    const menuItems = computed(() =>
+      [
+        {
+          title: 'Edit workspace',
+          to: 'workspace-edit',
+          isVisible: permission.getFor(permission.labels.workspaceInfoEdit)
+        },
+        {
+          title: 'Remove workspace',
+          onClick: 'onOpenWorkspaceRemove',
+          isVisible: permission.getFor(permission.labels.workspaceRemove)
+        },
+        { title: 'People', to: 'workspace-people', isVisible: props.isMember }
+      ].filter(el => el.isVisible)
+    )
 
     const isEditWorkspaceView = computed(() => context.root.$route.name === 'workspace-edit')
 
@@ -89,7 +113,8 @@ export default defineComponent({
       menu,
       menuItems,
       handleMenuClick,
-      isEditWorkspaceView
+      isEditWorkspaceView,
+      isSignIn: permission.token
     }
   }
 })

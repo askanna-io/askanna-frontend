@@ -79,7 +79,7 @@ export default defineComponent({
 
   setup(props, context) {
     const jobStore = useJobStore()
-    const router = useRouterAskAnna(context)
+    const router = useRouterAskAnna()
 
     const menu = ref(false)
     const deleteJobConfirmPopup = ref(false)

@@ -53,6 +53,7 @@ export const api: ApiSettings = {
     project: {
       get: id => `project/${id}/`,
       list: () => `project/`,
+      projectMe: id => `project/${id}/me/`,
       jobs: id => `project/${id}/jobs/`,
       packages: id => `project/${id}/packages/`,
       getLastJobRun: id => `job/${id}/runs/`,
@@ -105,8 +106,10 @@ export const api: ApiSettings = {
       getJobRunArtifact: ({ jobRunShortId, artifactShortId }) => `runinfo/${jobRunShortId}/artifact/${artifactShortId}/`
     },
     workspace: {
-      get: id => `workspace/${id}/`,
       list: () => `workspace/`,
+      get: id => `workspace/${id}/`,
+      profile: id => `workspace/${id}/me/`,
+      profileAvatar: id => `workspace/${id}/me/avatar/`,
       projects: id => `workspace/${id}/projects/`,
       invitePeople: id => `workspace/${id}/people/`,
       changeRole: ({ workspaceId, peopleId }) => `workspace/${workspaceId}/people/${peopleId}/`,
@@ -123,6 +126,9 @@ export const api: ApiSettings = {
       update: ({ projectId, variableId }) => `project/${projectId}/variables/${variableId}/`
     },
     user: {
+      globalProfile: () => 'me/',
+      globalProfileAvatar: () => 'me/avatar/',
+
       getAccounts: () => 'accounts/',
       getProfile: () => 'rest-auth/user/',
       updateAccount: id => `accounts/${id}/`

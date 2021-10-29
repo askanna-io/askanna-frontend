@@ -1,5 +1,5 @@
 <template>
-  <div class="text-center">
+  <div class="text-center" v-if="workspaceProjectCreate">
     <v-menu
       eager
       v-model="menu"
@@ -55,8 +55,9 @@
 </template>
 
 <script>
-import { ref, defineComponent } from '@vue/composition-api'
+import usePermission from '@/core/composition/usePermission'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
+import { ref, computed, defineComponent } from '@vue/composition-api'
 import useValidationRules from '@/core/composition/useValidationRules'
 import useProjectStore from '@/features/project/composition/useProjectStore'
 
@@ -64,11 +65,14 @@ export default defineComponent({
   name: 'CreateProjectPopup',
 
   setup(_, context) {
+    const router = useRouterAskAnna()
+    const permission = usePermission()
     const projectStore = useProjectStore()
-    const { RULES } = useValidationRules()
-    const router = useRouterAskAnna(context)
 
-    const menu = ref(false)
+    const workspaceProjectCreate = computed(() => permission.getFor(permission.labels.workspaceProjectCreate))
+    const { RULES } = useValidationRules()
+
+    const menu = ref()
     const isFormValid = ref(true)
     const newProjectFastForm = ref(null)
     const nameRules = ref([RULES.required('Project name is required')])
@@ -124,6 +128,7 @@ export default defineComponent({
       nameRules,
       isFormValid,
       newProjectFastForm,
+      workspaceProjectCreate,
       projectName: projectStore.projectName,
 
       handleCancel,

@@ -76,7 +76,7 @@ export default defineComponent({
   setup(props, context) {
     const moment = useMoment(context)
     const groupArray = useGroupArray()
-    const router = useRouterAskAnna(context)
+    const router = useRouterAskAnna()
 
     const timer: any = ref(null)
     const startTime: any = ref(null)

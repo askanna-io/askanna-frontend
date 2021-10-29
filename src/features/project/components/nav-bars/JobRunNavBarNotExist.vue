@@ -4,7 +4,7 @@
       <v-toolbar v-if="sticked" dense color="white" class="br-r5 ma-3" :flat="!sticked">
         <v-breadcrumbs :items="breadcrumbs" class="pl-0">
           <template v-slot:item="{ item }">
-            <v-breadcrumbs-item :to="item.to" exact>
+            <v-breadcrumbs-item :to="item.to" :exact="item.exact">
               {{ item.title }}
             </v-breadcrumbs-item>
           </template>
@@ -22,7 +22,7 @@
     </div>
     <v-breadcrumbs v-if="!sticked" :items="breadcrumbs" class="">
       <template v-slot:item="{ item }">
-        <v-breadcrumbs-item :to="item.to" exact>
+        <v-breadcrumbs-item :to="item.to" :exact="item.exact">
           {{ item.title }}
         </v-breadcrumbs-item>
       </template>
@@ -31,16 +31,14 @@
 </template>
 <script>
 import useJobStore from '@job/composition/useJobStore'
-import useMoment from '@/core/composition/useMoment'
 import useFetchData from '@/core/composition/useFetchData'
 import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
 import useJobRunStore from '@jobrun/composition/useJobRunStore'
-import useJobRunResults from '@jobs/composition/useJobRunResults'
 import useProjectStore from '@project/composition/useProjectStore'
 
 import JobToolBar from './parts/JobToolBar'
 import ProjectToolBar from './parts/ProjectToolBar'
-import { defineComponent, onBeforeMount, computed, watch, ref } from '@vue/composition-api'
+import { defineComponent, computed } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'JobRunNavBarNotExist',

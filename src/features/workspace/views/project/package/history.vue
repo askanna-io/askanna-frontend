@@ -132,7 +132,7 @@ export default defineComponent({
     const { width } = useWindowSize()
     const slicedText = useSlicedText()
     const projectStore = useProjectStore()
-    const router = useRouterAskAnna(context)
+    const router = useRouterAskAnna()
     const packagesStore = usePackagesStore(context)
     const forceFileDownload = useForceFileDownload()
     const breadcrumbs = useBreadcrumbs(context, { start: 2 })

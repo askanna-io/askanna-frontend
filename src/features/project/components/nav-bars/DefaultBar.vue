@@ -4,7 +4,7 @@
       <v-toolbar v-if="sticked" ref="refToolbar" dense color="white" class="br-r5 ma-3" :flat="!sticked">
         <v-breadcrumbs v-if="sticked" class="pl-0" :items="projectBreadcrumbs">
           <template v-slot:item="{ item }">
-            <v-breadcrumbs-item :to="item.to" exact>
+            <v-breadcrumbs-item :to="item.to" :exact="item.exact">
               {{ item.title }}
             </v-breadcrumbs-item>
           </template>
@@ -22,7 +22,7 @@
 
     <v-breadcrumbs v-if="!sticked" :items="projectBreadcrumbs">
       <template v-slot:item="{ item }">
-        <v-breadcrumbs-item :to="item.to" exact>
+        <v-breadcrumbs-item :to="item.to" :exact="item.exact">
           {{ item.title }}
         </v-breadcrumbs-item>
       </template>
@@ -46,7 +46,7 @@
             <v-spacer />
 
             <project-menu-popup
-              v-if="!isEditProjectView"
+              v-if="!isEditProjectView && (projectRemove || projectInfoEdit)"
               :project="project"
               :routeToRedirect="'workspace'"
               :routeBackTo="'workspace-project'"
@@ -59,6 +59,7 @@
 </template>
 <script>
 import ProjectMenu from './parts/ProjectMenu'
+import usePermission from '@/core/composition/usePermission'
 import { ref, computed, defineComponent } from '@vue/composition-api'
 import ProjectMenuPopup from '@/features/project/components/ProjectMenuPopup'
 
@@ -96,6 +97,10 @@ export default defineComponent({
 
   setup(props, context) {
     const refToolbar = ref(null)
+    const permission = usePermission()
+
+    const projectRemove = computed(() => permission.getFor(permission.labels.projectRemove))
+    const projectInfoEdit = computed(() => permission.getFor(permission.labels.projectInfoEdit))
 
     const onStick = data => {
       props.handleOnStick(data.sticked)
@@ -103,7 +108,14 @@ export default defineComponent({
 
     const isEditProjectView = computed(() => context.root.$route.name === 'workspace-project-edit')
 
-    return { onStick, refToolbar, isEditProjectView, routerParams: context.root.$route.params }
+    return {
+      onStick,
+      refToolbar,
+      projectRemove,
+      projectInfoEdit,
+      isEditProjectView,
+      routerParams: context.root.$route.params
+    }
   }
 })
 </script>
