@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { ref, defineComponent } from '@vue/composition-api'
+import { defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'WorkspacePeopleCardItem',
@@ -37,9 +37,9 @@ export default defineComponent({
           uuid: '',
           name: '',
           role: '',
-          job_title: '',
           created: '',
           modified: '',
+          job_title: '',
           short_uuid: '',
           last_active: ''
         }

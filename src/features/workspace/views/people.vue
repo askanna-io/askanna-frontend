@@ -128,8 +128,8 @@ export default defineComponent({
 
       if (sortBy && sort) {
         people = people.sort((a, b) => {
-          const nameA = (a.name && a.name.toUpperCase()) || ''
-          const nameB = (b.name && b.name.toUpperCase()) || ''
+          const nameA = (a.name && a.name.toLowerCase()) || a.email.toLowerCase()
+          const nameB = (b.name && b.name.toLowerCase()) || b.email.toLowerCase()
 
           if (nameA < nameB) return -sort
           if (nameA > nameB) return sort
