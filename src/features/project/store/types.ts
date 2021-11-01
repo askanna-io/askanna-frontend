@@ -111,6 +111,7 @@ export class ProjectModel {
       created: '',
       modified: '',
       template: '',
+      permission: {},
       short_uuid: '',
       description: '',
       package: {
