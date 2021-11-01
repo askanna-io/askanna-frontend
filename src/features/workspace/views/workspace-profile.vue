@@ -31,7 +31,7 @@
           <v-tabs-slider color="primary" />
           <v-tab ripple key="worksapce"> {{ workspaceName }} workspace</v-tab>
           <v-tab ripple key="global">
-            AskAnna profiles
+            AskAnna profile
           </v-tab>
         </v-tabs>
 
