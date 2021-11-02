@@ -22,7 +22,7 @@
     </template>
     <template v-slot:no-data
       ><v-alert v-if="!loading" class="mt-2 text-center" dense outlined>
-        <template v-if="isWorkspaceViewer">
+        <template v-if="isWorkspaceViewer || !isSignIn">
           There are no projects in this workspace that you have access to.
         </template>
         <template v-else>
@@ -42,6 +42,7 @@
   </v-data-iterator>
 </template>
 <script>
+import usePermission from '@/core/composition/usePermission'
 import { computed, defineComponent } from '@vue/composition-api'
 import useSanitizeHTML from '@/core/composition/useSanitizeHTML'
 import WorkspaceProjectCardItem from './WorkspaceProjectCardItem.vue'
@@ -73,6 +74,7 @@ export default defineComponent({
   components: { WorkspaceProjectCardItem, WorkspaceProjectListItem },
 
   setup() {
+    const permission = usePermission()
     const sanitizeHTML = useSanitizeHTML()
     const workspaceStore = useWorkspaceStore()
 
@@ -80,7 +82,7 @@ export default defineComponent({
 
     const isWorkspaceViewer = computed(() => workspaceStore.currentPeople.value.role.code === 'WV')
 
-    return { loading, sanitizeHTML, isWorkspaceViewer }
+    return { loading, sanitizeHTML, isSignIn: permission.token, isWorkspaceViewer }
   }
 })
 </script>
