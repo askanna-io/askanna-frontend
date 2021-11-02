@@ -381,14 +381,13 @@ export const actions: ActionTree<workspaceState, RootState> = {
     }
 
     commit(mutation.SET_CURRENT_PEOPLE, people)
-
     if (people && process.env.VUE_APP_INTERCOM === 'on') {
       window.Intercom('boot', {
         app_id: 'c6wuieqm',
         name: people.name,
         email: people.email,
-        user_id: people.membership.user.short_uuid,
-        created_at: rootState.user.userProfile.date_joined
+        user_id: people.membership?.user?.short_uuid,
+        created_at: rootState.user?.userProfile?.date_joined
       })
     }
   },
