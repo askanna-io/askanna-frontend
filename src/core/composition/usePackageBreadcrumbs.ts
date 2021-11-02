@@ -21,6 +21,7 @@ export default (context: SetupContext, params: { start: number; end: number } = 
             path: currentPath,
             params: { workspaceId, projectId, packageId, folderName: currentPath }
           },
+          exact: true,
           disabled: index === arr.length - 1
         }
       })
