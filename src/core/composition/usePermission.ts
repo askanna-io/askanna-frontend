@@ -40,6 +40,6 @@ export default () => {
     isAllowedToView,
     isWorkspaceViewer,
     labels: PERMISSIONS_LABELS,
-    isUserLoggedIn: authStore.getters.isUserLoggedIn
+    isUserLoggedIn: !!token.value
   }
 }
