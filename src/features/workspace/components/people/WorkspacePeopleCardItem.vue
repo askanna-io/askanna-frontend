@@ -14,7 +14,6 @@
         <v-list-item color="rgba(0, 0, 0, .4)">
           <v-list-item-content>
             <v-list-item-title class="people-title">{{ people.name || people.email }}</v-list-item-title>
-            <v-list-item-subtitle>{{ people.job_title }}</v-list-item-subtitle>
             <v-list-item-subtitle>{{ people.role.name }}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
