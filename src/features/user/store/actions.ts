@@ -29,8 +29,8 @@ export const actions: ActionTree<userState, RootState> = {
     commit(mt.SET_USER_PROFILE, result.data)
 
     if (process.env.VUE_APP_SENTRY === 'on') {
-      const { email, short_uuid: id, username } = result.data
-      Sentry.setUser({ id, email, username })
+      const { email, short_uuid: id } = result.data
+      Sentry.setUser({ id, email, username: email })
     }
 
     return result
