@@ -3,6 +3,8 @@ export interface projectState extends ProjectState {}
 export interface ProjectState {
   project: Project
   projects: {
+    next: string
+    previous: string
     count: number
     results: any[]
   }

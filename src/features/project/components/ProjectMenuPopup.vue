@@ -118,7 +118,11 @@ export default defineComponent({
     const handleOpenConfirmEditProject = () =>
       context.root.$router.push({
         name: 'workspace-project-edit',
-        params: { projectId: props.project.short_uuid, routeBackTo: props.routeBackTo }
+        params: {
+          routeBackTo: props.routeBackTo,
+          projectId: props.project.short_uuid,
+          workspaceId: props.project.workspace.short_uuid
+        }
       })
 
     const handleDeleteConfirmPorject = async () => {

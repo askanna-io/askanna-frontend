@@ -15,6 +15,8 @@ export default defineComponent({
     const router = useRouterAskAnna()
     const workspaceStore = useWorkspaceStore()
 
+    const isMember = computed(() => workspaceStore.workspace.value.is_member)
+
     const initWorkspace = async workspaceId => {
       if (!workspaceId) {
         router.push({ path: `/` })

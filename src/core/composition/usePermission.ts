@@ -1,6 +1,5 @@
 import { useRouter } from '@u3u/vue-hooks'
 import { computed } from '@vue/composition-api'
-import useUserStore from '@/features/user/composition/useUserStore'
 import useAuthStore from '@/features/auth/composition/useAuthStore'
 import { PERMISSIONS_LABELS } from '@/features/workspace/store/const'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
@@ -8,8 +7,6 @@ import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStor
 export default () => {
   const { route } = useRouter()
   const authStore = useAuthStore()
-  const userStore = useUserStore()
-
   const workspaceStore = useWorkspaceStore()
 
   const token = computed(() => window.localStorage.getItem('token'))

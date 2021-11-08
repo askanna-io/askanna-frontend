@@ -20,33 +20,12 @@
       </v-toolbar-title>
       <v-spacer />
 
-      <project-menu-popup v-if="projectInfoEdit" :project="project" />
+      <project-menu-popup v-if="projectInfoEdit" :project="project" :routeBackTo="routeBackTo" />
     </v-toolbar>
 
     <v-card-text class="font-weight-bold project--description">
       {{ description }}
     </v-card-text>
-    <template v-if="isNotBeta">
-      <v-card-actions>
-        <v-alert text dense type="success" class="d-flex mb-0">
-          Last run on <strong>Oct 23, 2019</strong> was <strong>successfull</strong>
-        </v-alert>
-      </v-card-actions>
-      <v-card-actions class="px-5">
-        <v-hover v-slot:default="{ hover }" open-delay="200" v-for="n in 5" :key="n">
-          <v-avatar
-            :class="`elevation-${hover ? 16 : 2}`"
-            class="mx-auto transition-swing"
-            size="35"
-            color="grey "
-            :hover="hover"
-            :to="`/workspace/project/${project.short_uuid}`"
-          >
-            <img src="https://randomuser.me/api/portraits/men/81.jpg" />
-          </v-avatar>
-        </v-hover>
-      </v-card-actions>
-    </template>
   </v-card>
 </template>
 
@@ -88,12 +67,18 @@ export default defineComponent({
     hover: {
       type: Boolean,
       default: false
+    },
+    routeBackTo: {
+      type: String,
+      default: () => 'workspace'
     }
   },
 
   setup(props) {
     const permission = usePermission()
-    const projectInfoEdit = computed(() => props.project.permission[permission.labels.projectInfoEdit])
+    const projectInfoEdit = computed(
+      () => props.project.permission && props.project.permission[permission.labels.projectInfoEdit]
+    )
 
     return { projectInfoEdit }
   }

@@ -27,7 +27,9 @@ export const mutations: MutationTree<projectState> = {
   },
   [mutation.UPDATE_PROJECTS](state, data) {
     state.projects = {
+      next: state.projects.next,
       count: state.projects.count + 1,
+      previous: state.projects.previous,
       results: state.projects.results.concat(data)
     }
   },

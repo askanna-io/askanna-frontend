@@ -466,12 +466,14 @@ export default {
     },
     {
       path: '/:workspaceId',
+      caseSensitive: true,
       component: () => import(/* webpackChunkName: "workspace" */ './views/index.vue'),
       meta: {
         hideAppBarIcon: true,
         title: 'Workspace: workspaceId',
         breadcrumb: 'Workspace - :workspaceId'
       },
+
       children: [
         {
           path: '',

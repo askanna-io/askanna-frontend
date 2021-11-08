@@ -52,7 +52,42 @@ export const mutations: MutationTree<workspaceState> = {
   },
 
   [mutation.SET_WORKSPACE_PEOPLE_INITIAL](state, data) {
-    state.workspacePeople = data
+    const TEST_PEOPLE = [
+      {
+        name: 'Anrii viewer',
+        status: 'accepted',
+        email: 'asd@sa.com viewer ',
+        uuid: '9192e8c0-f9a0-42a3-8215-382305c39051',
+        short_uuid: '4Qh1-YUet-Qvsn-y7q1',
+        object_uuid: '695fcc8b-ba8c-4575-a1e0-f0fcfc70a349',
+        object_type: 'WV',
+        workspace: {
+          relation: 'workspace',
+          name: 'AskAnna',
+          uuid: '695fcc8b-ba8c-4575-a1e0-f0fcfc70a349',
+          short_uuid: '3Cpy-QMzd-MVko-1rDQ'
+        },
+        role: 'WV',
+        job_title: '',
+        user: {
+          uuid: null,
+          short_uuid: null,
+          name: null
+        },
+        avatar: {
+          icon:
+            'https://cdn-env-301-global-me-hsclya-api.askanna.eu/files/avatars/9192e8c0f9a042a38215382305c39050/avatar_9192e8c0f9a042a38215382305c39050_icon.png?1629455986.778795',
+          small:
+            'https://cdn-env-301-global-me-hsclya-api.askanna.eu/files/avatars/9192e8c0f9a042a38215382305c39050/avatar_9192e8c0f9a042a38215382305c39050_small.png?1629455986.778795',
+          medium:
+            'https://cdn-env-301-global-me-hsclya-api.askanna.eu/files/avatars/9192e8c0f9a042a38215382305c39050/avatar_9192e8c0f9a042a38215382305c39050_medium.png?1629455986.778795',
+          large:
+            'https://cdn-env-301-global-me-hsclya-api.askanna.eu/files/avatars/9192e8c0f9a042a38215382305c39050/avatar_9192e8c0f9a042a38215382305c39050_large.png?1629455986.778795'
+        },
+        front_end_url: 'https://beta.askanna.eu'
+      }
+    ]
+    state.workspacePeople = [...data, ...TEST_PEOPLE]
   },
 
   [mutation.SET_WORKSPACE_PARAMS](state, { path, value }) {

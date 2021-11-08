@@ -8,11 +8,13 @@ export const state: projectState = {
   project: new ProjectModel().state,
   projects: {
     count: 0,
+    next: '',
+    previous: '',
     results: []
   },
   projectJobs: [],
   query: {
-    limit: 10,
+    limit: 1000,
     offset: 0
   },
   jobsLoading: true,
