@@ -2,8 +2,19 @@
   <v-toolbar color="grey lighten-4" flat dense class="br-r5">
     <v-toolbar-title>Explore projects</v-toolbar-title>
     <v-spacer />
+    <v-flex>
+      <v-text-field
+        v-model="searchText"
+        @input="debounceedSearch"
+        small
+        dense
+        outlined
+        hide-details
+        placeholder="Search projects..."
+      ></v-text-field>
+    </v-flex>
     <v-spacer />
-    <v-spacer />
+
     <v-menu
       v-model="sortMenu"
       bottom
@@ -13,14 +24,13 @@
       class="workspace-menu"
       data-test="workspace-menu"
       transition="slide-y-transition"
-      :close-on-content-click="false"
     >
       <template v-slot:activator="{ on }">
         <v-btn v-on="on" small data-test="workspace-menu-activate-btn"><v-icon>mdi-sort</v-icon>Sort</v-btn>
       </template>
       <v-list>
-        <v-list-item-group v-model="activeSort" color="primary">
-          <v-list-item v-for="(item, index) in sortItems" :key="index" @click="handleSort(item)">
+        <v-list-item-group v-model="activeSort" color="primary" @change="handleSort()">
+          <v-list-item v-for="(item, index) in sortItems" :key="index">
             <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item>
         </v-list-item-group>
@@ -44,35 +54,30 @@
         <v-col class="d-flex pt-1 pb-1" cols="12">
           <v-card flat width="284">
             <v-card-subtitle class="pa-0">
-              <h3>Account types</h3>
+              <h3>Project visibility</h3>
             </v-card-subtitle>
             <v-select
-              hide-details
               v-model="activeRoleFilter"
-              :items="roleFilters"
+              hide-details
+              class="pt-0"
+              no-data-text=""
               item-text="name"
               item-value="value"
-              no-data-text=""
-              class="pt-0"
+              :items="visibilityFilters"
             >
             </v-select>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row class="pa-2 white">
-        <v-col class="d-flex pt-1 pb-1" cols="12">
-          <v-card flat width="284">
-            <v-card-subtitle class="pa-0">
-              <h3>Account status</h3>
+
+            <v-card-subtitle class="pa-0 pt-4">
+              <h3>Project membership</h3>
             </v-card-subtitle>
             <v-select
+              v-model="activeMemberFilter"
               hide-details
-              v-model="activeStatusFilter"
-              :items="statusFilters"
+              class="pt-0"
+              no-data-text=""
               item-text="name"
               item-value="value"
-              no-data-text=""
-              class="pt-0"
+              :items="isMemberFilters"
             >
             </v-select>
           </v-card>
@@ -82,9 +87,8 @@
   </v-toolbar>
 </template>
 <script>
-import usePermission from '@/core/composition/usePermission'
+import { debounce } from 'lodash'
 import { ref, computed, defineComponent } from '@vue/composition-api'
-import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 
 export default defineComponent({
   name: 'WorkspaceToolbar',
@@ -93,67 +97,100 @@ export default defineComponent({
     title: {
       type: String,
       default: ''
+    },
+    params: {
+      type: Object,
+      default: () => ({
+        sort: 'desc',
+        sortby: 'modified',
+        searchtext: ''
+      })
     }
   },
 
-  setup() {
-    const permission = usePermission()
-    const workspaceStore = useWorkspaceStore()
+  setup(_, context) {
+    const ISMEMBER = {
+      '': '',
+      true: true,
+      false: false
+    }
+    const VISIBILITIES = {
+      all: '',
+      public: 'PUBLIC',
+      private: 'PRIVATE'
+    }
 
-    const menu = ref(false)
-    const activeSort = ref('')
-    const sortMenu = ref(false)
-    const filterMenu = ref(false)
-
-    const workspacePeopleInviteCreate = computed(() => permission.getFor(permission.labels.workspacePeopleInviteCreate))
+    const { sort = 'desc', sortby = 'created', searchtext } = context.root.$route.query
 
     const sortItems = [
-      { title: 'A to Z', value: { sortBy: 'name', sort: 1 } },
-      { title: 'Z to A', value: { sortBy: 'name', sort: -1 } }
+      { title: 'Last created first', value: { sortby: 'created', sort: 'desc' } },
+      { title: 'Oldest created first', value: { sortby: 'created', sort: 'asc' } },
+
+      { title: 'Project name (A to Z)', value: { sortby: 'name', sort: 'asc' } },
+      { title: 'Project name (Z to A)', value: { sortby: 'name', sort: 'desc' } }
     ]
 
-    const roleFilters = [
-      { value: '', name: 'All types' },
-      { value: 'WA', name: 'Admin' },
-      { value: 'WM', name: 'Member' }
+    const searchText = ref(searchtext)
+    const menu = ref(false)
+    const sortMenu = ref(false)
+    const filterMenu = ref(false)
+    const activeSort = ref(sortItems.findIndex(item => item.value.sort === sort && item.value.sortby === sortby))
+
+    const visibilityFilters = [
+      { value: '', name: 'All projects' },
+      { value: 'PUBLIC', name: 'Public projects' },
+      { value: 'PRIVATE', name: 'Private projects' }
     ]
 
-    const statusFilters = [
-      { value: '', name: 'All' },
-      { value: 'invited', name: 'Invited' },
-      { value: 'accepted', name: 'Accepted' }
+    const isMemberFilters = [
+      { value: '', name: 'All projects' },
+      { value: true, name: "Projects I'm a member of" },
+      { value: false, name: "Projects I'm not a member of" }
     ]
+
+    const activeMemberFilter = computed({
+      get: () => {
+        const { is_member = '' } = context.root.$route.query
+
+        return isMemberFilters.find(item => item.value === ISMEMBER[is_member])
+      },
+      set: async value => {
+        context.emit('onFilterMember', value)
+      }
+    })
 
     const activeRoleFilter = computed({
-      get: () => '',
+      get: () => {
+        const { visibility = 'all' } = context.root.$route.query
+
+        return visibilityFilters.find(item => item.value === VISIBILITIES[visibility])
+      },
       set: async value => {
-        await workspaceStore.setWorkspaceParams({ path: 'workspacePeopleParams.filter.role', value })
+        context.emit('onFilter', value)
       }
     })
 
-    const activeStatusFilter = computed({
-      get: () => '',
-      set: async value => {
-        await workspaceStore.setWorkspaceParams({ path: 'workspacePeopleParams.filter.status', value })
-      }
-    })
+    const handleSearch = () => context.emit('onSearch', searchText.value)
+    const debounceedSearch = debounce(handleSearch, 350)
 
-    const handleSort = async ({ value }) =>
-      await workspaceStore.setWorkspaceParams({ path: 'workspacePeopleParams.sorting', value })
+    const handleSort = () => {
+      context.emit('onSort', typeof activeSort.value !== 'undefined' && sortItems[activeSort.value].value)
+    }
 
     return {
       menu,
       sortMenu,
       sortItems,
+      searchText,
       filterMenu,
       activeSort,
-      roleFilters,
-      statusFilters,
+      isMemberFilters,
       activeRoleFilter,
-      activeStatusFilter,
-      workspacePeopleInviteCreate,
+      visibilityFilters,
+      activeMemberFilter,
 
-      handleSort
+      handleSort,
+      debounceedSearch
     }
   }
 })

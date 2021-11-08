@@ -18,10 +18,6 @@ const routerConfig: RouterConfig = {
   ['forgot-password']: {
     layout: 'login',
     isShowSecondNavBar: false
-  },
-  projects: {
-    layout: 'public',
-    isShowSecondNavBar: false
   }
 }
 

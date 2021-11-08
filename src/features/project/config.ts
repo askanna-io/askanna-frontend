@@ -1,7 +1,7 @@
 export default {
   paths: [
     {
-      path: '/projects',
+      path: '/projects/',
       component: () => import(/* webpackChunkName: "projects" */ './views/public-projects.vue'),
       name: 'projects',
       meta: {

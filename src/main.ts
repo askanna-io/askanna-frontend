@@ -69,7 +69,7 @@ router.beforeEach((to, _, next) => {
     window.localStorage.setItem('back_after_login', window.location.pathname)
 
     next({
-      name: 'signin'
+      name: 'projects'
     })
   } else if (token && isNotAllowedWithToken) {
     next('/')

@@ -25,7 +25,7 @@
     "@types/lodash": "4.14.170",
     "@types/numeral": "2.0.1",
     "@u3u/vue-hooks": "2.0.1",
-    "@vue/composition-api": "1.2.2",
+    "@vue/composition-api": "1.2.4",
     "axios": "0.21.1",
     "core-js": "3.8.3",
     "cronstrue": "1.112.0",
