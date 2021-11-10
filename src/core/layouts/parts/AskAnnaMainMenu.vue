@@ -41,65 +41,6 @@
         Projects
       </v-btn>
     </v-flex>
-    <v-flex v-if="isNotBeta">
-      <v-menu v-model="menu" :close-on-content-click="false" :nudge-width="400" offset-y nudge-bottom="10">
-        <template v-slot:activator="{ on }">
-          <v-btn small dark class="white--text" text v-on="on">
-            Workspaces
-          </v-btn>
-        </template>
-        <v-row class="pr-2 white">
-          <v-col cols="4">
-            <v-list dense>
-              <v-list-item-group v-model="project" color="primary">
-                <v-list-item v-for="(item, i) in projects" :key="i">
-                  <v-list-item-content>
-                    <v-list-item-title v-text="item.text"></v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
-              </v-list-item-group>
-            </v-list>
-          </v-col>
-          <v-col cols="8">
-            <v-alert dense border="left" colored-border color="primary">
-              <v-text-field
-                hide-details
-                dense
-                append-icon="fas fa-search"
-                :height="10"
-                label="Search"
-                single-line
-                outlined
-              />
-              <div class="pt-1 subtitle-2">
-                Frequently visited
-              </div>
-              <v-list two-line dense subheader>
-                <v-list-item v-for="item in projectsList" :key="item.title">
-                  <v-list-item-avatar>
-                    <v-icon :class="[item.iconClass]" v-text="item.icon"></v-icon>
-                  </v-list-item-avatar>
-
-                  <v-list-item-content>
-                    <v-list-item-title v-text="item.title"></v-list-item-title>
-                    <v-list-item-subtitle v-text="item.subtitle"></v-list-item-subtitle>
-                  </v-list-item-content>
-
-                  <v-list-item-action>
-                    <v-btn icon>
-                      <v-icon color="grey lighten-1">fas fa-info-circle</v-icon>
-                    </v-btn>
-                  </v-list-item-action>
-                </v-list-item>
-              </v-list>
-            </v-alert>
-          </v-col>
-        </v-row>
-      </v-menu>
-      <v-btn small dark class="white--text" text v-on="on" :to="{ paht: '/projects/' }">
-        Projects
-      </v-btn>
-    </v-flex>
   </div>
 </template>
 

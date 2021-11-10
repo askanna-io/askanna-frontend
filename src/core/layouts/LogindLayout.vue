@@ -3,7 +3,7 @@
     <v-main class="login-layout">
       <v-container fluid pa-0 class="login-layout--container">
         <router-view />
-        <span v-if="isNotBeta" class="version">Build version:&nbsp;{{ version }}</span>
+        <span v-if="isReview" class="version">Build version:&nbsp;{{ version }}</span>
       </v-container>
       <the-snack-bar />
     </v-main>

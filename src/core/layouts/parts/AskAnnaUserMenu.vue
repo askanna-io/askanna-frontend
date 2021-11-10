@@ -3,7 +3,6 @@
     <v-btn @click="handleShowHideUploadStatus" icon :color="colorStatus">
       <v-icon>{{ iconStatus }}</v-icon>
     </v-btn>
-    <span v-if="isNotBeta">Build version:&nbsp;{{ version }}</span>
     <v-menu transition="slide-y-transition" min-width="100px" offset-y close-on-content-click>
       <template v-slot:activator="{ on }">
         <v-btn icon v-on="on">

@@ -58,7 +58,7 @@ export default defineComponent({
         id: 0,
         name: 'Activity',
         to: 'workspace-project-activity',
-        show: context.root.isNotBeta
+        show: false
       },
       {
         id: 1,
@@ -86,7 +86,7 @@ export default defineComponent({
         id: 4,
         name: 'Documentation',
         to: 'workspace-project-documentation',
-        show: context.root.isNotBeta
+        show: false
       }
     ])
 

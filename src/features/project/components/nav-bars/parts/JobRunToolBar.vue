@@ -49,49 +49,49 @@ export default defineComponent({
       {
         id: 0,
         name: 'Overview',
-        show: !context.root.isNotBeta,
+        show: true,
         to: 'workspace-project-jobs-job-jobrun-overview'
       },
       {
         id: 1,
         name: 'Input',
-        show: !context.root.isNotBeta,
+        show: true,
         to: 'workspace-project-jobs-job-jobrun-input'
       },
       {
         id: 2,
         name: 'Result',
-        show: !context.root.isNotBeta,
+        show: true,
         to: 'workspace-project-jobs-job-jobrun-result'
       },
       {
         id: 3,
         name: 'Metrics',
-        show: !context.root.isNotBeta,
+        show: true,
         to: 'workspace-project-jobs-job-jobrun-metrics'
       },
       {
         id: 4,
         name: 'Artifact',
-        show: !context.root.isNotBeta,
+        show: true,
         to: 'workspace-project-jobs-job-jobrun-artifact'
       },
       {
         id: 5,
         name: 'Variables',
-        show: !context.root.isNotBeta,
+        show: true,
         to: 'workspace-project-jobs-job-jobrun-variables'
       },
       {
         id: 6,
         name: 'Code',
-        show: !context.root.isNotBeta,
+        show: true,
         to: 'workspace-project-jobs-job-jobrun-code'
       },
       {
         id: 7,
         name: 'Log',
-        show: !context.root.isNotBeta,
+        show: true,
         to: 'workspace-project-jobs-job-jobrun-log'
       }
     ]

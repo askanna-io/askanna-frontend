@@ -57,26 +57,26 @@ export default defineComponent({
       {
         id: 0,
         name: 'Overview',
-        show: !context.root.isNotBeta,
+        show: true,
         to: 'workspace-project-job-overiew'
       },
       {
         id: 1,
         name: 'Runs',
-        show: !context.root.isNotBeta,
+        show: true,
         to: 'workspace-project-job-jobruns'
       },
       {
         id: 2,
         name: 'Variables & data',
-        show: context.root.isNotBeta,
+        show: true,
         to: 'workspace-project-job-variables'
       },
 
       {
         id: 3,
         name: 'Tokens',
-        show: context.root.isNotBeta,
+        show: true,
         to: 'workspace-project-job-tokens'
       }
     ]

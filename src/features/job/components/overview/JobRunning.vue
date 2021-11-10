@@ -1,12 +1,12 @@
 <template>
   <v-card class="mx-auto" flat>
     <v-card-title>Running the job</v-card-title>
-    <v-row v-if="isNotBeta">
+    <v-row v-if="false">
       <v-col cols="12" sm="4">
         <v-select :items="versions" class="px-2" dense outlined persistent-hint label="Version" hint="Select package" />
       </v-col>
     </v-row>
-    <v-row v-if="isNotBeta">
+    <v-row v-if="false">
       <v-col cols="12" sm="4">
         <v-text-field
           dense
@@ -70,21 +70,21 @@ export default defineComponent({
         name: 'Platform',
         component: 'JobRunPlatform',
         to: 'workspace-project-job-running-platform',
-        show: !context.root.isNotBeta
+        show: true
       },
       {
         id: 1,
         name: 'Curl',
         component: 'JobRunCurl',
         to: 'workspace-project-job-running-curl',
-        show: !context.root.isNotBeta
+        show: true
       },
       {
         id: 2,
         name: 'Python',
         component: 'JobRunPython',
         to: 'workspace-project-job-running-python',
-        show: !context.root.isNotBeta
+        show: true
       }
     ]
 

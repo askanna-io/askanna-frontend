@@ -39,7 +39,6 @@
       <v-btn :disabled="!isFormValid" color="primary" class="mr-4" @click.stop="handleLogin">
         {{ submitButtonTitle }}
       </v-btn>
-      <v-checkbox v-if="isNotBeta" dense label="Remember me" />
     </v-form>
   </div>
 </template>
