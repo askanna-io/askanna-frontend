@@ -1,6 +1,29 @@
 const fs = require('fs')
 const path = require('path')
 const yaml = require('js-yaml')
+const RobotstxtPlugin = require('robotstxt-webpack-plugin')
+
+const defaultRobotstxtOpt = {
+  policy: [
+    {
+      userAgent: '*',
+      disallow: '/'
+    }
+  ],
+  host: process.env.VUE_APP_URL
+}
+
+const betaRobotstxtOpt = {
+  policy: [
+    {
+      userAgent: '*',
+      allow: '/'
+    }
+  ],
+  host: process.env.VUE_APP_URL
+}
+
+const robotstxtOpt = process.env.VUE_APP_IS_BETA === 'on' ? betaRobotstxtOpt : defaultRobotstxtOpt
 
 const createAskAnnaConfig = () => {
   // eslint-disable-next-line no-console
@@ -41,13 +64,17 @@ module.exports = {
       swSrc: './src/service-worker.js'
     },
     manifestOptions: {
-      background_color: "#5d3eb2"
+      background_color: '#5d3eb2'
     }
   },
   chainWebpack: config => {
     config.plugin('define').tap(args => {
       const v = JSON.stringify(require('./package.json').version)
       args[0]['process.env']['VERSION'] = v
+      return args
+    })
+    config.plugin('html').tap(args => {
+      args[0].siteurl = process.env.VUE_APP_URL
       return args
     })
   },
@@ -57,7 +84,7 @@ module.exports = {
     disableHostCheck: true
   },
   configureWebpack: {
-    plugins: [new handlerAfterCompilerDoneHook(createAskAnnaConfig)],
+    plugins: [new handlerAfterCompilerDoneHook(createAskAnnaConfig), new RobotstxtPlugin(robotstxtOpt)],
     resolve: {
       extensions: ['.ts', '.js'],
       alias: {

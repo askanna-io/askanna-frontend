@@ -62,7 +62,7 @@
         <ask-anna-alert-status :statusData="item.runs.status" />
       </router-link>
     </template>
-    <template v-slot:item.actions="{ item }" v-if="isNotBeta">
+    <template v-slot:item.actions="{ item }" v-if="false">
       <v-chip-group outlined v-model="selection" mandatory>
         <v-chip outlined label class="askaanna-chip-status" color="success" @click.stop="startJob(item.short_uuid)">
           <v-avatar left><v-icon>mdi-play</v-icon></v-avatar
