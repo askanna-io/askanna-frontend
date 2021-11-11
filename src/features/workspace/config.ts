@@ -420,24 +420,6 @@ const JobRoutes = [
         children: jobRun
       },
       {
-        path: 'variables',
-        component: () =>
-          import(/* webpackChunkName: "workspace-project-job-variables" */ './views/project/jobs/job/variables.vue'),
-        name: 'workspace-project-job-variables',
-        meta: {
-          breadcrumb: 'Variables'
-        }
-      },
-      {
-        path: 'tokens',
-        component: () =>
-          import(/* webpackChunkName: "workspace-project-job-tokens" */ './views/project/jobs/job/tokens.vue'),
-        name: 'workspace-project-job-tokens',
-        meta: {
-          breadcrumb: 'Tokens'
-        }
-      },
-      {
         path: 'edit',
         component: () =>
           import(/* webpackChunkName: "workspace-project-job-edit" */ './views/project/jobs/job/edit.vue'),
