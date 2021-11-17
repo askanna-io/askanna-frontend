@@ -28,8 +28,6 @@ export default defineComponent({
 
         case route === 'workspace-project-job-overiew':
         case route === 'workspace-project-job-jobruns':
-        case route === 'workspace-project-job-variables':
-        case route === 'workspace-project-job-tokens':
         case route === 'workspace-project-job-edit':
           return JobNavBar
 

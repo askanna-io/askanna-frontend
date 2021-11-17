@@ -65,19 +65,6 @@ export default defineComponent({
         name: 'Runs',
         show: true,
         to: 'workspace-project-job-jobruns'
-      },
-      {
-        id: 2,
-        name: 'Variables & data',
-        show: true,
-        to: 'workspace-project-job-variables'
-      },
-
-      {
-        id: 3,
-        name: 'Tokens',
-        show: true,
-        to: 'workspace-project-job-tokens'
       }
     ]
 
