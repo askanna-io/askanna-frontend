@@ -11,6 +11,8 @@ import { app, router, store } from './core'
 import vuetify from '@/core/plugins/vuetify'
 import 'vue-file-agent/dist/vue-file-agent.css'
 import VueCompositionApi from '@vue/composition-api'
+import { createPinia, PiniaVuePlugin } from 'pinia'
+
 import './registerServiceWorker'
 
 import * as Sentry from '@sentry/browser'
@@ -80,10 +82,13 @@ router.beforeEach((to, _, next) => {
 
 Vue.use(VueAxios, $axios)
 
+Vue.use(PiniaVuePlugin)
+const pinia = createPinia()
 //init app instance
 new Vue({
   router,
   store,
   vuetify,
+  pinia,
   render: h => h(app)
 }).$mount('#app')

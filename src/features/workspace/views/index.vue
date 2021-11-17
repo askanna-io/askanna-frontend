@@ -4,7 +4,7 @@
 
 <script>
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import { computed, onUpdated, onBeforeMount, defineComponent } from '@vue/composition-api'
+import { onUpdated, onBeforeMount, defineComponent } from '@vue/composition-api'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 
 export default defineComponent({
@@ -14,8 +14,6 @@ export default defineComponent({
     const reShortUuid = /[0-9a-zA-Z]{4}\-[0-9a-zA-Z]{4}\-[0-9a-zA-Z]{4}\-[0-9a-zA-Z]{4}$/g
     const router = useRouterAskAnna()
     const workspaceStore = useWorkspaceStore()
-
-    const isMember = computed(() => workspaceStore.workspace.value.is_member)
 
     const initWorkspace = async workspaceId => {
       if (!workspaceId) {

@@ -436,6 +436,15 @@ const JobRoutes = [
 export default {
   paths: [
     {
+      path: '/workspaces',
+      component: () => import(/* webpackChunkName: "workspaces" */ './views/workspaces.vue'),
+      name: 'workspaces',
+      meta: {
+        hideAppBarIcon: true,
+        title: 'Workspaces'
+      }
+    },
+    {
       path: '/workspace-does-not-exist',
       component: () =>
         import(/* webpackChunkName: "workspace-does-not-exist" */ './views/workspace-does-not-exist.vue'),

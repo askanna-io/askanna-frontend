@@ -84,7 +84,11 @@ module.exports = {
     disableHostCheck: true
   },
   configureWebpack: {
-    plugins: [new handlerAfterCompilerDoneHook(createAskAnnaConfig), new RobotstxtPlugin(robotstxtOpt)],
+    plugins: [
+      new handlerAfterCompilerDoneHook(createAskAnnaConfig),
+      new RobotstxtPlugin(robotstxtOpt),
+      require('unplugin-vue2-script-setup').webpack({})
+    ],
     resolve: {
       extensions: ['.ts', '.js'],
       alias: {
@@ -97,5 +101,9 @@ module.exports = {
         '@packages': path.resolve(__dirname, 'src/features/packages/')
       }
     }
+  },
+  chainWebpack(config) {
+    // disable type check and let `vue-tsc` handles it
+    config.plugins.delete('fork-ts-checker')
   }
 }

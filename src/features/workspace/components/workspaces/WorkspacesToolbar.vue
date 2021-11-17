@@ -1,6 +1,6 @@
 <template>
   <v-toolbar color="grey lighten-4" flat dense class="br-r5">
-    <v-toolbar-title>Explore projects</v-toolbar-title>
+    <v-toolbar-title>Explorer workspaces</v-toolbar-title>
     <v-spacer />
     <v-flex>
       <v-text-field
@@ -10,7 +10,7 @@
         dense
         outlined
         hide-details
-        placeholder="Search projects..."
+        placeholder="Search workspaces..."
       ></v-text-field>
     </v-flex>
     <v-spacer />
@@ -54,7 +54,7 @@
         <v-col class="d-flex pt-1 pb-1" cols="12">
           <v-card flat width="284">
             <v-card-subtitle class="pa-0">
-              <h3>Project visibility</h3>
+              <h3>Workspace visibility</h3>
             </v-card-subtitle>
             <v-select
               v-model="activeRoleFilter"
@@ -68,7 +68,7 @@
             </v-select>
 
             <v-card-subtitle class="pa-0 pt-4">
-              <h3>Project membership</h3>
+              <h3>Workspace membership</h3>
             </v-card-subtitle>
             <v-select
               v-model="activeMemberFilter"
@@ -91,7 +91,7 @@ import { debounce } from 'lodash'
 import { ref, computed, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
-  name: 'WorkspaceToolbar',
+  name: 'WorkspacesToolbar',
 
   props: {
     title: {
@@ -126,8 +126,8 @@ export default defineComponent({
       { title: 'Created (New to Old)', value: { sortby: 'created', sort: 'desc' } },
       { title: 'Created (Old to New)', value: { sortby: 'created', sort: 'asc' } },
 
-      { title: 'Project name (A to Z)', value: { sortby: 'name', sort: 'asc' } },
-      { title: 'Project name (Z to A)', value: { sortby: 'name', sort: 'desc' } }
+      { title: 'Workspace name (A to Z)', value: { sortby: 'name', sort: 'asc' } },
+      { title: 'Workspace name (Z to A)', value: { sortby: 'name', sort: 'desc' } }
     ]
 
     const searchText = ref(searchtext)
@@ -137,15 +137,15 @@ export default defineComponent({
     const activeSort = ref(sortItems.findIndex(item => item.value.sort === sort && item.value.sortby === sortby))
 
     const visibilityFilters = [
-      { value: '', name: 'All projects' },
-      { value: 'PUBLIC', name: 'Public projects' },
-      { value: 'PRIVATE', name: 'Private projects' }
+      { value: '', name: 'All workspaces' },
+      { value: 'PUBLIC', name: 'Public workspaces' },
+      { value: 'PRIVATE', name: 'Private workspaces' }
     ]
 
     const isMemberFilters = [
-      { value: '', name: 'All projects' },
-      { value: true, name: "Projects I'm a member of" },
-      { value: false, name: "Projects I'm not a member of" }
+      { value: '', name: 'All workspaces' },
+      { value: true, name: "Workspaces I'm a member of" },
+      { value: false, name: "Workspaces I'm not a member of" }
     ]
 
     const activeMemberFilter = computed({

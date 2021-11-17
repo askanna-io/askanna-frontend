@@ -11,37 +11,13 @@
 
     <create-project-popup v-if="!isEditWorkspaceView" />
 
-    <v-menu
-      v-if="menuItems.length"
-      bottom
-      offset-y
-      v-model="menu"
-      :nudge-width="100"
-      class="workspace-menu"
-      data-test="workspace-menu"
-      :close-on-content-click="false"
-    >
-      <template v-slot:activator="{ on }">
-        <v-btn small icon v-on="on" data-test="workspace-menu-activate-btn">
-          <v-icon>mdi-dots-vertical</v-icon>
-        </v-btn>
-      </template>
-
-      <v-list>
-        <template v-for="(item, index) in menuItems">
-          <v-list-item v-if="item.isVisible" @click="handleMenuClick(item)" :key="index">
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item>
-        </template>
-      </v-list>
-    </v-menu>
+    <WorkspaceToolbarMenu :isMember="isMember" :workspaceUuid="workspaceUuid" />
   </v-toolbar>
 </template>
 <script>
+import WorkspaceToolbarMenu from './WorkspaceToolbarMenu'
 import usePermission from '@/core/composition/usePermission'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-
-import { ref, computed, defineComponent } from '@vue/composition-api'
+import { computed, defineComponent } from '@vue/composition-api'
 import CreateProjectPopup from '@/features/project/components/CreateProjectPopup'
 
 export default defineComponent({
@@ -70,49 +46,14 @@ export default defineComponent({
     }
   },
 
-  components: { CreateProjectPopup },
+  components: { CreateProjectPopup, WorkspaceToolbarMenu },
 
   setup(props, context) {
     const permission = usePermission()
-    const router = useRouterAskAnna()
-
-    const menu = ref(false)
-    const menuItems = computed(() =>
-      [
-        {
-          title: 'Edit workspace',
-          to: 'workspace-edit',
-          isVisible: permission.getFor(permission.labels.workspaceInfoEdit)
-        },
-        {
-          title: 'Remove workspace',
-          onClick: 'onOpenWorkspaceRemove',
-          isVisible: permission.getFor(permission.labels.workspaceRemove)
-        },
-        { title: 'People', to: 'workspace-people', isVisible: props.isMember }
-      ].filter(el => el.isVisible)
-    )
 
     const isEditWorkspaceView = computed(() => context.root.$route.name === 'workspace-edit')
 
-    const handleMenuClick = item => {
-      menu.value = false
-
-      if (item.onClick) {
-        context.emit(item.onClick)
-        return
-      }
-
-      router.push({
-        name: item.to,
-        params: context.root.$route.params
-      })
-    }
-
     return {
-      menu,
-      menuItems,
-      handleMenuClick,
       isEditWorkspaceView,
       isSignIn: permission.token
     }

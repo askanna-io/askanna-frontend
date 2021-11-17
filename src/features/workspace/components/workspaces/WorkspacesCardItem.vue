@@ -3,24 +3,26 @@
     class="mx-auto h-100"
     :elevation="hover ? 16 : 2"
     :to="{
-      name: 'workspace-project-code',
+      name: 'workspace',
       params: {
-        title: `${project.name} - ${workspaceName}`,
-        projectId: project.short_uuid,
-        packageId: (project.package && project.package.short_uuid) || ''
+        workspaceId: workspace.short_uuid,
+        title: `${workspace.name}}`
       }
     }"
   >
     <v-toolbar flat dense white--text color="white" class="AskAnna-app-bar">
       <v-toolbar-title class="pl-4 pt-5 title font-weight-light">
         <v-icon large>
-          mdi-semantic-web
+          {{ icon }}
         </v-icon>
-        {{ project.name }}
+        {{ workspace.name }}
       </v-toolbar-title>
       <v-spacer />
 
-      <project-menu-popup v-if="projectInfoEdit" :project="project" />
+      <v-spacer />
+      <div class="text-center">
+        <WorkspaceToolbarMenu :isMember="workspace.is_member" :workspaceUuid="workspace.short_uuid" />
+      </div>
     </v-toolbar>
 
     <v-card-text class="font-weight-bold project--description">
@@ -32,27 +34,28 @@
 <script>
 import usePermission from '@/core/composition/usePermission'
 import { computed, defineComponent } from '@vue/composition-api'
-import ProjectMenuPopup from '@/features/project/components/ProjectMenuPopup'
+import WorkspaceToolbarMenu from '@/features/workspace/components/WorkspaceToolbarMenu'
 
 export default defineComponent({
-  name: 'PublicProjectCardItem',
+  name: 'WorkspacesCardItem',
 
   components: {
-    ProjectMenuPopup
+    WorkspaceToolbarMenu
   },
 
   props: {
-    project: {
+    workspace: {
       type: Object,
       default: function () {
         return {
-          status: 'UNDIFENED',
-          runtime: 0,
-          memory: 0,
-          return_payload: null,
-          stdout: null,
           created: '',
-          finished: ''
+          description: '',
+          is_member: true,
+          modified: '',
+          name: '',
+          short_uuid: '',
+          uuid: '',
+          visibility: 'PRIVATE'
         }
       }
     },
@@ -60,21 +63,22 @@ export default defineComponent({
       type: String,
       default: () => ''
     },
-    workspaceName: {
-      type: String,
-      default: () => ''
-    },
+
     hover: {
       type: Boolean,
       default: false
     }
   },
 
-  setup() {
+  setup(props) {
     const permission = usePermission()
-    const projectInfoEdit = computed(() => permission.getFor(permission.labels.projectInfoEdit))
+    const workspaceInfoEdit = computed(() => permission.getFor(permission.labels.workspaceInfoEdit))
 
-    return { projectInfoEdit }
+    const icon = computed(() =>
+      props.workspace.visibility === 'PUBLIC' ? 'mdi-package-variant' : 'mdi-package-variant-closed'
+    )
+
+    return { icon, workspaceInfoEdit }
   }
 })
 </script>

@@ -99,7 +99,7 @@ export default defineComponent({
       }
 
       if (typeof is_member !== 'undefined' && is_member !== '') {
-        results = results.filter(item => item.is_member === is_member)
+        results = results.filter(item => String(item.is_member) === String(is_member))
       }
 
       // search
@@ -119,7 +119,7 @@ export default defineComponent({
         is_member: typeof is_member === 'undefined' || is_member === '' ? undefined : is_member
       }
 
-      router.push({
+      router.replace({
         name: 'projects',
         query: query
       })

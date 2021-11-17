@@ -5,14 +5,15 @@
     <v-tabs v-model="currentJobRunTab" left align-with-title>
       <v-tabs-slider color="primary" />
       <template v-for="tab of tabs">
-        <v-tab v-if="tab.show" ripple :key="tab.id" :to="{ name: tab.to }">
+        <v-tab v-if="tab.show" ripple :key="tab.id" :to="{ name: tab.to, params }">
           {{ tab.name }}
         </v-tab>
       </template>
     </v-tabs>
   </v-card-title>
 </template>
-<script>
+<script lang="ts">
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import { ref, computed, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
@@ -34,7 +35,11 @@ export default defineComponent({
   },
 
   setup(props, context) {
+    const routerAA = useRouterAskAnna()
+
     const currentJobRunTab = ref('workspace-project-jobs-job-jobrun-input')
+
+    const params = computed(() => routerAA.route.params)
 
     const jobRunEditTabs = [
       {
@@ -101,7 +106,7 @@ export default defineComponent({
       return runTabs.filter(item => item.show)
     })
 
-    return { tabs, currentJobRunTab }
+    return { tabs, params, currentJobRunTab }
   }
 })
 </script>

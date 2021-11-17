@@ -1,43 +1,10 @@
 <template>
   <div class="text-sm-center ml-sm-6 ml-md-0 d-none d-sm-flex">
     <v-flex>
-      <v-btn
-        v-if="workspaces.length <= 1"
-        small
-        dark
-        text
-        exact
-        exact-path
-        class="white--text"
-        :to="{ name: 'worksapce' }"
-      >
-        Workspace
+      <v-btn small dark class="white--text" :to="{ name: 'workspaces' }" text>
+        Workspaces
       </v-btn>
-      <v-menu v-else offset-y>
-        <template v-slot:activator="{ on }">
-          <v-btn
-            v-on="on"
-            small
-            dark
-            text
-            class="mx-1 white--text"
-            :class="{ 'v-btn--active': $route.name !== 'projects' }"
-          >
-            Workspaces
-          </v-btn>
-        </template>
-        <v-list>
-          <v-list-item
-            v-for="(item, index) in workspaces"
-            :key="index"
-            :class="{ 'v-btn--active': workspaceShortUuid === item.short_uuid }"
-            @click="handleChangeWorkspace(item)"
-          >
-            <v-list-item-title>{{ item.name }}</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-      <v-btn small dark class="white--text" exact exact-path :to="{ name: 'projects' }" text>
+      <v-btn small dark class="white--text" :to="{ name: 'projects' }" text>
         Projects
       </v-btn>
     </v-flex>

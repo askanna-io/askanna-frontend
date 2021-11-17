@@ -29,14 +29,14 @@
 
         <v-tabs v-model="currentTab" class="pl-4">
           <v-tabs-slider color="primary" />
-          <v-tab ripple key="worksapce"> {{ workspaceName }} workspace</v-tab>
+          <v-tab ripple key="workspace"> {{ workspaceName }} workspace</v-tab>
           <v-tab ripple key="global">
             AskAnna profile
           </v-tab>
         </v-tabs>
 
         <v-tabs-items v-model="currentTab">
-          <v-tab-item key="worksapce">
+          <v-tab-item key="workspace">
             <v-card-subtitle class="text-body-1">My role: {{ roleName }}</v-card-subtitle>
 
             <v-container fluid class="pb-0">

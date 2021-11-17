@@ -12,6 +12,7 @@
     <workspace-toolbar
       :isMember="isMember"
       :title="workspace.name"
+      :workspaceUuid="workspace.short_uuid"
       :isWorkspacePublic="isWorkspacePublic"
       :isCurrentUserAdmin="isCurrentUserAdmin"
       @onOpenWorkspaceRemove="handleOpenWorkspaceRemove"
