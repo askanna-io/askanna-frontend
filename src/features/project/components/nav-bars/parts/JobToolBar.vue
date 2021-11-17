@@ -8,7 +8,7 @@
           v-if="tab.show"
           :key="tab.id"
           ripple
-          :to="{ name: tab.to, params: { title: `${tab.name} - ${projectName}` } }"
+          :to="{ name: tab.to, params: { ...params, title: `${tab.name} - ${projectName}` } }"
         >
           {{ tab.name }}
         </v-tab>
@@ -16,7 +16,8 @@
     </v-tabs>
   </v-card-title>
 </template>
-<script>
+<script lang="ts">
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import { ref, computed, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
@@ -42,7 +43,10 @@ export default defineComponent({
   },
 
   setup(props, context) {
+    const routerAA = useRouterAskAnna()
+
     const currentTab = ref('job-overview')
+    const params = computed(() => routerAA.route.params)
 
     const jobRunEditTabs = [
       {
@@ -73,7 +77,7 @@ export default defineComponent({
       return runTabs.filter(item => item.show)
     })
 
-    return { tabs, currentTab }
+    return { tabs, params, currentTab }
   }
 })
 </script>

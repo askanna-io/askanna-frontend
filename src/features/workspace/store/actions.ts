@@ -57,14 +57,14 @@ export const actions: ActionTree<workspaceState, RootState> = {
     return workspace
   },
 
-  async [action.getWorkspaces]({ state, commit }) {
+  async [action.getWorkspaces]({ state, commit }, { membership } = { membership: true }) {
     commit(mutation.SET_LOADING, { workspaces: true })
     let workspaces
     try {
       workspaces = await apiService({
         serviceName,
         action: api.list,
-        params: { ...state.workspaceQuery, membership: true }
+        params: { ...state.workspaceQuery, membership }
       })
     } catch (error) {
       logger.error(commit, 'Error on load workspaces in getWorkspaces action.\nError: ', error)

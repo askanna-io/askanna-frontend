@@ -51,7 +51,7 @@ export const state: workspaceState = {
     ]
   },
   workspaceQuery: {
-    limit: 10,
+    limit: 1000,
     offset: 0
   },
   loading: {

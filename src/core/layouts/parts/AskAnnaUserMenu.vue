@@ -7,7 +7,15 @@
       <template v-slot:activator="{ on }">
         <v-btn icon v-on="on">
           <v-avatar class="ma-2" rounded="35" :size="35" tile>
-            <v-img class="img--rounded" :src="workspaceProfile.membership.avatar.small || globalProfile.avatar.small" />
+            <v-img
+              class="img--rounded"
+              :src="
+                (workspaceProfile.membership &&
+                  workspaceProfile.membership.avatar &&
+                  workspaceProfile.membership.avatar.small) ||
+                globalProfile.avatar.small
+              "
+            />
           </v-avatar>
         </v-btn>
       </template>
