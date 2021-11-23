@@ -12,9 +12,7 @@
       <v-avatar v-if="globalProfile.avatar.small" class="ma-2" rounded="35" :size="35" tile>
         <v-img class="img--rounded" :src="globalProfile.avatar.small" />
       </v-avatar>
-      <v-icon v-else large left>
-        mdi-account
-      </v-icon>
+      <v-icon v-else large left> mdi-account </v-icon>
       <span class="title py-1">Edit my profile</span>
     </v-card-title>
     <ask-anna-loading-progress :loading="loading">
@@ -79,13 +77,12 @@
   </v-card>
 </template>
 
-<script>
+<script lang="ts">
 import usePermission from '@/core/composition/usePermission'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useUserStore from '@/features/user/composition/useUserStore'
 import UserProfile from '@/features/user/components/profile/UserProfile'
-import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 import UserWorkspaceProfile from '@/features/workspace/components/profile/UserWorkspaceProfile'
 import UserWorkspaceProfileAvatar from '@/features/workspace/components/profile/UserWorkspaceProfileAvatar'
 
@@ -100,8 +97,6 @@ export default defineComponent({
     const snackBar = useSnackBar()
     const userStore = useUserStore()
     const router = useRouterAskAnna()
-    const { token } = usePermission()
-    const workspaceStore = useWorkspaceStore()
 
     const profileForm = ref(null)
     const currentTab = ref('workspace')
@@ -221,14 +216,6 @@ export default defineComponent({
       state.globalAvatar = data
       state.isGlobalAvatarChanged = true
     }
-
-    const fetchData = async () => {
-      // get workspaces if they not in store
-      if (!workspaceStore.workspaces.value.count) {
-        await workspaceStore.getWorkspaces()
-      }
-    }
-    onBeforeMount(() => token && fetchData())
 
     watch(state, _ => {
       // check if exist error from backend on typing fields, try resest validation

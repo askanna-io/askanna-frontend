@@ -8,6 +8,7 @@ export default function () {
     workspace: 'workspace',
     workspaces: 'workspaces',
     currentPeople: 'currentPeople',
+    sharedWorkspaces: 'sharedWorkspaces',
     workspaceProjects: 'workspaceProjects',
     workspaceSettings: 'workspaceSettings',
     workspaceProjectsLoading: 'workspaceProjectsLoading'

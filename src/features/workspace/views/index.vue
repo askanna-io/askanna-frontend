@@ -2,8 +2,9 @@
   <router-view />
 </template>
 
-<script>
+<script lang="ts">
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
+import { useWorkspacesStore } from '@/features/workspaces/useWorkspacesStore'
 import { onUpdated, onBeforeMount, defineComponent } from '@vue/composition-api'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 
@@ -12,8 +13,10 @@ export default defineComponent({
     const token = window.localStorage.getItem('token')
 
     const reShortUuid = /[0-9a-zA-Z]{4}\-[0-9a-zA-Z]{4}\-[0-9a-zA-Z]{4}\-[0-9a-zA-Z]{4}$/g
+
     const router = useRouterAskAnna()
     const workspaceStore = useWorkspaceStore()
+    const workspacesStore = useWorkspacesStore()
 
     const initWorkspace = async workspaceId => {
       if (!workspaceId) {
@@ -39,16 +42,11 @@ export default defineComponent({
     const fetchData = async () => {
       await workspaceStore.reset()
 
-      // get workspaces if they not in store
-      if (!workspaceStore.workspaces.value.count) {
-        await workspaceStore.getWorkspaces()
-      }
-
       // check rounte param workspaceId, get from store if not present in params
       let { workspaceId } = context.root.$route.params
 
-      if (workspaceId === 'workspace' && workspaceStore.workspaces.value.results.length) {
-        workspaceId = workspaceStore.workspaces.value.results[0].short_uuid
+      if (workspaceId === 'workspace' && workspacesStore.workspaces.results.length) {
+        workspaceId = workspacesStore.workspaces.results[0].short_uuid
         router.push({ path: `/${workspaceId}` })
       }
 

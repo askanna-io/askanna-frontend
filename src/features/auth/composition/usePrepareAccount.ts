@@ -1,12 +1,12 @@
 import useAuthStore from './useAuthStore'
 import { ref } from '@vue/composition-api'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
+import { useWorkspacesStore } from '@/features/workspaces/useWorkspacesStore'
 
 export default function () {
   const authStore = useAuthStore()
   const router = useRouterAskAnna()
-  const workspaceStore = useWorkspaceStore()
+  const workspacesStore = useWorkspacesStore()
 
   const workspaceId = ref('')
   const IsAccountReady = ref(false)
@@ -16,8 +16,7 @@ export default function () {
   }
 
   const getWorkspace = async () => {
-    await workspaceStore.actions.reset()
-    const workspaces = await workspaceStore.actions.getWorkspaces()
+    const workspaces = await workspacesStore.getMemberWorkspaces()
     if (workspaces && workspaces.count && workspaces.count > 0) {
       workspaceId.value = workspaces.results[0].short_uuid
 

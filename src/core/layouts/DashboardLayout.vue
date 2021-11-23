@@ -23,9 +23,7 @@
             </v-list-item>
 
             <v-divider />
-            <v-btn small exact exact-path dark class="white--text" text :to="{ path: '/projects/' }">
-              Projects
-            </v-btn>
+            <v-btn small exact exact-path dark class="white--text" text :to="{ path: '/projects/' }"> Projects </v-btn>
             <v-list dense>
               <v-list-item v-for="item in items" :key="item.title" link :to="{ name: item.name }">
                 <v-list-item-icon>
@@ -61,95 +59,50 @@
   </v-app>
 </template>
 
-<script>
-import AskAnnaMainMenu from './parts/AskAnnaMainMenu'
-import AskAnnaUserMenu from './parts/AskAnnaUserMenu'
-import UpdateApp from '@/core/components/shared/updateApp/UpdateApp'
-import TheUploadStatus from '@/core/components/uploadStatus/TheUploadStatus'
+<script setup lang="ts">
+import AskAnnaMainMenu from './parts/AskAnnaMainMenu.vue'
+import AskAnnaUserMenu from './parts/AskAnnaUserMenu.vue'
+import UpdateApp from '@/core/components/shared/updateApp/UpdateApp.vue'
+import TheUploadStatus from '@/core/components/uploadStatus/TheUploadStatus.vue'
 
 import '@/core/plugins/intercom.js'
 import useTitle from '@/core/composition/useTitle'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useUserStore from '@/features/user/composition/useUserStore'
-import useUploadStatus from '@/core/components/uploadStatus/useUploadStatus'
-import useProjectStore from '@/features/project/composition/useProjectStore'
-import useWorkspaceStore from '../../features/workspace/composition/useWorkSpaceStore'
-import { ref, computed, defineComponent, onBeforeMount, onUpdated } from '@vue/composition-api'
+import { useProjectsStore } from '@/features/projects/useProjectsStore'
+import { useWorkspacesStore } from '@/features/workspaces/useWorkspacesStore'
+import { ref, computed, onBeforeMount, onUpdated } from '@vue/composition-api'
 
-export default defineComponent({
-  name: 'DashboardLayout',
+const mobileMenu = ref(false)
+const token = window.localStorage.getItem('token')
+const items = ref([{ title: 'Workspace', name: 'workspace', icon: 'mdi-view-dashboard' }])
 
-  components: { UpdateApp, AskAnnaMainMenu, AskAnnaUserMenu, TheUploadStatus },
+useTitle()
+const userStore = useUserStore()
+const router = useRouterAskAnna()
+const projectsStore = useProjectsStore()
+const workspacesStore = useWorkspacesStore()
 
-  setup(_, context) {
-    const token = window.localStorage.getItem('token')
+const showAppBarIcon = computed(() => !router.route.value.meta?.hideAppBarIcon)
 
-    useTitle(context)
-    const userStore = useUserStore()
-    const router = useRouterAskAnna()
-    const projectStore = useProjectStore()
-    const uploadStatus = useUploadStatus()
-    const workspaceStore = useWorkspaceStore()
+const fetchData = async () => {
+  await userStore.actions.getGlobalProfile()
 
-    const globalProfile = computed(() => userStore.state.globalProfile.value)
-    const workspaces = computed(() => workspaceStore.workspaces.value.results)
-    const workspaceProfile = computed(() => workspaceStore.state.currentPeople.value)
+  if (token) {
+    await userStore.actions.getUserProfile()
+  }
 
-    const isMember = computed(() => workspaceStore.workspace.value.is_member)
-    const showAppBarIcon = computed(() => !context.root.$route.meta?.hideAppBarIcon)
-    const workspaceShortUuid = computed(() => workspaceStore.workspace.value.short_uuid)
+  await projectsStore.getProjects()
+  await workspacesStore.getAllWorkspaces()
+  await workspacesStore.getMemberWorkspaces()
+}
 
-    const profileRoute = computed(() => {
-      if (isMember.value) {
-        return { name: 'workspace-profile', params: { workspaceId: workspaceShortUuid.value } }
-      }
-      return { name: 'profile' }
-    })
+onBeforeMount(() => fetchData())
 
-    const handleChangeWorkspace = ({ short_uuid }) => {
-      if (workspaceShortUuid.value === short_uuid) return
-      router.push({ path: `/${short_uuid}`, params: { workspace: short_uuid } })
-    }
-
-    const handleShowHideUploadStatus = () => {
-      uploadStatus.showHideSnackBar()
-    }
-
-    const fetchData = async () => {
-      await userStore.actions.getGlobalProfile()
-
-      if (token) {
-        await userStore.actions.getUserProfile()
-      }
-    }
-
-    onBeforeMount(() => fetchData())
-
-    onUpdated(() => {
-      if (process.env.VUE_APP_INTERCOM === 'on') {
-        window.Intercom('update')
-      }
-    })
-
-    return {
-      isMember,
-      profileRoute,
-      globalProfile,
-      showAppBarIcon,
-      workspaces,
-      workspaceProfile,
-      iconStatus: uploadStatus.iconStatus,
-      colorStatus: uploadStatus.colorStatus,
-
-      handleChangeWorkspace,
-      handleShowHideUploadStatus
-    }
-  },
-
-  data: () => ({
-    mobileMenu: false,
-    items: [{ title: 'Workspace', name: 'workspace', icon: 'mdi-view-dashboard' }]
-  })
+onUpdated(() => {
+  if (process.env.VUE_APP_INTERCOM === 'on') {
+    window.Intercom('update')
+  }
 })
 </script>
 <style scoped>

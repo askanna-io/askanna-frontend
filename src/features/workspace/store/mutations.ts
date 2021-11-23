@@ -10,6 +10,7 @@ export const mutations: MutationTree<workspaceState> = {
   [mutation.SET_WORKSPACES](state, data) {
     state.workspaces = data
   },
+
   [mutation.SET_WORKSPACE_PROJECTS](state, { count, results, next }) {
     state.workspaceProjects = {
       next,
@@ -75,8 +76,7 @@ export const mutations: MutationTree<workspaceState> = {
           name: null
         },
         avatar: {
-          icon:
-            'https://cdn-env-301-global-me-hsclya-api.askanna.eu/files/avatars/9192e8c0f9a042a38215382305c39050/avatar_9192e8c0f9a042a38215382305c39050_icon.png?1629455986.778795',
+          icon: 'https://cdn-env-301-global-me-hsclya-api.askanna.eu/files/avatars/9192e8c0f9a042a38215382305c39050/avatar_9192e8c0f9a042a38215382305c39050_icon.png?1629455986.778795',
           small:
             'https://cdn-env-301-global-me-hsclya-api.askanna.eu/files/avatars/9192e8c0f9a042a38215382305c39050/avatar_9192e8c0f9a042a38215382305c39050_small.png?1629455986.778795',
           medium:
