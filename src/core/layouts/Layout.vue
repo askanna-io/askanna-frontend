@@ -1,8 +1,7 @@
-<script>
-import LogindLayout from './LogindLayout'
-import PublicLayout from './PublicLayout'
-import DashboardLayout from './DashboardLayout'
-import PublicAuthLayout from './PublicAuthLayout'
+<script lang="ts">
+import LogindLayout from './LogindLayout.vue'
+import PublicLayout from './PublicLayout.vue'
+import DashboardLayout from './DashboardLayout.vue'
 import { defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
@@ -31,9 +30,6 @@ export default defineComponent({
 
         case layout === 'login':
           return LogindLayout
-
-        case layout === 'public':
-          return token ? PublicAuthLayout : PublicLayout
 
         default:
           return PublicLayout

@@ -1,17 +1,18 @@
+import { useRouter } from '@u3u/vue-hooks'
+import { watchEffect, computed } from '@vue/composition-api'
 import useGeneralStore from '@/core/store/general/useGeneralStore'
-import { watchEffect, computed, SetupContext } from '@vue/composition-api'
 
-export default function (context: SetupContext) {
+export default function () {
+  const { route, router } = useRouter()
   const generalStore = useGeneralStore()
 
   const defaultTitle = 'AskAnna - Running Data Science Projects'
 
   const getTitle = function () {
     const title = computed(() => {
-      let pageTitle = context?.root?.$route?.meta?.title || context.root.$route.params.title || ''
+      let pageTitle = route.value.meta?.title || route.value.params.title || ''
       // replace uuid to name
-      Object.entries(context.root.$route.params).forEach(([key, value]) => {
-        //@ts-expect-error: Let's ignore a single compiler error
+      Object.entries(route.value.params).forEach(([key, value]) => {
         const name = generalStore.breadcrumbParams.value[key]
         pageTitle = pageTitle.replace(key, name || value)
       })

@@ -4,7 +4,7 @@
   </v-app>
 </template>
 
-<script>
+<script lang="ts">
 import { get } from 'lodash'
 
 import Layout from '@/core/layouts/Layout'
@@ -274,6 +274,11 @@ code.lang-shell {
 
 .askAnna-avatar-badge .v-badge__badge {
   z-index: 1;
+}
+
+.askAnna-btn-link.theme--dark.v-btn--active:before,
+.askAnna-btn-link.theme--dark.v-btn--active:hover:before {
+  opacity: 0;
 }
 
 //colors

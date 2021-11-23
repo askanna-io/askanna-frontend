@@ -21,15 +21,11 @@
       </template>
 
       <v-list>
-        <v-list-item :key="'profile'" exact :to="profileRoute">
-          Edit my profile
-        </v-list-item>
+        <v-list-item :key="'profile'" exact :to="profileRoute"> Edit my profile </v-list-item>
         <v-list-item href="https://docs.askanna.io" target="_blank">
           <v-list-item-title>Documentation</v-list-item-title>
         </v-list-item>
-        <v-list-item :key="'logout'" exact @click="logout">
-          Logout
-        </v-list-item>
+        <v-list-item :key="'logout'" exact @click="logout"> Logout </v-list-item>
       </v-list>
     </v-menu>
     <v-btn v-if="isReview" small icon class="white--text" @click.stop="drawer = !drawer">
@@ -38,55 +34,41 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import '@/core/plugins/intercom.js'
+import { computed } from '@vue/composition-api'
 import useTitle from '@/core/composition/useTitle'
-import { computed, defineComponent } from '@vue/composition-api'
 import useAuthStore from '@/features/auth/composition/useAuthStore'
 import useUserStore from '@/features/user/composition/useUserStore'
 import useUploadStatus from '@/core/components/uploadStatus/useUploadStatus'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 
-export default defineComponent({
-  name: 'AskAnnaUserMenu',
+useTitle()
+const authStore = useAuthStore()
+const userStore = useUserStore()
+const uploadStatus = useUploadStatus()
 
-  setup(_, context) {
-    useTitle(context)
-    const authStore = useAuthStore()
-    const uploadStatus = useUploadStatus()
-    const userStore = useUserStore()
+const workspaceStore = useWorkspaceStore()
 
-    const workspaceStore = useWorkspaceStore()
+const logout = () => authStore.actions.logout()
 
-    const logout = () => authStore.actions.logout()
+const iconStatus = computed(() => uploadStatus.iconStatus.value)
+const colorStatus = computed(() => uploadStatus.colorStatus.value)
 
-    const isMember = computed(() => workspaceStore.workspace.value.is_member)
-    const globalProfile = computed(() => userStore.state.globalProfile.value)
+const isMember = computed(() => workspaceStore.workspace.value.is_member)
+const globalProfile = computed(() => userStore.state.globalProfile.value)
 
-    const workspaceProfile = computed(() => workspaceStore.state.currentPeople.value)
-    const workspaceShortUuid = computed(() => workspaceStore.workspace.value.short_uuid)
+const workspaceProfile = computed(() => workspaceStore.state.currentPeople.value)
+const workspaceShortUuid = computed(() => workspaceStore.workspace.value.short_uuid)
 
-    const profileRoute = computed(() => {
-      if (isMember.value) {
-        return { name: 'workspace-profile', params: { workspaceId: workspaceShortUuid.value } }
-      }
-      return { name: 'profile' }
-    })
-
-    const handleShowHideUploadStatus = () => {
-      uploadStatus.showHideSnackBar()
-    }
-
-    return {
-      logout,
-      profileRoute,
-      globalProfile,
-      workspaceProfile,
-      iconStatus: uploadStatus.iconStatus,
-      colorStatus: uploadStatus.colorStatus,
-
-      handleShowHideUploadStatus
-    }
+const profileRoute = computed(() => {
+  if (isMember.value) {
+    return { name: 'workspace-profile', params: { workspaceId: workspaceShortUuid.value } }
   }
+  return { name: 'profile' }
 })
+
+const handleShowHideUploadStatus = () => {
+  uploadStatus.showHideSnackBar()
+}
 </script>

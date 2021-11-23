@@ -6,7 +6,7 @@
     :items="workspaceProjects.results"
   />
 </template>
-<script>
+<script lang="ts">
 import { throttle } from 'lodash'
 import useQuery from '@/core/composition/useQuery'
 import { computed, defineComponent } from '@vue/composition-api'

@@ -25,5 +25,5 @@ export default () => {
     })
   }
 
-  return { route: route.value, router: route.value, push, replace }
+  return { route, router, push, replace }
 }
