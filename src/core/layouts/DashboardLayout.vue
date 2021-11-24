@@ -2,7 +2,7 @@
   <v-app>
     <v-app-bar app clipped-left dark color="primary" dense>
       <v-app-bar-nav-icon v-if="false" @click.stop="mobileMenu = !mobileMenu" class="hidden-sm-and-up" />
-      <v-app-bar-nav-icon v-if="showAppBarIcon" @click.stop="stickedVM = !stickedVM" />
+      <v-app-bar-nav-icon v-if="showAppBarIcon" @click.stop="handleChangeSticked" />
       <div v-else class="pl-9" />
       <v-container fluid class="pl-1">
         <div
@@ -67,9 +67,11 @@ import TheUploadStatus from '@/core/components/uploadStatus/TheUploadStatus.vue'
 
 import '@/core/plugins/intercom.js'
 import useTitle from '@/core/composition/useTitle'
+
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useUserStore from '@/features/user/composition/useUserStore'
 import { useProjectsStore } from '@/features/projects/useProjectsStore'
+import useProjectStore from '@/features/project/composition/useProjectStore'
 import { useWorkspacesStore } from '@/features/workspaces/useWorkspacesStore'
 import { ref, computed, onBeforeMount, onUpdated } from '@vue/composition-api'
 
@@ -80,10 +82,13 @@ const items = ref([{ title: 'Workspace', name: 'workspace', icon: 'mdi-view-dash
 useTitle()
 const userStore = useUserStore()
 const router = useRouterAskAnna()
+const projectStore = useProjectStore()
 const projectsStore = useProjectsStore()
 const workspacesStore = useWorkspacesStore()
 
 const showAppBarIcon = computed(() => !router.route.value.meta?.hideAppBarIcon)
+
+const handleChangeSticked = () => (projectStore.stickedVM.value = !projectStore.stickedVM.value)
 
 const fetchData = async () => {
   await userStore.actions.getGlobalProfile()
