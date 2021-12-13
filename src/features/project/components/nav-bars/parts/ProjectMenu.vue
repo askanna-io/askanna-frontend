@@ -7,18 +7,18 @@
         ripple
         :key="tab.id"
         @click="handleClick(tab.handler)"
-        :to="{ name: tab.to, params: { title: `${tab.name} - ${projectName}`, ...routerParams, ...tab.params } }"
+        :to="{ name: tab.to, params: { title: `${tab.name} - ${projectName}`, ...routeParams, ...tab.params } }"
       >
         {{ tab.name }}
       </v-tab>
     </template>
   </v-tabs>
 </template>
-<script>
+<script lang="ts">
 import { invoke } from 'lodash'
 import usePermission from '@/core/composition/usePermission'
 import { computed, defineComponent } from '@vue/composition-api'
-import useProjectStore from '@project/composition/useProjectStore'
+import useProjectStore from '@/features/project/composition/useProjectStore'
 import usePackageStore from '@/features/package/composition/usePackageStore'
 
 export default defineComponent({
@@ -92,6 +92,11 @@ export default defineComponent({
 
     const projectId = computed(() => projectStore.project.value.short_uuid)
     const packageId = computed(() => projectStore.project.value.package.short_uuid)
+    const routeParams = computed(() => ({
+      ...context.root.$route.params,
+      projectId: projectId.value,
+      packageId: packageId.value
+    }))
 
     const tabs = computed(() => {
       const currentTabs = props.isEditProjectView ? projectEditTabs.value : projectTabs.value
@@ -114,7 +119,7 @@ export default defineComponent({
 
     const handleClick = handler => invoke(handlers, handler)
 
-    return { tabs, routerParams: context.root.$route.params, handleClick }
+    return { tabs, routeParams, handleClick }
   }
 })
 </script>
