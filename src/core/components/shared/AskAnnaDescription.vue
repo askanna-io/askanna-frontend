@@ -366,7 +366,7 @@
   </form>
 </template>
 
-<script>
+<script lang="ts">
 import StarterKit from '@tiptap/starter-kit'
 import HardBreak from '@tiptap/extension-hard-break'
 import AskAnnaCodeBlock from './description/AskAnnaCodeBlock.vue'
@@ -483,9 +483,7 @@ export default defineComponent({
 
   watch: {
     description(val) {
-      if (this.editor.isEmpty) {
-        this.editor.commands.setContent(val)
-      }
+      this.editor.commands.setContent(val)
 
       if (this.editable) {
         this.currentDescriptionValue = this.editor.getHTML()
