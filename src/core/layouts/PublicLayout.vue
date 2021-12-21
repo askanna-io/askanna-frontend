@@ -1,14 +1,11 @@
 <template>
   <v-app>
     <v-app-bar app clipped-left dark color="primary" :dense="!$vuetify.breakpoint.xsOnly">
-      <template v-if="$vuetify.breakpoint.xsOnly">
-        <v-app-bar-nav-icon @click.stop="handleOpenMenu" />
-      </template>
-      <template v-else>
+      <template v-if="!$vuetify.breakpoint.xsOnly">
         <v-app-bar-nav-icon v-if="showAppBarIcon" @click.stop="handleChangeSticked" />
-
-        <div v-else class="pl-9" />
       </template>
+      <div v-else class="pl-9" />
+
       <v-container fluid class="pl-1">
         <div
           class="d-flex align-center"
@@ -44,6 +41,9 @@
           </template>
         </div>
       </v-container>
+      <template v-if="$vuetify.breakpoint.xsOnly">
+        <v-app-bar-nav-icon @click.stop="handleOpenMenu" />
+      </template>
     </v-app-bar>
 
     <v-main class="scrollbar">
