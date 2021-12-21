@@ -1,13 +1,12 @@
 <template>
-  <v-app>
+  <v-app :class="{ 'mobile-view': $vuetify.breakpoint.xsOnly, 'desktop-view': !$vuetify.breakpoint.xsOnly }">
     <Layout :layout="layout" :isLoggedIn="isLoggedIn" />
   </v-app>
 </template>
 
 <script lang="ts">
 import { get } from 'lodash'
-
-import Layout from '@/core/layouts/Layout'
+import Layout from '@/core/layouts/Layout.vue'
 import { routerConfig } from './router/routerConfig'
 import { computed, defineComponent } from '@vue/composition-api'
 import useUserStore from '@/features/user/composition/useUserStore'
@@ -37,6 +36,9 @@ export default defineComponent({
 #app .row {
   margin-top: 0;
   margin-bottom: 0;
+}
+.overflow-x-overlay {
+  overflow-x: overlay;
 }
 .theme--light.v-card > .v-card__subtitle,
 .theme--light.v-card > .v-card__text .v-window {
@@ -81,6 +83,9 @@ export default defineComponent({
 
 .v-application--is-ltr .v-data-table--fixed-header.askanna-table .v-data-footer {
   margin-right: 0 !important;
+}
+.w-100p {
+  width: 100%;
 }
 .w-min-110 {
   min-width: 110px !important;
@@ -284,5 +289,106 @@ code.lang-shell {
 //colors
 .primary--black-text {
   color: #000000de !important;
+}
+
+// mobile view
+.mobile-view {
+  .v-toolbar__extension {
+    padding: 4px 12px;
+  }
+  .v-item-group.v-slide-group {
+    display: grid;
+  }
+
+  .AskAnna-app-bar {
+    .v-toolbar__content {
+      padding-right: 0px;
+    }
+  }
+
+  .askAnna-breadcrumbs {
+    width: 100%;
+    height: 20px;
+    overflow: hidden;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    .v-breadcrumbs__divider {
+      padding: 0 6px;
+    }
+
+    .v-breadcrumbs {
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 15px;
+      margin-bottom: 15px;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+      li:nth-child(even):not(.v-breadcrumbs__divider) {
+        padding: 0;
+      }
+    }
+  }
+
+  .v-data-table.ask-anna-table .v-data-footer {
+    margin-right: 0;
+    .v-data-footer__select {
+      margin-left: 0;
+      .v-select {
+        margin: 13px 0 13px 20px;
+      }
+    }
+    .v-data-footer__pagination {
+      margin: 0 16px 0 16px;
+    }
+  }
+
+  .with-tabs .v-toolbar__content {
+    padding: 0 0 0 0;
+  }
+
+  .v-toolbar__content {
+    padding: 4px 12px;
+  }
+
+  .askAnna-main-menu {
+    width: 580px;
+    font-size: 16px !important;
+    .table-link,
+    .v-list-item__title,
+    .v-text-field__slot .v-label,
+    .v-text-field__slot input {
+      font-size: 16px !important;
+    }
+    .v-data-table__wrapper td {
+      padding-left: 12px !important;
+    }
+    .v-alert__border {
+      border-width: 2px !important;
+    }
+    .v-skeleton-loader__heading {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    .v-btn--plain.v-btn--active:not(.v-btn--loading):not(:focus):not(:hover) .v-btn__content {
+      opacity: 0.62;
+    }
+  }
+}
+
+.text-body-2 .v-breadcrumbs__item--disabled {
+  color: rgba(0, 0, 0, 0.87) !important;
+  font-weight: 400;
+  line-height: 1.25rem;
+  letter-spacing: 0.0178571429em !important;
 }
 </style>

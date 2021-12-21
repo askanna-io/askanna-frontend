@@ -2,31 +2,25 @@
   <v-tooltip top content-class="opacity-1">
     <template v-slot:activator="{ on }">
       <div v-on="on">
-        <template v-if="text">{{ text }}: </template><ask-anna-chip-status :status="value" />
+        <template v-if="text"
+          ><span class="font-weight-bold">{{ text }}: &nbsp;</span></template
+        ><ask-anna-chip-status :status="value" />
       </div>
     </template>
     Status of the run
   </v-tooltip>
 </template>
 
-<script>
-import { defineComponent } from '@vue/composition-api'
+<script setup lang="ts">
 import AskAnnaChipStatus from '@/core/components/shared/AskAnnaChipStatus.vue'
-
-export default defineComponent({
-  name: 'JobRunInfoStatus',
-
-  components: { AskAnnaChipStatus },
-
-  props: {
-    text: {
-      type: String,
-      default: ''
-    },
-    value: {
-      type: String,
-      default: ''
-    }
+defineProps({
+  text: {
+    type: String,
+    default: ''
+  },
+  value: {
+    type: String,
+    default: ''
   }
 })
 </script>

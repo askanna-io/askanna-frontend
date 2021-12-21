@@ -1,7 +1,7 @@
 <template>
   <v-menu
     v-model="projectMenu"
-    class="aa-main-menu--wrapper"
+    class="askAnna-main-menu--wrapper"
     :close-on-content-click="false"
     offset-y
     nudge-bottom="10"
@@ -9,7 +9,7 @@
     <template v-slot:activator="{ on }">
       <v-btn small dark class="white--text" text v-on="on">Projects</v-btn>
     </template>
-    <v-row class="pr-2 white aa-main-menu">
+    <v-row class="pr-2 white askAnna-main-menu">
       <v-col cols="5">
         <v-list dense>
           <v-list-item-group v-model="listMenu" color="primary" mandatory @change="handleChangeMenu">
@@ -22,7 +22,7 @@
         </v-list>
       </v-col>
       <v-col cols="7" class="pl-0">
-        <v-alert class="mb-0" dense border="left" colored-border color="primary">
+        <v-alert class="mb-0 pr-0" dense border="left" colored-border color="primary">
           <v-text-field
             v-if="!projectsStore.loading && (projects.length > 9 || searchText)"
             v-model="searchText"
@@ -53,7 +53,7 @@
                   class="cursor--pointer"
                   @click="handleClick(item)"
                 >
-                  <td>
+                  <td class="px-0">
                     <router-link
                       class="table-link table-link--unformated"
                       :to="{
@@ -64,7 +64,8 @@
                           workspaceId: item.workspace.short_uuid
                         }
                       }"
-                      >{{ item.name }}</router-link
+                    >
+                      <v-icon v-text="'mdi-semantic-web'" class="pr-2" />{{ item.name }}</router-link
                     >
                   </td>
                 </tr>

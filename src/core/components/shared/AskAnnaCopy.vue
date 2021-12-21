@@ -3,7 +3,7 @@
     <v-tooltip top left v-if="!masked" content-class="AskAnna-copy-tooltip opacity-1">
       <template v-slot:activator="{ on, value }">
         <div v-on="on">
-          {{ prefix }} {{ sliceText }}
+          <span class="text-no-wrap">{{ prefix }} {{ sliceText }}</span>
           <v-btn
             v-if="(expanded && isSliced) || (expanded && isSliced && !masked)"
             text

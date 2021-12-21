@@ -3,7 +3,7 @@
     <template v-slot:activator="{ on }">
       <v-btn small dark class="white--text" text v-on="on">Workspaces</v-btn>
     </template>
-    <v-row class="pr-2 white aa-main-menu">
+    <v-row class="pr-2 white askAnna-main-menu">
       <v-col cols="5">
         <v-list dense>
           <v-list-item-group v-model="listMenu" mandatory color="primary" @change="handleChangeMenu">
@@ -47,7 +47,7 @@
                   class="cursor--pointer"
                   @click="handleClick(item)"
                 >
-                  <td>
+                  <td class="px-0">
                     <router-link
                       class="table-link table-link--unformated"
                       :to="{
@@ -56,7 +56,8 @@
                           workspaceId: item.short_uuid
                         }
                       }"
-                      >{{ item.name }}</router-link
+                    >
+                      <v-icon v-text="getIcon(item)" class="pr-2" />{{ item.name }}</router-link
                     >
                   </td>
                 </tr>
@@ -114,6 +115,8 @@ const workspaces = computed(() => {
 
   return results
 })
+
+const getIcon = workspace => (workspace.visibility === 'PUBLIC' ? 'mdi-package-variant' : 'mdi-package-variant-closed')
 
 const handleChangeMenu = () => (searchText.value = '')
 

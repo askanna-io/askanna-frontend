@@ -16,7 +16,7 @@ import useTitle from '@/core/composition/useTitle'
 useTitle()
 </script>
 <style lang="scss">
-.aa-main-menu {
+.askAnna-main-menu {
   width: 530px;
   font-size: 16px !important;
   .table-link,
@@ -26,7 +26,7 @@ useTitle()
     font-size: 16px !important;
   }
   .v-data-table__wrapper td {
-    padding-left: 12px !important;
+    padding-left: 6px !important;
   }
   .v-alert__border {
     border-width: 2px !important;

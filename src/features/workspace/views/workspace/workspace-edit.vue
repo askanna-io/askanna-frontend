@@ -1,9 +1,9 @@
 <template>
   <div class="pt-2">
-    <v-card flat outlined v-if="isAllowedToView">
-      <v-container class="ma-0 ml-1 pt-0" fluid>
+    <v-card v-if="isAllowedToView" flat :outlined="!$vuetify.breakpoint.xsOnly">
+      <v-container class="ma-0 pt-0" fluid>
         <v-row>
-          <v-col cols="5">
+          <v-col cols="12" sm="5">
             <div class="transition-swing text-h5 pt-2 pb-4 font-weight-bold">Workspace profile</div>
             <v-text-field
               dense
@@ -36,14 +36,13 @@
             <div class="transition-swing text-h5 pt-2 pb-3 font-weight-bold">Workspace settings</div>
             <v-radio-group
               mandatory
+              hide-details
               class="pt-0 mt-0"
               :value="workspaceState.visibility"
               @change="handleOnChangeVisibility($event, 'visibility')"
             >
               <template v-slot:label>
-                <div class="text-subtitle-1 pt-0 font-weight-bold black--text">
-                  Visibility
-                </div>
+                <div class="text-subtitle-1 pt-0 font-weight-bold black--text">Visibility</div>
               </template>
               <v-radio :ripple="false" value="PRIVATE">
                 <template v-slot:label>
@@ -79,9 +78,7 @@
               >
                 Save my changes
               </v-btn>
-              <v-btn @click="handleClose" small outlined text color="secondary" class="btn--hover">
-                Cancel
-              </v-btn>
+              <v-btn @click="handleClose" small outlined text color="secondary" class="btn--hover"> Cancel </v-btn>
             </v-card-actions>
           </v-col>
         </v-row>
@@ -108,115 +105,88 @@
     />
   </div>
 </template>
-<script>
+<script setup lang="ts">
 import { set } from 'lodash'
+import { useRouter } from '@u3u/vue-hooks'
+import { ref, computed } from '@vue/composition-api'
 import usePermission from '@/core/composition/usePermission'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
-import { ref, computed, defineComponent } from '@vue/composition-api'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useValidationRules from '@/core/composition/useValidationRules'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
+import ChangeWorkspaceVisibilityPopup from '@/features/workspace/components/workspace-edit/ChangeWorkspaceVisibilityPopup.vue'
 
-import ChangeWorkspaceVisibilityPopup from '@/features/workspace/components/workspace-edit/ChangeWorkspaceVisibilityPopup'
+const { route } = useRouter()
+const snackBar = useSnackBar()
+const router = useRouterAskAnna()
+const { RULES } = useValidationRules()
 
-export default defineComponent({
-  name: 'workspace',
+const workspaceStore = useWorkspaceStore()
+const { token, isAllowedToView } = usePermission()
 
-  components: {
-    ChangeWorkspaceVisibilityPopup
-  },
+const isStateNotChanged = ref(true)
+const isVisibilityChanged = ref(false)
+const isShowConfirmChangeVisibility = ref(false)
 
-  setup(_, context) {
-    const snackBar = useSnackBar()
-    const { RULES } = useValidationRules()
-    const workspaceStore = useWorkspaceStore()
-    const { token, isAllowedToView } = usePermission()
+const workspace = computed(() => workspaceStore.workspace.value)
 
-    const isStateNotChanged = ref(true)
-    const isVisibilityChanged = ref(false)
-    const isShowConfirmChangeVisibility = ref(false)
-
-    const workspace = computed(() => workspaceStore.workspace.value)
-    const isMember = computed(() => workspaceStore.workspace.value.is_member)
-
-    const workspaceState = ref({
-      name: workspace.value.name,
-      visibility: workspace.value.visibility,
-      description: workspace.value.description
-    })
-
-    const handleOnInput = (value, path) => {
-      isStateNotChanged.value = false
-      set(workspaceState.value, path, value)
-    }
-
-    const handleOnChangeVisibility = value => {
-      isStateNotChanged.value = false
-      set(workspaceState.value, 'visibility', value)
-
-      isVisibilityChanged.value = workspaceState.value.visibility !== workspace.value.visibility
-    }
-
-    const handlePreSave = () => {
-      if (isVisibilityChanged.value) {
-        isShowConfirmChangeVisibility.value = true
-
-        return
-      }
-      handleSave()
-    }
-
-    const handleSave = async () => {
-      const workspace = await workspaceStore.updateWorkspace({ ...workspaceState.value })
-
-      if (workspace) {
-        snackBar.showSnackBar({
-          timeout: 2500,
-          color: 'success',
-          message: `The workspace ${workspace.name} was updated`
-        })
-        handleClose()
-      }
-    }
-
-    const handleClose = () =>
-      context.root.$router.push({
-        name: 'workspace'
-      })
-
-    const handleOnConfirm = () => {
-      isShowConfirmChangeVisibility.value = false
-      handleSave()
-    }
-
-    const handleOnCancel = () => {
-      isVisibilityChanged.value = false
-      isShowConfirmChangeVisibility.value = false
-      workspaceState.value.visibility = workspace.value.visibility
-    }
-
-    const handleOnChange = () => (isStateNotChanged.value = false)
-
-    const handleClarifyDescription = val => val.replace('<p></p>', '')
-
-    return {
-      RULES,
-      token,
-      workspace,
-      workspaceState,
-      isAllowedToView,
-      isStateNotChanged,
-      isShowConfirmChangeVisibility,
-
-      handleSave,
-      handleClose,
-      handlePreSave,
-      handleOnInput,
-      handleOnCancel,
-      handleOnChange,
-      handleOnConfirm,
-      handleOnChangeVisibility,
-      handleClarifyDescription
-    }
-  }
+const workspaceState = ref({
+  name: workspace.value.name,
+  visibility: workspace.value.visibility,
+  description: workspace.value.description
 })
+
+const handleOnInput = (value, path) => {
+  isStateNotChanged.value = false
+  set(workspaceState.value, path, value)
+}
+
+const handleOnChangeVisibility = value => {
+  isStateNotChanged.value = false
+  set(workspaceState.value, 'visibility', value)
+
+  isVisibilityChanged.value = workspaceState.value.visibility !== workspace.value.visibility
+}
+
+const handlePreSave = () => {
+  if (isVisibilityChanged.value) {
+    isShowConfirmChangeVisibility.value = true
+
+    return
+  }
+  handleSave()
+}
+
+const handleSave = async () => {
+  const workspace = await workspaceStore.updateWorkspace({ ...workspaceState.value })
+
+  if (workspace) {
+    snackBar.showSnackBar({
+      timeout: 2500,
+      color: 'success',
+      message: `The workspace ${workspace.name} was updated`
+    })
+    handleClose()
+  }
+}
+
+const handleClose = () =>
+  router.push({
+    name: 'workspace'
+  })
+
+const handleOnConfirm = () => {
+  isShowConfirmChangeVisibility.value = false
+  handleSave()
+}
+
+const handleOnCancel = () => {
+  isVisibilityChanged.value = false
+  isShowConfirmChangeVisibility.value = false
+  workspaceState.value.visibility = workspace.value.visibility
+}
+
+const handleOnChange = () => (isStateNotChanged.value = false)
+
+const handleClarifyDescription = val => val.replace('<p></p>', '')
 </script>

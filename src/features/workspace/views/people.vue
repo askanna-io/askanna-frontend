@@ -65,9 +65,10 @@
     </v-alert>
   </div>
 </template>
-<script>
+<script setup lang="ts">
+import { useRouter } from '@u3u/vue-hooks'
+import { ref, computed, onBeforeMount } from '@vue/composition-api'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
-import { ref, computed, onBeforeMount, defineComponent } from '@vue/composition-api'
 import WorkspacePeopleList from '@/features/workspace/components/people/WorkspacePeopleList.vue'
 import WorkspacePeoplePopup from '@/features/workspace/components/people/WorkspacePeoplePopup.vue'
 import WorkspacePeopleNavbar from '@/features/workspace/components/people/WorkspacePeopleNavbar.vue'
@@ -76,166 +77,123 @@ import WorkspacePeopleConfirmChangeRolePopup from '@/features/workspace/componen
 import WorkspacePeopleConfirmDeleteInvitationPopup from '@/features/workspace/components/people/WorkspacePeopleConfirmDeleteInvitationPopup.vue'
 import WorkspacePeopleConfirmResendInvitationPopup from '@/features/workspace/components/people/WorkspacePeopleConfirmResendInvitationPopup.vue'
 
-export default defineComponent({
-  name: 'workspace',
+const { route } = useRouter()
+const workspaceStore = useWorkspaceStore()
+const { workspaceId } = route.value.params
 
-  components: {
-    WorkspacePeopleList,
-    WorkspacePeoplePopup,
-    WorkspacePeopleNavbar,
-    WorkspacePeopleConfirmDeletePopup,
-    WorkspacePeopleConfirmChangeRolePopup,
-    WorkspacePeopleConfirmResendInvitationPopup,
-    WorkspacePeopleConfirmDeleteInvitationPopup
-  },
+const changeRoleTo = ref('')
+const peoplePopup = ref(false)
+const selectedPeople = ref(null)
 
-  setup(_, context) {
-    const workspaceStore = useWorkspaceStore()
-    const { workspaceId } = context.root.$route.params
+const changeRoleConfirmPopup = ref(false)
+const peopleConfirmDeletePopup = ref(false)
+const deleteInvitationConfirmPopup = ref(false)
+const resendInvitationConfirmPopup = ref(false)
 
-    const changeRoleTo = ref('')
-    const peoplePopup = ref(false)
-    const selectedPeople = ref(null)
+const isPeopleAdmin = computed(() => selectedPeople.value.role === 'WA')
+const role = computed(() => (isPeopleAdmin.value ? 'WM' : 'WA'))
+const isMember = computed(() => workspaceStore.workspace.value.is_member)
+const roleAction = computed(() => (isPeopleAdmin.value ? 'revoke' : 'grant'))
 
-    const changeRoleConfirmPopup = ref(false)
-    const peopleConfirmDeletePopup = ref(false)
-    const deleteInvitationConfirmPopup = ref(false)
-    const resendInvitationConfirmPopup = ref(false)
+const workspace = computed(() => workspaceStore.workspace.value)
+const currentUser = computed(() => workspaceStore.currentPeople.value)
+const workspaceSettings = computed(() => workspaceStore.workspaceSettings.value)
 
-    const isPeopleAdmin = computed(() => selectedPeople.value.role === 'WA')
-    const role = computed(() => (isPeopleAdmin.value ? 'WM' : 'WA'))
-    const isMember = computed(() => workspaceStore.workspace.value.is_member)
-    const roleAction = computed(() => (isPeopleAdmin.value ? 'revoke' : 'grant'))
+const workspacePeople = computed(() => {
+  const {
+    filter: { role, status },
+    search,
+    sorting: { sortBy, sort }
+  } = workspaceStore.workspacePeopleParams.value
 
-    const workspacePeople = computed(() => {
-      const {
-        filter: { role, status },
-        search,
-        sorting: { sortBy, sort }
-      } = workspaceStore.workspacePeopleParams.value
+  let people = [...workspaceStore.workspacePeople.value]
 
-      let people = [...workspaceStore.workspacePeople.value]
+  if (!people.length) return people
 
-      if (!people.length) return people
-
-      if (role) {
-        people = people.filter(item => item.role?.code === role)
-      }
-
-      if (status) {
-        people = people.filter(item => item.status === status)
-      }
-
-      if (sortBy && sort) {
-        people = people.sort((a, b) => {
-          const nameA = (a.name && a.name.toLowerCase()) || a.email.toLowerCase()
-          const nameB = (b.name && b.name.toLowerCase()) || b.email.toLowerCase()
-
-          if (nameA < nameB) return -sort
-          if (nameA > nameB) return sort
-
-          return 0
-        })
-      }
-
-      return people
-    })
-
-    const loading = computed(() => workspaceStore.loading.value.people)
-
-    const handleValue = value => (peoplePopup.value = value)
-
-    const handleOpenRemovePeople = value => (peopleConfirmDeletePopup.value = true)
-
-    const handleCloseChangeRolePopup = value => (changeRoleConfirmPopup.value = false)
-
-    const handleChangeRole = async role => {
-      changeRoleTo.value = role
-      changeRoleConfirmPopup.value = true
-    }
-
-    const handleConfirmChangeRole = async role => {
-      const people = await workspaceStore.actions.changeRole({
-        role,
-        peopleId: selectedPeople.value.short_uuid,
-        workspaceId: selectedPeople.value.workspace.short_uuid
-      })
-      if (people) {
-        changeRoleConfirmPopup.value = false
-        peoplePopup.value = false
-      }
-    }
-
-    const handleSelectPeople = people => {
-      selectedPeople.value = people
-      peoplePopup.value = true
-    }
-
-    const handleDeleteItem = async () => {
-      await workspaceStore.deleteWorkspacePeople(selectedPeople.value)
-      peopleConfirmDeletePopup.value = false
-      peoplePopup.value = false
-      deleteInvitationConfirmPopup.value = false
-    }
-
-    const handleDeleteInvitation = async () => {
-      await workspaceStore.deleteInvitation(selectedPeople.value)
-
-      peopleConfirmDeletePopup.value = false
-      peoplePopup.value = false
-      deleteInvitationConfirmPopup.value = false
-    }
-
-    const handleCloseConfirmDeletePopup = () => (peopleConfirmDeletePopup.value = false)
-    const handleDeleteInivitationPopup = value => (deleteInvitationConfirmPopup.value = value)
-    const handleResendInivitationPopup = value => (resendInvitationConfirmPopup.value = value)
-
-    const handleResendItem = () => {
-      workspaceStore.resendInvitation({
-        peopleId: selectedPeople.value.short_uuid,
-        workspaceId: selectedPeople.value.workspace.short_uuid
-      })
-      resendInvitationConfirmPopup.value = false
-      peoplePopup.value = false
-    }
-
-    const fetchData = async () => {
-      await workspaceStore.actions.getWorkspacePeople({ workspaceId })
-    }
-
-    onBeforeMount(() => fetchData())
-
-    return {
-      loading,
-      isMember,
-      roleAction,
-      peoplePopup,
-      changeRoleTo,
-      isPeopleAdmin,
-      selectedPeople,
-      workspacePeople,
-
-      handleValue,
-      handleDeleteItem,
-      handleResendItem,
-      handleChangeRole,
-      handleSelectPeople,
-      changeRoleConfirmPopup,
-      handleDeleteInvitation,
-      handleOpenRemovePeople,
-      handleConfirmChangeRole,
-      peopleConfirmDeletePopup,
-      handleCloseChangeRolePopup,
-      resendInvitationConfirmPopup,
-      deleteInvitationConfirmPopup,
-      handleDeleteInivitationPopup,
-      handleCloseConfirmDeletePopup,
-      handleResendInivitationPopup,
-      handleCloseConfirmDeletePopup,
-      workspace: workspaceStore.workspace,
-      currentUser: workspaceStore.currentPeople,
-      workspaceSettings: workspaceStore.workspaceSettings
-    }
+  if (role) {
+    people = people.filter(item => item.role?.code === role)
   }
+
+  if (status) {
+    people = people.filter(item => item.status === status)
+  }
+
+  if (sortBy && sort) {
+    people = people.sort((a, b) => {
+      const nameA = (a.name && a.name.toLowerCase()) || a.email.toLowerCase()
+      const nameB = (b.name && b.name.toLowerCase()) || b.email.toLowerCase()
+
+      if (nameA < nameB) return -sort
+      if (nameA > nameB) return sort
+
+      return 0
+    })
+  }
+
+  return people
 })
+
+const loading = computed(() => workspaceStore.loading.value.people)
+
+const handleValue = value => (peoplePopup.value = value)
+
+const handleOpenRemovePeople = value => (peopleConfirmDeletePopup.value = true)
+
+const handleCloseChangeRolePopup = value => (changeRoleConfirmPopup.value = false)
+
+const handleChangeRole = async role => {
+  changeRoleTo.value = role
+  changeRoleConfirmPopup.value = true
+}
+
+const handleConfirmChangeRole = async role => {
+  const people = await workspaceStore.actions.changeRole({
+    role,
+    peopleId: selectedPeople.value.short_uuid,
+    workspaceId: selectedPeople.value.workspace.short_uuid
+  })
+  if (people) {
+    changeRoleConfirmPopup.value = false
+    peoplePopup.value = false
+  }
+}
+
+const handleSelectPeople = people => {
+  selectedPeople.value = people
+  peoplePopup.value = true
+}
+
+const handleDeleteItem = async () => {
+  await workspaceStore.deleteWorkspacePeople(selectedPeople.value)
+  peopleConfirmDeletePopup.value = false
+  peoplePopup.value = false
+  deleteInvitationConfirmPopup.value = false
+}
+
+const handleDeleteInvitation = async () => {
+  await workspaceStore.deleteInvitation(selectedPeople.value)
+
+  peopleConfirmDeletePopup.value = false
+  peoplePopup.value = false
+  deleteInvitationConfirmPopup.value = false
+}
+
+const handleCloseConfirmDeletePopup = () => (peopleConfirmDeletePopup.value = false)
+const handleDeleteInivitationPopup = value => (deleteInvitationConfirmPopup.value = value)
+const handleResendInivitationPopup = value => (resendInvitationConfirmPopup.value = value)
+
+const handleResendItem = () => {
+  workspaceStore.resendInvitation({
+    peopleId: selectedPeople.value.short_uuid,
+    workspaceId: selectedPeople.value.workspace.short_uuid
+  })
+  resendInvitationConfirmPopup.value = false
+  peoplePopup.value = false
+}
+
+const fetchData = async () => {
+  await workspaceStore.actions.getWorkspacePeople({ workspaceId })
+}
+
+onBeforeMount(() => fetchData())
 </script>

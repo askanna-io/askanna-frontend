@@ -20,24 +20,24 @@
         </v-card>
       </v-slide-y-transition>
     </div>
-    <v-breadcrumbs v-if="!sticked" :items="breadcrumbs" class="">
-      <template v-slot:item="{ item }">
-        <v-breadcrumbs-item :to="item.to" :exact="item.exact">
-          {{ item.title }}
-        </v-breadcrumbs-item>
-      </template>
-    </v-breadcrumbs>
+    <div class="askAnna-breadcrumbs" :class="{ 'mb-2': $vuetify.breakpoint.xsOnly }">
+      <v-breadcrumbs v-if="!sticked" :items="breadcrumbs" :class="{ 'py-0 mt-0 pl-3': $vuetify.breakpoint.xsOnly }">
+        <template v-slot:item="{ item }">
+          <v-breadcrumbs-item :to="item.to" :exact="item.exact">
+            {{ item.title }}
+          </v-breadcrumbs-item>
+        </template>
+      </v-breadcrumbs>
+    </div>
   </div>
 </template>
-<script>
-import useJobStore from '@job/composition/useJobStore'
-import useFetchData from '@/core/composition/useFetchData'
+<script lang="ts">
 import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
-import useJobRunStore from '@jobrun/composition/useJobRunStore'
-import useProjectStore from '@project/composition/useProjectStore'
+import useJobStore from '@/features/job/composition/useJobStore'
+import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
 
-import JobToolBar from './parts/JobToolBar'
-import ProjectToolBar from './parts/ProjectToolBar'
+import JobToolBar from './parts/JobToolBar.vue'
+import ProjectToolBar from './parts/ProjectToolBar.vue'
 import { defineComponent, computed } from '@vue/composition-api'
 
 export default defineComponent({
@@ -78,13 +78,10 @@ export default defineComponent({
 
   setup(props, context) {
     const jobStore = useJobStore()
-    const fetchData = useFetchData()
     const jobRunStore = useJobRunStore()
-    const projectStore = useProjectStore()
 
     const jobName = computed(() => jobStore.job.value.name)
-    const end = context.root.$route.name.indexOf('jobs-name') >= 1 ? 5 : 3
-    const breadcrumbs = useBreadcrumbs(context, { start: 0, end: 6 })
+    const breadcrumbs = useBreadcrumbs({ start: 0, end: 6 })
 
     const onStick = data => props.handleOnStick(data.sticked)
 

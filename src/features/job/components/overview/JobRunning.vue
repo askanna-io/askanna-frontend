@@ -1,28 +1,10 @@
 <template>
   <v-card class="mx-auto" flat>
-    <v-card-title>Running the job</v-card-title>
-    <v-row v-if="false">
-      <v-col cols="12" sm="4">
-        <v-select :items="versions" class="px-2" dense outlined persistent-hint label="Version" hint="Select package" />
-      </v-col>
-    </v-row>
-    <v-row v-if="false">
-      <v-col cols="12" sm="4">
-        <v-text-field
-          dense
-          outlined
-          label="Url"
-          class="px-2"
-          persistent-hint
-          hint="Click to copy"
-          value="workspaceName/projectName/jobName"
-        />
-      </v-col>
-    </v-row>
+    <v-card-title :class="{ 'pb-0': $vuetify.breakpoint.xsOnly }">Running the job</v-card-title>
     <v-row>
-      <v-col cols="12">
+      <v-col cols="12" :class="{ 'pt-0': $vuetify.breakpoint.xsOnly }">
         <v-toolbar dense color="white" class="br-r5" flat transition="slide-y-transition">
-          <v-tabs v-model="currentTab" left align-with-title>
+          <v-tabs v-model="currentTab" left :align-with-title="!$vuetify.breakpoint.xsOnly">
             <v-tabs-slider color="primary" />
             <template v-for="tab of tabs">
               <v-tab v-if="tab.show" ripple :key="tab.id">
@@ -32,7 +14,7 @@
           </v-tabs>
         </v-toolbar>
       </v-col>
-      <v-col cols="12">
+      <v-col cols="12" :class="{ 'pt-0': $vuetify.breakpoint.xsOnly }">
         <v-tabs-items v-model="currentTab">
           <template v-for="tab in tabs">
             <v-tab-item :key="tab.name" v-if="tab.show">
@@ -45,54 +27,36 @@
   </v-card>
 </template>
 
-<script>
-import JobRunCurl from './jobrunning/JobRunCurl'
-import JobRunPython from './jobrunning/JobRunPython'
-import JobRunPlatform from './jobrunning/JobRunPlatform'
-import { ref, defineComponent } from '@vue/composition-api'
+<script setup lang="ts">
+import JobRunCurl from './jobrunning/JobRunCurl.vue'
+import JobRunPython from './jobrunning/JobRunPython.vue'
+import JobRunPlatform from './jobrunning/JobRunPlatform.vue'
+import { ref } from '@vue/composition-api'
 
-export default defineComponent({
-  name: 'JobRunning',
+const versions = ['package v1', 'package v2']
+const currentTab = ref('workspace-project-job-running-curl')
 
-  components: {
-    JobRunCurl,
-    JobRunPython,
-    JobRunPlatform
+const tabs = [
+  {
+    id: 0,
+    name: 'Platform',
+    component: JobRunPlatform,
+    to: 'workspace-project-job-running-platform',
+    show: true
   },
-
-  setup(_, context) {
-    const versions = ['package v1', 'package v2']
-    const currentTab = ref('workspace-project-job-running-curl')
-
-    const tabs = [
-      {
-        id: 0,
-        name: 'Platform',
-        component: 'JobRunPlatform',
-        to: 'workspace-project-job-running-platform',
-        show: true
-      },
-      {
-        id: 1,
-        name: 'Curl',
-        component: 'JobRunCurl',
-        to: 'workspace-project-job-running-curl',
-        show: true
-      },
-      {
-        id: 2,
-        name: 'Python',
-        component: 'JobRunPython',
-        to: 'workspace-project-job-running-python',
-        show: true
-      }
-    ]
-
-    return {
-      tabs,
-      versions,
-      currentTab
-    }
+  {
+    id: 1,
+    name: 'Curl',
+    component: JobRunCurl,
+    to: 'workspace-project-job-running-curl',
+    show: true
+  },
+  {
+    id: 2,
+    name: 'Python',
+    component: JobRunPython,
+    to: 'workspace-project-job-running-python',
+    show: true
   }
-})
+]
 </script>

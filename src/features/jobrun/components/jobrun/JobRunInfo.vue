@@ -1,6 +1,6 @@
 <template>
   <v-card class="d-flex justify-space-between ml-4" flat>
-    <v-card v-for="(group, index) in variables" :key="index" flat width="33.3%">
+    <v-card v-for="(group, index) in variables" :key="index" flat :width="viewConfig.width">
       <v-row no-gutters>
         <v-col class="mb-4" v-for="(item, index2) in group" :key="`${index}-${index2}`" cols="12">
           <component
@@ -20,7 +20,6 @@ import { get } from 'lodash'
 import useMoment from '@/core/composition/useMoment'
 import JobRunInfoEnv from './parts/JobRunInfoEnv.vue'
 import JobRunInfoJob from './parts/JobRunInfoJob.vue'
-import JobRunInfoCode from './parts/JobRunInfoCode.vue'
 import JobRunInfoText from './parts/JobRunInfoText.vue'
 import JobRunInfoStatus from './parts/JobRunInfoStatus.vue'
 import JobRunInfoAvatar from './parts/JobRunInfoAvatar.vue'
@@ -39,7 +38,6 @@ export default defineComponent({
     JobRunInfoEnv,
     JobRunInfoJob,
     JobRunInfoText,
-    JobRunInfoCode,
     JobRunInfoStatus,
     JobRunInfoAvatar,
     JobRunInfoPackage,
@@ -105,6 +103,26 @@ export default defineComponent({
       return moment.durationHumanize(props.jobRunStatus.created, startTime.value)
     })
 
+    const viewConfig = computed(() => {
+      const groups = {
+        xs: {
+          groupBy: 100,
+          width: '100%'
+        },
+        sm: {
+          groupBy: 5,
+          width: '50%'
+        },
+        default: {
+          groupBy: 3,
+
+          width: '33.3%'
+        }
+      }
+
+      return groups[context.root.$vuetify.breakpoint.name] || groups.default
+    })
+
     const variables = computed(() => {
       const allVariables = [
         {
@@ -128,7 +146,7 @@ export default defineComponent({
         },
         {
           text: 'Start date',
-          value: moment.$moment(props.jobRun.created).format(' Do MMMM YYYY, h:mm:ss a'),
+          value: moment.$moment(props.jobRun.created).format('Do MMMM YYYY, h:mm:ss a'),
           component: 'JobRunInfoText',
           visibility: true
         },
@@ -163,14 +181,8 @@ export default defineComponent({
           visibility: true
         }
       ]
-      interface VariableItem {
-        text: string
-        value: string | number | object
-        component: string
-        visibility: boolean
-      }
 
-      return groupArray(allVariables, 3)
+      return groupArray(allVariables, viewConfig.value.groupBy)
     })
 
     const handleGotoJob = () => {
@@ -186,6 +198,7 @@ export default defineComponent({
 
     return {
       variables,
+      viewConfig,
       handleGotoJob
     }
   }

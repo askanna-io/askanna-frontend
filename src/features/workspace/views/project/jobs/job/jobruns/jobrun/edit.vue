@@ -1,10 +1,10 @@
 <template>
-  <div :class="{ 'pb-5': projectJobEdit }">
+  <div>
     <ask-anna-loading-progress v-if="projectRunEdit" classes="ma-4" :type="'table-row'" :loading="loading" fullWidth>
       <v-card flat>
-        <v-container class="ma-0 ml-1 pt-0" fluid>
+        <v-container class="ma-0 pt-0" fluid>
           <v-row>
-            <v-col cols="5">
+            <v-col cols="12" sm="5">
               <v-text-field
                 dense
                 autofocus
@@ -43,9 +43,7 @@
                 >
                   Save my changes
                 </v-btn>
-                <v-btn @click="handleClose" small outlined text color="secondary" class="btn--hover">
-                  Cancel
-                </v-btn>
+                <v-btn @click="handleClose" small outlined text color="secondary" class="btn--hover"> Cancel </v-btn>
               </v-card-actions>
             </v-col>
           </v-row>
@@ -62,12 +60,12 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { set } from 'lodash'
 import usePermission from '@/core/composition/usePermission'
-import useJobRunStore from '@jobrun/composition/useJobRunStore'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
+import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
 import { ref, watch, computed, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({

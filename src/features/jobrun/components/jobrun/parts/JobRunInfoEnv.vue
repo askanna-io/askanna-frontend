@@ -2,7 +2,9 @@
   <v-tooltip top :nudge-left="nudgeLeft" content-class="opacity-1">
     <template v-slot:activator="{ on }">
       <div v-on="on">
-        <span>{{ text }}: {{ fullValue ? value.name : envNameSliced }}</span>
+        <span
+          ><span class="font-weight-bold">{{ text }}: </span>{{ fullValue ? value.name : envNameSliced }}</span
+        >
       </div>
     </template>
     <template v-if="fullMode">
@@ -17,59 +19,52 @@
     </template>
   </v-tooltip>
 </template>
-<script>
-import { computed, defineComponent } from '@vue/composition-api'
+<script setup lang="ts">
+import { computed } from '@vue/composition-api'
 import useStartSlicedText from '@/core/composition/useStartSlicedText'
 
-export default defineComponent({
-  name: 'JobRunInfoEnv',
-
-  props: {
-    text: {
-      type: String,
-      default: ''
-    },
-    fullMode: {
-      type: Boolean,
-      default: true
-    },
-    fullValue: {
-      type: Boolean,
-      default: false
-    },
-    nudgeLeft: {
-      type: Number,
-      default: () => 0
-    },
-    value: {
-      type: Object,
-      default: () => ({
-        name: '',
-        label: '',
-        timezone: '',
-        description: '',
-        image: { name: '', tag: '', digest: '' }
-      })
-    }
+const props = defineProps({
+  text: {
+    type: String,
+    default: ''
   },
-
-  setup(props) {
-    const slicedStartText = useStartSlicedText()
-
-    const envName = computed(() =>
-      props.value.image?.tag && props.value.image?.name ? `${props.value.image?.name}:${props.value.image?.tag}` : ''
-    )
-
-    const imageComputed = computed(() => ({
-      name: props.value.image?.name || '',
-      tag: props.value.image?.tag || '',
-      digest: props.value.image?.digest || ''
-    }))
-    const envNameSliced = computed(() => {
-      return slicedStartText(envName.value || props.value.name || props.value.image?.name, 35)
+  fullMode: {
+    type: Boolean,
+    default: true
+  },
+  fullValue: {
+    type: Boolean,
+    default: false
+  },
+  nudgeLeft: {
+    type: Number,
+    default: () => 0
+  },
+  value: {
+    type: Object,
+    default: () => ({
+      name: '',
+      label: '',
+      timezone: '',
+      description: '',
+      image: { name: '', tag: '', digest: '' }
     })
-
-    return { envNameSliced, imageComputed }
   }
+})
+
+const slicedStartText = useStartSlicedText()
+
+const envName = computed(() =>
+  props.value.image?.tag && props.value.image?.name ? `${props.value.image?.name}:${props.value.image?.tag}` : ''
+)
+
+const imageComputed = computed(() => ({
+  name: props.value.image?.name || '',
+  tag: props.value.image?.tag || '',
+  digest: props.value.image?.digest || ''
+}))
+
+const envNameSliced = computed(() => {
+  return slicedStartText(envName.value || props.value.name || props.value.image?.name, 35)
 })
 </script>

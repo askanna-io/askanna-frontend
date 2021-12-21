@@ -1,7 +1,7 @@
 <template>
   <v-row align="center" justify="center">
     <v-col cols="12" class="pt-0 pb-0">
-      <package-toolbar :breadcrumbs="breadcrumbs">
+      <package-toolbar :breadcrumbs="breadcrumbs" v-if="isLoggedIn">
         <template v-slot:left>
           <span class="text-body-2">New Package</span>
         </template>
@@ -15,9 +15,7 @@
             class="py-2 px-4"
             :id="packageId"
           />
-          <v-alert v-else class="ma-4 text-center" dense outlined>
-            There is no code pushed to this project.
-          </v-alert>
+          <v-alert v-else class="ma-4 text-center" dense outlined> There is no code pushed to this project.</v-alert>
         </div>
       </v-expand-transition>
       <template v-if="isProcessing">
@@ -27,16 +25,17 @@
   </v-row>
 </template>
 
-<script>
+<script lang="ts">
 import { useWindowSize } from '@u3u/vue-hooks'
 import usePermission from '@/core/composition/usePermission'
-import usePackages from '@packages/composition/usePackages'
-import useProjectStore from '@project/composition/useProjectStore'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
+import useUserStore from '@/features/user/composition/useUserStore'
 import { ref, computed, defineComponent } from '@vue/composition-api'
-import PackageToolbar from '@/features/package/components/PackageToolbar'
+import usePackages from '@/features/packages/composition/usePackages'
+import useProjectStore from '@/features/project/composition/useProjectStore'
 import usePackageStore from '@/features/package/composition/usePackageStore'
 import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
+import PackageToolbar from '@/features/package/components/PackageToolbar.vue'
 
 export default defineComponent({
   name: 'NewPackage',
@@ -49,12 +48,12 @@ export default defineComponent({
 
   setup(_, context) {
     usePackages(context)
+    const userStore = useUserStore()
+    const router = useRouterAskAnna()
     const permission = usePermission()
-
     const { height } = useWindowSize()
     const packageStore = usePackageStore()
     const projectStore = useProjectStore()
-    const router = useRouterAskAnna()
     const breadcrumbs = usePackageBreadcrumbs(context)
 
     const isRaplace = ref(false)
@@ -63,6 +62,7 @@ export default defineComponent({
     const projectCodeCreate = computed(() => permission.getFor(permission.labels.projectCodeCreate))
 
     const calcHeight = computed(() => height.value - 370)
+    const isLoggedIn = computed(() => !!userStore.state.globalProfile.value.short_uuid)
     const isProcessing = computed(() => packageStore.processingList.value.find(item => item.packageId === packageId))
 
     const handleReplace = () => (isRaplace.value = !isRaplace.value)
@@ -89,6 +89,7 @@ export default defineComponent({
 
     return {
       packageId,
+      isLoggedIn,
       calcHeight,
       breadcrumbs,
       isProcessing,

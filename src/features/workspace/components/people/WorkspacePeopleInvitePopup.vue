@@ -4,7 +4,7 @@
       <template v-slot:activator="{ on, attrs }">
         <v-btn v-bind="attrs" v-on="on" small rounded class="mr-3">
           <v-icon color="primary" left>mdi-plus</v-icon>
-          Invite more people
+          {{ $vuetify.breakpoint.xsOnly ? 'Invite  people' : 'Invite more people' }}
         </v-btn>
       </template>
       <v-card>
@@ -18,7 +18,7 @@
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-toolbar>
-        <v-container id="scroll-target" style="max-height: 400px;" class="pl-1 pt-0 overflow-y-auto">
+        <v-container id="scroll-target" style="max-height: 400px" class="pl-1 pt-0 overflow-y-auto">
           <v-row no-gutters>
             <v-col class="pa-2" cols="12">
               <v-combobox
@@ -99,18 +99,12 @@
             class="ml-0 btn--hover"
             @click="handleSentInvitation"
           >
-            <v-icon left>
-              mdi-mail
-            </v-icon>
+            <v-icon left> mdi-mail </v-icon>
             {{ invitationBtnText }}
             <template v-slot:loader>
-              <v-icon left>
-                mdi-mail
-              </v-icon>
+              <v-icon left> mdi-mail </v-icon>
               <span>{{ loadingText }}...</span>
-              <v-icon class="ask-anna-btn-loader">
-                mdi-loading
-              </v-icon>
+              <v-icon class="ask-anna-btn-loader"> mdi-loading </v-icon>
             </template>
           </v-btn>
         </v-card-actions>
@@ -119,141 +113,109 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { ref, computed } from '@vue/composition-api'
 import useSlicedText from '@/core/composition/useSlicedText'
 import useValidationRules from '@/core/composition/useValidationRules'
-import { ref, computed, defineComponent } from '@vue/composition-api'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 
-export default defineComponent({
-  name: 'WorkspacePeopleInvitePopup',
-
-  props: {
-    workspaceName: {
-      type: String,
-      default: ''
-    }
-  },
-
-  setup(props) {
-    const slicedText = useSlicedText()
-    const workspaceStore = useWorkspaceStore()
-    const validationRules = useValidationRules()
-
-    const currentRole = computed(() => workspaceStore.state.currentPeople.value.role.code)
-
-    const menu = ref(false)
-    const loading = ref(false)
-    const selectedAccess = ref({ code: 'WM', name: 'member' }) //default member access
-
-    const listAccess = computed(() => {
-      let list = [
-        { code: 'WM', name: 'Workspace member' },
-        { code: 'WV', name: 'Workspace viewer' }
-      ]
-      if (currentRole.value === 'WA') {
-        list = [{ code: 'WA', name: 'Workspace admin' }, ...list]
-      }
-      return list
-    })
-
-    const invitationItems = ref([])
-    const loadingText = ref('Sending...')
-
-    const title = computed(() => slicedText(props.workspaceName, 27))
-
-    const invitationBtnText = computed(() =>
-      invitationItems.value.length > 1 ? 'Send invitations' : 'Send invitation'
-    )
-    const inValidEmails = computed(() => invitationItems.value.filter(email => !validationRules.isValidEmail(email)))
-    const invitedEmails = computed(() =>
-      invitationItems.value.filter(
-        email => workspaceStore.workspacePeople.value.some(item => item.email === email) && email
-      )
-    )
-
-    const handleOnInput = (value, index, path, item) =>
-      invitationItems.value.splice(index, 1, { ...item, [path]: value })
-
-    const handleCancel = () => {
-      menu.value = false
-      invitationItems.value = []
-    }
-
-    const handleSentInvitation = async () => {
-      loading.value = true
-      const reducer = (acc, email) => {
-        const isExist = workspaceStore.workspacePeople.value.find(item => item.email === email)
-
-        if (!isExist) {
-          acc.push(email)
-        }
-        return acc
-      }
-
-      const emails = invitationItems.value.reduce(reducer, [])
-      if (emails.length) {
-        await workspaceStore.sendInvitations({ emails, role: selectedAccess.value.code })
-      }
-
-      menu.value = false
-      loading.value = false
-      invitationItems.value = []
-    }
-
-    const handleRemove = item => invitationItems.value.splice(invitationItems.value.indexOf(item), 1)
-
-    const handleRemoveInValidEmails = () => {
-      invitationItems.value = invitationItems.value.filter(email => validationRules.isValidEmail(email))
-    }
-
-    const handleRemoveInvitedEmails = () => {
-      invitationItems.value = invitationItems.value.filter(email => !invitedEmails.value.includes(email))
-    }
-
-    const getStyle = email => {
-      const isEmailValid = !validationRules.isValidEmail(email)
-      const isExist = workspaceStore.workspacePeople.value.find(item => item.email === email)
-      const isInvited = isExist && isExist.status === 'invited'
-      const isAccepted = isExist && isExist.status === 'accepted'
-      const icons = {
-        error: 'mdi-email-off-outline',
-        invited: 'mdi-email-send-outline',
-        accepted: 'mdi-email-check-outline'
-      }
-
-      const icon = (isExist && icons[isExist.status]) || (isEmailValid && icons.error) || ''
-
-      return {
-        color: {
-          error: isEmailValid,
-          primary: isAccepted,
-          'blue lighten-3': isInvited
-        },
-        icon
-      }
-    }
-
-    return {
-      menu,
-      title,
-      loading,
-      getStyle,
-      listAccess,
-      loadingText,
-      handleRemove,
-      handleCancel,
-      inValidEmails,
-      invitedEmails,
-      selectedAccess,
-      invitationItems,
-      invitationBtnText,
-
-      handleOnInput,
-      handleSentInvitation,
-      handleRemoveInvitedEmails,
-      handleRemoveInValidEmails
-    }
+const props = defineProps({
+  workspaceName: {
+    type: String,
+    default: ''
   }
 })
+
+const slicedText = useSlicedText()
+const workspaceStore = useWorkspaceStore()
+const validationRules = useValidationRules()
+
+const currentRole = computed(() => workspaceStore.state.currentPeople.value.role.code)
+
+const menu = ref(false)
+const loading = ref(false)
+const selectedAccess = ref({ code: 'WM', name: 'member' }) //default member access
+
+const listAccess = computed(() => {
+  let list = [
+    { code: 'WM', name: 'Workspace member' },
+    { code: 'WV', name: 'Workspace viewer' }
+  ]
+  if (currentRole.value === 'WA') {
+    list = [{ code: 'WA', name: 'Workspace admin' }, ...list]
+  }
+  return list
+})
+
+const invitationItems = ref([])
+const loadingText = ref('Sending...')
+
+const title = computed(() => slicedText(props.workspaceName, 27))
+
+const invitationBtnText = computed(() => (invitationItems.value.length > 1 ? 'Send invitations' : 'Send invitation'))
+const inValidEmails = computed(() => invitationItems.value.filter(email => !validationRules.isValidEmail(email)))
+const invitedEmails = computed(() =>
+  invitationItems.value.filter(
+    email => workspaceStore.workspacePeople.value.some(item => item.email === email) && email
+  )
+)
+
+const handleCancel = () => {
+  menu.value = false
+  invitationItems.value = []
+}
+
+const handleSentInvitation = async () => {
+  loading.value = true
+  const reducer = (acc, email) => {
+    const isExist = workspaceStore.workspacePeople.value.find(item => item.email === email)
+
+    if (!isExist) {
+      acc.push(email)
+    }
+    return acc
+  }
+
+  const emails = invitationItems.value.reduce(reducer, [])
+  if (emails.length) {
+    await workspaceStore.sendInvitations({ emails, role: selectedAccess.value.code })
+  }
+
+  menu.value = false
+  loading.value = false
+  invitationItems.value = []
+}
+
+const handleRemove = item => invitationItems.value.splice(invitationItems.value.indexOf(item), 1)
+
+const handleRemoveInValidEmails = () => {
+  invitationItems.value = invitationItems.value.filter(email => validationRules.isValidEmail(email))
+}
+
+const handleRemoveInvitedEmails = () => {
+  invitationItems.value = invitationItems.value.filter(email => !invitedEmails.value.includes(email))
+}
+
+const getStyle = email => {
+  const isEmailValid = !validationRules.isValidEmail(email)
+  const isExist = workspaceStore.workspacePeople.value.find(item => item.email === email)
+  const isInvited = isExist && isExist.status === 'invited'
+  const isAccepted = isExist && isExist.status === 'accepted'
+  const icons = {
+    error: 'mdi-email-off-outline',
+    invited: 'mdi-email-send-outline',
+    accepted: 'mdi-email-check-outline'
+  }
+
+  const icon = (isExist && icons[isExist.status]) || (isEmailValid && icons.error) || ''
+
+  return {
+    color: {
+      error: isEmailValid,
+      primary: isAccepted,
+      'blue lighten-3': isInvited
+    },
+    icon
+  }
+}
 </script>

@@ -6,6 +6,7 @@
 
         <div>
           <v-btn
+            v-if="!$vuetify.breakpoint.xsOnly"
             small
             outlined
             color="secondary"

@@ -11,7 +11,10 @@
     }"
   >
     <v-toolbar flat dense white--text color="white" class="AskAnna-app-bar">
-      <v-toolbar-title class="pl-4 pt-5 title font-weight-light">
+      <v-toolbar-title
+        class="title font-weight-light"
+        :class="{ 'px-0 pt-2': $vuetify.breakpoint.xsOnly, 'pl-4 pt-5': !$vuetify.breakpoint.xsOnly }"
+      >
         <v-icon large>
           {{ icon }}
         </v-icon>
@@ -21,7 +24,7 @@
 
       <v-spacer />
       <div class="text-center">
-        <WorkspaceToolbarMenu :isMember="workspace.is_member" :workspaceUuid="workspace.short_uuid" />
+        <WorkspaceToolbarMenu :isMember="workspace.is_member" :workspaceUuid="workspace.short_uuid" onlyShowPeople />
       </div>
     </v-toolbar>
 
@@ -31,56 +34,40 @@
   </v-card>
 </template>
 
-<script>
-import usePermission from '@/core/composition/usePermission'
-import { computed, defineComponent } from '@vue/composition-api'
-import WorkspaceToolbarMenu from '@/features/workspace/components/WorkspaceToolbarMenu'
+<script setup lang="ts">
+import { computed } from '@vue/composition-api'
+import WorkspaceToolbarMenu from '@/features/workspace/components/WorkspaceToolbarMenu.vue'
 
-export default defineComponent({
-  name: 'WorkspacesCardItem',
-
-  components: {
-    WorkspaceToolbarMenu
-  },
-
-  props: {
-    workspace: {
-      type: Object,
-      default: function () {
-        return {
-          created: '',
-          description: '',
-          is_member: true,
-          modified: '',
-          name: '',
-          short_uuid: '',
-          uuid: '',
-          visibility: 'PRIVATE'
-        }
+const props = defineProps({
+  workspace: {
+    type: Object,
+    default: function () {
+      return {
+        created: '',
+        description: '',
+        is_member: true,
+        modified: '',
+        name: '',
+        short_uuid: '',
+        uuid: '',
+        visibility: 'PRIVATE'
       }
-    },
-    description: {
-      type: String,
-      default: () => ''
-    },
-
-    hover: {
-      type: Boolean,
-      default: false
     }
   },
+  description: {
+    type: String,
+    default: () => ''
+  },
 
-  setup(props) {
-    const permission = usePermission()
-    const workspaceInfoEdit = computed(() => permission.getFor(permission.labels.workspaceInfoEdit))
-
-    const icon = computed(() =>
-      props.workspace.visibility === 'PUBLIC' ? 'mdi-package-variant' : 'mdi-package-variant-closed'
-    )
-
-    return { icon, workspaceInfoEdit }
+  hover: {
+    type: Boolean,
+    default: false
   }
 })
+
+const icon = computed(() =>
+  props.workspace.visibility === 'PUBLIC' ? 'mdi-package-variant' : 'mdi-package-variant-closed'
+)
 </script>
 <style scoped>
 .h-100 {

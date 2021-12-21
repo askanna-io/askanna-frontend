@@ -8,7 +8,8 @@
         >{{ title }}</label
       >
       <div class="" v-if="editor && editable">
-        <v-toolbar
+        <component
+          v-bind:is="$vuetify.breakpoint.xsOnly ? 'div' : 'v-toolbar'"
           dense
           height="30px"
           :flat="!sticked"
@@ -338,11 +339,11 @@
             </template>
             <span>Redo</span>
           </v-tooltip>
-          <v-spacer />
+          <v-spacer v-if="!$vuetify.breakpoint.xsOnly" />
           <a class="ask-anna-link body-2" target="_blank" href="https://docs.askanna.io/shortcuts-editor/" @click.stop>
             Markdown supported
           </a>
-        </v-toolbar>
+        </component>
       </div>
       <v-divider v-show="editable" class="" />
 

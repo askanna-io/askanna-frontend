@@ -1,10 +1,10 @@
 <template>
   <v-card flat>
     <v-form ref="newProjectForm" @submit.prevent="handleCreate">
-      <v-container fluid>
+      <v-container fluid class="pt-0">
         <v-row>
-          <v-col cols="5">
-            <div class="transition-swing text-h5 pt-2 pb-4 font-weight-bold">Project profile</div>
+          <v-col cols="12" sm="5" class="pt-0">
+            <div class="d-flex transition-swing text-h5 pt-2 pb-4 font-weight-bold">Project profile</div>
             <v-text-field
               dense
               outlined
@@ -34,14 +34,13 @@
             <div class="transition-swing text-h5 pt-2 pb-3 font-weight-bold">Project settings</div>
 
             <v-radio-group
+              hide-details
               :value="projectData.visibility"
               @change="handleOnInput($event, 'visibility')"
               class="pt-0 mt-0"
             >
               <template v-slot:label>
-                <div class="text-subtitle-1 pt-0 font-weight-bold black--text">
-                  Visibility
-                </div>
+                <div class="text-subtitle-1 pt-0 font-weight-bold black--text">Visibility</div>
               </template>
               <v-radio value="PRIVATE" :ripple="false">
                 <template v-slot:label>
@@ -101,7 +100,7 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col cols="6">
+          <v-col cols="12" sm="6" class="pt-0">
             <v-btn
               text
               small
@@ -113,9 +112,7 @@
             >
               {{ saveButtonText }}
             </v-btn>
-            <v-btn small outlined text color="secondary" class="ma-2 btn--hover" @click="handleCancel">
-              Cancel
-            </v-btn>
+            <v-btn small outlined text color="secondary" class="ma-2 btn--hover" @click="handleCancel"> Cancel </v-btn>
           </v-col>
         </v-row>
       </v-container>
@@ -123,84 +120,68 @@
   </v-card>
 </template>
 
-<script>
-import { ref, computed, defineComponent } from '@vue/composition-api'
+<script setup lang="ts">
+import { ref, computed } from '@vue/composition-api'
 import useValidationRules from '@/core/composition/useValidationRules'
 
-export default defineComponent({
-  name: 'Project',
-
-  props: {
-    projectData: {
-      type: Object,
-      default: () => ({
-        name: '',
-        template: '',
-        workspace: '',
-        short_uuid: '',
-        visibility: 'PRIVATE'
-      })
-    },
-    projectTemplates: {
-      type: Array,
-      default: () => []
-    },
-    saveButtonText: {
-      type: String,
-      default: () => 'Create'
-    },
-    workspaceProjectVisibility: {
-      type: String,
-      default: () => 'PRIVATE'
-    }
-  },
-
-  setup(props, context) {
-    const { RULES } = useValidationRules()
-
-    const isStateNotChanged = ref(!props.projectData.name)
-    const nameRules = ref([RULES.required('Project name is required')])
-
-    const template = computed({
-      get: () => props.projectData.template,
-      set: value => context.emit('handleOnInput', { path: 'template', value })
+const props = defineProps({
+  projectData: {
+    type: Object,
+    default: () => ({
+      name: '',
+      template: '',
+      workspace: '',
+      short_uuid: '',
+      visibility: 'PRIVATE'
     })
-    const newProjectForm = ref(null)
-
-    const handleOnInput = (value, path) => {
-      isStateNotChanged.value = false
-      context.emit('handleOnInput', { path, value })
-    }
-
-    const handleCreate = () => {
-      if (!newProjectForm.value.validate()) {
-        return
-      }
-      nameRules.value = []
-      resetValidation()
-      context.emit('handleCreate')
-    }
-
-    const handleCancel = () => {
-      nameRules.value = []
-      resetValidation()
-      context.emit('handleCancel')
-    }
-
-    const handleOnChange = () => (isStateNotChanged.value = false)
-    const resetValidation = () => newProjectForm.value.resetValidation()
-
-    return {
-      template,
-      nameRules,
-      newProjectForm,
-      isStateNotChanged,
-
-      handleCreate,
-      handleCancel,
-      handleOnInput,
-      handleOnChange
-    }
+  },
+  projectTemplates: {
+    type: Array,
+    default: () => []
+  },
+  saveButtonText: {
+    type: String,
+    default: () => 'Create'
+  },
+  workspaceProjectVisibility: {
+    type: String,
+    default: () => 'PRIVATE'
   }
 })
+
+const emit = defineEmits(['handleOnInput', 'handleCreate', 'handleCancel'])
+
+const { RULES } = useValidationRules()
+
+const isStateNotChanged = ref(!props.projectData.name)
+const nameRules = ref([RULES.required('Project name is required')])
+
+const template = computed({
+  get: () => props.projectData.template,
+  set: value => emit('handleOnInput', { path: 'template', value })
+})
+const newProjectForm = ref(null)
+
+const handleOnInput = (value, path) => {
+  isStateNotChanged.value = false
+  emit('handleOnInput', { path, value })
+}
+
+const handleCreate = () => {
+  if (!newProjectForm.value.validate()) {
+    return
+  }
+  nameRules.value = []
+  resetValidation()
+  emit('handleCreate')
+}
+
+const handleCancel = () => {
+  nameRules.value = []
+  resetValidation()
+  emit('handleCancel')
+}
+
+const handleOnChange = () => (isStateNotChanged.value = false)
+const resetValidation = () => newProjectForm.value.resetValidation()
 </script>

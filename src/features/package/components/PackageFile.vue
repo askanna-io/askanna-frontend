@@ -11,31 +11,43 @@
         </div>
 
         <v-spacer></v-spacer>
-        <v-btn small outlined color="secondary" class="mr-1 btn--hover" @click="handleDownload">
+        <v-btn
+          v-if="!$vuetify.breakpoint.xsOnly"
+          small
+          outlined
+          color="secondary"
+          class="mr-1 btn--hover"
+          @click="handleDownload"
+        >
           <v-icon color="secondary" left>mdi-download</v-icon>Download file
         </v-btn>
-        <v-btn small outlined color="secondary" class="mr-1 btn--hover" @click="handleCopy">
+        <v-btn
+          v-if="!$vuetify.breakpoint.xsOnly"
+          small
+          outlined
+          color="secondary"
+          class="mr-1 btn--hover"
+          @click="handleCopy"
+        >
           <v-icon color="secondary" left>mdi-content-copy</v-icon>Copy
         </v-btn>
       </v-toolbar>
       <package-file-image v-if="isFileImg" :dataSource="fileSource" />
       <package-notebook v-else-if="isIpynb" :file="file" :fileSource="fileSource" />
       <the-highlight v-else-if="fileComputed" :value="fileComputed" :languageName="languageName" />
-      <v-alert v-else class="ma-4 text-center" dense outlined>
-        This file is empty.
-      </v-alert>
+      <v-alert v-else class="ma-4 text-center" dense outlined> This file is empty. </v-alert>
     </v-col>
   </v-row>
 </template>
 
-<script>
+<script lang="ts">
 import useCopy from '@/core/composition/useCopy'
-import PackageNotebook from './PackageNotebook'
-import PackageFileImage from './PackageFileImage'
+import PackageNotebook from './PackageNotebook.vue'
+import PackageFileImage from './PackageFileImage.vue'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
 import useSizeHumanize from '@/core/composition/useSizeHumanize'
 import { defineComponent, computed } from '@vue/composition-api'
-import TheHighlight from '@/core/components/highlight/TheHighlight'
+import TheHighlight from '@/core/components/highlight/TheHighlight.vue'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
 
 export default defineComponent({

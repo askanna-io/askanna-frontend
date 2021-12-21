@@ -1,9 +1,9 @@
 <template>
   <ask-anna-loading-progress :type="'table-row'" :loading="loading">
-    <v-card class="ma-2" flat>
-      <project
+    <v-card flat>
+      <Project
         v-if="projectInfoEdit"
-        :projectData="projectState"
+        :projectData="projectData"
         :saveButtonText="'Save my changes'"
         :projectTemplates="projectTemplates"
         :workspaceProjectVisibility="workspaceProjectVisibility"
@@ -13,92 +13,75 @@
       />
       <v-alert v-else class="mx-2 my-4 text-center" dense outlined>
         You are not allowed to edit this project. I can bring you back to the project
-        <router-link :to="{ name: 'workspace-project' }" class="ask-anna-link">{{ project.name }}</router-link
+        <router-link :to="{ name: 'workspace-project' }" class="ask-anna-link">{{ projectData.name }}</router-link
         >.
       </v-alert>
     </v-card>
   </ask-anna-loading-progress>
 </template>
 
-<script>
+<script setup lang="ts">
 import { set } from 'lodash'
+import { useRouter } from '@u3u/vue-hooks'
 import usePermission from '@/core/composition/usePermission'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
+import { ref, watch, computed, onBeforeMount } from '@vue/composition-api'
 import useProjectStore from '@/features/project/composition/useProjectStore'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
-import { ref, watch, computed, onBeforeMount, defineComponent } from '@vue/composition-api'
 
-import Project from '@/features/project/components/Project'
-import AskAnnaCopyText from '@/core/components/shared/AskAnnaCopyText'
+import Project from '@/features/project/components/Project.vue'
 
-export default defineComponent({
-  name: 'project-edit',
+const { route } = useRouter()
+const snackBar = useSnackBar()
+const router = useRouterAskAnna()
+const permission = usePermission()
+const projectStore = useProjectStore()
+const workspaceStore = useWorkspaceStore()
 
-  components: { Project, AskAnnaCopyText },
+const { routeBackTo = 'workspace-project' } = route.value.params
 
-  setup(_, context) {
-    const snackBar = useSnackBar()
-    const permission = usePermission()
-    const workspaceStore = useWorkspaceStore()
-    const projectStore = useProjectStore(context)
+const projectData = computed(() => projectStore.project.value)
+const loading = computed(() => projectStore.projectLoading.value)
+const projectTemplates = computed(() => projectStore.projectTemplates.value)
+const projectInfoEdit = computed(() => permission.getFor(permission.labels.projectInfoEdit))
+const workspaceProjectVisibility = computed(() => workspaceStore.state.workspace.value.visibility)
 
-    const { routeBackTo = 'workspace-project' } = context.root.$route.params
+const projectState = ref({
+  name: projectData.value.name,
+  visibility: projectData.value.visibility,
+  description: projectData.value.description
+})
 
-    const project = computed(() => projectStore.project.value)
-    const loading = computed(() => projectStore.projectLoading.value)
-    const projectInfoEdit = computed(() => permission.getFor(permission.labels.projectInfoEdit))
-    const workspaceProjectVisibility = computed(() => workspaceStore.state.workspace.value.visibility)
+const fetchData = async () => projectStore.getProjectTemplates()
 
-    const projectState = ref({
-      name: project.value.name,
-      visibility: project.value.visibility,
-      description: project.value.description
-    })
+onBeforeMount(() => fetchData())
 
-    const fetchData = async () => projectStore.getProjectTemplates()
+const handleOnInput = ({ path, value }) => {
+  set(projectState.value, path, value)
+}
+const handleUpdate = async () => {
+  const project = await projectStore.updateProject(projectState.value)
 
-    onBeforeMount(() => fetchData())
+  if (routeBackTo === 'workspace') {
+    await workspaceStore.getInitialWorkpaceProjects({ params: { limit: 99, offset: 0 } })
+  }
+  if (project?.short_uuid) {
+    snackBar.showSnackBar({ message: `The project ${project.name} was updated`, color: 'success', timeout: 2500 })
+    handleCancel()
+  }
+}
+const handleCancel = () => {
+  router.push({
+    name: routeBackTo
+  })
+}
 
-    const handleOnInput = ({ path, value }) => {
-      set(projectState.value, path, value)
-    }
-    const handleUpdate = async () => {
-      const project = await projectStore.updateProject(projectState.value)
-
-      if (routeBackTo === 'workspace') {
-        await workspaceStore.getInitialWorkpaceProjects({ params: { limit: 99, offset: 0 } })
-      }
-      if (project?.short_uuid) {
-        snackBar.showSnackBar({ message: `The project ${project.name} was updated`, color: 'success', timeout: 2500 })
-        handleCancel()
-      }
-    }
-    const handleCancel = () => {
-      context.root.$router.push({
-        name: routeBackTo
-      })
-    }
-
-    watch(project, project => {
-      projectState.value = {
-        name: project.name,
-        visibility: project.visibility,
-        description: project.description
-      }
-    })
-
-    return {
-      loading,
-      project,
-      projectState,
-      projectInfoEdit,
-      workspaceProjectVisibility,
-      projectTemplates: projectStore.projectTemplates,
-
-      handleUpdate,
-      handleCancel,
-      handleOnInput
-    }
+watch(projectData, projectData => {
+  projectState.value = {
+    name: projectData.name,
+    visibility: projectData.visibility,
+    description: projectData.description
   }
 })
 </script>

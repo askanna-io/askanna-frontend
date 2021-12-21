@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto" outlined sticky-container>
+  <v-card class="mx-auto" :outlined="!$vuetify.breakpoint.xsOnly" :flat="$vuetify.breakpoint.xsOnly" sticky-container>
     <project-nav-bar
       :job="job"
       :project="project"
@@ -14,12 +14,12 @@
   </v-card>
 </template>
 
-<script>
-import useJobStore from '@job/composition/useJobStore'
-import useProject from '@project/composition/useProject'
+<script lang="ts">
 import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
+import useJobStore from '@/features/job/composition/useJobStore'
 import { computed, defineComponent } from '@vue/composition-api'
-import ProjectNavBar from '@project/components/nav-bars/ProjectNavBar'
+import useProject from '@/features/project/composition/useProject'
+import ProjectNavBar from '@/features/project/components/nav-bars/ProjectNavBar.vue'
 
 export default defineComponent({
   name: 'index',
@@ -27,13 +27,13 @@ export default defineComponent({
   components: { ProjectNavBar },
 
   setup(_, context) {
+    const jobStore = useJobStore()
     const project = useProject(context)
-    const jobStore = useJobStore(context)
 
     const routeName = computed(() => context.root.$route.name)
     const jobEnd = computed(() => (context.root.$route.name.indexOf('jobs-name') >= 1 ? 5 : 3))
     const end = computed(() => (context.root.$route.name === 'workspace-project-job-overiew' ? 6 : jobEnd.value))
-    const projectBreadcrumbs = useBreadcrumbs(context, { start: 0, end: end.value })
+    const projectBreadcrumbs = useBreadcrumbs({ start: 0, end: end.value })
 
     const handleShowProjectBar = () =>
       project.setMenu({ name: 'menu.isShowProjectBar', value: !project.menu.value.isShowProjectBar })

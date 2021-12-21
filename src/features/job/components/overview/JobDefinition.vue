@@ -1,14 +1,19 @@
 <template>
   <div class="AskAnna--job-definition">
-    <v-card-title>Definition</v-card-title>
+    <v-card-title :class="{ 'pb-0': $vuetify.breakpoint.xsOnly }">Definition</v-card-title>
     <v-container class="mx-1 py-0" fluid>
       <v-row>
-        <v-col cols="2" :sm="job.schedules.length ? 4 : 5">
+        <v-col
+          :cols="$vuetify.breakpoint.xsOnly ? 12 : 2"
+          :sm="job.schedules.length ? 4 : 5"
+          :class="{ 'py-0': $vuetify.breakpoint.xsOnly }"
+        >
           <v-row>
             <v-col cols="12"><JobRunInfoCopyText text="SUUID" :value="job.short_uuid" /></v-col>
             <v-col cols="12">
               <div class="code-wrapper">
-                Code:<v-btn
+                <span class="font-weight-bold">Code:</span
+                ><v-btn
                   color="primary"
                   class="pl-1 pr-0 text-body-1 text-transform--initial AskAnna-text--initial text-body-1"
                   text
@@ -37,7 +42,11 @@
             </v-col>
           </v-row>
         </v-col>
-        <v-col cols="2" :sm="job.schedules.length ? 4 : 5" v-if="job.schedules.length || nextRun.datatime">
+        <v-col
+          :cols="$vuetify.breakpoint.xsOnly ? 12 : 2"
+          :sm="job.schedules.length ? 4 : 5"
+          v-if="job.schedules.length || nextRun.datatime"
+        >
           <v-row>
             <v-col v-if="nextRun.datatime" cols="12">
               <v-tooltip top left content-class="opacity-1">
@@ -49,7 +58,7 @@
             </v-col>
             <v-col v-if="job.schedules.length" cols="12">
               <v-flex class="d-flex">
-                <span>{{ title }}:</span>
+                <span class="font-weight-bold">{{ title }}:</span>
                 <ul class="list--unformated">
                   <li class="hover-text" v-for="(item, i) in schedules" :key="i" height="20">
                     <v-tooltip top left content-class="opacity-1">
@@ -89,7 +98,11 @@
             </v-col>
           </v-row>
         </v-col>
-        <v-col cols="2" :sm="job.schedules.length ? 4 : 5">
+        <v-col
+          :class="{ 'pt-0': $vuetify.breakpoint.xsOnly }"
+          :cols="$vuetify.breakpoint.xsOnly ? 12 : 2"
+          :sm="job.schedules.length ? 4 : 5"
+        >
           <v-row>
             <v-col cols="12"
               ><notifications-email
@@ -107,73 +120,63 @@
   </div>
 </template>
 
-<script>
-import { computed, defineComponent } from '@vue/composition-api'
-
+<script setup lang="ts">
+import { computed } from '@vue/composition-api'
 import NotificationsEmail from './NotificationsEmail.vue'
-import JobRunInfoEnv from '@/features/jobrun/components/jobrun/parts/JobRunInfoEnv'
-import JobRunInfoCopyText from '@/features/jobrun/components/jobrun/parts/JobRunInfoCopyText'
+import JobRunInfoEnv from '@/features/jobrun/components/jobrun/parts/JobRunInfoEnv.vue'
+import JobRunInfoCopyText from '@/features/jobrun/components/jobrun/parts/JobRunInfoCopyText.vue'
 
-export default defineComponent({
-  name: 'JobDefinition',
-
-  components: { JobRunInfoEnv, JobRunInfoCopyText, NotificationsEmail },
-
-  props: {
-    job: {
-      type: Object,
-      default: () => {
-        return {
-          timezone: '',
-          environment: '',
-          notifications: {
-            all: { email: [] },
-            error: { email: [] }
-          }
-        }
-      }
-    },
-    schedules: {
-      type: Array,
-      default: () => {
-        return []
-      }
-    },
-
-    nextRun: {
-      type: Object,
-      default: () => {
-        return {
-          fromNow: '',
-          datatime: ''
-        }
-      }
-    },
-    lastPackage: {
-      type: Object,
-      default: () => {
-        return {
-          short_uuid: ''
+const emits = defineEmits('handleGoToCode')
+const props = defineProps({
+  job: {
+    type: Object,
+    default: () => {
+      return {
+        timezone: '',
+        environment: '',
+        notifications: {
+          all: { email: [] },
+          error: { email: [] }
         }
       }
     }
   },
+  schedules: {
+    type: Array,
+    default: () => {
+      return []
+    }
+  },
 
-  setup(props, context) {
-    const isMultipleSchedules = computed(() => props.job.schedules.length > 1)
-    const title = computed(() => (isMultipleSchedules.value ? 'Schedules' : 'Schedule'))
-    const prefix = computed(() => (props.nextRun.fromNow === 'within a minute' ? '' : 'in '))
-    const environment = computed(() => ({ name: props.job.environment, timezone: props.job.timezone }))
-
-    const nudgeLeft = computed(() => (environment.value.name.length > 30 ? 0 : 150))
-
-    const getColor = active => (active ? 'primary' : 'grey lighten-2')
-
-    const handleGoToCode = () => context.emit('handleGoToCode')
-
-    return { title, prefix, nudgeLeft, environment, getColor, isMultipleSchedules, handleGoToCode }
+  nextRun: {
+    type: Object,
+    default: () => {
+      return {
+        fromNow: '',
+        datatime: ''
+      }
+    }
+  },
+  lastPackage: {
+    type: Object,
+    default: () => {
+      return {
+        short_uuid: ''
+      }
+    }
   }
 })
+
+const isMultipleSchedules = computed(() => props.job.schedules.length > 1)
+const title = computed(() => (isMultipleSchedules.value ? 'Schedules' : 'Schedule'))
+const prefix = computed(() => (props.nextRun.fromNow === 'within a minute' ? '' : 'in '))
+const environment = computed(() => ({ name: props.job.environment, timezone: props.job.timezone }))
+
+const nudgeLeft = computed(() => (environment.value.name.length > 30 ? 0 : 150))
+
+const getColor = active => (active ? 'primary' : 'grey lighten-2')
+
+const handleGoToCode = () => emits('handleGoToCode')
 </script>
 <style scoped>
 .list--unformated {

@@ -1,6 +1,8 @@
 <template>
   <div class="d-flex align-baseline">
-    <div class="text-body-1">{{ text }}:</div>
+    <div class="text-body-1">
+      <span class="font-weight-bold">{{ text }}:</span>
+    </div>
     <v-btn
       color="primary"
       class="px-1 AskAnna-text--initial text-body-1"
@@ -15,21 +17,15 @@
     >
   </div>
 </template>
-<script>
-import { computed, defineComponent } from '@vue/composition-api'
-
-export default defineComponent({
-  name: 'JobRunInfoJob',
-
-  props: {
-    text: {
-      type: String,
-      default: ''
-    },
-    value: {
-      type: String,
-      default: ''
-    }
+<script setup lang="ts">
+defineProps({
+  text: {
+    type: String,
+    default: ''
+  },
+  value: {
+    type: String,
+    default: ''
   }
 })
 </script>

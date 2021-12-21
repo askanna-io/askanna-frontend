@@ -1,5 +1,5 @@
 <template>
-  <div class="text-right hidden-sm-and-down">
+  <div v-if="!$vuetify.breakpoint.xsOnly" class="text-right">
     <v-btn @click="handleShowHideUploadStatus" icon :color="colorStatus">
       <v-icon>{{ iconStatus }}</v-icon>
     </v-btn>

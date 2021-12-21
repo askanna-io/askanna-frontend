@@ -4,59 +4,41 @@
       <template v-slot:activator="{ on }">
         <div v-on="on">
           <div class="code-wrapper">
-            {{ title }}:
+            <span class="font-weight-bold">{{ title }}:</span>
             <template v-if="isSetNotifications">
               <notifications-email-popup :notifications="notifications" />
             </template>
             <template v-else>
-              <span class="pl-1 primary--hover">
-                No
-              </span>
+              <span class="pl-1 primary--hover"> No </span>
             </template>
           </div>
         </div>
       </template>
-      <template v-if="isSetNotifications">
-        Click to see details
-      </template>
-      <template v-else>
-        For this job, notifications are not configured
-      </template>
+      <template v-if="isSetNotifications">Click to see details </template>
+      <template v-else> For this job, notifications are not configured </template>
     </v-tooltip>
   </div>
 </template>
-<script>
-import { computed, defineComponent } from '@vue/composition-api'
-import NotificationsEmailPopup from './NotificationsEmailPopup'
+<script setup lang="ts">
+import { computed } from '@vue/composition-api'
+import NotificationsEmailPopup from './NotificationsEmailPopup.vue'
 
-export default defineComponent({
-  name: 'NotificationsEmail',
-
-  props: {
-    title: {
-      type: String,
-      default: ''
-    },
-
-    notifications: {
-      type: Object,
-      default: () => ({
-        all: { email: [] },
-        error: { email: [] }
-      })
-    }
+const props = defineProps({
+  title: {
+    type: String,
+    default: ''
   },
 
-  components: { NotificationsEmailPopup },
-
-  setup(props) {
-    const isSetNotifications = computed(() =>
-      Object.entries(props.notifications).some(([key, item]) => item.email.length)
-    )
-
-    return { isSetNotifications }
+  notifications: {
+    type: Object,
+    default: () => ({
+      all: { email: [] },
+      error: { email: [] }
+    })
   }
 })
+
+const isSetNotifications = computed(() => Object.entries(props.notifications).some(([_, item]) => item.email.length))
 </script>
 <style scoped>
 .notification {

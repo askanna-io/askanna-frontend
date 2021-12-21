@@ -6,6 +6,7 @@
     hide-default-footer
     item-key="short_uuid"
     disable-pagination
+    :mobile-breakpoint="0"
   >
     <template v-slot:top>
       <slot name="header" />
@@ -37,69 +38,53 @@
         There are no variables available for this project. In case you need a variable, you can easily create one with
         the option "+ new variable" above this table.
       </template>
-      <template v-else>
-        There are no variables available for this project.
-      </template>
+      <template v-else> There are no variables available for this project. </template>
     </template>
   </v-data-table>
 </template>
 
-<script>
+<script setup lang="ts">
+import { ref, computed } from '@vue/composition-api'
 import usePermission from '@/core/composition/usePermission'
-import AskAnnaCopy from '@/core/components/shared/AskAnnaCopy'
+import AskAnnaCopy from '@/core/components/shared/AskAnnaCopy.vue'
 
-import { ref, computed, defineComponent } from '@vue/composition-api'
-
-export default defineComponent({
-  name: 'VariableList',
-
-  props: {
-    items: {
-      type: Array,
-      default: () => []
-    }
-  },
-
-  components: { AskAnnaCopy },
-
-  setup(_, context) {
-    const permission = usePermission()
-    const projectVariableEdit = computed(() => permission.getFor(permission.labels.projectVariableEdit))
-
-    const headers = ref([
-      {
-        text: 'SUUID',
-        align: 'start',
-        sortable: false,
-        value: 'short_uuid',
-        width: '10%',
-        class: 'text-left text-subtitle-2 font-weight-bold h-20'
-      },
-      { text: 'Name', value: 'name', width: '35%', class: 'text-left text-subtitle-2 font-weight-bold h-20' },
-      {
-        text: 'Value',
-        value: 'value',
-        width: '45%',
-        sortable: true,
-        class: 'text-left text-subtitle-2 font-weight-bold h-20'
-      },
-      {
-        text: '',
-        value: 'actions',
-        width: '10%',
-        sortable: false,
-        class: 'text-left text-subtitle-2 font-weight-bold h-20'
-      }
-    ])
-
-    const handleEditItem = item => context.emit('onEditItem', item.short_uuid)
-
-    return {
-      headers,
-      projectVariableEdit,
-
-      handleEditItem
-    }
+defineProps({
+  items: {
+    type: Array,
+    default: () => []
   }
 })
+
+const emits = defineEmits('onEditItem')
+
+const permission = usePermission()
+const projectVariableEdit = computed(() => permission.getFor(permission.labels.projectVariableEdit))
+
+const headers = ref([
+  {
+    text: 'SUUID',
+    align: 'start',
+    sortable: false,
+    value: 'short_uuid',
+    width: '10%',
+    class: 'text-left text-subtitle-2 font-weight-bold h-20'
+  },
+  { text: 'Name', value: 'name', width: '35%', class: 'text-left text-subtitle-2 font-weight-bold h-20 text-no-wrap' },
+  {
+    text: 'Value',
+    value: 'value',
+    width: '45%',
+    sortable: true,
+    class: 'text-left text-subtitle-2 font-weight-bold h-20'
+  },
+  {
+    text: '',
+    value: 'actions',
+    width: '10%',
+    sortable: false,
+    class: 'text-left text-subtitle-2 font-weight-bold h-20'
+  }
+])
+
+const handleEditItem = item => emits('onEditItem', item.short_uuid)
 </script>

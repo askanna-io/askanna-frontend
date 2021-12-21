@@ -10,7 +10,7 @@
 
         <div class="mr-auto d-flex align-center"></div>
         <div>
-          <v-tooltip top content-class="opacity-1">
+          <v-tooltip v-if="!$vuetify.breakpoint.xsOnly" top content-class="opacity-1">
             <template v-slot:activator="{ on }">
               <v-btn
                 v-on="on"
@@ -65,194 +65,161 @@
           <ask-anna-loading-dots-flashing v-if="isLoadingLogs" />
         </div>
 
-        <v-alert v-else class="ma-4 text-center" dense outlined>
-          There is no log available for this run.
-        </v-alert>
+        <v-alert v-else class="ma-4 text-center" dense outlined> There is no log available for this run. </v-alert>
       </ask-anna-loading-progress>
     </v-flex>
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import { throttle } from 'lodash'
 import goTo from 'vuetify/lib/services/goto'
-import { useWindowSize } from '@u3u/vue-hooks'
 import useCopy from '@/core/composition/useCopy'
 import useQuery from '@/core/composition/useQuery'
+import { useRouter, useWindowSize } from '@u3u/vue-hooks'
 import useJobStore from '@/features/job/composition/useJobStore'
-import TheHighlight from '@/core/components/highlight/TheHighlight'
+import TheHighlight from '@/core/components/highlight/TheHighlight.vue'
 import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
-import AskAnnaChipPlayStop from '@/core/components/shared/AskAnnaChipPlayStop'
-import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress'
-import AskAnnaLoadingDotsFlashing from '@/core/components/shared/AskAnnaLoadingDotsFlashing'
-import { ref, watchEffect, computed, onBeforeMount, onUnmounted, defineComponent } from '@vue/composition-api'
+import AskAnnaChipPlayStop from '@/core/components/shared/AskAnnaChipPlayStop.vue'
+import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
+import { ref, watchEffect, computed, onBeforeMount, onUnmounted } from '@vue/composition-api'
+import AskAnnaLoadingDotsFlashing from '@/core/components/shared/AskAnnaLoadingDotsFlashing.vue'
 
-export default defineComponent({
-  name: 'JobRunLog',
+const copy = useCopy()
+const { route } = useRouter()
+const jobStore = useJobStore()
+const { height } = useWindowSize()
+const jobRunStore = useJobRunStore()
+const forceFileDownload = useForceFileDownload()
 
-  components: {
-    TheHighlight,
-    AskAnnaChipPlayStop,
-    AskAnnaLoadingProgress,
-    AskAnnaLoadingDotsFlashing
-  },
+const logRef = ref(null)
+const polling = ref(null)
+const scrollLoading = ref(false)
+const isAutoUpdateLog = ref(true)
+const isCheckStatusRuning = ref(false)
 
-  setup(_, context) {
-    const copy = useCopy(context)
-    const jobStore = useJobStore()
-    const { height } = useWindowSize()
-    const jobRunStore = useJobRunStore()
-    const forceFileDownload = useForceFileDownload()
+const jobRunStatus = computed(() => jobStore.jobrun.value.status)
+const isFinished = computed(() => jobRunStatus.value === 'failed' || jobRunStatus.value === 'finished')
 
-    const logRef = ref(null)
-    const polling = ref(null)
-    const scrollLoading = ref(false)
-    const isAutoUpdateLog = ref(true)
-    const isCheckStatusRuning = ref(false)
+const isLoadingLogs = computed(
+  () => (!isFinished.value || scrollLoading.value) && jobRunStatus.value && isAutoUpdateLog.value
+)
 
-    const jobRunStatus = computed(() => jobStore.jobrun.value.status)
-    const isFinished = computed(() => jobRunStatus.value === 'failed' || jobRunStatus.value === 'finished')
+const next = computed(() => jobRunStore.jobRunLog.value.next)
+const jobRunId = computed(() => route.value.params.jobRunId)
 
-    const isLoadingLogs = computed(
-      () => (!isFinished.value || scrollLoading.value) && jobRunStatus.value && isAutoUpdateLog.value
-    )
+const query = useQuery({
+  next,
+  limit: 100,
+  offset: 200,
+  uuid: jobRunId.value,
+  storeAction: jobRunStore.getJobRunLog
+})
 
-    const next = computed(() => jobRunStore.jobRunLog.value.next)
-    const jobRunId = computed(() => context.root.$route.params.jobRunId)
+const countLogs = computed(() => jobRunStore.jobRunLog.value.count)
+const logs = computed(() => {
+  if (!jobRunStore.jobRunLog.value.results) return ''
 
-    const query = useQuery({
-      next,
-      limit: 100,
-      offset: 200,
-      uuid: jobRunId.value,
-      storeAction: jobRunStore.getJobRunLog
-    })
-
-    const countLogs = computed(() => jobRunStore.jobRunLog.value.count)
-    const logs = computed(() => {
-      if (!jobRunStore.jobRunLog.value.results) return ''
-
-      const reducer = (acc, cr) => {
-        acc = acc + `${cr[2]} \n`
-        return acc
-      }
-      const result = jobRunStore.jobRunLog.value.results.length
-        ? jobRunStore.jobRunLog.value.results.reduce(reducer, ``)
-        : ''
-
-      return result
-    })
-
-    const fullLog = computed(() => {
-      if (!jobRunStore.jobRunLogFullVersion.value) return ''
-
-      const reducer = (acc, cr) => {
-        acc = acc + `${cr[2]} \n`
-        return acc
-      }
-      const result = jobRunStore.jobRunLogFullVersion.value.length
-        ? jobRunStore.jobRunLogFullVersion.value.reduce(reducer, ``)
-        : ''
-
-      return result
-    })
-
-    const maxHeight = computed(() => height.value - 270)
-    const loading = computed(() => jobRunStore.jobRunlogLoading.value)
-    const scrollerStyles = computed(() => ({ 'max-height': `${maxHeight.value}px` }))
-    const logNoAvailable = computed(() => !jobRunStore.jobRunLog.value.results.length && !loading.value)
-
-    const handleAutoUpdate = () => {
-      scrollLoading.value = true
-      isAutoUpdateLog.value = !isAutoUpdateLog.value
-    }
-
-    const handleCopy = async () => {
-      await getFullJobRun()
-      copy.handleCopyText(fullLog.value)
-    }
-
-    const handleDownload = async () => {
-      await getFullJobRun()
-
-      forceFileDownload.trigger({ source: fullLog.value, name: `run_${jobRunStore.jobRun.value.short_uuid}_log.txt` })
-    }
-
-    const onScroll = e => {
-      if (!isFinished.value) return
-      scrollLoading.value = true
-      query.onScroll(e.target.scrollTop)
-    }
-
-    const getFullJobRun = async () => {
-      if (fullLog.value && isFinished.value) return
-      await jobRunStore.getFullVersionJobRunLog(jobRunId.value)
-    }
-
-    const checkLogs = () => {
-      polling.value = setInterval(async () => {
-        if (!isAutoUpdateLog.value) return
-        // scroll window and log container to bottom
-        await jobRunStore.getJobRunLog({
-          uuid: jobRunId.value,
-          params: { limit: 1000, offset: jobRunStore.jobRunLog.value.results.length }
-        })
-        goTo(logRef.value.$el.scrollHeight)
-        goTo(logRef.value.$el.scrollHeight, { container: '#scroll-target' })
-
-        if (logNoAvailable.value || isFinished.value) {
-          clearInterval(polling.value)
-        }
-      }, 5000)
-    }
-
-    const fetchData = async () => {
-      await jobRunStore.resetJobRunLog()
-      await jobRunStore.getInitJobRunLog({ uuid: jobRunId.value, params: { limit: 200, offset: 0 } })
-    }
-
-    onBeforeMount(() => fetchData())
-
-    watchEffect(() => {
-      // check status, eneable auto-update logs
-      if (!isCheckStatusRuning.value && jobRunStatus.value && !isFinished.value) {
-        checkLogs()
-        isCheckStatusRuning.value = true
-      }
-
-      // disable load animation logic
-      if (isFinished.value && countLogs.value === jobRunStore.jobRunLog.value.results.length) {
-        scrollLoading.value = false
-
-        return
-      }
-    })
-
-    onUnmounted(() => {
-      clearInterval(polling.value)
-      isCheckStatusRuning.value = false
-    })
-
-    return {
-      logs,
-      logRef,
-      loading,
-      throttle,
-      onScroll,
-      isFinished,
-      jobRunStatus,
-      isLoadingLogs,
-      scrollLoading,
-      logNoAvailable,
-      scrollerStyles,
-      isAutoUpdateLog,
-
-      handleCopy,
-      handleDownload,
-      handleAutoUpdate
-    }
+  const reducer = (acc, cr) => {
+    acc = acc + `${cr[2]} \n`
+    return acc
   }
+  const result = jobRunStore.jobRunLog.value.results.length
+    ? jobRunStore.jobRunLog.value.results.reduce(reducer, ``)
+    : ''
+
+  return result
+})
+
+const fullLog = computed(() => {
+  if (!jobRunStore.jobRunLogFullVersion.value) return ''
+
+  const reducer = (acc, cr) => {
+    acc = acc + `${cr[2]} \n`
+    return acc
+  }
+  const result = jobRunStore.jobRunLogFullVersion.value.length
+    ? jobRunStore.jobRunLogFullVersion.value.reduce(reducer, ``)
+    : ''
+
+  return result
+})
+
+const maxHeight = computed(() => height.value - 270)
+const loading = computed(() => jobRunStore.jobRunlogLoading.value)
+const scrollerStyles = computed(() => ({ 'max-height': `${maxHeight.value}px` }))
+const logNoAvailable = computed(() => !jobRunStore.jobRunLog.value.results.length && !loading.value)
+
+const handleAutoUpdate = () => {
+  scrollLoading.value = true
+  isAutoUpdateLog.value = !isAutoUpdateLog.value
+}
+
+const handleCopy = async () => {
+  await getFullJobRun()
+  copy.handleCopyText(fullLog.value)
+}
+
+const handleDownload = async () => {
+  await getFullJobRun()
+
+  forceFileDownload.trigger({ source: fullLog.value, name: `run_${jobRunStore.jobRun.value.short_uuid}_log.txt` })
+}
+
+const onScroll = e => {
+  if (!isFinished.value) return
+  scrollLoading.value = true
+  query.onScroll(e.target.scrollTop)
+}
+
+const getFullJobRun = async () => {
+  if (fullLog.value && isFinished.value) return
+  await jobRunStore.getFullVersionJobRunLog(jobRunId.value)
+}
+
+const checkLogs = () => {
+  polling.value = setInterval(async () => {
+    if (!isAutoUpdateLog.value) return
+    // scroll window and log container to bottom
+    await jobRunStore.getJobRunLog({
+      uuid: jobRunId.value,
+      params: { limit: 1000, offset: jobRunStore.jobRunLog.value.results.length }
+    })
+    goTo(logRef.value.$el.scrollHeight)
+    goTo(logRef.value.$el.scrollHeight, { container: '#scroll-target' })
+
+    if (logNoAvailable.value || isFinished.value) {
+      clearInterval(polling.value)
+    }
+  }, 5000)
+}
+
+const fetchData = async () => {
+  await jobRunStore.resetJobRunLog()
+  await jobRunStore.getInitJobRunLog({ uuid: jobRunId.value, params: { limit: 200, offset: 0 } })
+}
+
+onBeforeMount(() => fetchData())
+
+watchEffect(() => {
+  // check status, eneable auto-update logs
+  if (!isCheckStatusRuning.value && jobRunStatus.value && !isFinished.value) {
+    checkLogs()
+    isCheckStatusRuning.value = true
+  }
+
+  // disable load animation logic
+  if (isFinished.value && countLogs.value === jobRunStore.jobRunLog.value.results.length) {
+    scrollLoading.value = false
+
+    return
+  }
+})
+
+onUnmounted(() => {
+  clearInterval(polling.value)
+  isCheckStatusRuning.value = false
 })
 </script>
 <style scoped lang="scss">

@@ -1,7 +1,9 @@
-import { computed, SetupContext } from '@vue/composition-api'
+import { useRouter } from '@u3u/vue-hooks'
+import { computed } from '@vue/composition-api'
 import useGeneralStore from '@/core/store/general/useGeneralStore'
 
-export default function (context: SetupContext, { start = 0, end = undefined }) {
+export default function ({ start = 0, end = undefined }) {
+  const { route: crcRoute } = useRouter()
   const generalStore = useGeneralStore()
 
   const getBreadcrumbs = computed(() => {
@@ -9,16 +11,16 @@ export default function (context: SetupContext, { start = 0, end = undefined }) 
 
     let isReachCurrent = false
 
-    breadcrumbs = context.root.$route.matched
+    breadcrumbs = crcRoute.value.matched
       .filter(route => route.meta.breadcrumb)
       .slice(start, end)
       .map(route => {
         if (isReachCurrent) return
-        isReachCurrent = context.root.$route.name === route.name
+        isReachCurrent = crcRoute.value.name === route.name
 
         let path = route.path
         let title = route.meta.breadcrumb
-        Object.entries(context.root.$route.params).forEach(([key, value]) => {
+        Object.entries(crcRoute.value.params).forEach(([key, value]) => {
           path = path.replace(`:${key}`, value)
           //@ts-expect-error: Let's ignore a single compiler error
           const name = generalStore.breadcrumbParams.value[key]

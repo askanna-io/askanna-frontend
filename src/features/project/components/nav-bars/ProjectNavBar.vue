@@ -1,10 +1,10 @@
-<script>
-import JobNavBar from './JobNavBar'
-import DefaultBar from './DefaultBar'
-import JobRunNavBar from './JobRunNavBar'
-import JobNavBarNotExist from './JobNavBarNotExist'
-import PackageBarNotExist from './PackageBarNotExist'
-import JobRunNavBarNotExist from './JobRunNavBarNotExist'
+<script lang="ts">
+import JobNavBar from './JobNavBar.vue'
+import DefaultBar from './DefaultBar.vue'
+import JobRunNavBar from './JobRunNavBar.vue'
+import JobNavBarNotExist from './JobNavBarNotExist.vue'
+import PackageBarNotExist from './PackageBarNotExist.vue'
+import JobRunNavBarNotExist from './JobRunNavBarNotExist.vue'
 import { defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
@@ -35,7 +35,7 @@ export default defineComponent({
           return JobNavBarNotExist
 
         case route.indexOf('job-uuid') !== -1:
-          return JobNabBar
+          return JobNavBar
 
         case route.indexOf('workspace-project-jobs-job-jobrun') !== -1:
           return JobRunNavBar
