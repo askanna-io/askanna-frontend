@@ -1,10 +1,10 @@
 <template>
-  <div :class="{ 'pb-5': projectJobEdit }">
+  <div :class="{ 'pt-4': projectJobEdit }">
     <ask-anna-loading-progress v-if="projectJobEdit" :type="'table-row'" :loading="loading" fullWidth>
       <v-card flat>
-        <v-container class="ma-0 ml-1 pt-0" fluid>
+        <v-container class="ma-0 pt-0" fluid>
           <v-row>
-            <v-col cols="5">
+            <v-col cols="12" sm="5">
               <v-text-field
                 dense
                 autofocus
@@ -44,9 +44,7 @@
                 >
                   Save my changes
                 </v-btn>
-                <v-btn @click="handleClose" small outlined text color="secondary" class="btn--hover">
-                  Cancel
-                </v-btn>
+                <v-btn @click="handleClose" small outlined text color="secondary" class="btn--hover"> Cancel </v-btn>
               </v-card-actions>
             </v-col>
           </v-row>
@@ -67,13 +65,13 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { set } from 'lodash'
-import useJobStore from '@job/composition/useJobStore'
+import useJobStore from '@/features/job/composition/useJobStore'
 import usePermission from '@/core/composition/usePermission'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
 import useValidationRules from '@/core/composition/useValidationRules'
-import ConfirmChangeJobNamePopup from '@/features/job/components/popup/ConfirmChangeJobNamePopup'
+import ConfirmChangeJobNamePopup from '@/features/job/components/popup/ConfirmChangeJobNamePopup.vue'
 
 import { ref, watch, computed, onBeforeMount, defineComponent } from '@vue/composition-api'
 

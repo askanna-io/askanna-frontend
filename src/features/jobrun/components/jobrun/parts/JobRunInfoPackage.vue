@@ -1,6 +1,7 @@
 <template>
   <div>
-    {{ text }}:<v-btn
+    <span class="font-weight-bold">{{ text }}:</span
+    ><v-btn
       color="primary"
       class="pl-1 pr-0 text-body-1 text-transform--initial AskAnna-text--initial text-body-1"
       text
@@ -20,21 +21,15 @@
     />
   </div>
 </template>
-<script>
-import { defineComponent } from '@vue/composition-api'
-
-export default defineComponent({
-  name: 'JobRunInfoPackage',
-
-  props: {
-    text: {
-      type: String,
-      default: ''
-    },
-    value: {
-      type: String,
-      default: ''
-    }
+<script setup lang="ts">
+defineProps({
+  text: {
+    type: String,
+    default: ''
+  },
+  value: {
+    type: String,
+    default: ''
   }
 })
 </script>

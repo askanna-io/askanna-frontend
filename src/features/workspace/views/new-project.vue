@@ -1,17 +1,17 @@
 <template>
-  <v-card class="mx-auto" outlined>
-    <v-breadcrumbs :items="breadcrumbs">
-      <template v-slot:item="{ item }">
-        <v-breadcrumbs-item :to="item.to" exact>
-          {{ item.title }}
-        </v-breadcrumbs-item>
-      </template>
-    </v-breadcrumbs>
-    <v-divider />
+  <v-card class="mx-auto" flat :outlined="!$vuetify.breakpoint.xsOnly">
+    <div class="askAnna-breadcrumbs">
+      <v-breadcrumbs :items="breadcrumbs" class="pa-0 pl-3" :class="{ 'pa-4 pl-4': !$vuetify.breakpoint.xsOnly }">
+        <template v-slot:item="{ item }">
+          <v-breadcrumbs-item :to="item.to" exact>
+            {{ item.title }}
+          </v-breadcrumbs-item>
+        </template>
+      </v-breadcrumbs>
+    </div>
+    <v-divider class="mt-1" />
     <v-card-title>
-      <v-icon large left>
-        mdi-semantic-web
-      </v-icon>
+      <v-icon large left> mdi-semantic-web </v-icon>
       <span class="title font-weight-light">Create a new project</span>
     </v-card-title>
 
@@ -41,12 +41,11 @@
   </v-card>
 </template>
 
-<script>
-import Project from '@/features/project/components/Project'
+<script lang="ts">
 import usePermission from '@/core/composition/usePermission'
+import Project from '@/features/project/components/Project.vue'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import AskAnnaCopyText from '@/core/components/shared/AskAnnaCopyText'
-
+import AskAnnaCopyText from '@/core/components/shared/AskAnnaCopyText.vue'
 import useProjectStore from '@/features/project/composition/useProjectStore'
 import { computed, onBeforeMount, defineComponent } from '@vue/composition-api'
 import useWorkSpaceStore from '@/features/workspace/composition/useWorkSpaceStore'

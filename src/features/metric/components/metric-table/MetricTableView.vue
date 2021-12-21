@@ -1,5 +1,13 @@
 <template>
-  <v-data-table fixed-header :height="height" class="pt-2" disable-pagination hide-default-footer :items="metricData">
+  <v-data-table
+    class="pt-2"
+    fixed-header
+    :height="height"
+    disable-pagination
+    hide-default-footer
+    :items="metricData"
+    :mobile-breakpoint="-1"
+  >
     <template v-slot:header>
       <thead v-if="metricData.length || isSorted">
         <tr>
@@ -60,13 +68,13 @@
     </template>
   </v-data-table>
 </template>
-<script>
-import MetricValue from './parts/MetricValue'
-import LableFilter from './parts/LableFilter'
-import MetricTableLabelTd from './parts/MetricTableLabelTd'
-import SortFilterByMetricName from './parts/sort-filter/SortFilterByMetricName'
-import SortFilterByMetricValue from './parts/sort-filter/SortFilterByMetricValue'
-import SortFilterByMetricLabel from './parts/sort-filter/SortFilterByMetricLabel'
+<script lang="ts">
+import MetricValue from './parts/MetricValue.vue'
+import LableFilter from './parts/LableFilter.vue'
+import MetricTableLabelTd from './parts/MetricTableLabelTd.vue'
+import SortFilterByMetricName from './parts/sort-filter/SortFilterByMetricName.vue'
+import SortFilterByMetricValue from './parts/sort-filter/SortFilterByMetricValue.vue'
+import SortFilterByMetricLabel from './parts/sort-filter/SortFilterByMetricLabel.vue'
 
 import useSortFilterTable from './parts/sort-filter/useSortFilterTable'
 import { ref, watch, defineComponent, computed } from '@vue/composition-api'

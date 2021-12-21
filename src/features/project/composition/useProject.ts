@@ -1,15 +1,17 @@
+import { useRouter } from '@u3u/vue-hooks'
 import useProjectStore from './useProjectStore'
-import { computed, SetupContext, onBeforeMount, onUnmounted, watch } from '@vue/composition-api'
+import { computed, onBeforeMount, onUnmounted, watch } from '@vue/composition-api'
 
-export default function (context: SetupContext) {
+export default function () {
+  const { route } = useRouter()
   const projectStore: any = useProjectStore()
 
-  const projectIdCd = computed(() => context.root.$route.params.projectId)
+  const projectIdCd = computed(() => route.value.params.projectId)
 
   const fetchData = async () => {
     projectStore.resetProjectData()
 
-    const { projectId } = context.root.$route.params
+    const { projectId } = route.value.params
 
     await projectStore.getProjectMe(projectId)
     await projectStore.getProject(projectId)

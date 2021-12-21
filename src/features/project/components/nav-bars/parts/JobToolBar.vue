@@ -1,7 +1,10 @@
 <template>
-  <v-card-title>
-    <span v-if="showTitle" class="title font-weight-light">Job: {{ jobName }}</span>
-    <v-tabs v-model="currentTab" left align-with-title>
+  <v-flex>
+    <v-card-title v-if="showTitle">
+      <span class="title font-weight-light">Job: {{ jobName }}</span>
+    </v-card-title>
+
+    <v-tabs v-model="currentTab" show-arrows :align-with-title="!$vuetify.breakpoint.xsOnly">
       <v-tabs-slider color="primary" />
       <template v-for="tab of tabs">
         <v-tab
@@ -14,7 +17,7 @@
         </v-tab>
       </template>
     </v-tabs>
-  </v-card-title>
+  </v-flex>
 </template>
 <script lang="ts">
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'

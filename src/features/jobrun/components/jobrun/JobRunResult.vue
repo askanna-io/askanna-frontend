@@ -2,9 +2,13 @@
   <div>
     <v-toolbar v-if="!loading && !isJobRunResultEmpty" dense flat color="grey lighten-4">
       <v-flex class="d-flex">
+        <div class="cut-text d-flex align-center">
+          {{ jobRun.result.original_name }}
+        </div>
         <div class="mr-auto d-flex align-center"></div>
         <div>
           <v-btn
+            v-if="!$vuetify.breakpoint.xsOnly"
             small
             :disabled="loading || isJobRunResultEmpty"
             outlined
@@ -70,7 +74,11 @@
             "
             class="my-2 mb-2 text-center"
           >
+            <p v-if="$vuetify.breakpoint.xsOnly" class="px-2">
+              ...this is a preview of the file. To download the file, open this page on a laptop or desktop.
+            </p>
             <v-btn
+              v-if="!$vuetify.breakpoint.xsOnly"
               text
               small
               outlined
@@ -79,11 +87,16 @@
               @click="handleDownload"
               :disabled="loading || isJobRunResultEmpty"
             >
-              <v-icon color="secondary" left>mdi-download</v-icon> ...to show the full result, please download the file
+              <v-icon color="secondary" left>mdi-download</v-icon>
+              ...to show the full result, please download the file
             </v-btn>
           </v-flex>
           <v-flex v-if="!isJobRunResultEmpty && !isShowPreview" class="my-2 mb-2 text-center">
+            <p v-if="$vuetify.breakpoint.xsOnly" class="px-2">
+              We cannot show a preview of this file. To download the file, open this page on a laptop or desktop.
+            </p>
             <v-btn
+              v-if="!$vuetify.breakpoint.xsOnly"
               text
               small
               outlined
@@ -92,8 +105,8 @@
               @click="handleDownload"
               :disabled="loading || isJobRunResultEmpty"
             >
-              <v-icon color="secondary" left>mdi-download</v-icon>We cannot show a preview of this file. Please download
-              the file.
+              <v-icon color="secondary" left>mdi-download</v-icon>
+              We cannot show a preview of this file. Please download the file.
             </v-btn>
           </v-flex>
 
@@ -105,145 +118,121 @@
     </v-flex>
   </div>
 </template>
-<script>
+<script setup lang="ts">
 import { useWindowSize } from '@u3u/vue-hooks'
 import { JobRunModel } from '../../store/types'
 import useCopy from '@/core/composition/useCopy'
 import usePrettyJSON from '@/core/composition/usePrettyJSON'
 import useJobRunStore from '../../composition/useJobRunStore'
-import JobRunResultPreview from './result/JobRunResultPreview'
+import JobRunResultPreview from './result/JobRunResultPreview.vue'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import TheHighlight from '@/core/components/highlight/TheHighlight'
+import { ref, computed, onBeforeMount } from '@vue/composition-api'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
-import { ref, computed, defineComponent, onBeforeMount } from '@vue/composition-api'
-import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress'
+import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 
-export default defineComponent({
-  name: 'JobRunResult',
-
-  props: {
-    jobRun: {
-      type: Object,
-      default: new JobRunModel().state
-    }
-  },
-
-  components: { TheHighlight, JobRunResultPreview, AskAnnaLoadingProgress },
-
-  setup(_, context) {
-    const copy = useCopy()
-    const { height } = useWindowSize()
-    const prettyJSON = usePrettyJSON()
-    const jobRunStore = useJobRunStore()
-    const router = useRouterAskAnna()
-    const forceFileDownload = useForceFileDownload()
-
-    const views = [
-      { name: 'Pretty', value: 'pretty' },
-      { name: 'Raw', value: 'raw' }
-    ]
-    const { view, jobRunId } = context.root.$route.params
-
-    const currentView = ref(views[0])
-    const scrolllWrapperRef = ref(null)
-
-    const viewModel = computed({
-      get: () => currentView.value,
-      set: view => {
-        if (view.value === currentView.value.value) return
-        currentView.value = view
-        router.push({ name: 'workspace-project-jobs-job-jobrun-result', params: { view: view.value } })
-      }
-    })
-
-    const loading = computed(() => jobRunStore.resultLoading.value)
-    const isResultJSON = computed(() => jobRunStore.isResultJSON.value)
-    const isResultHTML = computed(() => jobRunStore.isResultHTML.value)
-
-    const isShowPreview = computed(() => jobRunStore.isShowPreview.value)
-    const jobRunResultRaw = computed(() => jobRunStore.jobRunResult.value)
-    const jobRunResultExt = computed(() => jobRunStore.jobRunResultExt.value)
-
-    const isJobRunResultBig = computed(() => jobRunStore.isJobRunResultBig.value)
-    const isResultBigForRawView = computed(() => jobRunStore.isResultBigForRawView.value)
-    const isJobRunResultEmpty = computed(() => !jobRunResultPreview.value && !loading.value)
-
-    const jobRunResultPreview = computed(() =>
-      jobRunResultExt.value === 'json'
-        ? prettyJSON(jobRunStore.jobRunResultPreview.value, 2)
-        : jobRunStore.jobRunResultPreview.value
-    )
-
-    const isValidJSON = computed(() => jobRunResultPreview.value.isValidJSON)
-
-    const jobRunResultFormated = computed(() => jobRunResultPreview.value.prettyJson)
-    const jobRunResultForView = computed(() => {
-      if (!isResultJSON.value) return jobRunStore.jobRunResultPreview.value
-
-      return currentView.value.value === 'raw' ? jobRunStore.jobRunResultPreview.value : jobRunResultFormated.value
-    })
-
-    const jobRunResultSource = computed(() =>
-      currentView.value.value === 'raw' ? jobRunResultRaw.value : prettyJSON(jobRunResultRaw.value, 2).prettyJson
-    )
-
-    const fetchData = async () => {
-      if (view) {
-        currentView.value = views.find(el => el.value === view) || views[0]
-      }
-      await jobRunStore.getJobRunResultPreview(jobRunId)
-    }
-
-    const maxHeight = computed(() => height.value - 120)
-
-    const scrollerStyles = computed(() => {
-      return { 'max-height': `${maxHeight.value}px` }
-    })
-
-    const handleDownload = async () => {
-      // download full version of result without formating
-      await jobRunStore.getJobRunResult(jobRunId)
-
-      forceFileDownload.trigger({
-        source: jobRunResultRaw.value,
-        name: `run_${jobRunStore.jobRun.value.short_uuid}_result_${jobRunStore.jobRun.value.result.original_name}`
-      })
-    }
-
-    const handleCopy = async () => {
-      await jobRunStore.getJobRunResult(jobRunId)
-
-      copy.handleCopyText(jobRunResultSource.value)
-    }
-
-    onBeforeMount(() => fetchData())
-
-    // change view of cutted html to raw
-    if (isShowPreview.value && isResultHTML.value && isJobRunResultBig.value) {
-      currentView.value = views[1]
-    }
-
-    return {
-      views,
-      loading,
-      viewModel,
-      maxHeight,
-      isValidJSON,
-      currentView,
-      isResultJSON,
-      isResultHTML,
-      isShowPreview,
-      scrollerStyles,
-      jobRunResultExt,
-      scrolllWrapperRef,
-      isJobRunResultBig,
-      isJobRunResultEmpty,
-      jobRunResultForView,
-      isResultBigForRawView,
-
-      handleCopy,
-      handleDownload
-    }
+defineProps({
+  jobRun: {
+    type: Object,
+    default: new JobRunModel().state
   }
 })
+
+const copy = useCopy()
+const { height } = useWindowSize()
+const prettyJSON = usePrettyJSON()
+const jobRunStore = useJobRunStore()
+const router = useRouterAskAnna()
+const forceFileDownload = useForceFileDownload()
+
+const views = [
+  { name: 'Pretty', value: 'pretty' },
+  { name: 'Raw', value: 'raw' }
+]
+const { view, jobRunId } = router.route.value.params
+
+const currentView = ref(views[0])
+const scrolllWrapperRef = ref(null)
+
+const viewModel = computed({
+  get: () => currentView.value,
+  set: view => {
+    if (view.value === currentView.value.value) return
+    currentView.value = view
+    router.push({ name: 'workspace-project-jobs-job-jobrun-result', params: { view: view.value } })
+  }
+})
+
+const loading = computed(() => jobRunStore.resultLoading.value)
+const isResultJSON = computed(() => jobRunStore.isResultJSON.value)
+const isResultHTML = computed(() => jobRunStore.isResultHTML.value)
+
+const isShowPreview = computed(() => jobRunStore.isShowPreview.value)
+const jobRunResultRaw = computed(() => jobRunStore.jobRunResult.value)
+const jobRunResultExt = computed(() => jobRunStore.jobRunResultExt.value)
+
+const runResultPreview = computed(() =>
+  jobRunResultExt.value === 'json'
+    ? prettyJSON(jobRunStore.jobRunResultPreview.value, 2)
+    : jobRunStore.jobRunResultPreview.value
+)
+
+const isJobRunResultBig = computed(() => jobRunStore.isJobRunResultBig.value)
+const isResultBigForRawView = computed(() => jobRunStore.isResultBigForRawView.value)
+const isJobRunResultEmpty = computed(() => !runResultPreview.value && !loading.value)
+
+const isValidJSON = computed(() => runResultPreview.value.isValidJSON)
+
+const jobRunResultFormated = computed(() => runResultPreview.value.prettyJson)
+const jobRunResultForView = computed(() => {
+  if (!isResultJSON.value) return jobRunStore.jobRunResultPreview.value
+
+  return currentView.value.value === 'raw' ? jobRunStore.jobRunResultPreview.value : jobRunResultFormated.value
+})
+
+const jobRunResultSource = computed(() =>
+  currentView.value.value === 'raw' ? jobRunResultRaw.value : prettyJSON(jobRunResultRaw.value, 2).prettyJson
+)
+
+const fetchData = async () => {
+  if (view) {
+    currentView.value = views.find(el => el.value === view) || views[0]
+  }
+  await jobRunStore.getJobRunResultPreview(jobRunId)
+}
+
+const maxHeight = computed(() => height.value - 120)
+
+const scrollerStyles = computed(() => {
+  return { 'max-height': `${maxHeight.value}px` }
+})
+
+const handleDownload = async () => {
+  // download full version of result without formating
+  await jobRunStore.getJobRunResult(jobRunId)
+
+  forceFileDownload.trigger({
+    source: jobRunResultRaw.value,
+    name: `run_${jobRunStore.jobRun.value.short_uuid}_result_${jobRunStore.jobRun.value.result.original_name}`
+  })
+}
+
+const handleCopy = async () => {
+  await jobRunStore.getJobRunResult(jobRunId)
+
+  copy.handleCopyText(jobRunResultSource.value)
+}
+
+onBeforeMount(() => fetchData())
+
+// change view of cutted html to raw
+if (isShowPreview.value && isResultHTML.value && isJobRunResultBig.value) {
+  currentView.value = views[1]
+}
 </script>
+<style scoped>
+.cut-text {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+</style>

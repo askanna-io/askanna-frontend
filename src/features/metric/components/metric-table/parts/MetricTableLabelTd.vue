@@ -3,50 +3,39 @@
     <metric-value :metricRow="labelValue" :isLabels="isLabels" :isLabel="isLabel" />
   </td>
 </template>
-<script>
-import MetricValue from './MetricValue'
+<script setup lang="ts">
+import MetricValue from './MetricValue.vue'
+import { computed } from '@vue/composition-api'
 
-import { defineComponent, computed } from '@vue/composition-api'
-
-export default defineComponent({
-  name: 'MetricTableLabelTd',
-
-  props: {
-    isLabel: {
-      type: Boolean,
-      default: () => false
-    },
-    labels: Array,
-    label: String,
-    isLabels: Boolean
+const props = defineProps({
+  isLabel: {
+    type: Boolean,
+    default: () => false
   },
+  labels: Array,
+  label: String,
+  isLabels: Boolean
+})
 
-  components: { MetricValue },
+const types = {
+  tag: {},
+  date: { minWidth: '160px' },
+  time: { minWidth: '110px' },
+  float: {},
+  string: { minWidth: '190px' },
+  boolean: { minWidth: '95px' },
+  integer: {},
+  datetime: { minWidth: '240px' },
+  dictionary: { minWidth: '190px' }
+}
 
-  setup(props, context) {
-    const types = {
-      tag: {},
-      date: { minWidth: '160px' },
-      time: { minWidth: '110px' },
-      float: {},
-      string: { minWidth: '190px' },
-      boolean: { minWidth: '95px' },
-      integer: {},
-      datetime: { minWidth: '240px' },
-      dictionary: { minWidth: '190px' }
-    }
+const labelValue = computed(() => {
+  const value = props.labels.find(item => item.name === props.label)
 
-    const labelValue = computed(() => {
-      const value = props.labels.find(item => item.name === props.label)
+  return { ...value }
+})
 
-      return { ...value }
-    })
-
-    const labelStyles = computed(() => {
-      return types[labelValue.value.type]
-    })
-
-    return { labelValue, labelStyles }
-  }
+const labelStyles = computed(() => {
+  return types[labelValue.value.type]
 })
 </script>

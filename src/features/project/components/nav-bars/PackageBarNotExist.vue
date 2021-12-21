@@ -20,19 +20,24 @@
       </v-card>
     </div>
 
-    <v-breadcrumbs v-if="!sticked" :items="projectBreadcrumbs">
-      <template v-slot:item="{ item }">
-        <v-breadcrumbs-item :to="item.to" :exact="item.exact">
-          {{ item.title }}
-        </v-breadcrumbs-item>
-      </template>
-    </v-breadcrumbs>
+    <div class="askAnna-breadcrumbs" :class="{ 'mb-2': $vuetify.breakpoint.xsOnly }">
+      <v-breadcrumbs
+        v-if="!sticked"
+        :items="projectBreadcrumbs"
+        :class="{ 'py-0 mt-0 pl-3': $vuetify.breakpoint.xsOnly }"
+      >
+        <template v-slot:item="{ item }">
+          <v-breadcrumbs-item :to="item.to" :exact="item.exact">
+            {{ item.title }}
+          </v-breadcrumbs-item>
+        </template>
+      </v-breadcrumbs>
+    </div>
+
     <v-divider />
 
     <v-card-title>
-      <v-icon large left>
-        mdi-semantic-web
-      </v-icon>
+      <v-icon large left> mdi-semantic-web </v-icon>
       <span class="title font-weight-light">{{ project.name }}</span>
     </v-card-title>
 
@@ -52,10 +57,10 @@
     </v-card>
   </div>
 </template>
-<script>
-import ProjectMenu from './parts/ProjectMenu'
+<script lang="ts">
+import ProjectMenu from './parts/ProjectMenu.vue'
 import { ref, defineComponent } from '@vue/composition-api'
-import ProjectMenuPopup from '@/features/project/components/ProjectMenuPopup'
+import ProjectMenuPopup from '@/features/project/components/ProjectMenuPopup.vue'
 
 export default defineComponent({
   name: 'PackageBarNotExist',

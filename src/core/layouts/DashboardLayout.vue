@@ -1,44 +1,24 @@
 <template>
   <v-app>
-    <v-app-bar app clipped-left dark color="primary" dense>
-      <v-app-bar-nav-icon v-if="false" @click.stop="mobileMenu = !mobileMenu" class="hidden-sm-and-up" />
-      <v-app-bar-nav-icon v-if="showAppBarIcon" @click.stop="handleChangeSticked" />
+    <v-app-bar app clipped-left dark color="primary" :dense="!$vuetify.breakpoint.xsOnly">
+      <template v-if="!$vuetify.breakpoint.xsOnly">
+        <v-app-bar-nav-icon v-if="showAppBarIcon" @click.stop="handleChangeSticked" />
+      </template>
+
       <div v-else class="pl-9" />
+
       <v-container fluid class="pl-1">
         <div
-          class="d-flex justify-space-between justify-sm-center align-center justify-md-space-between"
-          justify="space-between"
+          class="d-flex align-center"
           align="center"
+          :class="{
+            'justify-center': $vuetify.breakpoint.xsOnly,
+            'justify-space-between': !$vuetify.breakpoint.xsOnly
+          }"
           no-gutters
         >
-          <v-navigation-drawer v-model="mobileMenu" app absolute temporary>
-            <v-list-item>
-              <v-list-item-avatar>
-                <v-img src="/content/avatars/andrii.gif" />
-              </v-list-item-avatar>
-
-              <v-list-item-content>
-                <v-list-item-title>Adnrii Shapovalov</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-
-            <v-divider />
-            <v-btn small exact exact-path dark class="white--text" text :to="{ path: '/projects/' }"> Projects </v-btn>
-            <v-list dense>
-              <v-list-item v-for="item in items" :key="item.title" link :to="{ name: item.name }">
-                <v-list-item-icon>
-                  <v-icon>{{ item.icon }}</v-icon>
-                </v-list-item-icon>
-
-                <v-list-item-content>
-                  <v-list-item-title>{{ item.title }}</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
-          </v-navigation-drawer>
-
-          <div md="auto" sm="12" text-sm-center>
-            <v-btn class="pa-0" :to="{ name: 'workspace', params: { ...$route.params } }" text color="transparent">
+          <div md="auto" sm="12" text-sm-left>
+            <v-btn class="pa-0 mt-1" :to="{ name: 'workspace', params: { ...$route.params } }" text color="transparent">
               <img alt="AskAnna logo" src="@/assets/logo.svg" class="logo" />
             </v-btn>
           </div>
@@ -46,10 +26,15 @@
           <AskAnnaUserMenu />
         </div>
       </v-container>
+      <template v-if="$vuetify.breakpoint.xsOnly">
+        <v-app-bar-nav-icon @click.stop="handleOpenMenu" />
+      </template>
     </v-app-bar>
 
-    <v-main>
-      <v-container class="a-content">
+    <v-main class="scrollbar">
+      <v-container class="a-content" :class="{ 'px-0 mx-0 pt-1': $vuetify.breakpoint.xsOnly }">
+        <MobileMainMenu v-if="mobileMenu" @onClose="handleOnCloseMobileMenu" />
+
         <router-view />
       </v-container>
       <the-snack-bar />
@@ -62,6 +47,7 @@
 <script setup lang="ts">
 import AskAnnaMainMenu from './parts/AskAnnaMainMenu.vue'
 import AskAnnaUserMenu from './parts/AskAnnaUserMenu.vue'
+import MobileMainMenu from './parts/mobile/MobileMainMenu.vue'
 import UpdateApp from '@/core/components/shared/updateApp/UpdateApp.vue'
 import TheUploadStatus from '@/core/components/uploadStatus/TheUploadStatus.vue'
 
@@ -77,7 +63,6 @@ import { ref, computed, onBeforeMount, onUpdated } from '@vue/composition-api'
 
 const mobileMenu = ref(false)
 const token = window.localStorage.getItem('token')
-const items = ref([{ title: 'Workspace', name: 'workspace', icon: 'mdi-view-dashboard' }])
 
 useTitle()
 const userStore = useUserStore()
@@ -101,6 +86,8 @@ const fetchData = async () => {
   await workspacesStore.getAllWorkspaces()
   await workspacesStore.getMemberWorkspaces()
 }
+const handleOnCloseMobileMenu = () => (mobileMenu.value = false)
+const handleOpenMenu = () => (mobileMenu.value = !mobileMenu.value)
 
 onBeforeMount(() => fetchData())
 

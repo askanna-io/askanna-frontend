@@ -1,18 +1,19 @@
 <template>
   <v-data-table
-    show-expand
     fixed-header
-    :hide-default-footer="!jobList.length"
     single-expand
-    item-key="short_uuid"
-    class="job-table scrollbar ask-anna-table ask-anna-table--with-links"
     :items="jobList"
+    item-key="short_uuid"
+    :mobile-breakpoint="0"
     :expanded.sync="expanded"
-    :headers="JobsListHeaders"
+    :hide-default-footer="!jobList.length"
+    :show-expand="!$vuetify.breakpoint.xsOnly"
+    :headers="getHeaders($vuetify.breakpoint.xsOnly)"
+    class="job-table scrollbar ask-anna-table ask-anna-table--with-links jobs"
     @item-expanded="handleExpand"
     @click:row="handleJobClick"
   >
-    <template v-slot:top>
+    <template v-slot:top v-if="!$vuetify.breakpoint.xsOnly">
       <v-card flat>
         <v-card-text>
           A job is a command or a set of commands you want to run in AskAnna. You can use jobs to handle data, get a
@@ -58,21 +59,11 @@
     </template>
 
     <template v-slot:item.status="{ item }">
-      <router-link class="table-link table-link--unformated" :to="routeLinkParams(item)">
+      <router-link class="table-link table-link--unformated alert" :to="routeLinkParams(item)">
         <ask-anna-alert-status :statusData="item.runs.status" />
       </router-link>
     </template>
-    <template v-slot:item.actions="{ item }" v-if="false">
-      <v-chip-group outlined v-model="selection" mandatory>
-        <v-chip outlined label class="askaanna-chip-status" color="success" @click.stop="startJob(item.short_uuid)">
-          <v-avatar left><v-icon>mdi-play</v-icon></v-avatar
-          >start</v-chip
-        >
-        <v-chip outlined label color="error" @click.stop="stopJob(item.short_uuid)"
-          >stop<v-avatar right><v-icon>mdi-stop</v-icon></v-avatar></v-chip
-        >
-      </v-chip-group>
-    </template>
+
     <template v-slot:no-data>
       For this project, there are no jobs configured. Check
       <a class="ask-anna-link" href="https://docs.askanna.io/jobs/create-job/" target="_blank">the documentation</a>
@@ -81,21 +72,23 @@
   </v-data-table>
 </template>
 
-<script>
+<script lang="ts">
 import { useWindowSize } from '@u3u/vue-hooks'
 import { JobsListHeaders } from '../utils/index'
-import JobRuns from '@jobrun/components/JobRuns'
 import useMoment from '@/core/composition/useMoment'
+import JobRuns from '@/features/jobrun/components/JobRuns.vue'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useJobRunStore from '../../jobrun/composition/useJobRunStore'
 import { ref, computed, defineComponent } from '@vue/composition-api'
-import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress'
+import AskAnnaAlertStatus from '@/core/components/shared/AskAnnaAlertStatus.vue'
+import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 
 export default defineComponent({
   name: 'JobList',
 
   components: {
     JobRuns,
+    AskAnnaAlertStatus,
     AskAnnaLoadingProgress
   },
 
@@ -106,11 +99,11 @@ export default defineComponent({
     }
   },
 
-  setup(props, context) {
-    const moment = useMoment(context)
+  setup(_, context) {
+    const moment = useMoment()
+    const router = useRouterAskAnna()
     const { height } = useWindowSize()
     const jobRunStore = useJobRunStore()
-    const router = useRouterAskAnna()
 
     const expanded = ref([])
     const selection = ref(2)
@@ -129,6 +122,9 @@ export default defineComponent({
       return subRowHeiht
     })
 
+    const getHeaders = (isMobile: boolean) =>
+      isMobile ? JobsListHeaders(isMobile).filter(el => el.isShowOnMobile) : JobsListHeaders(isMobile)
+
     const handleJobClick = item => {
       router.push({
         name: 'workspace-project-job-overiew',
@@ -136,7 +132,7 @@ export default defineComponent({
       })
     }
 
-    const handleExpand = async ({ item, value }) => {
+    const handleExpand = async ({ item }) => {
       loading.value = true
 
       currentJob.value = item
@@ -172,7 +168,7 @@ export default defineComponent({
       calcSubHeight,
       jobRunsLoading,
       ...moment,
-      JobsListHeaders,
+      getHeaders,
       routeLinkParams,
 
       handleExpand,
@@ -183,7 +179,7 @@ export default defineComponent({
 })
 </script>
 
-<style>
+<style lang="scss">
 .job-table tr {
   cursor: pointer;
 }
@@ -196,8 +192,20 @@ export default defineComponent({
 .theme--light.v-data-table .v-data-footer {
   border: none;
 }
+.mobile-view .v-data-table .v-data-footer {
+  margin-right: 0;
+  .v-data-footer__select {
+    margin-left: 0;
+  }
+}
 
 .v-data-table__expanded.v-data-table__expanded__content {
   box-shadow: none !important;
+}
+
+.mobile-view {
+  .jobs tbody td.text-start {
+    padding: 0 8px 0 0 !important;
+  }
 }
 </style>

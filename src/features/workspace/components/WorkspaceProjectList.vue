@@ -1,8 +1,16 @@
 <template>
   <v-data-iterator :items="items" hide-default-footer :no-data-text="''" disable-pagination>
     <template v-slot:default="props">
-      <v-row v-if="!settings.projectView">
-        <v-col v-for="item in props.items" :key="item.name + item.short_uuid" cols="12" sm="6" md="6" lg="4">
+      <v-row v-if="!settings.projectView" :class="{ 'px-2': $vuetify.breakpoint.xsOnly }">
+        <v-col
+          v-for="item in props.items"
+          :key="item.name + item.short_uuid"
+          cols="12"
+          sm="6"
+          md="4"
+          lg="4"
+          :class="{ 'pb-0': $vuetify.breakpoint.xsOnly }"
+        >
           <v-hover v-slot:default="{ hover }" open-delay="200">
             <workspace-project-card-item
               :project="item"
@@ -41,48 +49,38 @@
     >
   </v-data-iterator>
 </template>
-<script>
+<script setup lang="ts">
+import { computed } from '@vue/composition-api'
 import usePermission from '@/core/composition/usePermission'
-import { computed, defineComponent } from '@vue/composition-api'
 import useSanitizeHTML from '@/core/composition/useSanitizeHTML'
 import WorkspaceProjectCardItem from './WorkspaceProjectCardItem.vue'
 import WorkspaceProjectListItem from './WorkspaceProjectListItem.vue'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 
-export default defineComponent({
-  name: 'WorkspaceList',
-
-  props: {
-    workspaceName: {
-      type: String,
-      default: ''
-    },
-    items: {
-      type: Array,
-      default: () => []
-    },
-    settings: {
-      type: Object,
-      default: function () {
-        return {
-          projectView: 1
-        }
+defineProps({
+  workspaceName: {
+    type: String,
+    default: ''
+  },
+  items: {
+    type: Array,
+    default: () => []
+  },
+  settings: {
+    type: Object,
+    default: function () {
+      return {
+        projectView: 1
       }
     }
-  },
-
-  components: { WorkspaceProjectCardItem, WorkspaceProjectListItem },
-
-  setup() {
-    const permission = usePermission()
-    const sanitizeHTML = useSanitizeHTML()
-    const workspaceStore = useWorkspaceStore()
-
-    const loading = computed(() => workspaceStore.loading.value.projects)
-
-    const isWorkspaceViewer = computed(() => workspaceStore.currentPeople.value.role.code === 'WV')
-
-    return { loading, sanitizeHTML, isSignIn: permission.token, isWorkspaceViewer }
   }
 })
+
+const permission = usePermission()
+const sanitizeHTML = useSanitizeHTML()
+const workspaceStore = useWorkspaceStore()
+
+const isSignIn = computed(() => permission.token)
+const loading = computed(() => workspaceStore.loading.value.projects)
+const isWorkspaceViewer = computed(() => workspaceStore.currentPeople.value.role.code === 'WV')
 </script>

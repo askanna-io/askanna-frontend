@@ -1,89 +1,101 @@
 <template>
-  <v-toolbar color="grey lighten-4" flat dense class="br-r5">
-    <v-toolbar-title>Explorer workspaces</v-toolbar-title>
-    <v-spacer />
-    <v-flex>
-      <v-text-field
-        v-model="searchText"
-        @input="debounceedSearch"
-        small
-        dense
-        outlined
-        hide-details
-        placeholder="Search workspaces..."
-      ></v-text-field>
-    </v-flex>
-    <v-spacer />
+  <v-toolbar
+    color="grey lighten-4"
+    flat
+    dense
+    class="br-r5"
+    extension-height="50"
+    :extended="$vuetify.breakpoint.xsOnly"
+    :height="$vuetify.breakpoint.xsOnly ? '30px' : '48px'"
+  >
+    <v-toolbar-title>Explore workspaces</v-toolbar-title>
+    <template :slot="$vuetify.breakpoint.xsOnly ? 'extension' : 'default'">
+      <v-spacer v-if="!$vuetify.breakpoint.xsOnly" />
+      <v-flex class="pr-2 block" :class="{ 'w-100p': $vuetify.breakpoint.xsOnly }">
+        <v-text-field
+          v-model="searchText"
+          @input="debounceedSearch"
+          small
+          dense
+          hide-details
+          :placeholder="$vuetify.breakpoint.xsOnly ? 'Search...' : 'Search workspaces...'"
+          :outlined="!$vuetify.breakpoint.xsOnly"
+        ></v-text-field>
+      </v-flex>
+      <v-spacer />
 
-    <v-menu
-      v-model="sortMenu"
-      bottom
-      offset-y
-      nudge-bottom="10"
-      :nudge-width="100"
-      class="workspace-menu"
-      data-test="workspace-menu"
-      transition="slide-y-transition"
-    >
-      <template v-slot:activator="{ on }">
-        <v-btn v-on="on" small data-test="workspace-menu-activate-btn"><v-icon>mdi-sort</v-icon>Sort</v-btn>
-      </template>
-      <v-list>
-        <v-list-item-group v-model="activeSort" color="primary" @change="handleSort()">
-          <v-list-item v-for="(item, index) in sortItems" :key="index">
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item>
-        </v-list-item-group>
-      </v-list>
-    </v-menu>
-    <v-menu
-      v-model="filterMenu"
-      transition="slide-y-transition"
-      :close-on-content-click="false"
-      :nudge-width="200"
-      :nudge-height="300"
-      offset-y
-      nudge-bottom="10"
-    >
-      <template v-slot:activator="{ on }">
-        <v-btn class="ml-1" v-on="on" small data-test="workspace-menu-activate-btn">
-          <v-icon> mdi-filter-variant </v-icon>Filters
-        </v-btn>
-      </template>
-      <v-row class="pa-2 white">
-        <v-col class="d-flex pt-1 pb-1" cols="12">
-          <v-card flat width="284">
-            <v-card-subtitle class="pa-0">
-              <h3>Workspace visibility</h3>
-            </v-card-subtitle>
-            <v-select
-              v-model="activeRoleFilter"
-              hide-details
-              class="pt-0"
-              no-data-text=""
-              item-text="name"
-              item-value="value"
-              :items="visibilityFilters"
-            >
-            </v-select>
+      <v-menu
+        v-model="sortMenu"
+        bottom
+        offset-y
+        nudge-bottom="10"
+        :nudge-width="100"
+        class="workspace-menu"
+        data-test="workspace-menu"
+        transition="slide-y-transition"
+      >
+        <template v-slot:activator="{ on }">
+          <v-btn v-on="on" small data-test="workspace-menu-activate-btn"
+            ><v-icon>mdi-sort</v-icon>{{ $vuetify.breakpoint.xsOnly ? '' : 'Sort' }}</v-btn
+          >
+        </template>
+        <v-list>
+          <v-list-item-group v-model="activeSort" color="primary" @change="handleSort()">
+            <v-list-item v-for="(item, index) in sortItems" :key="index">
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
+      </v-menu>
+      <v-menu
+        v-model="filterMenu"
+        transition="slide-y-transition"
+        :close-on-content-click="false"
+        :nudge-width="200"
+        :nudge-height="300"
+        offset-y
+        nudge-bottom="10"
+      >
+        <template v-slot:activator="{ on }">
+          <v-btn class="ml-1" v-on="on" small data-test="workspace-menu-activate-btn">
+            <v-icon> mdi-filter-variant </v-icon>{{ $vuetify.breakpoint.xsOnly ? '' : 'Filters' }}
+          </v-btn>
+        </template>
+        <v-row class="pa-2 white">
+          <v-col class="d-flex pt-1 pb-1" cols="12">
+            <v-card flat width="284">
+              <v-card-subtitle class="pa-0">
+                <h3>Workspace visibility</h3>
+              </v-card-subtitle>
+              <v-select
+                v-model="activeRoleFilter"
+                hide-details
+                class="pt-0"
+                no-data-text=""
+                item-text="name"
+                item-value="value"
+                :items="visibilityFilters"
+              >
+              </v-select>
 
-            <v-card-subtitle class="pa-0 pt-4">
-              <h3>Workspace membership</h3>
-            </v-card-subtitle>
-            <v-select
-              v-model="activeMemberFilter"
-              hide-details
-              class="pt-0"
-              no-data-text=""
-              item-text="name"
-              item-value="value"
-              :items="isMemberFilters"
-            >
-            </v-select>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-menu>
+              <v-card-subtitle class="pa-0 pt-4">
+                <h3>Workspace membership</h3>
+              </v-card-subtitle>
+              <v-select
+                v-model="activeMemberFilter"
+                hide-details
+                class="pt-0"
+                no-data-text=""
+                item-text="name"
+                item-value="value"
+                :items="isMemberFilters"
+              >
+              </v-select>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-menu>
+    </template>
   </v-toolbar>
 </template>
 <script setup lang="ts">

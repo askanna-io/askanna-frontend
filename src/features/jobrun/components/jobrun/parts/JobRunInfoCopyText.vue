@@ -1,6 +1,6 @@
 <template>
   <div>
-    {{ text }}:
+    <span class="font-weight-bold">{{ text }}:&nbsp;</span>
     <ask-anna-copy-text
       :text="value"
       :iconColor="'grey lighten-2'"
@@ -9,21 +9,15 @@
     />
   </div>
 </template>
-<script>
-import { defineComponent } from '@vue/composition-api'
-
-export default defineComponent({
-  name: 'JobRunInfoCopyText',
-
-  props: {
-    text: {
-      type: String,
-      default: ''
-    },
-    value: {
-      type: String | Number,
-      default: ''
-    }
+<script setup lang="ts">
+defineProps({
+  text: {
+    type: String,
+    default: ''
+  },
+  value: {
+    type: String | Number,
+    default: ''
   }
 })
 </script>

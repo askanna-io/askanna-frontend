@@ -1,8 +1,8 @@
 <template>
-  <div class="px-4 pb-5">
+  <div class="pb-5" :class="{ 'px-0 ': $vuetify.breakpoint.xsOnly, 'px-4': !$vuetify.breakpoint.xsOnly }">
     <ask-anna-loading-progress :type="'table-row'" :loading="loading" fullWidth>
       <v-card flat>
-        <v-card-title>Information:</v-card-title>
+        <v-card-title :class="{ 'pt-0': $vuetify.breakpoint.xsOnly }">Information:</v-card-title>
         <job-run-info
           :jobId="jobId"
           :jobRun="jobRun"
@@ -20,11 +20,11 @@
   </div>
 </template>
 
-<script>
-import useJobStore from '@job/composition/useJobStore'
-import JobRunInfo from '@jobrun/components/jobrun/JobRunInfo'
-import useJobRunStore from '@jobrun/composition/useJobRunStore'
-import AskAnnaDescription from '@/core/components/shared/AskAnnaDescription'
+<script lang="ts">
+import useJobStore from '@/features/job/composition/useJobStore'
+import JobRunInfo from '@/features/jobrun/components/jobrun/JobRunInfo'
+import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
+import AskAnnaDescription from '@/core/components/shared/AskAnnaDescription.vue'
 
 import { computed, defineComponent, onBeforeMount } from '@vue/composition-api'
 

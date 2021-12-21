@@ -1,23 +1,25 @@
 <template>
   <v-container class="ma-0 ml-1 pt-0" fluid>
     <v-row>
-      <v-col cols="5">
+      <v-col :cols="$vuetify.breakpoint.xsOnly ? 12 : 5">
         <v-text-field
           dense
           autofocus
           outlined
           required
+          hide-details
           :value="run.name"
           label="Run name (optional)"
           @input="handleOnInput($event, 'name')"
         />
       </v-col>
     </v-row>
-    <v-row>
+    <v-row v-if="!$vuetify.breakpoint.xsOnly">
       <v-col cols="12" class="pt-0">
         <ask-anna-description
           cleared
           outlined
+          hide-details
           :title="'Run description (optional)'"
           @onChangeDescription="handleOnInput($event, 'description')"
         />
@@ -56,7 +58,7 @@
   </v-container>
 </template>
 
-<script>
+<script lang="ts">
 import { set } from 'lodash'
 import useMoment from '@/core/composition/useMoment'
 import useJobStore from '@job/composition/useJobStore'

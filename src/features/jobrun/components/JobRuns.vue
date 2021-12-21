@@ -1,23 +1,24 @@
 <template>
   <v-data-table
     fixed-header
-    class="job-runs-table ask-anna-table ask-anna-table--with-links"
     :items="items"
     :page.sync="page"
     :loading="loading"
-    :headers="headers"
+    :headers="getHeaders($vuetify.breakpoint.xsOnly)"
+    :mobile-breakpoint="-1"
     :class="tableClass"
     :options.sync="options"
     :server-items-length="count"
     :items-per-page="itemsPerPage"
     @page-count="pageCount = $event"
     :footer-props="{ itemsPerPageOptions: [5, 10, 15, 25, -1] }"
+    class="job-runs-table ask-anna-table ask-anna-table--with-links"
   >
     <template v-slot:item="{ item }">
       <tr>
         <td class="text-start">
           <router-link class="table-link table-link--unformated" :to="routeLinkParams({ item })">
-            <v-tooltip top content-class="opacity-1">
+            <v-tooltip v-if="!$vuetify.breakpoint.xsOnly" top content-class="opacity-1">
               <template v-slot:activator="{ on, value }">
                 <div v-on="on">
                   <v-btn class="px-0" text small>#{{ item.short_uuid.slice(0, 4) }}</v-btn>
@@ -33,6 +34,7 @@
               </template>
               <span>{{ item.short_uuid }}</span>
             </v-tooltip>
+            <template v-else> #{{ item.short_uuid.slice(0, 4) }} </template>
           </router-link>
         </td>
         <td class="text-start">
@@ -82,7 +84,7 @@
   </v-data-table>
 </template>
 
-<script>
+<script lang="ts">
 import useCopy from '@/core/composition/useCopy'
 import useMoment from '@/core/composition/useMoment'
 import useNumeral from '@/core/composition/useNumeral'
@@ -126,25 +128,24 @@ export default defineComponent({
 
   setup(props, context) {
     const copy = useCopy()
-    const numeral = useNumeral()
     const moment = useMoment(context)
+    const numeral = useNumeral(context)
 
     const page = ref(0)
-
+    const pageCount = ref(0)
     const options = ref({ itemsPerPage: props.itemsPerPage, page: 1 })
 
-    const pageCount = ref(0)
-    const headers = [
+    const getHeaders = isMobile => [
       {
         text: 'SUUID',
         sortable: false,
         value: 'info',
-        width: '110px',
+        width: isMobile ? '50px' : '110px',
         class: 'text-left text-subtitle-2 font-weight-bold h-20'
       },
       {
         text: 'Name',
-        width: '30%',
+        width: isMobile ? '170px' : '30%',
         sortable: false,
         value: 'name',
         class: 'text-left text-subtitle-2 font-weight-bold h-20'
@@ -158,7 +159,7 @@ export default defineComponent({
       },
       {
         text: 'Timing',
-        width: '270px',
+        width: '300px',
         sortable: false,
         value: 'runtime',
         class: 'text-left text-subtitle-2 font-weight-bold h-20'
@@ -234,10 +235,10 @@ export default defineComponent({
     return {
       ...moment,
       page,
-      headers,
       options,
       pageCount,
       handleCopy,
+      getHeaders,
       getMetricTitle,
       getPayloadTitle,
       routeLinkParams,

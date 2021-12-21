@@ -2,32 +2,22 @@
   <ask-anna-loading-progress :loading="packageLoading">
     <v-row align="center" justify="center">
       <v-col cols="12" class="pt-0 pb-0">
-        <package-toolbar :breadcrumbs="breadcrumbs" v-sticky="sticked" sticky-offset="{top: 52, bottom: 10}">
-          <template v-slot:left>
-            <v-tooltip top content-class="opacity-1">
-              <template v-slot:activator="{ on }">
-                <div v-on="on">
-                  <a v-if="currentPath" @click="handeBackToPackageRoot" class="text-body-2"
-                    >Package #{{ packageId.slice(0, 4) }}<v-icon small>mdi-chevron-right</v-icon></a
-                  >
-                  <span class="text-body-2" v-else>
-                    Package #{{ packageId.slice(0, 4) }}{{ isLastPackage ? ' (latest)' : '' }}</span
-                  >
-                </div>
-              </template>
-              <span>{{ packageId }}</span>
-              <br />
-              <span>{{ createdDate }}</span>
-            </v-tooltip>
-          </template>
+        <PackageToolbar :breadcrumbs="breadcrumbsComputed" v-sticky="sticked" sticky-offset="{top: 52, bottom: 10}">
           <template v-slot:rigth>
             <v-slide-y-transition>
-              <div v-if="!filePath">
-                <v-btn small outlined color="secondary" class="mr-1 btn--hover" @click="handleDownload()">
+              <div v-if="!filePath" class="d-flex">
+                <v-btn
+                  v-if="!$vuetify.breakpoint.xsOnly"
+                  small
+                  outlined
+                  color="secondary"
+                  class="mr-1 btn--hover"
+                  @click="handleDownload()"
+                >
                   <v-icon color="secondary" left>mdi-download</v-icon>Download
                 </v-btn>
                 <v-btn
-                  v-if="projectCodeCreate"
+                  v-if="projectCodeCreate && !$vuetify.breakpoint.xsOnly"
                   small
                   outlined
                   :class="{ 'replace-active': isRaplace }"
@@ -38,13 +28,41 @@
                   <v-icon color="secondary" left>mdi-folder-move</v-icon>Replace
                 </v-btn>
 
-                <v-btn small outlined color="secondary" class="btn--hover" @click="handleHistory()">
+                <v-btn
+                  v-if="!$vuetify.breakpoint.xsOnly"
+                  small
+                  outlined
+                  color="secondary"
+                  class="btn--hover"
+                  @click="handleHistory()"
+                >
                   <v-icon color="secondary" left>mdi-history</v-icon>History
                 </v-btn>
+                <v-menu
+                  v-if="$vuetify.breakpoint.xsOnly"
+                  v-model="menu"
+                  nudge-left="10"
+                  nudge-bottom="30"
+                  rounded
+                  :close-on-content-click="false"
+                  bottom
+                  left
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn icon v-bind="attrs" @click.stop.prevent="on.click" small>
+                      <v-icon>mdi-dots-vertical</v-icon>
+                    </v-btn>
+                  </template>
+                  <v-list dense>
+                    <v-list-item dense @click="handleHistory()">
+                      <v-list-item-title>History</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
               </div>
             </v-slide-y-transition>
           </template>
-        </package-toolbar>
+        </PackageToolbar>
         <v-expand-transition>
           <resumable-upload
             v-if="isRaplace"
@@ -67,7 +85,7 @@
             :currentPath="currentPath"
           />
           <template v-else>
-            <package-tree v-if="!isProcessing" :items="treeView" :height="calcHeight" :getRoutePath="getRoutePath" />
+            <PackageTree v-if="!isProcessing" :items="treeView" :height="calcHeight" :getRoutePath="getRoutePath" />
           </template>
         </template>
       </v-col>
@@ -75,20 +93,20 @@
   </ask-anna-loading-progress>
 </template>
 
-<script>
+<script lang="ts">
 import { useWindowSize } from '@u3u/vue-hooks'
-import { FileIcons } from '@package/utils/index'
 import useMoment from '@/core/composition/useMoment'
 import { defineComponent } from '@vue/composition-api'
-import PackageFile from '@package/components/PackageFile'
-import PackageTree from '@package/components/PackageTree'
+import { FileIcons } from '@/features/package/utils/index'
 import usePermission from '@/core/composition/usePermission'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import useProjectStore from '@project/composition/useProjectStore'
-import PackageToolbar from '@/features/package/components/PackageToolbar'
+import PackageFile from '@/features/package/components/PackageFile.vue'
+import PackageTree from '@/features/package/components/PackageTree.vue'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
+import useProjectStore from '@/features/project/composition/useProjectStore'
 import usePackageStore from '@/features/package/composition/usePackageStore'
 import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
+import PackageToolbar from '@/features/package/components/PackageToolbar.vue'
 import usePackagesStore from '@/features/packages/composition/usePackagesStore'
 import { ref, watch, onBeforeMount, onUnmounted, computed } from '@vue/composition-api'
 
@@ -115,6 +133,7 @@ export default defineComponent({
     const forceFileDownload = useForceFileDownload()
     const breadcrumbs = usePackageBreadcrumbs(context)
 
+    const menu = ref(false)
     const polling = ref(null)
     const isRaplace = ref(false)
 
@@ -131,6 +150,26 @@ export default defineComponent({
     const isLastPackage = computed(() => packageIdCd.value === packageStore.packageData.value.short_uuid)
     const { workspaceId, projectId, packageId: packageIdFromRoute = '', folderName = '' } = context.root.$route.params
     const packageId = computed(() => (useProjectPackageId ? packageIdCd.value : packageIdFromRoute))
+
+    const breadcrumbsComputed = computed(() => {
+      const first = {
+        title: `Package: #${packageId.value.slice(0, 4)}${isLastPackage.value ? '(latest)   ' : ''}`,
+        to: {
+          name: 'workspace-project-code',
+          params: { workspaceId, projectId, packageId: packageId.value }
+        },
+        exact: true,
+        disabled: false,
+        showTooltip: true,
+        tooltip: `
+          <span>${packageId.value}</span>
+          <br />
+          <span>${createdDate.value}</span>
+        `
+      }
+
+      return [first, ...breadcrumbs.value]
+    })
 
     const getPackage = async (loading = true) => {
       if (!packageId.value || !projectId) return
@@ -285,6 +324,7 @@ export default defineComponent({
 
     return {
       file,
+      menu,
       sticked,
       filePath,
       fileSource: packageStore.fileSource,
@@ -294,12 +334,12 @@ export default defineComponent({
       isRaplace,
       calcHeight,
       createdDate,
-      breadcrumbs,
       currentPath,
       isProcessing,
       getRoutePath,
       isLastPackage,
       projectCodeCreate,
+      breadcrumbsComputed,
 
       handleReplace,
       handleHistory,

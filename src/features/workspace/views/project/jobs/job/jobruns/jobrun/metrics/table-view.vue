@@ -13,13 +13,11 @@
         @onSort="handleOnSort"
         @onScroll="handleOnScroll"
       />
-      <v-alert v-else class="ma-4 text-center" dense outlined>
-        There are no metrics available for this run.
-      </v-alert>
+      <v-alert v-else class="ma-4 text-center" dense outlined> There are no metrics available for this run. </v-alert>
     </div>
   </ask-anna-loading-progress>
 </template>
-<script>
+<script lang="ts">
 import { throttle } from 'lodash'
 
 import { useWindowSize } from '@u3u/vue-hooks'
@@ -27,7 +25,7 @@ import useQuery from '@/core/composition/useQuery'
 import useMetricStore from '@/features/metric/composition/useMetricStore'
 import useProjectStore from '@/features/project/composition/useProjectStore'
 import { ref, computed, onBeforeMount, defineComponent } from '@vue/composition-api'
-import MetricTableView from '@/features/metric/components/metric-table/MetricTableView'
+import MetricTableView from '@/features/metric/components/metric-table/MetricTableView.vue'
 
 export default defineComponent({
   name: 'table-view',

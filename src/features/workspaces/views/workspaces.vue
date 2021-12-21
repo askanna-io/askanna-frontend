@@ -5,15 +5,16 @@
         <WorkspacesToolbar />
       </template>
       <template v-slot:default="props">
-        <v-row>
+        <v-row :class="{ 'px-2': $vuetify.breakpoint.xsOnly }">
           <v-col
             v-for="item in props.items"
             @click="handleOpenWorkspace(item)"
             :key="item.name + item.short_uuid"
             cols="12"
             sm="6"
-            md="6"
+            md="4"
             lg="4"
+            :class="{ 'pb-0': $vuetify.breakpoint.xsOnly }"
           >
             <v-hover v-slot:default="{ hover }" open-delay="200">
               <WorkspacesCardItem

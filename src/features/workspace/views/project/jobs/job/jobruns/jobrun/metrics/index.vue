@@ -12,6 +12,7 @@
 
         <div>
           <v-btn
+            v-if="!$vuetify.breakpoint.xsOnly"
             small
             outlined
             color="secondary"
@@ -48,7 +49,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import useCopy from '@/core/composition/useCopy'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useMetricStore from '@/features/metric/composition/useMetricStore'

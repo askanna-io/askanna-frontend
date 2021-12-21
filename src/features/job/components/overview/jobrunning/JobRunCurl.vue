@@ -1,10 +1,8 @@
 <template>
-  <div class="px-4">
+  <div :class="{ 'px-4': !$vuetify.breakpoint.xsOnly, 'px-0': $vuetify.breakpoint.xsOnly }">
     <v-toolbar dense flat color="grey lighten-4" class="br-r4">
       <v-flex class="d-flex">
-        <div class="mr-auto d-flex align-center">
-          Shell
-        </div>
+        <div class="mr-auto d-flex align-center">Shell</div>
         <div>
           <v-tooltip top content-class="opacity-1">
             <template v-slot:activator="{ on }">

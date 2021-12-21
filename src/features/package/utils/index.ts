@@ -25,6 +25,7 @@ export const headers = [
     sortable: false,
     value: 'type',
     width: 10,
+    isShowOnMobile: true,
     class: 'text-left text-subtitle-2 font-weight-bold h-20'
   },
   {
@@ -32,8 +33,16 @@ export const headers = [
     align: 'left',
     sortable: false,
     value: 'name',
+    isShowOnMobile: true,
+
     class: 'text-left text-subtitle-2 font-weight-bold h-20'
   },
-  { text: 'Size', value: 'size', class: 'text-left text-subtitle-2 font-weight-bold h-20' },
-  { text: 'Modified', value: 'last_modified', class: 'text-left text-subtitle-2 font-weight-bold h-20' }
+  { text: 'Size', value: 'size', isShowOnMobile: false, class: 'text-left text-subtitle-2 font-weight-bold h-20' },
+  {
+    text: 'Modified',
+    value: 'last_modified',
+    width: '30%',
+    isShowOnMobile: true,
+    class: 'text-left text-subtitle-2 font-weight-bold h-20'
+  }
 ]

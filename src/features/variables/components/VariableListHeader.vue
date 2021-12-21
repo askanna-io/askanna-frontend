@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <v-card flat>
+  <div :class="{ 'pt-2': $vuetify.breakpoint.xsOnly }">
+    <v-card flat v-if="!$vuetify.breakpoint.xsOnly">
       <v-card-text>
         <p>
           Project variables are applied to every run environment within this project. You can use variables for
@@ -16,9 +16,9 @@
         </p>
       </v-card-text>
     </v-card>
-    <v-toolbar color="grey lighten-4" flat dense>
+    <v-toolbar v-if="projectVariableCreate" color="grey lighten-4" flat dense>
       <v-spacer />
-      <v-btn v-if="projectVariableCreate" @click="handleOpenVariablePopup()" small rounded class="mr-3">
+      <v-btn @click="handleOpenVariablePopup()" small rounded class="mr-3">
         <v-icon color="primary" left>mdi-plus</v-icon>
         New variable
       </v-btn>
@@ -26,23 +26,14 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { computed } from '@vue/composition-api'
 import usePermission from '@/core/composition/usePermission'
-import { computed, defineComponent } from '@vue/composition-api'
 
-export default defineComponent({
-  name: 'VariableListHeader',
+const emits = defineEmits('openVariablePopup')
 
-  setup(_, context) {
-    const permission = usePermission()
-    const projectVariableCreate = computed(() => permission.getFor(permission.labels.projectVariableCreate))
+const permission = usePermission()
+const projectVariableCreate = computed(() => permission.getFor(permission.labels.projectVariableCreate))
 
-    const handleOpenVariablePopup = () => context.emit('openVariablePopup')
-
-    return {
-      projectVariableCreate,
-      handleOpenVariablePopup
-    }
-  }
-})
+const handleOpenVariablePopup = () => emits('openVariablePopup')
 </script>

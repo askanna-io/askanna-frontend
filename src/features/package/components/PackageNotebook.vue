@@ -1,54 +1,57 @@
 <template>
   <v-row align="center" justify="center">
-    <v-col cols="12">
+    <v-col cols="12" :class="{ 'pt-0': $vuetify.breakpoint.xsOnly }">
       <v-card class="AskAnna--notebook" flat v-html="notebookHtml" />
     </v-col>
   </v-row>
 </template>
 
-<script>
+<script setup lang="ts">
+// @ts-expect-error
 import Nb from '@/assets/js/notebook.js'
-import { computed, defineComponent } from '@vue/composition-api'
+import { computed } from '@vue/composition-api'
 
-export default defineComponent({
-  name: 'PackageNotebook',
-
-  props: {
-    file: String,
-    fileSource: String | Blob,
-    breadcrumbs: {
-      type: Array,
-      default: () => []
-    },
-    currentPath: {
-      type: Object,
-      default: () => {}
-    },
-    sticked: {
-      type: Boolean,
-      default: true
-    }
+const props = defineProps({
+  file: String,
+  fileSource: String | Blob,
+  breadcrumbs: {
+    type: Array,
+    default: () => []
   },
-
-  setup(props) {
-    const nb = Nb()
-
-    const notebookHtml = computed(() => {
-      if (!props.file) return
-      const notebook = nb.parse(JSON.parse(props.file))
-      const rendered = notebook.render()
-
-      return rendered.outerHTML
-    })
-
-    return {
-      notebookHtml
-    }
+  currentPath: {
+    type: Object,
+    default: () => {}
+  },
+  sticked: {
+    type: Boolean,
+    default: true
   }
+})
+
+const nb = Nb()
+
+const notebookHtml = computed(() => {
+  if (!props.file) return
+  const notebook = nb.parse(JSON.parse(props.file))
+  const rendered = notebook.render()
+
+  return rendered.outerHTML
 })
 </script>
 
-<style>
+<style lang="scss">
+.mobile-view {
+  .AskAnna--notebook {
+    width: 100%;
+    overflow-x: scroll;
+  }
+  .nb-notebook {
+    width: auto;
+    padding-left: 100px;
+    padding-right: 10px;
+  }
+}
+
 .AskAnna--notebook pre {
   border-radius: 4px;
 }

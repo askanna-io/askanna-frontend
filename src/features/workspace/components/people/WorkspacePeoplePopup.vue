@@ -1,6 +1,6 @@
 <template>
   <v-row justify="center">
-    <v-dialog v-model="openVmodel" max-width="400px" origin>
+    <v-dialog v-model="openVmodel" max-width="400px" origin content-class="overflow-x-hidden">
       <v-card class="text-center position">
         <v-app-bar flat dense white--text color="white">
           <v-spacer />
@@ -114,131 +114,112 @@
     </v-dialog>
   </v-row>
 </template>
-<script>
+<script setup lang="ts">
+import { ref, computed } from '@vue/composition-api'
 import usePermission from '@/core/composition/usePermission'
 import useSlicedText from '@/core/composition/useSlicedText'
-import { ref, computed, defineComponent } from '@vue/composition-api'
 
-export default defineComponent({
-  name: 'WorkspacePeoplePopup',
-
-  props: {
-    people: {
-      type: Object,
-      default: function () {
-        return {
-          uuid: '',
+const props = defineProps({
+  people: {
+    type: Object,
+    default: function () {
+      return {
+        uuid: '',
+        name: '',
+        role: {
           name: '',
-          role: {
-            name: '',
-            code: ''
-          },
-          status: '',
-          avatar: '',
-          created: '',
-          modified: '',
-          job_title: '',
-          short_uuid: '',
-          last_active: ''
-        }
+          code: ''
+        },
+        status: '',
+        avatar: '',
+        created: '',
+        modified: '',
+        job_title: '',
+        short_uuid: '',
+        last_active: ''
       }
-    },
-    workspaceName: {
-      type: String,
-      default: () => ''
-    },
-    value: {
-      type: Boolean,
-      default: false
-    },
-    currentUser: {
-      type: Object,
-      default: function () {
-        return {
-          email: '',
-          name: '',
-          job_title: '',
-          role: {
-            name: '',
-            code: ''
-          }
-        }
-      }
-    },
-    isPeopleAdmin: {
-      type: Boolean,
-      default: false
-    },
-    roleAction: {
-      type: String,
-      default: () => 'revoke'
-    },
-    simple: {
-      type: Boolean,
-      default: false
     }
   },
-  setup(props, context) {
-    const dialog = ref(false)
-    const slicedText = useSlicedText()
-    const permission = usePermission()
-
-    const openVmodel = computed({
-      get: () => props.value,
-      set: value => context.emit('handleValue', value)
-    })
-
-    const roleFilters = {
-      WA: 'Workspace admin',
-      WM: 'Workspace member',
-      WV: 'Workspace viewer'
+  workspaceName: {
+    type: String,
+    default: () => ''
+  },
+  value: {
+    type: Boolean,
+    default: false
+  },
+  currentUser: {
+    type: Object,
+    default: function () {
+      return {
+        email: '',
+        name: '',
+        job_title: '',
+        role: {
+          name: '',
+          code: ''
+        }
+      }
     }
-
-    const roleName = computed(() => {
-      const val = props.people.role.code
-      return roleFilters[val]
-    })
-
-    const buttonsVisible = computed(() => ({
-      WA: props.people.role.code !== 'WA',
-      WM: props.people.role.code !== 'WM',
-      WV: props.people.role.code !== 'WV'
-    }))
-
-    const workspacePeopleEdit = computed(() => permission.getFor(permission.labels.workspacePeopleEdit))
-    const workspacePeopleRemove = computed(() => permission.getFor(permission.labels.workspacePeopleRemove))
-    const workspacePeopleInviteRemove = computed(() => permission.getFor(permission.labels.workspacePeopleInviteRemove))
-
-    const name = computed(() => slicedText(props.people.name || props.people.email, 30))
-
-    const colorBtn = computed(() => (props.isPeopleAdmin ? 'error' : 'secondary'))
-
-    const isCurrentUserAdmin = computed(() => props.currentUser.role.code === 'WA')
-
-    const handleRemove = value => context.emit('onRemovePeople', value)
-    const handleChangeRole = value => context.emit('onChangeRole', value)
-    const handleDeleteInivitationPopup = () => context.emit('onDeleteInivitationPopup')
-    const handleResendInivitationPopup = () => context.emit('onResendInivitationPopup')
-
-    return {
-      name,
-      dialog,
-      roleName,
-      colorBtn,
-      openVmodel,
-      buttonsVisible,
-      workspacePeopleEdit,
-      workspacePeopleRemove,
-      workspacePeopleInviteRemove,
-
-      handleRemove,
-      handleChangeRole,
-      isCurrentUserAdmin,
-      handleDeleteInivitationPopup,
-      handleResendInivitationPopup
-    }
+  },
+  isPeopleAdmin: {
+    type: Boolean,
+    default: false
+  },
+  roleAction: {
+    type: String,
+    default: () => 'revoke'
+  },
+  simple: {
+    type: Boolean,
+    default: false
   }
 })
+
+const emits = defineEmits([
+  'handleValue',
+  'onChangeRole',
+  'onRemovePeople',
+  'onDeleteInivitationPopup',
+  'onResendInivitationPopup'
+])
+
+const slicedText = useSlicedText()
+const permission = usePermission()
+
+const openVmodel = computed({
+  get: () => props.value,
+  set: value => emits('handleValue', value)
+})
+
+const roleFilters = {
+  WA: 'Workspace admin',
+  WM: 'Workspace member',
+  WV: 'Workspace viewer'
+}
+
+const roleName = computed(() => {
+  const val = props.people.role.code
+  return roleFilters[val]
+})
+
+const buttonsVisible = computed(() => ({
+  WA: props.people.role.code !== 'WA',
+  WM: props.people.role.code !== 'WM',
+  WV: props.people.role.code !== 'WV'
+}))
+
+const workspacePeopleEdit = computed(() => permission.getFor(permission.labels.workspacePeopleEdit))
+const workspacePeopleRemove = computed(() => permission.getFor(permission.labels.workspacePeopleRemove))
+const workspacePeopleInviteRemove = computed(() => permission.getFor(permission.labels.workspacePeopleInviteRemove))
+
+const name = computed(() => slicedText(props.people.name || props.people.email, 30))
+const isCurrentUserAdmin = computed(() => props.currentUser.role.code === 'WA')
+
+const handleRemove = value => emits('onRemovePeople', value)
+const handleChangeRole = value => emits('onChangeRole', value)
+const handleDeleteInivitationPopup = () => emits('onDeleteInivitationPopup')
+const handleResendInivitationPopup = () => emits('onResendInivitationPopup')
 </script>
 <style scoped>
 .role {

@@ -2,11 +2,9 @@
   <div>
     <v-toolbar v-if="!isJobRunPayloadEmpty" dense flat color="grey lighten-4">
       <v-flex class="d-flex">
-        <div class="mr-auto d-flex align-center">
-          Payload
-        </div>
-        <div>
-          <v-tooltip top content-class="opacity-1">
+        <div class="mr-auto d-flex align-center" :class="{ 'pr-1': $vuetify.breakpoint.xsOnly }">Payload</div>
+        <div class="d-flex">
+          <v-tooltip v-if="!$vuetify.breakpoint.xsOnly" top content-class="opacity-1">
             <template v-slot:activator="{ on }">
               <v-btn
                 small
@@ -23,7 +21,7 @@
             <span>Download raw</span>
           </v-tooltip>
 
-          <v-tooltip top content-class="opacity-1">
+          <v-tooltip v-if="!$vuetify.breakpoint.xsOnly" top content-class="opacity-1">
             <template v-slot:activator="{ on }">
               <v-btn
                 v-on="on"
@@ -69,50 +67,30 @@
     </v-flex>
   </div>
 </template>
-<script>
-import useCopy from '@/core/composition/useCopy'
+<script setup lang="ts">
+import { computed } from '@vue/composition-api'
 import JobRunPayLoad from './JobRunPayLoad.vue'
+import useCopy from '@/core/composition/useCopy'
 import useJobRunStore from '../../composition/useJobRunStore'
-import { computed, defineComponent } from '@vue/composition-api'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
-import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress'
+import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 
-export default defineComponent({
-  name: 'JobRunInput',
+const copy = useCopy()
+const jobRunStore = useJobRunStore()
+const forceFileDownload = useForceFileDownload()
 
-  components: {
-    JobRunPayLoad,
-    AskAnnaLoadingProgress
-  },
+const loading = computed(() => jobRunStore.payLoadLoading.value)
+const jobRunPayload = computed(() => jobRunStore.jobRunPayload.value)
+const jobRunPayloadComputed = computed(() => JSON.stringify(jobRunStore.jobRunPayload.value, null, 2))
+const isJobRunPayloadEmpty = computed(() => !jobRunPayload.value && !loading.value)
 
-  setup() {
-    const copy = useCopy()
-    const jobRunStore = useJobRunStore()
-    const forceFileDownload = useForceFileDownload()
+const handleDownload = async formatType => {
+  const { short_uuid } = jobRunStore.jobRun.value
+  const formatOption = formatType === 'raw' ? null : 2
+  const jrPayload = JSON.stringify(jobRunPayload.value, null, formatOption)
 
-    const loading = computed(() => jobRunStore.payLoadLoading.value)
-    const jobRunPayload = computed(() => jobRunStore.jobRunPayload.value)
-    const jobRunPayloadComputed = computed(() => JSON.stringify(jobRunStore.jobRunPayload.value, null, 2))
-    const isJobRunPayloadEmpty = computed(() => !jobRunPayload.value && !loading.value)
+  forceFileDownload.trigger({ source: jrPayload, name: `run_${short_uuid}_payload.json` })
+}
 
-    const handleDownload = async formatType => {
-      const { short_uuid } = jobRunStore.jobRun.value
-      const formatOption = formatType === 'raw' ? null : 2
-      const jrPayload = JSON.stringify(jobRunPayload.value, null, formatOption)
-
-      forceFileDownload.trigger({ source: jrPayload, name: `run_${short_uuid}_payload.json` })
-    }
-
-    const handleCopy = () => copy.handleCopyText(jobRunPayloadComputed.value)
-
-    return {
-      loading,
-      handleCopy,
-      handleDownload,
-      isJobRunPayloadEmpty,
-      jobRunPayloadComputed,
-      jobRun: jobRunStore.jobRun.value
-    }
-  }
-})
+const handleCopy = () => copy.handleCopyText(jobRunPayloadComputed.value)
 </script>

@@ -5,7 +5,7 @@
     </template>
     <template v-slot:default="props">
       <ask-anna-loading-progress :type="'table-row'" :loading="loading">
-        <v-row v-if="!settings.projectView">
+        <v-row v-if="!settings.projectView" :class="{ 'px-2': $vuetify.breakpoint.xsOnly }">
           <v-col
             v-for="item in props.items"
             @click="handleSelectPeople(item)"
@@ -15,6 +15,7 @@
             md="3"
             lg="3"
             xl="3"
+            :class="{ 'pb-0': $vuetify.breakpoint.xsOnly }"
           >
             <v-hover v-slot:default="{ hover }" open-delay="200">
               <workspace-people-card-item
@@ -31,71 +32,55 @@
     </template>
   </v-data-iterator>
 </template>
-<script>
-import { ref, defineComponent } from '@vue/composition-api'
+<script setup lang="ts">
 import useSanitizeHTML from '@/core/composition/useSanitizeHTML'
 import WorkspacePeopleToolbar from './WorkspacePeopleToolbar.vue'
 import WorkspacePeopleCardItem from './WorkspacePeopleCardItem.vue'
 
-export default defineComponent({
-  name: 'WorkspacePeopleList',
-
-  props: {
-    workspaceName: {
-      type: String,
-      default: ''
-    },
-    workspaceUuid: {
-      type: String,
-      default: ''
-    },
-    items: {
-      type: Array,
-      default: () => []
-    },
-    loading: {
-      type: Boolean,
-      default: true
-    },
-    settings: {
-      type: Object,
-      default: function () {
-        return {
-          projectView: 1
-        }
-      }
-    },
-    currentUser: {
-      type: Object,
-      default: function () {
-        return {
-          email: '',
-          name: '',
-          role: ''
-        }
+defineProps({
+  workspaceName: {
+    type: String,
+    default: ''
+  },
+  workspaceUuid: {
+    type: String,
+    default: ''
+  },
+  items: {
+    type: Array,
+    default: () => []
+  },
+  loading: {
+    type: Boolean,
+    default: true
+  },
+  settings: {
+    type: Object,
+    default: function () {
+      return {
+        projectView: 1
       }
     }
   },
-
-  components: {
-    WorkspacePeopleToolbar,
-    WorkspacePeopleCardItem
-  },
-
-  setup(props, context) {
-    const sanitizeHTML = useSanitizeHTML()
-
-    const getStatus = status => status === 'invited' && 'blue lighten-3'
-
-    const handleSelectPeople = people => context.emit('onSelectPoeple', people)
-
-    return {
-      getStatus,
-      sanitizeHTML,
-      handleSelectPeople
+  currentUser: {
+    type: Object,
+    default: function () {
+      return {
+        email: '',
+        name: '',
+        role: ''
+      }
     }
   }
 })
+
+const emits = defineEmits('onSelectPoeple')
+
+const sanitizeHTML = useSanitizeHTML()
+
+const getStatus = status => status === 'invited' && 'blue lighten-3'
+
+const handleSelectPeople = people => emits('onSelectPoeple', people)
 </script>
 
 <style scoped>

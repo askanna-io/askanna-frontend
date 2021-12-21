@@ -3,7 +3,7 @@
     <template v-slot:activator="{ on, attrs }">
       <v-tooltip top>
         <template v-slot:activator="{ on: onHover }">
-          <div v-on="onHover">
+          <span v-on="onHover">
             <v-btn
               v-bind="attrs"
               v-on="on"
@@ -13,10 +13,11 @@
               text
               color="secondary"
               class="btn--hover btn--without-text mr-3"
+              :class="{ 'pt-1': $vuetify.breakpoint.xsOnly }"
             >
               <v-icon>mdi-format-color-fill</v-icon>
             </v-btn>
-          </div>
+          </span>
         </template>
         <span>Highlight</span>
       </v-tooltip>
@@ -37,52 +38,37 @@
           </template>
         </v-col>
         <v-col cols="12" class="py-2">
-          <v-btn block x-small depressed outlined text class="btn--hover" @click="handleClose">
-            No highlight
-          </v-btn>
+          <v-btn block x-small depressed outlined text class="btn--hover" @click="handleClose"> No highlight </v-btn>
         </v-col>
       </v-row>
     </v-card>
   </v-menu>
 </template>
 
-<script>
-import { ref, watch, computed, defineComponent } from '@vue/composition-api'
+<script setup lang="ts">
+import { ref, watch } from '@vue/composition-api'
 
-export default defineComponent({
-  name: 'AskAnnaColorPicker',
+const emit = defineEmits(['onChangeColor', 'onUnsetColor'])
 
-  setup(_, context) {
-    const swatches = ['#ff7872', '#faed7a', '#49b0ad', '#ffb385', '#9e9e9e']
+const swatches = ['#ff7872', '#faed7a', '#49b0ad', '#ffb385', '#9e9e9e']
 
-    const menu = ref(false)
-    const selectedColor = ref('#ffffff')
+const menu = ref(false)
+const selectedColor = ref('#ffffff')
 
-    const handleOnIputColor = color => {
-      selectedColor.value = color
-      context.emit('onChangeColor', color)
-    }
+const handleOnIputColor = (color: string) => {
+  selectedColor.value = color
+  emit('onChangeColor', color)
+}
 
-    const handleClose = () => {
-      menu.value = false
-      selectedColor.value = '#ffffff'
+const handleClose = () => {
+  menu.value = false
+  selectedColor.value = '#ffffff'
 
-      context.emit('onUnsetColor')
-    }
+  emit('onUnsetColor')
+}
 
-    watch(menu, menu => {
-      if (!menu) handleOnIputColor('#ffffff')
-    })
-
-    return {
-      menu,
-      swatches,
-      selectedColor,
-
-      handleClose,
-      handleOnIputColor
-    }
-  }
+watch(menu, menu => {
+  if (!menu) handleOnIputColor('#ffffff')
 })
 </script>
 

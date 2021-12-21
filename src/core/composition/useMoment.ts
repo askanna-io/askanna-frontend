@@ -1,5 +1,4 @@
 import moment from 'moment-timezone'
-import { SetupContext } from '@vue/composition-api'
 
 interface MillisecondsToStrParams {
   showSeconds: boolean
@@ -8,7 +7,7 @@ interface MillisecondsToStrParams {
   showLessMinuteText: boolean
 }
 
-export default function (context: SetupContext) {
+export default function () {
   const runTimeHours = function (startTime: string, endTime: string) {
     return moment.duration(moment(endTime).diff(moment(startTime))).asSeconds()
   }

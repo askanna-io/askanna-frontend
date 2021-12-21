@@ -13,10 +13,11 @@
     }"
   >
     <v-toolbar flat dense white--text color="white" class="AskAnna-app-bar">
-      <v-toolbar-title class="pl-4 pt-5 title font-weight-light">
-        <v-icon large>
-          mdi-semantic-web
-        </v-icon>
+      <v-toolbar-title
+        class="title font-weight-light"
+        :class="{ 'px-0 pt-2 pr-0': $vuetify.breakpoint.xsOnly, 'pl-4 pt-5': !$vuetify.breakpoint.xsOnly }"
+      >
+        <v-icon large> mdi-semantic-web </v-icon>
         {{ project.name }}
       </v-toolbar-title>
       <v-spacer />
@@ -30,60 +31,48 @@
   </v-card>
 </template>
 
-<script>
+<script setup lang="ts">
+import { computed } from '@vue/composition-api'
 import usePermission from '@/core/composition/usePermission'
-import { computed, defineComponent } from '@vue/composition-api'
-import ProjectMenuPopup from '@/features/project/components/ProjectMenuPopup'
+import ProjectMenuPopup from '@/features/project/components/ProjectMenuPopup.vue'
 
-export default defineComponent({
-  name: 'WorkspaceProjectCardItem',
-
-  components: {
-    ProjectMenuPopup
-  },
-
-  props: {
-    project: {
-      type: Object,
-      default: function () {
-        return {
-          status: 'UNDIFENED',
-          runtime: 0,
-          memory: 0,
-          return_payload: null,
-          stdout: null,
-          created: '',
-          finished: ''
-        }
+const props = defineProps({
+  project: {
+    type: Object,
+    default: function () {
+      return {
+        status: 'UNDIFENED',
+        runtime: 0,
+        memory: 0,
+        return_payload: null,
+        stdout: null,
+        created: '',
+        finished: ''
       }
-    },
-    description: {
-      type: String,
-      default: () => ''
-    },
-    workspaceName: {
-      type: String,
-      default: () => ''
-    },
-    hover: {
-      type: Boolean,
-      default: false
-    },
-    routeBackTo: {
-      type: String,
-      default: () => 'workspace'
     }
   },
-
-  setup(props) {
-    const permission = usePermission()
-    const projectInfoEdit = computed(
-      () => props.project.permission && props.project.permission[permission.labels.projectInfoEdit]
-    )
-
-    return { projectInfoEdit }
+  description: {
+    type: String,
+    default: () => ''
+  },
+  workspaceName: {
+    type: String,
+    default: () => ''
+  },
+  hover: {
+    type: Boolean,
+    default: false
+  },
+  routeBackTo: {
+    type: String,
+    default: () => 'workspace'
   }
 })
+
+const permission = usePermission()
+const projectInfoEdit = computed(
+  () => props.project.permission && props.project.permission[permission.labels.projectInfoEdit]
+)
 </script>
 <style scoped>
 .h-100 {

@@ -1,14 +1,14 @@
-<script>
-import MetricTagType from './types/MetricTagType'
-import MetricTimeType from './types/MetricTimeType'
-import MetricDateType from './types/MetricDateType'
-import MetricFloatType from './types/MetricFloatType'
+<script lang="ts">
+import MetricTagType from './types/MetricTagType.vue'
 import { defineComponent } from '@vue/composition-api'
-import MetricStringType from './types/MetricStringType'
-import MetricBooleanType from './types/MetricBooleanType'
-import MetricIntegerType from './types/MetricIntegerType'
-import MetricDateTimeType from './types/MetricDateTimeType'
-import MetricDictionaryType from './types/MetricDictionaryType'
+import MetricTimeType from './types/MetricTimeType.vue'
+import MetricDateType from './types/MetricDateType.vue'
+import MetricFloatType from './types/MetricFloatType.vue'
+import MetricStringType from './types/MetricStringType.vue'
+import MetricBooleanType from './types/MetricBooleanType.vue'
+import MetricIntegerType from './types/MetricIntegerType.vue'
+import MetricDateTimeType from './types/MetricDateTimeType.vue'
+import MetricDictionaryType from './types/MetricDictionaryType.vue'
 
 export default defineComponent({
   name: 'MetricValue',

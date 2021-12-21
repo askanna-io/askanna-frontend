@@ -2,23 +2,10 @@
   <ask-anna-loading-progress :loading="packageLoading && !isProcessing">
     <v-row align="center" justify="center">
       <v-col cols="12" class="pt-0 pb-0">
-        <package-toolbar :breadcrumbs="breadcrumbs" v-sticky="sticked" sticky-offset="{top: 52, bottom: 10}">
-          <template v-slot:left>
-            <v-tooltip top content-class="opacity-1">
-              <template v-slot:activator="{ on }">
-                <div v-on="on">
-                  <a v-if="currentPath" @click="handeBackToPackageRoot" class="text-body-2"
-                    >Package #{{ packageId.slice(0, 4) }}<v-icon small>mdi-chevron-right</v-icon></a
-                  >
-                  <span class="text-body-2" v-else> Package #{{ packageId.slice(0, 4) }}</span>
-                </div>
-              </template>
-              <span>{{ packageId }}</span>
-            </v-tooltip>
-          </template>
+        <package-toolbar :breadcrumbs="breadcrumbsComputed" v-sticky="sticked" sticky-offset="{top: 52, bottom: 10}">
           <template v-slot:rigth>
             <v-slide-y-transition>
-              <div v-if="!filePath">
+              <div v-if="!filePath && !$vuetify.breakpoint.xsOnly">
                 <v-btn small outlined color="secondary" class="mr-1 btn--hover" @click="handleDownload()">
                   <v-icon color="secondary" left>mdi-download</v-icon>Download
                 </v-btn>
@@ -44,19 +31,19 @@
   </ask-anna-loading-progress>
 </template>
 
-<script>
+<script lang="ts">
 import { useWindowSize } from '@u3u/vue-hooks'
-import { FileIcons } from '@package/utils/index'
 import { defineComponent } from '@vue/composition-api'
-import PackageFile from '@package/components/PackageFile'
-import PackageTree from '@package/components/PackageTree'
+import { FileIcons } from '@/features/package/utils/index'
+import PackageFile from '@package/components/PackageFile.vue'
+import PackageTree from '@package/components/PackageTree.vue'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import useProjectStore from '@project/composition/useProjectStore'
 import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
-import PackageToolbar from '@/features/package/components/PackageToolbar'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
+import useProjectStore from '@/features/project/composition/useProjectStore'
 import usePackageStore from '@/features/package/composition/usePackageStore'
 import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
+import PackageToolbar from '@/features/package/components/PackageToolbar.vue'
 import usePackagesStore from '@/features/packages/composition/usePackagesStore'
 import { ref, watch, onBeforeMount, onUnmounted, computed } from '@vue/composition-api'
 
@@ -87,6 +74,22 @@ export default defineComponent({
     const { workspaceId, projectId, jobId, jobRunId, folderName = '' } = context.root.$route.params
 
     const packageId = computed(() => jobRunStore.jobRun.value.package.short_uuid)
+
+    const breadcrumbsComputed = computed(() => {
+      const first = {
+        title: `Package: #${packageId.value.slice(0, 4)}`,
+        to: {
+          name: 'workspace-project-code',
+          params: { workspaceId, projectId, packageId: packageId.value }
+        },
+        exact: true,
+        disabled: false,
+        showTooltip: true,
+        tooltip: `<span>${packageId.value}</span>`
+      }
+
+      return [first, ...breadcrumbs.value]
+    })
 
     const sticked = computed(() => !projectStore.stickedVM.value)
 
@@ -219,8 +222,10 @@ export default defineComponent({
       calcHeight,
       breadcrumbs,
       currentPath,
-      getRoutePath,
       isProcessing,
+      breadcrumbsComputed,
+
+      getRoutePath,
       handleDownload,
       handeBackToPackageRoot
     }

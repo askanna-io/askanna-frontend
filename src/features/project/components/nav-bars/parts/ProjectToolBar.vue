@@ -1,23 +1,18 @@
 <template>
-  <v-card-title transition="slide-y-transition">
-    <span class="font-weight-light">Project: {{ projectName }}</span>
+  <div>
+    <v-card-title transition="slide-y-transition">
+      <span class="font-weight-light">Project: {{ projectName }}</span>
+    </v-card-title>
     <project-menu :projectName="projectName" />
-  </v-card-title>
+  </div>
 </template>
-<script>
-import ProjectMenu from './ProjectMenu'
-import { defineComponent } from '@vue/composition-api'
+<script setup lang="ts">
+import ProjectMenu from './ProjectMenu.vue'
 
-export default defineComponent({
-  name: 'ProjectToolBar',
-
-  components: { ProjectMenu },
-
-  props: {
-    projectName: {
-      type: String,
-      default: ''
-    }
+defineProps({
+  projectName: {
+    type: String,
+    default: ''
   }
 })
 </script>

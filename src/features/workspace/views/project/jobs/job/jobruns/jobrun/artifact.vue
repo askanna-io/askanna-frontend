@@ -4,26 +4,13 @@
       <v-col cols="12" class="pt-0 pb-0">
         <package-toolbar
           v-if="artifactUuid"
-          :breadcrumbs="breadcrumbs"
           v-sticky="sticked"
+          :breadcrumbs="breadcrumbsComputed"
           sticky-offset="{top: 52, bottom: 10}"
         >
-          <template v-slot:left>
-            <v-tooltip top content-class="opacity-1">
-              <template v-slot:activator="{ on }">
-                <div v-on="on">
-                  <a v-if="currentPath" @click="handeBackToPackageRoot" class="text-body-2"
-                    >Artifact #{{ artifactUuid.slice(0, 4) }}<v-icon small>mdi-chevron-right</v-icon></a
-                  >
-                  <span class="text-body-2" v-else> Artifact #{{ artifactUuid.slice(0, 4) }}</span>
-                </div>
-              </template>
-              <span>{{ artifactUuid }}</span>
-            </v-tooltip>
-          </template>
           <template v-slot:rigth>
             <v-slide-y-transition>
-              <div v-if="!filePath">
+              <div v-if="!filePath && !$vuetify.breakpoint.xsOnly">
                 <v-btn small outlined color="secondary" class="mr-1 btn--hover" @click="handleDownload()">
                   <v-icon color="secondary" left>mdi-download</v-icon>Download
                 </v-btn>
@@ -51,18 +38,18 @@
   </ask-anna-loading-progress>
 </template>
 
-<script>
+<script lang="ts">
 import { useWindowSize } from '@u3u/vue-hooks'
-import { FileIcons } from '@package/utils/index'
 import { defineComponent } from '@vue/composition-api'
+import { FileIcons } from '@/features/package/utils/index'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import PackageTree from '@/features/package/components/PackageTree'
-import useProjectStore from '@project/composition/useProjectStore'
-import PackageFile from '@/features/package/components/PackageFile'
-import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
-import PackageToolbar from '@/features/package/components/PackageToolbar'
 import { watch, onBeforeMount, computed } from '@vue/composition-api'
+import PackageFile from '@/features/package/components/PackageFile.vue'
+import PackageTree from '@/features/package/components/PackageTree.vue'
+import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
+import useProjectStore from '@/features/project/composition/useProjectStore'
 import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
+import PackageToolbar from '@/features/package/components/PackageToolbar.vue'
 import useTriggerFileDownload from '@/core/composition/useTriggerFileDownload'
 
 export default defineComponent({
@@ -75,10 +62,10 @@ export default defineComponent({
   },
 
   setup(_, context) {
+    const router = useRouterAskAnna()
     const { height } = useWindowSize()
     const jobRunStore = useJobRunStore()
     const projectStore = useProjectStore()
-    const router = useRouterAskAnna()
 
     const triggerFileDownload = useTriggerFileDownload()
     const breadcrumbs = usePackageBreadcrumbs(context, { start: 8, end: 9 })
@@ -92,6 +79,22 @@ export default defineComponent({
     const calcHeight = computed(() => height.value - 370)
     const path = computed(() => context.root.$route.params.folderName || '/')
     const artifactUuid = computed(() => jobRunStore.jobRun.value.artifact.short_uuid)
+
+    const breadcrumbsComputed = computed(() => {
+      const first = {
+        title: `Artifact: #${artifactUuid.value.slice(0, 4)}`,
+        to: {
+          name: 'workspace-project-jobs-job-jobrun-artifact',
+          params: { workspaceId, projectId, jobId, jobRunId }
+        },
+        exact: true,
+        disabled: false,
+        showTooltip: true,
+        tooltip: `<span>${artifactUuid.value}</span>`
+      }
+
+      return [first, ...breadcrumbs.value]
+    })
 
     const currentPath = computed(() => {
       const pathArray = path.value.split('/')
@@ -195,6 +198,8 @@ export default defineComponent({
       breadcrumbs,
       currentPath,
       artifactUuid,
+      breadcrumbsComputed,
+
       getRoutePath,
       handleDownload,
       jobRunArtifactLoading,
