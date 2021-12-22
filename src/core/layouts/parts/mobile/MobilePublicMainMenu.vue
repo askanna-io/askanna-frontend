@@ -1,5 +1,11 @@
 <template>
-  <v-card class="mx-auto askAnna-main-menu">
+  <v-card
+    :flat="!sticked"
+    v-sticky="true"
+    on-stick="handleOnStick"
+    class="mx-auto askAnna-main-menu"
+    sticky-offset="{top: 58, bottom: 10}"
+  >
     <v-list dense flat>
       <v-list-item href="https://askanna.io" link @click="handleClickOnMenuItem" key="find out" target="_blank">
         <v-list-item-title>Find out more about AskAnna</v-list-item-title>
@@ -29,7 +35,13 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from '@vue/composition-api'
+
 const emits = defineEmits('onClose')
+
+const sticked = ref(false)
+
+const handleOnStick = data => (sticked.value = data.sticked)
 
 const handleClickOnMenuItem = () => {
   emits('onClose')
