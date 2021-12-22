@@ -17,7 +17,7 @@
           no-gutters
         >
           <div md="auto" sm="12" text-sm-left>
-            <v-btn class="pa-0 mt-1" :href="'https://askanna.io/'" text color="transparent">
+            <v-btn class="pa-0 mt-1" :to="{ path: '/' }" text color="transparent">
               <img alt="AskAnna logo" src="@/assets/logo.svg" class="logo" />
             </v-btn>
           </div>
