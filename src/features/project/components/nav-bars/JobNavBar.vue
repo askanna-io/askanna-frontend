@@ -35,7 +35,7 @@
     <v-divider v-if="!$vuetify.breakpoint.xsOnly" />
     <v-card flat>
       <v-card-title v-if="!sticked" :class="{ 'py-1 pl-3 ': $vuetify.breakpoint.xsOnly }">
-        <span class="title font-weight-light">Job:{{ job.name }} </span>
+        <span class="title font-weight-light">Job: {{ job.name }} </span>
       </v-card-title>
       <v-divider v-if="!sticked" :class="{ 'py-1  ': $vuetify.breakpoint.xsOnly }" />
 
