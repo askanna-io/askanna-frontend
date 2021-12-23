@@ -1,14 +1,24 @@
 <template>
   <v-dialog v-model="valueModel" max-width="650px">
     <v-card class="AskAnna-card AskAnna-card--in-dialog">
-      <v-toolbar flat dense white--text color="white">
-        <v-toolbar-title class="px-0 toolbar-title">
+      <v-toolbar
+        flat
+        white--text
+        color="white"
+        :dense="!$vuetify.breakpoint.xsOnly"
+        :height="calcHeight($vuetify.breakpoint.xsOnly)"
+      >
+        <v-toolbar-title v-if="!$vuetify.breakpoint.xsOnly" class="px-0 toolbar-title">
           <div class="grid-container">
             <div class="pre">Do you want to remove&nbsp;</div>
             <div class="long primary--text">{{ peopleName }}</div>
             <div class="mark pre">&nbsp;?</div>
           </div>
         </v-toolbar-title>
+        <div v-else class="text-body-1 font-weight-bold">
+          Do you want to remove <span class="primary--text">{{ peopleName }}</span
+          >?
+        </div>
         <v-spacer />
         <v-btn icon @click="closeDelete">
           <v-icon>mdi-close</v-icon>
@@ -39,7 +49,7 @@
         The removal action cannot be undone! Please confirm that you want to remove <b>{{ peopleName }}</b
         >:
       </v-card-text>
-      <v-card-actions class="ml-5">
+      <v-card-actions :class="{ 'px-3': $vuetify.breakpoint.xsOnly }">
         <v-btn small outlined text color="secondary" class="mr-1 btn--hover" @click="closeDelete">Cancel</v-btn>
         <v-btn small outlined text color="error" class="mr-1 btn--hover" @click="deleteItemConfirm"
           >Remove {{ name }}</v-btn
@@ -48,45 +58,42 @@
     </v-card>
   </v-dialog>
 </template>
-<script>
+<script setup lang="ts">
+import { computed } from '@vue/composition-api'
 import useSlicedText from '@/core/composition/useSlicedText'
-import { computed, defineComponent } from '@vue/composition-api'
 
-export default defineComponent({
-  name: 'WorkspacePeopleConfirmDeletePopup',
-
-  props: {
-    value: {
-      type: Boolean,
-      default: false
-    },
-    peopleName: {
-      type: String,
-      default: () => ''
-    }
+const props = defineProps({
+  value: {
+    type: Boolean,
+    default: false
   },
-
-  setup(props, context) {
-    const slicedText = useSlicedText()
-
-    const name = computed(() => slicedText(props.peopleName, 17))
-
-    const valueModel = computed({
-      get: () => props.value,
-      set: () => context.emit('onCloseDeletePopup')
-    })
-
-    const closeDelete = () => context.emit('onCloseDeletePopup')
-    const deleteItemConfirm = () => context.emit('onDeleteConfirm')
-
-    return {
-      name,
-      valueModel,
-      closeDelete,
-      deleteItemConfirm
-    }
+  peopleName: {
+    type: String,
+    default: () => ''
   }
 })
+
+const emit = defineEmits(['onCloseDeletePopup', 'onCloseDeletePopup', 'onDeleteConfirm'])
+
+const slicedText = useSlicedText()
+
+const name = computed(() => slicedText(props.peopleName, 17))
+
+const valueModel = computed({
+  get: () => props.value,
+  set: () => emit('onCloseDeletePopup')
+})
+
+const closeDelete = () => emit('onCloseDeletePopup')
+const deleteItemConfirm = () => emit('onDeleteConfirm')
+
+const calcHeight = isMobile => {
+  let height = 50
+
+  height = isMobile ? 50 + props.peopleName.length / 2 : 50
+
+  return height
+}
 </script>
 <style>
 .pre {

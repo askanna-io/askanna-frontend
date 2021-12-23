@@ -1,20 +1,20 @@
 <template>
-  <v-card class="mx-auto" outlined>
-    <v-breadcrumbs :items="breadcrumbs">
-      <template v-slot:item="{ item }">
-        <v-breadcrumbs-item :to="item.to" exact>
-          {{ item.title }}
-        </v-breadcrumbs-item>
-      </template>
-    </v-breadcrumbs>
-    <v-divider />
+  <v-card class="mx-auto" :outlined="!$vuetify.breakpoint.xsOnly" :flat="$vuetify.breakpoint.xsOnly">
+    <div class="askAnna-breadcrumbs">
+      <v-breadcrumbs :items="breadcrumbs" :class="{ 'pa-0 pl-3': $vuetify.breakpoint.xsOnly }">
+        <template v-slot:item="{ item }">
+          <v-breadcrumbs-item :to="item.to" exact>
+            {{ item.title }}
+          </v-breadcrumbs-item>
+        </template>
+      </v-breadcrumbs>
+    </div>
+    <v-divider v-if="!$vuetify.breakpoint.xsOnly" />
     <v-card-title>
       <v-avatar v-if="workspaceProfile.membership.avatar.small" class="ma-2" rounded="35" :size="35" tile>
         <v-img class="img--rounded" :src="workspaceProfile.membership.avatar.small" />
       </v-avatar>
-      <v-icon v-else large left>
-        mdi-account
-      </v-icon>
+      <v-icon v-else large left> mdi-account </v-icon>
       <span class="title py-1">Edit my profile</span>
     </v-card-title>
 
@@ -30,9 +30,7 @@
         <v-tabs v-model="currentTab" class="pl-4">
           <v-tabs-slider color="primary" />
           <v-tab ripple key="workspace"> {{ workspaceName }} workspace</v-tab>
-          <v-tab ripple key="global">
-            AskAnna profile
-          </v-tab>
+          <v-tab ripple key="global"> AskAnna profile </v-tab>
         </v-tabs>
 
         <v-tabs-items v-model="currentTab">
@@ -133,17 +131,16 @@
   </v-card>
 </template>
 
-<script>
+<script lang="ts">
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useUserStore from '@/features/user/composition/useUserStore'
 import useImageUrlToBase64 from '@/core/composition/useImageUrlToBase64'
-import UserProfile from '@/features/user/components/profile/UserProfile'
+import UserProfile from '@/features/user/components/profile/UserProfile.vue'
 import useWorkSpaceStore from '@/features/workspace/composition/useWorkSpaceStore'
-import UserWorkspaceProfile from '@/features/workspace/components/profile/UserWorkspaceProfile'
-import UserWorkspaceProfileAvatar from '@/features/workspace/components/profile/UserWorkspaceProfileAvatar'
-
 import { watch, ref, toRefs, reactive, computed, defineComponent } from '@vue/composition-api'
+import UserWorkspaceProfile from '@/features/workspace/components/profile/UserWorkspaceProfile.vue'
+import UserWorkspaceProfileAvatar from '@/features/workspace/components/profile/UserWorkspaceProfileAvatar.vue'
 
 export default defineComponent({
   name: 'workspace-profile',
@@ -154,8 +151,8 @@ export default defineComponent({
     const snackBar = useSnackBar()
     const userStore = useUserStore()
     const router = useRouterAskAnna()
+    const workSpaceStore = useWorkSpaceStore()
     const imageUrlToBase64 = useImageUrlToBase64()
-    const workSpaceStore = useWorkSpaceStore(context)
 
     const profileForm = ref(null)
     const currentTab = ref('workspace')

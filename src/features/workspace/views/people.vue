@@ -91,7 +91,6 @@ const deleteInvitationConfirmPopup = ref(false)
 const resendInvitationConfirmPopup = ref(false)
 
 const isPeopleAdmin = computed(() => selectedPeople.value.role === 'WA')
-const role = computed(() => (isPeopleAdmin.value ? 'WM' : 'WA'))
 const isMember = computed(() => workspaceStore.workspace.value.is_member)
 const roleAction = computed(() => (isPeopleAdmin.value ? 'revoke' : 'grant'))
 
@@ -101,8 +100,8 @@ const workspaceSettings = computed(() => workspaceStore.workspaceSettings.value)
 
 const workspacePeople = computed(() => {
   const {
-    filter: { role, status },
     search,
+    filter: { role, status },
     sorting: { sortBy, sort }
   } = workspaceStore.workspacePeopleParams.value
 
@@ -137,9 +136,9 @@ const loading = computed(() => workspaceStore.loading.value.people)
 
 const handleValue = value => (peoplePopup.value = value)
 
-const handleOpenRemovePeople = value => (peopleConfirmDeletePopup.value = true)
+const handleOpenRemovePeople = () => (peopleConfirmDeletePopup.value = true)
 
-const handleCloseChangeRolePopup = value => (changeRoleConfirmPopup.value = false)
+const handleCloseChangeRolePopup = () => (changeRoleConfirmPopup.value = false)
 
 const handleChangeRole = async role => {
   changeRoleTo.value = role

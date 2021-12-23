@@ -40,17 +40,27 @@
 
         <v-divider />
         <v-card-actions
-          v-if="people.status === 'invited' && workspacePeopleInviteRemove"
-          :class="{ 'pb-0': isCurrentUserAdmin }"
+          v-if="people.status === 'invited' && (workspacePeopleInviteResend || workspacePeopleInviteRemove)"
+          :class="{ 'pb-0': isCurrentUserAdmin, 'px-0': $vuetify.breakpoint.xsOnly }"
         >
-          <v-row dense class="mx-2">
+          <v-row dense class="mx-2" justify="space-between">
             <v-col cols="6">
-              <v-btn small block outlined text color="error" class="btn--hover" @click="handleDeleteInivitationPopup">
+              <v-btn
+                v-if="workspacePeopleInviteRemove"
+                small
+                block
+                outlined
+                text
+                color="error"
+                class="btn--hover"
+                @click="handleDeleteInivitationPopup"
+              >
                 Delete invitation
               </v-btn>
             </v-col>
             <v-col cols="6">
               <v-btn
+                v-if="workspacePeopleInviteResend"
                 small
                 block
                 outlined
@@ -64,9 +74,12 @@
             </v-col>
           </v-row>
         </v-card-actions>
-        <v-card-actions v-if="currentUser.short_uuid === people.short_uuid">
-          <v-row class="mx-2">
-            <v-col>
+        <v-card-actions
+          v-if="currentUser.short_uuid === people.short_uuid"
+          :class="{ 'px-0': $vuetify.breakpoint.xsOnly }"
+        >
+          <v-row dense class="mx-2" justify="space-between">
+            <v-col class="text-center" cols="12">
               <v-btn small block outlined text color="secondary" class="btn--hover" :to="{ name: 'workspace-profile' }">
                 Edit my profile
               </v-btn>
@@ -77,9 +90,9 @@
           v-if="
             !simple && (workspacePeopleEdit || workspacePeopleRemove) && currentUser.short_uuid !== people.short_uuid
           "
-          :class="{ 'pt-0': isCurrentUserAdmin && people.status !== 'accepted' }"
+          :class="{ 'pt-0': isCurrentUserAdmin && people.status !== 'accepted', 'px-0': $vuetify.breakpoint.xsOnly }"
         >
-          <v-row dense class="mx-2">
+          <v-row dense class="mx-2" justify="space-between">
             <v-col v-if="workspacePeopleEdit && buttonsVisible.WA" class="text-center" cols="12">
               <div>
                 <v-btn small block outlined text color="secondary" class="btn--hover" @click="handleChangeRole('WA')">
@@ -115,7 +128,7 @@
   </v-row>
 </template>
 <script setup lang="ts">
-import { ref, computed } from '@vue/composition-api'
+import { computed } from '@vue/composition-api'
 import usePermission from '@/core/composition/usePermission'
 import useSlicedText from '@/core/composition/useSlicedText'
 
@@ -212,6 +225,7 @@ const buttonsVisible = computed(() => ({
 const workspacePeopleEdit = computed(() => permission.getFor(permission.labels.workspacePeopleEdit))
 const workspacePeopleRemove = computed(() => permission.getFor(permission.labels.workspacePeopleRemove))
 const workspacePeopleInviteRemove = computed(() => permission.getFor(permission.labels.workspacePeopleInviteRemove))
+const workspacePeopleInviteResend = computed(() => permission.getFor(permission.labels.workspacePeopleInviteResend))
 
 const name = computed(() => slicedText(props.people.name || props.people.email, 30))
 const isCurrentUserAdmin = computed(() => props.currentUser.role.code === 'WA')

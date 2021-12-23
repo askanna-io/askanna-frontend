@@ -1,13 +1,16 @@
 <template>
-  <v-card class="mx-auto" outlined>
-    <v-breadcrumbs :items="breadcrumbs">
-      <template v-slot:item="{ item }">
-        <v-breadcrumbs-item :to="item.to" exact>
-          {{ item.title }}
-        </v-breadcrumbs-item>
-      </template>
-    </v-breadcrumbs>
-    <v-divider />
+  <v-card class="mx-auto" :outlined="!$vuetify.breakpoint.xsOnly" :flat="$vuetify.breakpoint.xsOnly">
+    <div class="askAnna-breadcrumbs">
+      <v-breadcrumbs :items="breadcrumbs" :class="{ 'pa-0 pl-3': $vuetify.breakpoint.xsOnly }">
+        <template v-slot:item="{ item }">
+          <v-breadcrumbs-item :to="item.to" exact>
+            {{ item.title }}
+          </v-breadcrumbs-item>
+        </template>
+      </v-breadcrumbs>
+    </div>
+
+    <v-divider v-if="!$vuetify.breakpoint.xsOnly" />
     <v-card-title>
       <v-avatar v-if="globalProfile.avatar.small" class="ma-2" rounded="35" :size="35" tile>
         <v-img class="img--rounded" :src="globalProfile.avatar.small" />
@@ -78,15 +81,13 @@
 </template>
 
 <script lang="ts">
-import usePermission from '@/core/composition/usePermission'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useUserStore from '@/features/user/composition/useUserStore'
-import UserProfile from '@/features/user/components/profile/UserProfile'
-import UserWorkspaceProfile from '@/features/workspace/components/profile/UserWorkspaceProfile'
-import UserWorkspaceProfileAvatar from '@/features/workspace/components/profile/UserWorkspaceProfileAvatar'
-
-import { watch, ref, toRefs, reactive, computed, onBeforeMount, defineComponent } from '@vue/composition-api'
+import UserProfile from '@/features/user/components/profile/UserProfile.vue'
+import { watch, ref, toRefs, reactive, computed, defineComponent } from '@vue/composition-api'
+import UserWorkspaceProfile from '@/features/workspace/components/profile/UserWorkspaceProfile.vue'
+import UserWorkspaceProfileAvatar from '@/features/workspace/components/profile/UserWorkspaceProfileAvatar.vue'
 
 export default defineComponent({
   name: 'workspace-profile',
