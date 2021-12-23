@@ -4,12 +4,12 @@
       <v-col :cols="$vuetify.breakpoint.xsOnly ? 12 : 5">
         <v-text-field
           dense
-          autofocus
           outlined
           required
           hide-details
           :value="run.name"
           label="Run name (optional)"
+          :autofocus="!$vuetify.breakpoint.xsOnly"
           @input="handleOnInput($event, 'name')"
         />
       </v-col>

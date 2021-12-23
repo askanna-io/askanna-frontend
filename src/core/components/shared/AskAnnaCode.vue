@@ -13,19 +13,19 @@
             for="input-174"
             :class="{ 'primary--text': isFocused, 'error--text': jsonerror }"
             class="v-label theme--light v-label--active"
-            style="left: 0px; right: auto; position: absolute;"
+            style="left: 0px; right: auto; position: absolute"
             >{{ title }}</label
           >
           <textarea
-            spellcheck="false"
-            autofocus
+            rows="7"
             no-resize
+            ref="textArea"
             :label="title"
             v-model="value"
+            spellcheck="false"
             @blur="handleOnBlur"
             @focus="handleOnFocus"
-            rows="7"
-            ref="textArea"
+            :autofocus="!$vuetify.breakpoint.xsOnly"
           />
         </div>
         <div class="v-input__append-inner">
