@@ -2,7 +2,11 @@
   <v-dialog v-model="valueModel" max-width="650px" @click:outside="closeDelete">
     <v-card class="AskAnna-card AskAnna-card--in-dialog">
       <v-app-bar flat dense white--text color="white">
-        <v-card-title class="px-0">Do you want to delete the invitation? </v-card-title>
+        <div v-if="$vuetify.breakpoint.xsOnly" class="text-body-1 font-weight-bold">
+          Do you want to delete the invitation?
+        </div>
+
+        <v-toolbar-title v-else class="px-0 toolbar-title">Do you want to delete the invitation?</v-toolbar-title>
         <v-spacer />
 
         <v-btn icon @click="closeDelete">
@@ -23,7 +27,7 @@
         The action cannot be undone! Please confirm that you want to delete the invitation for <b>{{ peopleName }}</b
         >:
       </v-card-text>
-      <v-card-actions class="ml-5">
+      <v-card-actions :class="{ 'px-3': $vuetify.breakpoint.xsOnly }">
         <v-btn small outlined text color="secondary" class="mr-1 btn--hover" @click="closeDelete">Cancel</v-btn>
         <v-btn small outlined text color="error" class="mr-1 btn--hover" @click="deleteItemConfirm"
           >Delete invitation</v-btn
@@ -32,45 +36,34 @@
     </v-card>
   </v-dialog>
 </template>
-<script>
+<script setup lang="ts">
+import { computed } from '@vue/composition-api'
 import useSlicedText from '@/core/composition/useSlicedText'
-import { computed, defineComponent } from '@vue/composition-api'
 
-export default defineComponent({
-  name: 'WorkspacePeopleConfirmDeleteInvitationPopup',
-
-  props: {
-    value: {
-      type: Boolean,
-      default: false
-    },
-    peopleName: {
-      type: String,
-      default: () => ''
-    }
+const props = defineProps({
+  value: {
+    type: Boolean,
+    default: false
   },
-
-  setup(props, context) {
-    const slicedText = useSlicedText()
-
-    const name = computed(() => slicedText(props.peopleName, 17))
-
-    const valueModel = computed({
-      get: () => props.value,
-      set: () => context.emit('onClose')
-    })
-
-    const closeDelete = () => context.emit('onClose')
-    const deleteItemConfirm = () => context.emit('onDeleteConfirm')
-
-    return {
-      name,
-      valueModel,
-      closeDelete,
-      deleteItemConfirm
-    }
+  peopleName: {
+    type: String,
+    default: () => ''
   }
 })
+
+const emit = defineEmits(['onClose', 'onDeleteConfirm'])
+
+const slicedText = useSlicedText()
+
+const name = computed(() => slicedText(props.peopleName, 17))
+
+const valueModel = computed({
+  get: () => props.value,
+  set: () => emit('onClose')
+})
+
+const closeDelete = () => emit('onClose')
+const deleteItemConfirm = () => emit('onDeleteConfirm')
 </script>
 <style scoped>
 .break {

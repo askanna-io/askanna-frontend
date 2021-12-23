@@ -293,9 +293,14 @@ code.lang-shell {
 
 // mobile view
 .mobile-view {
+  .v-dialog {
+    margin: 12px;
+  }
+
   .v-toolbar__extension {
     padding: 4px 12px;
   }
+
   .v-item-group.v-slide-group {
     display: grid;
   }

@@ -28,32 +28,18 @@
     </v-card>
   </div>
 </template>
-<script lang="ts">
+<script setup lang="ts">
+import { computed } from '@vue/composition-api'
 import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
-import useProjectStore from '@project/composition/useProjectStore'
-import { computed, defineComponent } from '@vue/composition-api'
+import useProjectStore from '@/features/project/composition/useProjectStore'
 
-export default defineComponent({
-  name: 'WorkspacePeopleNavbar',
+const projectStore = useProjectStore()
+const breadcrumbs = useBreadcrumbs({ start: 0, end: 3 })
 
-  setup(_, context) {
-    const projectStore = useProjectStore(context)
+const sticked = computed(() => projectStore.menu.value.sticked)
 
-    const breadcrumbs = useBreadcrumbs({ start: 0, end: 3 })
-
-    const sticked = computed(() => projectStore.menu.value.sticked)
-
-    const onStick = data => {
-      projectStore.setMenu({ name: 'menu.isSticked', value: data.sticked })
-      if (!data.sticked) projectStore.setMenu({ name: 'menu.sticked', value: false })
-    }
-
-    return {
-      sticked,
-      onStick,
-      breadcrumbs,
-      routerParams: context.root.$route.params
-    }
-  }
-})
+const onStick = data => {
+  projectStore.setMenu({ name: 'menu.isSticked', value: data.sticked })
+  if (!data.sticked) projectStore.setMenu({ name: 'menu.sticked', value: false })
+}
 </script>

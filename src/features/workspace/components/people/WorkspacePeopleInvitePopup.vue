@@ -1,6 +1,6 @@
 <template>
   <div class="text-center">
-    <v-dialog v-model="menu" :close-on-content-click="false" width="500">
+    <v-dialog content-class="invite-popup" v-model="menu" :close-on-content-click="false" width="500">
       <template v-slot:activator="{ on, attrs }">
         <v-btn v-bind="attrs" v-on="on" small rounded class="mr-3">
           <v-icon color="primary" left>mdi-plus</v-icon>
@@ -219,3 +219,8 @@ const getStyle = email => {
   }
 }
 </script>
+<style lang="scss">
+.mobile-view .v-dialog {
+  margin: 12px;
+}
+</style>
