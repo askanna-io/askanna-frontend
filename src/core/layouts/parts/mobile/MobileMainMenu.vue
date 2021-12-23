@@ -1,5 +1,11 @@
 <template>
-  <v-card class="mx-auto askAnna-main-menu">
+  <v-card
+    v-sticky="true"
+    :flat="!sticked"
+    on-stick="handleOnStick"
+    class="mx-auto askAnna-main-menu"
+    sticky-offset="{top: 58, bottom: 10}"
+  >
     <v-list dense>
       <MobileWorkspaceMenu @onClose="handleClickOnMenuItem" />
       <MobileProjectMenu @onClose="handleClickOnMenuItem" />
@@ -18,10 +24,10 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed } from '@vue/composition-api'
 import MobileProjectMenu from './MobileProjectMenu.vue'
 import MobileWorkspaceMenu from './MobileWorkspaceMenu.vue'
 
-import { computed } from '@vue/composition-api'
 import useAuthStore from '@/features/auth/composition/useAuthStore'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 
@@ -29,6 +35,8 @@ const emits = defineEmits('onClose')
 
 const authStore = useAuthStore()
 const workspaceStore = useWorkspaceStore()
+
+const sticked = ref(false)
 
 const isMember = computed(() => workspaceStore.workspace.value.is_member)
 const workspaceShortUuid = computed(() => workspaceStore.workspace.value.short_uuid)
@@ -41,6 +49,8 @@ const profileRoute = computed(() => {
 })
 
 const logout = () => authStore.actions.logout()
+
+const handleOnStick = data => (sticked.value = data.sticked)
 
 const handleClickOnMenuItem = () => {
   emits('onClose')

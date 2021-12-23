@@ -34,7 +34,6 @@
     <v-main class="scrollbar">
       <v-container class="a-content" :class="{ 'px-0 mx-0 pt-1': $vuetify.breakpoint.xsOnly }">
         <MobileMainMenu v-if="mobileMenu" @onClose="handleOnCloseMobileMenu" />
-
         <router-view />
       </v-container>
       <the-snack-bar />
