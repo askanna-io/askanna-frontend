@@ -162,31 +162,31 @@ const viewModel = computed({
   }
 })
 
-const loading = computed(() => jobRunStore.resultLoading.value)
-const isResultJSON = computed(() => jobRunStore.isResultJSON.value)
-const isResultHTML = computed(() => jobRunStore.isResultHTML.value)
+const loading = computed(() => jobRunStore.state.resultLoading.value)
+const isResultJSON = computed(() => jobRunStore.state.isResultJSON.value)
+const isResultHTML = computed(() => jobRunStore.state.isResultHTML.value)
 
-const isShowPreview = computed(() => jobRunStore.isShowPreview.value)
-const jobRunResultRaw = computed(() => jobRunStore.jobRunResult.value)
-const jobRunResultExt = computed(() => jobRunStore.jobRunResultExt.value)
+const isShowPreview = computed(() => jobRunStore.state.isShowPreview.value)
+const jobRunResultRaw = computed(() => jobRunStore.state.jobRunResult.value)
+const jobRunResultExt = computed(() => jobRunStore.state.jobRunResultExt.value)
 
 const runResultPreview = computed(() =>
   jobRunResultExt.value === 'json'
-    ? prettyJSON(jobRunStore.jobRunResultPreview.value, 2)
-    : jobRunStore.jobRunResultPreview.value
+    ? prettyJSON(jobRunStore.state.jobRunResultPreview.value, 2)
+    : jobRunStore.state.jobRunResultPreview.value
 )
 
-const isJobRunResultBig = computed(() => jobRunStore.isJobRunResultBig.value)
-const isResultBigForRawView = computed(() => jobRunStore.isResultBigForRawView.value)
+const isJobRunResultBig = computed(() => jobRunStore.state.isJobRunResultBig.value)
+const isResultBigForRawView = computed(() => jobRunStore.state.isResultBigForRawView.value)
 const isJobRunResultEmpty = computed(() => !runResultPreview.value && !loading.value)
 
 const isValidJSON = computed(() => runResultPreview.value.isValidJSON)
 
 const jobRunResultFormated = computed(() => runResultPreview.value.prettyJson)
 const jobRunResultForView = computed(() => {
-  if (!isResultJSON.value) return jobRunStore.jobRunResultPreview.value
+  if (!isResultJSON.value) return jobRunStore.state.jobRunResultPreview.value
 
-  return currentView.value.value === 'raw' ? jobRunStore.jobRunResultPreview.value : jobRunResultFormated.value
+  return currentView.value.value === 'raw' ? jobRunStore.state.jobRunResultPreview.value : jobRunResultFormated.value
 })
 
 const jobRunResultSource = computed(() =>
@@ -212,7 +212,7 @@ const handleDownload = async () => {
 
   forceFileDownload.trigger({
     source: jobRunResultRaw.value,
-    name: `run_${jobRunStore.jobRun.value.short_uuid}_result_${jobRunStore.jobRun.value.result.original_name}`
+    name: `run_${jobRunStore.state.jobRun.value.short_uuid}_result_${jobRunStore.state.jobRun.value.result.original_name}`
   })
 }
 

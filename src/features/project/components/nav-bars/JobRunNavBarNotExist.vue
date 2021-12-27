@@ -86,7 +86,7 @@ export default defineComponent({
     const onStick = data => props.handleOnStick(data.sticked)
 
     const { jobId, jobRunId } = context.root.$route.params
-    const jobRun = computed(() => jobRunStore.jobRun.value)
+    const jobRun = computed(() => jobRunStore.state.jobRun.value)
 
     return {
       jobId,

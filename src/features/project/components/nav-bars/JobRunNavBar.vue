@@ -51,7 +51,7 @@
         <job-run-info-status class="title font-weight-light" text="" :value="jobRunStatus" />
       </v-card-title>
 
-      <v-divider v-if="!sticked" />
+      <v-divider v-if="!sticked && !$vuetify.breakpoint.xsOnly" />
 
       <v-toolbar
         v-if="!sticked"
@@ -69,10 +69,7 @@
 
         <v-spacer />
 
-        <job-run-menu-popup
-          v-if="!isEditJobRunView && projectRunEdit && !$vuetify.breakpoint.xsOnly"
-          :jobrun="jobRun"
-        />
+        <job-run-menu-popup v-if="!isEditJobRunView && projectRunEdit && !$vuetify.breakpoint.xsOnly" />
       </v-toolbar>
     </v-card>
   </div>
@@ -129,7 +126,7 @@ const projectRunEdit = computed(() => permission.getFor(permission.labels.projec
 
 const { jobRunId } = route.value.params
 const jobName = computed(() => jobStore.job.value.name)
-const jobRun = computed(() => jobRunStore.jobRun.value)
+const jobRun = computed(() => jobRunStore.state.jobRun.value)
 const jobRunStatus = computed(() => jobStore.jobrun.value.status)
 const runName = computed(() => (jobRun.value.name ? `: ${jobRun.value.name}` : ':'))
 

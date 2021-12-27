@@ -14,9 +14,9 @@ const jobRunStore = useJobRunStore()
 const fetchData = async () => {
   const { jobRunId } = route.value.params
 
-  if (jobRunStore.jobRun.value.short_uuid !== jobRunId) {
-    await jobRunStore.resetStore()
-    await jobRunStore.getJobRun(jobRunId)
+  if (jobRunStore.state.jobRun.value.short_uuid !== jobRunId) {
+    await jobRunStore.actions.resetStore()
+    await jobRunStore.actions.getJobRun(jobRunId)
   }
 }
 

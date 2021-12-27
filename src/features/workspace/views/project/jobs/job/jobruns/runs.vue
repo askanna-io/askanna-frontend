@@ -13,11 +13,11 @@
   </v-card>
 </template>
 
-<script>
-import JobRuns from '@jobrun/components/JobRuns'
-import useJobRunStore from '@jobrun/composition/useJobRunStore'
+<script lang="ts">
+import JobRuns from '@/features/jobrun/components/JobRuns.vue'
+import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
 import { ref, onBeforeMount, defineComponent, computed } from '@vue/composition-api'
-import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress'
+import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 
 export default defineComponent({
   components: {
@@ -32,7 +32,7 @@ export default defineComponent({
     const jobRunStore = useJobRunStore()
 
     const fetchData = async () => {
-      await jobRunStore.getRunsJob({
+      await jobRunStore.actions.getRunsJob({
         uuid,
         params: {
           limit: 25,
@@ -45,13 +45,13 @@ export default defineComponent({
 
     onBeforeMount(() => fetchData())
 
-    const runs = computed(() => jobRunStore.runs.value.results)
-    const count = computed(() => jobRunStore.runs.value.count)
+    const runs = computed(() => jobRunStore.state.runs.value.results)
+    const count = computed(() => jobRunStore.state.runs.value.count)
 
-    const jobRunsLoading = computed(() => jobRunStore.jobRunsLoading.value)
+    const jobRunsLoading = computed(() => jobRunStore.state.jobRunsLoading.value)
 
     const handleChangeParams = async params => {
-      await jobRunStore.getRunsJob({
+      await jobRunStore.actions.getRunsJob({
         uuid,
         params
       })

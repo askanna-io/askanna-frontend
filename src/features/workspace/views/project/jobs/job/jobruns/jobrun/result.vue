@@ -12,14 +12,14 @@ export default defineComponent({
 
   setup(_, context) {
     const jobRunStore = useJobRunStore()
-    const jobRun = computed(() => jobRunStore.jobRun.value)
+    const jobRun = computed(() => jobRunStore.state.jobRun.value)
 
     const fetchData = async () => {
       const { jobRunId } = context.root.$route.params
 
-      if (jobRunStore.jobRun.value.short_uuid !== jobRunId) {
-        await jobRunStore.resetStore()
-        await jobRunStore.getJobRun(jobRunId)
+      if (jobRunStore.state.jobRun.value.short_uuid !== jobRunId) {
+        await jobRunStore.actions.resetStore()
+        await jobRunStore.actions.getJobRun(jobRunId)
       }
     }
 

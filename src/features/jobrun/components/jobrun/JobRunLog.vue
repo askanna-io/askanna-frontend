@@ -106,7 +106,7 @@ const isLoadingLogs = computed(
   () => (!isFinished.value || scrollLoading.value) && jobRunStatus.value && isAutoUpdateLog.value
 )
 
-const next = computed(() => jobRunStore.jobRunLog.value.next)
+const next = computed(() => jobRunStore.state.jobRunLog.value.next)
 const jobRunId = computed(() => route.value.params.jobRunId)
 
 const query = useQuery({
@@ -114,42 +114,42 @@ const query = useQuery({
   limit: 100,
   offset: 200,
   uuid: jobRunId.value,
-  storeAction: jobRunStore.getJobRunLog
+  storeAction: jobRunStore.state.getJobRunLog
 })
 
-const countLogs = computed(() => jobRunStore.jobRunLog.value.count)
+const countLogs = computed(() => jobRunStore.state.jobRunLog.value.count)
 const logs = computed(() => {
-  if (!jobRunStore.jobRunLog.value.results) return ''
+  if (!jobRunStore.state.jobRunLog.value.results) return ''
 
   const reducer = (acc, cr) => {
     acc = acc + `${cr[2]} \n`
     return acc
   }
-  const result = jobRunStore.jobRunLog.value.results.length
-    ? jobRunStore.jobRunLog.value.results.reduce(reducer, ``)
+  const result = jobRunStore.state.jobRunLog.value.results.length
+    ? jobRunStore.state.jobRunLog.value.results.reduce(reducer, ``)
     : ''
 
   return result
 })
 
 const fullLog = computed(() => {
-  if (!jobRunStore.jobRunLogFullVersion.value) return ''
+  if (!jobRunStore.state.jobRunLogFullVersion.value) return ''
 
   const reducer = (acc, cr) => {
     acc = acc + `${cr[2]} \n`
     return acc
   }
-  const result = jobRunStore.jobRunLogFullVersion.value.length
-    ? jobRunStore.jobRunLogFullVersion.value.reduce(reducer, ``)
+  const result = jobRunStore.state.jobRunLogFullVersion.value.length
+    ? jobRunStore.state.jobRunLogFullVersion.value.reduce(reducer, ``)
     : ''
 
   return result
 })
 
 const maxHeight = computed(() => height.value - 270)
-const loading = computed(() => jobRunStore.jobRunlogLoading.value)
+const loading = computed(() => jobRunStore.state.jobRunlogLoading.value)
 const scrollerStyles = computed(() => ({ 'max-height': `${maxHeight.value}px` }))
-const logNoAvailable = computed(() => !jobRunStore.jobRunLog.value.results.length && !loading.value)
+const logNoAvailable = computed(() => !jobRunStore.state.jobRunLog.value.results.length && !loading.value)
 
 const handleAutoUpdate = () => {
   scrollLoading.value = true
@@ -164,7 +164,7 @@ const handleCopy = async () => {
 const handleDownload = async () => {
   await getFullJobRun()
 
-  forceFileDownload.trigger({ source: fullLog.value, name: `run_${jobRunStore.jobRun.value.short_uuid}_log.txt` })
+  forceFileDownload.trigger({ source: fullLog.value, name: `run_${jobRunStore.state.jobRun.value.short_uuid}_log.txt` })
 }
 
 const onScroll = e => {
@@ -175,16 +175,16 @@ const onScroll = e => {
 
 const getFullJobRun = async () => {
   if (fullLog.value && isFinished.value) return
-  await jobRunStore.getFullVersionJobRunLog(jobRunId.value)
+  await jobRunStore.actions.getFullVersionJobRunLog(jobRunId.value)
 }
 
 const checkLogs = () => {
   polling.value = setInterval(async () => {
     if (!isAutoUpdateLog.value) return
     // scroll window and log container to bottom
-    await jobRunStore.getJobRunLog({
+    await jobRunStore.actions.getJobRunLog({
       uuid: jobRunId.value,
-      params: { limit: 1000, offset: jobRunStore.jobRunLog.value.results.length }
+      params: { limit: 1000, offset: jobRunStore.state.jobRunLog.value.results.length }
     })
     goTo(logRef.value.$el.scrollHeight)
     goTo(logRef.value.$el.scrollHeight, { container: '#scroll-target' })
@@ -196,8 +196,8 @@ const checkLogs = () => {
 }
 
 const fetchData = async () => {
-  await jobRunStore.resetJobRunLog()
-  await jobRunStore.getInitJobRunLog({ uuid: jobRunId.value, params: { limit: 200, offset: 0 } })
+  await jobRunStore.actions.resetJobRunLog()
+  await jobRunStore.actions.getInitJobRunLog({ uuid: jobRunId.value, params: { limit: 200, offset: 0 } })
 }
 
 onBeforeMount(() => fetchData())
@@ -210,7 +210,7 @@ watchEffect(() => {
   }
 
   // disable load animation logic
-  if (isFinished.value && countLogs.value === jobRunStore.jobRunLog.value.results.length) {
+  if (isFinished.value && countLogs.value === jobRunStore.state.jobRunLog.value.results.length) {
     scrollLoading.value = false
 
     return

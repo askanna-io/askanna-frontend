@@ -2,9 +2,9 @@
   <router-view />
 </template>
 
-<script>
-import useJobStore from '@job/composition/useJobStore'
-import useJobRunStore from '@jobrun/composition/useJobRunStore'
+<script lang="ts">
+import useJobStore from '@/features/job/composition/useJobStore'
+import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
 import { onBeforeMount, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
@@ -17,7 +17,7 @@ export default defineComponent({
     onBeforeMount(() => {
       const fetchData = async () => {
         await jobStore.resetStore()
-        await jobRunStore.resetStore()
+        await jobRunStore.actions.resetStore()
         await jobStore.getJob(jobId)
       }
 

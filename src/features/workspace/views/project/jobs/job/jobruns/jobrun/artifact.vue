@@ -70,7 +70,7 @@ export default defineComponent({
     const triggerFileDownload = useTriggerFileDownload()
     const breadcrumbs = usePackageBreadcrumbs(context, { start: 8, end: 9 })
 
-    const file = computed(() => jobRunStore.file.value)
+    const file = computed(() => jobRunStore.state.file.value)
 
     const { jobId, jobRunId, projectId, workspaceId } = context.root.$route.params
 
@@ -78,7 +78,7 @@ export default defineComponent({
 
     const calcHeight = computed(() => height.value - 370)
     const path = computed(() => context.root.$route.params.folderName || '/')
-    const artifactUuid = computed(() => jobRunStore.jobRun.value.artifact.short_uuid)
+    const artifactUuid = computed(() => jobRunStore.state.jobRun.value.artifact.short_uuid)
 
     const breadcrumbsComputed = computed(() => {
       const first = {
@@ -99,7 +99,7 @@ export default defineComponent({
     const currentPath = computed(() => {
       const pathArray = path.value.split('/')
       const fileName = pathArray.pop()
-      const current = jobRunStore.artifactData.value.files.find(
+      const current = jobRunStore.state.artifactData.value.files.find(
         item => item.name === fileName && item.path === path.value
       )
 
@@ -109,7 +109,7 @@ export default defineComponent({
     const parentPath = computed(() => {
       let parentPathTemp
       if (currentPath.value && currentPath.value.is_dir && path.value !== '/') {
-        parentPathTemp = jobRunStore.artifactData.value.files.find(
+        parentPathTemp = jobRunStore.state.artifactData.value.files.find(
           file => file.name === currentPath.value.parent && file.is_dir
         )
         parentPathTemp = {
@@ -127,7 +127,7 @@ export default defineComponent({
     )
 
     const treeView = computed(() => {
-      const tree = jobRunStore.artifactData.value.files.filter(item => item.parent === path.value)
+      const tree = jobRunStore.state.artifactData.value.files.filter(item => item.parent === path.value)
 
       return parentPath.value ? [parentPath.value, ...tree] : tree
     })
@@ -143,10 +143,10 @@ export default defineComponent({
     }
 
     const handleDownload = async () => {
-      const artifactData = jobRunStore.artifactData.value
+      const artifactData = jobRunStore.state.artifactData.value
       const url = await jobRunStore.downloadPackage({
         jobRunShortId: jobRunId,
-        artifactShortId: jobRunStore.jobRun.value.artifact.short_uuid
+        artifactShortId: jobRunStore.state.jobRun.value.artifact.short_uuid
       })
 
       triggerFileDownload.trigger({ url, name: artifactData.filename })
@@ -162,14 +162,14 @@ export default defineComponent({
     const fetchData = async () => {
       const { jobRunId } = context.root.$route.params
 
-      if (jobRunStore.jobRun.value.short_uuid !== jobRunId) {
+      if (jobRunStore.state.jobRun.value.short_uuid !== jobRunId) {
         await jobRunStore.resetStore()
         await jobRunStore.getJobRun(jobRunId)
       }
       await jobRunStore.getInitialJobRunArtifact({
         uuid: {
           jobRunShortId: jobRunId,
-          artifactShortId: jobRunStore.jobRun.value.artifact.short_uuid
+          artifactShortId: jobRunStore.state.jobRun.value.artifact.short_uuid
         }
       })
     }
@@ -184,8 +184,8 @@ export default defineComponent({
       await jobRunStore.getFileSource(filePath)
     })
 
-    const fileSource = computed(() => jobRunStore.fileSource.value)
-    const jobRunArtifactLoading = computed(() => jobRunStore.jobRunArtifactLoading.value)
+    const fileSource = computed(() => jobRunStore.state.fileSource.value)
+    const jobRunArtifactLoading = computed(() => jobRunStore.state.jobRunArtifactLoading.value)
 
     return {
       file,

@@ -110,9 +110,9 @@ export default defineComponent({
     const loading = ref(true)
     const currentJob = ref(true)
 
-    const count = computed(() => jobRunStore.runs.value.count)
-    const runs = computed(() => jobRunStore.runs.value.results)
-    const jobRunsLoading = computed(() => jobRunStore.jobRunsLoading.value)
+    const count = computed(() => jobRunStore.state.runs.value.count)
+    const runs = computed(() => jobRunStore.state.runs.value.results)
+    const jobRunsLoading = computed(() => jobRunStore.state.jobRunsLoading.value)
 
     const calcSubHeight = computed(() => {
       const rowHeight = 64
