@@ -51,11 +51,11 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import useJobStore from '@/features/job/composition/useJobStore'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import { ref, defineComponent, computed } from '@vue/composition-api'
-import ConfirmDeleteJobPopup from '@/features/project/components/popup/ConfirmDeleteJobPopup'
+import ConfirmDeleteJobPopup from '@/features/project/components/popup/ConfirmDeleteJobPopup.vue'
 
 export default defineComponent({
   name: 'JobMenuPopup',

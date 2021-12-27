@@ -73,7 +73,7 @@ export default defineComponent({
 
     const { workspaceId, projectId, jobId, jobRunId, folderName = '' } = context.root.$route.params
 
-    const packageId = computed(() => jobRunStore.jobRun.value.package.short_uuid)
+    const packageId = computed(() => jobRunStore.state.jobRun.value.package.short_uuid)
 
     const breadcrumbsComputed = computed(() => {
       const first = {
@@ -96,11 +96,11 @@ export default defineComponent({
     const fetchData = async () => {
       const { jobRunId } = context.root.$route.params
 
-      if (jobRunStore.jobRun.value.short_uuid !== jobRunId) {
+      if (jobRunStore.state.jobRun.value.short_uuid !== jobRunId) {
         await jobRunStore.resetStore()
         await jobRunStore.getJobRun(jobRunId)
       }
-      const packageId = jobRunStore.jobRun.value.package.short_uuid
+      const packageId = jobRunStore.state.jobRun.value.package.short_uuid
 
       if (packageId === '') {
         return
@@ -122,7 +122,7 @@ export default defineComponent({
       await packageStore.getPackage({
         projectId,
         folderName,
-        packageId: jobRunStore.jobRun.value.package.short_uuid,
+        packageId: jobRunStore.state.jobRun.value.package.short_uuid,
         failedRoute: 'workspace-project-jobs-job-jobrun-code-does-not-exist'
       })
 

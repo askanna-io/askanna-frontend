@@ -46,10 +46,10 @@ export default defineComponent({
     const jobRunStatus = computed(() => jobStore.jobrun.value)
     const loadingStatus = computed(() => jobStore.jobRunStatusLoading.value)
 
-    const jobRun = computed(() => jobRunStore.jobRun.value)
-    const loading = computed(() => jobRunStore.jobRunLoading.value)
+    const jobRun = computed(() => jobRunStore.state.jobRun.value)
+    const loading = computed(() => jobRunStore.state.jobRunLoading.value)
 
-    const description = computed(() => jobRunStore.jobRun.value.description)
+    const description = computed(() => jobRunStore.state.jobRun.value.description)
     const isDescriptionNotEmpty = computed(() => description.value && description.value !== '<p></p>')
 
     const fetchData = async () => {

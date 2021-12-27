@@ -75,8 +75,8 @@ export default defineComponent({
     const router = useRouterAskAnna()
     const jobRunStore = useJobRunStore()
 
-    const jobRun = computed(() => jobRunStore.jobRun.value)
-    const loading = computed(() => jobRunStore.jobRunLoading.value)
+    const jobRun = computed(() => jobRunStore.state.jobRun.value)
+    const loading = computed(() => jobRunStore.state.jobRunLoading.value)
     const projectRunEdit = computed(() => permission.getFor(permission.labels.projectRunEdit))
 
     const isStateNotChanged = ref(true)
@@ -91,7 +91,10 @@ export default defineComponent({
     }
 
     const handleSave = async () => {
-      const isUpdated = await jobRunStore.udapteJobRun({ uuid: jobRunStore.jobRun.value.short_uuid, data: run.value })
+      const isUpdated = await jobRunStore.udapteJobRun({
+        uuid: jobRunStore.state.jobRun.value.short_uuid,
+        data: run.value
+      })
       if (isUpdated) {
         snackBar.showSnackBar({ message: 'The runifo was updated', color: 'success' })
         handleClose()
@@ -102,12 +105,6 @@ export default defineComponent({
       router.push({
         name: 'workspace-project-jobs-job-jobrun-overview'
       })
-
-    const hadnleOpenJobRun = () => {
-      router.push({
-        name: 'workspace-project-jobs-job-jobrun'
-      })
-    }
 
     const handleOnChange = () => (isStateNotChanged.value = false)
     const handleClarifyDescription = val => val.replace('<p></p>', '')
@@ -130,7 +127,6 @@ export default defineComponent({
       handleClose,
       handleOnInput,
       handleOnChange,
-      hadnleOpenJobRun,
       handleClarifyDescription
     }
   }

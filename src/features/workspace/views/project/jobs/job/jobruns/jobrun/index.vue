@@ -2,11 +2,11 @@
   <router-view />
 </template>
 
-<script>
-import useJobStore from '@job/composition/useJobStore'
+<script lang="ts">
 import useInterval from '@/core/composition/useInterval'
-import useJobRunStore from '@jobrun/composition/useJobRunStore'
-import useProjectStore from '@project/composition/useProjectStore'
+import useJobStore from '@/features/job/composition/useJobStore'
+import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
+import useProjectStore from '@/features/project/composition/useProjectStore'
 import { computed, watchEffect, defineComponent, onBeforeMount } from '@vue/composition-api'
 
 export default defineComponent({
@@ -27,7 +27,7 @@ export default defineComponent({
 
         await jobStore.getJobRunStatus(jobRunId)
         if (isFinished.value) {
-          await jobRunStore.getJobRun(jobRunId)
+          await jobRunStore.actions.getJobRun(jobRunId)
           clearIntervalFn('checkStatus')
         }
       })
@@ -42,7 +42,7 @@ export default defineComponent({
 
         await jobStore.getJob(jobId)
       }
-      await jobRunStore.getJobRun(jobRunId)
+      await jobRunStore.actions.getJobRun(jobRunId)
       await jobStore.getJobRunStatus(jobRunId)
     }
 

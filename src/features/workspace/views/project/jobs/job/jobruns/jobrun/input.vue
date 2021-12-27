@@ -2,8 +2,8 @@
   <job-run-input />
 </template>
 
-<script>
-import useJobRunStore from '@jobrun/composition/useJobRunStore'
+<script lang="ts">
+import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
 import JobRunInput from '@/features/jobrun/components/jobrun/JobRunInput.vue'
 import { watch, computed, onBeforeMount, onMounted, defineComponent } from '@vue/composition-api'
 
@@ -14,16 +14,16 @@ export default defineComponent({
     const { jobRunId } = context.root.$route.params
 
     const jobRunStore = useJobRunStore()
-    const jobRunShortId = computed(() => jobRunStore.jobRun.value.short_uuid)
-    const payloadUuid = computed(() => jobRunStore.jobRun.value.payload.short_uuid)
+    const jobRunShortId = computed(() => jobRunStore.state.jobRun.value.short_uuid)
+    const payloadUuid = computed(() => jobRunStore.state.jobRun.value.payload.short_uuid)
 
-    const stopLoading = async () => await jobRunStore.setLoading({ name: 'payLoadLoading', value: false })
+    const stopLoading = async () => await jobRunStore.actions.setLoading({ name: 'payLoadLoading', value: false })
 
     const handleViewPayload = async (jobRunShortId, payloadUuid) => {
-      await jobRunStore.setLoading({ name: 'payLoadLoading', value: true })
+      await jobRunStore.actions.setLoading({ name: 'payLoadLoading', value: true })
 
       if (payloadUuid) {
-        await jobRunStore.getJobRunPayload({ jobRunShortId, payloadUuid })
+        await jobRunStore.actions.getJobRunPayload({ jobRunShortId, payloadUuid })
         await stopLoading()
       }
     }
@@ -35,13 +35,13 @@ export default defineComponent({
     })
 
     watch(payloadUuid, (payloadUuid, previusPayloadUuid) => {
-      if (!jobRunStore.jobRunPayload.value || previusPayloadUuid !== payloadUuid) {
+      if (!jobRunStore.state.jobRunPayload.value || previusPayloadUuid !== payloadUuid) {
         handleViewPayload(jobRunShortId.value, payloadUuid)
       }
     })
 
     onBeforeMount(() => {
-      if (jobRunShortId.value !== jobRunId || !jobRunStore.jobRunPayload.value) {
+      if (jobRunShortId.value !== jobRunId || !jobRunStore.state.jobRunPayload.value) {
         handleViewPayload(jobRunShortId.value, payloadUuid.value)
       }
     })

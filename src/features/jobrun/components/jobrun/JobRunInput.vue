@@ -79,13 +79,13 @@ const copy = useCopy()
 const jobRunStore = useJobRunStore()
 const forceFileDownload = useForceFileDownload()
 
-const loading = computed(() => jobRunStore.payLoadLoading.value)
-const jobRunPayload = computed(() => jobRunStore.jobRunPayload.value)
-const jobRunPayloadComputed = computed(() => JSON.stringify(jobRunStore.jobRunPayload.value, null, 2))
+const loading = computed(() => jobRunStore.state.payLoadLoading.value)
+const jobRunPayload = computed(() => jobRunStore.state.jobRunPayload.value)
+const jobRunPayloadComputed = computed(() => JSON.stringify(jobRunStore.state.jobRunPayload.value, null, 2))
 const isJobRunPayloadEmpty = computed(() => !jobRunPayload.value && !loading.value)
 
 const handleDownload = async formatType => {
-  const { short_uuid } = jobRunStore.jobRun.value
+  const { short_uuid } = jobRunStore.state.jobRun.value
   const formatOption = formatType === 'raw' ? null : 2
   const jrPayload = JSON.stringify(jobRunPayload.value, null, formatOption)
 

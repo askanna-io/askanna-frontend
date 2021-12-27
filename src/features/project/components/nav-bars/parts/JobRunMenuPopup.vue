@@ -9,7 +9,7 @@
       <v-card flat elevation="24" width="300">
         <v-toolbar flat height="40" class="secondary--text" color="white">
           <v-toolbar-title class="pl-0">
-            <span class="title font-weight-light">{{ jobrun.name || 'Run:' + jobrun.short_uuid }}</span>
+            <span class="title font-weight-light">{{ run.name || 'Run: ' + run.short_uuid }}</span>
           </v-toolbar-title>
           <v-spacer />
 
@@ -43,7 +43,7 @@
       </v-card>
     </v-menu>
     <confirm-delete-run-popup
-      :runInfo="jobrun"
+      :runInfo="run"
       :value="deleteRunConfirmPopup"
       @onClose="handlCloseConfirmDeletePopup"
       @onDeleteConfirm="handleDeleteConfirmRun"
@@ -51,75 +51,42 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { ref, computed } from '@vue/composition-api'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import { ref, defineComponent, computed } from '@vue/composition-api'
 import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
-import ConfirmDeleteRunPopup from '@/features/project/components/popup/ConfirmDeleteRunPopup'
 
-export default defineComponent({
-  name: 'JobRunMenuPopup',
+import ConfirmDeleteRunPopup from '@/features/project/components/popup/ConfirmDeleteRunPopup.vue'
 
-  components: {
-    ConfirmDeleteRunPopup
-  },
+const router = useRouterAskAnna()
+const jobRunStore = useJobRunStore()
 
-  props: {
-    jobrun: {
-      type: Object,
-      default: function () {
-        return {
-          name: '',
-          short_uuid: '',
-          description: ''
-        }
-      }
-    }
-  },
+const menu = ref(false)
+const deleteRunConfirmPopup = ref(false)
 
-  setup(props, context) {
-    const jobRunStore = useJobRunStore()
-    const router = useRouterAskAnna()
+const editJobRunRouteName = 'workspace-project-jobs-job-jobrun-edit'
 
-    const menu = ref(false)
-    const deleteRunConfirmPopup = ref(false)
+const run = computed(() => jobRunStore.state.jobRun.value)
+const disabledButtonEditJobRun = computed(() => router.route.value.name === editJobRunRouteName)
+const handlerOpenEditRunPage = async () => {
+  router.push({ name: editJobRunRouteName })
+  handleClose()
+}
 
-    const editJobRunRouteName = 'workspace-project-jobs-job-jobrun-edit'
+const handleClose = () => {
+  menu.value = false
+}
 
-    const disabledButtonEditJobRun = computed(() => context.root.$route.name === editJobRunRouteName)
-    const handlerOpenEditRunPage = async () => {
-      router.push({ name: editJobRunRouteName })
-      handleClose()
-    }
+const handleOpenConfirmDeleteRun = async () => (deleteRunConfirmPopup.value = true)
 
-    const handleClose = () => {
-      menu.value = false
-    }
+const handlCloseConfirmDeletePopup = () => (deleteRunConfirmPopup.value = false)
 
-    const handleOpenConfirmDeleteRun = async () => (deleteRunConfirmPopup.value = true)
-
-    const handlCloseConfirmDeletePopup = () => (deleteRunConfirmPopup.value = false)
-
-    const handleDeleteConfirmRun = async () => {
-      const isDeleted = await jobRunStore.deleteRunInfo(props.jobrun)
-      deleteRunConfirmPopup.value = false
-      menu.value = false
-      if (isDeleted) {
-        router.push({ name: 'workspace-project-job-jobruns' })
-      }
-    }
-
-    return {
-      menu,
-      deleteRunConfirmPopup,
-      disabledButtonEditJobRun,
-
-      handleClose,
-      handlerOpenEditRunPage,
-      handleDeleteConfirmRun,
-      handleOpenConfirmDeleteRun,
-      handlCloseConfirmDeletePopup
-    }
+const handleDeleteConfirmRun = async () => {
+  const isDeleted = await jobRunStore.actions.deleteRunInfo(run.value)
+  deleteRunConfirmPopup.value = false
+  menu.value = false
+  if (isDeleted) {
+    router.push({ name: 'workspace-project-job-jobruns' })
   }
-})
+}
 </script>

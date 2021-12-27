@@ -10,10 +10,10 @@
   </v-card>
 </template>
 
-<script>
-import JobsList from '@/features/jobs/components/JobsList'
-import useJobRunStore from '@jobrun/composition/useJobRunStore'
-import useProjectStore from '@project/composition/useProjectStore'
+<script lang="ts">
+import JobsList from '@/features/jobs/components/JobsList.vue'
+import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
+import useProjectStore from '@/features/project/composition/useProjectStore'
 import { computed, defineComponent, onBeforeMount } from '@vue/composition-api'
 
 export default defineComponent({
@@ -29,7 +29,7 @@ export default defineComponent({
     const { projectId } = context.root.$route.params
 
     const fetchData = async () => {
-      await jobRunStore.resetStore()
+      await jobRunStore.actions.resetStore()
       await projectStore.resetProjectJobs()
       await projectStore.getProjectJobs(projectId)
     }

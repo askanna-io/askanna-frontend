@@ -39,7 +39,7 @@ const isSorted = ref(false)
 
 const sticked = computed(() => !projectStore.stickedVM.value)
 const next = computed(() => runinfoVariablesStore.state.variables.value.next)
-const labels = computed(() => jobRunStore.jobRun.value.variablesmeta.labels)
+const labels = computed(() => jobRunStore.state.jobRun.value.variablesmeta.labels)
 
 const items = computed(() => runinfoVariablesStore.state.variables.value.results)
 const loading = computed(() => runinfoVariablesStore.state.loading.value.variables)
