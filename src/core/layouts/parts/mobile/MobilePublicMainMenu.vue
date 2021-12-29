@@ -1,9 +1,8 @@
 <template>
   <v-card
-    :flat="!sticked"
     v-sticky="true"
-    on-stick="handleOnStick"
     class="mx-auto askAnna-main-menu"
+    :class="{ 'sticky-fox': isSticky }"
     sticky-offset="{top: 58, bottom: 10}"
   >
     <v-list dense flat>
@@ -35,13 +34,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from '@vue/composition-api'
+import { computed } from '@vue/composition-api'
+import { useMobileStore } from '@/core/store/useMobileStore'
 
 const emits = defineEmits('onClose')
 
-const sticked = ref(false)
+const mobileStore = useMobileStore()
 
-const handleOnStick = data => (sticked.value = data.sticked)
+const isSticky = computed(() => mobileStore.isMenuOpen && mobileStore.isMenuSticked)
 
 const handleClickOnMenuItem = () => {
   emits('onClose')

@@ -48,7 +48,7 @@
 
     <v-main class="scrollbar">
       <v-container class="a-content" :class="{ 'px-0 mx-0 pt-1': $vuetify.breakpoint.xsOnly }">
-        <MobilePublicMainMenu v-if="mobileMenu" @onClose="handleOnCloseMobileMenu" />
+        <MobilePublicMainMenu v-if="mobileStore.isMenuOpen" @onClose="handleOnCloseMobileMenu" />
 
         <router-view />
       </v-container>
@@ -61,26 +61,26 @@
 <script setup lang="ts">
 import '@/core/plugins/intercom.js'
 import useTitle from '@/core/composition/useTitle'
+import { useMobileStore } from '@/core/store/useMobileStore'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useUserStore from '@/features/user/composition/useUserStore'
 
 import { useProjectsStore } from '@/features/projects/useProjectsStore'
 import UpdateApp from '@/core/components/shared/updateApp/UpdateApp.vue'
+import { computed, onUpdated, onBeforeMount } from '@vue/composition-api'
 import MobilePublicMainMenu from './parts/mobile/MobilePublicMainMenu.vue'
 import useProjectStore from '@/features/project/composition/useProjectStore'
 import { useWorkspacesStore } from '@/features/workspaces/useWorkspacesStore'
-import { ref, computed, onUpdated, onBeforeMount } from '@vue/composition-api'
 
 useTitle()
 const token = window.localStorage.getItem('token')
 
 const userStore = useUserStore()
 const routerAA = useRouterAskAnna()
+const mobileStore = useMobileStore()
 const projectStore = useProjectStore()
 const projectsStore = useProjectsStore()
 const workspacesStore = useWorkspacesStore()
-
-const mobileMenu = ref(false)
 
 const showAppBarIcon = computed(() => !routerAA.route.value.meta?.hideAppBarIcon)
 
@@ -94,8 +94,12 @@ const fetchData = async () => {
   await workspacesStore.getAllWorkspaces()
 }
 
-const handleOnCloseMobileMenu = () => (mobileMenu.value = false)
-const handleOpenMenu = () => (mobileMenu.value = !mobileMenu.value)
+const handleOnCloseMobileMenu = () => (mobileStore.isMenuOpen = false)
+const handleOpenMenu = () => {
+  mobileStore.isMenuOpen = !mobileStore.isMenuOpen
+  mobileStore.isMenuSticked = window.pageYOffset > 1
+}
+
 const handleChangeSticked = () => (projectStore.stickedVM.value = !projectStore.stickedVM.value)
 
 onBeforeMount(() => fetchData())

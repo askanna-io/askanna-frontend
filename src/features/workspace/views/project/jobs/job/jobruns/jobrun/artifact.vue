@@ -5,6 +5,7 @@
         <package-toolbar
           v-if="artifactUuid"
           v-sticky="sticked"
+          :sticky-z-index="1"
           :breadcrumbs="breadcrumbsComputed"
           sticky-offset="{top: 52, bottom: 10}"
         >

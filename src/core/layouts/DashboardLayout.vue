@@ -33,7 +33,7 @@
 
     <v-main class="scrollbar">
       <v-container class="a-content" :class="{ 'px-0 mx-0 pt-1': $vuetify.breakpoint.xsOnly }">
-        <MobileMainMenu v-if="mobileMenu" @onClose="handleOnCloseMobileMenu" />
+        <MobileMainMenu v-if="mobileStore.isMenuOpen" @onClose="handleOnCloseMobileMenu" />
         <router-view />
       </v-container>
       <the-snack-bar />
@@ -44,28 +44,28 @@
 </template>
 
 <script setup lang="ts">
+import '@/core/plugins/intercom.js'
+import useTitle from '@/core/composition/useTitle'
 import AskAnnaMainMenu from './parts/AskAnnaMainMenu.vue'
 import AskAnnaUserMenu from './parts/AskAnnaUserMenu.vue'
+import { useMobileStore } from '@/core/store/useMobileStore'
 import MobileMainMenu from './parts/mobile/MobileMainMenu.vue'
 import UpdateApp from '@/core/components/shared/updateApp/UpdateApp.vue'
 import TheUploadStatus from '@/core/components/uploadStatus/TheUploadStatus.vue'
 
-import '@/core/plugins/intercom.js'
-import useTitle from '@/core/composition/useTitle'
-
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useUserStore from '@/features/user/composition/useUserStore'
 import { useProjectsStore } from '@/features/projects/useProjectsStore'
+import { computed, onBeforeMount, onUpdated } from '@vue/composition-api'
 import useProjectStore from '@/features/project/composition/useProjectStore'
 import { useWorkspacesStore } from '@/features/workspaces/useWorkspacesStore'
-import { ref, computed, onBeforeMount, onUpdated } from '@vue/composition-api'
 
-const mobileMenu = ref(false)
 const token = window.localStorage.getItem('token')
 
 useTitle()
 const userStore = useUserStore()
 const router = useRouterAskAnna()
+const mobileStore = useMobileStore()
 const projectStore = useProjectStore()
 const projectsStore = useProjectsStore()
 const workspacesStore = useWorkspacesStore()
@@ -85,8 +85,11 @@ const fetchData = async () => {
   await workspacesStore.getAllWorkspaces()
   await workspacesStore.getMemberWorkspaces()
 }
-const handleOnCloseMobileMenu = () => (mobileMenu.value = false)
-const handleOpenMenu = () => (mobileMenu.value = !mobileMenu.value)
+const handleOnCloseMobileMenu = () => (mobileStore.isMenuOpen = false)
+const handleOpenMenu = () => {
+  mobileStore.isMenuOpen = !mobileStore.isMenuOpen
+  mobileStore.isMenuSticked = window.pageYOffset > 1
+}
 
 onBeforeMount(() => fetchData())
 
