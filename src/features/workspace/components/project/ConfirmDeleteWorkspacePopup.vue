@@ -1,10 +1,19 @@
 <template>
   <v-dialog v-model="valueModel" max-width="650px" @click:outside="closeDelete">
-    <v-card class="AskAnna-card AskAnna-card--in-dialog">
-      <v-toolbar flat dense white--text color="white">
-        <v-toolbar-title class="px-0"
-          >Do you want to remove the <span class="primary--text">{{ title }}</span> workspace ?</v-toolbar-title
+    <v-card class="AskAnna-card AskAnna-card--in-dialog" :class="{ 'pt-2': $vuetify.breakpoint.xsOnly }">
+      <v-toolbar
+        flat
+        white--text
+        color="white"
+        :dense="!$vuetify.breakpoint.xsOnly"
+        :class="{ 'mb-2': $vuetify.breakpoint.xsOnly }"
+      >
+        <v-toolbar-title v-if="!$vuetify.breakpoint.xsOnly" class="px-0"
+          >Do you want to remove the <span class="primary--text">{{ title }}</span> workspace?</v-toolbar-title
         >
+        <div v-else class="text-body-1 font-weight-bold">
+          Do you want to remove the <span class="primary--text">{{ title }}</span> workspace?
+        </div>
         <v-spacer />
 
         <v-btn icon @click="closeDelete">
@@ -33,56 +42,44 @@
         <br />
         Please confirm that you want to remove the <b>{{ workspaceName }}</b> workspace.
       </v-card-text>
-      <v-card-actions class="ml-5">
+      <v-card-actions :class="{ 'px-3': $vuetify.breakpoint.xsOnly }">
         <v-btn small outlined text color="secondary" class="mr-1 btn--hover" @click="closeDelete">Cancel</v-btn>
         <v-btn small outlined text color="error" class="mr-1 btn--hover" @click="deleteItemConfirm"
-          >Remove workspace: {{ name }}
+          >Remove workspace{{ $vuetify.breakpoint.xsOnly ? '' : `: ${name}` }}
         </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
-<script>
+<script setup lang="ts">
+import { computed } from '@vue/composition-api'
 import useSlicedText from '@/core/composition/useSlicedText'
-import { computed, defineComponent } from '@vue/composition-api'
 
-export default defineComponent({
-  name: 'ConfirmDeleteWorkspacePopup',
-
-  props: {
-    value: {
-      type: Boolean,
-      default: false
-    },
-    workspaceName: {
-      type: String,
-      default: () => ''
-    }
+const props = defineProps({
+  value: {
+    type: Boolean,
+    default: false
   },
-
-  setup(props, context) {
-    const slicedText = useSlicedText()
-
-    const name = computed(() => slicedText(props.workspaceName, 17))
-    const title = computed(() => slicedText(props.workspaceName, 27))
-
-    const valueModel = computed({
-      get: () => props.value,
-      set: () => context.emit('onClose')
-    })
-
-    const closeDelete = () => context.emit('onClose')
-    const deleteItemConfirm = () => context.emit('onDeleteConfirm')
-
-    return {
-      title,
-      name,
-      valueModel,
-      closeDelete,
-      deleteItemConfirm
-    }
+  workspaceName: {
+    type: String,
+    default: () => ''
   }
 })
+
+const emit = defineEmits(['onClose', 'onDeleteConfirm'])
+
+const slicedText = useSlicedText()
+
+const name = computed(() => slicedText(props.workspaceName, 17))
+const title = computed(() => slicedText(props.workspaceName, 27))
+
+const valueModel = computed({
+  get: () => props.value,
+  set: () => emit('onClose')
+})
+
+const closeDelete = () => emit('onClose')
+const deleteItemConfirm = () => emit('onDeleteConfirm')
 </script>
 <style scoped>
 .break {
