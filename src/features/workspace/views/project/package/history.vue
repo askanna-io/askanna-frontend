@@ -16,6 +16,7 @@
           <template v-slot:top>
             <package-toolbar
               v-sticky="sticked"
+              :sticky-z-index="1"
               sticky-offset="{top: 52, bottom: 10}"
               :breadcrumbs="breadcrumbsComputed"
             />

@@ -2,7 +2,12 @@
   <ask-anna-loading-progress :loading="packageLoading">
     <v-row align="center" justify="center">
       <v-col cols="12" class="pt-0 pb-0">
-        <PackageToolbar :breadcrumbs="breadcrumbsComputed" v-sticky="sticked" sticky-offset="{top: 52, bottom: 10}">
+        <PackageToolbar
+          :breadcrumbs="breadcrumbsComputed"
+          v-sticky="sticked"
+          :sticky-z-index="1"
+          sticky-offset="{top: 52, bottom: 10}"
+        >
           <template v-slot:rigth>
             <v-slide-y-transition>
               <div v-if="!filePath" class="d-flex">

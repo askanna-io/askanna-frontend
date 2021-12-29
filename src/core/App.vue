@@ -1,13 +1,18 @@
 <template>
-  <v-app :class="{ 'mobile-view': $vuetify.breakpoint.xsOnly, 'desktop-view': !$vuetify.breakpoint.xsOnly }">
+  <v-app
+    :class="{ 'mobile-view': $vuetify.breakpoint.xsOnly, 'desktop-view': !$vuetify.breakpoint.xsOnly }"
+    v-scroll="handleOnScroll"
+  >
     <Layout :layout="layout" :isLoggedIn="isLoggedIn" />
   </v-app>
 </template>
 
 <script lang="ts">
 import { get } from 'lodash'
+import { useRouter } from '@u3u/vue-hooks'
 import Layout from '@/core/layouts/Layout.vue'
 import { routerConfig } from './router/routerConfig'
+import { useMobileStore } from '@/core/store/useMobileStore'
 import { computed, defineComponent } from '@vue/composition-api'
 import useUserStore from '@/features/user/composition/useUserStore'
 
@@ -17,7 +22,10 @@ export default defineComponent({
   components: { Layout },
 
   setup(_, context) {
+    const { router } = useRouter()
     const userStore = useUserStore()
+    const mobileStore = useMobileStore()
+    router.afterEach(() => (mobileStore.isMenuOpen = false))
 
     const layout = computed(() => {
       const name = context.root.$route.name || 'signin'
@@ -28,7 +36,9 @@ export default defineComponent({
 
     const isLoggedIn = computed(() => !!userStore.state.globalProfile.value.short_uuid)
 
-    return { layout, isLoggedIn }
+    const handleOnScroll = () => (mobileStore.isMenuSticked = window.pageYOffset > 10)
+
+    return { layout, isLoggedIn, handleOnScroll }
   }
 })
 </script>
@@ -289,6 +299,15 @@ code.lang-shell {
 //colors
 .primary--black-text {
   color: #000000de !important;
+}
+
+.sticky-fox {
+  position: fixed !important;
+  top: 58px !important;
+  bottom: auto !important;
+  left: 0px !important;
+  width: 543px !important;
+  z-index: 10 !important;
 }
 
 // mobile view

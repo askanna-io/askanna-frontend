@@ -1,13 +1,13 @@
 <template>
   <v-row align="center" justify="center">
     <v-col cols="12" class="pt-0 pb-0">
-      <v-toolbar dense flat v-sticky="sticked" sticky-offset="{top: 52, bottom: 10}">
+      <v-toolbar dense flat v-sticky="sticked" :sticky-offset="stickyParams" :sticky-z-index="1">
         <v-btn icon small @click="handleBack">
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
 
         <div>
-          {{ currentPath.name }}<span class="pl-3">({{ `${humanizeSize(currentPath.size)}` }})</span>
+          {{ currentPath.name }}<span class="pl-3">({{ `${humanize.humanizeSize(currentPath.size)}` }})</span>
         </div>
 
         <v-spacer></v-spacer>
@@ -40,86 +40,68 @@
   </v-row>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { useRouter } from '@u3u/vue-hooks'
+import { computed } from '@vue/composition-api'
 import useCopy from '@/core/composition/useCopy'
 import PackageNotebook from './PackageNotebook.vue'
 import PackageFileImage from './PackageFileImage.vue'
-import useSnackBar from '@/core/components/snackBar/useSnackBar'
+import { useMobileStore } from '@/core/store/useMobileStore'
 import useSizeHumanize from '@/core/composition/useSizeHumanize'
-import { defineComponent, computed } from '@vue/composition-api'
 import TheHighlight from '@/core/components/highlight/TheHighlight.vue'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
 
-export default defineComponent({
-  name: 'PackageFile',
-
-  components: {
-    TheHighlight,
-    PackageNotebook,
-    PackageFileImage
+const props = defineProps({
+  file: String,
+  fileSource: String | Blob,
+  breadcrumbs: {
+    type: Array,
+    default: () => []
   },
-
-  props: {
-    file: String,
-    fileSource: String | Blob,
-    breadcrumbs: {
-      type: Array,
-      default: () => []
-    },
-    currentPath: {
-      type: Object,
-      default: () => {
-        return {
-          ext: '',
-          is_dir: true,
-          last_modified: '',
-          name: '',
-          parent: '/',
-          path: '',
-          size: 0,
-          type: ''
-        }
+  currentPath: {
+    type: Object,
+    default: () => {
+      return {
+        ext: '',
+        is_dir: true,
+        last_modified: '',
+        name: '',
+        parent: '/',
+        path: '',
+        size: 0,
+        type: ''
       }
-    },
-    sticked: {
-      type: Boolean,
-      default: true
     }
   },
-
-  setup(props, context) {
-    const allowedLangs = ['json', 'md', 'py', 'txt', 'yml', 'ini', 'toml', 'markdown']
-    const copy = useCopy(context)
-    const snackBar = useSnackBar()
-    const sizeHumanize = useSizeHumanize()
-    const forceFileDownload = useForceFileDownload()
-
-    const fileComputed = computed(() => props.file)
-    const handleBack = () => context.root.$router.back(-1)
-
-    const handleCopy = () => {
-      copy.handleCopyText(props.file || ' ')
-    }
-
-    const imgExts = ['jpg', 'png', 'gif', 'jpeg']
-    const isIpynb = computed(() => props.currentPath.ext === 'ipynb')
-    const isFileImg = computed(() => imgExts.includes(props.currentPath.ext))
-    const languageName = computed(() =>
-      allowedLangs.includes(props.currentPath.ext) ? props.currentPath.ext : 'markdown'
-    )
-
-    const handleDownload = () => forceFileDownload.trigger({ source: props.fileSource, name: props.currentPath.name })
-
-    return {
-      languageName,
-      ...sizeHumanize,
-      isIpynb,
-      isFileImg,
-      handleBack,
-      handleCopy,
-      fileComputed,
-      handleDownload
-    }
+  sticked: {
+    type: Boolean,
+    default: true
   }
 })
+
+const allowedLangs = ['json', 'md', 'py', 'txt', 'yml', 'ini', 'toml', 'markdown']
+const copy = useCopy()
+const { router } = useRouter()
+const humanize = useSizeHumanize()
+const mobileStore = useMobileStore()
+
+const forceFileDownload = useForceFileDownload()
+
+const fileComputed = computed(() => props.file)
+const handleBack = () => router.back()
+
+const handleCopy = () => {
+  copy.handleCopyText(props.file || ' ')
+}
+
+const stickyParams = computed(() =>
+  mobileStore.isMenuOpen && mobileStore.isMenuSticked ? '{top: 252, bottom: 10}' : '{top: 52, bottom: 10}'
+)
+
+const imgExts = ['jpg', 'png', 'gif', 'jpeg']
+const isIpynb = computed(() => props.currentPath.ext === 'ipynb')
+const isFileImg = computed(() => imgExts.includes(props.currentPath.ext))
+const languageName = computed(() => (allowedLangs.includes(props.currentPath.ext) ? props.currentPath.ext : 'markdown'))
+
+const handleDownload = () => forceFileDownload.trigger({ source: props.fileSource, name: props.currentPath.name })
 </script>
