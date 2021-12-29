@@ -43,6 +43,8 @@ const props = defineProps({
   }
 })
 
+const emit = defineEmits('onOpenWorkspaceRemove')
+
 const router = useRouterAskAnna()
 const permission = usePermission()
 const context = getCurrentInstance()
@@ -75,6 +77,11 @@ const menuItems = computed(() =>
 
 const handleMenuClick = item => {
   menu.value = false
+
+  if (item.onClick) {
+    emit(item.onClick)
+    return
+  }
 
   router.push({
     name: item.to,

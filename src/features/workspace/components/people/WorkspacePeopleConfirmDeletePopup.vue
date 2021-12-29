@@ -52,7 +52,7 @@
       <v-card-actions :class="{ 'px-3': $vuetify.breakpoint.xsOnly }">
         <v-btn small outlined text color="secondary" class="mr-1 btn--hover" @click="closeDelete">Cancel</v-btn>
         <v-btn small outlined text color="error" class="mr-1 btn--hover" @click="deleteItemConfirm"
-          >Remove {{ name }}</v-btn
+          >Remove{{ $vuetify.breakpoint.xsOnly ? '' : `: ${name}` }}</v-btn
         >
       </v-card-actions>
     </v-card>

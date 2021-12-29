@@ -11,14 +11,18 @@
 
     <create-project-popup v-if="!isEditWorkspaceView && !$vuetify.breakpoint.xsOnly" />
 
-    <WorkspaceToolbarMenu :isMember="isMember" :workspaceUuid="workspaceUuid" />
+    <WorkspaceToolbarMenu
+      :isMember="isMember"
+      :workspaceUuid="workspaceUuid"
+      @onOpenWorkspaceRemove="handleOpenConfirmRemoveWorkspace"
+    />
   </v-toolbar>
 </template>
 <script setup lang="ts">
 import { useRouter } from '@u3u/vue-hooks'
 import { computed } from '@vue/composition-api'
-import WorkspaceToolbarMenu from './WorkspaceToolbarMenu.vue'
 import usePermission from '@/core/composition/usePermission'
+import WorkspaceToolbarMenu from './WorkspaceToolbarMenu.vue'
 import CreateProjectPopup from '@/features/project/components/CreateProjectPopup.vue'
 
 defineProps({
@@ -43,12 +47,17 @@ defineProps({
     default: () => false
   }
 })
+
+const emit = defineEmits('onOpenWorkspaceRemove')
+
 const { route } = useRouter()
 const permission = usePermission()
 
 const isEditWorkspaceView = computed(() => route.value.name === 'workspace-edit')
 
 const isSignIn = computed(() => permission.token.value)
+
+const handleOpenConfirmRemoveWorkspace = () => emit('onOpenWorkspaceRemove')
 </script>
 <style lang="scss">
 .mobile-view {
