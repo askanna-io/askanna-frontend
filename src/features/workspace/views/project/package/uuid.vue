@@ -90,7 +90,13 @@
             :currentPath="currentPath"
           />
           <template v-else>
-            <PackageTree v-if="!isProcessing" :items="treeView" :height="calcHeight" :getRoutePath="getRoutePath" />
+            <PackageTree
+              v-if="!isProcessing"
+              :items="treeView"
+              :height="calcHeight"
+              :getRoutePath="getRoutePath"
+              noDataAvailable="This file or directory does not exist"
+            />
           </template>
         </template>
       </v-col>
