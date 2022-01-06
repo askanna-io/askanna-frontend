@@ -28,7 +28,7 @@ export default function ({ start = 0, end = undefined }) {
         })
 
         return {
-          title,
+          title: decodeURI(title),
           to: path,
           exact: true,
           disabled: isReachCurrent
