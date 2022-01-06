@@ -16,7 +16,7 @@ export default (context: SetupContext, params: { start: number; end: number } = 
       .map((name, index, arr) => {
         currentPath += `/${name}`
         return {
-          title: name,
+          title: decodeURI(name),
           to: {
             path: currentPath,
             params: { workspaceId, projectId, packageId, folderName: currentPath }
