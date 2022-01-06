@@ -114,7 +114,7 @@ const query = useQuery({
   limit: 100,
   offset: 200,
   uuid: jobRunId.value,
-  storeAction: jobRunStore.state.getJobRunLog
+  storeAction: jobRunStore.actions.getJobRunLog
 })
 
 const countLogs = computed(() => jobRunStore.state.jobRunLog.value.count)
