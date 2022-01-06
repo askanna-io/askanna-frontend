@@ -29,7 +29,14 @@
             :fileSource="fileSource"
             :currentPath="currentPath"
           />
-          <package-tree v-else :items="treeView" :height="calcHeight" :getRoutePath="getRoutePath" />
+
+          <package-tree
+            v-else
+            :items="treeView"
+            :height="calcHeight"
+            :getRoutePath="getRoutePath"
+            noDataAvailable="This file or directory does not exist"
+          />
         </template>
       </v-col>
     </v-row>
