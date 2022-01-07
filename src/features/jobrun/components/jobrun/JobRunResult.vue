@@ -19,7 +19,7 @@
             <v-icon color="secondary" left>mdi-download</v-icon>Download file
           </v-btn>
           <v-btn
-            v-if="isResultJSON"
+            v-if="isResultJSON || isFileImg"
             small
             :disabled="loading || isJobRunResultEmpty"
             outlined
@@ -170,6 +170,9 @@ const isShowPreview = computed(() => jobRunStore.state.isShowPreview.value)
 const jobRunResultRaw = computed(() => jobRunStore.state.jobRunResult.value)
 const jobRunResultExt = computed(() => jobRunStore.state.jobRunResultExt.value)
 
+const imgExts = ['jpg', 'png', 'gif', 'jpeg']
+const isFileImg = computed(() => imgExts.includes(jobRunResultExt.value))
+
 const runResultPreview = computed(() =>
   jobRunResultExt.value === 'json'
     ? prettyJSON(jobRunStore.state.jobRunResultPreview.value, 2)
@@ -217,8 +220,15 @@ const handleDownload = async () => {
 }
 
 const handleCopy = async () => {
-  await jobRunStore.getJobRunResult(jobRunId)
+  if (isFileImg.value) {
+    const fileSource = await jobRunStore.actions.getJobRunResultBlob(jobRunId)
 
+    copy.handleCopyElementBySource(fileSource)
+
+    return
+  }
+
+  await jobRunStore.actions.getJobRunResult(jobRunId)
   copy.handleCopyText(jobRunResultSource.value)
 }
 

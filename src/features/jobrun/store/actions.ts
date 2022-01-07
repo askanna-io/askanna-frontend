@@ -235,6 +235,20 @@ export const actions: ActionTree<jobRunState, RootState> = {
     commit(type.SET_JOB_RUN_RESULT, jobRunResult)
   },
 
+  async [type.action.getJobRunResultBlob]({ commit }, uuid) {
+    try {
+      return await apiService({
+        uuid,
+        serviceName,
+        responseType: 'blob',
+        action: api.getJobRunResult,
+        transformResponse: [data => data]
+      })
+    } catch (e) {
+      logger.error(commit, 'Error on get blob in getJobRunResultBlob action.\nError: ', e)
+    }
+  },
+
   async [type.action.setLoading]({ commit }, data) {
     commit(type.mutation.SET_LOADING, data)
   },
