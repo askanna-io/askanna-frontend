@@ -92,16 +92,7 @@ export default defineComponent({
       'PYTHON-SDK': 'Python SDK'
     }
 
-    const isFinished = computed(
-      () => props.jobRunStatus.status === 'failed' || props.jobRunStatus.status === 'finished'
-    )
-
-    const calculateDuration = computed(() => {
-      if (isFinished.value) {
-        return moment.durationHumanizeBySecond(props.jobRunStatus.duration?.toString())
-      }
-      return moment.durationHumanize(props.jobRunStatus.created, startTime.value)
-    })
+    const calculateDuration = computed(() => moment.durationHumanizeBySecond(props.jobRunStatus.duration?.toString()))
 
     const viewConfig = computed(() => {
       const groups = {
