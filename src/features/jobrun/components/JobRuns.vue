@@ -55,7 +55,7 @@
           <router-link class="table-link table-link--unformated" :to="routeLinkParams({ item })">
             <b>Started:</b> &nbsp;{{ $moment(item.created).format(' Do MMMM YYYY, h:mm:ss a') }}
             <br />
-            <b>Duration:</b> &nbsp;{{ calculateDuration(item) }}<br />
+            <b>Duration:</b>&nbsp;{{ calculateDuration(item) }}<br />
           </router-link>
         </td>
         <td class="text-start">
@@ -159,7 +159,7 @@ export default defineComponent({
       },
       {
         text: 'Timing',
-        width: '300px',
+        width: '350px',
         sortable: false,
         value: 'runtime',
         class: 'text-left text-subtitle-2 font-weight-bold h-20'
@@ -189,7 +189,7 @@ export default defineComponent({
 
     const handleCopy = id => copy.handleCopyText(id)
 
-    const calculateDuration = item => moment.durationHumanizeBySecond(item.duration)
+    const calculateDuration = item => moment.durationHumanizeBySecond(item.duration?.toString())
 
     const routeLinkParams = ({ item, name = 'workspace-project-jobs-job-jobrun-overview' }) => {
       return {
