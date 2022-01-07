@@ -125,6 +125,7 @@ export const action = {
   showJobRunResult: 'showJobRunResult',
   closeResultModal: 'closeResultModal',
   getJobRunArtifact: 'getJobRunArtifact',
+  getJobRunResultBlob: 'getJobRunResultBlob',
   getJobRunResultPreview: 'getJobRunResultPreview',
   getFullVersionJobRunLog: 'getFullVersionJobRunLog',
   getInitialJobRunArtifact: 'getInitialJobRunArtifact'
