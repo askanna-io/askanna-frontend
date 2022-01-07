@@ -92,7 +92,12 @@ export default defineComponent({
       'PYTHON-SDK': 'Python SDK'
     }
 
-    const calculateDuration = computed(() => moment.durationHumanizeBySecond(props.jobRunStatus.duration?.toString()))
+    const calculateDuration = computed(() => {
+      const status = props.jobRunStatus.status.toLowerCase()
+      if (status === 'queued' || status === 'pending') return 'Not started'
+
+      return moment.durationHumanizeBySecond(props.jobRunStatus.duration?.toString())
+    })
 
     const viewConfig = computed(() => {
       const groups = {

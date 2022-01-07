@@ -189,7 +189,12 @@ export default defineComponent({
 
     const handleCopy = id => copy.handleCopyText(id)
 
-    const calculateDuration = item => moment.durationHumanizeBySecond(item.duration?.toString())
+    const calculateDuration = item => {
+      const status = item.status.toLowerCase()
+      if (status === 'queued' || status === 'pending') return 'Not started'
+
+      return moment.durationHumanizeBySecond(item.duration?.toString())
+    }
 
     const routeLinkParams = ({ item, name = 'workspace-project-jobs-job-jobrun-overview' }) => {
       return {
