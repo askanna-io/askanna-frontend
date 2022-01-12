@@ -23,6 +23,7 @@ if (process.env.VUE_APP_SENTRY === 'on') {
   const rate: number = parseFloat(<string>process.env.VUE_APP_SENTRY_TRACES_RATE || '0')
 
   Sentry.init({
+    ignoreErrors: ['Non-Error exception captured', 'Non-Error promise rejection captured'],
     dsn: 'https://c3668b20284540cb91541549285dcc94@o451235.ingest.sentry.io/5436959',
     environment: process.env.VUE_APP_SENTRY_ENV,
     integrations: [
