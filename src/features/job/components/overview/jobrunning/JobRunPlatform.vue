@@ -61,21 +61,23 @@
 <script lang="ts">
 import { set } from 'lodash'
 import useMoment from '@/core/composition/useMoment'
-import useJobStore from '@job/composition/useJobStore'
-import AskAnnaCode from '@/core/components/shared/AskAnnaCode'
+import useJobStore from '@/features/job/composition/useJobStore'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
+import AskAnnaCode from '@/core/components/shared/AskAnnaCode.vue'
+import AskAnnaChipStatus from '@/core/components/shared/AskAnnaChipStatus.vue'
 import { ref, computed, onUnmounted, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'JobRunPlatform',
 
   components: {
-    AskAnnaCode
+    AskAnnaCode,
+    AskAnnaChipStatus
   },
 
   setup(_, context) {
+    const moment = useMoment()
     const jobStore = useJobStore()
-    const moment = useMoment(context)
     const router = useRouterAskAnna()
 
     jobStore.resetJobRun()

@@ -88,11 +88,15 @@
 import useCopy from '@/core/composition/useCopy'
 import useMoment from '@/core/composition/useMoment'
 import useNumeral from '@/core/composition/useNumeral'
-
 import { ref, watch, defineComponent } from '@vue/composition-api'
+import AskAnnaChipStatus from '@/core/components/shared/AskAnnaChipStatus.vue'
 
 export default defineComponent({
   name: 'JobRuns',
+
+  components: {
+    AskAnnaChipStatus
+  },
 
   props: {
     count: {
@@ -128,7 +132,7 @@ export default defineComponent({
 
   setup(props, context) {
     const copy = useCopy()
-    const moment = useMoment(context)
+    const moment = useMoment()
     const numeral = useNumeral(context)
 
     const page = ref(0)

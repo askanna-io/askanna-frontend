@@ -15,6 +15,7 @@
 </template>
 
 <script setup lang="ts">
+import { get } from 'lodash'
 import { computed } from '@vue/composition-api'
 import useMoment from '@/core/composition/useMoment'
 import useCapitalize from '@/core/composition/useCapitalize'
@@ -46,9 +47,9 @@ const COLORS = {
   UNDEFINED: 'grey',
   FAILURE: 'error',
   FAILED: 'error',
-  IN_PROGRESS: 'yellow darken-2',
-  SUBMITTED: 'amber lighten-1',
-  PENDING: 'blue lighten-3'
+  IN_PROGRESS: 'blue lighten-3',
+  SUBMITTED: 'grey',
+  PENDING: 'grey'
 }
 const ICONS = {
   NOT_RUNS: 'mdi-do-not-disturb',
@@ -75,11 +76,11 @@ const TEXTS = {
 
 const status = computed(() => (props.statusData.status ? props.statusData.status : 'UNDEFINED'))
 
-const statusIcon = computed(() => ICONS[status.value])
-const statusColor = computed(() => COLORS[status.value])
-const statusValue = computed(() => TEXTS[status.value])
+const statusIcon = computed(() => get(ICONS, status.value))
+const statusColor = computed(() => get(COLORS, status.value))
+const statusValue = computed(() => get(TEXTS, status.value))
 
-const getText = isMobile => {
+const getText = (isMobile: boolean) => {
   const created = props.statusData.created && `(${moment.ago(props.statusData.created)})`
   const desktopStatus = `Last status: ${statusValue.value} ${created}`
   const mobileStatus = !props.statusData.created
