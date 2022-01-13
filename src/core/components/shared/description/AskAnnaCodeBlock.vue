@@ -1,6 +1,19 @@
 <template>
   <node-view-wrapper class="code-block">
     <v-flex>
+      <select
+        ref="languageSelect"
+        contenteditable="false"
+        :disabled="!isEditable"
+        v-model="selectedLanguage"
+        class="secondary--text white-text--hover"
+      >
+        <option :value="null">auto</option>
+        <option disabled>—</option>
+        <option v-for="(language, index) in languages" :value="language" :key="index">
+          {{ language }}
+        </option>
+      </select>
       <v-btn
         dark
         icon
@@ -11,29 +24,12 @@
         @click="handleCopy"
         ><v-icon>mdi-content-copy</v-icon></v-btn
       >
-      <select
-        ref="languageSelect"
-        contenteditable="false"
-        :disabled="!isEditable"
-        v-model="selectedLanguage"
-        class="secondary--text white-text--hover"
-      >
-        <option :value="null">
-          auto
-        </option>
-        <option disabled>
-          —
-        </option>
-        <option v-for="(language, index) in languages" :value="language" :key="index">
-          {{ language }}
-        </option>
-      </select>
     </v-flex>
     <pre><node-view-content as="code"  /></pre>
   </node-view-wrapper>
 </template>
 
-<script>
+<script lang="ts">
 import useCopy from '@/core/composition/useCopy'
 import { ref, defineComponent } from '@vue/composition-api'
 import { NodeViewWrapper, NodeViewContent, nodeViewProps } from '@tiptap/vue-2'
@@ -67,8 +63,8 @@ export default defineComponent({
       }
     }
   },
-  setup(_, context) {
-    const copy = useCopy(context)
+  setup() {
+    const copy = useCopy()
     const languageSelect = ref(null)
 
     return { languageSelect, handleCopyText: copy.handleCopyText }
@@ -94,17 +90,20 @@ export default defineComponent({
 <style lang="scss" scoped>
 .code-block {
   position: relative;
+
   .copy-button {
     position: absolute;
     top: 0.5rem;
-    right: 7.5rem;
+    right: 0.5rem;
   }
 
   select {
     color: white;
     position: absolute;
+    text-align: right;
+    padding-right: 5px;
     top: 0.5rem;
-    right: 0.5rem;
+    right: 2.2rem;
 
     &:not([disabled]) {
       cursor: pointer;

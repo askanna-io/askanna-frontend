@@ -1,5 +1,5 @@
 <template>
-  <form @focusout="handleOnBlurWrapper" @focusin="handleOnClickWrapper">
+  <form @focusout="handleOnBlurWrapper" @focusin="handleOnClickWrapper" @click="handleOnClickWrapper">
     <v-card class="ask-anna--editor" :class="{ 'border--primary ': isFocused && outlined }" flat :outlined="outlined">
       <label
         v-if="title"
@@ -293,7 +293,7 @@
                 icon
                 x-small
                 :text="!editor.isActive('codeBlock')"
-                class="btn--hover btn--without-text mr-3"
+                class="btn--hover btn--without-text mr-1"
                 :class="{ 'is-active': editor.isActive('codeBlock') }"
                 @click="editor.chain().focus().toggleCodeBlock().run()"
                 :color="editor.isActive('codeBlock') ? 'primary' : 'secondary'"
@@ -303,6 +303,13 @@
             </template>
             <span>Code block</span>
           </v-tooltip>
+
+          <AskAnnaLinkMenu
+            :open="isSetLinkOpen"
+            :isActive="editor.isActive('link')"
+            @onSetLink="handleSetLink"
+            @onOpen="handleOpenSetLink"
+          />
 
           <v-tooltip top>
             <template v-slot:activator="{ on }">
@@ -347,209 +354,251 @@
       </div>
       <v-divider v-show="editable" class="" />
 
-      <editor-content class="ma-2 overflow-y-auto" :editor="editor" :style="scrollerStyles" spellcheck="false" />
-
-      <v-card-actions v-if="!onLiveMode">
-        <v-btn v-if="editable" small outlined color="secondary" @click="handleSave">
-          <v-icon left small dark>mdi-content-save</v-icon>Save
-        </v-btn>
-        <v-btn v-if="editable && cleared" small outlined color="secondary" @click="handleClear">
-          <v-icon left small dark>mdi-delete-forever-outline</v-icon>Clear
-        </v-btn>
-        <v-btn v-if="editable" small outlined color="secondary" class="mr-1 btn--hover" @click="handleCancel">
-          <v-icon color="secondary" small left>mdi-close</v-icon>Cancel
-        </v-btn>
-        <v-btn v-if="!editable" class="my-2 btn--hover" small outlined color="secondary" @click="handleEdit">
-          <v-icon color="secondary" left small class="mr-2">mdi-pencil</v-icon>Edit
-        </v-btn>
-      </v-card-actions>
+      <editor-content
+        :editor="editor"
+        :style="scrollerStyles"
+        :class="{ 'editable-mode': editable }"
+        @click="handleOnClickWrapper"
+        spellcheck="false"
+        class="ma-2 overflow-y-auto"
+      />
     </v-card>
   </form>
 </template>
 
-<script lang="ts">
-import StarterKit from '@tiptap/starter-kit'
+<script setup lang="ts">
 import HardBreak from '@tiptap/extension-hard-break'
+import AskAnnaLinkMenu from './description/AskAnnaLinkMenu.vue'
 import AskAnnaCodeBlock from './description/AskAnnaCodeBlock.vue'
 import AskAnnaColorPicker from './description/AskAnnaColorPicker.vue'
 
-import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
-import { Editor, EditorContent, VueNodeViewRenderer } from '@tiptap/vue-2'
-
 import lowlight from 'lowlight'
+import Link from '@tiptap/extension-link'
+import { markInputRule } from '@tiptap/core'
+import Code from '@tiptap/extension-code'
+import StarterKit from '@tiptap/starter-kit'
 import TaskList from '@tiptap/extension-task-list'
 import TaskItem from '@tiptap/extension-task-item'
 import Underline from '@tiptap/extension-underline'
 import Highlight from '@tiptap/extension-highlight'
+import CodeBlock from '@tiptap/extension-code-block'
+import Blockquote from '@tiptap/extension-blockquote'
+import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
+import { Editor, EditorContent, VueNodeViewRenderer } from '@tiptap/vue-2'
 
 import { useWindowSize } from '@u3u/vue-hooks'
-import { computed, defineComponent } from '@vue/composition-api'
+import { useEditorStore } from '@/core/store/useEditorStore'
+import { ref, watch, computed, onMounted, onBeforeUnmount } from '@vue/composition-api'
 
-export default defineComponent({
-  name: 'AskAnnaDescription',
-
-  props: {
-    cleared: {
-      type: Boolean,
-      default: false
-    },
-    preview: {
-      type: Boolean,
-      default: false
-    },
-    outlined: {
-      type: Boolean,
-      default: false
-    },
-    readonly: {
-      type: Boolean,
-      default: false
-    },
-    onLiveMode: {
-      type: Boolean,
-      default: true
-    },
-    title: {
-      type: String,
-      default: () => ''
-    },
-    description: {
-      type: String,
-      default: ''
-    },
-    headerHeight: {
-      type: Number,
-      default: 235
-    }
+const props = defineProps({
+  cleared: {
+    type: Boolean,
+    default: false
   },
-
-  components: {
-    EditorContent,
-    AskAnnaColorPicker
+  preview: {
+    type: Boolean,
+    default: false
   },
-
-  setup(props) {
-    const { height } = useWindowSize()
-    const maxHeight = computed(() => height.value - props.headerHeight)
-    const scrollerStyles = computed(() => {
-      return { 'max-height': `${maxHeight.value}px` }
-    })
-
-    return { scrollerStyles }
+  outlined: {
+    type: Boolean,
+    default: false
   },
-  data() {
-    return {
-      sticked: false,
-      editor: new Editor({
-        autofocus: false,
-        editable: true,
-        extensions: [
-          Underline,
-          StarterKit,
-          TaskList,
-          TaskItem,
-          Highlight.configure({ multicolor: true }),
-          CodeBlockLowlight.extend({
-            addNodeView() {
-              return VueNodeViewRenderer(AskAnnaCodeBlock)
-            }
-          }).configure({ lowlight }),
-          // add custom keyboard shortcad for past hard break, aslo leve code block
-          HardBreak.extend({
-            addKeyboardShortcuts() {
-              return {
-                Escape: () => this.editor.commands.setHardBreak()
-              }
-            }
-          })
-        ],
-        content: this.description,
-        onUpdate: ({ editor }) => this.$emit('onChange', editor.getHTML())
-      }),
-      editable: true,
-      isFocused: false,
-      currentDescriptionValue: ''
-    }
+  readonly: {
+    type: Boolean,
+    default: false
   },
-
-  mounted() {
-    if (this.preview) {
-      this.editable = false
-    }
-
-    if (this.readonly) {
-      this.editable = false
-    }
+  title: {
+    type: String,
+    default: () => ''
   },
-
-  watch: {
-    description(val) {
-      this.editor.commands.setContent(val)
-
-      if (this.editable) {
-        this.currentDescriptionValue = this.editor.getHTML()
-      }
-    },
-    editable() {
-      if (this.editable) {
-        this.currentDescriptionValue = this.editor.getHTML()
-      }
-      this.editor.setOptions({
-        editable: this.editable
-      })
-    }
+  description: {
+    type: String,
+    default: ''
   },
-
-  beforeDestroy() {
-    this.editor.destroy()
-  },
-
-  methods: {
-    handleSave() {
-      this.$emit('onChangeDescription', { description: this.editor.getHTML() })
-      this.$emit('onSave')
-      this.editable = !this.editable
-    },
-
-    handleClear() {
-      this.editor.clearContent()
-    },
-
-    handleCancel() {
-      this.handleClear()
-
-      this.editor.commands.setContent(this.currentDescriptionValue)
-      this.editable = !this.editable
-    },
-
-    handleEdit() {
-      this.editable = !this.editable
-      this.editor.focus()
-    },
-
-    handleOnClickWrapper() {
-      this.isFocused = true
-    },
-
-    handleOnBlurWrapper() {
-      this.isFocused = false
-      this.editor.commands.blur()
-      if (this.onLiveMode) this.$emit('onChangeDescription', this.editor.getHTML())
-    },
-
-    handleOnChangeColor(color) {
-      this.editor.chain().focus().toggleHighlight({ color }).run()
-    },
-
-    handleUnsetHighlight() {
-      this.editor.commands.unsetHighlight()
-    },
-
-    onStick(data) {
-      this.sticked = data.sticked
-    }
+  height: {
+    type: Number,
+    default: 500
   }
 })
+
+const emit = defineEmits(['onChange', 'onChangeDescription'])
+
+const { height } = useWindowSize()
+const editorStore = useEditorStore()
+
+const editable = ref(true)
+const sticked = ref(false)
+const isFocused = ref(false)
+const isSetLinkOpen = ref(false)
+const isInitialValueSet = ref(false)
+const currentDescriptionValue = ref('')
+
+const maxHeight = computed(() => props.height)
+const descriptionComputed = computed(() => props.description)
+const scrollerStyles = computed(() => {
+  if (!editable.value) return
+  return { 'max-height': `${maxHeight.value}px`, 'min-height': '120px', height: 'auto' }
+})
+
+const linkInputRegex = /^\[([\w\s\d]+)\]\((https?:\/\/[\w\d./?=#]+)\)$/
+
+const editor = new Editor({
+  autofocus: false,
+  editable: true,
+  extensions: [
+    StarterKit,
+    Code.extend({
+      addKeyboardShortcuts() {
+        return {
+          Escape: () => {
+            editor.commands.unsetCode()
+          }
+        }
+      }
+    }),
+
+    CodeBlock.configure({
+      exitOnTripleEnter: true
+    }),
+    TaskList,
+    TaskItem,
+    HardBreak,
+    Underline,
+
+    Blockquote.extend({
+      addKeyboardShortcuts() {
+        return {
+          Escape: () => {
+            if (!editor.isActive('blockquote')) return
+
+            editor.commands.enter()
+            editor.commands.lift('blockquote')
+          }
+        }
+      }
+    }),
+
+    Highlight.configure({ multicolor: true }),
+
+    CodeBlockLowlight.extend({
+      addNodeView() {
+        return VueNodeViewRenderer(AskAnnaCodeBlock)
+      },
+      addKeyboardShortcuts() {
+        return {
+          Escape: () => {
+            editor.isActive('codeBlock') && editor.commands.exitCode()
+          }
+        }
+      }
+    }).configure({ lowlight, exitOnTripleEnter: true }),
+
+    Link.extend({
+      addKeyboardShortcuts() {
+        return {
+          'Mod-k': () => {
+            handleOpenSetLink()
+            editorStore.isMenuOpen = true
+          },
+          Escape: () => {
+            if (!editor.isActive('link')) return
+
+            editorStore.url = ''
+
+            editor.commands.insertContent(' ')
+          }
+        }
+      },
+      addInputRules() {
+        return [
+          markInputRule({
+            type: this.type,
+            find: linkInputRegex
+          })
+        ]
+      }
+    }).configure({
+      openOnClick: !editable.value
+    })
+  ],
+
+  content: props.description,
+  onUpdate: ({ editor }) => emit('onChange', editor.getHTML())
+})
+
+onMounted(() => {
+  if (props.preview) {
+    editable.value = false
+  }
+
+  if (props.readonly) {
+    editable.value = false
+  }
+})
+
+watch(descriptionComputed, val => {
+  if (!isInitialValueSet.value) {
+    isInitialValueSet.value = true
+    editor.commands.setContent(val)
+  }
+
+  if (editable.value) {
+    currentDescriptionValue.value = editor.getHTML()
+  }
+})
+
+watch(editable, val => {
+  if (val) {
+    currentDescriptionValue.value = editor.getHTML()
+  }
+  editor.setOptions({
+    editable: val
+  })
+})
+
+onBeforeUnmount(() => editor.destroy())
+
+const handleOnClickWrapper = (event: MouseEvent) => {
+  const element = event?.target as HTMLElement
+
+  if (!isFocused.value && element.tagName === 'DIV') {
+    editor.commands.focus()
+    isFocused.value = true
+  }
+}
+
+const handleOnBlurWrapper = () => {
+  isFocused.value = false
+  editor.commands.blur()
+  emit('onChangeDescription', editor.getHTML())
+}
+
+const handleOnChangeColor = (color: string) => {
+  editor.chain().focus().toggleHighlight({ color }).run()
+}
+
+const handleUnsetHighlight = () => {
+  editor.commands.unsetHighlight()
+}
+
+const onStick = data => (sticked.value = data.sticked)
+
+const handleOpenSetLink = () => {
+  editorStore.url = editor.getAttributes('link').href
+}
+
+const handleSetLink = () => {
+  // unset link
+  if (editorStore.url === null || editorStore.url === '') {
+    editor.chain().focus().extendMarkRange('link').unsetLink().run()
+
+    return
+  }
+
+  // update link
+  editor.chain().focus().extendMarkRange('link').setLink({ href: editorStore.url }).run()
+  editorStore.url = ''
+}
 </script>
 <style lang="scss">
 .v-application .ask-anna--editor p {
@@ -588,6 +637,14 @@ ul[data-type='taskList'] {
     > label {
       flex: 0 0 auto;
       margin-right: 0.5rem;
+
+      input[type='checkbox'] {
+        accent-color: #5d3eb2 !important;
+      }
+    }
+
+    > div {
+      flex: 1 1 auto;
     }
   }
 }
@@ -631,6 +688,14 @@ ul[data-type='taskList'] {
   background: none !important;
   color: #ffffff !important;
   font-size: 16px !important;
+}
+
+.ask-anna--editor {
+  .editable-mode {
+    a {
+      cursor: text;
+    }
+  }
 }
 
 .ask-anna--editor blockquote {

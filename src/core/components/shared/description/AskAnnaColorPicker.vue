@@ -68,7 +68,7 @@ const handleClose = () => {
 }
 
 watch(menu, menu => {
-  if (!menu) handleOnIputColor('#ffffff')
+  if (!menu) selectedColor.value = '#ffffff'
 })
 </script>
 
