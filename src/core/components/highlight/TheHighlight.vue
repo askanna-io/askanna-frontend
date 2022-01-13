@@ -5,47 +5,36 @@
   ><code class="lang-shell hljs" :class="{ 'loading': loading }" v-html="highlighted"></code></pre>
 </template>
 
-<script>
+<script setup lang="ts">
 import hljs from 'highlight.js'
 import useLineNumber from './useLineNumber'
-import { ref, computed, defineComponent } from '@vue/composition-api'
+import { ref, computed } from '@vue/composition-api'
 window.hljs = hljs
 
-export default defineComponent({
-  name: 'TheHighlight',
-
-  props: {
-    loading: {
-      type: Boolean,
-      default: false
-    },
-    value: String,
-    languageName: {
-      type: String,
-      default: 'shell'
-    },
-    maxRowToShow: {
-      type: Number || null,
-      default: null
-    }
+const props = defineProps({
+  loading: {
+    type: Boolean,
+    default: false
   },
-
-  setup(props, context) {
-    const codeWrapper = ref(null)
-    const lineNumber = useLineNumber()
-
-    const highlighted = computed(() => {
-      let result = hljs.highlight(props.languageName, props.value, true).value
-      result = lineNumber.lineNumbersValue(result, { maxRowToShow: props.maxRowToShow })
-
-      return result
-    })
-
-    return {
-      codeWrapper,
-      highlighted
-    }
+  value: String,
+  languageName: {
+    type: String,
+    default: 'shell'
+  },
+  maxRowToShow: {
+    type: Number || null,
+    default: null
   }
+})
+
+const codeWrapper = ref(null)
+const lineNumber = useLineNumber()
+
+const highlighted = computed(() => {
+  let result = hljs.highlight(props.languageName, props.value, true).value
+  result = lineNumber.lineNumbersValue(result, { maxRowToShow: props.maxRowToShow })
+
+  return result
 })
 </script>
 

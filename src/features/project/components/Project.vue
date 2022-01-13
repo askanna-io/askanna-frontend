@@ -18,10 +18,10 @@
         </v-row>
         <v-row>
           <v-col cols="12">
-            <ask-anna-description
+            <AskAnnaDescription
               cleared
               outlined
-              onInputMode
+              :height="480"
               :description="projectData.description"
               :title="'Project description (optional)'"
               @onChange="handleOnChange"
@@ -123,6 +123,7 @@
 <script setup lang="ts">
 import { ref, computed } from '@vue/composition-api'
 import useValidationRules from '@/core/composition/useValidationRules'
+import AskAnnaDescription from '@/core/components/shared/AskAnnaDescription.vue'
 
 const props = defineProps({
   projectData: {

@@ -19,27 +19,29 @@
   </v-card>
 </template>
 
-<script>
+<script lang="ts">
 import useMoment from '@/core/composition/useMoment'
-import useJobStore from '@job/composition/useJobStore'
 import useCronstrue from '@/core/composition/useCronstrue'
 import usePermission from '@/core/composition/usePermission'
+import useJobStore from '@/features/job/composition/useJobStore'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import JobDefinition from '@job/components/overview/JobDefinition'
-import JobRunning from '@/features/job/components/overview/JobRunning'
+import JobDefinition from '@job/components/overview/JobDefinition.vue'
+import JobRunning from '@/features/job/components/overview/JobRunning.vue'
 import useProjectStore from '@/features/project/composition/useProjectStore'
 import { onBeforeMount, defineComponent, computed } from '@vue/composition-api'
+import AskAnnaDescription from '@/core/components/shared/AskAnnaDescription.vue'
 
 export default defineComponent({
   components: {
     JobRunning,
-    JobDefinition
+    JobDefinition,
+    AskAnnaDescription
   },
 
   setup(_, context) {
+    const moment = useMoment()
     const jobStore = useJobStore()
     const cronstrue = useCronstrue()
-    const moment = useMoment(context)
     const permission = usePermission()
 
     const projectStore = useProjectStore()

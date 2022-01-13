@@ -22,11 +22,10 @@
 
 <script lang="ts">
 import useJobStore from '@/features/job/composition/useJobStore'
-import JobRunInfo from '@/features/jobrun/components/jobrun/JobRunInfo'
+import { computed, defineComponent } from '@vue/composition-api'
 import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
+import JobRunInfo from '@/features/jobrun/components/jobrun/JobRunInfo.vue'
 import AskAnnaDescription from '@/core/components/shared/AskAnnaDescription.vue'
-
-import { computed, defineComponent, onBeforeMount } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'Overview',

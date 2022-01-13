@@ -19,15 +19,14 @@
         </v-row>
         <v-row>
           <v-col cols="12" class="pt-0">
-            <ask-anna-description
+            <AskAnnaDescription
               cleared
               outlined
-              onInputMode
-              :headerHeight="215"
+              :height="480"
               :description="workspaceState.description"
               :title="'Workspace description (optional)'"
               @onChange="handleOnChange"
-              @onChangeDescription="handleOnInput(handleClarifyDescription($event), 'description')"
+              @onChangeDescription="handleOnInput($event, 'description')"
             />
           </v-col>
         </v-row>
@@ -107,20 +106,18 @@
 </template>
 <script setup lang="ts">
 import { set } from 'lodash'
-import { useRouter } from '@u3u/vue-hooks'
 import { ref, computed } from '@vue/composition-api'
 import usePermission from '@/core/composition/usePermission'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useValidationRules from '@/core/composition/useValidationRules'
+import AskAnnaDescription from '@/core/components/shared/AskAnnaDescription.vue'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 import ChangeWorkspaceVisibilityPopup from '@/features/workspace/components/workspace-edit/ChangeWorkspaceVisibilityPopup.vue'
 
-const { route } = useRouter()
 const snackBar = useSnackBar()
 const router = useRouterAskAnna()
 const { RULES } = useValidationRules()
-
 const workspaceStore = useWorkspaceStore()
 const { token, isAllowedToView } = usePermission()
 
@@ -187,6 +184,4 @@ const handleOnCancel = () => {
 }
 
 const handleOnChange = () => (isStateNotChanged.value = false)
-
-const handleClarifyDescription = val => val.replace('<p></p>', '')
 </script>

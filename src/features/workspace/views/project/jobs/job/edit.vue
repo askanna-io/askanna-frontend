@@ -19,14 +19,14 @@
           </v-row>
           <v-row>
             <v-col cols="12" class="pt-0">
-              <ask-anna-description
+              <AskAnnaDescription
                 cleared
                 outlined
-                onInputMode
+                :height="480"
                 :description="jobState.description"
                 :title="'Run description (optional)'"
                 @onChange="handleOnChange"
-                @onChangeDescription="handleOnInput(handleClarifyDescription($event), 'description')"
+                @onChangeDescription="handleOnInput($event, 'description')"
               />
             </v-col>
           </v-row>
@@ -71,12 +71,13 @@ import useJobStore from '@/features/job/composition/useJobStore'
 import usePermission from '@/core/composition/usePermission'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
 import useValidationRules from '@/core/composition/useValidationRules'
+import AskAnnaDescription from '@/core/components/shared/AskAnnaDescription.vue'
 import ConfirmChangeJobNamePopup from '@/features/job/components/popup/ConfirmChangeJobNamePopup.vue'
 
 import { ref, watch, computed, onBeforeMount, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
-  components: { ConfirmChangeJobNamePopup },
+  components: { AskAnnaDescription, ConfirmChangeJobNamePopup },
 
   setup(_, context) {
     const jobStore = useJobStore()
@@ -132,8 +133,6 @@ export default defineComponent({
     }
     const handleChangeDescription = data => jobStore.changeJob(data)
 
-    const handleClarifyDescription = val => val.replace('<p></p>', '')
-
     const handleClosePopup = () => {
       showConfirmPopup.value = false
     }
@@ -164,7 +163,6 @@ export default defineComponent({
       handleOnChange,
       handleClosePopup,
       handleChangeDescription,
-      handleClarifyDescription,
       handleShowConfirmationPopup
     }
   }

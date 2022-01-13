@@ -75,19 +75,21 @@
 import ProjectMenu from './parts/ProjectMenu.vue'
 import usePermission from '@/core/composition/usePermission'
 import { ref, computed, defineComponent } from '@vue/composition-api'
+import AskAnnaDescription from '@/core/components/shared/AskAnnaDescription.vue'
 import ProjectMenuPopup from '@/features/project/components/ProjectMenuPopup.vue'
 
 export default defineComponent({
   name: 'DefaultBar',
 
-  components: { ProjectMenu, ProjectMenuPopup },
+  components: { ProjectMenu, ProjectMenuPopup, AskAnnaDescription },
 
   props: {
     project: {
       type: Object,
       default: function () {
         return {
-          name: ''
+          name: '',
+          description: ''
         }
       }
     },
