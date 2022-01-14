@@ -25,6 +25,7 @@
               :description="projectData.description"
               :title="'Project description (optional)'"
               @onChange="handleOnChange"
+              @onSave="handleSaveDescription"
               @onChangeDescription="handleOnInput($event, 'description')"
             />
           </v-col>
@@ -150,7 +151,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['handleOnInput', 'handleCreate', 'handleCancel'])
+const emit = defineEmits(['handleOnInput', 'handleCreate', 'handleCancel', 'oSaveDescription'])
 
 const { RULES } = useValidationRules()
 
@@ -184,5 +185,8 @@ const handleCancel = () => {
 }
 
 const handleOnChange = () => (isStateNotChanged.value = false)
+
 const resetValidation = () => newProjectForm.value.resetValidation()
+
+const handleSaveDescription = () => emit('oSaveDescription')
 </script>

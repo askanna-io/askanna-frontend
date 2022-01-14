@@ -26,6 +26,7 @@
                 :description="jobState.description"
                 :title="'Run description (optional)'"
                 @onChange="handleOnChange"
+                @onSave="handleSaveDescription"
                 @onChangeDescription="handleOnInput($event, 'description')"
               />
             </v-col>
@@ -65,106 +66,90 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { set } from 'lodash'
-import useJobStore from '@/features/job/composition/useJobStore'
 import usePermission from '@/core/composition/usePermission'
+import useJobStore from '@/features/job/composition/useJobStore'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useValidationRules from '@/core/composition/useValidationRules'
+import { ref, watch, computed, onBeforeMount } from '@vue/composition-api'
 import AskAnnaDescription from '@/core/components/shared/AskAnnaDescription.vue'
 import ConfirmChangeJobNamePopup from '@/features/job/components/popup/ConfirmChangeJobNamePopup.vue'
 
-import { ref, watch, computed, onBeforeMount, defineComponent } from '@vue/composition-api'
+const jobStore = useJobStore()
+const snackBar = useSnackBar()
+const router = useRouterAskAnna()
+const permission = usePermission()
+const validationRules = useValidationRules()
 
-export default defineComponent({
-  components: { AskAnnaDescription, ConfirmChangeJobNamePopup },
+const { jobId } = router.route.value.params
 
-  setup(_, context) {
-    const jobStore = useJobStore()
-    const snackBar = useSnackBar()
-    const permission = usePermission()
-    const validationRules = useValidationRules()
+const isNameChanged = ref(false)
+const showConfirmPopup = ref(false)
 
-    const { jobId } = context.root.$route.params
+const RULE = computed(() => validationRules.RULES)
+const projectJobEdit = computed(() => permission.getFor(permission.labels.projectJobEdit))
 
-    const isNameChanged = ref(false)
-    const showConfirmPopup = ref(false)
+const fetchData = async () => {
+  await jobStore.resetStore()
+  await jobStore.getJob(jobId)
+}
 
-    const projectJobEdit = computed(() => permission.getFor(permission.labels.projectJobEdit))
+onBeforeMount(() => fetchData())
 
-    const fetchData = async () => {
-      await jobStore.resetStore()
-      await jobStore.getJob(jobId)
-    }
+const job = computed(() => jobStore.job.value)
+const loading = computed(() => jobStore.jobLoading.value)
 
-    onBeforeMount(() => fetchData())
+const isStateNotChanged = ref(true)
+const jobState = ref({
+  name: job.value.name,
+  description: job.value.description
+})
 
-    const job = computed(() => jobStore.job.value)
-    const loading = computed(() => jobStore.jobLoading.value)
+const handleOnInput = (value, path) => {
+  isStateNotChanged.value = false
+  if (path === 'name') isNameChanged.value = true
+  set(jobState.value, path, value)
+}
 
-    const isStateNotChanged = ref(true)
-    const jobState = ref({
-      name: job.value.name,
-      description: job.value.description
-    })
+const handleOnChange = () => (isStateNotChanged.value = false)
 
-    const handleOnInput = (value, path) => {
-      isStateNotChanged.value = false
-      if (path === 'name') isNameChanged.value = true
-      set(jobState.value, path, value)
-    }
+const handleShowConfirmationPopup = () => {
+  if (isNameChanged.value) {
+    showConfirmPopup.value = true
+    return
+  }
+  handleSave()
+}
 
-    const handleOnChange = () => (isStateNotChanged.value = false)
+const handleSave = async () => {
+  const isUpdated = await jobStore.updateJob({ ...jobState.value })
+  if (isUpdated) {
+    snackBar.showSnackBar({ message: 'The job was updated', color: 'success' })
+    handleClose()
+  }
+}
 
-    const handleShowConfirmationPopup = () => {
-      if (isNameChanged.value) {
-        showConfirmPopup.value = true
-        return
-      }
-      handleSave()
-    }
+const handleSaveDescription = async () => {
+  const isUpdated = await jobStore.updateJob({ description: jobState.value.description })
+  if (isUpdated) {
+    snackBar.showSnackBar({ message: 'The job was updated', color: 'success' })
+  }
+}
 
-    const handleSave = async () => {
-      const isUpdated = await jobStore.updateJob({ ...jobState.value })
-      if (isUpdated) {
-        snackBar.showSnackBar({ message: 'The job was updated', color: 'success' })
-        handleClose()
-      }
-    }
-    const handleChangeDescription = data => jobStore.changeJob(data)
+const handleClosePopup = () => {
+  showConfirmPopup.value = false
+}
+const handleClose = () =>
+  router.push({
+    name: 'workspace-project-job-overiew'
+  })
 
-    const handleClosePopup = () => {
-      showConfirmPopup.value = false
-    }
-    const handleClose = () =>
-      context.root.$router.push({
-        name: 'workspace-project-job-overiew'
-      })
-
-    watch(job, job => {
-      jobState.value = {
-        name: job.name,
-        description: job.description
-      }
-    })
-
-    return {
-      job,
-      loading,
-      jobState,
-      projectJobEdit,
-      showConfirmPopup,
-      isStateNotChanged,
-      RULE: validationRules.RULES,
-
-      handleSave,
-      handleClose,
-      handleOnInput,
-      handleOnChange,
-      handleClosePopup,
-      handleChangeDescription,
-      handleShowConfirmationPopup
-    }
+watch(job, job => {
+  jobState.value = {
+    name: job.name,
+    description: job.description
   }
 })
 </script>

@@ -25,6 +25,7 @@
                 :description="run.description"
                 :title="'Run description (optional)'"
                 @onChange="handleOnChange"
+                @onSave="handleSaveDescription"
                 @onChangeDescription="handleOnInput($event, 'description')"
               />
             </v-col>
@@ -87,6 +88,17 @@ const run = ref({
 const handleOnInput = (value, path) => {
   isStateNotChanged.value = false
   set(run.value, path, value)
+}
+
+const handleSaveDescription = async () => {
+  const isUpdated = await jobRunStore.udapteJobRun({
+    uuid: jobRunStore.state.jobRun.value.short_uuid,
+    data: { description: run.value.description }
+  })
+
+  if (isUpdated) {
+    snackBar.showSnackBar({ message: 'The runifo was updated', color: 'success' })
+  }
 }
 
 const handleSave = async () => {
