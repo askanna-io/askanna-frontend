@@ -6,15 +6,7 @@
       <div class="text--primary">
         <p>
           If you want to replace this code package, you are in the right place. Below you can find instructions on how
-          you can use the AskAnna CLI (<code class="px-2 mr-2 text-primary">{{ cliInstall }}</code>
-          <v-tooltip top content-class="opacity-1">
-            <template v-slot:activator="{ on }">
-              <v-btn x-small v-on="on" outlined color="secondary" @click.stop="handleCopy(cliInstall)">
-                <v-icon small color="secondary">mdi-content-copy</v-icon>Copy
-              </v-btn>
-            </template>
-            <span>Copy</span>
-          </v-tooltip>
+          you can use the AskAnna CLI ( <ask-anna-copy-text :text="cliInstall" />
           ) to push a new version of the code to this project.
         </p>
         <p>
@@ -23,16 +15,8 @@
         </p>
         <div>COMMAND LINE INSTRUCTIONS</div>
         <p>
-          If you have installed the AskAnna CLI (<code class="px-2 mr-2 text-primary">{{ cliInstall }}</code>
-          <v-tooltip top content-class="opacity-1">
-            <template v-slot:activator="{ on }">
-              <v-btn x-small v-on="on" outlined color="secondary" @click.stop="handleCopy(cliInstall)">
-                <v-icon small color="secondary">mdi-content-copy</v-icon>Copy
-              </v-btn>
-            </template>
-            <span>Copy</span>
-          </v-tooltip>
-          ), you can use the command line interface as well.
+          If you have installed the AskAnna CLI (<ask-anna-copy-text :text="cliInstall" />), you can use the command
+          line interface as well.
         </p>
         <p>
           Probably you already have an <span class="font-italic">askanna.yml</span> file in your local directory. If
@@ -45,94 +29,44 @@
           configuration you need to do.
         </p>
         <p>
-          <code class="px-2 mr-2 text-primary">{{ projectUrl }}</code>
-          <v-tooltip top content-class="opacity-1">
-            <template v-slot:activator="{ on }">
-              <v-btn x-small v-on="on" outlined color="secondary" @click.stop="handleCopy(projectUrl)">
-                <v-icon small color="secondary">mdi-content-copy</v-icon>Copy
-              </v-btn>
-            </template>
-            <span>Copy</span>
-          </v-tooltip>
+          <ask-anna-copy-text :text="projectUrl" />
         </p>
         <p>
           In your terminal, make sure you are in one of the project directories. Now you can run
-          <code class="px-2 mr-2">{{ askannaPush }}</code>
-          <v-tooltip top content-class="opacity-1">
-            <template v-slot:activator="{ on }">
-              <v-btn v-on="on" x-small outlined color="secondary" @click.stop="handleCopy(askannaPush)">
-                <v-icon small color="secondary">mdi-content-copy</v-icon>Copy
-              </v-btn>
-            </template>
-            <span>Copy</span>
-          </v-tooltip>
+          <ask-anna-copy-text :text="askannaPush" />
           and follow the instructions in the terminal. If you don’t want to confirm that you want to replace the current
-          package version, you can use <code class="px-2 mr-2">{{ askannaPushForce }}</code>
-          <v-tooltip top content-class="opacity-1">
-            <template v-slot:activator="{ on }">
-              <v-btn v-on="on" x-small outlined color="secondary" @click.stop="handleCopy(askannaPushForce)">
-                <v-icon small color="secondary">mdi-content-copy</v-icon>Copy
-              </v-btn>
-            </template>
-            <span>Copy</span>
-          </v-tooltip>
+          package version, you can use <ask-anna-copy-text :text="askannaPushForce" />
         </p>
         <p>
           Optionally you can add a description to the version you push via
-          <code class="px-2 mr-2">{{ askannaPushWithMessage }}</code>
-          <v-tooltip top content-class="opacity-1">
-            <template v-slot:activator="{ on }">
-              <v-btn v-on="on" x-small outlined color="secondary" @click.stop="handleCopy(askannaPushWithMessage)">
-                <v-icon small color="secondary">mdi-content-copy</v-icon>Copy
-              </v-btn>
-            </template>
-            <span>Copy</span>
-          </v-tooltip>
+          <ask-anna-copy-text :text="askannaPushWithMessage" />
         </p>
       </div>
     </v-card-text>
   </v-card>
 </template>
-<script>
-import useCopy from '@/core/composition/useCopy'
+<script setup lang="ts">
+import { ref } from '@vue/composition-api'
 import { url } from '@/core/services/api-settings'
-import { ref, defineComponent } from '@vue/composition-api'
+import AskAnnaCopyText from '@/core/components/shared/AskAnnaCopyText.vue'
 
-export default defineComponent({
-  name: 'ReplaceInfo',
-
-  props: {
-    projectShortUuid: {
-      type: String,
-      default: () => ''
-    },
-    workspaceId: {
-      type: String,
-      default: () => ''
-    }
+const props = defineProps({
+  projectShortUuid: {
+    type: String,
+    default: () => ''
   },
-
-  setup(props) {
-    const copy = useCopy()
-
-    const projectUrl = ref(`push-target: ${url}/${props.workspaceId}/project/${props.projectShortUuid}`)
-    const cliInstall = 'pip install askanna'
-    const askannaPush = 'askanna push'
-    const askannaPushForce = 'askanna push -f'
-    const askannaPushWithMessage = 'askanna push -m "a description"'
-
-    const handleCopy = text => copy.handleCopyText(text)
-
-    return {
-      projectUrl,
-      cliInstall,
-      handleCopy,
-      askannaPush,
-      askannaPushForce,
-      askannaPushWithMessage
-    }
+  workspaceId: {
+    type: String,
+    default: () => ''
   }
 })
+
+const askannaPush = 'askanna push'
+const cliInstall = 'pip install askanna'
+const askannaPushForce = 'askanna push -f'
+const askannaPushWithMessage = 'askanna push -m "a description"'
+
+const projectUrl = ref(`push-target: ${url}/${props.workspaceId}/project/${props.projectShortUuid}`)
 </script>
 <style>
 .askanna-code {
