@@ -47,51 +47,34 @@
     </v-card-text>
   </v-card>
 </template>
-<script>
+<script setup lang="ts">
+import { ref } from '@vue/composition-api'
 import { url } from '@/core/services/api-settings'
-import { ref, defineComponent } from '@vue/composition-api'
-import AskAnnaCopyText from '@/core/components/shared/AskAnnaCopyText'
+import AskAnnaCopyText from '@/core/components/shared/AskAnnaCopyText.vue'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
 
-export default defineComponent({
-  name: 'NewPackageInfo',
-
-  props: {
-    projectShortUuid: {
-      type: String,
-      default: () => ''
-    },
-    workspaceId: {
-      type: String,
-      default: () => ''
-    }
+const props = defineProps({
+  projectShortUuid: {
+    type: String,
+    default: () => ''
   },
-
-  components: { AskAnnaCopyText },
-
-  setup(props, context) {
-    const forceFileDownload = useForceFileDownload()
-
-    const projectUrl = ref(`push-target: ${url}/${props.workspaceId}/project/${props.projectShortUuid}`)
-    const cliInstall = 'pip install askanna'
-    const askannaPush = 'askanna push'
-    const askannaPushForce = 'askanna push -f'
-    const askannaPushWithMessage = 'askanna push -m "a description"'
-
-    const handleDownload = async () => {
-      forceFileDownload.trigger({ source: projectUrl.value, name: 'askanna.yml' })
-    }
-
-    return {
-      projectUrl,
-      cliInstall,
-      askannaPush,
-      handleDownload,
-      askannaPushForce,
-      askannaPushWithMessage
-    }
+  workspaceId: {
+    type: String,
+    default: () => ''
   }
 })
+
+const askannaPush = 'askanna push'
+const cliInstall = 'pip install askanna'
+const askannaPushForce = 'askanna push -f'
+
+const forceFileDownload = useForceFileDownload()
+
+const projectUrl = ref(`push-target: ${url}/${props.workspaceId}/project/${props.projectShortUuid}`)
+
+const handleDownload = async () => {
+  forceFileDownload.trigger({ source: projectUrl.value, name: 'askanna.yml' })
+}
 </script>
 <style>
 .askanna-code {
