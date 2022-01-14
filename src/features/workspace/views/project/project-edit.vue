@@ -10,6 +10,7 @@
         @handleCreate="handleUpdate"
         @handleCancel="handleCancel"
         @handleOnInput="handleOnInput"
+        @oSaveDescription="handleSaveDescription"
       />
       <v-alert v-else class="mx-2 my-4 text-center" dense outlined>
         You are not allowed to edit this project. I can bring you back to the project
@@ -60,6 +61,7 @@ onBeforeMount(() => fetchData())
 const handleOnInput = ({ path, value }) => {
   set(projectState.value, path, value)
 }
+
 const handleUpdate = async () => {
   const project = await projectStore.updateProject(projectState.value)
 
@@ -71,6 +73,15 @@ const handleUpdate = async () => {
     handleCancel()
   }
 }
+
+const handleSaveDescription = async () => {
+  const project = await projectStore.updateProject({ description: projectState.value.description })
+
+  if (project?.short_uuid) {
+    snackBar.showSnackBar({ message: `The project ${project.name} was updated`, color: 'success', timeout: 2500 })
+  }
+}
+
 const handleCancel = () => {
   router.push({
     name: routeBackTo

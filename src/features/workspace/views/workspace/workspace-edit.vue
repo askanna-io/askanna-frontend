@@ -26,6 +26,7 @@
               :description="workspaceState.description"
               :title="'Workspace description (optional)'"
               @onChange="handleOnChange"
+              @onSave="handleSaveDescription"
               @onChangeDescription="handleOnInput($event, 'description')"
             />
           </v-col>
@@ -164,6 +165,18 @@ const handleSave = async () => {
       message: `The workspace ${workspace.name} was updated`
     })
     handleClose()
+  }
+}
+
+const handleSaveDescription = async () => {
+  const workspace = await workspaceStore.updateWorkspace({ description: workspaceState.value.description })
+
+  if (workspace) {
+    snackBar.showSnackBar({
+      timeout: 2500,
+      color: 'success',
+      message: `The workspace ${workspace.name} was updated`
+    })
   }
 }
 
