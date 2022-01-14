@@ -5,6 +5,13 @@
         <span
           ><span class="font-weight-bold">{{ text }}: </span>{{ fullValue ? value.name : envNameSliced }}</span
         >
+        <ask-anna-copy-text
+          :showText="false"
+          :text="envNameComputed"
+          :iconColor="'grey lighten-2'"
+          :buttonType="{ text: true }"
+          :styleClasses="'px-0 white font-weight-regular text--regular body-1'"
+        />
       </div>
     </template>
     <template v-if="fullMode">
@@ -22,6 +29,7 @@
 <script setup lang="ts">
 import { computed } from '@vue/composition-api'
 import useStartSlicedText from '@/core/composition/useStartSlicedText'
+import AskAnnaCopyText from '@/core/components/shared/AskAnnaCopyText.vue'
 
 const props = defineProps({
   text: {
@@ -64,7 +72,7 @@ const imageComputed = computed(() => ({
   digest: props.value.image?.digest || ''
 }))
 
-const envNameSliced = computed(() => {
-  return slicedStartText(envName.value || props.value.name || props.value.image?.name, 35)
-})
+const envNameSliced = computed(() => slicedStartText(envName.value || props.value.name || props.value.image?.name, 35))
+
+const envNameComputed = computed(() => envName.value || props.value.name || props.value.image?.name)
 </script>
