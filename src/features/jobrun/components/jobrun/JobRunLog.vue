@@ -56,7 +56,7 @@
         type="list-item-two-line"
       >
         <div v-if="!logNoAvailable" class="logs-wrapper">
-          <the-highlight
+          <TheHighlight
             ref="logRef"
             :value="logs"
             :loading="isLoadingLogs"

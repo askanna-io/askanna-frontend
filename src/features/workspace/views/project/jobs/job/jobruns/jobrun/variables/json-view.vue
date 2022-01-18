@@ -5,21 +5,20 @@
     </ask-anna-loading-progress>
   </v-flex>
 </template>
-<script>
+<script lang="ts">
 import { throttle } from 'lodash'
 import { useWindowSize } from '@u3u/vue-hooks'
 import useQuery from '@/core/composition/useQuery'
-import useRuninfoVariablesStore from '@/features/runinfo-variables/composition/useRuninfoVariablesStore'
-
 import { computed, onBeforeMount, defineComponent } from '@vue/composition-api'
 import MetricJsonView from '@/features/metric/components/metric-table/MetricJsonView.vue'
+import useRuninfoVariablesStore from '@/features/runinfo-variables/composition/useRuninfoVariablesStore'
 
 export default defineComponent({
   name: 'json-view',
 
   components: { MetricJsonView },
 
-  setup(props, context) {
+  setup(_, context) {
     const { height } = useWindowSize()
     const runinfoVariablesStore = useRuninfoVariablesStore()
 

@@ -26,7 +26,7 @@
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-app-bar>
-      <the-highlight :value="metricRow.value" languageName="text" />
+      <TheHighlight :value="metricRow.value" languageName="text" />
     </v-card>
   </v-menu>
 </template>
