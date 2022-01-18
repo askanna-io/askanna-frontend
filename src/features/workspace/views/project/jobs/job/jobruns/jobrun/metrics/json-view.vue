@@ -5,7 +5,7 @@
     </ask-anna-loading-progress>
   </v-flex>
 </template>
-<script>
+<script lang="ts">
 import { throttle } from 'lodash'
 import { useWindowSize } from '@u3u/vue-hooks'
 import useQuery from '@/core/composition/useQuery'
@@ -18,7 +18,7 @@ export default defineComponent({
 
   components: { MetricJsonView },
 
-  setup(props, context) {
+  setup(_, context) {
     const { height } = useWindowSize()
     const metricStore = useMetricStore()
 

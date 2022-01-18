@@ -2,16 +2,16 @@
   <v-row align="center" justify="center">
     <v-col cols="12" class="pb-0 pt-0">
       <div class="page">
-        <div style="max-height: 420px;" class="overflow-y-auto" id="scroll-target">
-          <the-highlight v-if="partFile" :value="partFile" languageName="json" />
+        <div style="max-height: 420px" class="overflow-y-auto" id="scroll-target">
+          <TheHighlight v-if="partFile" :value="partFile" languageName="json" />
         </div>
       </div>
     </v-col>
   </v-row>
 </template>
 
-<script>
-import TheHighlight from '@/core/components/highlight/TheHighlight'
+<script lang="ts">
+import TheHighlight from '@/core/components/highlight/TheHighlight.vue'
 import { reactive, computed, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
@@ -25,7 +25,7 @@ export default defineComponent({
     file: String
   },
 
-  setup(props, context) {
+  setup(props) {
     const state = reactive({
       sliceStart: 0,
       sliceEnd: 100000

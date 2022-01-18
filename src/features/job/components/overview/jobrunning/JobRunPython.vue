@@ -16,17 +16,17 @@
       </v-flex>
     </v-toolbar>
     <v-flex class="mb-4">
-      <the-highlight class="curl-code" :value="pythonCode" languageName="python" />
+      <TheHighlight class="curl-code" :value="pythonCode" languageName="python" />
     </v-flex>
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import useCopy from '@/core/composition/useCopy'
 import { apiUrl } from '@/core/services/api-settings'
 import { defineComponent } from '@vue/composition-api'
-import TheHighlight from '@/core/components/highlight/TheHighlight'
 import useAuthStore from '@/features/auth/composition/useAuthStore'
+import TheHighlight from '@/core/components/highlight/TheHighlight.vue'
 
 export default defineComponent({
   name: 'JobRunPython',

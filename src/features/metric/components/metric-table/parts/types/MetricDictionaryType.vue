@@ -39,7 +39,7 @@
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-app-bar>
-      <the-highlight :value="jsonString" languageName="json" />
+      <TheHighlight :value="jsonString" languageName="json" />
     </v-card>
   </v-menu>
 </template>

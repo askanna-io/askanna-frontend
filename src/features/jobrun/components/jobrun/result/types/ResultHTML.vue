@@ -17,7 +17,7 @@
       </v-alert>
       <div ref="iframeRef" />
     </template>
-    <the-highlight
+    <TheHighlight
       v-else
       readonly
       languageName="html"
@@ -26,94 +26,81 @@
     />
   </div>
 </template>
-<script>
+<script setup lang="ts">
 import { throttle } from 'lodash'
-import { ref, watch, defineComponent } from '@vue/composition-api'
+import { ref, watch } from '@vue/composition-api'
+import TheHighlight from '@/core/components/highlight/TheHighlight.vue'
 
-export default defineComponent({
-  name: 'ResultHTML',
-
-  props: {
-    view: {
-      type: String,
-      default: () => 'pretty'
-    },
-    dataSource: {
-      type: String,
-      default: () => ''
-    },
-    maxHeight: {
-      type: String,
-      default: () => '100vh'
-    }
+const props = defineProps({
+  view: {
+    type: String,
+    default: () => 'pretty'
   },
+  dataSource: {
+    type: String,
+    default: () => ''
+  },
+  maxHeight: {
+    type: String,
+    default: () => '100vh'
+  }
+})
 
-  setup(props) {
-    const NOT_ALLOWED_TAGS = ['<script']
+const NOT_ALLOWED_TAGS = ['<script']
 
-    const alert = ref(NOT_ALLOWED_TAGS.some(item => props.dataSource.includes(item)))
-    const iframeRef = ref(null)
-    const currentScrollTop = ref(0)
+const alert = ref(NOT_ALLOWED_TAGS.some(item => props.dataSource.includes(item)))
+const iframeRef = ref(null)
+const currentScrollTop = ref(0)
 
-    const onScroll = scrollTop => {
-      if (scrollTop > currentScrollTop.value) {
-        window.scrollTo(0, window.pageYOffset + 10)
-        currentScrollTop.value = scrollTop
-      }
-    }
+const onScroll = scrollTop => {
+  if (scrollTop > currentScrollTop.value) {
+    window.scrollTo(0, window.pageYOffset + 10)
+    currentScrollTop.value = scrollTop
+  }
+}
 
-    const throttled = throttle(onScroll, 1500)
+const throttled = throttle(onScroll, 1500)
 
-    const handleOnScroll = e => {
-      window.scrollTo(0, window.pageYOffset + 10)
-      throttled(e.target.scrollTop)
-    }
+const handleOnScroll = e => {
+  window.scrollTo(0, window.pageYOffset + 10)
+  throttled(e.target.scrollTop)
+}
 
-    const handleAllow = () => {
-      alert.value = false
+const handleAllow = () => {
+  alert.value = false
 
-      initIframe()
-    }
+  initIframe()
+}
 
-    const removeIframe = () => {
-      while (iframeRef.value.firstChild) {
-        iframeRef.value.removeChild(iframeRef.value.firstChild)
-      }
-    }
+const removeIframe = () => {
+  while (iframeRef.value.firstChild) {
+    iframeRef.value.removeChild(iframeRef.value.firstChild)
+  }
+}
 
-    const initIframe = () => {
-      removeIframe()
-      const sandbox = alert.value ? '' : 'allow-scripts allow-same-origin'
+const initIframe = () => {
+  removeIframe()
+  const sandbox = alert.value ? '' : 'allow-scripts allow-same-origin'
 
-      const iframeEl = document.createElement('iframe')
-      iframeEl.setAttribute('height', props.maxHeight)
+  const iframeEl = document.createElement('iframe')
+  iframeEl.setAttribute('height', props.maxHeight)
 
-      iframeEl.setAttribute('class', 'AskAnna-iframe')
-      iframeEl.setAttribute('srcdoc', props.dataSource)
-      iframeEl.setAttribute('sandbox', sandbox)
+  iframeEl.setAttribute('class', 'AskAnna-iframe')
+  iframeEl.setAttribute('srcdoc', props.dataSource)
+  iframeEl.setAttribute('sandbox', sandbox)
 
-      iframeEl.onload = () => {
-        if (!alert.value) {
-          iframeEl.contentWindow.onscroll = e => handleOnScroll(e)
-        }
-      }
-
-      iframeRef.value.appendChild(iframeEl)
-    }
-
-    watch(iframeRef, async iframeRef => {
-      if (!iframeRef) return
-      initIframe()
-    })
-
-    return {
-      alert,
-      iframeRef,
-
-      handleAllow,
-      handleOnScroll
+  iframeEl.onload = () => {
+    if (!alert.value) {
+      iframeEl.contentWindow.onscroll = e => handleOnScroll(e)
     }
   }
+
+  iframeRef.value.appendChild(iframeEl)
+}
+
+watch(iframeRef, async iframeRef => {
+  if (!iframeRef) return
+  initIframe()
 })
 </script>
 <style>
