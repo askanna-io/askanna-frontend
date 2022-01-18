@@ -53,6 +53,7 @@ const handlerAfterCompilerDoneHook = function (cb) {
 }
 
 module.exports = {
+  transpileDependencies: ['vuetify'],
   pwa: {
     name: 'AskAnna',
     themeColor: '#5d3eb2',

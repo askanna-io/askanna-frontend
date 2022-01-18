@@ -5,12 +5,9 @@
     </v-card-title>
 
     <v-tabs v-model="currentJobRunTab" class="pb-3">
-      <v-tabs-slider color="primary" />
-      <template v-for="tab of tabs">
-        <v-tab v-if="tab.show" ripple :key="tab.id" :to="{ name: tab.to, params }">
-          {{ tab.name }}
-        </v-tab>
-      </template>
+      <v-tab v-for="tab of tabs" ripple :key="tab.id" :to="{ name: tab.to, params }">
+        {{ tab.name }}
+      </v-tab>
       <JobRunMenuPopup v-if="!isEditJobRunView && projectRunEdit && $vuetify.breakpoint.xsOnly" class="pt-2" />
     </v-tabs>
   </v-flex>
