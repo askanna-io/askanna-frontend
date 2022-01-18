@@ -21,20 +21,23 @@
       >
         <label
           v-if="title && !isFullScreen"
-          class="ask-anna-descriptio--title v-label theme--light px-1"
+          class="ask-anna-description--title v-label theme--light px-1"
           :class="{ 'v-label--active': isFocused }"
           >{{ title }}</label
         >
-        <div v-if="editor && editable">
+        <div
+          v-if="editor && editable"
+          :class="{
+            'toolbar-full-screen': isFullScreen,
+            'is-active': isFocused && !$vuetify.breakpoint.xsOnly && isFullScreen
+          }"
+        >
           <component
             v-bind:is="$vuetify.breakpoint.xsOnly ? 'div' : 'v-toolbar'"
             dense
             height="30px"
-            :flat="!sticked"
-            v-sticky="false"
-            on-stick="onStick"
-            sticky-offset="{top: 45, bottom: 12}"
-            :class="{ 'mx-1 mt-2': !sticked }"
+            flat
+            class="mx-1 mt-2"
           >
             <v-tooltip top>
               <template v-slot:activator="{ on }">
@@ -398,7 +401,7 @@
         <editor-content
           :editor="editor"
           :style="scrollerStyles"
-          :class="{ 'editable-mode': editable }"
+          :class="{ 'editable-mode': editable, 'full-screen': isFullScreen }"
           @click="handleOnClickWrapper"
           spellcheck="false"
           class="ma-2 overflow-y-auto"
@@ -468,7 +471,6 @@ const emit = defineEmits(['onChange', 'onSave', 'onChangeDescription'])
 const editorStore = useEditorStore()
 
 const editable = ref(true)
-const sticked = ref(false)
 const isFocused = ref(false)
 const isFullScreen = ref(false)
 const isSetLinkOpen = ref(false)
@@ -628,8 +630,6 @@ const handleUnsetHighlight = () => {
   editor.commands.unsetHighlight()
 }
 
-const onStick = data => (sticked.value = data.sticked)
-
 const handleOpenSetLink = () => {
   editorStore.url = editor.getAttributes('link').href
 }
@@ -663,6 +663,36 @@ const handleOnSave = () => {
 }
 </script>
 <style lang="scss">
+.mobile-view {
+  .toolbar-full-screen {
+    width: auto;
+  }
+  .editable-mode {
+    &.full-screen {
+      padding-top: 55px !important;
+    }
+  }
+}
+.toolbar-full-screen {
+  position: fixed;
+  width: 900px;
+  background-color: white;
+  z-index: 10;
+  opacity: 1;
+  margin-left: -1px;
+  border-radius: 4px 4px 0 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+  border-left: 1px solid rgba(0, 0, 0, 0.12);
+
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  border-color: rgba(0, 0, 0, 0.12);
+  &.is-active {
+    border-top: 1px solid #5d3eb2;
+    border-right: 1px solid #5d3eb2;
+    border-left: 1px solid #5d3eb2;
+  }
+}
 .v-application .ask-anna--editor p {
   margin-bottom: 0px;
   code {
@@ -727,7 +757,7 @@ ul[data-type='taskList'] {
   overflow-x: auto;
 }
 
-.ask-anna-descriptio--title {
+.ask-anna-description--title {
   position: absolute;
   top: -9px;
   z-index: 3;
@@ -737,7 +767,7 @@ ul[data-type='taskList'] {
   background-color: white;
 }
 
-.ask-anna-descriptio--title.v-label--active {
+.ask-anna-description--title.v-label--active {
   color: #5d3eb2 !important;
 }
 
@@ -754,10 +784,16 @@ ul[data-type='taskList'] {
 
 .ask-anna--editor {
   &.full-screen-mode {
+    overflow: hidden;
+    overflow-y: scroll;
     width: 900px;
     margin: 0 auto;
+    border-radius: 2px !important;
   }
   .editable-mode {
+    &.full-screen {
+      padding-top: 40px;
+    }
     a {
       cursor: text;
     }
