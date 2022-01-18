@@ -1,10 +1,10 @@
 <template>
-  <v-app
+  <div
     :class="{ 'mobile-view': $vuetify.breakpoint.xsOnly, 'desktop-view': !$vuetify.breakpoint.xsOnly }"
     v-scroll="handleOnScroll"
   >
     <Layout :layout="layout" :isLoggedIn="isLoggedIn" />
-  </v-app>
+  </div>
 </template>
 
 <script lang="ts">

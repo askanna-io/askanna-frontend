@@ -1,9 +1,7 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
-import 'vuetify/dist/vuetify.min.css'
 import '@mdi/font/css/materialdesignicons.css'
 import '@fortawesome/fontawesome-free/css/all.css'
-
 import GoogleIcon from '@/core/components/icons/GoogleIcon.vue'
 
 Vue.use(Vuetify)
