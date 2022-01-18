@@ -2,21 +2,21 @@
   <div>
     <v-dialog
       v-if="dialog"
-      class="editor--dialog"
+      content-class="editor--dialog"
       v-model="dialog"
       fullscreen
       persistent
-      hide-overlay
       no-click-animation
       transition="dialog-bottom-transition"
     >
       <v-card flat>
-        <v-toolbar dense tile dark color="primary" class="fullscreen--toplbar">
+        <v-toolbar extension-height="10" dense flat tile dark color="primary" class="fullscreen--toplbar">
           <v-toolbar-title>{{ title }}</v-toolbar-title>
           <v-spacer />
           <v-btn class="mr-3" dark text small outlined @click="handleSave">Save my changes</v-btn>
 
           <v-btn dark text small outlined @click="handleExitFullScreen">Exit full screen</v-btn>
+          <template v-slot:extension></template>
         </v-toolbar>
 
         <slot />
@@ -59,6 +59,10 @@ const handleExitFullScreen = () => emit('onExitFullScreen')
   left: 0;
   width: 100%;
   z-index: 10;
+  .v-toolbar__extension {
+    padding: 0;
+    background-color: white;
+  }
 }
 
 .mobile-view .v-dialog--fullscreen {
