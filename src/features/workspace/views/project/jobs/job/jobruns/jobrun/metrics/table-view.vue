@@ -61,7 +61,14 @@ export default defineComponent({
 
     const loadingByParams = computed(() => metricStore.state.loading.value.metricByParams)
 
-    const tableHeight = computed(() => height.value - 66)
+    const tableHeight = computed(() => {
+      const tableHeigth = items.value.length * 48
+      if (tableHeigth + 280 < window.innerHeight) {
+        return items.value.length * 48 + 60
+      }
+
+      return height.value - 66
+    })
 
     const query = useQuery({
       next,
