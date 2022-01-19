@@ -24,7 +24,7 @@
                 outlined
                 :height="480"
                 :description="jobState.description"
-                :title="'Run description (optional)'"
+                :title="'Job description (optional)'"
                 @onChange="handleOnChange"
                 @onSave="handleSaveDescription"
                 @onChangeDescription="handleOnInput($event, 'description')"
