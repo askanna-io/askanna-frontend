@@ -26,12 +26,10 @@ const props = defineProps({
     default: function () {
       return {
         status: 'UNDIFENED',
-        runtime: 0,
-        memory: 0,
-        return_payload: null,
-        stdout: null,
         created: '',
-        finished: ''
+        finished: '',
+        started: '',
+        updated: ''
       }
     }
   }
@@ -81,11 +79,10 @@ const statusColor = computed(() => get(COLORS, status.value))
 const statusValue = computed(() => get(TEXTS, status.value))
 
 const getText = (isMobile: boolean) => {
-  const created = props.statusData.created && `(${moment.ago(props.statusData.created)})`
-  const desktopStatus = `Last status: ${statusValue.value} ${created}`
-  const mobileStatus = !props.statusData.created
-    ? capitalize(statusValue.value)
-    : capitalize(moment.ago(props.statusData.created))
+  const lastStatus = props.statusData.finished || props.statusData.started || props.statusData.created
+  const lastStatusMoment = lastStatus && `(${moment.ago(lastStatus)})`
+  const desktopStatus = `Last status: ${statusValue.value} ${lastStatusMoment}`
+  const mobileStatus = !lastStatus ? capitalize(statusValue.value) : capitalize(moment.ago(lastStatus))
 
   return isMobile ? mobileStatus : desktopStatus
 }

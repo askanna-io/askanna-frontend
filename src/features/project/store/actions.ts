@@ -114,8 +114,20 @@ export const actions: ActionTree<projectState, RootState> = {
             offset: 0
           }
         })
-        const run = runs && runs.results.length ? runs.results[0] : { status: 'NOT_RUNS', created: '' }
-        job.runs = { count: runs.count, status: { status: run.status, created: run.created } }
+        const run =
+          runs && runs.results.length
+            ? runs.results[0]
+            : { status: 'NOT_RUNS', created: '', started: '', finished: '', updated: '' }
+        job.runs = {
+          count: runs.count,
+          status: {
+            status: run.status,
+            created: run.created,
+            started: run.started,
+            finished: run.finished,
+            updated: run.modified
+          }
+        }
 
         return job
       })
