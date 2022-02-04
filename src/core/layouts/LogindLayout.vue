@@ -9,32 +9,24 @@
     </v-main>
   </v-app>
 </template>
-<script>
+<script setup lang="ts">
 import '@/core/plugins/intercom.js'
 import useTitle from '@/core/composition/useTitle'
-import { onUpdated, onBeforeUnmount, defineComponent } from '@vue/composition-api'
+import { onUpdated, computed } from '@vue/composition-api'
 
-export default defineComponent({
-  name: 'LogindLayout',
+useTitle()
 
-  setup(props, context) {
-    useTitle(context)
+const version = computed(() => process.env.VERSION)
 
-    if (process.env.VUE_APP_INTERCOM === 'on') {
-      window.Intercom('boot', {
-        app_id: 'c6wuieqm'
-      })
-    }
+if (process.env.VUE_APP_INTERCOM === 'on') {
+  window.Intercom('boot', {
+    app_id: 'c6wuieqm'
+  })
+}
 
-    onUpdated(() => {
-      if (process.env.VUE_APP_INTERCOM === 'on') {
-        window.Intercom('update')
-      }
-    })
-
-    return {
-      version: process.env.VERSION
-    }
+onUpdated(() => {
+  if (process.env.VUE_APP_INTERCOM === 'on') {
+    window.Intercom('update')
   }
 })
 </script>
