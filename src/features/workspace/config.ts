@@ -314,7 +314,8 @@ const packageRoutes = [
         },
         meta: {
           useProjectPackageId: true,
-          hideAppBarIcon: true
+          hideAppBarIcon: true,
+          title: 'Code | Project: projectId'
         }
       },
       {
@@ -534,7 +535,8 @@ export default {
           component: () => import(/* webpackChunkName: "workspace-project" */ './views/project/index.vue'),
           meta: {
             hideAppBarIcon: true,
-            breadcrumb: 'Project - :projectId'
+            breadcrumb: 'Project - :projectId',
+            title: 'Project: projectId'
           },
 
           children: [

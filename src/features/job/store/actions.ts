@@ -209,6 +209,7 @@ export const actions: ActionTree<jobState, RootState> = {
     }
     logger.success(commit, 'Job was updated')
     commit(type.UPDATE_JOB, updatedJob)
+    commit(`${GENERAL_STORE}/${gMutation.SET_BREADCRUMB_PARAMS}`, { jobId: updatedJob.name }, { root: true })
 
     isUpdated = true
     return isUpdated
