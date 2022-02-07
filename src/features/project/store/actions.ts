@@ -224,12 +224,14 @@ export const actions: ActionTree<projectState, RootState> = {
         data
       })
     } catch (error) {
-      logger.error(commit, 'Error on update project in updateProject action.\nError: ', error)
+      logger.error(commit, 'Error on update project in updateProject action.\nError: ', error as Error)
 
       return project
     }
 
     commit(mutation.SET_PROJECT, project)
+    commit(`${GENERAL_STORE}/${gMutation.SET_BREADCRUMB_PARAMS}`, { projectId: project.name }, { root: true })
+
     return project
   },
 

@@ -1,3 +1,4 @@
+import { get } from 'lodash'
 import { useRouter } from '@u3u/vue-hooks'
 import { computed } from '@vue/composition-api'
 import useGeneralStore from '@/core/store/general/useGeneralStore'
@@ -22,8 +23,7 @@ export default function ({ start = 0, end = undefined }) {
         let title = route.meta.breadcrumb
         Object.entries(crcRoute.value.params).forEach(([key, value]) => {
           path = path.replace(`:${key}`, value)
-          //@ts-expect-error: Let's ignore a single compiler error
-          const name = generalStore.breadcrumbParams.value[key]
+          const name = get(generalStore.breadcrumbParams.value, key)
           title = title.replace(`:${key}`, name || value)
         })
 
