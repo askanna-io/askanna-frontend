@@ -32,8 +32,8 @@ export default defineComponent({
 
       if (isValidShortUuid && isValidShortUuid[0] === workspaceId) {
         await workspaceStore.actions.getCurrentPeople({ workspaceId })
-        await workspaceStore.getWorkspace(workspaceId)
-        await workspaceStore.getInitialWorkpaceProjects({ workspaceId, params: { limit: 99, offset: 0 } })
+        await workspaceStore.actions.getWorkspace(workspaceId)
+        await workspaceStore.actions.getInitialWorkpaceProjects({ workspaceId, params: { limit: 99, offset: 0 } })
       } else {
         router.push({ path: `/` })
       }
@@ -67,11 +67,7 @@ export default defineComponent({
 
       workspaceStore.setLoading({ projects: true })
 
-      setTimeout(() => workspaceStore.setLoading({ projects: false }), 100)
-
-      if (workspaceId !== workspaceStore.workspace.value.short_uuid) {
-        await initWorkspace(workspaceId)
-      }
+      await initWorkspace(workspaceId)
     })
   }
 })
