@@ -2,7 +2,6 @@ import { MutationTree } from 'vuex'
 import { File, JobRunModel, jobRunState, ArtifactModel } from './types'
 import * as type from './types'
 import { isArray, set } from 'lodash'
-import { debounce } from 'lodash'
 
 export const mutations: MutationTree<jobRunState> = {
   [type.SET_JOB_RUN](state, data) {
@@ -33,40 +32,15 @@ export const mutations: MutationTree<jobRunState> = {
     state.jobRunPayload = data
   },
 
-  [type.SET_JOB_RUN_RESULT](state, data) {
-    state.jobRunResult = data
-  },
-
-  [type.SET_JOB_RUN_RESULT_PREVIEW](
-    state,
-    { data, contentExt, isShowPreview, isJobRunResultBig, isResultJSON, isResultHTML, isResultBigForRawView }
-  ) {
-    state.jobRunResultPreview = data
-    state.isResultJSON = isResultJSON
-    state.isResultHTML = isResultHTML
-    state.isShowPreview = isShowPreview
-    state.jobRunResultExt = contentExt || 'json'
-    state.isJobRunResultBig = isJobRunResultBig
-    state.isResultBigForRawView = isResultBigForRawView
-  },
-
   [type.mutation.UPDATE_JOB_RUN_STORE](state) {
     state.runs = {
       count: 0,
       next: null,
       results: []
     }
-    state.jobRunResult = ''
-    state.jobRunPayload = undefined
-    state.isResultJSON = true
     state.jobRunLoading = true
-    state.resultLoading = true
     state.payLoadLoading = true
-    state.isShowPreview = false
-    state.jobRunResultPreview = ''
-    state.jobRunResultExt = 'json'
-    state.isJobRunResultBig = true
-    state.isResultBigForRawView = false
+    state.jobRunPayload = undefined
 
     state.jobRun = new JobRunModel().state
 
@@ -77,7 +51,6 @@ export const mutations: MutationTree<jobRunState> = {
     }
     state.jobRunLogFullVersion = []
     state.artifactData = new ArtifactModel().state
-    ;(state.file = ''), (state.fileSource = new Blob())
   },
 
   [type.mutation.SET_LOADING](state, { name, value }) {
@@ -114,15 +87,5 @@ export const mutations: MutationTree<jobRunState> = {
     })
 
     state.artifactData = { ...data, files }
-  },
-
-  [type.mutation.SET_FILE](state, { file, fileSource }) {
-    state.file = file
-    state.fileSource = fileSource
-  },
-
-  [type.mutation.RESET_FILE_FILESOURCE](state) {
-    state.file = ''
-    state.fileSource = new Blob()
   }
 }

@@ -16,16 +16,6 @@ export const mutations: MutationTree<PackageState> = {
     state.packageData = { ...data, files }
   },
 
-  [type.SET_FILE](state, { file, fileSource }) {
-    state.file = file
-    state.fileSource = fileSource
-  },
-
-  [type.RESET_FILE_FILESOURCE](state) {
-    state.file = ''
-    state.fileSource = new Blob()
-  },
-
   [type.SET_PROCESSING_LIST](state, uuid) {
     const found = state.processingList.find(item => item.packageId === uuid.packageId)
 

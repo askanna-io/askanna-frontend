@@ -2,12 +2,10 @@ import { useState, useActions } from '@u3u/vue-hooks'
 import {
   PACKAGE_STORE,
   getPackage,
-  getFileSource,
   registerPackage,
   registerChunkPackage,
   uploadChunkPackage,
-  finishUpload,
-  resetFile
+  finishUpload
 } from '../store/types'
 
 export default function () {
@@ -22,20 +20,14 @@ export default function () {
   }
 
   const actions = {
-    ...useActions(PACKAGE_STORE, [
-      getPackage,
-      getFileSource,
-      registerPackage,
-      registerChunkPackage,
-      uploadChunkPackage,
-      finishUpload,
-      resetFile
-    ])
+    ...useActions(PACKAGE_STORE, [getPackage, registerPackage, registerChunkPackage, uploadChunkPackage, finishUpload])
   }
 
   return {
     open,
     ...state,
-    ...actions
+    ...actions,
+    state,
+    actions
   }
 }

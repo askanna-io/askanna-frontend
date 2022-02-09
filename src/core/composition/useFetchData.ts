@@ -1,7 +1,9 @@
-import { SetupContext } from '@vue/composition-api'
+import { useStore } from '@u3u/vue-hooks'
 
-export default function () {
-  const fetchData = function (context: SetupContext, ...params: any) {
+export default () => {
+  const fetchData = (...params: any) => {
+    const store = useStore()
+
     return (async () => {
       for (const action of params) {
         if (Array.isArray(action)) {
@@ -12,14 +14,14 @@ export default function () {
               }
 
               if (typeof el === 'string') {
-                return context.root.$store.dispatch(el)
+                return store.value.dispatch(el)
               }
             })
           )
         }
 
         if (typeof action === 'string') {
-          await context.root.$store.dispatch(action)
+          await store.value.dispatch(action)
         }
 
         if (typeof action === 'function') {

@@ -1,12 +1,13 @@
 import $axios from '@/core/plugins/axios'
-import { api, apiUrlFunctionParams } from './api-settings'
-import { Method, ResponseType, AxiosResponse, AxiosTransformer } from 'axios'
+import { api } from './api-settings'
+import { Method, ResponseType, AxiosTransformer } from 'axios'
 
 interface ServiceParams {
-  uuid?: any
   data?: any
-  headers?: any
+  uuid?: any
+  url?: string
   params?: any
+  headers?: any
   method?: Method
   action?: string
   serviceName?: string
@@ -16,6 +17,7 @@ interface ServiceParams {
 }
 
 const apiService = async ({
+  url = '',
   uuid = '',
   data = null,
   headers = {},
@@ -28,14 +30,28 @@ const apiService = async ({
   returnFullResponse = false
 }: ServiceParams) => {
   try {
-    const result = await $axios(api.apiUrl() + api.points[serviceName][action](uuid), {
-      data,
-      method,
-      params,
-      headers,
-      responseType,
-      transformResponse
-    })
+    const apiUrl = url ? undefined : api.apiUrl() + api.points[serviceName][action](uuid)
+    let result = null
+
+    if (url) {
+      result = await $axios({
+        url,
+        method,
+        headers,
+        responseType,
+        transformResponse
+      })
+    } else {
+      result = await $axios(apiUrl, {
+        url,
+        data,
+        method,
+        params,
+        headers,
+        responseType,
+        transformResponse
+      })
+    }
 
     if (result.status === 200 || result.status === 201 || result.status === 204 || result.status === 206) {
       if (returnFullResponse) {

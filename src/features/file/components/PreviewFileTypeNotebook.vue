@@ -12,8 +12,10 @@ import Nb from '@/assets/js/notebook.js'
 import { computed } from '@vue/composition-api'
 
 const props = defineProps({
-  file: String,
-  fileSource: String | Blob,
+  fileSource: {
+    type: Blob,
+    default: () => ''
+  },
   breadcrumbs: {
     type: Array,
     default: () => []
@@ -32,7 +34,10 @@ const nb = Nb()
 
 const notebookHtml = computed(() => {
   if (!props.file) return
-  const notebook = nb.parse(JSON.parse(props.file))
+
+  // @TODO check if works without async
+  const fileSource = props.fileSource.text()
+  const notebook = nb.parse(JSON.parse(fileSource))
   const rendered = notebook.render()
 
   return rendered.outerHTML

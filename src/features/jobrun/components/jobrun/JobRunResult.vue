@@ -1,37 +1,49 @@
 <template>
   <div>
-    <v-toolbar v-if="!loading && !isJobRunResultEmpty" dense flat color="grey lighten-4">
+    <v-toolbar v-if="!fileStore.loading && !fileStore.isFileEmpty" dense flat color="grey lighten-4">
       <v-flex class="d-flex">
         <div class="cut-text d-flex align-center">
-          {{ jobRun.result.original_name }}
+          {{ jobRun.result.original_name
+          }}<span v-if="!$vuetify.breakpoint.xsOnly" class="pl-3"
+            >({{ `${humanize.humanizeSize(fileStore.size)}` }})</span
+          >
         </div>
         <div class="mr-auto d-flex align-center"></div>
         <div>
           <v-btn
             v-if="!$vuetify.breakpoint.xsOnly"
             small
-            :disabled="loading || isJobRunResultEmpty"
             outlined
             color="secondary"
             class="mr-1 btn--hover"
+            :disabled="fileStore.loading || fileStore.isFileEmpty || fileStore.loadingFullData"
             @click="handleDownload"
           >
+            <template v-slot:loader>
+              <span>Downloading...</span>
+            </template>
             <v-icon color="secondary" left>mdi-download</v-icon>Download file
           </v-btn>
           <v-btn
-            v-if="isResultJSON || isFileImg"
+            v-if="fileStore.isFileJSON || fileStore.isFileImg"
             small
-            :disabled="loading || isJobRunResultEmpty"
             outlined
             color="secondary"
             class="mr-1 btn--hover"
+            :disabled="fileStore.loading || fileStore.isFileEmpty || fileStore.loadingFullData"
             @click="handleCopy()"
           >
             <v-icon left color="secondary">mdi-content-copy</v-icon>Copy
           </v-btn>
         </div>
         <div>
-          <v-card class="ml-4" flat width="115" color="grey lighten-4" v-if="isValidJSON || isResultHTML">
+          <v-card
+            class="ml-4"
+            flat
+            width="115"
+            color="grey lighten-4"
+            v-if="fileStore.isValidJSON || fileStore.isFileHTML"
+          >
             <v-select
               dense
               hide-details
@@ -43,77 +55,34 @@
               v-model="viewModel"
               :menu-props="{ bottom: true, offsetY: true }"
             >
-              <template v-slot:selection="{ item }"> View: {{ item.name }} </template>
+              <template v-slot:selection="{ item }">View: {{ item.name }} </template>
             </v-select>
           </v-card>
         </div>
       </v-flex>
     </v-toolbar>
-    <v-flex ref="scrolllWrapperRef" :style="scrollerStyles" class="overflow-y-auto" id="scroll-target">
+    <v-flex id="scroll-target" class="overflow-y-auto" ref="scrolllWrapperRef" :style="scrollerStyles">
       <ask-anna-loading-progress
-        :loading="loading"
+        :loading="fileStore.loading"
         fullWidth
         height="94"
         classes="mx-4 mb-4"
         transition="transition"
         type="list-item-two-line"
       >
-        <div>
-          <job-run-result-preview
-            v-if="!isJobRunResultEmpty"
-            :view="currentView.value"
-            :maxHeight="`${maxHeight}px`"
-            :fileExtension="jobRunResultExt"
-            :dataSource="jobRunResultForView"
-          />
-          <v-flex
-            v-if="
-              !isJobRunResultEmpty &&
-              (isJobRunResultBig || (isResultBigForRawView && currentView.value === 'raw')) &&
-              isShowPreview
-            "
-            class="my-2 mb-2 text-center"
-          >
-            <p v-if="$vuetify.breakpoint.xsOnly" class="px-2">
-              ...this is a preview of the file. To download the file, open this page on a laptop or desktop.
-            </p>
-            <v-btn
-              v-if="!$vuetify.breakpoint.xsOnly"
-              text
-              small
-              outlined
-              color="secondary"
-              class="mr-1 btn--hover"
-              @click="handleDownload"
-              :disabled="loading || isJobRunResultEmpty"
-            >
-              <v-icon color="secondary" left>mdi-download</v-icon>
-              ...to show the full result, please download the file
-            </v-btn>
-          </v-flex>
-          <v-flex v-if="!isJobRunResultEmpty && !isShowPreview" class="my-2 mb-2 text-center">
-            <p v-if="$vuetify.breakpoint.xsOnly" class="px-2">
-              We cannot show a preview of this file. To download the file, open this page on a laptop or desktop.
-            </p>
-            <v-btn
-              v-if="!$vuetify.breakpoint.xsOnly"
-              text
-              small
-              outlined
-              color="secondary"
-              class="mr-1 btn--hover"
-              @click="handleDownload"
-              :disabled="loading || isJobRunResultEmpty"
-            >
-              <v-icon color="secondary" left>mdi-download</v-icon>
-              We cannot show a preview of this file. Please download the file.
-            </v-btn>
-          </v-flex>
-
-          <v-alert v-if="isJobRunResultEmpty" class="ma-4 text-center" dense outlined>
-            There is no result available for this run.
-          </v-alert>
-        </div>
+        <PreviewFile
+          :maxHeight="`${maxHeight}px`"
+          :fileBlob="fileStore.fileBlob"
+          :isFileBig="fileStore.isFileBig"
+          :currentView="currentView.value"
+          :isFileEmpty="fileStore.isFileEmpty"
+          :fileExtension="fileStore.fileExtension"
+          :loadingFullData="fileStore.loadingFullData"
+          :isShowFilePreview="fileStore.isShowFilePreview"
+          :fileSource="fileStore.filePreviewByView(currentView)"
+          :isFileBigForRawView="fileStore.isFileBigForRawView"
+          @onDownload="handleDownload"
+        />
       </ask-anna-loading-progress>
     </v-flex>
   </div>
@@ -122,11 +91,12 @@
 import { useWindowSize } from '@u3u/vue-hooks'
 import { JobRunModel } from '../../store/types'
 import useCopy from '@/core/composition/useCopy'
-import usePrettyJSON from '@/core/composition/usePrettyJSON'
+import { useFileStore } from '@/features/file/useFileStore'
 import useJobRunStore from '../../composition/useJobRunStore'
-import JobRunResultPreview from './result/JobRunResultPreview.vue'
+import useSizeHumanize from '@/core/composition/useSizeHumanize'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import { ref, computed, onBeforeMount } from '@vue/composition-api'
+import PreviewFile from '@/features/file/components/PreviewFile.vue'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
 import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 
@@ -138,10 +108,11 @@ defineProps({
 })
 
 const copy = useCopy()
-const { height } = useWindowSize()
-const prettyJSON = usePrettyJSON()
-const jobRunStore = useJobRunStore()
+const fileStore = useFileStore()
 const router = useRouterAskAnna()
+const { height } = useWindowSize()
+const humanize = useSizeHumanize()
+const jobRunStore = useJobRunStore()
 const forceFileDownload = useForceFileDownload()
 
 const views = [
@@ -162,80 +133,65 @@ const viewModel = computed({
   }
 })
 
-const loading = computed(() => jobRunStore.state.resultLoading.value)
-const isResultJSON = computed(() => jobRunStore.state.isResultJSON.value)
-const isResultHTML = computed(() => jobRunStore.state.isResultHTML.value)
-
-const isShowPreview = computed(() => jobRunStore.state.isShowPreview.value)
-const jobRunResultRaw = computed(() => jobRunStore.state.jobRunResult.value)
-const jobRunResultExt = computed(() => jobRunStore.state.jobRunResultExt.value)
-
-const imgExts = ['jpg', 'png', 'gif', 'jpeg']
-const isFileImg = computed(() => imgExts.includes(jobRunResultExt.value))
-
-const runResultPreview = computed(() =>
-  jobRunResultExt.value === 'json'
-    ? prettyJSON(jobRunStore.state.jobRunResultPreview.value, 2)
-    : jobRunStore.state.jobRunResultPreview.value
-)
-
-const isJobRunResultBig = computed(() => jobRunStore.state.isJobRunResultBig.value)
-const isResultBigForRawView = computed(() => jobRunStore.state.isResultBigForRawView.value)
-const isJobRunResultEmpty = computed(() => !runResultPreview.value && !loading.value)
-
-const isValidJSON = computed(() => runResultPreview.value.isValidJSON)
-
-const jobRunResultFormated = computed(() => runResultPreview.value.prettyJson)
-const jobRunResultForView = computed(() => {
-  if (!isResultJSON.value) return jobRunStore.state.jobRunResultPreview.value
-
-  return currentView.value.value === 'raw' ? jobRunStore.state.jobRunResultPreview.value : jobRunResultFormated.value
-})
-
-const jobRunResultSource = computed(() =>
-  currentView.value.value === 'raw' ? jobRunResultRaw.value : prettyJSON(jobRunResultRaw.value, 2).prettyJson
-)
+const runResult = computed(() => jobRunStore.state.jobRun.value.result)
 
 const fetchData = async () => {
+  fileStore.$reset()
   if (view) {
     currentView.value = views.find(el => el.value === view) || views[0]
   }
-  await jobRunStore.getJobRunResultPreview(jobRunId)
+
+  if (!runResult.value) {
+    fileStore.loading = false
+    return
+  }
+
+  await fileStore.getFilePreview({
+    uuid: jobRunId,
+    serviceName: 'jobrun',
+    size: runResult.value.size,
+    serviceAction: 'getJobRunResult',
+    extension: runResult.value.extension
+  })
 }
 
 const maxHeight = computed(() => height.value - 120)
-
-const scrollerStyles = computed(() => {
-  return { 'max-height': `${maxHeight.value}px` }
-})
+const scrollerStyles = computed(() => ({ 'max-height': `${maxHeight.value}px` }))
 
 const handleDownload = async () => {
   // download full version of result without formating
-  await jobRunStore.getJobRunResult(jobRunId)
+  await fileStore.getFullFile({
+    uuid: jobRunId,
+    serviceName: 'jobrun',
+    serviceAction: 'getJobRunResult'
+  })
 
   forceFileDownload.trigger({
-    source: jobRunResultRaw.value,
+    source: fileStore.rawFile,
     name: `run_${jobRunStore.state.jobRun.value.short_uuid}_result_${jobRunStore.state.jobRun.value.result.original_name}`
   })
 }
 
 const handleCopy = async () => {
-  if (isFileImg.value) {
-    const fileSource = await jobRunStore.actions.getJobRunResultBlob(jobRunId)
+  const fileSource = await fileStore.getFullFile({
+    uuid: jobRunId,
+    serviceName: 'jobrun',
+    serviceAction: 'getJobRunResult'
+  })
 
+  if (fileStore.isFileImg) {
     copy.handleCopyElementBySource(fileSource)
 
     return
   }
 
-  await jobRunStore.actions.getJobRunResult(jobRunId)
-  copy.handleCopyText(jobRunResultSource.value)
+  copy.handleCopyText(fileStore.fileSourceForCopy(currentView.value.value))
 }
 
 onBeforeMount(() => fetchData())
 
 // change view of cutted html to raw
-if (isShowPreview.value && isResultHTML.value && isJobRunResultBig.value) {
+if (fileStore.isShowFilePreview && fileStore.isFileHTML && fileStore.isFileBig) {
   currentView.value = views[1]
 }
 </script>

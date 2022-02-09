@@ -6,20 +6,11 @@ export interface jobRubData {
   jobRun: JobRun
   jobRunPayload: string | null | undefined
   jobRunLoading: boolean
-  resultLoading: boolean
   payLoadLoading: boolean
   jobRunsLoading: boolean
   jobRunlogLoading: boolean
   jobRunArtifactLoading: boolean
   jobRunlogScrollLoading: boolean
-  jobRunResult: any
-  jobRunResultExt: string
-  jobRunResultPreview: any
-  isJobRunResultBig: boolean
-  isResultBigForRawView: boolean
-  isResultJSON: boolean
-  isResultHTML: boolean
-  isShowPreview: boolean
   jobRunLog: {
     count: number
     next: null | string
@@ -27,8 +18,6 @@ export interface jobRubData {
   }
   jobRunLogFullVersion: any[]
   artifactData?: Package
-  file: string
-  fileSource: Blob
 }
 
 export interface Package {
@@ -107,7 +96,6 @@ export const JOB_RUN_STORE = 'jobrun'
 
 // actions
 export const action = {
-  resetFile: 'resetFile',
   getJobRun: 'getJobRun',
   setLoading: 'setLoading',
   resetStore: 'resetStore',
@@ -115,31 +103,25 @@ export const action = {
   udapteJobRun: 'udapteJobRun',
   getJobRunLog: 'getJobRunLog',
   deleteRunInfo: 'deleteRunInfo',
-  getFileSource: 'getFileSource',
   resetJobRunLog: 'resetJobRunLog',
   downloadPackage: 'downloadPackage',
-  getJobRunResult: 'getJobRunResult',
   getTargetPackage: 'getTargetPackage',
   getInitJobRunLog: 'getInitJobRunLog',
   getJobRunPayload: 'getJobRunPayload',
   showJobRunResult: 'showJobRunResult',
   closeResultModal: 'closeResultModal',
   getJobRunArtifact: 'getJobRunArtifact',
-  getJobRunResultBlob: 'getJobRunResultBlob',
-  getJobRunResultPreview: 'getJobRunResultPreview',
   getFullVersionJobRunLog: 'getFullVersionJobRunLog',
   getInitialJobRunArtifact: 'getInitialJobRunArtifact'
 }
 
 // mutations
 export const mutation = {
-  SET_FILE: 'SET_FILE',
   SET_LOADING: 'SET_LOADING',
   SET_RESULT_MODAL: 'SET_RESULT_MODAL',
   RESET_JOB_RUN_LOG: 'RESET_JOB_RUN_LOG',
   CLOSE_RESULT_MODAL: 'CLOSE_RESULT_MODAL',
-  UPDATE_JOB_RUN_STORE: 'UPDATE_JOB_RUN_STORE',
-  RESET_FILE_FILESOURCE: 'RESET_FILE_FILESOURCE'
+  UPDATE_JOB_RUN_STORE: 'UPDATE_JOB_RUN_STORE'
 }
 
 //mutations
@@ -154,28 +136,17 @@ export const SET_JOB_RUN_RESULT_PREVIEW = 'SET_JOB_RUN_RESULT_PREVIEW'
 export const SET_JOB_RUN_LOG_FULL_VERSION = 'SET_JOB_RUN_LOG_FULL_VERSION'
 
 export const stateType = {
-  file: 'file',
   runs: 'runs',
   jobRun: 'jobRun',
   jobRunLog: 'jobRunLog',
-  fileSource: 'fileSource',
   logLoading: 'logLoading',
-  isResultJSON: 'isResultJSON',
-  isResultHTML: 'isResultHTML',
   artifactData: 'artifactData',
-  jobRunResult: 'jobRunResult',
   jobRunPayload: 'jobRunPayload',
   jobRunLoading: 'jobRunLoading',
-  isShowPreview: 'isShowPreview',
-  resultLoading: 'resultLoading',
   jobRunsLoading: 'jobRunsLoading',
   payLoadLoading: 'payLoadLoading',
-  jobRunResultExt: 'jobRunResultExt',
   jobRunlogLoading: 'jobRunlogLoading',
-  isJobRunResultBig: 'isJobRunResultBig',
-  jobRunResultPreview: 'jobRunResultPreview',
   jobRunLogFullVersion: 'jobRunLogFullVersion',
-  isResultBigForRawView: 'isResultBigForRawView',
   jobRunArtifactLoading: 'jobRunArtifactLoading',
   jobRunlogScrollLoading: 'jobRunlogScrollLoading'
 }

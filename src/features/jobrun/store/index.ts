@@ -14,29 +14,18 @@ export const state: jobRunState = {
   jobRun: new JobRunModel().state,
   jobRunPayload: undefined,
   jobRunLoading: true,
-  resultLoading: true,
   payLoadLoading: false,
   jobRunsLoading: false,
   jobRunlogLoading: true,
-  jobRunArtifactLoading: true,
-  jobRunResult: '',
-  jobRunResultPreview: '',
-  isShowPreview: false,
-  jobRunResultExt: 'json',
-  isJobRunResultBig: true,
-  isResultBigForRawView: false,
-  isResultJSON: true,
-  isResultHTML: false,
+  jobRunArtifactLoading: false,
   jobRunLog: {
     count: 0,
     next: null,
     results: []
   },
   jobRunLogFullVersion: [],
-  artifactData: new ArtifactModel().state,
-  file: '',
-  fileSource: new Blob(),
-  jobRunlogScrollLoading: false
+  jobRunlogScrollLoading: false,
+  artifactData: new ArtifactModel().state
 }
 
 const namespaced: boolean = true

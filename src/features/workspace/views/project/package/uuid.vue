@@ -3,9 +3,9 @@
     <v-row align="center" justify="center">
       <v-col cols="12" class="pt-0 pb-0">
         <PackageToolbar
-          :breadcrumbs="breadcrumbsComputed"
           v-sticky="sticked"
           :sticky-z-index="1"
+          :breadcrumbs="breadcrumbsComputed"
           sticky-offset="{top: 52, bottom: 10}"
         >
           <template v-slot:rigth>
@@ -17,9 +17,13 @@
                   outlined
                   color="secondary"
                   class="mr-1 btn--hover"
+                  :loading="downloadPackage"
                   @click="handleDownload()"
                 >
                   <v-icon color="secondary" left>mdi-download</v-icon>Download
+                  <template v-slot:loader>
+                    <span>Downloading...</span>
+                  </template>
                 </v-btn>
                 <v-btn
                   v-if="projectCodeCreate && !$vuetify.breakpoint.xsOnly"
@@ -82,12 +86,15 @@
           <package-processing />
         </template>
         <template v-else>
-          <package-file
+          <PackageFile
             v-if="filePath"
-            :file="file"
             :sticked="sticked"
-            :fileSource="fileSource"
+            :file="fileStore.fileBlob"
             :currentPath="currentPath"
+            :loading="fileStore.loading"
+            :fileSource="fileStore.fileSource"
+            @onCopy="handleCopy"
+            @onDownload="handleDownloadFile"
           />
           <template v-else>
             <PackageTree
@@ -104,11 +111,11 @@
   </ask-anna-loading-progress>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import useCopy from '@/core/composition/useCopy'
 import { useWindowSize } from '@u3u/vue-hooks'
 import useMoment from '@/core/composition/useMoment'
-import { defineComponent } from '@vue/composition-api'
-import { FileIcons } from '@/features/package/utils/index'
+import { useFileStore } from '@/features/file/useFileStore'
 import usePermission from '@/core/composition/usePermission'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import PackageFile from '@/features/package/components/PackageFile.vue'
@@ -119,247 +126,235 @@ import usePackageStore from '@/features/package/composition/usePackageStore'
 import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
 import PackageToolbar from '@/features/package/components/PackageToolbar.vue'
 import usePackagesStore from '@/features/packages/composition/usePackagesStore'
+import PackageProcessing from '@/features/package/components/PackageProcessing.vue'
+import ResumableUpload from '@/features/package/components/resumable-upload/ResumableUpload.vue'
 import { ref, watch, onBeforeMount, onUnmounted, computed } from '@vue/composition-api'
 
-export default defineComponent({
-  name: 'PackageUuid',
+const copy = useCopy()
+const moment = useMoment()
+const fileStore = useFileStore()
+const router = useRouterAskAnna()
+const permission = usePermission()
+const { height } = useWindowSize()
+const packageStore = usePackageStore()
+const projectStore = useProjectStore()
+const packagesStore = usePackagesStore()
+const breadcrumbs = usePackageBreadcrumbs()
+const forceFileDownload = useForceFileDownload()
 
-  components: {
-    PackageFile,
-    PackageTree,
-    PackageToolbar,
-    PackageProcessing: () => import('@/features/package/components/PackageProcessing.vue'),
-    ResumableUpload: () => import('@/features/package/components/resumable-upload/ResumableUpload.vue')
-  },
+const menu = ref(false)
+const polling = ref(null)
+const isRaplace = ref(false)
 
-  setup(_, context) {
-    const moment = useMoment(context)
-    const permission = usePermission()
-    const { height } = useWindowSize()
-    const packageStore = usePackageStore()
-    const projectStore = useProjectStore()
-    const router = useRouterAskAnna()
+const projectCodeCreate = computed(() => permission.getFor(permission.labels.projectCodeCreate))
 
-    const packagesStore = usePackagesStore(context)
-    const forceFileDownload = useForceFileDownload()
-    const breadcrumbs = usePackageBreadcrumbs(context)
+const sticked = computed(() => !projectStore.stickedVM.value)
+const { useProjectPackageId = false } = router.route.value.meta
+const projectIdCd = computed(() => projectStore.project.value.short_uuid)
+const createdDate = computed(() =>
+  moment.$moment(packageStore.packageData.value.created).format(' Do MMMM YYYY, h:mm:ss a')
+)
+const packageIdCd = computed(() => projectStore.project.value.package.short_uuid)
+const isLastPackage = computed(() => packageIdCd.value === packageStore.packageData.value.short_uuid)
+const { workspaceId, projectId, packageId: packageIdFromRoute = '', folderName = '' } = router.route.value.params
+const packageId = computed(() => (useProjectPackageId ? packageIdCd.value : packageIdFromRoute))
 
-    const menu = ref(false)
-    const polling = ref(null)
-    const isRaplace = ref(false)
-
-    const projectCodeCreate = computed(() => permission.getFor(permission.labels.projectCodeCreate))
-
-    const file = computed(() => packageStore.file.value)
-    const sticked = computed(() => !projectStore.stickedVM.value)
-    const { useProjectPackageId = false } = context.root.$route.meta
-    const projectIdCd = computed(() => projectStore.project.value.short_uuid)
-    const createdDate = computed(() =>
-      moment.$moment(packageStore.packageData.value.created).format(' Do MMMM YYYY, h:mm:ss a')
-    )
-    const packageIdCd = computed(() => projectStore.project.value.package.short_uuid)
-    const isLastPackage = computed(() => packageIdCd.value === packageStore.packageData.value.short_uuid)
-    const { workspaceId, projectId, packageId: packageIdFromRoute = '', folderName = '' } = context.root.$route.params
-    const packageId = computed(() => (useProjectPackageId ? packageIdCd.value : packageIdFromRoute))
-
-    const breadcrumbsComputed = computed(() => {
-      const first = {
-        title: `Package: #${packageId.value.slice(0, 4)}${isLastPackage.value ? '(latest)   ' : ''}`,
-        to: {
-          name: 'workspace-project-code',
-          params: { workspaceId, projectId, packageId: packageId.value }
-        },
-        exact: true,
-        disabled: false,
-        showTooltip: true,
-        tooltip: `
+const breadcrumbsComputed = computed(() => {
+  const first = {
+    title: `Package: #${packageId.value.slice(0, 4)}${isLastPackage.value ? '(latest)   ' : ''}`,
+    to: {
+      name: 'workspace-project-code',
+      params: { workspaceId, projectId, packageId: packageId.value }
+    },
+    exact: true,
+    disabled: false,
+    showTooltip: true,
+    tooltip: `
           <span>${packageId.value}</span>
           <br />
           <span>${createdDate.value}</span>
         `
-      }
+  }
 
-      return [first, ...breadcrumbs.value]
-    })
+  return [first, ...breadcrumbs.value]
+})
 
-    const getPackage = async (loading = true) => {
-      if (!packageId.value || !projectId) return
+const downloadPackage = ref(false)
 
-      await packageStore.getPackage({
-        loading,
-        projectId,
-        packageId: packageId.value,
-        folderName
-      })
-    }
+const getPackage = async (loading = true) => {
+  if (!packageId.value || !projectId) return
 
-    const pollData = () => {
-      polling.value = setInterval(async () => {
-        await getPackage(false)
-        checkProcessing()
-      }, 10000)
-    }
+  await packageStore.getPackage({
+    loading,
+    projectId,
+    packageId: packageId.value,
+    folderName
+  })
+}
 
-    const checkProcessing = () => {
-      if (!isProcessing.value) {
-        clearInterval(polling.value)
-      }
-    }
+const pollData = () => {
+  polling.value = setInterval(async () => {
+    await getPackage(false)
+    checkProcessing()
+  }, 10000)
+}
 
-    const calcHeight = computed(() => height.value - 370)
-    const path = computed(() => {
-      let a = context.root.$route.params.folderName || '/'
-      return a
-    })
-    const isProcessing = computed(() =>
-      packageStore.processingList.value.find(item => item.packageId === packageId.value)
+const checkProcessing = () => {
+  if (!isProcessing.value) {
+    clearInterval(polling.value)
+  }
+}
+
+const calcHeight = computed(() => height.value - 370)
+const path = computed(() => {
+  let a = router.route.value.params.folderName || '/'
+  return a
+})
+const isProcessing = computed(() => packageStore.processingList.value.find(item => item.packageId === packageId.value))
+
+const currentPath = computed(() => {
+  const pathArray = path.value.split('/')
+  const fileName = pathArray.pop()
+  const current = packageStore.packageData.value.files.find(item => item.name === fileName && item.path === path.value)
+
+  return current
+})
+
+const parentPath = computed(() => {
+  let parentPathTemp
+  if (currentPath.value && currentPath.value.is_dir && path.value !== '/') {
+    parentPathTemp = packageStore.packageData.value.files.find(
+      file => file.name === currentPath.value.parent && file.is_dir
     )
-
-    const currentPath = computed(() => {
-      const pathArray = path.value.split('/')
-      const fileName = pathArray.pop()
-      const current = packageStore.packageData.value.files.find(
-        item => item.name === fileName && item.path === path.value
-      )
-
-      return current
-    })
-
-    const parentPath = computed(() => {
-      let parentPathTemp
-      if (currentPath.value && currentPath.value.is_dir && path.value !== '/') {
-        parentPathTemp = packageStore.packageData.value.files.find(
-          file => file.name === currentPath.value.parent && file.is_dir
-        )
-        parentPathTemp = {
-          ...parentPathTemp,
-          name: '...',
-          ext: 'parent'
-        }
-      }
-
-      return parentPathTemp
-    })
-
-    const treeView = computed(() => {
-      const tree = packageStore.packageData.value.files.filter(item => item.parent === path.value)
-
-      return parentPath.value ? [parentPath.value, ...tree] : tree
-    })
-
-    const getRoutePath = item => {
-      let path = `/${workspaceId}/project/${projectId}/code/${packageId.value}/${item.path}`
-
-      if (typeof item.path === 'undefined') {
-        path = `/${workspaceId}/project/${projectId}/code/${packageId.value}`
-      }
-
-      return { path }
-    }
-
-    const handleHistory = () => {
-      router.push({
-        name: 'workspace-project-code-package-history',
-        params: { projectId, packageId: packageId.value }
-      })
-    }
-
-    const handleDownload = async () => {
-      const packageData = packageStore.packageData.value
-      const source = await packagesStore.downloadPackage({
-        projectId,
-        packageId: packageData.short_uuid
-      })
-      forceFileDownload.trigger({ source, name: `code_${packageData.short_uuid}_${packageData.filename}` })
-    }
-
-    const handleReplace = () => (isRaplace.value = !isRaplace.value)
-
-    const handeBackToPackageRoot = () => {
-      router.push({
-        name: 'workspace-project-code',
-        params: { workspaceId, projectId, packageId: packageId.value }
-      })
-    }
-
-    const handleCloseOutside = async () => {
-      await projectStore.getProjectMe(context.root.$route.params.projectId)
-      const project = await projectStore.getProject(context.root.$route.params.projectId)
-      if (!project.package.short_uuid || !project.short_uuid) return
-
-      await packageStore.getPackage({
-        loading: true,
-        projectId: project.short_uuid,
-        packageId: project.package.short_uuid
-      })
-      isRaplace.value = false
-    }
-
-    // check if current package the same as in store
-    watch(
-      () => context.root.$route,
-      async () => {
-        if (useProjectPackageId) {
-          isRaplace.value = false
-          await getPackage()
-        }
-      }
-    )
-
-    const packageLoading = computed(() => packageStore.packageLoading.value)
-
-    const filePath = computed(() =>
-      currentPath.value && !currentPath.value.is_dir && currentPath.value.name !== '' ? currentPath.value.path : ''
-    )
-
-    const fetchData = async () => {
-      await getPackage()
-      if (isProcessing.value) {
-        pollData()
-      }
-    }
-
-    onBeforeMount(() => fetchData())
-
-    watch(projectIdCd, async () => !packageLoading.value && getPackage())
-
-    onUnmounted(() => {
-      clearInterval(polling.value)
-    })
-
-    watch(currentPath, async currentPath => {
-      packageStore.resetFile()
-      if (!filePath.value) return
-      packageStore.getFileSource(filePath.value)
-    })
-
-    return {
-      file,
-      menu,
-      sticked,
-      filePath,
-      fileSource: packageStore.fileSource,
-      treeView,
-      packageId,
-      FileIcons,
-      isRaplace,
-      calcHeight,
-      createdDate,
-      currentPath,
-      isProcessing,
-      getRoutePath,
-      isLastPackage,
-      projectCodeCreate,
-      breadcrumbsComputed,
-
-      handleReplace,
-      handleHistory,
-      packageLoading,
-      handleDownload,
-      handleCloseOutside,
-      handeBackToPackageRoot
+    parentPathTemp = {
+      ...parentPathTemp,
+      name: '...',
+      ext: 'parent'
     }
   }
+
+  return parentPathTemp
+})
+
+const treeView = computed(() => {
+  const tree = packageStore.packageData.value.files.filter(item => item.parent === path.value)
+
+  return parentPath.value ? [parentPath.value, ...tree] : tree
+})
+
+const getRoutePath = item => {
+  let path = `/${workspaceId}/project/${projectId}/code/${packageId.value}/${item.path}`
+
+  if (typeof item.path === 'undefined') {
+    path = `/${workspaceId}/project/${projectId}/code/${packageId.value}`
+  }
+
+  return { path }
+}
+
+const handleHistory = () => {
+  router.push({
+    name: 'workspace-project-code-package-history',
+    params: { projectId, packageId: packageId.value }
+  })
+}
+
+const handleDownload = async () => {
+  downloadPackage.value = true
+
+  const packageData = packageStore.packageData.value
+  const source = await packagesStore.downloadPackage({
+    projectId,
+    packageId: packageData.short_uuid
+  })
+  forceFileDownload.trigger({ source, name: `code_${packageData.short_uuid}_${packageData.filename}` })
+
+  downloadPackage.value = false
+}
+
+const handleReplace = () => (isRaplace.value = !isRaplace.value)
+
+const handleCloseOutside = async () => {
+  await projectStore.getProjectMe(router.route.value.params.projectId)
+  const project = await projectStore.getProject(router.route.value.params.projectId)
+  if (!project.package.short_uuid || !project.short_uuid) return
+
+  await packageStore.getPackage({
+    loading: true,
+    projectId: project.short_uuid,
+    packageId: project.package.short_uuid
+  })
+  isRaplace.value = false
+}
+
+// check if current package the same as in store
+watch(
+  () => router.route,
+  async () => {
+    if (useProjectPackageId) {
+      isRaplace.value = false
+      await getPackage()
+    }
+  }
+)
+
+const packageLoading = computed(() => packageStore.packageLoading.value)
+
+const filePath = computed(() =>
+  currentPath.value && !currentPath.value.is_dir && currentPath.value.name !== '' ? currentPath.value.path : ''
+)
+
+const handleDownloadFile = async () => {
+  await fileStore.getFullFile({
+    url: `${packageStore.state.packageData.value.cdn_base_url}/${currentPath.value.path}`
+  })
+
+  forceFileDownload.trigger({
+    source: fileStore.rawFile,
+    name: currentPath.value.name
+  })
+}
+
+const handleCopy = async () => {
+  const fileSource = await fileStore.getFullFile({
+    url: `${packageStore.state.packageData.value.cdn_base_url}/${currentPath.value.path}`
+  })
+
+  if (fileStore.isFileImg) {
+    copy.handleCopyElementBySource(fileSource)
+
+    return
+  }
+
+  copy.handleCopyText(fileStore.fileSourceForCopy('pretty'))
+}
+
+const fetchData = async () => {
+  fileStore.$reset()
+
+  await getPackage()
+  if (isProcessing.value) {
+    pollData()
+  }
+}
+
+onBeforeMount(() => fetchData())
+
+watch(projectIdCd, async () => !packageLoading.value && getPackage())
+
+onUnmounted(() => {
+  clearInterval(polling.value)
+})
+
+watch(currentPath, async (currentPath, lastPath) => {
+  if (!filePath.value || !lastPath) return
+  fileStore.$reset()
+
+  await fileStore.getFilePreview({
+    size: currentPath.size,
+    extension: currentPath.ext,
+    url: `${packageStore.state.packageData.value.cdn_base_url}/${filePath.value}`
+  })
 })
 </script>
 <style>

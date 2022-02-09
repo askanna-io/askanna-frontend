@@ -10,12 +10,12 @@
         <div>
           <resumable-upload
             v-if="projectCodeCreate"
-            @cancelUpload="handleReplace"
-            @onCloseOutside="handleCloseOutside"
             class="py-2 px-4"
             :id="packageId"
+            @cancelUpload="handleReplace"
+            @onCloseOutside="handleCloseOutside"
           />
-          <v-alert v-else class="ma-4 text-center" dense outlined> There is no code pushed to this project.</v-alert>
+          <v-alert v-else class="ma-4 text-center" dense outlined>There is no code pushed to this project.</v-alert>
         </div>
       </v-expand-transition>
       <template v-if="isProcessing">
@@ -25,82 +25,49 @@
   </v-row>
 </template>
 
-<script lang="ts">
-import { useWindowSize } from '@u3u/vue-hooks'
+<script setup lang="ts">
+import { ref, computed } from '@vue/composition-api'
 import usePermission from '@/core/composition/usePermission'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useUserStore from '@/features/user/composition/useUserStore'
-import { ref, computed, defineComponent } from '@vue/composition-api'
 import usePackages from '@/features/packages/composition/usePackages'
 import useProjectStore from '@/features/project/composition/useProjectStore'
 import usePackageStore from '@/features/package/composition/usePackageStore'
 import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
 import PackageToolbar from '@/features/package/components/PackageToolbar.vue'
+import PackageProcessing from '@/features/package/components/PackageProcessing.vue'
+import ResumableUpload from '@/features/package/components/resumable-upload/ResumableUpload.vue'
 
-export default defineComponent({
-  name: 'NewPackage',
+usePackages()
+const userStore = useUserStore()
+const router = useRouterAskAnna()
+const permission = usePermission()
+const packageStore = usePackageStore()
+const projectStore = useProjectStore()
+const breadcrumbs = usePackageBreadcrumbs()
 
-  components: {
-    PackageToolbar,
-    PackageProcessing: () => import('@/features/package/components/PackageProcessing.vue'),
-    ResumableUpload: () => import('@/features/package/components/resumable-upload/ResumableUpload.vue')
-  },
+const isRaplace = ref(false)
+const packageId = router.route.value.params.packageId || ''
 
-  setup(_, context) {
-    usePackages(context)
-    const userStore = useUserStore()
-    const router = useRouterAskAnna()
-    const permission = usePermission()
-    const { height } = useWindowSize()
-    const packageStore = usePackageStore()
-    const projectStore = useProjectStore()
-    const breadcrumbs = usePackageBreadcrumbs(context)
+const projectCodeCreate = computed(() => permission.getFor(permission.labels.projectCodeCreate))
 
-    const isRaplace = ref(false)
-    const { workspaceId, projectId, packageId = '' } = context.root.$route.params
+const isLoggedIn = computed(() => !!userStore.state.globalProfile.value.short_uuid)
+const isProcessing = computed(() => packageStore.processingList.value.find(item => item.packageId === packageId))
 
-    const projectCodeCreate = computed(() => permission.getFor(permission.labels.projectCodeCreate))
+const handleReplace = () => (isRaplace.value = !isRaplace.value)
 
-    const calcHeight = computed(() => height.value - 370)
-    const isLoggedIn = computed(() => !!userStore.state.globalProfile.value.short_uuid)
-    const isProcessing = computed(() => packageStore.processingList.value.find(item => item.packageId === packageId))
+const handleCloseOutside = async () => {
+  await projectStore.getProjectMe(router.route.value.params.projectId)
+  const project = await projectStore.getProject(router.route.value.params.projectId)
+  if (!project.package.short_uuid || !project.short_uuid) return
 
-    const handleReplace = () => (isRaplace.value = !isRaplace.value)
-
-    const handeBackToPackageRoot = () => {
-      router.push({
-        name: 'workspace-project-code',
-        params: { workspaceId, projectId, packageId }
-      })
-    }
-
-    const handleCloseOutside = async () => {
-      await projectStore.getProjectMe(context.root.$route.params.projectId)
-      const project = await projectStore.getProject(context.root.$route.params.projectId)
-      if (!project.package.short_uuid || !project.short_uuid) return
-
-      await packageStore.getPackage({
-        loading: true,
-        projectId: project.short_uuid,
-        packageId: project.package.short_uuid
-      })
-      isRaplace.value = false
-    }
-
-    return {
-      packageId,
-      isLoggedIn,
-      calcHeight,
-      breadcrumbs,
-      isProcessing,
-      projectCodeCreate,
-
-      handleReplace,
-      handleCloseOutside,
-      handeBackToPackageRoot
-    }
-  }
-})
+  await packageStore.getPackage({
+    loading: true,
+    projectId: project.short_uuid,
+    packageId: project.package.short_uuid
+  })
+  isRaplace.value = false
+}
 </script>
 <style>
 .replace-active {

@@ -21,14 +21,14 @@
       v-else
       readonly
       languageName="html"
-      :value="dataSource.slice(0, 10000)"
+      :value="fileSource.slice(0, 10000)"
       v-scroll:#scroll-target="handleOnScroll"
     />
   </div>
 </template>
 <script setup lang="ts">
 import { throttle } from 'lodash'
-import { ref, watch } from '@vue/composition-api'
+import { ref, watch, computed } from '@vue/composition-api'
 import TheHighlight from '@/core/components/highlight/TheHighlight.vue'
 
 const props = defineProps({
@@ -36,7 +36,7 @@ const props = defineProps({
     type: String,
     default: () => 'pretty'
   },
-  dataSource: {
+  fileSource: {
     type: String,
     default: () => ''
   },
@@ -48,9 +48,11 @@ const props = defineProps({
 
 const NOT_ALLOWED_TAGS = ['<script']
 
-const alert = ref(NOT_ALLOWED_TAGS.some(item => props.dataSource.includes(item)))
+const alert = ref(false)
 const iframeRef = ref(null)
 const currentScrollTop = ref(0)
+
+const source = computed(() => props.fileSource)
 
 const onScroll = scrollTop => {
   if (scrollTop > currentScrollTop.value) {
@@ -86,7 +88,7 @@ const initIframe = () => {
   iframeEl.setAttribute('height', props.maxHeight)
 
   iframeEl.setAttribute('class', 'AskAnna-iframe')
-  iframeEl.setAttribute('srcdoc', props.dataSource)
+  iframeEl.setAttribute('srcdoc', props.fileSource)
   iframeEl.setAttribute('sandbox', sandbox)
 
   iframeEl.onload = () => {
@@ -98,8 +100,10 @@ const initIframe = () => {
   iframeRef.value.appendChild(iframeEl)
 }
 
-watch(iframeRef, async iframeRef => {
-  if (!iframeRef) return
+watch([iframeRef, source], async iframeRef => {
+  if (!source.value || !iframeRef) return
+
+  alert.value = NOT_ALLOWED_TAGS.some(item => props.fileSource.includes(item))
   initIframe()
 })
 </script>

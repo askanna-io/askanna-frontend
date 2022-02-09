@@ -1,15 +1,17 @@
-import { computed, SetupContext } from '@vue/composition-api'
+import { useRouter } from '@u3u/vue-hooks'
+import { computed } from '@vue/composition-api'
 
-export default (context: SetupContext, params: { start: number; end: number } = { start: 0, end: 6 }) => {
+export default (params: { start: number; end: number } = { start: 0, end: 6 }) => {
   const { end } = params
+  const { route } = useRouter()
 
   const getBreadcrumbs = computed(() => {
-    const beforeFolderPath = context.root.$route.path.split('/').slice(0, end).join('/')
-    const { workspaceId, projectId, packageId } = context.root.$route.params
+    const beforeFolderPath = route.value.path.split('/').slice(0, end).join('/')
+    const { workspaceId, projectId, packageId } = route.value.params
 
     let currentPath = beforeFolderPath
 
-    const breadcrumbs = context.root.$route.path
+    const breadcrumbs = route.value.path
       .split('/')
       .slice(end)
       .filter(name => name !== '')
