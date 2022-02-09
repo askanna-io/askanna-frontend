@@ -50,105 +50,76 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { ref, computed } from '@vue/composition-api'
 import usePermission from '@/core/composition/usePermission'
-import { ref, computed, defineComponent } from '@vue/composition-api'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
+import { useProjectsStore } from '@/features/projects/useProjectsStore'
 import useProjectStore from '@/features/project/composition/useProjectStore'
-import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
-import ConfirmDeleteProjectPopup from '@/features/project/components/popup/ConfirmDeleteProjectPopup'
+import ConfirmDeleteProjectPopup from '@/features/project/components/popup/ConfirmDeleteProjectPopup.vue'
 
-export default defineComponent({
-  name: 'ProjectMenuPopup',
-
-  components: {
-    ConfirmDeleteProjectPopup
-  },
-
-  props: {
-    project: {
-      type: Object,
-      default: function () {
-        return {
-          runtime: 0,
-          memory: 0,
-          created: '',
-          stdout: null,
-          finished: '',
-          permission: {},
-          return_payload: null
-        }
-      }
-    },
-    routeToRedirect: {
-      type: String,
-      default: () => ''
-    },
-    routeBackTo: {
-      type: String,
-      default: () => 'workspace'
-    }
-  },
-
-  setup(props, context) {
-    const permission = usePermission()
-    const projectStore = useProjectStore()
-    const router = useRouterAskAnna()
-    const workspaceStore = useWorkspaceStore()
-
-    const menu = ref(false)
-    const deleteProjectConfirmPopup = ref(false)
-
-    const projectRemove = computed(() => props.project.permission[permission.labels.projectRemove])
-    const projectInfoEdit = computed(() => props.project.permission[permission.labels.projectInfoEdit])
-    const isCurrentUserAdmin = computed(() => workspaceStore.currentPeople.value.role.code === 'WA')
-
-    const handleMoreOptions = () =>
-      router.push({
-        name: 'workspace-new-project',
-        params: { workspaceId: context.root.$route.params.workspaceId }
-      })
-
-    const handleOpenConfirmDeleteProject = async () => (deleteProjectConfirmPopup.value = true)
-
-    const handlCloseConfirmDeletePopup = () => (deleteProjectConfirmPopup.value = false)
-
-    const handleClose = () => (menu.value = false)
-
-    const handleOpenConfirmEditProject = () =>
-      context.root.$router.push({
-        name: 'workspace-project-edit',
-        params: {
-          routeBackTo: props.routeBackTo,
-          projectId: props.project.short_uuid,
-          workspaceId: props.project.workspace.short_uuid
-        }
-      })
-
-    const handleDeleteConfirmPorject = async () => {
-      await projectStore.deleteProject(props.project)
-      deleteProjectConfirmPopup.value = false
-      menu.value = false
-      if (props.routeToRedirect) {
-        router.push({ name: props.routeToRedirect })
+const props = defineProps({
+  project: {
+    type: Object,
+    default: function () {
+      return {
+        runtime: 0,
+        memory: 0,
+        created: '',
+        stdout: null,
+        finished: '',
+        permission: {},
+        return_payload: null
       }
     }
-
-    return {
-      menu,
-      projectRemove,
-      projectInfoEdit,
-      isCurrentUserAdmin,
-
-      handleClose,
-      handleMoreOptions,
-      deleteProjectConfirmPopup,
-      handleDeleteConfirmPorject,
-      handleOpenConfirmEditProject,
-      handlCloseConfirmDeletePopup,
-      handleOpenConfirmDeleteProject,
-      projectName: projectStore.projectName
-    }
+  },
+  routeToRedirect: {
+    type: String,
+    default: () => ''
+  },
+  routeBackTo: {
+    type: String,
+    default: () => 'workspace'
   }
 })
+
+const router = useRouterAskAnna()
+const permission = usePermission()
+const projectStore = useProjectStore()
+const projectsStore = useProjectsStore()
+
+const menu = ref(false)
+const deleteProjectConfirmPopup = ref(false)
+
+const projectRemove = computed(() => props.project.permission[permission.labels.projectRemove])
+const projectInfoEdit = computed(() => props.project.permission[permission.labels.projectInfoEdit])
+
+const handleOpenConfirmDeleteProject = async () => (deleteProjectConfirmPopup.value = true)
+
+const handlCloseConfirmDeletePopup = () => (deleteProjectConfirmPopup.value = false)
+
+const handleClose = () => (menu.value = false)
+
+const handleOpenConfirmEditProject = () =>
+  context.root.$router.push({
+    name: 'workspace-project-edit',
+    params: {
+      routeBackTo: props.routeBackTo,
+      projectId: props.project.short_uuid,
+      workspaceId: props.project.workspace.short_uuid
+    }
+  })
+
+const handleDeleteConfirmPorject = async () => {
+  await projectStore.deleteProject(props.project)
+  await projectsStore.getProjects()
+
+  deleteProjectConfirmPopup.value = false
+
+  menu.value = false
+
+  if (props.routeToRedirect) {
+    router.push({ name: props.routeToRedirect })
+  }
+}
 </script>

@@ -112,6 +112,7 @@ import usePermission from '@/core/composition/usePermission'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useValidationRules from '@/core/composition/useValidationRules'
+import { useWorkspacesStore } from '@/features/workspaces/useWorkspacesStore'
 import AskAnnaDescription from '@/core/components/shared/AskAnnaDescription.vue'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 import ChangeWorkspaceVisibilityPopup from '@/features/workspace/components/workspace-edit/ChangeWorkspaceVisibilityPopup.vue'
@@ -120,6 +121,7 @@ const snackBar = useSnackBar()
 const router = useRouterAskAnna()
 const { RULES } = useValidationRules()
 const workspaceStore = useWorkspaceStore()
+const workspacesStore = useWorkspacesStore()
 const { token, isAllowedToView } = usePermission()
 
 const isStateNotChanged = ref(true)
@@ -165,6 +167,7 @@ const handleSave = async () => {
       message: `The workspace ${workspace.name} was updated`
     })
     handleClose()
+    await workspacesStore.getAllWorkspaces() // call get all workspaces to updated them on menu
   }
 }
 
