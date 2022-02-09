@@ -57,39 +57,6 @@ export const actions: ActionTree<PackageState, RootState> = {
     commit(type.SET_LOADING, { name: 'packageLoading', value: false })
   },
 
-  async [type.getFileSource]({ dispatch, state, commit }, path) {
-    commit(type.SET_LOADING, { name: 'packageLoading', value: true })
-
-    if (!path) return commit(type.SET_FILE, '')
-    if (!state.packageData) return commit(type.SET_FILE, '')
-    commit(type.RESET_FILE_FILESOURCE)
-
-    const url = `${state.packageData.cdn_base_url}/${path}`
-
-    let fileSource
-    try {
-      fileSource = await dispatch(
-        rootTypes.apiDownloadSerice,
-        {
-          url
-        },
-        { root }
-      )
-    } catch (e) {
-      logger.error(commit, 'Error on load fileSource in getFileSource action.\nError: ', e)
-      return
-    }
-
-    const file = await fileSource.text()
-
-    commit(type.SET_FILE, { file, fileSource })
-    commit(type.SET_LOADING, { name: 'packageLoading', value: false })
-  },
-
-  async [type.resetFile]({ commit }) {
-    commit(type.RESET_FILE_FILESOURCE)
-  },
-
   async [type.registerPackage]({ commit }, data) {
     let packageData
     try {

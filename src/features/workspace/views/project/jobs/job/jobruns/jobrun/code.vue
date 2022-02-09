@@ -11,8 +11,18 @@
           <template v-slot:rigth>
             <v-slide-y-transition>
               <div v-if="!filePath && !$vuetify.breakpoint.xsOnly">
-                <v-btn small outlined color="secondary" class="mr-1 btn--hover" @click="handleDownload()">
+                <v-btn
+                  small
+                  outlined
+                  color="secondary"
+                  class="mr-1 btn--hover"
+                  :loading="downloadPackage"
+                  @click="handleDownload()"
+                >
                   <v-icon color="secondary" left>mdi-download</v-icon>Download
+                  <template v-slot:loader>
+                    <span>Downloading...</span>
+                  </template>
                 </v-btn>
               </div>
             </v-slide-y-transition>
@@ -22,15 +32,17 @@
           <package-processing />
         </template>
         <template v-else>
-          <package-file
+          <PackageFile
             v-if="filePath"
-            :file="file"
             :sticked="sticked"
-            :fileSource="fileSource"
+            :file="fileStore.fileBlob"
             :currentPath="currentPath"
+            :loading="fileStore.loading"
+            :fileSource="fileStore.fileSource"
+            @onCopy="handleCopy"
+            @onDownload="handleDownloadFile"
           />
-
-          <package-tree
+          <PackageTree
             v-else
             :items="treeView"
             :height="calcHeight"
@@ -43,10 +55,10 @@
   </ask-anna-loading-progress>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { useWindowSize } from '@u3u/vue-hooks'
-import { defineComponent } from '@vue/composition-api'
-import { FileIcons } from '@/features/package/utils/index'
+import useCopy from '@/core/composition/useCopy'
+import { useFileStore } from '@/features/file/useFileStore'
 import PackageFile from '@package/components/PackageFile.vue'
 import PackageTree from '@package/components/PackageTree.vue'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
@@ -57,191 +69,192 @@ import usePackageStore from '@/features/package/composition/usePackageStore'
 import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
 import PackageToolbar from '@/features/package/components/PackageToolbar.vue'
 import usePackagesStore from '@/features/packages/composition/usePackagesStore'
+import PackageProcessing from '@/features/package/components/PackageProcessing.vue'
 import { ref, watch, onBeforeMount, onUnmounted, computed } from '@vue/composition-api'
 
-export default defineComponent({
-  name: 'PackageUuid',
+const copy = useCopy()
+const fileStore = useFileStore()
+const router = useRouterAskAnna()
+const { height } = useWindowSize()
+const jobRunStore = useJobRunStore()
+const packageStore = usePackageStore()
+const projectStore = useProjectStore()
+const packagesStore = usePackagesStore()
+const forceFileDownload = useForceFileDownload()
+const breadcrumbs = usePackageBreadcrumbs({ start: 8, end: 9 })
 
-  components: {
-    PackageFile,
-    PackageTree,
-    PackageToolbar,
-    PackageProcessing: () => import('@/features/package/components/PackageProcessing.vue')
-  },
+const { workspaceId, projectId, jobId, jobRunId, folderName = '' } = router.route.value.params
 
-  setup(_, context) {
-    const { height } = useWindowSize()
-    const jobRunStore = useJobRunStore()
-    const packageStore = usePackageStore()
-    const projectStore = useProjectStore()
-    const router = useRouterAskAnna()
+const polling = ref(null)
+const downloadPackage = ref(false)
 
-    const packagesStore = usePackagesStore(context)
-    const forceFileDownload = useForceFileDownload()
-    const breadcrumbs = usePackageBreadcrumbs(context, { start: 8, end: 9 })
+const packageLoading = computed(() => packageStore.state.packageLoading.value)
+const packageId = computed(() => jobRunStore.state.jobRun.value.package.short_uuid)
 
-    const polling = ref(null)
-    const file = computed(() => packageStore.file.value)
+const breadcrumbsComputed = computed(() => {
+  const first = {
+    title: `Package: #${packageId.value.slice(0, 4)}`,
+    to: {
+      name: 'workspace-project-code',
+      params: { workspaceId, projectId, packageId: packageId.value }
+    },
+    exact: true,
+    disabled: false,
+    showTooltip: true,
+    tooltip: `<span>${packageId.value}</span>`
+  }
 
-    const { workspaceId, projectId, jobId, jobRunId, folderName = '' } = context.root.$route.params
+  return [first, ...breadcrumbs.value]
+})
 
-    const packageId = computed(() => jobRunStore.state.jobRun.value.package.short_uuid)
+const sticked = computed(() => !projectStore.stickedVM.value)
 
-    const breadcrumbsComputed = computed(() => {
-      const first = {
-        title: `Package: #${packageId.value.slice(0, 4)}`,
-        to: {
-          name: 'workspace-project-code',
-          params: { workspaceId, projectId, packageId: packageId.value }
-        },
-        exact: true,
-        disabled: false,
-        showTooltip: true,
-        tooltip: `<span>${packageId.value}</span>`
-      }
+const fetchData = async () => {
+  fileStore.$reset()
 
-      return [first, ...breadcrumbs.value]
-    })
+  const { jobRunId } = router.route.value.params
 
-    const sticked = computed(() => !projectStore.stickedVM.value)
+  if (jobRunStore.state.jobRun.value.short_uuid !== jobRunId) {
+    await jobRunStore.actions.resetStore()
+    await jobRunStore.actions.getJobRun(jobRunId)
+  }
+  const packageId = jobRunStore.state.jobRun.value.package.short_uuid
 
-    const fetchData = async () => {
-      const { jobRunId } = context.root.$route.params
+  if (packageId === '') {
+    return
+  }
 
-      if (jobRunStore.state.jobRun.value.short_uuid !== jobRunId) {
-        await jobRunStore.resetStore()
-        await jobRunStore.getJobRun(jobRunId)
-      }
-      const packageId = jobRunStore.state.jobRun.value.package.short_uuid
+  await getPackage()
+  if (isProcessing.value) {
+    pollData()
+  }
+}
 
-      if (packageId === '') {
-        return
-      }
+onBeforeMount(() => fetchData())
 
-      await getPackage()
-      if (isProcessing.value) {
-        pollData()
-      }
-    }
+onUnmounted(() => {
+  clearInterval(polling.value)
+})
 
-    onBeforeMount(() => fetchData())
+const getPackage = async () =>
+  await packageStore.getPackage({
+    projectId,
+    folderName,
+    packageId: jobRunStore.state.jobRun.value.package.short_uuid,
+    failedRoute: 'workspace-project-jobs-job-jobrun-code-does-not-exist'
+  })
 
-    onUnmounted(() => {
-      clearInterval(polling.value)
-    })
+const pollData = () => {
+  polling.value = setInterval(async () => {
+    await getPackage()
+    checkProcessing()
+  }, 10000)
+}
 
-    const getPackage = async () =>
-      await packageStore.getPackage({
-        projectId,
-        folderName,
-        packageId: jobRunStore.state.jobRun.value.package.short_uuid,
-        failedRoute: 'workspace-project-jobs-job-jobrun-code-does-not-exist'
-      })
+const checkProcessing = () => {
+  if (!isProcessing.value) {
+    clearInterval(polling.value)
+  }
+}
 
-    const pollData = () => {
-      polling.value = setInterval(async () => {
-        await getPackage()
-        checkProcessing()
-      }, 10000)
-    }
+const calcHeight = computed(() => height.value - 370)
+const path = computed(() => router.route.value.params.folderName || '/')
+const isProcessing = computed(() => packageStore.state.processingList.value.find(item => item.packageId === packageId))
 
-    const checkProcessing = () => {
-      if (!isProcessing.value) {
-        clearInterval(polling.value)
-      }
-    }
+const currentPath = computed(() => {
+  const pathArray = path.value.split('/')
+  const fileName = pathArray.pop()
+  const current = packageStore.state.packageData.value.files.find(
+    item => item.name === fileName && item.path === path.value
+  )
 
-    const calcHeight = computed(() => height.value - 370)
-    const path = computed(() => context.root.$route.params.folderName || '/')
-    const isProcessing = computed(() => packageStore.processingList.value.find(item => item.packageId === packageId))
+  return current
+})
 
-    const currentPath = computed(() => {
-      const pathArray = path.value.split('/')
-      const fileName = pathArray.pop()
-      const current = packageStore.packageData.value.files.find(
-        item => item.name === fileName && item.path === path.value
-      )
-
-      return current
-    })
-
-    const filePath = computed(() =>
-      currentPath.value && !currentPath.value.is_dir && currentPath.value.name !== '' ? currentPath.value.path : ''
+const filePath = computed(() =>
+  currentPath.value && !currentPath.value.is_dir && currentPath.value.name !== '' ? currentPath.value.path : ''
+)
+const parentPath = computed(() => {
+  let parentPathTemp
+  if (currentPath.value && currentPath.value.is_dir && path.value !== '/') {
+    parentPathTemp = packageStore.state.packageData.value.files.find(
+      file => file.name === currentPath.value.parent && file.is_dir
     )
-    const parentPath = computed(() => {
-      let parentPathTemp
-      if (currentPath.value && currentPath.value.is_dir && path.value !== '/') {
-        parentPathTemp = packageStore.packageData.value.files.find(
-          file => file.name === currentPath.value.parent && file.is_dir
-        )
-        parentPathTemp = {
-          ...parentPathTemp,
-          name: '...',
-          ext: 'parent'
-        }
-      }
-
-      return parentPathTemp
-    })
-
-    const treeView = computed(() => {
-      const tree = packageStore.packageData.value.files.filter(item => item.parent === path.value)
-
-      return parentPath.value ? [parentPath.value, ...tree] : tree
-    })
-
-    const getRoutePath = item => {
-      let path = `/${workspaceId}/project/${projectId}/jobs/${jobId}/runs/${jobRunId}/code/${item.path}`
-
-      if (typeof item.path === 'undefined') {
-        path = `/${workspaceId}/project/${projectId}/jobs/${jobId}/runs/${jobRunId}/code/`
-      }
-
-      return { path }
-    }
-
-    const handleDownload = async () => {
-      const packageData = packageStore.packageData.value
-      const source = await packagesStore.downloadPackage({
-        projectId,
-        packageId: packageData.short_uuid
-      })
-      forceFileDownload.trigger({ source, name: `run_${jobRunId}_code_${packageData.filename}` })
-    }
-
-    const handeBackToPackageRoot = () => {
-      router.push({
-        name: 'workspace-project-jobs-job-jobrun-code',
-        params: { workspaceId, projectId, packageId, jobId, jobRunId }
-      })
-    }
-
-    watch(filePath, async filePath => {
-      if (filePath === '') return
-
-      packageStore.getFileSource(filePath)
-    })
-
-    return {
-      file,
-      sticked,
-      filePath,
-      fileSource: packageStore.fileSource,
-      packageLoading: packageStore.packageLoading,
-      treeView,
-      packageId,
-      FileIcons,
-      calcHeight,
-      breadcrumbs,
-      currentPath,
-      isProcessing,
-      breadcrumbsComputed,
-
-      getRoutePath,
-      handleDownload,
-      handeBackToPackageRoot
+    parentPathTemp = {
+      ...parentPathTemp,
+      name: '...',
+      ext: 'parent'
     }
   }
+
+  return parentPathTemp
+})
+
+const treeView = computed(() => {
+  const tree = packageStore.state.packageData.value.files.filter(item => item.parent === path.value)
+
+  return parentPath.value ? [parentPath.value, ...tree] : tree
+})
+
+const getRoutePath = item => {
+  let path = `/${workspaceId}/project/${projectId}/jobs/${jobId}/runs/${jobRunId}/code/${item.path}`
+
+  if (typeof item.path === 'undefined') {
+    path = `/${workspaceId}/project/${projectId}/jobs/${jobId}/runs/${jobRunId}/code/`
+  }
+
+  return { path }
+}
+
+const handleDownload = async () => {
+  downloadPackage.value = true
+
+  const packageData = packageStore.state.packageData.value
+  const source = await packagesStore.actions.downloadPackage({
+    projectId,
+    packageId: packageData.short_uuid
+  })
+  forceFileDownload.trigger({ source, name: `run_${jobRunId}_code_${packageData.filename}` })
+
+  downloadPackage.value = false
+}
+
+// download full version of result without formating
+const handleDownloadFile = async () => {
+  await fileStore.getFullFile({
+    url: `${packageStore.state.packageData.value.cdn_base_url}/${currentPath.value.path}`
+  })
+
+  forceFileDownload.trigger({
+    source: fileStore.rawFile,
+    name: currentPath.value.name
+  })
+}
+
+const handleCopy = async () => {
+  const fileSource = await fileStore.getFullFile({
+    url: `${packageStore.state.packageData.value.cdn_base_url}/${currentPath.value.path}`
+  })
+
+  if (fileStore.isFileImg) {
+    copy.handleCopyElementBySource(fileSource)
+
+    return
+  }
+
+  copy.handleCopyText(fileStore.fileSourceForCopy('pretty'))
+}
+
+watch(filePath, async filePath => {
+  if (filePath === '') return
+
+  fileStore.$reset()
+
+  await fileStore.getFilePreview({
+    size: currentPath.value.size,
+    extension: currentPath.value.ext,
+    url: `${packageStore.state.packageData.value.cdn_base_url}/${filePath}`
+  })
 })
 </script>
 <style>

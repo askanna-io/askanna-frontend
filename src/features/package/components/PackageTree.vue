@@ -13,7 +13,7 @@
       <router-link class="table-link table-link--unformated" :to="getRoutePath(item)">
         <v-icon v-if="item.is_dir">mdi-folder</v-icon>
         <v-icon v-else>
-          {{ FileIcons[item.ext] }}
+          {{ getIcons(item.ext) }}
         </v-icon>
       </router-link>
     </template>
@@ -41,6 +41,7 @@
 </template>
 
 <script setup lang="ts">
+import { get } from 'lodash'
 import { headers, FileIcons } from '../utils/index'
 import useMoment from '@/core/composition/useMoment'
 import useSizeHumanize from '@/core/composition/useSizeHumanize'
@@ -67,11 +68,14 @@ defineProps({
 const moment = useMoment()
 const sizeHumanize = useSizeHumanize()
 
+const getIcons = (ext: string) => get(FileIcons, ext) || (ext !== 'parent' ? 'mdi-file-outline' : '')
+
 const getHeaders = (isMobile: boolean) => (isMobile ? headers.filter(el => el.isShowOnMobile) : headers)
 
 const getUpdateDate = (isMobile: boolean, lastModified: string) =>
   isMobile ? moment.ago(lastModified) : moment.$moment(lastModified).format(' Do MMMM YYYY, h:mm:ss a')
 </script>
+
 <style lang="scss">
 .mobile-view {
   .file-list {

@@ -6,8 +6,6 @@ import { PackageState, PACKAGE_STORE, PackageModel } from './types'
 
 export const state: PackageState = {
   packageData: new PackageModel().state,
-  file: '',
-  fileSource: new Blob(),
   processingList: [],
   packageLoading: true
 }

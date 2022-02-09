@@ -17,19 +17,17 @@
 import { computed } from '@vue/composition-api'
 
 const props = defineProps({
-  dataSource: {
+  fileBlob: {
     type: Blob,
-    default: function () {
-      return ''
-    }
+    default: () => ''
   }
 })
 
 const imgSrc = computed(() => {
-  if (!props.dataSource) return ''
+  if (!props.fileBlob) return ''
 
   const urlCreator = window.URL || window.webkitURL
-  const imgSrc = urlCreator.createObjectURL(props.dataSource)
+  const imgSrc = urlCreator.createObjectURL(props.fileBlob)
 
   return imgSrc
 })

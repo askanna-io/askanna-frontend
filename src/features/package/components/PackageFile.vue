@@ -17,12 +17,13 @@
           outlined
           color="secondary"
           class="mr-1 btn--hover"
+          :disabled="fileStore.loadingFullData"
           @click="handleDownload"
         >
           <v-icon color="secondary" left>mdi-download</v-icon>Download file
         </v-btn>
         <v-btn
-          v-if="!$vuetify.breakpoint.xsOnly"
+          v-if="!$vuetify.breakpoint.xsOnly && fileStore.isShowFilePreview"
           small
           outlined
           color="secondary"
@@ -32,80 +33,85 @@
           <v-icon color="secondary" left>mdi-content-copy</v-icon>Copy
         </v-btn>
       </v-toolbar>
-      <PackageFileImage v-if="isFileImg" :dataSource="fileSource" />
-      <package-notebook v-else-if="isIpynb" :file="file" :fileSource="fileSource" />
-      <TheHighlight v-else-if="fileComputed" :value="fileComputed" :languageName="languageName" />
-      <v-alert v-else class="ma-4 text-center" dense outlined> This file is empty. </v-alert>
+      <PreviewFile
+        v-if="!fileStore.isFileEmpty"
+        :fileBlob="file"
+        :loading="loading"
+        :fileSource="fileSource"
+        :maxHeight="`${maxHeight}px`"
+        :isFileBig="fileStore.isFileBig"
+        :currentView="currentView.value"
+        :fileExtension="currentPath.ext"
+        :isFileEmpty="fileStore.isFileEmpty"
+        :loadingFullData="fileStore.loadingFullData"
+        :isShowFilePreview="fileStore.isShowFilePreview"
+        :isFileBigForRawView="fileStore.isFileBigForRawView"
+        @onDownload="handleDownload"
+      />
+      <v-alert v-else class="ma-4 text-center" dense outlined>This file is empty.</v-alert>
     </v-col>
   </v-row>
 </template>
 
 <script setup lang="ts">
-import { useRouter } from '@u3u/vue-hooks'
 import { computed } from '@vue/composition-api'
-import useCopy from '@/core/composition/useCopy'
-import PackageNotebook from './PackageNotebook.vue'
-import PackageFileImage from './PackageFileImage.vue'
+import { useRouter, useWindowSize } from '@u3u/vue-hooks'
+import { useFileStore } from '@/features/file/useFileStore'
 import { useMobileStore } from '@/core/store/useMobileStore'
 import useSizeHumanize from '@/core/composition/useSizeHumanize'
-import TheHighlight from '@/core/components/highlight/TheHighlight.vue'
-import useForceFileDownload from '@/core/composition/useForceFileDownload'
+import PreviewFile from '@/features/file/components/PreviewFile.vue'
 
-const props = defineProps({
-  file: String,
-  fileSource: String | Blob,
+defineProps({
+  file: Blob,
+  fileSource: String,
   breadcrumbs: {
     type: Array,
     default: () => []
+  },
+  sticked: {
+    type: Boolean,
+    default: true
+  },
+  loading: {
+    type: Boolean,
+    default: true
   },
   currentPath: {
     type: Object,
     default: () => {
       return {
         ext: '',
-        is_dir: true,
-        last_modified: '',
-        name: '',
-        parent: '/',
-        path: '',
         size: 0,
-        type: ''
+        name: '',
+        path: '',
+        type: '',
+        parent: '/',
+        is_dir: true,
+        last_modified: ''
       }
     }
-  },
-  sticked: {
-    type: Boolean,
-    default: true
   }
 })
 
-const allowedLangs = ['json', 'md', 'py', 'txt', 'yml', 'ini', 'toml', 'markdown']
-const copy = useCopy()
+const emit = defineEmits(['onCopy', 'onDownload'])
+
 const { router } = useRouter()
+const fileStore = useFileStore()
+const { height } = useWindowSize()
 const humanize = useSizeHumanize()
 const mobileStore = useMobileStore()
 
-const forceFileDownload = useForceFileDownload()
-
-const fileComputed = computed(() => props.file)
-const handleBack = () => router.back()
+const currentView = { value: 'pretty' }
 
 const stickyParams = computed(() =>
   mobileStore.isMenuOpen && mobileStore.isMenuSticked ? '{top: 252, bottom: 10}' : '{top: 52, bottom: 10}'
 )
 
-const imgExts = ['jpg', 'png', 'gif', 'jpeg']
-const isIpynb = computed(() => props.currentPath.ext === 'ipynb')
-const isFileImg = computed(() => imgExts.includes(props.currentPath.ext))
-const languageName = computed(() => (allowedLangs.includes(props.currentPath.ext) ? props.currentPath.ext : 'markdown'))
+const maxHeight = computed(() => height.value - 120)
 
-const handleCopy = () => {
-  if (isFileImg.value) {
-    copy.handleCopyElementBySource(props.fileSource)
+const handleBack = () => router.back()
 
-    return
-  }
-  copy.handleCopyText(props.file || ' ')
-}
-const handleDownload = () => forceFileDownload.trigger({ source: props.fileSource, name: props.currentPath.name })
+const handleCopy = () => emit('onCopy')
+
+const handleDownload = () => emit('onDownload')
 </script>

@@ -1,11 +1,14 @@
 export const FileIcons = {
   html: 'mdi-language-html5',
   js: 'mdi-nodejs',
+  xml: 'mdi-xml',
   json: 'mdi-code-json',
-  md: 'mdi-language-markdown',
   pdf: 'mdi-file-pdf',
   png: 'mdi-file-image',
   jpg: 'mdi-file-image',
+  jpeg: 'mdi-file-image',
+  md: 'mdi-language-markdown',
+  csv: 'mdi-file-delimited-outline',
   txt: 'mdi-file-document-outline',
   yml: 'mdi-file-document-outline',
   rst: 'mdi-file-document-outline',
@@ -13,11 +16,13 @@ export const FileIcons = {
   in: 'mdi-file-settings',
   cfg: 'mdi-file-settings',
   xls: 'mdi-file-excel',
+  xlsx: 'mdi-file-excel',
   py: 'mdi-language-python',
   ini: 'mdi-file-cog-outline',
   bat: 'mdi-file-cog-outline',
   ipynb: 'mdi-notebook'
 }
+
 export const headers = [
   {
     text: '',

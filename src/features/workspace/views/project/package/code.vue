@@ -6,10 +6,12 @@
 </template>
 
 <script setup lang="ts">
+import { useFileStore } from '@/features/file/useFileStore'
 import useProjectStore from '@/features/project/composition/useProjectStore'
 import usePackageStore from '@/features/package/composition/usePackageStore'
 import { watch, computed, onBeforeUnmount, onBeforeMount } from '@vue/composition-api'
 
+const fileStore = useFileStore()
 const projectStore = useProjectStore()
 const packageStore = usePackageStore()
 
@@ -30,6 +32,6 @@ const getPackage = async (loading = true) => {
   })
 }
 
-onBeforeMount(() => packageStore.resetFile())
-onBeforeUnmount(() => packageStore.resetFile())
+onBeforeMount(() => fileStore.$reset())
+onBeforeUnmount(() => fileStore.$reset())
 </script>

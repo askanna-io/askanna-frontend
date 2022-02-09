@@ -1,16 +1,17 @@
-import { SetupContext } from '@vue/composition-api'
-import { onBeforeMount } from '@vue/composition-api'
+import { useRouter } from '@u3u/vue-hooks'
 import usePackagesStore from './usePackagesStore'
+import { onBeforeMount } from '@vue/composition-api'
 import useFetchData from '@/core/composition/useFetchData'
 
-export default function (context: SetupContext) {
-  const packagesStore: any = usePackagesStore()
+export default () => {
+  const { route } = useRouter()
   const fetchData = useFetchData()
+  const packagesStore: any = usePackagesStore()
 
   onBeforeMount(() => {
     packagesStore.resetStore()
-    const { projectId: uuid } = context.root.$route.params
-    fetchData(context, packagesStore.getProjectPackages({ uuid, params: { limit: 1, offset: 0 } }))
+    const uuid = route.value.params.projectId
+    fetchData(packagesStore.getProjectPackages({ uuid, params: { limit: 1, offset: 0 } }))
   })
 
   return {

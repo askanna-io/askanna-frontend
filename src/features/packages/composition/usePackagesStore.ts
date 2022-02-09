@@ -1,7 +1,7 @@
 import { useState, useActions } from '@u3u/vue-hooks'
 import { PACKAGES_STORE, action, stateType } from '../store/types'
 
-export default function () {
+export default () => {
   const state = {
     ...useState(PACKAGES_STORE, {
       ...stateType
@@ -15,6 +15,8 @@ export default function () {
   return {
     open,
     ...state,
-    ...actions
+    ...actions,
+    state,
+    actions
   }
 }
