@@ -25,19 +25,20 @@
 import { set } from 'lodash'
 import { useRouter } from '@u3u/vue-hooks'
 import usePermission from '@/core/composition/usePermission'
+import Project from '@/features/project/components/Project.vue'
 import useSnackBar from '@/core/components/snackBar/useSnackBar'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
+import { useProjectsStore } from '@/features/projects/useProjectsStore'
 import { ref, watch, computed, onBeforeMount } from '@vue/composition-api'
 import useProjectStore from '@/features/project/composition/useProjectStore'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
-
-import Project from '@/features/project/components/Project.vue'
 
 const { route } = useRouter()
 const snackBar = useSnackBar()
 const router = useRouterAskAnna()
 const permission = usePermission()
 const projectStore = useProjectStore()
+const projectsStore = useProjectsStore()
 const workspaceStore = useWorkspaceStore()
 
 const { routeBackTo = 'workspace-project' } = route.value.params
@@ -68,8 +69,10 @@ const handleUpdate = async () => {
   if (routeBackTo === 'workspace') {
     await workspaceStore.getInitialWorkpaceProjects({ params: { limit: 99, offset: 0 } })
   }
+
   if (project?.short_uuid) {
     snackBar.showSnackBar({ message: `The project ${project.name} was updated`, color: 'success', timeout: 2500 })
+    await projectsStore.getProjects() // call get all project to updated them on menu
     handleCancel()
   }
 }

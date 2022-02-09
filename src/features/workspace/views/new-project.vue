@@ -43,15 +43,17 @@
 
 <script setup lang="ts">
 import usePermission from '@/core/composition/usePermission'
-import Project from '@/features/project/components/Project.vue'
 import { computed, onBeforeMount } from '@vue/composition-api'
+import Project from '@/features/project/components/Project.vue'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
+import { useProjectsStore } from '@/features/projects/useProjectsStore'
 import useProjectStore from '@/features/project/composition/useProjectStore'
 import useWorkSpaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 
 const router = useRouterAskAnna()
 const permission = usePermission()
 const projectStore = useProjectStore()
+const projectsStore = useProjectsStore()
 const workSpaceStore = useWorkSpaceStore()
 
 const workspaceName = computed(() => workSpaceStore.workspace.value.name)
@@ -83,6 +85,8 @@ const handleOnInput = data => projectStore.setProject(data)
 const handleCreate = async () => {
   const project = await projectStore.createProjectFullWay(router.route.value.params.workspaceId)
   if (project && project.short_uuid) {
+    await projectsStore.getProjects() // call get all project to updated them on menu
+
     router.push({
       name: 'workspace-project-code',
       params: { projectId: project.short_uuid, workspaceId: project.workspace.short_uuid, packageId: '' }

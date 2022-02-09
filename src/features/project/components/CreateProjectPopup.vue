@@ -20,7 +20,7 @@
         <v-form ref="newProjectFastForm" @submit.prevent="handlerCreateProject">
           <v-col cols="12" class="pb-0">
             <v-text-field
-              v-model="projectName"
+              v-model="projectStore.projectName.value"
               @input="handleOnInput"
               small
               dense
@@ -38,7 +38,7 @@
               outlined
               color="secondary"
               class="mr-1 btn--hover"
-              :disabled="!projectName"
+              :disabled="!projectStore.projectName.value"
               @click="handlerCreateProject"
             >
               Create
@@ -54,89 +54,71 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { ref, computed } from '@vue/composition-api'
 import usePermission from '@/core/composition/usePermission'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import { ref, computed, defineComponent } from '@vue/composition-api'
 import useValidationRules from '@/core/composition/useValidationRules'
+import { useProjectsStore } from '@/features/projects/useProjectsStore'
 import useProjectStore from '@/features/project/composition/useProjectStore'
 
-export default defineComponent({
-  name: 'CreateProjectPopup',
+const router = useRouterAskAnna()
+const permission = usePermission()
+const projectStore = useProjectStore()
+const projectsStore = useProjectsStore()
 
-  setup(_, context) {
-    const router = useRouterAskAnna()
-    const permission = usePermission()
-    const projectStore = useProjectStore()
+const workspaceProjectCreate = computed(() => permission.getFor(permission.labels.workspaceProjectCreate))
+const { RULES } = useValidationRules()
 
-    const workspaceProjectCreate = computed(() => permission.getFor(permission.labels.workspaceProjectCreate))
-    const { RULES } = useValidationRules()
+const menu = ref()
+const isFormValid = ref(true)
+const newProjectFastForm = ref(null)
+const nameRules = ref([RULES.required('Project name is required')])
 
-    const menu = ref()
-    const isFormValid = ref(true)
-    const newProjectFastForm = ref(null)
-    const nameRules = ref([RULES.required('Project name is required')])
+projectStore.resetProjectData()
 
-    projectStore.resetProjectData()
+const handleMoreOptions = () =>
+  router.push({
+    name: 'workspace-new-project',
+    params: { workspaceId: router.route.value.params.workspaceId }
+  })
 
-    const handleMoreOptions = () =>
-      router.push({
-        name: 'workspace-new-project',
-        params: { workspaceId: context.root.$route.params.workspaceId }
-      })
+const handlerCreateProject = async () => {
+  if (!newProjectFastForm.value.validate()) {
+    isFormValid.value = false
 
-    const handlerCreateProject = async () => {
-      if (!newProjectFastForm.value.validate()) {
-        isFormValid.value = false
-
-        return
-      }
-
-      await projectStore.createProjectShortWay(context.root.$route.params.workspaceId)
-
-      resetValidation()
-      nameRules.value = []
-      menu.value = false
-      isFormValid.value = false
-      projectStore.resetProjectData()
-      projectStore.projectName.value = ''
-    }
-
-    const handleOnInput = val => {
-      isFormValid.value = val ? true : false
-    }
-
-    const handleCancel = () => {
-      nameRules.value = []
-      menu.value = false
-      isFormValid.value = true
-      projectStore.resetProjectData()
-    }
-
-    const resetValidation = () => newProjectFastForm.value.resetValidation()
-
-    const handleOpenMenu = val => {
-      isFormValid.value = true
-      resetValidation()
-      if (val) {
-        nameRules.value = [RULES.required('Project name is required')]
-      }
-    }
-
-    return {
-      menu,
-      nameRules,
-      isFormValid,
-      newProjectFastForm,
-      workspaceProjectCreate,
-      projectName: projectStore.projectName,
-
-      handleCancel,
-      handleOnInput,
-      handleOpenMenu,
-      handleMoreOptions,
-      handlerCreateProject
-    }
+    return
   }
-})
+
+  await projectStore.createProjectShortWay(router.route.value.params.workspaceId)
+  await projectsStore.getProjects() // call get all project to updated them on menu
+
+  resetValidation()
+  nameRules.value = []
+  menu.value = false
+  isFormValid.value = false
+  projectStore.resetProjectData()
+  projectStore.projectName.value = ''
+}
+
+const handleOnInput = val => {
+  isFormValid.value = val ? true : false
+}
+
+const handleCancel = () => {
+  nameRules.value = []
+  menu.value = false
+  isFormValid.value = true
+  projectStore.resetProjectData()
+}
+
+const resetValidation = () => newProjectFastForm.value.resetValidation()
+
+const handleOpenMenu = val => {
+  isFormValid.value = true
+  resetValidation()
+  if (val) {
+    nameRules.value = [RULES.required('Project name is required')]
+  }
+}
 </script>
