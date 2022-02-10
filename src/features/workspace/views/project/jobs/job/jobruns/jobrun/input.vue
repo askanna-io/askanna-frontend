@@ -1,56 +1,52 @@
 <template>
-  <job-run-input />
+  <JobRunInput />
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { useFileStore } from '@/features/file/useFileStore'
 import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
 import JobRunInput from '@/features/jobrun/components/jobrun/JobRunInput.vue'
-import { watch, computed, onBeforeMount, onMounted, defineComponent } from '@vue/composition-api'
+import { watch, computed, onBeforeMount, onMounted } from '@vue/composition-api'
 
-export default defineComponent({
-  components: { JobRunInput },
+const fileStore = useFileStore()
+const jobRunStore = useJobRunStore()
 
-  setup(_, context) {
-    const { jobRunId } = context.root.$route.params
+const jobRunShortId = computed(() => jobRunStore.state.jobRun.value.short_uuid)
+const payloadUuid = computed(() => jobRunStore.state.jobRun.value.payload.short_uuid)
 
-    const jobRunStore = useJobRunStore()
-    const jobRunShortId = computed(() => jobRunStore.state.jobRun.value.short_uuid)
-    const payloadUuid = computed(() => jobRunStore.state.jobRun.value.payload.short_uuid)
-
-    const stopLoading = async () => await jobRunStore.actions.setLoading({ name: 'payLoadLoading', value: false })
-
-    const handleViewPayload = async (jobRunShortId, payloadUuid) => {
-      await jobRunStore.actions.setLoading({ name: 'payLoadLoading', value: true })
-
-      if (payloadUuid) {
-        await jobRunStore.actions.getJobRunPayload({ jobRunShortId, payloadUuid })
-        await stopLoading()
-      }
-    }
-
-    watch(jobRunShortId, jobRunShortId => {
-      if (!payloadUuid.value && jobRunShortId) {
-        stopLoading()
-      }
+const handleViewPayload = async (jobRunShortId, payloadUuid) => {
+  if (payloadUuid) {
+    await fileStore.getFilePreview({
+      extension: 'json',
+      serviceName: 'jobrun',
+      serviceAction: 'getJobRunPayload',
+      uuid: { jobRunShortId, payloadUuid },
+      size: jobRunStore.state.jobRun.value.payload.size
     })
+  }
+}
 
-    watch(payloadUuid, (payloadUuid, previusPayloadUuid) => {
-      if (!jobRunStore.state.jobRunPayload.value || previusPayloadUuid !== payloadUuid) {
-        handleViewPayload(jobRunShortId.value, payloadUuid)
-      }
-    })
+watch(jobRunShortId, jobRunShortId => {
+  if (!payloadUuid.value && jobRunShortId) {
+    fileStore.loading = false
+  }
+})
 
-    onBeforeMount(() => {
-      if (jobRunShortId.value !== jobRunId || !jobRunStore.state.jobRunPayload.value) {
-        handleViewPayload(jobRunShortId.value, payloadUuid.value)
-      }
-    })
+watch(payloadUuid, (payloadUuid, previusPayloadUuid) => {
+  if (fileStore.isFileEmpty || previusPayloadUuid !== payloadUuid) {
+    handleViewPayload(jobRunShortId.value, payloadUuid)
+  }
+})
 
-    onMounted(() => {
-      if (!payloadUuid.value && jobRunShortId.value) {
-        stopLoading()
-      }
-    })
+onBeforeMount(() => {
+  fileStore.$reset()
+
+  handleViewPayload(jobRunShortId.value, payloadUuid.value)
+})
+
+onMounted(() => {
+  if (!payloadUuid.value && jobRunShortId.value) {
+    fileStore.loading = false
   }
 })
 </script>

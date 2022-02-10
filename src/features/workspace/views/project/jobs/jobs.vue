@@ -11,6 +11,7 @@
 </template>
 
 <script lang="ts">
+import { useFileStore } from '@/features/file/useFileStore'
 import JobsList from '@/features/jobs/components/JobsList.vue'
 import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
 import useProjectStore from '@/features/project/composition/useProjectStore'
@@ -24,11 +25,14 @@ export default defineComponent({
   },
 
   setup(_, context) {
+    const fileStore = useFileStore()
     const jobRunStore = useJobRunStore()
     const projectStore = useProjectStore()
+
     const { projectId } = context.root.$route.params
 
     const fetchData = async () => {
+      fileStore.$reset()
       await jobRunStore.actions.resetStore()
       await projectStore.resetProjectJobs()
       await projectStore.getProjectJobs(projectId)

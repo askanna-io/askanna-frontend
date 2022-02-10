@@ -98,26 +98,6 @@ export const actions: ActionTree<jobRunState, RootState> = {
     return isUpdated
   },
 
-  async [type.action.getJobRunPayload]({ commit }, uuid) {
-    commit(type.mutation.SET_LOADING, { name: stateType.payLoadLoading, value: true })
-
-    let jobRunPayload
-    try {
-      jobRunPayload = await apiService({
-        action: api.getJobRunPayload,
-        serviceName,
-        uuid
-      })
-    } catch (e) {
-      logger.error(commit, 'Error on jobRunPayload job  in getJobRunPayload action.\nError: ', e)
-      commit(type.mutation.SET_LOADING, { name: stateType.payLoadLoading, value: false })
-
-      return
-    }
-    commit(type.SET_JOB_RUN_PAYLOAD, jobRunPayload)
-    commit(type.mutation.SET_LOADING, { name: stateType.payLoadLoading, value: false })
-  },
-
   async [type.action.setLoading]({ commit }, data) {
     commit(type.mutation.SET_LOADING, data)
   },

@@ -57,9 +57,7 @@
         </v-btn>
       </v-flex>
 
-      <v-alert v-if="isFileEmpty" class="ma-4 text-center" dense outlined>
-        There is no result available for this run.
-      </v-alert>
+      <v-alert v-if="isFileEmpty" class="ma-4 text-center" dense outlined>{{ textNoData }}.</v-alert>
     </div>
   </ask-anna-loading-progress>
 </template>
@@ -109,6 +107,10 @@ defineProps({
   isFileBigForRawView: {
     type: Boolean,
     default: false
+  },
+  textNoData: {
+    type: String,
+    default: () => 'There is no result available for this run'
   }
 })
 

@@ -75,7 +75,7 @@ const handleAllow = () => {
 }
 
 const removeIframe = () => {
-  while (iframeRef.value.firstChild) {
+  while (iframeRef.value && iframeRef.value.firstChild) {
     iframeRef.value.removeChild(iframeRef.value.firstChild)
   }
 }
@@ -96,8 +96,7 @@ const initIframe = () => {
       iframeEl.contentWindow.onscroll = e => handleOnScroll(e)
     }
   }
-
-  iframeRef.value.appendChild(iframeEl)
+  iframeRef.value && iframeRef.value.appendChild(iframeEl)
 }
 
 watch([iframeRef, source], async iframeRef => {

@@ -4,9 +4,7 @@ export interface jobRubData {
   runs: { count: number; results: JobRun[]; next: null | string }
   openJobRunResult: boolean
   jobRun: JobRun
-  jobRunPayload: string | null | undefined
   jobRunLoading: boolean
-  payLoadLoading: boolean
   jobRunsLoading: boolean
   jobRunlogLoading: boolean
   jobRunArtifactLoading: boolean
@@ -107,7 +105,6 @@ export const action = {
   downloadPackage: 'downloadPackage',
   getTargetPackage: 'getTargetPackage',
   getInitJobRunLog: 'getInitJobRunLog',
-  getJobRunPayload: 'getJobRunPayload',
   showJobRunResult: 'showJobRunResult',
   closeResultModal: 'closeResultModal',
   getJobRunArtifact: 'getJobRunArtifact',
@@ -130,7 +127,6 @@ export const SET_JOB_RUNS = 'SET_JOB_RUNS'
 export const SET_JOB_RUN_LOG = 'SET_JOB_RUN_LOG'
 export const UPDATE_JOB_RESULT = 'UPDATE_JOB_RESULT'
 export const SET_JOB_RUN_RESULT = 'SET_JOB_RUN_RESULT'
-export const SET_JOB_RUN_PAYLOAD = 'SET_JOB_RUN_PAYLOAD'
 export const SET_JOB_RUN_ARTIFACT = 'SET_JOB_RUN_ARTIFACT'
 export const SET_JOB_RUN_RESULT_PREVIEW = 'SET_JOB_RUN_RESULT_PREVIEW'
 export const SET_JOB_RUN_LOG_FULL_VERSION = 'SET_JOB_RUN_LOG_FULL_VERSION'
@@ -144,7 +140,6 @@ export const stateType = {
   jobRunPayload: 'jobRunPayload',
   jobRunLoading: 'jobRunLoading',
   jobRunsLoading: 'jobRunsLoading',
-  payLoadLoading: 'payLoadLoading',
   jobRunlogLoading: 'jobRunlogLoading',
   jobRunLogFullVersion: 'jobRunLogFullVersion',
   jobRunArtifactLoading: 'jobRunArtifactLoading',

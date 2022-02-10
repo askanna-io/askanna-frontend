@@ -3,6 +3,7 @@
 </template>
 
 <script lang="ts">
+import { useFileStore } from '@/features/file/useFileStore'
 import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
 import JobRunResult from '@/features/jobrun/components/jobrun/JobRunResult.vue'
 import { computed, defineComponent, onBeforeMount } from '@vue/composition-api'
@@ -11,10 +12,14 @@ export default defineComponent({
   components: { JobRunResult },
 
   setup(_, context) {
+    const fileStore = useFileStore()
     const jobRunStore = useJobRunStore()
+
     const jobRun = computed(() => jobRunStore.state.jobRun.value)
 
     const fetchData = async () => {
+      fileStore.$reset()
+
       const { jobRunId } = context.root.$route.params
 
       if (jobRunStore.state.jobRun.value.short_uuid !== jobRunId) {
