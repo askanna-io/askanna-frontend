@@ -57,7 +57,7 @@ const jobRun = [
         }
       },
       {
-        path: 'input',
+        path: 'input/:view?',
         component: () =>
           import(
             /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-input" */ './views/project/jobs/job/jobruns/jobrun/input.vue'

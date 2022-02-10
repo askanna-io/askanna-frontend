@@ -28,10 +28,6 @@ export const mutations: MutationTree<jobRunState> = {
     state.openJobRunResult = true
   },
 
-  [type.SET_JOB_RUN_PAYLOAD](state, data) {
-    state.jobRunPayload = data
-  },
-
   [type.mutation.UPDATE_JOB_RUN_STORE](state) {
     state.runs = {
       count: 0,
@@ -39,8 +35,6 @@ export const mutations: MutationTree<jobRunState> = {
       results: []
     }
     state.jobRunLoading = true
-    state.payLoadLoading = true
-    state.jobRunPayload = undefined
 
     state.jobRun = new JobRunModel().state
 

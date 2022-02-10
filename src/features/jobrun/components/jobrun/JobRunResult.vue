@@ -79,7 +79,7 @@
           :fileExtension="fileStore.fileExtension"
           :loadingFullData="fileStore.loadingFullData"
           :isShowFilePreview="fileStore.isShowFilePreview"
-          :fileSource="fileStore.filePreviewByView(currentView)"
+          :fileSource="fileStore.filePreviewByView(currentView.value)"
           :isFileBigForRawView="fileStore.isFileBigForRawView"
           @onDownload="handleDownload"
         />

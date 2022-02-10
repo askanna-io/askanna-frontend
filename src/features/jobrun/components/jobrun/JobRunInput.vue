@@ -1,96 +1,139 @@
 <template>
   <div>
-    <v-toolbar v-if="!isJobRunPayloadEmpty" dense flat color="grey lighten-4">
+    <v-toolbar v-if="!fileStore.isFileEmpty" dense flat color="grey lighten-4">
       <v-flex class="d-flex">
         <div class="mr-auto d-flex align-center" :class="{ 'pr-1': $vuetify.breakpoint.xsOnly }">Payload</div>
         <div class="d-flex">
-          <v-tooltip v-if="!$vuetify.breakpoint.xsOnly" top content-class="opacity-1">
-            <template v-slot:activator="{ on }">
-              <v-btn
-                small
-                :disabled="loading || isJobRunPayloadEmpty"
-                outlined
-                v-on="on"
-                color="secondary"
-                class="mr-1 btn--hover"
-                @click="handleDownload('raw')"
-              >
-                <v-icon color="secondary" left>mdi-download</v-icon>Raw
-              </v-btn>
-            </template>
-            <span>Download raw</span>
-          </v-tooltip>
+          {{ fileStore.isFileBig }}
+          <v-btn
+            v-if="!$vuetify.breakpoint.xsOnly"
+            small
+            :disabled="fileStore.loading || fileStore.isFileEmpty"
+            outlined
+            color="secondary"
+            class="mr-1 btn--hover"
+            @click="handleDownload()"
+          >
+            <v-icon color="secondary" left>mdi-download</v-icon>Download file
+          </v-btn>
 
-          <v-tooltip v-if="!$vuetify.breakpoint.xsOnly" top content-class="opacity-1">
-            <template v-slot:activator="{ on }">
-              <v-btn
-                v-on="on"
-                :disabled="loading || isJobRunPayloadEmpty"
-                small
-                outlined
-                color="secondary"
-                class="mr-1 btn--hover"
-                @click="handleDownload('formated')"
-              >
-                <v-icon color="secondary" left>mdi-download</v-icon>Formated
-              </v-btn>
-            </template>
-            <span>Download formated</span>
-          </v-tooltip>
+          <v-btn
+            small
+            :disabled="fileStore.loading || fileStore.isFileEmpty"
+            outlined
+            color="secondary"
+            @click="handleCopy()"
+            class="mr-1 btn--hover"
+          >
+            <v-icon left color="secondary">mdi-content-copy</v-icon>Copy
+          </v-btn>
 
-          <v-tooltip top content-class="opacity-1">
-            <template v-slot:activator="{ on }">
-              <v-btn
-                v-on="on"
-                small
-                :disabled="loading || isJobRunPayloadEmpty"
-                outlined
-                color="secondary"
-                @click="handleCopy()"
-                class="mr-1 btn--hover"
+          <div v-if="fileStore.isValidJSON || fileStore.isFileHTML">
+            <v-card class="ml-4" flat width="115" color="grey lighten-4">
+              <v-select
+                dense
+                hide-details
+                return-object
+                :items="views"
+                persistent-hint
+                item-text="name"
+                item-value="value"
+                v-model="viewModel"
+                :menu-props="{ bottom: true, offsetY: true }"
               >
-                <v-icon left color="secondary">mdi-content-copy</v-icon>Copy
-              </v-btn>
-            </template>
-            <span>Copy</span>
-          </v-tooltip>
+                <template v-slot:selection="{ item }">View: {{ item.name }} </template>
+              </v-select>
+            </v-card>
+          </div>
         </div>
       </v-flex>
     </v-toolbar>
     <v-flex>
-      <ask-anna-loading-progress classes="mx-4 mb-4" :type="'table-row'" :loading="loading" fullWidth>
-        <job-run-pay-load v-if="!isJobRunPayloadEmpty" :file="jobRunPayloadComputed" />
-        <v-alert v-if="isJobRunPayloadEmpty" class="ma-4 text-center" dense outlined>
-          There is no input available for this run.
-        </v-alert>
+      <ask-anna-loading-progress classes="mx-4 mb-4" :type="'table-row'" :loading="fileStore.loading" fullWidth>
+        <PreviewFile
+          :maxHeight="`${maxHeight}px`"
+          :fileBlob="fileStore.fileBlob"
+          :isFileBig="fileStore.isFileBig"
+          :currentView="currentView.value"
+          :isFileEmpty="fileStore.isFileEmpty"
+          :fileExtension="fileStore.fileExtension"
+          :loadingFullData="fileStore.loadingFullData"
+          :isShowFilePreview="fileStore.isShowFilePreview"
+          :isFileBigForRawView="fileStore.isFileBigForRawView"
+          :fileSource="fileStore.filePreviewByView(currentView.value)"
+          textNoData="There is no input available for this run."
+          @onDownload="handleDownload()"
+        />
       </ask-anna-loading-progress>
     </v-flex>
   </div>
 </template>
 <script setup lang="ts">
-import { computed } from '@vue/composition-api'
-import JobRunPayLoad from './JobRunPayLoad.vue'
+import { useWindowSize } from '@u3u/vue-hooks'
 import useCopy from '@/core/composition/useCopy'
+import { useFileStore } from '@/features/file/useFileStore'
 import useJobRunStore from '../../composition/useJobRunStore'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
+import { ref, computed, onBeforeMount } from '@vue/composition-api'
+import PreviewFile from '@/features/file/components/PreviewFile.vue'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
 import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 
 const copy = useCopy()
+const fileStore = useFileStore()
+const router = useRouterAskAnna()
+const { height } = useWindowSize()
 const jobRunStore = useJobRunStore()
 const forceFileDownload = useForceFileDownload()
 
-const loading = computed(() => jobRunStore.state.payLoadLoading.value)
-const jobRunPayload = computed(() => jobRunStore.state.jobRunPayload.value)
-const jobRunPayloadComputed = computed(() => JSON.stringify(jobRunStore.state.jobRunPayload.value, null, 2))
-const isJobRunPayloadEmpty = computed(() => !jobRunPayload.value && !loading.value)
+const views = [
+  { name: 'Pretty', value: 'pretty' },
+  { name: 'Raw', value: 'raw' }
+]
+const { view } = router.route.value.params
 
-const handleDownload = async formatType => {
+const currentView = ref(views[0])
+
+const viewModel = computed({
+  get: () => currentView.value,
+  set: view => {
+    if (view.value === currentView.value.value) return
+    currentView.value = view
+    router.push({ name: 'workspace-project-jobs-job-jobrun-input', params: { view: view.value } })
+  }
+})
+
+const maxHeight = computed(() => height.value - 150)
+const jobRunShortId = computed(() => jobRunStore.state.jobRun.value.short_uuid)
+const payloadUuid = computed(() => jobRunStore.state.jobRun.value.payload.short_uuid)
+
+const handleDownload = async () => {
   const { short_uuid } = jobRunStore.state.jobRun.value
-  const formatOption = formatType === 'raw' ? null : 2
-  const jrPayload = JSON.stringify(jobRunPayload.value, null, formatOption)
 
-  forceFileDownload.trigger({ source: jrPayload, name: `run_${short_uuid}_payload.json` })
+  await fileStore.getFullFile({
+    serviceName: 'jobrun',
+    serviceAction: 'getJobRunPayload',
+    uuid: { jobRunShortId: jobRunShortId.value, payloadUuid: payloadUuid.value }
+  })
+
+  forceFileDownload.trigger({ source: fileStore.filePreviewByView('raw'), name: `run_${short_uuid}_payload.json` })
 }
 
-const handleCopy = () => copy.handleCopyText(jobRunPayloadComputed.value)
+const handleCopy = async () => {
+  await fileStore.getFullFile({
+    serviceName: 'jobrun',
+    serviceAction: 'getJobRunPayload',
+    uuid: { jobRunShortId: jobRunShortId.value, payloadUuid: payloadUuid.value }
+  })
+
+  copy.handleCopyText(fileStore.fileSourceForCopy(currentView.value.value))
+}
+
+const fetchData = async () => {
+  if (view) {
+    currentView.value = views.find(el => el.value === view) || views[0]
+  }
+}
+
+onBeforeMount(() => fetchData())
 </script>
