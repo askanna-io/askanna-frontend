@@ -231,7 +231,7 @@ const handleDownloadFile = async () => {
   })
 }
 
-const handleCopy = async () => {
+const handleCopy = async (view: string) => {
   const fileSource = await fileStore.getFullFile({
     url: `${packageStore.state.packageData.value.cdn_base_url}/${currentPath.value.path}`
   })
@@ -242,7 +242,7 @@ const handleCopy = async () => {
     return
   }
 
-  copy.handleCopyText(fileStore.fileSourceForCopy('pretty'))
+  copy.handleCopyText(fileStore.fileSourceForCopy(view))
 }
 
 watch(filePath, async filePath => {
