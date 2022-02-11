@@ -32,12 +32,28 @@
         >
           <v-icon color="secondary" left>mdi-content-copy</v-icon>Copy
         </v-btn>
+        <div v-if="fileStore.isValidJSON || fileStore.isFileHTML">
+          <v-card class="ml-4" flat width="115">
+            <v-select
+              dense
+              hide-details
+              return-object
+              :items="views"
+              persistent-hint
+              item-text="name"
+              item-value="value"
+              v-model="viewModel"
+              :menu-props="{ bottom: true, offsetY: true }"
+            >
+              <template v-slot:selection="{ item }">View: {{ item.name }} </template>
+            </v-select>
+          </v-card>
+        </div>
       </v-toolbar>
       <PreviewFile
         v-if="!fileStore.isFileEmpty"
         :fileBlob="file"
         :loading="loading"
-        :fileSource="fileSource"
         :maxHeight="`${maxHeight}px`"
         :isFileBig="fileStore.isFileBig"
         :currentView="currentView.value"
@@ -46,6 +62,7 @@
         :loadingFullData="fileStore.loadingFullData"
         :isShowFilePreview="fileStore.isShowFilePreview"
         :isFileBigForRawView="fileStore.isFileBigForRawView"
+        :fileSource="fileStore.filePreviewByView(currentView.value)"
         @onDownload="handleDownload"
       />
       <v-alert v-else class="ma-4 text-center" dense outlined>This file is empty.</v-alert>
@@ -54,11 +71,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from '@vue/composition-api'
-import { useRouter, useWindowSize } from '@u3u/vue-hooks'
+import { useWindowSize } from '@u3u/vue-hooks'
+import { ref, computed } from '@vue/composition-api'
 import { useFileStore } from '@/features/file/useFileStore'
 import { useMobileStore } from '@/core/store/useMobileStore'
 import useSizeHumanize from '@/core/composition/useSizeHumanize'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import PreviewFile from '@/features/file/components/PreviewFile.vue'
 
 defineProps({
@@ -95,13 +113,26 @@ defineProps({
 
 const emit = defineEmits(['onCopy', 'onDownload'])
 
-const { router } = useRouter()
+const router = useRouterAskAnna()
 const fileStore = useFileStore()
 const { height } = useWindowSize()
 const humanize = useSizeHumanize()
 const mobileStore = useMobileStore()
 
-const currentView = { value: 'pretty' }
+const views = [
+  { name: 'Pretty', value: 'pretty' },
+  { name: 'Raw', value: 'raw' }
+]
+
+const currentView = ref(views[0])
+
+const viewModel = computed({
+  get: () => currentView.value,
+  set: view => {
+    if (view.value === currentView.value.value) return
+    currentView.value = view
+  }
+})
 
 const stickyParams = computed(() =>
   mobileStore.isMenuOpen && mobileStore.isMenuSticked ? '{top: 252, bottom: 10}' : '{top: 52, bottom: 10}'
@@ -109,9 +140,9 @@ const stickyParams = computed(() =>
 
 const maxHeight = computed(() => height.value - 120)
 
-const handleBack = () => router.back()
+const handleBack = () => router.router.back()
 
-const handleCopy = () => emit('onCopy')
+const handleCopy = () => emit('onCopy', currentView.value.value)
 
 const handleDownload = () => emit('onDownload')
 </script>
