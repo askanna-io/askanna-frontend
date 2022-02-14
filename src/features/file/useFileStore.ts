@@ -104,7 +104,7 @@ export const useFileStore = defineStore('file', {
       this.fileExtension = extension
       this.isFileJSON = extension === 'json'
       const isFileHTML = extension === 'html'
-      const maxLength = isFileHTML ? 5242880 : 10000
+      const maxLength = ext.bigPreview.includes(extension) ? 5242880 : 10000
       const isFileImg = allowedImageExts.includes(extension)
 
       let isFileBig = Number(size) >= maxLength

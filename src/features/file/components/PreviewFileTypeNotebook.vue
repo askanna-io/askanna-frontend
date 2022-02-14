@@ -13,31 +13,17 @@ import { computed } from '@vue/composition-api'
 
 const props = defineProps({
   fileSource: {
-    type: Blob,
+    type: [Blob, String, Object],
     default: () => ''
-  },
-  breadcrumbs: {
-    type: Array,
-    default: () => []
-  },
-  currentPath: {
-    type: Object,
-    default: () => {}
-  },
-  sticked: {
-    type: Boolean,
-    default: true
   }
 })
 
 const nb = Nb()
 
 const notebookHtml = computed(() => {
-  if (!props.file) return
+  if (!props.fileSource) return
 
-  // @TODO check if works without async
-  const fileSource = props.fileSource.text()
-  const notebook = nb.parse(JSON.parse(fileSource))
+  const notebook = nb.parse(props.fileSource)
   const rendered = notebook.render()
 
   return rendered.outerHTML

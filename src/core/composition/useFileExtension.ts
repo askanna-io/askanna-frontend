@@ -1,5 +1,6 @@
 export default () => {
   const extenstions = {
+    bigPreview: ['html', 'ipynb'],
     images: ['jpg', 'png', 'gif', 'jpeg'],
     noPreview: ['xls', 'pdf', 'xlsx', 'pkl', 'parquet'],
     code: ['xml', 'csv', 'tsv', 'plain', 'json', 'md', 'py', 'txt', 'yml', 'ini', 'toml', 'markdown']
