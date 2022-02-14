@@ -81,7 +81,7 @@ import PreviewFile from '@/features/file/components/PreviewFile.vue'
 
 defineProps({
   file: Blob,
-  fileSource: String,
+  fileSource: [String, Object, Blob],
   breadcrumbs: {
     type: Array,
     default: () => []

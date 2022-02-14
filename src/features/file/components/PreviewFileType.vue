@@ -19,7 +19,7 @@ const props = defineProps({
     type: Blob
   },
   fileSource: {
-    type: String,
+    type: [String, Object, Blob],
     default: () => ''
   },
   fileExtension: {
