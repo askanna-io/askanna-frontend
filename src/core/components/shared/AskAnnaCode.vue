@@ -8,12 +8,12 @@
         <fieldset aria-hidden="true">
           <legend :style="{ width: titleWidth }"><span>&#8203;</span></legend>
         </fieldset>
-        <div class="v-text-field__slot">
+        <div class="v-text-field__slot pt-2">
           <label
             for="input-174"
-            :class="{ 'primary--text': isFocused, 'error--text': jsonerror }"
             class="v-label theme--light v-label--active"
             style="left: 0px; right: auto; position: absolute"
+            :class="{ 'primary--text': isFocused, 'error--text': jsonerror }"
             >{{ title }}</label
           >
           <textarea
@@ -49,108 +49,93 @@
   </div>
 </template>
 
-<script>
-import TheHighlight from '@/core/components/highlight/TheHighlight'
-import { ref, computed, defineComponent } from '@vue/composition-api'
+<script ref setup lang="ts">
+import { ref, computed } from '@vue/composition-api'
 
-export default defineComponent({
-  name: 'AskAnnaCode',
-
-  props: {
-    title: {
-      type: String,
-      default: () => ''
-    },
-    code: {
-      type: String,
-      default: ''
-    },
-    titleWidth: {
-      type: String,
-      default: '40px'
-    }
+const props = defineProps({
+  title: {
+    type: String,
+    default: () => ''
   },
-  components: {
-    TheHighlight
+  code: {
+    type: String,
+    default: ''
   },
-
-  setup(props, context) {
-    const jsonerror = ref('')
-    const textArea = ref(null)
-    const isFocused = ref(false)
-    const isJsonValid = ref(true)
-
-    const value = computed({
-      get: () => props.code,
-      set: val => context.emit('onInput', val)
-    })
-
-    const validateJson = val => {
-      if (!val) {
-        isJsonValid.value = true
-        jsonerror.value = ''
-        context.emit('validete', jsonerror.value)
-
-        return
-      }
-      let jsonValue = null
-
-      try {
-        jsonValue = JSON.parse(val)
-        isJsonValid.value = true
-        jsonerror.value = ''
-      } catch (e) {
-        isJsonValid.value = false
-        jsonerror.value = JSON.stringify(e.message)
-        if (jsonerror.value.indexOf('position') > -1) {
-          // highlight error position
-          const textarea = textArea.value
-          textarea.focus()
-          const positionStr = jsonerror.value.lastIndexOf('position') + 8
-          const posi = parseInt(jsonerror.value.substr(positionStr, jsonerror.value.lastIndexOf('"')))
-          if (posi >= 0) {
-            textarea.setSelectionRange(posi, posi + 1)
-          }
-        }
-      }
-      context.emit('validete', jsonerror.value)
-    }
-
-    const handleOnBlur = () => {
-      isFocused.value = false
-      validateJson(value.value)
-    }
-
-    const handleOnFocus = () => (isFocused.value = true)
-
-    const handleClear = () => {
-      jsonerror.value = ''
-      isJsonValid.value = true
-      context.emit('onInput', '')
-      context.emit('validete', jsonerror.value)
-    }
-
-    const sanitise = text => text.slice(1, -1)
-
-    return {
-      value,
-      sanitise,
-      jsonerror,
-      textArea,
-      isFocused,
-      isJsonValid,
-      handleClear,
-      handleOnBlur,
-      handleOnFocus
-    }
+  titleWidth: {
+    type: String,
+    default: '40px'
   }
 })
+
+const emit = defineEmits(['onInput', 'validete'])
+
+const jsonerror = ref('')
+const textArea = ref(null)
+const isFocused = ref(false)
+const isJsonValid = ref(true)
+
+const value = computed({
+  get: () => props.code,
+  set: val => emit('onInput', val)
+})
+
+const validateJson = (val: string) => {
+  if (!val) {
+    isJsonValid.value = true
+    jsonerror.value = ''
+
+    emit('validete', isJsonValid.value)
+
+    return
+  }
+
+  let jsonValue = null
+
+  try {
+    jsonValue = JSON.parse(val)
+    jsonerror.value = ''
+    isJsonValid.value = true
+  } catch (e) {
+    isJsonValid.value = false
+    jsonerror.value = JSON.stringify(e.message)
+    if (jsonerror.value.indexOf('position') > -1) {
+      // highlight error position
+      const textarea = textArea.value
+      textarea.focus()
+      const positionStr = jsonerror.value.lastIndexOf('position') + 8
+      const posi = parseInt(jsonerror.value.substr(positionStr, jsonerror.value.lastIndexOf('"')))
+      if (posi >= 0) {
+        textarea.setSelectionRange(posi, posi + 1)
+      }
+    }
+  }
+
+  emit('validete', isJsonValid.value)
+}
+
+const handleOnBlur = () => {
+  isFocused.value = false
+  validateJson(value.value)
+}
+
+const handleOnFocus = () => (isFocused.value = true)
+
+const handleClear = () => {
+  jsonerror.value = ''
+  isJsonValid.value = true
+
+  emit('onInput', '')
+  emit('validete', isJsonValid.value)
+}
+
+const sanitise = (text: string) => text.slice(1, -1)
 </script>
 <style scoped>
 textarea {
+  width: 100%;
   resize: none;
-  background-color: transparent;
   border-style: none;
   border-top-style: none;
+  background-color: transparent;
 }
 </style>
