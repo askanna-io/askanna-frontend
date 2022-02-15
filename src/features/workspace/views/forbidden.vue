@@ -12,27 +12,15 @@
   </AskAnnaForbiddenPage>
 </template>
 
-<script>
-import { computed, defineComponent } from '@vue/composition-api'
-import AskAnnaForbiddenPage from '@/core/components/shared/AskAnnaForbiddenPage'
+<script setup lang="ts">
+import { computed } from '@vue/composition-api'
+import AskAnnaForbiddenPage from '@/core/components/shared/AskAnnaForbiddenPage.vue'
 
-export default defineComponent({
-  name: 'workspace-does-not-exist',
-
-  components: { AskAnnaForbiddenPage },
-
-  setup() {
-    const breadcrumbs = computed(() => [
-      {
-        title: 'Forbidden 403',
-        to: '',
-        disabled: true
-      }
-    ])
-
-    return {
-      breadcrumbs
-    }
+const breadcrumbs = computed(() => [
+  {
+    title: 'Forbidden 403',
+    to: '',
+    disabled: true
   }
-})
+])
 </script>
