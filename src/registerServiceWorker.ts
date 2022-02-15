@@ -8,14 +8,18 @@ if (process.env.NODE_ENV === 'production') {
           const newSW = reg.installing
 
           if (!newSW) return
+
           newSW.onstatechange = function () {
-            if (newSW.state) {
-              document.dispatchEvent(new CustomEvent('swUpdated', { detail: newSW }))
+            if (newSW.state === 'installed') {
+              if (reg.active) {
+                document.dispatchEvent(new CustomEvent('swUpdated', { detail: newSW }))
+              }
             }
           }
         }
       })
     })
+
     // refrech all open tabs
     var refreshing: boolean
 
