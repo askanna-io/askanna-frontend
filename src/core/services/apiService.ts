@@ -19,11 +19,11 @@ interface ServiceParams {
 const apiService = async ({
   url = '',
   uuid = '',
-  data = null,
   headers = {},
-  params = null,
   method = 'get',
   action = 'get',
+  data = undefined,
+  params = undefined,
   transformResponse,
   responseType = 'json',
   serviceName = 'workspace',

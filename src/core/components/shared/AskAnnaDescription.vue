@@ -463,6 +463,10 @@ const props = defineProps({
   height: {
     type: Number,
     default: 500
+  },
+  isClearContent: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -593,6 +597,10 @@ watch(descriptionComputed, val => {
 
   if (editable.value) {
     currentDescriptionValue.value = editor.getHTML()
+  }
+
+  if (!val && props.isClearContent) {
+    editor.commands.clearContent()
   }
 })
 

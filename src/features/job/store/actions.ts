@@ -49,10 +49,10 @@ export const actions: ActionTree<jobState, RootState> = {
         headers: {
           'Content-Type': 'application/json'
         },
-        serviceName,
-        uuid: state.job.short_uuid,
+        params,
         data: code,
-        params
+        serviceName,
+        uuid: state.job.short_uuid
       })
     } catch (e) {
       logger.error(commit, 'Error on start job  in startJob action.\nError: ', e)

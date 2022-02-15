@@ -4,7 +4,6 @@
       <v-flex class="d-flex">
         <div class="mr-auto d-flex align-center" :class="{ 'pr-1': $vuetify.breakpoint.xsOnly }">Payload</div>
         <div class="d-flex">
-          {{ fileStore.isFileBig }}
           <v-btn
             v-if="!$vuetify.breakpoint.xsOnly"
             small

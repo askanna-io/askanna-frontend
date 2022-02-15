@@ -19,8 +19,11 @@
         <AskAnnaDescription
           cleared
           outlined
+          ref="Editor"
           hide-details
+          isClearContent
           :headerHeight="440"
+          :description="run.description"
           :title="'Run description (optional)'"
           @onChangeDescription="handleOnInput($event, 'description')"
         />
@@ -99,18 +102,32 @@ const startedTtext = computed(() =>
 const handleOnInput = (value, path) => set(run.value, path, value)
 
 const handleRunJob = async () => {
-  if (run.value.code && isValid.value) return
+  const isCodeEmpty = run.value.code === ''
+
+  if (!isCodeEmpty && !isValid.value) return
+
+  run.value.code = isCodeEmpty ? undefined : run.value.code
 
   runName.value = run.value.name ? ` "${run.value.name}"` : ''
 
   await jobStore.startJob({ ...run.value })
+
+  clearInterval(timer.value)
+  clearInterval(polling.value)
   checkStatus()
+
   timer.value = setInterval(async () => {
     startTime.value = new Date().getTime()
   }, 1000)
+
+  run.value = {
+    code: '',
+    name: '',
+    description: ''
+  }
 }
 
-const handleValidate = async error => (isValid.value = error)
+const handleValidate = async (value: boolean) => (isValid.value = value)
 
 const hadnleOpenJobRun = () => {
   router.push({

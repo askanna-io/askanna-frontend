@@ -65,7 +65,7 @@
           <ask-anna-loading-dots-flashing v-if="isLoadingLogs" />
         </div>
 
-        <v-alert v-else class="ma-4 text-center" dense outlined> There is no log available for this run. </v-alert>
+        <v-alert v-else class="ma-4 text-center" dense outlined>There is no log available for this run. </v-alert>
       </ask-anna-loading-progress>
     </v-flex>
   </div>
@@ -169,12 +169,14 @@ const handleDownload = async () => {
 
 const onScroll = e => {
   if (!isFinished.value) return
+
   scrollLoading.value = true
   query.onScroll(e.target.scrollTop)
 }
 
 const getFullJobRun = async () => {
   if (fullLog.value && isFinished.value) return
+
   await jobRunStore.actions.getFullVersionJobRunLog(jobRunId.value)
 }
 
@@ -212,6 +214,8 @@ watchEffect(() => {
   // disable load animation logic
   if (isFinished.value && countLogs.value === jobRunStore.state.jobRunLog.value.results.length) {
     scrollLoading.value = false
+    isAutoUpdateLog.value = false
+    isCheckStatusRuning.value = true
 
     return
   }
