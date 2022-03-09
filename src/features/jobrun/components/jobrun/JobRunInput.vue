@@ -3,6 +3,30 @@
     <v-toolbar v-if="!fileStore.isFileEmpty" dense flat color="grey lighten-4">
       <v-flex class="d-flex">
         <div class="mr-auto d-flex align-center" :class="{ 'pr-1': $vuetify.breakpoint.xsOnly }">Payload</div>
+
+        <v-btn-toggle
+          v-if="fileStore.isRenderedExt || fileStore.isValidJSON"
+          mandatory
+          class="mr-1"
+          :value="currentView.value"
+        >
+          <v-tooltip v-for="(view, index) in views" top :key="index">
+            <template v-slot:activator="{ on }">
+              <v-btn
+                v-on="on"
+                class="btn--hover"
+                :value="view.value"
+                small
+                outlined
+                color="secondary"
+                @click="handleChangeView(index)"
+              >
+                <v-icon color="secondary">{{ view.icon }}</v-icon>
+              </v-btn>
+            </template>
+            <span>{{ view.name }}</span>
+          </v-tooltip>
+        </v-btn-toggle>
         <div class="d-flex">
           <v-btn
             v-if="!$vuetify.breakpoint.xsOnly"
@@ -26,24 +50,6 @@
           >
             <v-icon left color="secondary">mdi-content-copy</v-icon>Copy
           </v-btn>
-
-          <div v-if="fileStore.isValidJSON || fileStore.isFileHTML">
-            <v-card class="ml-4" flat width="115" color="grey lighten-4">
-              <v-select
-                dense
-                hide-details
-                return-object
-                :items="views"
-                persistent-hint
-                item-text="name"
-                item-value="value"
-                v-model="viewModel"
-                :menu-props="{ bottom: true, offsetY: true }"
-              >
-                <template v-slot:selection="{ item }">View: {{ item.name }} </template>
-              </v-select>
-            </v-card>
-          </div>
         </div>
       </v-flex>
     </v-toolbar>
@@ -85,22 +91,14 @@ const { height } = useWindowSize()
 const jobRunStore = useJobRunStore()
 const forceFileDownload = useForceFileDownload()
 
-const views = [
-  { name: 'Pretty', value: 'pretty' },
-  { name: 'Raw', value: 'raw' }
-]
 const { view } = router.route.value.params
 
-const currentView = ref(views[0])
+const views = [
+  { name: 'Pretty', value: 'pretty', icon: 'mdi-file-outline' },
+  { name: 'Raw', value: 'raw', icon: 'mdi-xml' }
+]
 
-const viewModel = computed({
-  get: () => currentView.value,
-  set: view => {
-    if (view.value === currentView.value.value) return
-    currentView.value = view
-    router.push({ name: 'workspace-project-jobs-job-jobrun-input', params: { view: view.value } })
-  }
-})
+const currentView = ref(views[0])
 
 const maxHeight = computed(() => height.value - 150)
 const jobRunShortId = computed(() => jobRunStore.state.jobRun.value.short_uuid)
@@ -126,6 +124,11 @@ const handleCopy = async () => {
   })
 
   copy.handleCopyText(fileStore.fileSourceForCopy(currentView.value.value))
+}
+
+const handleChangeView = (currentViewIndex: number) => {
+  currentView.value = views[currentViewIndex]
+  router.push({ name: 'workspace-project-jobs-job-jobrun-input', params: { view: currentView.value.value } })
 }
 
 const fetchData = async () => {

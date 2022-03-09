@@ -9,6 +9,29 @@
           >
         </div>
         <div class="mr-auto d-flex align-center"></div>
+        <v-btn-toggle
+          v-if="fileStore.isRenderedExt || fileStore.isValidJSON"
+          mandatory
+          class="mr-1"
+          :value="currentView.value"
+        >
+          <v-tooltip v-for="(view, index) in views" top :key="index">
+            <template v-slot:activator="{ on }">
+              <v-btn
+                v-on="on"
+                class="btn--hover"
+                :value="view.value"
+                small
+                outlined
+                color="secondary"
+                @click="handleChangeView(index)"
+              >
+                <v-icon color="secondary">{{ view.icon }}</v-icon>
+              </v-btn>
+            </template>
+            <span>{{ view.name }}</span>
+          </v-tooltip>
+        </v-btn-toggle>
         <div>
           <v-btn
             v-if="!$vuetify.breakpoint.xsOnly"
@@ -35,29 +58,6 @@
           >
             <v-icon left color="secondary">mdi-content-copy</v-icon>Copy
           </v-btn>
-        </div>
-        <div>
-          <v-card
-            class="ml-4"
-            flat
-            width="115"
-            color="grey lighten-4"
-            v-if="fileStore.isValidJSON || fileStore.isFileHTML"
-          >
-            <v-select
-              dense
-              hide-details
-              return-object
-              :items="views"
-              persistent-hint
-              item-text="name"
-              item-value="value"
-              v-model="viewModel"
-              :menu-props="{ bottom: true, offsetY: true }"
-            >
-              <template v-slot:selection="{ item }">View: {{ item.name }} </template>
-            </v-select>
-          </v-card>
         </div>
       </v-flex>
     </v-toolbar>
@@ -116,22 +116,14 @@ const jobRunStore = useJobRunStore()
 const forceFileDownload = useForceFileDownload()
 
 const views = [
-  { name: 'Pretty', value: 'pretty' },
-  { name: 'Raw', value: 'raw' }
+  { name: 'Pretty', value: 'pretty', icon: 'mdi-file-outline' },
+  { name: 'Raw', value: 'raw', icon: 'mdi-xml' }
 ]
+
 const { view, jobRunId } = router.route.value.params
 
 const currentView = ref(views[0])
 const scrolllWrapperRef = ref(null)
-
-const viewModel = computed({
-  get: () => currentView.value,
-  set: view => {
-    if (view.value === currentView.value.value) return
-    currentView.value = view
-    router.push({ name: 'workspace-project-jobs-job-jobrun-result', params: { view: view.value } })
-  }
-})
 
 const runResult = computed(() => jobRunStore.state.jobRun.value.result)
 
@@ -186,6 +178,11 @@ const handleCopy = async () => {
   }
 
   copy.handleCopyText(fileStore.fileSourceForCopy(currentView.value.value))
+}
+
+const handleChangeView = (currentViewIndex: number) => {
+  currentView.value = views[currentViewIndex]
+  router.push({ name: 'workspace-project-jobs-job-jobrun-result', params: { view: currentView.value.value } })
 }
 
 onBeforeMount(() => fetchData())

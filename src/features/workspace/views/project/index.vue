@@ -1,49 +1,74 @@
 <template>
-  <v-card class="mx-auto" :outlined="!$vuetify.breakpoint.xsOnly" :flat="$vuetify.breakpoint.xsOnly" sticky-container>
-    <project-nav-bar
-      :job="job"
-      :project="project"
-      :routeName="routeName"
-      :sticked="menu.sticked"
-      :handleOnStick="handleOnStick"
-      :isShowProjectBar="menu.isShowProjectBar"
-      :handleShowProjectBar="handleShowProjectBar"
-      :projectBreadcrumbs="projectBreadcrumbs"
-    />
-    <router-view />
-  </v-card>
+  <div>
+    <v-card class="mx-auto" :outlined="!$vuetify.breakpoint.xsOnly" :flat="$vuetify.breakpoint.xsOnly" sticky-container>
+      <project-nav-bar
+        :job="jobStore.job"
+        :routeName="routeName"
+        :handleOnStick="handleOnStick"
+        :sticked="project.menu.sticked"
+        :project="project.project.value"
+        :projectBreadcrumbs="projectBreadcrumbs"
+        :handleShowProjectBar="handleShowProjectBar"
+        :isShowProjectBar="project.menu.isShowProjectBar"
+      />
+      <router-view />
+    </v-card>
+    <v-card v-if="isShowReadmeFile && readmeFile" class="mt-3" outlined>
+      <v-card-title flat dense color="white" class="pb-0">
+        {{ readmeFile.name | capitalize }}
+      </v-card-title>
+      <PreviewFileTypeMardown :fileSource="fileSource" :images="images" :cdnBaseUrl="cdnBaseUrl" />
+    </v-card>
+  </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { useRouter } from '@u3u/vue-hooks'
+import { ref, watch, computed } from '@vue/composition-api'
+import { useFileStore } from '@/features/file/useFileStore'
 import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
 import useJobStore from '@/features/job/composition/useJobStore'
-import { computed, defineComponent } from '@vue/composition-api'
 import useProject from '@/features/project/composition/useProject'
+import useFileExtension from '@/core/composition/useFileExtension'
+import usePackageStore from '@/features/package/composition/usePackageStore'
 import ProjectNavBar from '@/features/project/components/nav-bars/ProjectNavBar.vue'
+import PreviewFileTypeMardown from '@/features/file/components/PreviewFileTypeMardown.vue'
 
-export default defineComponent({
-  name: 'index',
+const project = useProject()
+const { route } = useRouter()
+const ext = useFileExtension()
+const jobStore = useJobStore()
+const fileStore = useFileStore()
+const packageStore = usePackageStore()
 
-  components: { ProjectNavBar },
+const fileSource = ref('')
 
-  setup(_, context) {
-    const jobStore = useJobStore()
-    const project = useProject(context)
+const routeName = computed(() => route.value.name)
+const isShowReadmeFile = computed(() => routeName.value === 'workspace-project-code')
+const jobEnd = computed(() => (route.value.name.indexOf('jobs-name') >= 1 ? 5 : 3))
+const end = computed(() => (route.value.name === 'workspace-project-job-overiew' ? 6 : jobEnd.value))
+const projectBreadcrumbs = useBreadcrumbs({ start: 0, end: end.value })
 
-    const routeName = computed(() => context.root.$route.name)
-    const jobEnd = computed(() => (context.root.$route.name.indexOf('jobs-name') >= 1 ? 5 : 3))
-    const end = computed(() => (context.root.$route.name === 'workspace-project-job-overiew' ? 6 : jobEnd.value))
-    const projectBreadcrumbs = useBreadcrumbs({ start: 0, end: end.value })
+const readmeFile = computed(() =>
+  packageStore.packageData.value.files.find(item => item.parent === '/' && item.name.toLowerCase() === 'readme.md')
+)
 
-    const handleShowProjectBar = () =>
-      project.setMenu({ name: 'menu.isShowProjectBar', value: !project.menu.value.isShowProjectBar })
+const images = computed(() => packageStore.packageData.value.files.filter(item => ext.images.includes(item.ext)))
+const cdnBaseUrl = computed(() => packageStore.packageData.value.cdn_base_url)
 
-    const handleOnStick = value => {
-      project.setMenu({ name: 'menu.isSticked', value })
-      if (!value) project.setMenu({ name: 'menu.sticked', value: false })
-    }
+const handleShowProjectBar = () =>
+  project.setMenu({ name: 'menu.isShowProjectBar', value: !project.menu.value.isShowProjectBar })
 
-    return { ...project, ...jobStore, routeName, handleOnStick, projectBreadcrumbs, handleShowProjectBar }
-  }
+const handleOnStick = value => {
+  project.setMenu({ name: 'menu.isSticked', value })
+  if (!value) project.setMenu({ name: 'menu.sticked', value: false })
+}
+
+watch(readmeFile, async readmeFile => {
+  if (!isShowReadmeFile.value || !readmeFile) return
+
+  fileSource.value = await fileStore.getFullFile({
+    url: `${packageStore.state.packageData.value.cdn_base_url}/${readmeFile.path}`
+  })
 })
 </script>

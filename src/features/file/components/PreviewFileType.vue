@@ -5,6 +5,7 @@
 import { computed } from '@vue/composition-api'
 import PreviewFileTypeHTML from './PreviewFileTypeHTML.vue'
 import PreviewFileTypeImage from './PreviewFileTypeImage.vue'
+import PreviewFileTypeMardown from './PreviewFileTypeMardown.vue'
 import useFileExtension from '@/core/composition/useFileExtension'
 import PreviewFileTypeNotebook from './PreviewFileTypeNotebook.vue'
 import PreviewFileTypeLanguage from './PreviewFileTypeLanguage.vue'
@@ -29,6 +30,14 @@ const props = defineProps({
   maxHeight: {
     type: String,
     default: () => '100vh'
+  },
+  images: {
+    type: Array,
+    default: () => []
+  },
+  cdnBaseUrl: {
+    type: String,
+    default: () => ''
   }
 })
 
@@ -52,12 +61,18 @@ const types = [
     component: PreviewFileTypeDownloadable
   },
   {
+    extensions: 'md',
+    component: PreviewFileTypeMardown
+  },
+  {
     extensions: ext.code,
     component: PreviewFileTypeLanguage
   }
 ]
 
 const TypeComponent = computed(() => {
+  if (props.view !== 'pretty') return PreviewFileTypeLanguage
+
   const type = types.find(item => item.extensions.includes(props.fileExtension))
   return type?.component || PreviewFileTypeLanguage
 })

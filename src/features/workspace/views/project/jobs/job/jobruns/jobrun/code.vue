@@ -34,7 +34,9 @@
         <template v-else>
           <PackageFile
             v-if="filePath"
+            :images="images"
             :sticked="sticked"
+            :cdnBaseUrl="cdnBaseUrl"
             :file="fileStore.fileBlob"
             :currentPath="currentPath"
             :loading="fileStore.loading"
@@ -62,6 +64,7 @@ import { useFileStore } from '@/features/file/useFileStore'
 import PackageFile from '@package/components/PackageFile.vue'
 import PackageTree from '@package/components/PackageTree.vue'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
+import useFileExtension from '@/core/composition/useFileExtension'
 import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
 import useProjectStore from '@/features/project/composition/useProjectStore'
@@ -73,6 +76,7 @@ import PackageProcessing from '@/features/package/components/PackageProcessing.v
 import { ref, watch, onBeforeMount, onUnmounted, computed } from '@vue/composition-api'
 
 const copy = useCopy()
+const ext = useFileExtension()
 const fileStore = useFileStore()
 const router = useRouterAskAnna()
 const { height } = useWindowSize()
@@ -90,6 +94,9 @@ const downloadPackage = ref(false)
 
 const packageLoading = computed(() => packageStore.state.packageLoading.value)
 const packageId = computed(() => jobRunStore.state.jobRun.value.package.short_uuid)
+
+const cdnBaseUrl = computed(() => packageStore.packageData.value.cdn_base_url)
+const images = computed(() => packageStore.packageData.value.files.filter(item => ext.images.includes(item.ext)))
 
 const breadcrumbsComputed = computed(() => {
   const first = {

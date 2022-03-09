@@ -88,7 +88,9 @@
         <template v-else>
           <PackageFile
             v-if="filePath"
+            :images="images"
             :sticked="sticked"
+            :cdnBaseUrl="cdnBaseUrl"
             :file="fileStore.fileBlob"
             :currentPath="currentPath"
             :loading="fileStore.loading"
@@ -118,6 +120,7 @@ import useMoment from '@/core/composition/useMoment'
 import { useFileStore } from '@/features/file/useFileStore'
 import usePermission from '@/core/composition/usePermission'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
+import useFileExtension from '@/core/composition/useFileExtension'
 import PackageFile from '@/features/package/components/PackageFile.vue'
 import PackageTree from '@/features/package/components/PackageTree.vue'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
@@ -132,12 +135,14 @@ import { ref, watch, onBeforeMount, onUnmounted, computed } from '@vue/compositi
 
 const copy = useCopy()
 const moment = useMoment()
+const ext = useFileExtension()
 const fileStore = useFileStore()
 const router = useRouterAskAnna()
 const permission = usePermission()
 const { height } = useWindowSize()
 const packageStore = usePackageStore()
 const projectStore = useProjectStore()
+
 const packagesStore = usePackagesStore()
 const breadcrumbs = usePackageBreadcrumbs()
 const forceFileDownload = useForceFileDownload()
@@ -158,6 +163,9 @@ const packageIdCd = computed(() => projectStore.project.value.package.short_uuid
 const isLastPackage = computed(() => packageIdCd.value === packageStore.packageData.value.short_uuid)
 const { workspaceId, projectId, packageId: packageIdFromRoute = '', folderName = '' } = router.route.value.params
 const packageId = computed(() => (useProjectPackageId ? packageIdCd.value : packageIdFromRoute))
+
+const cdnBaseUrl = computed(() => packageStore.packageData.value.cdn_base_url)
+const images = computed(() => packageStore.packageData.value.files.filter(item => ext.images.includes(item.ext)))
 
 const breadcrumbsComputed = computed(() => {
   const first = {

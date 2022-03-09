@@ -5,10 +5,4 @@
   </v-card>
 </template>
 
-<script>
-import { defineComponent } from '@vue/composition-api'
-
-export default defineComponent({
-  name: 'activity'
-})
-</script>
+<script setup lang="ts"></script>

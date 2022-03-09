@@ -1,16 +1,12 @@
 <template>
   <v-card flat class="mx-3 mt-2" outlined>
-    <v-card-title class="headline font-weight-bold">
-      Command line instructions
-    </v-card-title>
+    <v-card-title class="headline font-weight-bold"> Command line instructions </v-card-title>
     <v-card-text>
       <p>
         You can work on your project via the AskAnna CLI. With the CLI you can package your code and deploy to AskAnna.
       </p>
     </v-card-text>
-    <v-card-title class="headline font-weight-bold">
-      Download the CLI
-    </v-card-title>
+    <v-card-title class="headline font-weight-bold"> Download the CLI </v-card-title>
     <v-card-text>
       <p>
         When working in a virtualenv (python), one can install the CLI using:
@@ -38,9 +34,7 @@
         <code>project_url: https://askanna.io/mycompany/projectx</code>
       </p>
     </v-card-text>
-    <v-card-title class="headline font-weight-bold">
-      Further reference
-    </v-card-title>
+    <v-card-title class="headline font-weight-bold"> Further reference </v-card-title>
     <v-card-text>
       <p>
         The CLI is using our API which facilitates many operations such as running a job. If you would like know what
@@ -51,10 +45,4 @@
   </v-card>
 </template>
 
-<script>
-import { defineComponent } from '@vue/composition-api'
-
-export default defineComponent({
-  name: 'Documentation'
-})
-</script>
+<script setup land="ts"></script>

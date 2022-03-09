@@ -749,14 +749,14 @@ ul[data-type='taskList'] {
   }
 }
 
-.ProseMirror:focus {
+.ask-anna--editor:focus {
   outline: none;
 }
 .ask-anna--editor .v-btn.is-active {
   opacity: 0.9;
 }
 
-.ProseMirror pre {
+.ask-anna--editor pre {
   padding: 0.7rem 1rem;
   border-radius: 5px;
   background: #282c34 !important;
@@ -826,44 +826,6 @@ ul[data-type='taskList'] {
     }
     code {
       font-size: 14px;
-      .hljs-comment,
-      .hljs-quote {
-        color: #999999;
-      }
-      .hljs-variable,
-      .hljs-template-variable,
-      .hljs-attribute,
-      .hljs-tag,
-      .hljs-name,
-      .hljs-regexp,
-      .hljs-link,
-      .hljs-name,
-      .hljs-selector-id,
-      .hljs-selector-class {
-        color: #f2777a;
-      }
-      .hljs-number,
-      .hljs-meta,
-      .hljs-built_in,
-      .hljs-builtin-name,
-      .hljs-literal,
-      .hljs-type,
-      .hljs-params {
-        color: #f99157;
-      }
-      .hljs-string,
-      .hljs-symbol,
-      .hljs-bullet {
-        color: #99cc99;
-      }
-      .hljs-title,
-      .hljs-section {
-        color: #ffcc66;
-      }
-      .hljs-keyword,
-      .hljs-selector-tag {
-        color: #6699cc;
-      }
       .hljs-emphasis {
         font-style: italic;
       }
