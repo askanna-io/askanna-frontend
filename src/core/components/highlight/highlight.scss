@@ -1,0 +1,120 @@
+.hljs-ln td {
+  padding: 0;
+}
+.hljs-ln {
+  border-collapse: collapse;
+  line-height: 8px;
+}
+.hljs-ln-n:before {
+  content: attr(data-line-number);
+}
+/* for block of numbers */
+.hljs-ln-numbers {
+  font-size: 14px;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  text-align: right;
+  color: #999;
+  vertical-align: top;
+  padding-left: 5px !important;
+  padding-right: 5px !important;
+}
+/* for block of code */
+.hljs-ln-code {
+  white-space: pre-wrap;
+  font-size: 14px;
+}
+.ask-anna-highlight td.hljs-ln-code {
+  white-space: pre;
+}
+
+.ask-anna-highlight code {
+  white-space: pre-wrap;
+  overflow: auto;
+  &.loading {
+    padding-bottom: 35px !important;
+  }
+}
+.ask-anna-highlight .hljs,
+.ask-anna--editor .hljs,
+.ask-anna--editor code,
+.hljs code {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  color: #fff !important;
+  background-color: #282c34 !important;
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: #5c6370;
+  font-style: italic;
+}
+
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula {
+  color: #8559ff;
+}
+
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-deletion,
+.hljs-subst {
+  color: #e06c75;
+}
+
+.hljs-literal {
+  color: #56b6c2;
+}
+
+.hljs-string,
+.hljs-regexp,
+.hljs-addition,
+.hljs-attribute,
+.hljs-meta-string {
+  color: #99cc99;
+}
+
+.hljs-built_in,
+.hljs-class .hljs-title {
+  color: #f99157;
+}
+
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #d19a66;
+}
+
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #61aeee;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+
+.hljs-link {
+  text-decoration: underline;
+}

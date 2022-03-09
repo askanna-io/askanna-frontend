@@ -31,7 +31,9 @@
         </package-toolbar>
         <PackageFile
           v-if="filePath"
+          :images="images"
           :sticked="sticked"
+          :cdnBaseUrl="cdnBaseUrl"
           :file="fileStore.fileBlob"
           :currentPath="currentPath"
           :loading="fileStore.loading"
@@ -55,6 +57,7 @@ import { useWindowSize } from '@u3u/vue-hooks'
 import useCopy from '@/core/composition/useCopy'
 import { useFileStore } from '@/features/file/useFileStore'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
+import useFileExtension from '@/core/composition/useFileExtension'
 import PackageFile from '@/features/package/components/PackageFile.vue'
 import PackageTree from '@/features/package/components/PackageTree.vue'
 import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
@@ -66,6 +69,7 @@ import PackageToolbar from '@/features/package/components/PackageToolbar.vue'
 import useTriggerFileDownload from '@/core/composition/useTriggerFileDownload'
 
 const copy = useCopy()
+const ext = useFileExtension()
 const fileStore = useFileStore()
 const router = useRouterAskAnna()
 const { height } = useWindowSize()
@@ -82,6 +86,9 @@ const downloadArtifact = ref(false)
 const sticked = computed(() => !projectStore.stickedVM.value)
 
 const jobRunArtifactLoading = computed(() => jobRunStore.state.jobRunArtifactLoading.value)
+
+const cdnBaseUrl = computed(() => jobRunStore.state.artifactData.value.cdn_base_url)
+const images = computed(() => jobRunStore.state.artifactData.value.files.filter(item => ext.images.includes(item.ext)))
 
 const calcHeight = computed(() => height.value - 370)
 const path = computed(() => router.route.value.params.folderName || '/')

@@ -61,8 +61,11 @@ Vue.filter('lowercase', function (value: string) {
 
 //check if the current user is authenticated
 const notAllowedRouteWithToken = ['signin', 'signup']
-router.beforeEach((to, _, next) => {
+const notNeedToReload = ['workspace-project-package-folder']
+
+router.beforeEach((to, previus, next) => {
   if (to.name === next.name) return
+  if (to.name === previus.name && to.hash) return
 
   const token = window.localStorage.getItem('token')
   const isRequiresAuth = to.matched.some(route => route.meta.requiresAuth)

@@ -101,7 +101,7 @@ const handlCloseConfirmDeletePopup = () => (deleteProjectConfirmPopup.value = fa
 const handleClose = () => (menu.value = false)
 
 const handleOpenConfirmEditProject = () =>
-  context.root.$router.push({
+  router.router.push({
     name: 'workspace-project-edit',
     params: {
       routeBackTo: props.routeBackTo,

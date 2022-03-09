@@ -43,6 +43,8 @@ export default defineComponent({
 })
 </script>
 <style lang="scss">
+@import '@/core/components/highlight/highlight.scss';
+
 #app .row {
   margin-top: 0;
   margin-bottom: 0;
@@ -208,7 +210,7 @@ export default defineComponent({
   font-weight: 700 !important;
 }
 
-.v-application .ProseMirror code {
+.v-application .ask-anna--editor code {
   padding-left: 0;
 }
 .v-application code.language-js,
@@ -407,6 +409,13 @@ code.lang-shell {
       opacity: 0.62;
     }
   }
+}
+
+.v-application .theme--light.v-btn-toggle:not(.v-btn-toggle--group) .v-btn.v-btn {
+  border-color: #515151 !important;
+}
+.v-item-group.v-btn-toggle .btn--hover:not(:first-child):hover {
+  border-left: none !important;
 }
 
 .text-body-2 .v-breadcrumbs__item--disabled {

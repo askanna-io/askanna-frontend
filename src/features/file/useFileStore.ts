@@ -62,6 +62,10 @@ export const useFileStore = defineStore('file', {
 
     isValidJSON() {
       return this.filePreview.isValidJSON
+    },
+
+    isRenderedExt() {
+      return ext.isRendered.includes(this.fileExtension)
     }
   },
 
