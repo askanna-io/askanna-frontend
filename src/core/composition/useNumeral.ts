@@ -1,7 +1,6 @@
 import numeral from 'numeral'
-import { SetupContext } from '@vue/composition-api'
 
-export default function (context: SetupContext) {
+export default function () {
   const numberFormated = (num: string | number) => {
     const decs = countDecimals(Number(num))
     const formats = ['0,0', '0,0.0', '0,0.00', '0,0.000']

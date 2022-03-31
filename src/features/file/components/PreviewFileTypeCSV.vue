@@ -1,0 +1,62 @@
+<template>
+  <v-flex
+    class="fill-height"
+    fluid
+    :class="{ 'px-0': $vuetify.breakpoint.xsOnly, 'px-5': !$vuetify.breakpoint.xsOnly }"
+  >
+    <v-fade-transition mode="out-in">
+      <CSV :data="tableData.data" :headers="tableData.headers" :cdnBaseUrl="cdnBaseUrl" />
+    </v-fade-transition>
+  </v-flex>
+</template>
+
+<script setup lang="ts">
+import { parse } from 'papaparse'
+import CSV from '@/core/components/csv/CSV.vue'
+import { computed } from '@vue/composition-api'
+import { useFileStore } from '@/features/file/useFileStore'
+
+const props = defineProps({
+  fileSource: {
+    type: [String, Object, Blob],
+    default: () => ''
+  },
+  images: {
+    type: Array,
+    default: () => []
+  },
+  cdnBaseUrl: {
+    type: String,
+    default: () => ''
+  }
+})
+
+const fileStore = useFileStore()
+
+const tableData = computed(() => {
+  const isNoHeaderPresent = [0, 1, '0', '1'].includes(props.fileSource.charAt(0))
+  const parsedData = parse(props.fileSource, { header: !isNoHeaderPresent, skipEmptyLines: 'greedy' })
+
+  if (isNoHeaderPresent) {
+    const data = parsedData.data.map(el => ({ ...el }))
+    fileStore.metaInfo.columns = Object.keys(data[0]).length
+    fileStore.metaInfo.rows = data.length
+
+    return { data, headers: [] }
+  }
+
+  const headers = parsedData.meta.fields
+    .filter(el => el)
+    .map(el => ({
+      text: el,
+      value: el,
+      width: 'auto',
+      sortable: true
+    }))
+
+  fileStore.metaInfo.columns = headers.length
+  fileStore.metaInfo.rows = parsedData.data.length
+
+  return { data: parsedData.data, headers }
+})
+</script>

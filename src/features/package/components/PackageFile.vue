@@ -7,7 +7,8 @@
         </v-btn>
 
         <div>
-          {{ currentPath.name }}<span class="pl-3">({{ `${humanize.humanizeSize(currentPath.size)}` }})</span>
+          {{ currentPath.name
+          }}<span class="pl-3">({{ `${humanize.humanizeSize(currentPath.size)}` }}{{ metaInfo }})</span>
         </div>
 
         <v-spacer />
@@ -50,9 +51,9 @@
         :images="images"
         :fileBlob="file"
         :loading="loading"
-        :maxHeight="`${maxHeight}px`"
-        :isFileBig="fileStore.isFileBig"
+        :maxHeight="`${maxHeight}`"
         :cdnBaseUrl="cdnBaseUrl"
+        :isFileBig="fileStore.isFileBig"
         :currentView="currentView.value"
         :fileExtension="currentPath.ext"
         :isFileEmpty="fileStore.isFileEmpty"
@@ -70,6 +71,7 @@
 <script setup lang="ts">
 import { useWindowSize } from '@u3u/vue-hooks'
 import { ref, computed } from '@vue/composition-api'
+import useNumeral from '@/core/composition/useNumeral'
 import { useFileStore } from '@/features/file/useFileStore'
 import { useMobileStore } from '@/core/store/useMobileStore'
 import useSizeHumanize from '@/core/composition/useSizeHumanize'
@@ -118,9 +120,11 @@ defineProps({
 
 const emit = defineEmits(['onCopy', 'onDownload'])
 
-const router = useRouterAskAnna()
+const numeral = useNumeral()
 const fileStore = useFileStore()
+const router = useRouterAskAnna()
 const { height } = useWindowSize()
+
 const humanize = useSizeHumanize()
 const mobileStore = useMobileStore()
 
@@ -130,6 +134,14 @@ const views = [
 ]
 
 const currentView = ref(views[0])
+
+const metaInfo = computed(() =>
+  ['csv', 'tsv'].includes(fileStore.fileExtension)
+    ? `, ${numeral.numberFormated(fileStore.metaInfo.columns)} columns,${
+        fileStore.isFileBig ? 'preview ' : ''
+      } ${numeral.numberFormated(fileStore.metaInfo.rows)} rows`
+    : ''
+)
 
 const stickyParams = computed(() =>
   mobileStore.isMenuOpen && mobileStore.isMenuSticked ? '{top: 252, bottom: 10}' : '{top: 52, bottom: 10}'

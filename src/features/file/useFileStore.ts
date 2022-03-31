@@ -17,6 +17,11 @@ export const useFileStore = defineStore('file', {
       loading: true,
       loadingFullData: false,
 
+      metaInfo: {
+        rows: 0,
+        columns: 0
+      },
+
       currentView: 'raw',
 
       size: 0,
@@ -163,6 +168,7 @@ export const useFileStore = defineStore('file', {
 
       // get preview of file only 10 000 bytes
       else {
+        const size = ext.csv.includes(extension) ? 5242880 : 10000
         try {
           response = await apiService({
             url,
@@ -171,7 +177,7 @@ export const useFileStore = defineStore('file', {
             serviceName,
             responseType: 'text',
             headers: {
-              range: 'bytes=0-10000'
+              range: `bytes=0-${size}`
             },
             returnFullResponse: true,
             transformResponse: [data => data]
