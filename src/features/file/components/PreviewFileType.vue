@@ -3,6 +3,7 @@
 </template>
 <script setup lang="ts">
 import { computed } from '@vue/composition-api'
+import PreviewFileTypeCSV from './PreviewFileTypeCSV.vue'
 import PreviewFileTypeHTML from './PreviewFileTypeHTML.vue'
 import PreviewFileTypeImage from './PreviewFileTypeImage.vue'
 import PreviewFileTypeMardown from './PreviewFileTypeMardown.vue'
@@ -64,6 +65,11 @@ const types = [
     extensions: 'md',
     component: PreviewFileTypeMardown
   },
+  {
+    extensions: ['csv', 'tsv'],
+    component: PreviewFileTypeCSV
+  },
+
   {
     extensions: ext.code,
     component: PreviewFileTypeLanguage

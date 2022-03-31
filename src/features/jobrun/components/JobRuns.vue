@@ -133,7 +133,7 @@ export default defineComponent({
   setup(props, context) {
     const copy = useCopy()
     const moment = useMoment()
-    const numeral = useNumeral(context)
+    const numeral = useNumeral()
 
     const page = ref(0)
     const pageCount = ref(0)

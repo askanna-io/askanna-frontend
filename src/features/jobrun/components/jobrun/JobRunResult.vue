@@ -5,7 +5,7 @@
         <div class="cut-text d-flex align-center">
           {{ jobRun.result.original_name
           }}<span v-if="!$vuetify.breakpoint.xsOnly" class="pl-3"
-            >({{ `${humanize.humanizeSize(fileStore.size)}` }})</span
+            >({{ `${humanize.humanizeSize(fileStore.size)}` }}{{ metaInfo }})</span
           >
         </div>
         <div class="mr-auto d-flex align-center"></div>
@@ -91,6 +91,7 @@
 import { useWindowSize } from '@u3u/vue-hooks'
 import { JobRunModel } from '../../store/types'
 import useCopy from '@/core/composition/useCopy'
+import useNumeral from '@/core/composition/useNumeral'
 import { useFileStore } from '@/features/file/useFileStore'
 import useJobRunStore from '../../composition/useJobRunStore'
 import useSizeHumanize from '@/core/composition/useSizeHumanize'
@@ -108,6 +109,7 @@ defineProps({
 })
 
 const copy = useCopy()
+const numeral = useNumeral()
 const fileStore = useFileStore()
 const router = useRouterAskAnna()
 const { height } = useWindowSize()
@@ -149,6 +151,14 @@ const fetchData = async () => {
 
 const maxHeight = computed(() => height.value - 120)
 const scrollerStyles = computed(() => ({ 'max-height': `${maxHeight.value}px` }))
+
+const metaInfo = computed(() =>
+  ['csv', 'tsv'].includes(fileStore.fileExtension)
+    ? `, ${numeral.numberFormated(fileStore.metaInfo.columns)} columns, ${
+        fileStore.isFileBig ? 'preview ' : ''
+      } ${numeral.numberFormated(fileStore.metaInfo.rows)} rows`
+    : ''
+)
 
 const handleDownload = async () => {
   // download full version of result without formating

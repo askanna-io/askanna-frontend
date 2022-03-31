@@ -2,7 +2,7 @@
   <div>
     <v-card class="mx-auto" :outlined="!$vuetify.breakpoint.xsOnly" :flat="$vuetify.breakpoint.xsOnly" sticky-container>
       <project-nav-bar
-        :job="jobStore.job"
+        :job="job"
         :routeName="routeName"
         :handleOnStick="handleOnStick"
         :sticked="project.menu.sticked"
@@ -43,6 +43,7 @@ const packageStore = usePackageStore()
 
 const fileSource = ref('')
 
+const job = computed(() => jobStore.job.value)
 const routeName = computed(() => route.value.name)
 const isShowReadmeFile = computed(() => routeName.value === 'workspace-project-code')
 const jobEnd = computed(() => (route.value.name.indexOf('jobs-name') >= 1 ? 5 : 3))
