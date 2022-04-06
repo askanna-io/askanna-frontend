@@ -35,8 +35,18 @@
         </v-row>
       </v-container>
     </template>
-    <template v-slot:body="{ items }">
-      <tbody ref="tableRef">
+
+    <template v-slot:body="{ items, options, groupedItems }">
+      <TableGroupedTable
+        v-if="options.groupBy.length"
+        ref="tableRef"
+        :key="index"
+        :items="groupedItems"
+        :groupBy="options.groupBy"
+        :headersLength="headers.length"
+      />
+
+      <tbody v-else ref="tableRef">
         <template v-for="(item, index) in items">
           <tr :key="index">
             <template v-for="(value, index2) in item">
@@ -50,6 +60,8 @@
 </template>
 <script setup lang="ts">
 import { useWindowSize } from '@u3u/vue-hooks'
+import TableGroupedTable from '@/features/file/components/TableGroupedTable.vue'
+
 import { ref, watch, computed } from '@vue/composition-api'
 
 const props = defineProps({
