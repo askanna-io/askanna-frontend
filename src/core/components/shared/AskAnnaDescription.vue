@@ -806,6 +806,9 @@ ul[data-type='taskList'] {
       cursor: text;
     }
   }
+  .ProseMirror:focus {
+    outline: none;
+  }
 }
 
 .ask-anna--editor blockquote {
