@@ -68,7 +68,8 @@
     "vue-sticky-directive": "0.0.10",
     "vuetify": "2.6.2",
     "vuex": "^3.6.2",
-    "vuex-persistedstate": "3.1.0"
+    "vuex-persistedstate": "3.1.0",
+    "xlsx": "0.18.4"
   },
   "devDependencies": {
     "@babel/highlight": "7.13.10",

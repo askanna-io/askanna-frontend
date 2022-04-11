@@ -36,7 +36,7 @@
           <v-icon color="secondary" left>mdi-download</v-icon>Download file
         </v-btn>
         <v-btn
-          v-if="!$vuetify.breakpoint.xsOnly && fileStore.isShowFilePreview"
+          v-if="!$vuetify.breakpoint.xsOnly && fileStore.isShowCopyBtn"
           small
           outlined
           color="secondary"
