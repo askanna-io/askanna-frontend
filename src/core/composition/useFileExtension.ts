@@ -1,9 +1,11 @@
 export default () => {
   const extenstions = {
+    xls: ['xls', 'xlsx'],
     csv: ['csv', 'tsv'],
+    noPreview: ['pdf', 'pkl', 'parquet'],
     images: ['jpg', 'png', 'gif', 'jpeg'],
-    bigPreview: ['html', 'ipynb', 'csv', 'tsv'],
-    noPreview: ['xls', 'pdf', 'xlsx', 'pkl', 'parquet'],
+    notShowCopyBtn: ['pdf', 'pkl', 'parquet', 'xls', 'xlsx'],
+    bigPreview: ['html', 'ipynb', 'csv', 'tsv', 'xls', 'xlsx'],
     isRendered: ['html', 'json', 'md', 'markdown', 'csv', 'tsv'],
     code: ['xml', 'csv', 'tsv', 'plain', 'json', 'md', 'py', 'txt', 'yml', 'ini', 'toml', 'markdown']
   }

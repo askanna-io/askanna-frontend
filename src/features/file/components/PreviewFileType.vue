@@ -3,6 +3,7 @@
 </template>
 <script setup lang="ts">
 import { computed } from '@vue/composition-api'
+import PreviewFileTypeXLS from './PreviewFileTypeXLS.vue'
 import PreviewFileTypeCSV from './PreviewFileTypeCSV.vue'
 import PreviewFileTypeHTML from './PreviewFileTypeHTML.vue'
 import PreviewFileTypeImage from './PreviewFileTypeImage.vue'
@@ -56,6 +57,10 @@ const types = [
   {
     extensions: ['ipynb'],
     component: PreviewFileTypeNotebook
+  },
+  {
+    extensions: ext.xls,
+    component: PreviewFileTypeXLS
   },
   {
     extensions: ext.noPreview,

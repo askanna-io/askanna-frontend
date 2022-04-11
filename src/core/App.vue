@@ -44,7 +44,6 @@ export default defineComponent({
 </script>
 <style lang="scss">
 @import '@/core/components/highlight/highlight.scss';
-
 #app .row {
   margin-top: 0;
   margin-bottom: 0;

@@ -8,6 +8,7 @@ import useFileExtension from '@/core/composition/useFileExtension'
 const ext = useFileExtension()
 const prettyJSON = usePrettyJSON()
 
+const blobExts = ext.xls
 const allowedImageExts = ext.images
 const noPreviewExts = ext.noPreview
 
@@ -34,6 +35,7 @@ export const useFileStore = defineStore('file', {
       isFileImg: false,
       isFileJSON: true,
       isFileHTML: false,
+      isShowCopyBtn: true,
       isShowFilePreview: false,
       isFileBigForRawView: false
     }
@@ -120,7 +122,7 @@ export const useFileStore = defineStore('file', {
       const isFileBigForRawView = Number(size) >= 10000
 
       // get images
-      if (allowedImageExts.includes(extension)) {
+      if (allowedImageExts.includes(extension) || blobExts.includes(extension)) {
         response = await apiService({
           url,
           uuid,
@@ -202,6 +204,7 @@ export const useFileStore = defineStore('file', {
 
       this.isShowFilePreview = isShowFilePreview
       this.isFileBigForRawView = isFileBigForRawView
+      this.isShowCopyBtn = !ext.notShowCopyBtn.includes(extension)
 
       this.loading = false
     },
