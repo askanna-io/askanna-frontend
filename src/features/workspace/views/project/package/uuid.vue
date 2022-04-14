@@ -152,6 +152,8 @@ const menu = ref(false)
 const polling = ref(null)
 const isRaplace = ref(false)
 
+const params = computed(() => router.route.value.params)
+
 const projectCodeCreate = computed(() => permission.getFor(permission.labels.projectCodeCreate))
 
 const sticked = computed(() => !projectStore.stickedVM.value)
@@ -162,8 +164,7 @@ const createdDate = computed(() =>
 )
 const packageIdCd = computed(() => projectStore.project.value.package.short_uuid)
 const isLastPackage = computed(() => packageIdCd.value === packageStore.packageData.value.short_uuid)
-const { workspaceId, projectId, packageId: packageIdFromRoute = '', folderName = '' } = router.route.value.params
-const packageId = computed(() => (useProjectPackageId ? packageIdCd.value : packageIdFromRoute))
+const packageId = computed(() => (useProjectPackageId ? packageIdCd.value : params.value.packageId))
 
 const cdnBaseUrl = computed(() => packageStore.packageData.value.cdn_base_url)
 const images = computed(() => packageStore.packageData.value.files.filter(item => ext.images.includes(item.ext)))
@@ -173,7 +174,7 @@ const breadcrumbsComputed = computed(() => {
     title: `Package: #${packageId.value.slice(0, 4)}${isLastPackage.value ? '(latest)   ' : ''}`,
     to: {
       name: 'workspace-project-code',
-      params: { workspaceId, projectId, packageId: packageId.value }
+      params: { workspaceId: params.value.workspaceId, projectId: params.value.projectId, packageId: packageId.value }
     },
     exact: true,
     disabled: false,
@@ -191,13 +192,13 @@ const breadcrumbsComputed = computed(() => {
 const downloadPackage = ref(false)
 
 const getPackage = async (loading = true) => {
-  if (!packageId.value || !projectId) return
+  if (!packageId.value || !params.value.projectId) return
 
   await packageStore.getPackage({
     loading,
-    projectId,
     packageId: packageId.value,
-    folderName
+    projectId: params.value.projectId,
+    folderName: params.value.folderName
   })
 }
 
@@ -252,10 +253,10 @@ const treeView = computed(() => {
 })
 
 const getRoutePath = item => {
-  let path = `/${workspaceId}/project/${projectId}/code/${packageId.value}/${item.path}`
+  let path = `/${params.value.workspaceId}/project/${params.value.projectId}/code/${packageId.value}/${item.path}`
 
   if (typeof item.path === 'undefined') {
-    path = `/${workspaceId}/project/${projectId}/code/${packageId.value}`
+    path = `/${params.value.workspaceId}/project/${params.value.projectId}/code/${packageId.value}`
   }
 
   return { path }
@@ -264,7 +265,7 @@ const getRoutePath = item => {
 const handleHistory = () => {
   router.push({
     name: 'workspace-project-code-package-history',
-    params: { projectId, packageId: packageId.value }
+    params: { projectId: params.value.projectId, packageId: packageId.value }
   })
 }
 
@@ -273,7 +274,7 @@ const handleDownload = async () => {
 
   const packageData = packageStore.packageData.value
   const source = await packagesStore.downloadPackage({
-    projectId,
+    projectId: params.value.projectId,
     packageId: packageData.short_uuid
   })
   forceFileDownload.trigger({ source, name: `code_${packageData.short_uuid}_${packageData.filename}` })
@@ -355,8 +356,8 @@ onUnmounted(() => {
   clearInterval(polling.value)
 })
 
-watch(currentPath, async (currentPath, lastPath) => {
-  if (!filePath.value || !lastPath) return
+watch(currentPath, async currentPath => {
+  if (!filePath.value) return
   fileStore.$reset()
 
   await fileStore.getFilePreview({
