@@ -8,15 +8,15 @@ variables:
   DOCKER_BASE_IMAGE: $CI_REGISTRY_IMAGE/base:$CI_COMMIT_REF_SLUG
   DOCKER_REVIEW: $CI_REGISTRY_IMAGE/review:$CI_COMMIT_REF_SLUG-$CI_COMMIT_SHORT_SHA
 
-include:
-  - template: Code-Quality.gitlab-ci.yml
-
 stages:
   - build-base
   - build-deploy
   - test
   - deploy
   - cleanup
+
+include:
+  - template: Code-Quality.gitlab-ci.yml
 
 # To use Kaniko extend the job and set variable for DOCKER_DESTINATION and DOCKERFILE
 .use-kaniko:
@@ -35,8 +35,7 @@ stages:
 
 build_base:
   stage: build-base
-  extends:
-    - .use-kaniko
+  extends: .use-kaniko
   variables:
     DOCKER_FILE: $CI_PROJECT_DIR/compose/Dockerfile.base    
   script:
@@ -53,8 +52,7 @@ build_base:
 
 build_master:
   stage: build-deploy
-  extends:
-    - .use-kaniko
+  extends: .use-kaniko
   only:
     - master
 
@@ -86,18 +84,20 @@ code_quality:
   tags:
     - docker
 
-.deploy: &deploy
-  variables:
-    GIT_STRATEGY: none
-  image: curlimages/curl
+.deploy:
   stage: deploy
+  image: curlimages/curl
   tags:
     - kubernetes
+  variables:
+    GIT_STRATEGY: none
+    ASKANNA_DEPLOY_BRANCH: master
+    ASKANNA_DEPLOY_PRODUCT: askanna-frontend
   script:
-    - curl -X POST -F token=${DEPLOY_TOKEN} -F ref=master -F variables[product]=frontend -F variables[branch]=${CI_COMMIT_REF_SLUG} -F variables[action]=deploy -F variables[slug]=${CI_ENVIRONMENT_SLUG} ${TRIGGER_URL}
+    - curl -X POST -F token=${CI_JOB_TOKEN} -F ref=${ASKANNA_DEPLOY_BRANCH} -F variables[product]=${ASKANNA_DEPLOY_PRODUCT} -F variables[branch]=${CI_COMMIT_REF_SLUG} -F variables[action]=deploy -F variables[slug]=${CI_ENVIRONMENT_SLUG} ${ASKANNA_DEPLOY_TRIGGER}
 
 deploy_master:
-  <<: *deploy
+  extends: .deploy
   environment:
     name: master
     url: https://${MASTER_DOMAIN}
@@ -105,7 +105,7 @@ deploy_master:
     - master
 
 deploy_beta:
-  <<: *deploy
+  extends: .deploy
   environment:
     name: beta
     url: https://${BETA_DOMAIN}
