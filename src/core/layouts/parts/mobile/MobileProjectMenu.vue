@@ -9,9 +9,9 @@
       </template>
       <v-col cols="12" class="pa-0">
         <v-text-field
-          v-if="!loading && (projects.length > 0 || searchText)"
+          v-if="!loading && (projects.length > 0 || search)"
           class="mx-1 mt-2"
-          v-model="searchText"
+          v-model="search"
           @input="handleOnSearch()"
           x-small
           dense
@@ -49,7 +49,7 @@
           </v-list-item>
         </v-list>
 
-        <v-flex v-if="searchText && !projects.length && !isSearchProcessing" class="px-2 pt-2 pl-4 text--secondary"
+        <v-flex v-if="search && !projects.length && !isSearchProcessing" class="px-2 pt-2 pl-4 text--secondary"
           >No results</v-flex
         >
         <v-col class="pa-2">
@@ -85,7 +85,7 @@ const explorBtnOpts = [
   { id: 1, to: { name: 'projects' }, title: 'Explore all projects' }
 ]
 
-const searchText = ref('')
+const search = ref('')
 const isSearchProcessing = ref(false)
 
 const loading = computed(() => projectsStore.loading)
@@ -94,8 +94,8 @@ const projectsState = computed(() => projectsStore.projects.results)
 const projects = computed(() => {
   let results = projectsState.value.filter(item => item.is_member)
 
-  if (searchText.value) {
-    results = results.filter(item => item.name.toLowerCase().includes(searchText.value.toLowerCase()))
+  if (search.value) {
+    results = results.filter(item => item.name.toLowerCase().includes(search.value.toLowerCase()))
 
     isSearchProcessing.value = false
   }
@@ -104,12 +104,12 @@ const projects = computed(() => {
 })
 
 const handleClickOnMenuItem = () => {
-  searchText.value = ''
+  search.value = ''
   emits('onClose')
 }
 
 const handleClickItem = item => {
-  searchText.value = ''
+  search.value = ''
 }
 
 const handleOnSearch = () => (isSearchProcessing.value = true)

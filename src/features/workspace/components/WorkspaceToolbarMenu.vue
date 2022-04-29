@@ -17,7 +17,7 @@
     <v-list>
       <template v-for="(item, index) in menuItems">
         <v-list-item v-if="item.isVisible" @click="handleMenuClick(item)" :key="index">
-          <v-list-item-title>{{ item.title }}</v-list-item-title>
+          <v-list-item-title :class="[item.color]">{{ item.title }}</v-list-item-title>
         </v-list-item>
       </template>
     </v-list>
@@ -33,11 +33,15 @@ const props = defineProps({
     type: Boolean,
     default: () => false
   },
+  permission: {
+    type: Object,
+    default: () => ({})
+  },
   workspaceUuid: {
     type: String,
     default: () => ''
   },
-  onlyShowPeople: {
+  usePermission: {
     type: Boolean,
     default: () => false
   }
@@ -57,19 +61,22 @@ const menuItems = computed(() =>
       title: 'Create project',
       to: 'workspace-new-project',
       isVisible:
-        permission.getFor(permission.labels.workspaceProjectCreate) &&
-        !props.onlyShowPeople &&
-        context.root.proxy.$vuetify.breakpoint.xsOnly
+        permission.getFor(
+          permission.labels.workspaceProjectCreate || props.permission[permission.labels.workspaceProjectCreate]
+        ) && context.root.proxy.$vuetify.breakpoint.xsOnly
     },
     {
       title: 'Edit workspace',
       to: 'workspace-edit',
-      isVisible: permission.getFor(permission.labels.workspaceInfoEdit) && !props.onlyShowPeople
+      isVisible:
+        permission.getFor(permission.labels.workspaceInfoEdit) || props.permission[permission.labels.workspaceInfoEdit]
     },
     {
       title: 'Remove workspace',
       onClick: 'onOpenWorkspaceRemove',
-      isVisible: permission.getFor(permission.labels.workspaceRemove) && !props.onlyShowPeople
+      color: 'error--text',
+      isVisible:
+        permission.getFor(permission.labels.workspaceRemove) || props.permission[permission.labels.workspaceRemove]
     },
     { title: 'People', to: 'workspace-people', isVisible: props.isMember }
   ].filter(el => el.isVisible)

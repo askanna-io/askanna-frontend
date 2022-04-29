@@ -28,11 +28,26 @@
           </v-col>
         </v-row>
       </template>
+      <template v-slot:no-data
+        ><v-alert
+          v-if="!loading"
+          dense
+          outlined
+          class="mt-2 text-center"
+          :class="{ 'ma-2': $vuetify.breakpoint.xsOnly }"
+        >
+          <template v-if="query.search">There are no projects for this search request.</template>
+          <template v-else-if="query.visibility || query.is_member"
+            >There are no projects for this filter request.</template
+          >
+        </v-alert></template
+      >
     </v-data-iterator>
   </ask-anna-loading-progress>
 </template>
 <script setup lang="ts">
-import { computed } from '@vue/composition-api'
+import { ref, computed } from '@vue/composition-api'
+import usePermission from '@/core/composition/usePermission'
 import useSanitizeHTML from '@/core/composition/useSanitizeHTML'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import { useProjectsStore } from '@/features/projects/useProjectsStore'
@@ -40,11 +55,13 @@ import { useProjectsStore } from '@/features/projects/useProjectsStore'
 import PublicProjectsToolbar from '../components/public-projects/PublicProjectsToolbar.vue'
 import WorkspaceProjectCardItem from '@/features/workspace/components/WorkspaceProjectCardItem.vue'
 
+const permission = usePermission()
 const routerAA = useRouterAskAnna()
 const sanitizeHTML = useSanitizeHTML()
 const projectsStore = useProjectsStore()
 
 const loading = computed(() => projectsStore.loading)
+const isSignIn = computed(() => permission.token.value)
 const query = computed(() => routerAA.route.value.query)
 const projects = computed(() => projectsStore.getProjectsByParams(query.value))
 

@@ -13,9 +13,9 @@ const helper = {
         : this.results
     return this
   },
-  filterBySearchtext: function (searchtext) {
-    this.results = searchtext
-      ? this.results.filter(item => item.name.toLowerCase().includes(searchtext.toLowerCase()))
+  filterBySearchtext: function (search) {
+    this.results = search
+      ? this.results.filter(item => item.name.toLowerCase().includes(search.toLowerCase()))
       : this.results
     return this
   },

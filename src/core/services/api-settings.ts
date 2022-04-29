@@ -107,6 +107,7 @@ export const api: ApiSettings = {
     },
     workspace: {
       list: () => `workspace/`,
+      create: () => `workspace/`,
       get: id => `workspace/${id}/`,
       profile: id => `workspace/${id}/me/`,
       profileAvatar: id => `workspace/${id}/me/avatar/`,
