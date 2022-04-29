@@ -1,47 +1,76 @@
 <template>
-  <ask-anna-loading-progress :type="'table-row'" :loading="loading">
-    <v-data-iterator :items="workspaces" hide-default-footer :no-data-text="''" disable-pagination>
-      <template v-slot:header>
-        <WorkspacesToolbar />
-      </template>
-      <template v-slot:default="props">
-        <v-row :class="{ 'px-2': $vuetify.breakpoint.xsOnly }">
-          <v-col
-            v-for="item in props.items"
-            @click="handleOpenWorkspace(item)"
-            :key="item.name + item.short_uuid"
-            cols="12"
-            sm="6"
-            md="4"
-            lg="4"
-            :class="{ 'pb-0': $vuetify.breakpoint.xsOnly }"
+  <div>
+    <ask-anna-loading-progress :type="'table-row'" :loading="loading">
+      <v-data-iterator :items="workspaces" hide-default-footer :no-data-text="''" disable-pagination>
+        <template v-slot:header>
+          <WorkspacesToolbar />
+        </template>
+        <template v-slot:default="props">
+          <v-row :class="{ 'px-2': $vuetify.breakpoint.xsOnly }">
+            <v-col
+              v-for="item in props.items"
+              @click="handleOpenWorkspace(item)"
+              :key="item.name + item.short_uuid"
+              cols="12"
+              sm="6"
+              md="4"
+              lg="4"
+              :class="{ 'pb-0': $vuetify.breakpoint.xsOnly }"
+            >
+              <v-hover v-slot:default="{ hover }" open-delay="200">
+                <WorkspacesCardItem
+                  :workspace="item"
+                  :hover="hover"
+                  :routeBackTo="'workspaces'"
+                  :description="sanitizeHTML(item.description)"
+                  @onOpenWorkspaceRemove="handleOpenWorkspaceRemove(item)"
+                />
+              </v-hover>
+            </v-col>
+          </v-row>
+        </template>
+        <template v-slot:no-data
+          ><v-alert
+            v-if="!loading"
+            class="mt-2 text-center"
+            dense
+            outlined
+            :class="{ 'ma-2': $vuetify.breakpoint.xsOnly }"
           >
-            <v-hover v-slot:default="{ hover }" open-delay="200">
-              <WorkspacesCardItem
-                :workspace="item"
-                :hover="hover"
-                :routeBackTo="'workspaces'"
-                :description="sanitizeHTML(item.description)"
-              />
-            </v-hover>
-          </v-col>
-        </v-row>
-      </template>
-    </v-data-iterator>
-  </ask-anna-loading-progress>
+            <template v-if="query.search">There are no workspaces for this search request.</template>
+            <template v-else-if="query.visibility || query.is_member"
+              >There are no workspaces for this filter request.</template
+            >
+          </v-alert></template
+        >
+      </v-data-iterator>
+    </ask-anna-loading-progress>
+    <ConfirmDeleteWorkspacePopup
+      :value="deleteWorkspaceConfirmPopup"
+      :workspaceName="workspace.name"
+      @onClose="handleCloseWorkspaceRemove"
+      @onDeleteConfirm="handleDeleteConfirmWorkspace"
+    />
+  </div>
 </template>
 <script setup lang="ts">
-import { computed } from '@vue/composition-api'
+import { ref, computed } from '@vue/composition-api'
 import useSanitizeHTML from '@/core/composition/useSanitizeHTML'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import { useWorkspacesStore } from '@/features/workspaces/useWorkspacesStore'
+import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 
 import WorkspacesToolbar from '@/features/workspaces/components/WorkspacesToolbar.vue'
 import WorkspacesCardItem from '@/features/workspaces/components/WorkspacesCardItem.vue'
+import ConfirmDeleteWorkspacePopup from '@/features/workspace/components/project/ConfirmDeleteWorkspacePopup.vue'
 
 const routerAA = useRouterAskAnna()
 const sanitizeHTML = useSanitizeHTML()
+const workspaceStore = useWorkspaceStore()
 const workspacesStore = useWorkspacesStore()
+
+const workspace = ref({})
+const deleteWorkspaceConfirmPopup = ref(false)
 
 const query = computed(() => routerAA.route.value.query)
 const loading = computed(() => workspacesStore.loadingAll)
@@ -55,6 +84,19 @@ const handleOpenWorkspace = workspace => {
       title: `${workspace.name}`
     }
   })
+}
+
+const handleOpenWorkspaceRemove = item => {
+  workspace.value = item
+  deleteWorkspaceConfirmPopup.value = true
+}
+const handleCloseWorkspaceRemove = () => (deleteWorkspaceConfirmPopup.value = false)
+
+const handleDeleteConfirmWorkspace = async () => {
+  await workspaceStore.actions.deleteWorkspace(workspace.value)
+  deleteWorkspaceConfirmPopup.value = false
+
+  await workspacesStore.getAllWorkspaces()
 }
 </script>
 

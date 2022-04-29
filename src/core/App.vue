@@ -382,7 +382,7 @@ code.lang-shell {
   }
 
   .v-toolbar__content {
-    padding: 4px 12px;
+    padding: 4px 8px;
   }
 
   .askAnna-main-menu {

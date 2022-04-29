@@ -32,13 +32,13 @@ export const useWorkspacesStore = defineStore('workspaces', {
   },
   getters: {
     getWorkspacesByParams: state => {
-      return ({ sort = 'desc', sortby = 'created', is_member, searchtext, visibility }) => {
+      return ({ sort = 'desc', sortby = 'created', is_member, search, visibility }) => {
         sortFilterHelper.results = [...state.allWorkspaces.results]
 
         return sortFilterHelper
           .filterByVisibility(visibility)
           .filterByMember(is_member)
-          .filterBySearchtext(searchtext)
+          .filterBySearchtext(search)
           .sorting({ sort, sortby })
       }
     }

@@ -24,7 +24,13 @@
 
       <v-spacer />
       <div class="text-center">
-        <WorkspaceToolbarMenu :isMember="workspace.is_member" :workspaceUuid="workspace.short_uuid" onlyShowPeople />
+        <WorkspaceToolbarMenu
+          usePermission
+          :isMember="workspace.is_member"
+          :permission="workspace.permission"
+          :workspaceUuid="workspace.short_uuid"
+          @onOpenWorkspaceRemove="handleOpenConfirmRemoveWorkspace"
+        />
       </div>
     </v-toolbar>
 
@@ -37,6 +43,10 @@
 <script setup lang="ts">
 import { computed } from '@vue/composition-api'
 import WorkspaceToolbarMenu from '@/features/workspace/components/WorkspaceToolbarMenu.vue'
+
+const emit = defineEmits('onOpenWorkspaceRemove')
+
+const handleOpenConfirmRemoveWorkspace = () => emit('onOpenWorkspaceRemove')
 
 const props = defineProps({
   workspace: {

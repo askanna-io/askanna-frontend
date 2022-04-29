@@ -10,9 +10,9 @@
 
       <v-col cols="12" class="pa-0">
         <v-text-field
-          v-if="!loading && (workspaces.length > 0 || searchText)"
+          v-if="!loading && (workspaces.length > 0 || search)"
           class="mx-1 mt-2"
-          v-model="searchText"
+          v-model="search"
           @input="handleOnSearch()"
           x-small
           dense
@@ -48,7 +48,7 @@
           </v-list-item>
         </v-list>
 
-        <v-flex v-if="searchText && !workspaces.length && !isSearchProcessing" class="px-2 pt-2 pl-4 text--secondary"
+        <v-flex v-if="search && !workspaces.length && !isSearchProcessing" class="px-2 pt-2 pl-4 text--secondary"
           >No results</v-flex
         >
         <v-col class="pa-2">
@@ -88,7 +88,7 @@ const explorBtnOpts = [
   }
 ]
 
-const searchText = ref('')
+const search = ref('')
 
 const isSearchProcessing = ref(false)
 
@@ -98,8 +98,8 @@ const allWorkspacesState = computed(() => workspacesStore.allWorkspaces.results)
 const workspaces = computed(() => {
   let results = allWorkspacesState.value.filter(item => item.is_member)
 
-  if (searchText.value) {
-    results = results.filter(item => item.name.toLowerCase().includes(searchText.value.toLowerCase()))
+  if (search.value) {
+    results = results.filter(item => item.name.toLowerCase().includes(search.value.toLowerCase()))
     isSearchProcessing.value = false
   }
 
@@ -107,7 +107,7 @@ const workspaces = computed(() => {
 })
 
 const handleClickOnMenuItem = () => {
-  searchText.value = ''
+  search.value = ''
   emits('onClose')
 }
 
@@ -115,6 +115,6 @@ const getIcon = workspace => (workspace.visibility === 'PUBLIC' ? 'mdi-package-v
 const handleOnSearch = () => (isSearchProcessing.value = true)
 
 const handleClickItem = () => {
-  searchText.value = ''
+  search.value = ''
 }
 </script>

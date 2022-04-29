@@ -24,8 +24,8 @@
       <v-col cols="7" class="pl-0">
         <v-alert class="mb-0 pr-0" dense border="left" colored-border color="primary">
           <v-text-field
-            v-if="!projectsStore.loading && (projects.length > 9 || searchText)"
-            v-model="searchText"
+            v-if="!projectsStore.loading && (projects.length > 9 || search)"
+            v-model="search"
             @input="handleOnSearch()"
             x-small
             dense
@@ -73,7 +73,7 @@
             </template>
           </v-simple-table>
 
-          <v-flex v-if="searchText && !projects.length && !isSearchProcessing" class="px-2 pt-2">No results </v-flex>
+          <v-flex v-if="search && !projects.length && !isSearchProcessing" class="px-2 pt-2">No results </v-flex>
           <v-btn @click="handleCloseMenu" text plain small outlined class="mt-4 mb-0" :to="projectBtnOpt.to">{{
             projectBtnOpt.title
           }}</v-btn>
@@ -97,7 +97,7 @@ const explorBtnOpts = [
 ]
 
 const listMenu = ref(0)
-const searchText = ref('')
+const search = ref('')
 const projectMenu = ref(false)
 const projectMenuItems = ref([
   { text: 'My projects', icon: 'fas fa-project-diagram' },
@@ -111,8 +111,8 @@ const projectBtnOpt = computed(() => explorBtnOpts.find(el => el.id === listMenu
 const projects = computed(() => {
   let results = projectsState.value.filter(item => item.is_member === !listMenu.value)
 
-  if (searchText.value) {
-    results = results.filter(item => item.name.toLowerCase().includes(searchText.value.toLowerCase()))
+  if (search.value) {
+    results = results.filter(item => item.name.toLowerCase().includes(search.value.toLowerCase()))
 
     isSearchProcessing.value = false
   }
@@ -120,12 +120,12 @@ const projects = computed(() => {
   return results
 })
 
-const handleChangeMenu = () => (searchText.value = '')
+const handleChangeMenu = () => (search.value = '')
 
 const handleCloseMenu = () => {
   projectMenu.value = false
   listMenu.value = 0
-  searchText.value = ''
+  search.value = ''
 }
 
 const handleClick = item => {

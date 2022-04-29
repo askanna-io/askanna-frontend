@@ -16,60 +16,67 @@
         </v-list>
       </v-col>
       <v-col cols="7" class="pl-0">
-        <v-alert class="mb-0" dense border="left" colored-border color="primary">
-          <v-text-field
-            v-if="!loading && (workspaces.length > 9 || searchText)"
-            v-model="searchText"
-            @input="handleOnSearch()"
-            x-small
-            dense
-            outlined
-            single-line
-            hide-details
-            clearable
-            label="Search workspaces..."
-          />
+        <template v-if="listMenu === 2">
+          <v-alert class="mb-0 pl-0 pt-0" dense border="left" :height="'100%'" colored-border color="primary">
+            <WorkspaceCreateForm @onClose="handleCloseMenu" />
+          </v-alert>
+        </template>
+        <template v-else>
+          <v-alert class="mb-0" dense border="left" :height="'100%'" colored-border color="primary">
+            <v-text-field
+              v-if="!loading && (workspaces.length > 9 || search)"
+              v-model="search"
+              @input="handleOnSearch()"
+              x-small
+              dense
+              outlined
+              single-line
+              hide-details
+              clearable
+              label="Search workspaces..."
+            />
 
-          <v-skeleton-loader v-if="loading" class="mx-auto" type="heading, text@9"></v-skeleton-loader>
+            <v-skeleton-loader v-if="loading" class="mx-auto" type="heading, text@9"></v-skeleton-loader>
 
-          <v-simple-table
-            v-else
-            dense
-            fixed-header
-            hide-default-footer
-            class="ask-anna-table ask-anna-table--with-links"
-          >
-            <template v-slot:default>
-              <tbody>
-                <tr
-                  v-for="item in workspaces.slice(0, 9)"
-                  :key="item.short_uuid"
-                  class="cursor--pointer"
-                  @click="handleClick(item)"
-                >
-                  <td class="px-0">
-                    <router-link
-                      class="table-link table-link--unformated"
-                      :to="{
-                        name: 'workspace',
-                        params: {
-                          workspaceId: item.short_uuid
-                        }
-                      }"
-                    >
-                      <v-icon v-text="getIcon(item)" class="pr-2" />{{ item.name }}</router-link
-                    >
-                  </td>
-                </tr>
-              </tbody>
-            </template>
-          </v-simple-table>
+            <v-simple-table
+              v-else
+              dense
+              fixed-header
+              hide-default-footer
+              class="ask-anna-table ask-anna-table--with-links"
+            >
+              <template v-slot:default>
+                <tbody>
+                  <tr
+                    v-for="item in workspaces.slice(0, 9)"
+                    :key="item.short_uuid"
+                    class="cursor--pointer"
+                    @click="handleClick(item)"
+                  >
+                    <td class="px-0">
+                      <router-link
+                        class="table-link table-link--unformated"
+                        :to="{
+                          name: 'workspace',
+                          params: {
+                            workspaceId: item.short_uuid
+                          }
+                        }"
+                      >
+                        <v-icon v-text="getIcon(item)" class="pr-2" />{{ item.name }}</router-link
+                      >
+                    </td>
+                  </tr>
+                </tbody>
+              </template>
+            </v-simple-table>
 
-          <v-flex v-if="searchText && !workspaces.length && !isSearchProcessing" class="px-2 pt-2">No results </v-flex>
-          <v-btn @click="handleCloseMenu" text plain small outlined class="mt-4 mb-0" :to="projectBtnOpt.to">{{
-            projectBtnOpt.title
-          }}</v-btn>
-        </v-alert>
+            <v-flex v-if="search && !workspaces.length && !isSearchProcessing" class="px-2 pt-2">No results </v-flex>
+            <v-btn @click="handleCloseMenu" text plain small outlined class="mt-4 mb-0" :to="projectBtnOpt.to">{{
+              projectBtnOpt.title
+            }}</v-btn>
+          </v-alert>
+        </template>
       </v-col>
     </v-row>
   </v-menu>
@@ -79,6 +86,7 @@
 import { ref, computed } from '@vue/composition-api'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import { useWorkspacesStore } from '@/features/workspaces/useWorkspacesStore'
+import WorkspaceCreateForm from '@/features/workspaces/components/WorkspaceCreateForm.vue'
 
 const router = useRouterAskAnna()
 const workspacesStore = useWorkspacesStore()
@@ -94,10 +102,11 @@ const explorBtnOpts = [
 
 const listMenu = ref(0)
 const menu = ref(false)
-const searchText = ref('')
+const search = ref('')
 const menuItems = ref([
   { text: 'My workspaces', icon: 'fas fa-project-diagram' },
-  { text: 'Explore workspaces', icon: '' }
+  { text: 'Explore workspaces', icon: '' },
+  { text: 'Create workspace', icon: '' }
 ])
 const isSearchProcessing = ref(false)
 
@@ -108,8 +117,8 @@ const projectBtnOpt = computed(() => explorBtnOpts.find(el => el.id === listMenu
 const workspaces = computed(() => {
   let results = allWorkspacesState.value.filter(item => item.is_member === !listMenu.value)
 
-  if (searchText.value) {
-    results = results.filter(item => item.name.toLowerCase().includes(searchText.value.toLowerCase()))
+  if (search.value) {
+    results = results.filter(item => item.name.toLowerCase().includes(search.value.toLowerCase()))
     isSearchProcessing.value = false
   }
 
@@ -118,12 +127,13 @@ const workspaces = computed(() => {
 
 const getIcon = workspace => (workspace.visibility === 'PUBLIC' ? 'mdi-package-variant' : 'mdi-package-variant-closed')
 
-const handleChangeMenu = () => (searchText.value = '')
+const handleChangeMenu = () => (search.value = '')
 
 const handleCloseMenu = () => {
   menu.value = false
-  listMenu.value = 0
-  searchText.value = ''
+  search.value = ''
+
+  setTimeout(() => (listMenu.value = 0), 150)
 }
 
 const handleClick = item => {

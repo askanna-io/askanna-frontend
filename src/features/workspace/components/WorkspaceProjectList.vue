@@ -29,10 +29,16 @@
       </div>
     </template>
     <template v-slot:no-data
-      ><v-alert v-if="!loading" class="mt-2 text-center" dense outlined>
+      ><v-alert v-if="!loading" class="mt-2 text-center" dense outlined :class="{ 'ma-2': $vuetify.breakpoint.xsOnly }">
         <template v-if="isWorkspaceViewer || !isSignIn">
           There are no projects in this workspace that you have access to.
         </template>
+        <template v-else-if="queryParams.search"
+          >There are no projects for this search request in this workspace.</template
+        >
+        <template v-else-if="queryParams.visibility || queryParams.is_member"
+          >There are no projects for this filter request in this workspace.</template
+        >
         <template v-else>
           There are no projects in this workspace. So, let's create one. You can easily do this with the option "+
           CREATE PROJECT" in the grey bar.<br />
@@ -65,6 +71,16 @@ defineProps({
   items: {
     type: Array,
     default: () => []
+  },
+  queryParams: {
+    type: Object,
+    default: () => ({
+      search: '',
+      sort: '',
+      sortby: '',
+      visibility: '',
+      is_member: ''
+    })
   },
   settings: {
     type: Object,

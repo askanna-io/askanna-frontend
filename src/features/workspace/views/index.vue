@@ -65,6 +65,8 @@ export default defineComponent({
 
       const { workspaceId } = context.root.$route.params
 
+      if (workspaceId === workspaceStore.state.workspace.value.short_uuid) return
+
       workspaceStore.setLoading({ projects: true })
 
       await initWorkspace(workspaceId)
