@@ -111,7 +111,7 @@ const handleOpenConfirmEditProject = () =>
   })
 
 const handleDeleteConfirmPorject = async () => {
-  await projectStore.deleteProject(props.project)
+  await projectStore.actions.deleteProject(props.project)
   await projectsStore.getProjects()
 
   deleteProjectConfirmPopup.value = false

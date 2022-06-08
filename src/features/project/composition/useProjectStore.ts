@@ -36,8 +36,10 @@ export default function () {
 
   return {
     stickedVM,
+    state,
     ...state,
     ...actions,
+    actions,
     projectName
   }
 }

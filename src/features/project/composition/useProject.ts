@@ -30,8 +30,4 @@ export default function () {
   onUnmounted(() => {
     projectStore.resetProjectData()
   })
-
-  return {
-    ...projectStore
-  }
 }
