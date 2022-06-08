@@ -58,7 +58,6 @@
           >
             <project-menu :projectName="project.name" :isEditProjectView="isEditProjectView" />
             <v-spacer />
-
             <project-menu-popup
               v-if="!isEditProjectView && (projectRemove || projectInfoEdit)"
               :project="project"

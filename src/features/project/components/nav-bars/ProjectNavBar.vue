@@ -1,54 +1,95 @@
-<script lang="ts">
+<template>
+  <component :is="TypeComponent" v-bind="props" />
+</template>
+<script setup lang="ts">
+import { computed } from '@vue/composition-api'
+
 import JobNavBar from './JobNavBar.vue'
 import DefaultBar from './DefaultBar.vue'
 import JobRunNavBar from './JobRunNavBar.vue'
 import JobNavBarNotExist from './JobNavBarNotExist.vue'
 import PackageBarNotExist from './PackageBarNotExist.vue'
 import JobRunNavBarNotExist from './JobRunNavBarNotExist.vue'
-import { defineComponent } from '@vue/composition-api'
 
-export default defineComponent({
-  name: 'ProjectNavBar',
-
-  functional: true,
-
-  props: {
-    routeName: {
-      type: [Number, String],
-      default: 'workspace-project-activity'
-    }
+const props = defineProps({
+  routeName: {
+    type: [Number, String],
+    default: 'workspace-project-activity'
   },
-  render: function (h, context) {
-    function appropriateBarComponent() {
-      const route = context.props.routeName
-
-      switch (true) {
-        case route === 'workspace-project-code-does-not-exist':
-          return PackageBarNotExist
-
-        case route === 'workspace-project-job-overiew':
-        case route === 'workspace-project-job-jobruns':
-        case route === 'workspace-project-job-edit':
-          return JobNavBar
-
-        case route === 'workspace-project-job-does-not-exist':
-          return JobNavBarNotExist
-
-        case route.indexOf('job-uuid') !== -1:
-          return JobNavBar
-
-        case route.indexOf('workspace-project-jobs-job-jobrun') !== -1:
-          return JobRunNavBar
-
-        case route === 'workspace-project-job-run-does-not-exist':
-          return JobRunNavBarNotExist
-
-        default:
-          return DefaultBar
+  job: {
+    type: Object,
+    default: function () {
+      return {
+        name: ''
       }
     }
-
-    return h(appropriateBarComponent(), context.data, context.children)
+  },
+  project: {
+    type: Object,
+    default: function () {
+      return {
+        name: ''
+      }
+    }
+  },
+  sticked: {
+    type: Boolean,
+    default: () => false
+  },
+  isShowProjectBar: {
+    type: Boolean,
+    default: false
+  },
+  handleOnStick: {
+    type: Function,
+    default: () => {}
+  },
+  handleShowProjectBar: {
+    type: Function,
+    default: () => {}
+  },
+  projectBreadcrumbs: {
+    type: Array,
+    default: () => []
   }
+})
+
+const types = [
+  {
+    routes: 'workspace-project-code-does-not-exist',
+    component: PackageBarNotExist,
+    comporasionFn: item => item.routes === props.routeName
+  },
+  {
+    routes: ['workspace-project-job-overiew', 'workspace-project-job-jobruns', 'workspace-project-job-edit'],
+    component: JobNavBar,
+    comporasionFn: item => item.routes.some(route => route === props.routeName)
+  },
+  {
+    routes: 'workspace-project-job-does-not-exist',
+    component: JobNavBarNotExist,
+    comporasionFn: item => item.routes === props.routeName
+  },
+  {
+    routes: 'job-uuid',
+    component: JobNavBar,
+    comporasionFn: () => props.routeName.indexOf('job-uuid') !== -1
+  },
+  {
+    routes: 'workspace-project-jobs-job-jobrun',
+    component: JobRunNavBar,
+    comporasionFn: () => props.routeName.indexOf('workspace-project-jobs-job-jobrun') !== -1
+  },
+  {
+    routes: 'workspace-project-job-run-does-not-exist',
+    component: JobRunNavBarNotExist,
+    comporasionFn: item => item.routes === props.routeName
+  }
+]
+
+const TypeComponent = computed(() => {
+  const type = types.find(item => item.comporasionFn(item))
+
+  return type?.component || DefaultBar
 })
 </script>

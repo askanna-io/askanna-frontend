@@ -5,11 +5,11 @@
         :job="job"
         :routeName="routeName"
         :handleOnStick="handleOnStick"
-        :sticked="project.menu.sticked"
-        :project="project.project.value"
+        :sticked="projectStore.stickedVM.value"
         :projectBreadcrumbs="projectBreadcrumbs"
+        :project="projectStore.state.project.value"
         :handleShowProjectBar="handleShowProjectBar"
-        :isShowProjectBar="project.menu.isShowProjectBar"
+        :isShowProjectBar="projectStore.state.menu.isShowProjectBar"
       />
       <router-view />
     </v-card>
@@ -23,6 +23,8 @@
 </template>
 
 <script setup lang="ts">
+import useProjectStore from '@/features/project/composition/useProjectStore'
+
 import { useRouter } from '@u3u/vue-hooks'
 import { ref, watch, computed } from '@vue/composition-api'
 import { useFileStore } from '@/features/file/useFileStore'
@@ -34,11 +36,12 @@ import usePackageStore from '@/features/package/composition/usePackageStore'
 import ProjectNavBar from '@/features/project/components/nav-bars/ProjectNavBar.vue'
 import PreviewFileTypeMardown from '@/features/file/components/PreviewFileTypeMardown.vue'
 
-const project = useProject()
+useProject()
 const { route } = useRouter()
 const ext = useFileExtension()
 const jobStore = useJobStore()
 const fileStore = useFileStore()
+const projectStore = useProjectStore()
 const packageStore = usePackageStore()
 
 const fileSource = ref('')
@@ -58,11 +61,14 @@ const images = computed(() => packageStore.packageData.value.files.filter(item =
 const cdnBaseUrl = computed(() => packageStore.packageData.value.cdn_base_url)
 
 const handleShowProjectBar = () =>
-  project.setMenu({ name: 'menu.isShowProjectBar', value: !project.menu.value.isShowProjectBar })
+  projectStore.actions.setMenu({
+    name: 'menu.isShowProjectBar',
+    value: !projectStore.state.menu.value.isShowProjectBar
+  })
 
 const handleOnStick = value => {
-  project.setMenu({ name: 'menu.isSticked', value })
-  if (!value) project.setMenu({ name: 'menu.sticked', value: false })
+  projectStore.actions.setMenu({ name: 'menu.isSticked', value })
+  if (!value) projectStore.actions.setMenu({ name: 'menu.sticked', value: false })
 }
 
 watch(readmeFile, async readmeFile => {
