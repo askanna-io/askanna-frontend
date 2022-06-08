@@ -53,7 +53,19 @@ const queryParams = computed({
   }
 })
 
-const tableHeight = computed(() => height.value - 66)
+const tableHeight = computed(() => {
+  const calcHeigth = (acc: number, cr: any) => {
+    const h = cr.variable.type.includes('list') ? 132 : 48
+    acc = acc + h
+
+    return acc
+  }
+
+  const count = items.value.reduce(calcHeigth, 0)
+
+  return count + 80
+})
+
 const loadingByParams = computed(() => runinfoVariablesStore.state.loading.value.variablesByParams)
 
 const query = useQuery({
