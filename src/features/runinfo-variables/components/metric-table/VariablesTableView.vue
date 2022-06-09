@@ -37,8 +37,12 @@
         <tr v-if="isLabels">
           <th colspan="2" class="h-30 text-left" />
           <template>
-            <th class="h-30 text-left text-subtitle-2 font-weight-bold" v-for="label in labels" :key="label">
-              {{ label }}
+            <th
+              class="h-30 text-left text-subtitle-2 font-weight-bold"
+              v-for="(label, index) in labels"
+              :key="label.name + index"
+            >
+              {{ label.name }}
             </th>
           </template>
         </tr>
@@ -55,8 +59,8 @@
             <template v-if="labels.length">
               <metric-table-label-td
                 v-for="label in labels"
-                :key="label + index"
-                :label="label"
+                :key="label.name + index"
+                :label="label.name"
                 :isLabel="true"
                 :labels="item.label"
                 :isLabels="isLabels"

@@ -1,7 +1,7 @@
 <template>
   <ask-anna-loading-progress classes="mx-4 mb-4" :type="'table-row'" :loading="loading">
     <div>
-      <variables-table-view
+      <VariablesTableView
         v-if="items.length || isSorted"
         :isSorted="isSorted"
         :labels="labels"
@@ -19,8 +19,8 @@
 </template>
 <script setup lang="ts">
 import { throttle } from 'lodash'
+import { useRouter } from '@u3u/vue-hooks'
 import useQuery from '@/core/composition/useQuery'
-import { useRouter, useWindowSize } from '@u3u/vue-hooks'
 import { ref, computed, onBeforeMount } from '@vue/composition-api'
 import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
 import useProjectStore from '@/features/project/composition/useProjectStore'
@@ -28,7 +28,6 @@ import useRuninfoVariablesStore from '@/features/runinfo-variables/composition/u
 import VariablesTableView from '@/features/runinfo-variables/components/metric-table/VariablesTableView.vue'
 
 const { route } = useRouter()
-const { height } = useWindowSize()
 const jobRunStore = useJobRunStore()
 const projectStore = useProjectStore()
 const runinfoVariablesStore = useRuninfoVariablesStore()
@@ -39,7 +38,7 @@ const isSorted = ref(false)
 
 const sticked = computed(() => !projectStore.stickedVM.value)
 const next = computed(() => runinfoVariablesStore.state.variables.value.next)
-const labels = computed(() => jobRunStore.state.jobRun.value.variablesmeta.labels)
+const labels = computed(() => jobRunStore.state.jobRun.value.variables_meta.label_names)
 
 const items = computed(() => runinfoVariablesStore.state.variables.value.results)
 const loading = computed(() => runinfoVariablesStore.state.loading.value.variables)

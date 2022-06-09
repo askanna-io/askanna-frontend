@@ -76,7 +76,7 @@
             class="table-link table-link--unformated"
             :to="routeLinkParams({ item, name: 'workspace-project-jobs-job-jobrun-metrics' })"
           >
-            {{ getMetricTitle(item.metricsmeta.count) }}
+            {{ getMetricTitle(item.metrics_meta.count) }}
           </router-link>
         </td>
       </tr>
@@ -186,7 +186,7 @@ export default defineComponent({
         width: '120px',
         text: 'Metrics',
         sortable: false,
-        value: 'metricsmeta',
+        value: 'metrics_meta',
         class: 'text-left text-subtitle-2 font-weight-bold h-20'
       }
     ]

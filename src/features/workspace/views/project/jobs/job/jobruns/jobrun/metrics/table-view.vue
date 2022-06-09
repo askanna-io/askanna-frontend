@@ -17,105 +17,80 @@
     </div>
   </ask-anna-loading-progress>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 import { throttle } from 'lodash'
-
-import { useWindowSize } from '@u3u/vue-hooks'
+import { useRouter } from '@u3u/vue-hooks'
 import useQuery from '@/core/composition/useQuery'
-import useMetricStore from '@/features/metric/composition/useMetricStore'
+import { useMetricStore } from '@/features/metric/useMetricStore'
+import { ref, computed, onBeforeMount } from '@vue/composition-api'
 import useProjectStore from '@/features/project/composition/useProjectStore'
-import { ref, computed, onBeforeMount, defineComponent } from '@vue/composition-api'
 import MetricTableView from '@/features/metric/components/metric-table/MetricTableView.vue'
 
-export default defineComponent({
-  name: 'table-view',
+const { route } = useRouter()
+const metricStore = useMetricStore()
+const projectStore = useProjectStore()
 
-  components: {
-    MetricTableView
-  },
+const { jobRunId: uuid } = route.value.params
 
-  setup(_, context) {
-    const { height } = useWindowSize()
-    const metricStore = useMetricStore()
-    const projectStore = useProjectStore()
+const isSorted = ref(false)
+const metricsQuery = ref({})
 
-    const { jobRunId: uuid } = context.root.$route.params
+const next = computed(() => metricStore.metrics.next)
+const items = computed(() => metricStore.metrics.results)
+const loading = computed(() => metricStore.loading.metric)
+const sticked = computed(() => !projectStore.stickedVM.value)
+const labels = computed(() => metricStore.metricMeta.label_names)
 
-    const isSorted = ref(false)
-
-    const sticked = computed(() => !projectStore.stickedVM.value)
-    const next = computed(() => metricStore.state.metrics.value.next)
-    const labels = computed(() => metricStore.state.metricLabels.value)
-    const items = computed(() => metricStore.state.metrics.value.results)
-    const loading = computed(() => metricStore.state.loading.value.metric)
-    //const queryParams = computed(() => metricStore.state.metricsQuery.value)
-
-    const metricsQuery = ref({})
-    const queryParams = computed({
-      get: () => metricsQuery.value,
-      set: val => {
-        isSorted.value = true
-        metricsQuery.value = val
-      }
-    })
-
-    const loadingByParams = computed(() => metricStore.state.loading.value.metricByParams)
-
-    const tableHeight = computed(() => {
-      const calcHeigth = (acc: number, cr: any) => {
-        const h = cr.metric.type.includes('list') ? 132 : 48
-        acc = acc + h
-
-        return acc
-      }
-
-      const count = items.value.reduce(calcHeigth, 0)
-
-      return count + 80
-    })
-
-    const query = useQuery({
-      next,
-      uuid,
-      limit: 10,
-      offset: 100,
-      queryParams,
-      storeAction: metricStore.actions.getMetricByParams
-    })
-
-    const handleOnSort = async params => {
-      await metricStore.actions.getMetricInitial({ uuid, params, loading: 'metricByParams' })
-      await metricStore.actions.setIsFiltered(true)
-
-      const { limit, offset, ...rest } = params
-      queryParams.value = rest
-      query.resetParams()
-    }
-
-    const throttled = throttle(query.onScroll, 350)
-    const handleOnScroll = e => throttled(e.target.scrollTop)
-
-    const fetchData = async () => {
-      await metricStore.actions.setIsFiltered(false)
-      await metricStore.actions.getMetricLabels(uuid)
-      await metricStore.actions.getMetricInitial({ uuid, params: { limit: 100, offset: 0 } })
-    }
-
-    onBeforeMount(() => fetchData())
-
-    return {
-      items,
-      sticked,
-      labels,
-      loading,
-      throttle,
-      isSorted,
-      tableHeight,
-      loadingByParams,
-
-      handleOnSort,
-      handleOnScroll
-    }
+const queryParams = computed({
+  get: () => metricsQuery.value,
+  set: val => {
+    isSorted.value = true
+    metricsQuery.value = val
   }
 })
+
+const loadingByParams = computed(() => metricStore.loading.metricByParams)
+
+const tableHeight = computed(() => {
+  const calcHeigth = (acc: number, cr: any) => {
+    const h = cr.metric.type.includes('list') ? 132 : 48
+    acc = acc + h
+
+    return acc
+  }
+
+  const count = items.value.reduce(calcHeigth, 0)
+
+  return count + 80
+})
+
+const query = useQuery({
+  next,
+  uuid,
+  limit: 10,
+  offset: 100,
+  queryParams,
+  storeAction: metricStore.getMetricByParams
+})
+
+const handleOnSort = async params => {
+  await metricStore.getMetricInitial({ uuid, params, loading: 'metricByParams' })
+  metricStore.isFiltered = true
+
+  const { limit, offset, ...rest } = params
+  queryParams.value = rest
+  query.resetParams()
+}
+
+const throttled = throttle(query.onScroll, 350)
+const handleOnScroll = e => throttled(e.target.scrollTop)
+
+const fetchData = async () => {
+  metricStore.isFiltered = false
+
+  await metricStore.getMetricMeta(uuid)
+  await metricStore.getMetricInitial({ uuid, params: { limit: 100, offset: 0 } })
+}
+
+onBeforeMount(() => fetchData())
 </script>

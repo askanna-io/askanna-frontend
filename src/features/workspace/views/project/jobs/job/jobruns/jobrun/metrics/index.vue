@@ -12,7 +12,19 @@
 
         <div>
           <v-btn
-            v-if="!$vuetify.breakpoint.xsOnly"
+            v-if="isChartView"
+            small
+            outlined
+            color="secondary"
+            class="mr-1 btn--hover"
+            :disabled="!chart.svgData || disabledTools"
+            @click="handleDownloadPNG"
+          >
+            <v-icon color="secondary" left>mdi-download</v-icon>Download PNG
+          </v-btn>
+
+          <v-btn
+            v-if="!$vuetify.breakpoint.xsOnly && !isChartView"
             small
             outlined
             color="secondary"
@@ -22,120 +34,108 @@
           >
             <v-icon color="secondary" left>mdi-download</v-icon>Download JSON
           </v-btn>
-          <v-btn small outlined color="secondary" @click="handleCopy" class="mr-1 btn--hover" :disabled="disabledTools">
+          <v-btn
+            v-if="!isChartView"
+            small
+            outlined
+            color="secondary"
+            @click="handleCopy"
+            class="mr-1 btn--hover"
+            :disabled="disabledTools"
+          >
             <v-icon color="secondary" left>mdi-content-copy</v-icon>Copy JSON
           </v-btn>
         </div>
 
-        <v-card class="ml-4" flat width="115" color="grey lighten-4">
-          <v-select
-            dense
-            hide-details
-            return-object
-            :items="views"
-            persistent-hint
-            item-text="name"
-            item-value="value"
-            v-model="viewModel"
-            :disabled="disabledTools"
-            :menu-props="{ bottom: true, offsetY: true }"
-          >
-            <template v-slot:selection="{ item }"> View: {{ item.name }} </template>
-          </v-select>
-        </v-card>
+        <v-btn-toggle v-model="currentViewIndex" mandatory class="mr-1">
+          <v-tooltip v-for="(view, index) in views" top :key="index">
+            <template v-slot:activator="{ on }">
+              <v-btn v-on="on" small class="btn--hover" outlined color="secondary" @click="handleChangeView(index)">
+                <v-icon color="secondary">{{ view.icon }}</v-icon>
+              </v-btn>
+            </template>
+            <span>{{ view.name }}</span>
+          </v-tooltip>
+        </v-btn-toggle>
       </v-flex>
     </v-toolbar>
     <router-view />
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import useCopy from '@/core/composition/useCopy'
+import { useChartStore } from '@/features/charts/useChartStore'
+import useChartDownload from '@/features/charts/useChartDownload'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import useMetricStore from '@/features/metric/composition/useMetricStore'
+import { useMetricStore } from '@/features/metric/useMetricStore'
+import { ref, computed, onBeforeMount } from '@vue/composition-api'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
-import useProjectStore from '@/features/project/composition/useProjectStore'
-import { ref, computed, defineComponent, onBeforeMount } from '@vue/composition-api'
 
-export default defineComponent({
-  name: 'metric-index',
+const copy = useCopy()
+const chart = useChartStore()
+const router = useRouterAskAnna()
+const metricStore = useMetricStore()
+const chartDownload = useChartDownload()
+const forceFileDownload = useForceFileDownload()
 
-  setup(_, context) {
-    const copy = useCopy()
-    const metricStore = useMetricStore()
-    const projectStore = useProjectStore()
-    const router = useRouterAskAnna()
-    const forceFileDownload = useForceFileDownload()
+const { jobRunId: uuid } = router.route.value.params
 
-    const { jobRunId: uuid } = context.root.$route.params
+const views = [
+  { name: 'Table', value: 'table', icon: 'mdi-table' },
+  { name: 'Chart', value: 'chart', icon: 'mdi-chart-areaspline-variant' },
+  { name: 'JSON', value: 'json', icon: 'mdi-code-json' }
+]
 
-    const views = [
-      { name: 'Table', value: 'table' },
-      { name: 'JSON', value: 'json' }
-      // { name: 'Card', value: 'card' },
-      // { name: 'Grid', value: 'grid' }
-    ]
-    const currentView = ref(views[0])
+const currentView = ref(views[0])
+const currentViewIndex = ref(0)
 
-    const sticked = computed(() => !projectStore.stickedVM.value)
-    const items = computed(() => metricStore.state.metrics.value.results)
-    const isFiltered = computed(() => metricStore.state.isFiltered.value)
+const items = computed(() => metricStore.metrics.results)
+const isFiltered = computed(() => metricStore.isFiltered)
 
-    const metricFullData = computed(() => metricStore.state.metricFullData.value)
-    const metricJSON = computed(() => JSON.stringify(metricStore.state.metricJSON.value.results, null, 2))
+const metricJSON = computed(() => JSON.stringify(metricStore.metricJSON.results, null, 2))
+const isChartView = computed(() => currentView.value.value === 'chart')
+const disabledTools = computed(
+  () =>
+    (currentView.value.value === 'table' && !items.value.length) ||
+    (currentView.value.value === 'json' && !metricJSON.value)
+)
 
-    const viewModel = computed({
-      get: () => {
-        return currentView.value
-      },
-      set: view => {
-        if (view.value === currentView.value.value) return
-        currentView.value = view
-        router.push({ name: `workspace-project-jobs-job-jobrun-metrics-${view.value}` })
-      }
-    })
+const handleCopy = async () => {
+  if (!metricStore.metricFullData) await metricStore.getMetricFullData({ uuid })
 
-    const disabledTools = computed(
-      () =>
-        (currentView.value.value === 'table' && !items.value.length) ||
-        (currentView.value.value === 'json' && !metricJSON.value)
-    )
+  copy.handleCopyText(metricStore.metricFullData)
+}
 
-    const handleCopy = async () => {
-      if (!metricFullData.value) await metricStore.actions.getMetricFullData({ uuid })
+const handleDownload = async () => {
+  if (!metricStore.metricFullData) await metricStore.getMetricFullData({ uuid })
 
-      copy.handleCopyText(metricFullData.value)
-    }
+  forceFileDownload.trigger({ source: metricStore.metricFullData, name: `run_${uuid}_metrics.json` })
+}
 
-    const handleDownload = async () => {
-      if (!metricFullData.value) await metricStore.actions.getMetricFullData({ uuid })
-
-      forceFileDownload.trigger({ source: metricFullData.value, name: `run_${uuid}_metrics.json` })
-    }
-
-    const fetchData = async () => {
-      await metricStore.actions.clearMetric()
-      const view = context.root.$route.meta.tabValue
-      if (view) {
-        currentView.value = views.find(item => item.value === view)
-      }
-    }
-
-    onBeforeMount(() => fetchData())
-
-    return {
-      items,
-      views,
-      sticked,
-      viewModel,
-      isFiltered,
-      disabledTools,
-
-      handleCopy,
-      handleDownload
-    }
+const fetchData = async () => {
+  await metricStore.$reset()
+  const view = router.route.value.meta.tabValue
+  if (view) {
+    currentView.value = views.find(item => item.value === view)
+    currentViewIndex.value = views.findIndex(item => item.value === view)
   }
-})
+}
+
+const handleChangeView = (index: number) => {
+  const view = views[index]
+  currentViewIndex.value = index
+  if (view.value === currentView.value.value) return
+  currentView.value = view
+  router.push({ name: `workspace-project-jobs-job-jobrun-metrics-${view.value}` })
+}
+
+const handleDownloadPNG = () => {
+  const activeS = chart.activeS ? '_' + chart.activeS : ''
+  chartDownload.save(chart.svgData, `run_${uuid}_metrics_${chart.activeY}_${chart.activeX}${activeS}.png`)
+}
+
+onBeforeMount(() => fetchData())
 </script>
 <style scoped>
 .h-20 {

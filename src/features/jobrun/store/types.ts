@@ -203,7 +203,7 @@ export class JobRunModel {
       trigger: {
         name: ''
       },
-      variablesmeta: { count: 0, size: 0, labels: ['source'], keys: [] },
+      variables_meta: { count: 0, size: 0, label_names: [], keys: [], variable_names: [] },
       count: 0,
       keys: [],
       labels: [],

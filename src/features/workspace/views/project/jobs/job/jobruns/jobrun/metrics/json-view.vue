@@ -9,7 +9,7 @@
 import { throttle } from 'lodash'
 import { useWindowSize } from '@u3u/vue-hooks'
 import useQuery from '@/core/composition/useQuery'
-import useMetricStore from '@/features/metric/composition/useMetricStore'
+import { useMetricStore } from '@/features/metric/useMetricStore'
 import { computed, onBeforeMount, defineComponent } from '@vue/composition-api'
 import MetricJsonView from '@/features/metric/components/metric-table/MetricJsonView.vue'
 
@@ -23,7 +23,7 @@ export default defineComponent({
     const metricStore = useMetricStore()
 
     const { jobRunId: uuid } = context.root.$route.params
-    const next = computed(() => metricStore.state.metricJSON.value.next)
+    const next = computed(() => metricStore.metricJSON.next)
 
     const query = useQuery({
       uuid,
@@ -31,11 +31,11 @@ export default defineComponent({
       limit: 10,
       offset: 10,
       loading: false,
-      storeAction: metricStore.actions.getMetricJSON
+      storeAction: metricStore.getMetricJSON
     })
 
-    const loading = computed(() => metricStore.state.loading.value.metricJSON)
-    const metricJSON = computed(() => JSON.stringify(metricStore.state.metricJSON.value.results, null, 2))
+    const loading = computed(() => metricStore.loading.metricJSON)
+    const metricJSON = computed(() => JSON.stringify(metricStore.metricJSON.results, null, 2))
 
     const maxHeight = computed(() => height.value - 140)
     const scrollerStyles = computed(() => {
@@ -49,7 +49,7 @@ export default defineComponent({
       throttled(e.target.scrollTop)
     }
 
-    const fetchData = async () => await metricStore.actions.getMetricJSON({ uuid, params: { limit: 10, offset: 0 } })
+    const fetchData = async () => await metricStore.getMetricJSON({ uuid, params: { limit: 10, offset: 0 } })
     onBeforeMount(() => fetchData())
 
     return { loading, metricJSON, scrollerStyles, handleOnScroll }
