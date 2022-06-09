@@ -103,6 +103,18 @@ const jobRun = [
             }
           },
           {
+            path: 'chart',
+            component: () =>
+              import(
+                /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-chart-json" */ './views/project/jobs/job/jobruns/jobrun/metrics/chart-view.vue'
+              ),
+            name: 'workspace-project-jobs-job-jobrun-metrics-chart',
+            meta: {
+              tabValue: 'chart',
+              title: 'Run: jobRunId'
+            }
+          },
+          {
             path: 'json',
             component: () =>
               import(
@@ -111,30 +123,6 @@ const jobRun = [
             name: 'workspace-project-jobs-job-jobrun-metrics-json',
             meta: {
               tabValue: 'json',
-              title: 'Run: jobRunId'
-            }
-          },
-          {
-            path: 'card',
-            component: () =>
-              import(
-                /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-metrics-card" */ './views/project/jobs/job/jobruns/jobrun/metrics/card-view.vue'
-              ),
-            name: 'workspace-project-jobs-job-jobrun-metrics-card',
-            meta: {
-              tabValue: 'card',
-              title: 'Run: jobRunId'
-            }
-          },
-          {
-            path: 'grid',
-            component: () =>
-              import(
-                /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-metrics-grid" */ './views/project/jobs/job/jobruns/jobrun/metrics/grid-view.vue'
-              ),
-            name: 'workspace-project-jobs-job-jobrun-metrics-grid',
-            meta: {
-              tabValue: 'grid',
               title: 'Run: jobRunId'
             }
           }
@@ -205,30 +193,6 @@ const jobRun = [
             name: 'workspace-project-jobs-job-jobrun-variables-json',
             meta: {
               tabValue: 'json',
-              title: 'Run: jobRunId'
-            }
-          },
-          {
-            path: 'card',
-            component: () =>
-              import(
-                /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-variables-card" */ './views/project/jobs/job/jobruns/jobrun/variables/card-view.vue'
-              ),
-            name: 'workspace-project-jobs-job-jobrun-variables-card',
-            meta: {
-              tabValue: 'card',
-              title: 'Run: jobRunId'
-            }
-          },
-          {
-            path: 'grid',
-            component: () =>
-              import(
-                /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-variables-grid" */ './views/project/jobs/job/jobruns/jobrun/variables/grid-view.vue'
-              ),
-            name: 'workspace-project-jobs-job-jobrun-variables-grid',
-            meta: {
-              tabValue: 'grid',
               title: 'Run: jobRunId'
             }
           }

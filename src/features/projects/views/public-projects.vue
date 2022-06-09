@@ -40,6 +40,7 @@
           <template v-else-if="query.visibility || query.is_member"
             >There are no projects for this filter request.</template
           >
+          <template v-else>There are no projects that you have access to.</template>
         </v-alert></template
       >
     </v-data-iterator>

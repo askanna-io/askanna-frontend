@@ -38,122 +38,87 @@
           </v-select>
         </v-card>
 
-        <v-card class="ml-4" flat width="115" color="grey lighten-4">
-          <v-select
-            dense
-            hide-details
-            return-object
-            :items="views"
-            persistent-hint
-            item-text="name"
-            item-value="value"
-            v-model="viewModel"
-            :disabled="disabledTools"
-            :menu-props="{ bottom: true, offsetY: true }"
-          >
-            <template v-slot:selection="{ item }"> View: {{ item.name }} </template>
-          </v-select>
-        </v-card>
+        <v-btn-toggle v-model="currentViewIndex" mandatory class="mr-1">
+          <v-tooltip v-for="(view, index) in views" top :key="index">
+            <template v-slot:activator="{ on }">
+              <v-btn v-on="on" small class="btn--hover" outlined color="secondary" @click="handleChangeView(index)">
+                <v-icon color="secondary">{{ view.icon }}</v-icon>
+              </v-btn>
+            </template>
+            <span>{{ view.name }}</span>
+          </v-tooltip>
+        </v-btn-toggle>
       </v-flex>
     </v-toolbar>
     <router-view />
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import useCopy from '@/core/composition/useCopy'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
+import { ref, computed, onBeforeMount } from '@vue/composition-api'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
-import useProjectStore from '@/features/project/composition/useProjectStore'
-import { ref, computed, defineComponent, onBeforeMount } from '@vue/composition-api'
 import useRuninfoVariablesStore from '@/features/runinfo-variables/composition/useRuninfoVariablesStore'
 
-export default defineComponent({
-  name: 'variables-index',
+const copy = useCopy()
+const router = useRouterAskAnna()
+const forceFileDownload = useForceFileDownload()
+const runinfoVariablesStore = useRuninfoVariablesStore()
 
-  setup(_, context) {
-    const copy = useCopy()
-    const router = useRouterAskAnna()
-    const runinfoVariablesStore = useRuninfoVariablesStore()
+const { jobRunId: uuid } = router.route.value.params
 
-    const projectStore = useProjectStore()
-    const forceFileDownload = useForceFileDownload()
+const views = [
+  { name: 'Table', value: 'table', icon: 'mdi-table' },
+  { name: 'JSON', value: 'json', icon: 'mdi-code-json' }
+]
 
-    const { jobRunId: uuid } = context.root.$route.params
+const defaultGroupByValues = [{ name: 'Name', value: 'name' }]
 
-    const views = [
-      { name: 'Table', value: 'table' },
-      { name: 'JSON', value: 'json' }
-      // { name: 'Card', value: 'card' },
-      // { name: 'Grid', value: 'grid' }
-    ]
+const currentView = ref(views[0])
+const currentViewIndex = ref(0)
+const currentGroupBy = ref(defaultGroupByValues[0])
 
-    const defaultGroupByValues = [{ name: 'Name', value: 'name' }]
+const labels = computed(() => runinfoVariablesStore.state.variablesLabels.value)
+const items = computed(() => runinfoVariablesStore.state.variables.value.results)
+const variablesFullData = computed(() => runinfoVariablesStore.state.variablesFullData.value)
+const variablesJSON = computed(() => JSON.stringify(runinfoVariablesStore.state.variablesJSON.value.results, null, 2))
 
-    const currentView = ref(views[0])
-    const currentGroupBy = ref(defaultGroupByValues[0])
+// set labels to group select if they exist
+const groupByValues = computed(() =>
+  labels.value.length ? [...defaultGroupByValues, ...labels.value] : defaultGroupByValues
+)
 
-    const sticked = computed(() => !projectStore.stickedVM.value)
-    const labels = computed(() => runinfoVariablesStore.state.variablesLabels.value)
-    const items = computed(() => runinfoVariablesStore.state.variables.value.results)
-    const variablesFullData = computed(() => runinfoVariablesStore.state.variablesFullData.value)
-    const variablesJSON = computed(() =>
-      JSON.stringify(runinfoVariablesStore.state.variablesJSON.value.results, null, 2)
-    )
+const disabledTools = computed(
+  () =>
+    (currentView.value.value === 'table' && !items.value.length) ||
+    (currentView.value.value === 'json' && !variablesJSON.value)
+)
 
-    // set labels to group select if they exist
-    const groupByValues = computed(() =>
-      labels.value.length ? [...defaultGroupByValues, ...labels.value] : defaultGroupByValues
-    )
+const handleCopy = async () => {
+  if (!variablesFullData.value) await runinfoVariablesStore.actions.getVariablesFullData({ uuid })
 
-    const viewModel = computed({
-      get: () => {
-        return currentView.value
-      },
-      set: view => {
-        if (view.value === currentView.value.value) return
-        currentView.value = view
-        router.push({ name: `workspace-project-jobs-job-jobrun-variables-${view.value}` })
-      }
-    })
+  copy.handleCopyText(variablesFullData.value)
+}
 
-    const disabledTools = computed(
-      () =>
-        (currentView.value.value === 'table' && !items.value.length) ||
-        (currentView.value.value === 'json' && !variablesJSON.value)
-    )
+const handleDownload = async () => {
+  if (!variablesFullData.value) await runinfoVariablesStore.actions.getVariablesFullData({ uuid })
 
-    const handleCopy = async () => {
-      if (!variablesFullData.value) await runinfoVariablesStore.actions.getVariablesFullData({ uuid })
+  forceFileDownload.trigger({ source: variablesFullData.value, name: `run_${uuid}_variables.json` })
+}
 
-      copy.handleCopyText(variablesFullData.value)
-    }
+const handleChangeView = (index: number) => {
+  const view = views[index]
+  currentViewIndex.value = index
+  if (view.value === currentView.value.value) return
+  currentView.value = view
+  router.push({ name: `workspace-project-jobs-job-jobrun-variables-${view.value}` })
+}
 
-    const handleDownload = async () => {
-      if (!variablesFullData.value) await runinfoVariablesStore.actions.getVariablesFullData({ uuid })
-
-      forceFileDownload.trigger({ source: variablesFullData.value, name: `run_${uuid}_variables.json` })
-    }
-
-    onBeforeMount(() => {
-      const view = context.root.$route.meta.tabValue
-      if (view) {
-        currentView.value = views.find(item => item.value === view)
-      }
-    })
-
-    return {
-      items,
-      views,
-      sticked,
-      viewModel,
-      disabledTools,
-      groupByValues,
-      currentGroupBy,
-
-      handleCopy,
-      handleDownload
-    }
+onBeforeMount(() => {
+  const view = router.route.value?.meta.tabValue
+  if (view) {
+    currentView.value = views.find(item => item.value === view)
   }
 })
 </script>

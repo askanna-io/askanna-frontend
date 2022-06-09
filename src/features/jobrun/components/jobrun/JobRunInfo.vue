@@ -72,7 +72,7 @@ export default defineComponent({
   },
 
   setup(props, context) {
-    const moment = useMoment(context)
+    const moment = useMoment()
     const groupArray = useGroupArray()
     const router = useRouterAskAnna()
 

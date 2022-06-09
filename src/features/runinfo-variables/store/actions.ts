@@ -3,7 +3,7 @@ import { logger } from '@/core/plugins/logger'
 import apiService from '@/core/services/apiService'
 import { apiStringify } from '@/core/services/api-settings'
 
-import { runInfoVariablesState, RUNIFO_VARIABLES_STORE, action as ac, mutation as mt } from './types'
+import { runInfoVariablesState, action as ac, mutation as mt } from './types'
 
 const serviceName = 'runifo'
 const apiActions = apiStringify(serviceName)
@@ -59,23 +59,6 @@ export const actions: ActionTree<runInfoVariablesState, RootState> = {
 
     commit(mt.SET_VARIABLES, variables)
     if (loading) commit(mt.SET_LOADING, { variablesByParams: false })
-  },
-
-  async [ac.getVariablesLabels]({ commit }, uuid) {
-    let meta
-
-    try {
-      meta = await apiService({
-        uuid,
-        serviceName,
-        action: apiActions.getVariablesMeta
-      })
-    } catch (e) {
-      logger.error(commit, 'Error on get variables in getVariablesLabels action.\nError: ', e)
-      return
-    }
-
-    commit(mt.SET_VARIABLES_LABELS, meta?.labels)
   },
 
   async [ac.setLoading]({ commit }, data) {

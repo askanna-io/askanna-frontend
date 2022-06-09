@@ -73,8 +73,6 @@ export const api: ApiSettings = {
       list: () => `project/`,
       projectPackages: id => `project/${id}/packages/`,
       getDownloadLink: ({ projectId, packageId }) => `project/${projectId}/packages/${packageId}/download/`
-
-      //getDownloadLink: ({ projectId, packageId }) => 'project/1/packages/45d1816c-4973-4db1-b909-a4a2a6cda9b4/download/'
     },
     job: {
       add: () => 'job/',
@@ -136,11 +134,10 @@ export const api: ApiSettings = {
     },
     metric: {
       getMetric: jobRunShortId => `runinfo/${jobRunShortId}/metrics/`,
-      getMetricMeta: jobRunShortId => `runinfo/${jobRunShortId}/metrics/${jobRunShortId}/meta/`
+      getMetricMeta: jobRunShortId => `runinfo/${jobRunShortId}/`
     },
     runifo: {
-      getVariables: jobRunShortId => `runinfo/${jobRunShortId}/variables/`,
-      getVariablesMeta: jobRunShortId => `runinfo/${jobRunShortId}/variables/${jobRunShortId}/meta/`
+      getVariables: jobRunShortId => `runinfo/${jobRunShortId}/variables/`
     }
   }
 }

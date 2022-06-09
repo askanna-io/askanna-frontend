@@ -27,10 +27,6 @@ export const mutations: MutationTree<runInfoVariablesState> = {
     state.variablesFullData = JSON.stringify(data, null, 2)
   },
 
-  [mutation.SET_VARIABLES_LABELS](state, data) {
-    state.variablesLabels = data
-  },
-
   [mutation.SET_LOADING](state, value) {
     state.loading = { ...state.loading, ...value }
   },
