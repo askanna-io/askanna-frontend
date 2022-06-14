@@ -104,7 +104,7 @@
 <script setup lang="ts">
 import { set } from 'lodash'
 import { ref, computed } from '@vue/composition-api'
-import useSnackBar from '@/core/components/snackBar/useSnackBar'
+import { useSnackBar } from '@/core/components/snackBar/useSnackBar'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useValidationRules from '@/core/composition/useValidationRules'
 import { useWorkspaceStore } from '@/features/workspace/useWorkspaceStore'

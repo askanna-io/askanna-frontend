@@ -1,9 +1,8 @@
 import * as type from './types'
 import { ActionTree } from 'vuex'
-import { logger } from '@/core/plugins/logger'
 import { JobsState, JOBS_STORE } from './types'
 import apiService from '@/core/services/apiService'
-import * as rootTypes from '@/core/store/actionTypes'
+import { useLogger } from '@/core/composition/useLogger'
 import { apiStringify } from '@/core/services/api-settings'
 
 const serviceName = JOBS_STORE
@@ -20,9 +19,11 @@ export const actions: ActionTree<JobsState, RootState> = {
         serviceName
       })
     } catch (error) {
+      const logger = useLogger()
+
       commit(type.SET_LOADING, { name: 'jobsLoading', value: false })
 
-      logger.error(commit, 'Error on load jobs list items in getJobsList action.\nError: ', error)
+      logger.error('Error on load jobs list items in getJobsList action.\nError: ', error)
 
       return
     }

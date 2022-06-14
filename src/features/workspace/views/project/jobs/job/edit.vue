@@ -70,7 +70,7 @@
 import { set } from 'lodash'
 import usePermission from '@/core/composition/usePermission'
 import useJobStore from '@/features/job/composition/useJobStore'
-import useSnackBar from '@/core/components/snackBar/useSnackBar'
+import { useSnackBar } from '@/core/components/snackBar/useSnackBar'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useValidationRules from '@/core/composition/useValidationRules'
 import { ref, watch, computed, onBeforeMount } from '@vue/composition-api'

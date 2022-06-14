@@ -3,8 +3,8 @@ import { ActionTree } from 'vuex'
 import router from '@/core/router'
 import { debounce } from 'lodash'
 import VueRouter from 'vue-router'
-import { logger } from '@/core/plugins/logger'
 import apiService from '@/core/services/apiService'
+import { useLogger } from '@/core/composition/useLogger'
 import { apiStringify } from '@/core/services/api-settings'
 const { isNavigationFailure, NavigationFailureType } = VueRouter
 import { jobRunState, JobRun, JOB_RUN_STORE, stateType } from './types'
@@ -26,7 +26,9 @@ export const actions: ActionTree<jobRunState, RootState> = {
         action: api.runs
       })
     } catch (e) {
-      logger.error(commit, 'Error on runs job  in getRunsJob action.\nError: ', e)
+      const logger = useLogger()
+
+      logger.error('Error on runs job in getRunsJob action.\nError: ', e)
       commit(type.mutation.SET_LOADING, { name: stateType.jobRunsLoading, value: false })
 
       return
@@ -58,11 +60,13 @@ export const actions: ActionTree<jobRunState, RootState> = {
         uuid
       })
     } catch (e) {
-      logger.error(commit, 'Error on jobRun job  in getJobRun action.\nError: ', e)
+      const logger = useLogger()
+
+      logger.error('Error on jobRun job in getJobRun action.\nError: ', e)
 
       router.push({ name: 'workspace-project-job-run-does-not-exist' }).catch(failure => {
         if (isNavigationFailure(failure, NavigationFailureType.redirected)) {
-          logger.error(commit, 'Error on redirect to workspace-project-job-run-does-not-exist.\nError: ', failure)
+          logger.error('Error on redirect to workspace-project-job-run-does-not-exist.\nError: ', failure)
         }
       })
 
@@ -86,7 +90,9 @@ export const actions: ActionTree<jobRunState, RootState> = {
         action: api.getJobRun
       })
     } catch (e) {
-      logger.error(commit, 'Error on udapte jobRun job  in udapteJobRun action.\nError: ', e)
+      const logger = useLogger()
+
+      logger.error('Error on udapte jobRun job in udapteJobRun action.\nError: ', e)
 
       return
     }
@@ -130,7 +136,9 @@ export const actions: ActionTree<jobRunState, RootState> = {
         params
       })
     } catch (e) {
-      logger.error(commit, 'Error on jobrun log in getJobRunLog action.\nError: ', e)
+      const logger = useLogger()
+
+      logger.error('Error on jobrun log in getJobRunLog action.\nError: ', e)
     }
     commit(type.SET_JOB_RUN_LOG, jobRunLog)
 
@@ -155,7 +163,9 @@ export const actions: ActionTree<jobRunState, RootState> = {
         uuid
       })
     } catch (e) {
-      logger.error(commit, 'Error on jobrun log  in getJobRunLog action.\nError: ', e)
+      const logger = useLogger()
+
+      logger.error('Error on jobrun log in getJobRunLog action.\nError: ', e)
 
       return
     }
@@ -181,7 +191,9 @@ export const actions: ActionTree<jobRunState, RootState> = {
         params
       })
     } catch (e) {
-      logger.error(commit, 'Error on artifactData  in getJobRunArtifact action.\nError: ', e)
+      const logger = useLogger()
+
+      logger.error('Error on artifactData in getJobRunArtifact action.\nError: ', e)
       commit(type.mutation.SET_LOADING, { name: stateType.jobRunArtifactLoading, value: false })
 
       return
@@ -206,7 +218,9 @@ export const actions: ActionTree<jobRunState, RootState> = {
         uuid
       })
     } catch (e) {
-      logger.error(commit, 'Error on load packageTarget in getTargetPackage action.\nError: ', e)
+      const logger = useLogger()
+
+      logger.error('Error on load packageTarget in getTargetPackage action.\nError: ', e)
       return ''
     }
 
@@ -214,6 +228,8 @@ export const actions: ActionTree<jobRunState, RootState> = {
   },
 
   async [type.action.deleteRunInfo]({ commit }, { short_uuid: uuid, name }) {
+    const logger = useLogger()
+
     try {
       await apiService({
         uuid,
@@ -221,11 +237,11 @@ export const actions: ActionTree<jobRunState, RootState> = {
         method: 'delete',
         serviceName
       })
-      logger.success(commit, `You have successfully deleted the run ${name || uuid}`)
+      logger.success(`You have successfully deleted the run ${name || uuid}`)
 
       return true
     } catch (error) {
-      logger.error(commit, 'Error on delete runInfo in deleteRunInfo action.\nError: ', error)
+      logger.error('Error on delete runInfo in deleteRunInfo action.\nError: ', error)
     }
   }
 }

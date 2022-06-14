@@ -1,10 +1,12 @@
+import { set } from 'lodash'
 import { defineStore } from 'pinia'
-import { get, set, map } from 'lodash'
-import { logger } from '@/core/plugins/logger'
 import apiService from '@/core/services/apiService'
+import { useLogger } from '@/core/composition/useLogger'
 import { apiStringify } from '@/core/services/api-settings'
 
+const logger = useLogger()
 const serviceName = 'metric'
+
 const apiActions = apiStringify(serviceName)
 
 export const useMetricStore = defineStore('metric', {
@@ -57,8 +59,7 @@ export const useMetricStore = defineStore('metric', {
           action: apiActions.getMetric
         })
       } catch (e) {
-        // eslint-disable-next-line no-console
-        console.log('Error on get metric in getMetric action.\nError: ', e)
+        logger.error('Error on get metric in getMetric action.\nError: ', e)
 
         return
       }
@@ -119,8 +120,7 @@ export const useMetricStore = defineStore('metric', {
           action: apiActions.getMetricMeta
         })
       } catch (e) {
-        // eslint-disable-next-line no-console
-        console.log('Error on get metric in getMetric action.\nError: ', e)
+        logger.error('Error on get metric in getMetric action.\nError: ', e)
         return
       }
       this.metricMeta = runInfo.metrics_meta

@@ -2,14 +2,12 @@ import * as type from './types'
 import { ActionTree } from 'vuex'
 import router from '@/core/router'
 import VueRouter from 'vue-router'
-import { logger } from '@/core/plugins/logger'
+import { useLogger } from '@/core/composition/useLogger'
 import apiService from '@/core/services/apiService'
-import * as rootTypes from '@/core/store/actionTypes'
 import { PackageState, packageServiceName } from './types'
 import { apiStringify } from '@/core/services/api-settings'
 const { isNavigationFailure, NavigationFailureType } = VueRouter
 
-const root = true
 const serviceName = packageServiceName
 const api = apiStringify(serviceName)
 
@@ -38,16 +36,18 @@ export const actions: ActionTree<PackageState, RootState> = {
         return
       }
 
+      const logger = useLogger()
+
       const name = failedRoute || 'workspace-project-code-does-not-exist'
       router.push({ name }).catch(failure => {
         if (isNavigationFailure(failure, NavigationFailureType.redirected)) {
-          logger.error(commit, 'Error on redirect to workspace-project-code-does-not-exist.\nError: ', failure)
+          logger.error('Error on redirect to workspace-project-code-does-not-exist.\nError: ', failure)
         }
       })
 
       if (loading) commit(type.SET_LOADING, { name: 'packageLoading', value: false })
 
-      logger.error(commit, 'Error on load packageData in getPackage action.\nError: ', e)
+      logger.error('Error on load packageData in getPackage action.\nError: ', e)
 
       return
     }
@@ -67,7 +67,9 @@ export const actions: ActionTree<PackageState, RootState> = {
         data
       })
     } catch (e) {
-      logger.error(commit, 'Error on upload package in registerPackage action.\nError: ', e)
+      const logger = useLogger()
+
+      logger.error('Error on upload package in registerPackage action.\nError: ', e)
 
       return
     }
@@ -85,7 +87,9 @@ export const actions: ActionTree<PackageState, RootState> = {
         data
       })
     } catch (e) {
-      logger.error(commit, 'Error on finish register chunck package in registerChunkPackage action.\nError: ', e)
+      const logger = useLogger()
+
+      logger.error('Error on finish register chunck package in registerChunkPackage action.\nError: ', e)
     }
 
     return result
@@ -110,7 +114,9 @@ export const actions: ActionTree<PackageState, RootState> = {
         data: formData
       })
     } catch (e) {
-      logger.error(commit, 'Error on finish upload package in finishUpload action.\nError: ', e)
+      const logger = useLogger()
+
+      logger.error('Error on finish upload package in finishUpload action.\nError: ', e)
 
       return
     }
