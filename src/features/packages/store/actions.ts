@@ -1,7 +1,7 @@
 import * as type from './types'
 import { action, stateType } from './types'
 import { ActionTree } from 'vuex'
-import { logger } from '@/core/plugins/logger'
+import { useLogger } from '@/core/composition/useLogger'
 import apiService from '@/core/services/apiService'
 
 import { PackagesState, PACKAGES_STORE } from './types'
@@ -30,7 +30,9 @@ export const actions: ActionTree<PackagesState, RootState> = {
         params
       })
     } catch (e) {
-      logger.error(commit, 'Error on load packages in getProjectPackages action.\nError: ', e)
+      const logger = useLogger()
+
+      logger.error('Error on load packages in getProjectPackages action.\nError: ', e)
       return
     }
     commit(type.SET_PROJECT_PACKAGES, packages)
@@ -45,7 +47,9 @@ export const actions: ActionTree<PackagesState, RootState> = {
         uuid
       })
     } catch (e) {
-      logger.error(commit, 'Error on load packageTarget in getTargetPackage action.\nError: ', e)
+      const logger = useLogger()
+
+      logger.error('Error on load packageTarget in getTargetPackage action.\nError: ', e)
       return
     }
 
@@ -65,7 +69,9 @@ export const actions: ActionTree<PackagesState, RootState> = {
         { root }
       )
     } catch (e) {
-      logger.error(commit, 'Error on load packageSource in downloadPackage action.\nError: ', e)
+      const logger = useLogger()
+
+      logger.error('Error on load packageSource in downloadPackage action.\nError: ', e)
       return
     }
 

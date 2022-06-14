@@ -13,6 +13,7 @@
 import '@/core/plugins/intercom.js'
 import useTitle from '@/core/composition/useTitle'
 import { onUpdated, computed } from '@vue/composition-api'
+import TheSnackBar from '@/core/components/snackBar/TheSnackBar.vue'
 
 useTitle()
 

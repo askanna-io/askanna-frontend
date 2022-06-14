@@ -64,6 +64,7 @@ import useTitle from '@/core/composition/useTitle'
 import { useMobileStore } from '@/core/store/useMobileStore'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useUserStore from '@/features/user/composition/useUserStore'
+import TheSnackBar from '@/core/components/snackBar/TheSnackBar.vue'
 
 import { useProjectsStore } from '@/features/projects/useProjectsStore'
 import UpdateApp from '@/core/components/shared/updateApp/UpdateApp.vue'

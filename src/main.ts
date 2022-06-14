@@ -6,7 +6,6 @@ import Beta from '@/core/plugins/beta'
 import VueFileAgent from 'vue-file-agent'
 import $axios from '@/core/plugins/axios'
 import Sticky from 'vue-sticky-directive'
-import Logger from '@/core/plugins/logger'
 import { app, router, store } from './core'
 import vuetify from '@/core/plugins/vuetify'
 import 'vue-file-agent/dist/vue-file-agent.css'
@@ -18,6 +17,12 @@ import './registerServiceWorker'
 import * as Sentry from '@sentry/browser'
 import { Integrations } from '@sentry/tracing'
 import { Vue as VueIntegration } from '@sentry/integrations'
+
+const pinia = createPinia()
+
+Vue.use(VueAxios, $axios)
+
+Vue.use(PiniaVuePlugin)
 
 if (process.env.VUE_APP_SENTRY === 'on') {
   const rate: number = parseFloat(<string>process.env.VUE_APP_SENTRY_TRACES_RATE || '0')
@@ -41,7 +46,6 @@ Vue.use(VueFileAgent)
 // register globally
 Vue.use(Beta)
 Vue.use(hooks)
-Vue.use(Logger)
 Vue.use(Sticky)
 
 Vue.use(VueCompositionApi)
@@ -84,15 +88,11 @@ router.beforeEach((to, previus, next) => {
   }
 })
 
-Vue.use(VueAxios, $axios)
-
-Vue.use(PiniaVuePlugin)
-const pinia = createPinia()
 //init app instance
 new Vue({
   router,
+  pinia,
   store,
   vuetify,
-  pinia,
   render: h => h(app)
 }).$mount('#app')

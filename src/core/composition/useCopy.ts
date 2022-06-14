@@ -1,5 +1,5 @@
 //@ts-nocheck
-import useSnackBar from '@/core/components/snackBar/useSnackBar'
+import { useSnackBar } from '@/core/components/snackBar/useSnackBar'
 
 export default () => {
   const snackBar = useSnackBar()

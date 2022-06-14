@@ -81,7 +81,7 @@
 </template>
 
 <script lang="ts">
-import useSnackBar from '@/core/components/snackBar/useSnackBar'
+import { useSnackBar } from '@/core/components/snackBar/useSnackBar'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useUserStore from '@/features/user/composition/useUserStore'
 import UserProfile from '@/features/user/components/profile/UserProfile.vue'

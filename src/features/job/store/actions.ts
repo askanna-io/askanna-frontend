@@ -3,8 +3,8 @@ import { ActionTree } from 'vuex'
 import router from '@/core/router'
 import VueRouter from 'vue-router'
 import { jobState, JOB_STORE, stateType } from './types'
-import { logger } from '@/core/plugins/logger'
 import apiService from '@/core/services/apiService'
+import { useLogger } from '@/core/composition/useLogger'
 import { apiStringify } from '@/core/services/api-settings'
 const { isNavigationFailure, NavigationFailureType } = VueRouter
 import { mutation as gMutation, GENERAL_STORE } from '@/core/store/general/types'
@@ -24,11 +24,13 @@ export const actions: ActionTree<jobState, RootState> = {
         uuid: id
       })
     } catch (error) {
-      logger.error(commit, 'Error on load job  in getJob action.\nError: ', error)
+      const logger = useLogger()
+
+      logger.error('Error on load job in getJob action.\nError: ', error)
 
       router.push({ name: 'workspace-project-job-does-not-exist' }).catch(failure => {
         if (isNavigationFailure(failure, NavigationFailureType.redirected)) {
-          logger.error(commit, 'Error on redirect to workspace-project-job-does-not-exist.\nError: ', failure)
+          logger.error('Error on redirect to workspace-project-job-does-not-exist.\nError: ', failure)
         }
       })
 
@@ -41,6 +43,8 @@ export const actions: ActionTree<jobState, RootState> = {
   },
 
   async [type.startJob]({ commit, state }, { code, ...params }) {
+    const logger = useLogger()
+
     let jobRun
     try {
       jobRun = await apiService({
@@ -55,10 +59,10 @@ export const actions: ActionTree<jobState, RootState> = {
         uuid: state.job.short_uuid
       })
     } catch (e) {
-      logger.error(commit, 'Error on start job  in startJob action.\nError: ', e)
+      logger.error('Error on start job in startJob action.\nError: ', e)
       return
     }
-    logger.success(commit, 'Job was started')
+    logger.success('Job was started')
 
     commit(type.mutation.SET_JOB_RUN, jobRun)
   },
@@ -74,7 +78,9 @@ export const actions: ActionTree<jobState, RootState> = {
         uuid: jobRunShortUuid || state.jobrun.short_uuid
       })
     } catch (e) {
-      logger.error(commit, 'Error on getjob run status in getJobRunStatus action.\nError: ', e)
+      const logger = useLogger()
+
+      logger.error('Error on getjob run status in getJobRunStatus action.\nError: ', e)
       return
     }
 
@@ -83,6 +89,8 @@ export const actions: ActionTree<jobState, RootState> = {
   },
 
   async [type.action.stopJob]({ commit }, id) {
+    const logger = useLogger()
+
     let jobRun
     try {
       jobRun = await apiService({
@@ -92,11 +100,11 @@ export const actions: ActionTree<jobState, RootState> = {
         uuid: id
       })
     } catch (e) {
-      logger.error(commit, 'Error on stop job  in stopJob action.\nError: ', e)
+      logger.error('Error on stop job in stopJob action.\nError: ', e)
 
       return
     }
-    logger.userDanger(commit, 'Job was stoped')
+    logger.userDanger('Job was stoped')
     commit(type.mutation.SET_JOB_RUN, jobRun)
   },
 
@@ -110,7 +118,9 @@ export const actions: ActionTree<jobState, RootState> = {
         uuid: id
       })
     } catch (e) {
-      logger.error(commit, 'Error on pause job  in pauseJob action.\nError: ', e)
+      const logger = useLogger()
+
+      logger.error('Error on pause job in pauseJob action.\nError: ', e)
 
       return
     }
@@ -119,6 +129,8 @@ export const actions: ActionTree<jobState, RootState> = {
   },
 
   async [type.action.resetJob]({ commit }, id) {
+    const logger = useLogger()
+
     let job
     try {
       job = await apiService({
@@ -128,11 +140,11 @@ export const actions: ActionTree<jobState, RootState> = {
         uuid: id
       })
     } catch (e) {
-      logger.error(commit, 'Error on reset job  in resetJob action.\nError: ', e)
+      logger.error('Error on reset job in resetJob action.\nError: ', e)
 
       return
     }
-    logger.userWarning(commit, 'Job was reseted')
+    logger.userWarning('Job was reseted')
     commit(type.UPDATE_JOB, job)
   },
 
@@ -146,7 +158,9 @@ export const actions: ActionTree<jobState, RootState> = {
         uuid: id
       })
     } catch (e) {
-      logger.error(commit, 'Error on kill job  in killJob action.\nError: ', e)
+      const logger = useLogger()
+
+      logger.error('Error on kill job in killJob action.\nError: ', e)
 
       return
     }
@@ -164,7 +178,9 @@ export const actions: ActionTree<jobState, RootState> = {
         uuid: id
       })
     } catch (e) {
-      logger.error(commit, 'Error on result job  in resultJob action.\nError: ', e)
+      const logger = useLogger()
+
+      logger.error('Error on result job in resultJob action.\nError: ', e)
 
       return
     }
@@ -182,7 +198,9 @@ export const actions: ActionTree<jobState, RootState> = {
         uuid
       })
     } catch (e) {
-      logger.error(commit, 'Error on info job  in getJobInfo action.\nError: ', e)
+      const logger = useLogger()
+
+      logger.error('Error on info job in getJobInfo action.\nError: ', e)
 
       return
     }
@@ -191,6 +209,8 @@ export const actions: ActionTree<jobState, RootState> = {
   },
 
   async [type.updateJob]({ state: { job }, commit }, data) {
+    const logger = useLogger()
+
     let isUpdated = false
 
     let updatedJob
@@ -204,10 +224,10 @@ export const actions: ActionTree<jobState, RootState> = {
       })
     } catch (e) {
       isUpdated = false
-      logger.error(commit, 'Error on update job  in updateJob action.\nError: ', e)
+      logger.error('Error on update job in updateJob action.\nError: ', e)
       return isUpdated
     }
-    logger.success(commit, 'Job was updated')
+    logger.success('Job was updated')
     commit(type.UPDATE_JOB, updatedJob)
     commit(`${GENERAL_STORE}/${gMutation.SET_BREADCRUMB_PARAMS}`, { jobId: updatedJob.name }, { root: true })
 
@@ -228,6 +248,8 @@ export const actions: ActionTree<jobState, RootState> = {
   },
 
   async [type.action.deleteJob]({ commit }, { short_uuid: uuid, name }) {
+    const logger = useLogger()
+
     try {
       await apiService({
         uuid,
@@ -235,11 +257,11 @@ export const actions: ActionTree<jobState, RootState> = {
         method: 'delete',
         serviceName
       })
-      logger.success(commit, `You have successfully deleted the job ${name}`)
+      logger.success(`You have successfully deleted the job ${name}`)
 
       return true
     } catch (error) {
-      logger.error(commit, 'Error on delete job in deleteJob action.\nError: ', error)
+      logger.error('Error on delete job in deleteJob action.\nError: ', error)
     }
   }
 }

@@ -1,17 +1,14 @@
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { ac, mt } from './types'
 import { ActionTree } from 'vuex'
 import router from '@/core/router'
 import { AuthState } from './types'
 import * as Sentry from '@sentry/browser'
-import { logger } from '@/core/plugins/logger'
 import { api } from '@/core/services/api-settings'
 import apiService from '@/core/services/apiService'
-import { AUTH_STORE } from '@/core/store/storeTypes'
+import { useLogger } from '@/core/composition/useLogger'
 import { apiStringify } from '@/core/services/api-settings'
 
-const serviceName = AUTH_STORE
-const authApi = apiStringify('auth')
 const apiAccounts = apiStringify('accounts')
 
 export const actions: ActionTree<AuthState, RootState> = {
@@ -40,11 +37,13 @@ export const actions: ActionTree<AuthState, RootState> = {
       if (redirect) router.push({ name: 'check-access' })
 
       return data
-    } catch (error) {
-      logger.error(commit, 'Error on login action.\nError: ', error)
+    } catch (error: any) {
+      const logger = useLogger()
+
+      logger.error('Error on login action.\nError: ', error)
 
       if (error?.response?.data?.non_field_errors) {
-        logger.userDanger(commit, error?.response?.data?.non_field_errors[0])
+        useLogger().userDanger(error?.response?.data?.non_field_errors[0])
       }
 
       return error
@@ -54,8 +53,10 @@ export const actions: ActionTree<AuthState, RootState> = {
   async [ac.logout]({ commit }, redirect = true) {
     try {
       await axios.post(api.url() + api.auth.logout({}))
-    } catch (error) {
-      logger.error(commit, 'Error on logout action.\nError: ', error)
+    } catch (error: any) {
+      const logger = useLogger()
+
+      logger.error('Error on logout action.\nError: ', error)
     }
     commit(mt.DROP_AUTH, null)
 
@@ -75,8 +76,10 @@ export const actions: ActionTree<AuthState, RootState> = {
         serviceName: 'accounts',
         data
       })
-    } catch (e) {
-      logger.error(commit, 'Error on create account in createAccount action.\nError: ', e)
+    } catch (e: any) {
+      const logger = useLogger()
+
+      logger.error('Error on create account in createAccount action.\nError: ', e)
 
       return e
     }
@@ -94,8 +97,10 @@ export const actions: ActionTree<AuthState, RootState> = {
       const result = await axios.post(url, payload)
 
       return result
-    } catch (error) {
-      logger.error(commit, 'Error on resetPassword action.\nError: ', error)
+    } catch (error: any) {
+      const logger = useLogger()
+
+      logger.error('Error on resetPassword action.\nError: ', error)
 
       return error
     }
@@ -112,8 +117,10 @@ export const actions: ActionTree<AuthState, RootState> = {
       result = await axios.get(url, {
         params
       })
-    } catch (error) {
-      logger.error(commit, 'Error on validateResetToken action.\nError: ', error)
+    } catch (error: any) {
+      const logger = useLogger()
+
+      logger.error('Error on validateResetToken action.\nError: ', error)
 
       return error
     }
@@ -122,6 +129,8 @@ export const actions: ActionTree<AuthState, RootState> = {
   },
 
   async [ac.confirmResetPassword]({ commit }, payload) {
+    const logger = useLogger()
+
     const url = api.url() + api.auth.confirmResetPassword()
 
     axios.defaults.xsrfCookieName = 'csrftoken'
@@ -130,11 +139,11 @@ export const actions: ActionTree<AuthState, RootState> = {
     try {
       const result = await axios.post(url, payload)
 
-      logger.success(commit, `Your password has been reset successfully!`)
+      logger.success(`Your password has been reset successfully!`)
 
       return result
-    } catch (error) {
-      logger.error(commit, 'Error on confirmResetPassword action.\nError: ', error)
+    } catch (error: any) {
+      logger.error('Error on confirmResetPassword action.\nError: ', error)
 
       return error
     }

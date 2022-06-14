@@ -65,7 +65,7 @@
 import { set } from 'lodash'
 import { ref, watch, computed } from '@vue/composition-api'
 import usePermission from '@/core/composition/usePermission'
-import useSnackBar from '@/core/components/snackBar/useSnackBar'
+import { useSnackBar } from '@/core/components/snackBar/useSnackBar'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
 import AskAnnaDescription from '@/core/components/shared/AskAnnaDescription.vue'

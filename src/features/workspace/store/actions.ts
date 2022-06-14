@@ -2,8 +2,8 @@ import { get, map } from 'lodash'
 import { ActionTree } from 'vuex'
 import router from '@/core/router'
 import VueRouter from 'vue-router'
-import { logger } from '@/core/plugins/logger'
 import apiService from '@/core/services/apiService'
+import { useLogger } from '@/core/composition/useLogger'
 import { apiStringify } from '@/core/services/api-settings'
 const { isNavigationFailure, NavigationFailureType } = VueRouter
 import { workspaceState, WORKSPACE_STORE, action, mutation } from './types'
@@ -22,11 +22,13 @@ export const actions: ActionTree<workspaceState, RootState> = {
         uuid
       })
     } catch (error) {
-      logger.error(commit, 'Error on load workspace in getWorkspace action.\nError: ', error)
+      const logger = useLogger()
+
+      logger.error('Error on load workspace in getWorkspace action.\nError: ', error)
 
       return router.push({ name: 'workspace-does-not-exist' }).catch(failure => {
         if (isNavigationFailure(failure, NavigationFailureType.redirected)) {
-          logger.error(commit, 'Error on to redirect to workspace-does-not-exist.\nError: ', failure)
+          logger.error('Error on to redirect to workspace-does-not-exist.\nError: ', failure)
         }
       })
     }
@@ -36,6 +38,8 @@ export const actions: ActionTree<workspaceState, RootState> = {
   },
 
   async [action.updateWorkspace]({ state, commit }, data) {
+    const logger = useLogger()
+
     let workspace
     try {
       workspace = await apiService({
@@ -46,7 +50,7 @@ export const actions: ActionTree<workspaceState, RootState> = {
         uuid: state.workspace.short_uuid
       })
     } catch (error) {
-      logger.error(commit, 'Error on update workspace in getWorkspace action.\nError: ', error)
+      logger.error('Error on update workspace in getWorkspace action.\nError: ', error)
 
       return workspace
     }
@@ -58,6 +62,8 @@ export const actions: ActionTree<workspaceState, RootState> = {
   },
 
   async [action.getWorkspaces]({ state, commit }, { membership } = { membership: true }) {
+    const logger = useLogger()
+
     commit(mutation.SET_LOADING, { workspaces: true })
     let workspaces
     try {
@@ -67,7 +73,7 @@ export const actions: ActionTree<workspaceState, RootState> = {
         params: { ...state.workspaceQuery, membership }
       })
     } catch (error) {
-      logger.error(commit, 'Error on load workspaces in getWorkspaces action.\nError: ', error)
+      logger.error('Error on load workspaces in getWorkspaces action.\nError: ', error)
       commit(mutation.SET_LOADING, { workspaces: false })
 
       return
@@ -88,6 +94,8 @@ export const actions: ActionTree<workspaceState, RootState> = {
   },
 
   async [action.getWorkpaceProjects]({ state, commit }, { workspaceId, params, initial }) {
+    const logger = useLogger()
+
     let projects
     try {
       projects = await apiService({
@@ -97,7 +105,7 @@ export const actions: ActionTree<workspaceState, RootState> = {
         uuid: state.workspace.short_uuid || workspaceId
       })
     } catch (error) {
-      logger.error(commit, 'Error on load projects in getWorkpaceProjects action.\nError: ', error)
+      logger.error('Error on load projects in getWorkpaceProjects action.\nError: ', error)
 
       return
     }
@@ -135,7 +143,9 @@ export const actions: ActionTree<workspaceState, RootState> = {
         uuid: workspaceId
       })
     } catch (error) {
-      logger.error(commit, 'Error on load people in getWorkspacePeople action.\nError: ', error)
+      const logger = useLogger()
+
+      logger.error('Error on load people in getWorkspacePeople action.\nError: ', error)
 
       return
     }
@@ -149,6 +159,8 @@ export const actions: ActionTree<workspaceState, RootState> = {
   },
 
   async [action.sendInvitations]({ state, commit, dispatch }, { emails, role }) {
+    const logger = useLogger()
+
     const result = await Promise.all(
       map(emails, async email => {
         const people = await dispatch(action.sendInviteEmail, {
@@ -169,7 +181,6 @@ export const actions: ActionTree<workspaceState, RootState> = {
     if (people.length) {
       commit(mutation.UPDATE_WORKSPACE_PEOPLE, people)
       logger.success(
-        commit,
         `You have successfully invited ${people.map(item => item.email).join(', ')} to join the workspace
       ${state.workspace.name}`
       )
@@ -177,6 +188,8 @@ export const actions: ActionTree<workspaceState, RootState> = {
   },
 
   async [action.resendInvitation]({ state, commit }, uuid) {
+    const logger = useLogger()
+
     let response
 
     const data = {
@@ -191,14 +204,13 @@ export const actions: ActionTree<workspaceState, RootState> = {
         data
       })
     } catch (e) {
-      logger.error(commit, 'Error on resent invatation in resendInvitation action.\nError: ', e)
+      logger.error('Error on resent invatation in resendInvitation action.\nError: ', e)
 
       return e
     }
 
     if (response) {
       logger.success(
-        commit,
         `You have successfully re-invited ${response.email} to join the workspace
       ${state.workspace.name}`
       )
@@ -206,6 +218,8 @@ export const actions: ActionTree<workspaceState, RootState> = {
   },
 
   async [action.deleteInvitation]({ commit }, people) {
+    const logger = useLogger()
+
     try {
       await apiService({
         action: api.acceptInvitetion,
@@ -217,19 +231,20 @@ export const actions: ActionTree<workspaceState, RootState> = {
         serviceName
       })
     } catch (e) {
-      logger.error(commit, 'Error on delete invatation in deleteInvitation action.\nError: ', e)
+      logger.error('Error on delete invatation in deleteInvitation action.\nError: ', e)
 
       return e
     }
     commit(mutation.DELETE_WORKSPACE_PEOPLE, people)
     logger.success(
-      commit,
       `You have successfully deleted the invitation for ${people.name} on the workspace
       ${people.workspace.name}`
     )
   },
 
   async [action.sendInviteEmail]({ state, commit }, data) {
+    const logger = useLogger()
+
     let response
     try {
       response = await apiService({
@@ -240,7 +255,7 @@ export const actions: ActionTree<workspaceState, RootState> = {
         data
       })
     } catch (e) {
-      logger.error(commit, 'Error on upload package in registerPackage action.\nError: ', e)
+      logger.error('Error on upload package in registerPackage action.\nError: ', e)
 
       return e
     }
@@ -271,6 +286,8 @@ export const actions: ActionTree<workspaceState, RootState> = {
   },
 
   async [action.changeRole]({ commit }, { role, peopleId, workspaceId }) {
+    const logger = useLogger()
+
     let people
 
     const data = {
@@ -285,12 +302,11 @@ export const actions: ActionTree<workspaceState, RootState> = {
         data
       })
     } catch (e) {
-      logger.error(commit, 'Error on change people Role in changeRole action.\nError: ', e)
+      logger.error('Error on change people Role in changeRole action.\nError: ', e)
 
       return e
     }
     logger.success(
-      commit,
       `You have successfully changed the role of ${people.name} for the workspace ${people.workspace.name}.`
     )
 
@@ -311,7 +327,9 @@ export const actions: ActionTree<workspaceState, RootState> = {
         uuid: state.workspace.short_uuid
       })
     } catch (e) {
-      logger.error(commit, 'Error on change people in updateWorkspaceProfile action.\nError: ', e)
+      const logger = useLogger()
+
+      logger.error('Error on change people in updateWorkspaceProfile action.\nError: ', e)
 
       return e
     }
@@ -333,8 +351,10 @@ export const actions: ActionTree<workspaceState, RootState> = {
         params: { token }
       })
     } catch (e) {
+      const logger = useLogger()
+
       const message = get(e, 'response.data.token') || 'Your token is not valid.\nError: '
-      logger.error(commit, message, e)
+      logger.error(message, e)
 
       commit(mutation.RESET_INVITATION)
       return
@@ -343,6 +363,8 @@ export const actions: ActionTree<workspaceState, RootState> = {
   },
 
   async [action.deleteWorkspacePeople]({ commit }, people) {
+    const logger = useLogger()
+
     try {
       await apiService({
         action: api.acceptInvitetion,
@@ -351,7 +373,7 @@ export const actions: ActionTree<workspaceState, RootState> = {
         serviceName
       })
     } catch (e) {
-      logger.error(commit, 'Error on delete people in deleteWorkspacePeople action.\nError: ', e)
+      logger.error('Error on delete people in deleteWorkspacePeople action.\nError: ', e)
 
       return e
     }
@@ -359,7 +381,6 @@ export const actions: ActionTree<workspaceState, RootState> = {
     commit(mutation.DELETE_WORKSPACE_PEOPLE, people)
 
     logger.success(
-      commit,
       `You have successfully deleted ${people.name} from the workspace
     ${people.workspace.name}`
     )
@@ -375,7 +396,9 @@ export const actions: ActionTree<workspaceState, RootState> = {
         uuid: workspaceId || state.workspace.short_uuid
       })
     } catch (e) {
-      logger.error(commit, 'Error on get people in getCurrentPeople action.\nError: ', e)
+      const logger = useLogger()
+
+      logger.error('Error on get people in getCurrentPeople action.\nError: ', e)
 
       return e
     }
@@ -410,7 +433,9 @@ export const actions: ActionTree<workspaceState, RootState> = {
         data
       })
     } catch (e) {
-      logger.error(commit, 'Error on update people avatar in setPeopleAvatar action.\nError: ', e)
+      const logger = useLogger()
+
+      logger.error('Error on update people avatar in setPeopleAvatar action.\nError: ', e)
 
       return e
     }
@@ -419,6 +444,8 @@ export const actions: ActionTree<workspaceState, RootState> = {
   },
 
   async [action.deleteWorkspace]({ commit }, workspace) {
+    const logger = useLogger()
+
     try {
       await apiService({
         action: api.delete,
@@ -427,11 +454,11 @@ export const actions: ActionTree<workspaceState, RootState> = {
         uuid: workspace.short_uuid
       })
 
-      logger.success(commit, `You have successfully deleted the workspace ${workspace.name}`)
+      logger.success(`You have successfully deleted the workspace ${workspace.name}`)
 
       return true
     } catch (error) {
-      logger.error(commit, 'Error on delete workspace in deleteWorkspace action.\nError: ', error)
+      logger.error('Error on delete workspace in deleteWorkspace action.\nError: ', error)
 
       return
     }

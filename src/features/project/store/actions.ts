@@ -2,8 +2,8 @@ import { map } from 'lodash'
 import { ActionTree } from 'vuex'
 import router from '@/core/router'
 import VueRouter from 'vue-router'
-import { logger } from '@/core/plugins/logger'
 import apiService from '@/core/services/apiService'
+import { useLogger } from '@/core/composition/useLogger'
 import { apiStringify } from '@/core/services/api-settings'
 const { isNavigationFailure, NavigationFailureType } = VueRouter
 
@@ -26,13 +26,15 @@ export const actions: ActionTree<projectState, RootState> = {
         uuid: uuid
       })
     } catch (error) {
-      logger.error(commit, 'Error on load project  in getProject action.\nError: ', error)
+      const logger = useLogger()
+
+      logger.error('Error on load project in getProject action.\nError: ', error)
 
       project = new ProjectModel().state
 
       router.push({ name: 'project-does-not-exist' }).catch(failure => {
         if (isNavigationFailure(failure, NavigationFailureType.redirected)) {
-          logger.error(commit, 'Error on redirect to workspace-project-does-not-exist.\nError: ', failure)
+          logger.error('Error on redirect to workspace-project-does-not-exist.\nError: ', failure)
         }
       })
 
@@ -61,7 +63,9 @@ export const actions: ActionTree<projectState, RootState> = {
         action: api.projectMe
       })
     } catch (error) {
-      logger.error(commit, 'Error on load projects in getProjects action.\nError: ', error)
+      const logger = useLogger()
+
+      logger.error('Error on load projects in getProjects action.\nError: ', error)
 
       return
     }
@@ -77,7 +81,9 @@ export const actions: ActionTree<projectState, RootState> = {
         params: state.query
       })
     } catch (error) {
-      logger.error(commit, 'Error on load projects in getProjects action.\nError: ', error)
+      const logger = useLogger()
+
+      logger.error('Error on load projects in getProjects action.\nError: ', error)
 
       return
     }
@@ -96,9 +102,11 @@ export const actions: ActionTree<projectState, RootState> = {
         uuid
       })
     } catch (error) {
+      const logger = useLogger()
+
       commit(mutation.SET_LOADING, { name: 'jobsLoading', value: false })
 
-      logger.error(commit, 'Error on load project jobs in getProjectJobs action.\nError: ', error)
+      logger.error('Error on load project jobs in getProjectJobs action.\nError: ', error)
 
       return
     }
@@ -156,7 +164,9 @@ export const actions: ActionTree<projectState, RootState> = {
       })
       packageData = packages && packages.results && packages.results ? packages.results[0] : null
     } catch (e) {
-      logger.error(commit, 'Error on load packageData in getLastPackage action.\nError: ', e)
+      const logger = useLogger()
+
+      logger.error('Error on load packageData in getLastPackage action.\nError: ', e)
 
       return
     }
@@ -188,6 +198,8 @@ export const actions: ActionTree<projectState, RootState> = {
   },
 
   async [action.createProject]({ commit }, data) {
+    const logger = useLogger()
+
     let project
     try {
       project = await apiService({
@@ -197,7 +209,7 @@ export const actions: ActionTree<projectState, RootState> = {
         data
       })
     } catch (error) {
-      logger.error(commit, 'Error on create project in createProject action.\nError:', error)
+      logger.error('Error on create project in createProject action.\nError:', error)
 
       return project
     }
@@ -208,12 +220,14 @@ export const actions: ActionTree<projectState, RootState> = {
       { root: true }
     )
 
-    logger.success(commit, `The project ${project.name} is created`)
+    logger.success(`The project ${project.name} is created`)
 
     return project
   },
 
   async [action.updateProject]({ commit, state }, data) {
+    const logger = useLogger()
+
     let project
     try {
       project = await apiService({
@@ -224,7 +238,7 @@ export const actions: ActionTree<projectState, RootState> = {
         data
       })
     } catch (error) {
-      logger.error(commit, 'Error on update project in updateProject action.\nError: ', error as Error)
+      logger.error('Error on update project in updateProject action.\nError: ', error as Error)
 
       return project
     }
@@ -258,6 +272,8 @@ export const actions: ActionTree<projectState, RootState> = {
   },
 
   async [action.deleteProject]({ commit }, project) {
+    const logger = useLogger()
+
     try {
       await apiService({
         action: api.delete,
@@ -266,13 +282,13 @@ export const actions: ActionTree<projectState, RootState> = {
         uuid: project.short_uuid
       })
     } catch (error) {
-      logger.error(commit, 'Error on delete project in deleteProject action.\nError: ', error)
+      logger.error('Error on delete project in deleteProject action.\nError: ', error)
 
       return
     }
 
     commit(`workspace/DELETE_WORKSPACE_PROJECT`, project, { root: true })
 
-    logger.success(commit, `You have successfully deleted the project ${project.name}`)
+    logger.success(`You have successfully deleted the project ${project.name}`)
   }
 }

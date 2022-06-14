@@ -50,6 +50,7 @@ import AskAnnaMainMenu from './parts/AskAnnaMainMenu.vue'
 import AskAnnaUserMenu from './parts/AskAnnaUserMenu.vue'
 import { useMobileStore } from '@/core/store/useMobileStore'
 import MobileMainMenu from './parts/mobile/MobileMainMenu.vue'
+import TheSnackBar from '@/core/components/snackBar/TheSnackBar.vue'
 import UpdateApp from '@/core/components/shared/updateApp/UpdateApp.vue'
 import TheUploadStatus from '@/core/components/uploadStatus/TheUploadStatus.vue'
 

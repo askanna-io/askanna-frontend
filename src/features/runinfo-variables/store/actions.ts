@@ -1,6 +1,6 @@
 import { ActionTree } from 'vuex'
-import { logger } from '@/core/plugins/logger'
 import apiService from '@/core/services/apiService'
+import { useLogger } from '@/core/composition/useLogger'
 import { apiStringify } from '@/core/services/api-settings'
 
 import { runInfoVariablesState, action as ac, mutation as mt } from './types'
@@ -20,7 +20,9 @@ export const actions: ActionTree<runInfoVariablesState, RootState> = {
         action: apiActions.getVariables
       })
     } catch (e) {
-      logger.error(commit, 'Error on get variables in getVariables action.\nError: ', e)
+      const logger = useLogger()
+
+      logger.error('Error on get variables in getVariables action.\nError: ', e)
 
       return
     }

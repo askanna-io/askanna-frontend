@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { ActionTree } from 'vuex'
 import * as Sentry from '@sentry/browser'
-import { logger } from '@/core/plugins/logger'
+import { useLogger } from '@/core/composition/useLogger'
 import apiService from '@/core/services/apiService'
 import { api, apiStringify } from '@/core/services/api-settings'
 
@@ -18,7 +18,9 @@ export const actions: ActionTree<userState, RootState> = {
     try {
       result = await axios.get(url)
     } catch (e) {
-      logger.error(commit, 'Error on get current user profile in getUserProfile action.\nError: ', e)
+      const logger = useLogger()
+
+      logger.error('Error on get current user profile in getUserProfile action.\nError: ', e)
 
       return e
     }
@@ -47,7 +49,9 @@ export const actions: ActionTree<userState, RootState> = {
         serviceName
       })
     } catch (error) {
-      logger.error(commit, 'Error on update user profile in updateProfile action.\nError: ', error)
+      const logger = useLogger()
+
+      logger.error('Error on update user profile in updateProfile action.\nError: ', error)
 
       return error
     }
@@ -65,7 +69,9 @@ export const actions: ActionTree<userState, RootState> = {
         serviceName
       })
     } catch (error) {
-      logger.error(commit, 'Error on get getAccounts in getAccounts action.\nError: ', error)
+      const logger = useLogger()
+
+      logger.error('Error on get getAccounts in getAccounts action.\nError: ', error)
 
       return error
     }
@@ -83,7 +89,9 @@ export const actions: ActionTree<userState, RootState> = {
         action: apiActions.globalProfile
       })
     } catch (error) {
-      logger.error(commit, 'Error on get global profile in getGlobalProfile action.\nError: ', error)
+      const logger = useLogger()
+
+      logger.error('Error on get global profile in getGlobalProfile action.\nError: ', error)
 
       return error
     }
@@ -101,7 +109,9 @@ export const actions: ActionTree<userState, RootState> = {
         action: apiActions.globalProfile
       })
     } catch (error) {
-      logger.error(commit, 'Error on update global profile in updateGlobalProfile action.\nError: ', error)
+      const logger = useLogger()
+
+      logger.error('Error on update global profile in updateGlobalProfile action.\nError: ', error)
 
       return error
     }
@@ -122,7 +132,9 @@ export const actions: ActionTree<userState, RootState> = {
         action: apiActions.globalProfileAvatar
       })
     } catch (e) {
-      logger.error(commit, 'Error on update global avatar in updateGlobalAvatar action.\nError: ', e)
+      const logger = useLogger()
+
+      logger.error('Error on update global avatar in updateGlobalAvatar action.\nError: ', e)
 
       return e
     }

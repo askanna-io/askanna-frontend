@@ -1,8 +1,8 @@
 import * as type from './types'
 import { ActionTree } from 'vuex'
-import { VariablesState, VARIABLES_STORE } from './types'
-import { logger } from '@/core/plugins/logger'
 import apiService from '@/core/services/apiService'
+import { useLogger } from '@/core/composition/useLogger'
+import { VariablesState, VARIABLES_STORE } from './types'
 import { apiStringify } from '@/core/services/api-settings'
 
 const serviceName = VARIABLES_STORE
@@ -20,7 +20,9 @@ export const actions: ActionTree<VariablesState, RootState> = {
         uuid
       })
     } catch (error) {
-      logger.error(commit, 'Error on load variables  in getVariables action.\nError: ', error)
+      const logger = useLogger()
+
+      logger.error('Error on load variables in getVariables action.\nError: ', error)
       commit(type.mutation.SET_LOADING, { name: 'variablesLoading', value: false })
 
       return
@@ -30,7 +32,9 @@ export const actions: ActionTree<VariablesState, RootState> = {
     commit(type.mutation.SET_LOADING, { name: 'variablesLoading', value: false })
   },
 
-  async [type.action.createVariable]({ commit, dispatch }, data) {
+  async [type.action.createVariable]({ dispatch }, data) {
+    const logger = useLogger()
+
     let variable
     try {
       variable = await apiService({
@@ -41,12 +45,12 @@ export const actions: ActionTree<VariablesState, RootState> = {
         data
       })
     } catch (error) {
-      logger.error(commit, 'Error on create variable  in createVariable action.\nError: ', error)
+      logger.error('Error on create variable in createVariable action.\nError: ', error)
 
       return error
     }
 
-    logger.success(commit, `The variable ${variable.name} is created`)
+    logger.success(`The variable ${variable.name} is created`)
 
     await dispatch(type.action.getVariables, data.project)
   },
@@ -60,14 +64,18 @@ export const actions: ActionTree<VariablesState, RootState> = {
         uuid
       })
     } catch (error) {
-      logger.error(commit, 'Error on load variable  in getVariable action.\nError: ', error)
+      const logger = useLogger()
+
+      logger.error('Error on load variable in getVariable action.\nError: ', error)
 
       return
     }
     commit(type.mutation.SET_EDIT_VARIABLE, variable)
   },
 
-  async [type.action.updateVariable]({ commit, dispatch }, { projectId, variableId, ...data }) {
+  async [type.action.updateVariable]({ dispatch }, { projectId, variableId, ...data }) {
+    const logger = useLogger()
+
     try {
       await apiService({
         action: api.update,
@@ -77,17 +85,19 @@ export const actions: ActionTree<VariablesState, RootState> = {
         uuid: { projectId, variableId }
       })
     } catch (error) {
-      logger.error(commit, 'Error on update variable  in updateVariable action.\nError: ', error)
+      logger.error('Error on update variable in updateVariable action.\nError: ', error)
 
       return error
     }
 
-    logger.success(commit, `The variable ${name} is updated`)
+    logger.success(`The variable ${name} is updated`)
 
     await dispatch(type.action.getVariables, projectId)
   },
 
-  async [type.action.deleteVariable]({ commit, dispatch }, { name, projectId, variableId }) {
+  async [type.action.deleteVariable]({ dispatch }, { name, projectId, variableId }) {
+    const logger = useLogger()
+
     let variable
     try {
       variable = await apiService({
@@ -97,12 +107,12 @@ export const actions: ActionTree<VariablesState, RootState> = {
         uuid: { projectId, variableId }
       })
     } catch (error) {
-      logger.error(commit, 'Error on delete variable  in deleteVariable action.\nError: ', error)
+      logger.error('Error on delete variable in deleteVariable action.\nError: ', error)
 
       return
     }
 
-    logger.success(commit, `The variable ${name} is deleted`)
+    logger.success(`The variable ${name} is deleted`)
 
     await dispatch(type.action.getVariables, projectId)
   },
