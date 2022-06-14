@@ -165,7 +165,12 @@ export const useFileStore = defineStore('file', {
           })
         }
         isFileBig = false
-        this.fileSource = response.data
+
+        if (extension === 'txt' && typeof response.data === 'object') {
+          this.fileSource = JSON.stringify(response.data)
+        } else {
+          this.fileSource = response.data
+        }
       }
 
       // get preview of file only 10 000 bytes
