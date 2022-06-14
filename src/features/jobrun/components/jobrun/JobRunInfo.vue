@@ -95,8 +95,7 @@ export default defineComponent({
     const calculateDuration = computed(() => {
       const status = props.jobRunStatus.status.toLowerCase()
       if (status === 'queued' || status === 'pending') return 'Not started'
-
-      return moment.durationHumanizeBySecond(props.jobRunStatus.duration?.toString())
+      return moment.durationHumanizeBySecond(props.jobRun.duration?.toString())
     })
 
     const viewConfig = computed(() => {
