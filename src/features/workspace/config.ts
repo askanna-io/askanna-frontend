@@ -522,16 +522,6 @@ export default {
               }
             },
             {
-              path: 'activity',
-              component: () =>
-                import(/* webpackChunkName: "workspace-project-uuid-activity" */ './views/project/activity.vue'),
-              name: 'workspace-project-activity',
-              meta: {
-                hideAppBarIcon: true,
-                breadcrumb: 'Activity'
-              }
-            },
-            {
               path: 'jobs',
               component: () =>
                 import(/* webpackChunkName: "workspace-project-uuid-jobs-index" */ './views/project/jobs/index.vue'),
@@ -549,18 +539,6 @@ export default {
               meta: {
                 hideAppBarIcon: true,
                 breadcrumb: 'Variables'
-              }
-            },
-            {
-              path: 'documentation',
-              component: () =>
-                import(
-                  /* webpackChunkName: "workspace-project-uuid-documentation" */ './views/project/documentation.vue'
-                ),
-              name: 'workspace-project-documentation',
-              meta: {
-                hideAppBarIcon: true,
-                breadcrumb: 'Documentation'
               }
             },
             {

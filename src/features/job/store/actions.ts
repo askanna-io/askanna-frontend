@@ -88,46 +88,6 @@ export const actions: ActionTree<jobState, RootState> = {
     commit(type.mutation.SET_LOADING, { name: stateType.jobRunStatusLoading, value: false })
   },
 
-  async [type.action.stopJob]({ commit }, id) {
-    const logger = useLogger()
-
-    let jobRun
-    try {
-      jobRun = await apiService({
-        action: api.stop,
-        method: 'post',
-        serviceName,
-        uuid: id
-      })
-    } catch (e) {
-      logger.error('Error on stop job in stopJob action.\nError: ', e)
-
-      return
-    }
-    logger.userDanger('Job was stoped')
-    commit(type.mutation.SET_JOB_RUN, jobRun)
-  },
-
-  async [type.action.pauseJob]({ commit }, id) {
-    let job
-    try {
-      job = await apiService({
-        action: api.pause,
-        method: 'post',
-        serviceName,
-        uuid: id
-      })
-    } catch (e) {
-      const logger = useLogger()
-
-      logger.error('Error on pause job in pauseJob action.\nError: ', e)
-
-      return
-    }
-
-    commit(type.UPDATE_JOB, job)
-  },
-
   async [type.action.resetJob]({ commit }, id) {
     const logger = useLogger()
 
@@ -146,46 +106,6 @@ export const actions: ActionTree<jobState, RootState> = {
     }
     logger.userWarning('Job was reseted')
     commit(type.UPDATE_JOB, job)
-  },
-
-  async [type.action.killJob]({ commit }, id) {
-    let job
-    try {
-      job = await apiService({
-        action: api.kill,
-        method: 'post',
-        serviceName,
-        uuid: id
-      })
-    } catch (e) {
-      const logger = useLogger()
-
-      logger.error('Error on kill job in killJob action.\nError: ', e)
-
-      return
-    }
-
-    commit(type.UPDATE_JOB, job)
-  },
-
-  async [type.action.resultJob]({ commit }, id) {
-    let result
-    try {
-      result = await apiService({
-        action: api.result,
-        method: 'post',
-        serviceName,
-        uuid: id
-      })
-    } catch (e) {
-      const logger = useLogger()
-
-      logger.error('Error on result job in resultJob action.\nError: ', e)
-
-      return
-    }
-
-    commit(type.mutation.UPDATE_JOB_RESULT, result.result!)
   },
 
   async [type.action.getJobInfo]({ commit }, uuid) {

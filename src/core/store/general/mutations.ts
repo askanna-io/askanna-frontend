@@ -1,5 +1,5 @@
 import { MutationTree } from 'vuex'
-import { mutation, generalState, stateType } from './types'
+import { mutation, generalState } from './types'
 
 export const mutations: MutationTree<generalState> = {
   [mutation.SET_BREADCRUMB_PARAMS](state, data) {

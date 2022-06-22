@@ -1,4 +1,4 @@
-import axios, { AxiosError } from 'axios'
+import axios from 'axios'
 import { ac, mt } from './types'
 import { ActionTree } from 'vuex'
 import router from '@/core/router'

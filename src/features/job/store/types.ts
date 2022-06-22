@@ -60,9 +60,6 @@ export const stateType = {
 export const action = {
   addJob: 'addJob',
   getJob: 'getJob',
-  stopJob: 'stopJob',
-  killJob: 'killJob',
-  pauseJob: 'pauseJob',
   resetJob: 'resetJob',
   startJob: 'startJob',
   deleteJob: 'deleteJob',
@@ -90,12 +87,8 @@ export const mutation = {
 }
 
 export const getJob = 'getJob'
-export const killJob = 'killJob'
 export const startJob = 'startJob'
-export const pauseJob = 'pauseJob'
-export const resetJob = 'resetJob'
 
-export const addJob = 'addJob'
 export const updateJob = 'updateJob'
 export const removeJob = 'removeJob'
 export const getJobInfo = 'getJobInfo'

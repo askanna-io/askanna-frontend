@@ -14,7 +14,7 @@ import JobRunNavBarNotExist from './JobRunNavBarNotExist.vue'
 const props = defineProps({
   routeName: {
     type: [Number, String],
-    default: 'workspace-project-activity'
+    default: 'workspace-project-code'
   },
   job: {
     type: Object,
