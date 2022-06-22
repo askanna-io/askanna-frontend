@@ -51,12 +51,6 @@ const projectEditTabs = computed(() => [
 
 const projectTabs = computed(() => [
   {
-    id: 0,
-    name: 'Activity',
-    to: 'workspace-project-activity',
-    show: false
-  },
-  {
     id: 1,
     name: 'Code',
     to: 'workspace-project-code',
@@ -76,13 +70,6 @@ const projectTabs = computed(() => [
     name: 'Variables',
     to: 'workspace-project-variables',
     show: projectVariableList.value
-  },
-
-  {
-    id: 4,
-    name: 'Documentation',
-    to: 'workspace-project-documentation',
-    show: false
   }
 ])
 

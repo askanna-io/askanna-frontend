@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Vuetify from 'vuetify'
 import '@mdi/font/css/materialdesignicons.css'
 import '@fortawesome/fontawesome-free/css/all.css'
-import GoogleIcon from '@/core/components/icons/GoogleIcon.vue'
 
 Vue.use(Vuetify)
 
@@ -25,11 +24,6 @@ export default new Vuetify({
     }
   },
   icons: {
-    iconfont: 'mdi',
-    values: {
-      google: {
-        component: GoogleIcon
-      }
-    }
+    iconfont: 'mdi'
   }
 })
