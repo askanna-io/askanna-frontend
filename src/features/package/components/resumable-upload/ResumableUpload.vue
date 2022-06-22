@@ -5,7 +5,7 @@
         <div class="grid-block-wrapper vue-file-agent file-input-wrapper has-multiple">
           <replace-info v-if="isReplace" :projectShortUuid="projectShortUuid" :workspaceId="workspaceId" />
           <new-package-info v-else :projectShortUuid="projectShortUuid" :workspaceId="workspaceId" />
-          <canvas style="position: fixed; visibility: hidden; z-index: -3;"></canvas>
+          <canvas style="position: fixed; visibility: hidden; z-index: -3"></canvas>
           <div transitionduration="300" pressdelay="0" helperclass="active-sorting-item">
             <div>
               <file-preview
@@ -67,9 +67,9 @@ import UploadProcessDialod from './UploadProcessDialod.vue'
 
 import Resumablejs from '@/core/plugins/resumable.js'
 import { apiUrl } from '@/core/services/api-settings'
-import useUploadStatus from '@/core/components/uploadStatus/useUploadStatus'
 import usePackageStore from '@/features/package/composition/usePackageStore'
 import useProjectStore from '@/features/project/composition/useProjectStore'
+import { useUploadStatus } from '@/core/components/uploadStatus/useUploadStatus'
 
 import { ref, watch, reactive, computed, defineComponent, onMounted } from '@vue/composition-api'
 
@@ -183,7 +183,6 @@ export default defineComponent({
           isComplete: file.isComplete(),
           progress: prg,
           projectId: projectShortUuid,
-
           packageId: currentPackageData.value.short_uuid
         })
       })

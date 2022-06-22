@@ -1,7 +1,7 @@
 <template>
   <div v-if="!$vuetify.breakpoint.xsOnly" class="text-right">
-    <v-btn @click="handleShowHideUploadStatus" icon :color="colorStatus">
-      <v-icon>{{ iconStatus }}</v-icon>
+    <v-btn @click="uploadStatus.showHideSnackBar()" icon :color="uploadStatus.colorStatus">
+      <v-icon>{{ uploadStatus.iconStatus }}</v-icon>
     </v-btn>
     <v-menu transition="slide-y-transition" min-width="100px" offset-y close-on-content-click>
       <template v-slot:activator="{ on }">
@@ -40,7 +40,7 @@ import { computed } from '@vue/composition-api'
 import useTitle from '@/core/composition/useTitle'
 import useAuthStore from '@/features/auth/composition/useAuthStore'
 import useUserStore from '@/features/user/composition/useUserStore'
-import useUploadStatus from '@/core/components/uploadStatus/useUploadStatus'
+import { useUploadStatus } from '@/core/components/uploadStatus/useUploadStatus'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 
 useTitle()
@@ -51,9 +51,6 @@ const uploadStatus = useUploadStatus()
 const workspaceStore = useWorkspaceStore()
 
 const logout = () => authStore.actions.logout()
-
-const iconStatus = computed(() => uploadStatus.iconStatus.value)
-const colorStatus = computed(() => uploadStatus.colorStatus.value)
 
 const isMember = computed(() => workspaceStore.workspace.value.is_member)
 const globalProfile = computed(() => userStore.state.globalProfile.value)
@@ -67,8 +64,4 @@ const profileRoute = computed(() => {
   }
   return { name: 'profile' }
 })
-
-const handleShowHideUploadStatus = () => {
-  uploadStatus.showHideSnackBar()
-}
 </script>

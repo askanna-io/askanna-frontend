@@ -5,7 +5,7 @@
         Successfully started the upload
         <p class="body-1">
           The upload is running in the background. You can continue working in AskAnna. If you do, you can check the
-          status via <v-icon>{{ iconStatus }}</v-icon> in the right upper corner.
+          status via <v-icon>{{ uploadStatus.iconStatus }}</v-icon> in the right upper corner.
         </p>
       </v-card-title>
       <v-card-text>
@@ -25,51 +25,33 @@
   </v-dialog>
 </template>
 
-<script>
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import { ref, watch, computed, defineComponent } from '@vue/composition-api'
-import useUploadStatus from '@/core/components/uploadStatus/useUploadStatus'
+<script setup lang="ts">
+import { ref, watch } from '@vue/composition-api'
+import { useUploadStatus } from '@/core/components/uploadStatus/useUploadStatus'
 
-export default defineComponent({
-  name: 'UploadProcessDialod',
-
-  props: {
-    progress: {
-      type: Number,
-      default: 0
-    },
-    projectId: {
-      type: String,
-      default: ''
-    },
-    packageId: {
-      type: String,
-      default: ''
-    },
-    isUploadFinish: {
-      type: Boolean,
-      default: false
-    }
+defineProps({
+  progress: {
+    type: Number,
+    default: 0
   },
-
-  setup(props, context) {
-    const dialog = ref(true)
-    const uploadStatus = useUploadStatus()
-    const router = useRouterAskAnna()
-
-    watch(dialog, async dialog => {
-      if (!dialog) context.emit('confirmationClosed')
-    })
-
-    const handleCloseOutside = () => context.emit('onCloseOutside')
-
-    const iconStatus = computed(() => uploadStatus.iconStatus.value)
-
-    const handleOpenPackage = () => {
-      location.reload()
-    }
-
-    return { dialog, iconStatus, handleCloseOutside, handleOpenPackage }
+  isUploadFinish: {
+    type: Boolean,
+    default: false
   }
 })
+
+const emit = defineEmits(['onCloseOutside', 'confirmationClosed'])
+
+const dialog = ref(true)
+const uploadStatus = useUploadStatus()
+
+watch(dialog, async dialog => {
+  if (!dialog) emit('confirmationClosed')
+})
+
+const handleCloseOutside = () => emit('onCloseOutside')
+
+const handleOpenPackage = () => {
+  location.reload()
+}
 </script>
