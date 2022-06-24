@@ -13,7 +13,7 @@
                 (workspaceProfile.membership &&
                   workspaceProfile.membership.avatar &&
                   workspaceProfile.membership.avatar.small) ||
-                globalProfile.avatar.small
+                userStore.globalProfile.avatar.small
               "
             />
           </v-avatar>
@@ -39,7 +39,7 @@ import '@/core/plugins/intercom.js'
 import { computed } from '@vue/composition-api'
 import useTitle from '@/core/composition/useTitle'
 import { useAuthStore } from '@/features/auth/useAuthStore'
-import useUserStore from '@/features/user/composition/useUserStore'
+import { useUserStore } from '@/features/user/useUserStore'
 import { useUploadStatus } from '@/core/components/uploadStatus/useUploadStatus'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 
@@ -47,11 +47,9 @@ useTitle()
 const authStore = useAuthStore()
 const userStore = useUserStore()
 const uploadStatus = useUploadStatus()
-
 const workspaceStore = useWorkspaceStore()
 
 const isMember = computed(() => workspaceStore.workspace.value.is_member)
-const globalProfile = computed(() => userStore.state.globalProfile.value)
 
 const workspaceProfile = computed(() => workspaceStore.state.currentPeople.value)
 const workspaceShortUuid = computed(() => workspaceStore.workspace.value.short_uuid)

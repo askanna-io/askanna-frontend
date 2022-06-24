@@ -3,44 +3,33 @@
     :class="{ 'mobile-view': $vuetify.breakpoint.xsOnly, 'desktop-view': !$vuetify.breakpoint.xsOnly }"
     v-scroll="handleOnScroll"
   >
-    <Layout :layout="layout" :isLoggedIn="isLoggedIn" />
+    <Layout :layout="layout" :isLoggedIn="userStore.isLoggedIn" />
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { get } from 'lodash'
 import { useRouter } from '@u3u/vue-hooks'
 import Layout from '@/core/layouts/Layout.vue'
+import { computed } from '@vue/composition-api'
 import { routerConfig } from './router/routerConfig'
 import { useMobileStore } from '@/core/store/useMobileStore'
-import { computed, defineComponent } from '@vue/composition-api'
-import useUserStore from '@/features/user/composition/useUserStore'
+import { useUserStore } from '@/features/user/useUserStore'
 
-export default defineComponent({
-  name: 'App',
+const userStore = useUserStore()
+const mobileStore = useMobileStore()
+const { route, router } = useRouter()
 
-  components: { Layout },
+router.afterEach(() => (mobileStore.isMenuOpen = false))
 
-  setup(_, context) {
-    const { router } = useRouter()
-    const userStore = useUserStore()
-    const mobileStore = useMobileStore()
-    router.afterEach(() => (mobileStore.isMenuOpen = false))
+const layout = computed(() => {
+  const name = route.value.name || 'signin'
 
-    const layout = computed(() => {
-      const name = context.root.$route.name || 'signin'
-
-      // get layout from routerConfig else use default
-      return get(routerConfig, `${name}.layout`) || 'dashboard'
-    })
-
-    const isLoggedIn = computed(() => !!userStore.state.globalProfile.value.short_uuid)
-
-    const handleOnScroll = () => (mobileStore.isMenuSticked = window.pageYOffset > 10)
-
-    return { layout, isLoggedIn, handleOnScroll }
-  }
+  // get layout from routerConfig else use default
+  return get(routerConfig, `${name}.layout`) || 'dashboard'
 })
+
+const handleOnScroll = () => (mobileStore.isMenuSticked = window.pageYOffset > 10)
 </script>
 <style lang="scss">
 @import '@/core/components/highlight/highlight.scss';

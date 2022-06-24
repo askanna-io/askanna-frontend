@@ -4,6 +4,7 @@ import router from '@/core/router'
 import VueRouter from 'vue-router'
 import apiService from '@/core/services/apiService'
 import { useLogger } from '@/core/composition/useLogger'
+import { useUserStore } from '@/features/user/useUserStore'
 import { apiStringify } from '@/core/services/api-settings'
 const { isNavigationFailure, NavigationFailureType } = VueRouter
 import { workspaceState, WORKSPACE_STORE, action, mutation } from './types'
@@ -404,7 +405,9 @@ export const actions: ActionTree<workspaceState, RootState> = {
     }
 
     commit(mutation.SET_CURRENT_PEOPLE, people)
-    const name = people.name || people.membership.name || rootState.user.globalProfile.name
+    const userStore = useUserStore()
+
+    const name = people.name || people.membership.name || userStore.globalProfile.name
 
     if (people && process.env.VUE_APP_INTERCOM === 'on') {
       window.Intercom('boot', {
