@@ -25,7 +25,7 @@
         <v-list-item href="https://docs.askanna.io" target="_blank">
           <v-list-item-title>Documentation</v-list-item-title>
         </v-list-item>
-        <v-list-item :key="'logout'" exact @click="logout"> Logout </v-list-item>
+        <v-list-item :key="'logout'" exact @click="authStore.logout()"> Logout </v-list-item>
       </v-list>
     </v-menu>
     <v-btn v-if="isReview" small icon class="white--text" @click.stop="drawer = !drawer">
@@ -38,7 +38,7 @@
 import '@/core/plugins/intercom.js'
 import { computed } from '@vue/composition-api'
 import useTitle from '@/core/composition/useTitle'
-import useAuthStore from '@/features/auth/composition/useAuthStore'
+import { useAuthStore } from '@/features/auth/useAuthStore'
 import useUserStore from '@/features/user/composition/useUserStore'
 import { useUploadStatus } from '@/core/components/uploadStatus/useUploadStatus'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
@@ -49,8 +49,6 @@ const userStore = useUserStore()
 const uploadStatus = useUploadStatus()
 
 const workspaceStore = useWorkspaceStore()
-
-const logout = () => authStore.actions.logout()
 
 const isMember = computed(() => workspaceStore.workspace.value.is_member)
 const globalProfile = computed(() => userStore.state.globalProfile.value)

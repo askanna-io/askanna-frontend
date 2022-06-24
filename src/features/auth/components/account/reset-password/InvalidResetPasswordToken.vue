@@ -17,10 +17,4 @@
   </v-row>
 </template>
 
-<script>
-import { defineComponent } from '@vue/composition-api'
-
-export default defineComponent({
-  name: 'InvalidResetPasswordToken'
-})
-</script>
+<script setup lang="ts"></script>

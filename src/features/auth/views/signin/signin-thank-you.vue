@@ -11,15 +11,6 @@
   </v-card>
 </template>
 
-<script>
-import TheSignIn from '../../components/TheSignIn'
-import { defineComponent } from '@vue/composition-api'
-
-export default defineComponent({
-  name: 'signin-thank-you',
-
-  components: {
-    TheSignIn
-  }
-})
+<script setup lang="ts">
+import TheSignIn from '../../components/TheSignIn.vue'
 </script>

@@ -20,7 +20,7 @@
         autocomplete="off"
         label="Email"
         :error-messages="error.email || error.username"
-        :rules="[RULE.required('The email is required'), RULE.email('The email you entered is not valid', 3)]"
+        :rules="[RULES.required('The email is required'), RULES.email('The email you entered is not valid', 3)]"
       />
 
       <v-btn :disabled="!isFormValid" color="primary" @click.stop="handleSentEmail">
@@ -41,11 +41,11 @@
   </div>
 </template>
 
-<script lang="ts">
-import useAuthStore from '../../composition/useAuthStore'
+<script setup lang="ts">
+import { useAuthStore } from '@/features/auth/useAuthStore'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
+import { ref, watch, reactive, computed } from '@vue/composition-api'
 import useValidationRules from '@/core/composition/useValidationRules'
-import { ref, watch, reactive, computed, defineComponent, onMounted, toRefs } from '@vue/composition-api'
 
 type VForm = Vue & {
   reset: () => void
@@ -53,75 +53,51 @@ type VForm = Vue & {
   resetValidation: () => void
 }
 
-export default defineComponent({
-  name: 'ForgotPasswordSentForm',
+const authStore = useAuthStore()
+const router = useRouterAskAnna()
+const { RULES } = useValidationRules()
 
-  setup(_, context) {
-    const authStore = useAuthStore()
-    const router = useRouterAskAnna()
-    const validationRules = useValidationRules()
+const username = ref('')
+const isSent = ref(false)
+const isFormValid = ref(false)
+const forgotPasswordSentFormRef = ref()
 
-    const username = ref('')
-    const isSent = ref(false)
+let error = reactive({ email: '', username: '' })
 
-    const isFormValid = ref(false)
-    const forgotPasswordSentFormRef = ref(context.root.$refs.forgotPasswordSentFormRef)
-    const forgotPasswordSentForm = computed(() => forgotPasswordSentFormRef.value as VForm)
+const forgotPasswordSentForm = computed(() => forgotPasswordSentFormRef.value as VForm)
 
-    const errorData = reactive({
-      error: { email: '', username: '' }
-    })
+const handleSentEmail = async () => {
+  if (!forgotPasswordSentForm.value.validate()) {
+    return
+  }
 
-    const handleSentEmail = async () => {
-      if (!forgotPasswordSentForm.value.validate()) {
-        return
-      }
+  const response = await authStore.resetPassword({
+    email: username.value,
+    front_end_domain: window.location.origin
+  })
 
-      const response = await authStore.actions.resetPassword({
-        email: username.value,
-        front_end_domain: window.location.origin
-      })
+  if (response && response.status === 400) {
+    error = { ...error, ...response.data }
 
-      if (response && response.status === 400) {
-        errorData.error = { ...errorData.error, ...response.data }
+    return
+  }
 
-        return
-      }
+  isSent.value = true
+}
 
-      isSent.value = true
-    }
+const handleGoToLogin = () => router.push({ name: 'signin' })
 
-    const handleGoToLogin = () => router.push({ name: 'signin' })
+const resetError = () => {
+  error = { email: '', username: '' }
+}
 
-    const resetError = () => {
-      errorData.error = { email: '', username: '' }
-    }
+const resetValidation = () => forgotPasswordSentForm.value.resetValidation()
 
-    const reset = () => forgotPasswordSentForm.value.reset()
-    const resetValidation = () => forgotPasswordSentForm.value.resetValidation()
-
-    watch(username, async username => {
-      // check if exist error from backend on typing fields, try resest validation
-      if (Object.values(errorData.error).some(error => error.length)) {
-        resetError()
-        resetValidation()
-      }
-    })
-
-    return {
-      ...authStore,
-      ...toRefs(errorData),
-      RULE: validationRules.RULES,
-      reset,
-      isSent,
-      username,
-      isFormValid,
-      resetValidation,
-      handleSentEmail,
-      handleGoToLogin,
-      forgotPasswordSentForm,
-      forgotPasswordSentFormRef
-    }
+watch(username, async () => {
+  // check if exist error from backend on typing fields, try resest validation
+  if (Object.values(error).some(item => item.length)) {
+    resetError()
+    resetValidation()
   }
 })
 </script>

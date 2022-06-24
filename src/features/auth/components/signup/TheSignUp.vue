@@ -11,7 +11,7 @@
       outlined
       label="Name"
       validate-on-blur
-      :value="name"
+      :value="formData.name"
       @blur="handleOnBlurName"
       :error-messages="error.name"
     />
@@ -19,10 +19,10 @@
       dense
       outlined
       label="Email"
-      v-model="email"
+      v-model="formData.email"
       validate-on-blur
       :error-messages="error.email || error.username"
-      :rules="[RULE.required('The email is required'), RULE.email('The email you entered is not valid', 3)]"
+      :rules="[RULES.required('The email is required'), RULES.email('The email you entered is not valid', 3)]"
     />
     <v-text-field
       dense
@@ -30,12 +30,12 @@
       outlined
       validate-on-blur
       label="Password"
-      v-model="password"
+      v-model="formData.password"
       :error-messages="error.password"
       :type="isShowPassword ? 'text' : 'password'"
       :rules="[
-        RULE.required('The password is required'),
-        RULE.min('The password should be longer than 10 characters', 10)
+        RULES.required('The password is required'),
+        RULES.min('The password should be longer than 10 characters', 10)
       ]"
       @click:append="isShowPassword = !isShowPassword"
     />
@@ -43,25 +43,23 @@
       dense
       outlined
       validate-on-blur
-      v-model="workspace"
+      v-model="formData.workspace"
       label="Workspace name"
       :error-messages="error.workspace"
-      :rules="[RULE.required('The workspace name is required')]"
+      :rules="[RULES.required('The workspace name is required')]"
     />
 
     <v-checkbox
       dense
       class="pt-0 mt-0"
-      v-model="terms_of_use"
-      :rules="[RULE.required('The Terms of Use and Data Processing Agreement is required')]"
+      v-model="formData.terms_of_use"
+      :rules="[RULES.required('The Terms of Use and Data Processing Agreement is required')]"
       :error-messages="error.terms_of_use"
     >
       <template v-slot:label>
         <div>
           I accept the
-          <a class="ask-anna-link" target="_blank" href="https://askanna.io/terms/" @click.stop>
-            Terms of Use
-          </a>
+          <a class="ask-anna-link" target="_blank" href="https://askanna.io/terms/" @click.stop> Terms of Use </a>
           and
           <a class="ask-anna-link" target="_blank" href="https://askanna.io/dpa/" @click.stop>
             Data Processing Agreement
@@ -70,118 +68,91 @@
       </template>
     </v-checkbox>
 
-    <input type="password" style="display: none;" browserAutocomplete="new-password" autocomplete="new-password" />
+    <input type="password" style="display: none" browserAutocomplete="new-password" autocomplete="new-password" />
     <v-btn :disabled="!isFormValid" :loading="loading" color="primary" class="mr-4" @click="handleLogin">
       Create your account
       <template v-slot:loader>
         <span>{{ loadingText }}...</span>
-        <v-icon class="ask-anna-btn-loader" dark>
-          mdi-loading
-        </v-icon>
+        <v-icon class="ask-anna-btn-loader" dark> mdi-loading </v-icon>
       </template>
     </v-btn>
   </v-form>
 </template>
 
-<script>
-import useAuthStore from '../../composition/useAuthStore'
+<script setup lang="ts">
+import { useAuthStore } from '@/features/auth/useAuthStore'
 import useValidationRules from '@/core/composition/useValidationRules'
-import { ref, watch, toRefs, inject, reactive, computed, defineComponent } from '@vue/composition-api'
+import { ref, watch, toRefs, inject, reactive, computed } from '@vue/composition-api'
 
-export default defineComponent({
-  name: 'TheCreateNewAccount',
+const authStore = useAuthStore()
+const { RULES } = useValidationRules()
 
-  setup(rops, context) {
-    const authStore = useAuthStore()
-    const validationRules = useValidationRules()
+const updateAuthData = inject('updateAuthData')
+const updateSignUpStep = inject('updateSignUpStep')
 
-    const updateAuthData = inject('updateAuthData')
-    const updateSignUpStep = inject('updateSignUpStep')
+const loading = ref(false)
+const isFormValid = ref(false)
+const loginFormRef = ref(null)
+const isShowPassword = ref(false)
 
-    const loading = ref(false)
-    const checkTerms = ref(false)
-    const isFormValid = ref(false)
-    const loginFormRef = ref(null)
-    const isShowPassword = ref(false)
+const formData = reactive({
+  name: '',
+  email: '',
+  username: '',
+  password: '',
+  workspace: '',
+  terms_of_use: false
+})
 
-    const formData = reactive({
-      name: '',
-      email: '',
-      username: '',
-      password: '',
-      workspace: '',
-      terms_of_use: false
-    })
+const loadingTexts = ['Creating accout', 'Creating workspace']
+const loadingText = computed(() => loadingTexts[authStore.signUpStep])
+let error = reactive({ name: '', email: '', username: '', password: '', workspace: '', terms_of_use: '' })
 
-    const errorData = reactive({
-      error: { name: '', email: '', username: '', password: '', workspace: '', terms_of_use: '' }
-    })
-    const loadingText = computed(() => loadingTexts[authStore.signUpStep])
-    const loadingTexts = ['Creating accout', 'Creating workspace']
+const handleOnBlurName = $e => {
+  if (formData.workspace === '' || formData.workspace === formData.name) {
+    formData.workspace = $e?.target?.value
+  }
+  formData.name = $e?.target?.value
+}
 
-    const reset = () => loginFormRef.value.reset()
-    const resetValidation = () => loginFormRef.value.resetValidation()
+const handleLogin = async () => {
+  updateSignUpStep(0)
+  if (!loginFormRef.value.validate()) {
+    return
+  }
+  loading.value = true
 
-    const handleOnBlurName = $e => {
-      if (formData.workspace === '' || formData.workspace === formData.name) {
-        formData.workspace = $e?.target?.value
-      }
-      formData.name = $e?.target?.value
-    }
+  const username = formData.email
+  const name = formData.name || undefined
+  const workspace = formData.workspace || formData.name
+  const account = await authStore.createAccount({
+    ...formData,
+    name,
+    username,
+    workspace,
+    front_end_domain: window.location.origin
+  })
 
-    const handleLogin = async () => {
-      updateSignUpStep(0)
-      if (!loginFormRef.value.validate()) {
-        return
-      }
-      loading.value = true
+  if (account && account.response && account.response.status === 400) {
+    error = { ...error, ...account.response.data }
 
-      const username = formData.email
-      const name = formData.name || undefined
-      const workspace = formData.workspace || formData.name
-      const account = await authStore.actions.createAccount({
-        ...formData,
-        name,
-        username,
-        workspace,
-        front_end_domain: window.location.origin
-      })
+    loading.value = false
 
-      if (account && account.response && account.response.status === 400) {
-        errorData.error = { ...errorData.error, ...account.response.data }
+    return
+  }
+  updateAuthData({ username, password: formData.password })
+  updateSignUpStep(1)
+}
 
-        loading.value = false
+const resetError = () => {
+  error = { name: '', email: '', username: '', password: '', workspace: '', terms_of_use: '' }
+}
 
-        return
-      }
-      updateAuthData({ username, password: formData.password })
-      updateSignUpStep(1)
-    }
-
-    const resetError = () => {
-      errorData.error = { name: '', email: '', username: '', password: '' }
-    }
-
-    watch(formData, _ => {
-      // check if exist error from backend on typing fields, try resest validation
-      if (Object.values(errorData.error).some(error => error.length)) {
-        resetError()
-        loginFormRef.value.resetValidation()
-      }
-    })
-
-    return {
-      loading,
-      ...toRefs(formData),
-      ...toRefs(errorData),
-      loadingText,
-      isFormValid,
-      handleLogin,
-      loginFormRef,
-      isShowPassword,
-      handleOnBlurName,
-      RULE: validationRules.RULES
-    }
+watch(formData, _ => {
+  // check if exist error from backend on typing fields, try resest validation
+  if (Object.values(error).some(item => item.length)) {
+    resetError()
+    loginFormRef.value.resetValidation()
   }
 })
 </script>

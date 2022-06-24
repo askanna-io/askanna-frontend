@@ -14,8 +14,8 @@
         v-model="password"
         :error-messages="error.new_password1 || error.new_password2"
         :rules="[
-          RULE.required('The password is required'),
-          RULE.min('The password should be longer than 10 characters', 10)
+          RULES.required('The password is required'),
+          RULES.min('The password should be longer than 10 characters', 10)
         ]"
         :append-icon="isShowPassword ? 'far fa-eye' : 'fas fa-eye-slash'"
         :type="isShowPassword ? 'text' : 'password'"
@@ -25,22 +25,17 @@
         @click:append="isShowPassword = !isShowPassword"
       />
 
-      <v-btn :disabled="!isFormValid" color="primary" @click.stop="handleResetPassword">
-        Reset password
-      </v-btn>
+      <v-btn :disabled="!isFormValid" color="primary" @click.stop="handleResetPassword"> Reset password </v-btn>
     </v-form>
-    <template v-else>
-      Your password has been reset successfully! We will redirect you to the sign-in page.
-    </template>
+    <template v-else> Your password has been reset successfully! We will redirect you to the sign-in page. </template>
   </div>
 </template>
 
-<script lang="ts">
-import useAuthStore from '../../../composition/useAuthStore'
+<script setup lang="ts">
+import { useAuthStore } from '@/features/auth/useAuthStore'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
+import { ref, watch, reactive, computed } from '@vue/composition-api'
 import useValidationRules from '@/core/composition/useValidationRules'
-
-import { ref, watch, reactive, computed, defineComponent, toRefs } from '@vue/composition-api'
 
 type VForm = Vue & {
   reset: () => void
@@ -48,78 +43,55 @@ type VForm = Vue & {
   resetValidation: () => void
 }
 
-export default defineComponent({
-  name: 'ResetForm',
+const authStore = useAuthStore()
+const router = useRouterAskAnna()
+const { RULES } = useValidationRules()
 
-  setup(_, context) {
-    const authStore = useAuthStore()
-    const router = useRouterAskAnna()
-    const validationRules = useValidationRules()
+const { token, uid } = router.route.value.query
 
-    const { token, uid } = context.root.$route.query
+let error = reactive({
+  new_password1: '',
+  new_password2: ''
+})
+const password = ref('')
 
-    const errorData = reactive({
-      error: { new_password1: '', new_password2: '' }
-    })
-    const password = ref('')
+const isFormValid = ref(false)
+const isShowPassword = ref(false)
+const isPasswordReset = ref(false)
+const forgotPasswordSentFormRef = ref()
 
-    const isFormValid = ref(false)
-    const isShowPassword = ref(false)
-    const isPasswordReset = ref(false)
-    const forgotPasswordSentFormRef = ref(context.root.$refs.forgotPasswordSentFormRef)
-    const forgotPasswordSentForm = computed(() => forgotPasswordSentFormRef.value as VForm)
+const forgotPasswordSentForm = computed(() => forgotPasswordSentFormRef.value as VForm)
 
-    const handleResetPassword = async () => {
-      if (!forgotPasswordSentForm.value.validate()) {
-        return
-      }
-      const result = await authStore.actions.confirmResetPassword({
-        uid,
-        token,
-        new_password1: password.value,
-        new_password2: password.value
-      })
+const handleResetPassword = async () => {
+  if (!forgotPasswordSentForm.value.validate()) {
+    return
+  }
+  const result = await authStore.confirmResetPassword({
+    uid,
+    token,
+    new_password1: password.value,
+    new_password2: password.value
+  })
 
-      if (result && result.response && result.response.status === 400) {
-        errorData.error = { ...errorData.error, ...result.response.data }
+  if (result && result.response && result.response.status === 400) {
+    error = { ...error, ...result.response.data }
 
-        return
-      }
-      isPasswordReset.value = true
-      setTimeout(() => router.push({ name: 'signin' }), 3000)
-    }
+    return
+  }
+  isPasswordReset.value = true
+  setTimeout(() => router.push({ name: 'signin' }), 3000)
+}
 
-    const handleGoToLogin = () => context.emit('onOpenLogin')
+const resetError = () => {
+  error = { new_password1: '', new_password2: '' }
+}
+const resetValidation = () => forgotPasswordSentForm.value.resetValidation()
 
-    const reset = () => forgotPasswordSentForm.value.reset()
-    const resetError = () => {
-      errorData.error = { new_password1: '', new_password2: '' }
-    }
-    const resetValidation = () => forgotPasswordSentForm.value.resetValidation()
-
-    watch(password, async password => {
-      // check if exist error from backend on typing fields, try resest validation
-      if (Object.values(errorData.error).some(error => error.length)) {
-        resetError()
-        resetValidation()
-      }
-    })
-
-    return {
-      ...authStore,
-      ...toRefs(errorData),
-      RULE: validationRules.RULES,
-      reset,
-      password,
-      isFormValid,
-      isShowPassword,
-      isPasswordReset,
-      resetValidation,
-      handleGoToLogin,
-      handleResetPassword,
-      forgotPasswordSentForm,
-      forgotPasswordSentFormRef
-    }
+watch(password, async () => {
+  // check if exist error from backend on typing fields, try resest validation
+  if (Object.values(error).some(item => item.length)) {
+    resetError()
+    resetValidation()
   }
 })
 </script>

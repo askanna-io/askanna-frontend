@@ -15,24 +15,14 @@
   </v-expansion-panel>
 </template>
 
-<script>
-import TheSignIn from '../../components/TheSignIn'
-import { ref, defineComponent } from '@vue/composition-api'
-import ForgotPasswordLink from '../../components/account/ForgotPasswordLink'
+<script setup lang="ts">
+import TheSignIn from '../../components/TheSignIn.vue'
+import ForgotPasswordLink from '../../components/account/ForgotPasswordLink.vue'
 
-export default defineComponent({
-  name: 'Signin',
-
-  props: {
-    title: {
-      type: String,
-      default: () => 'Sign in'
-    }
-  },
-
-  components: {
-    TheSignIn,
-    ForgotPasswordLink
+defineProps({
+  title: {
+    type: String,
+    default: () => 'Sign in'
   }
 })
 </script>

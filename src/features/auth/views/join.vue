@@ -20,55 +20,37 @@
   </div>
 </template>
 
-<script>
-import { ref, computed, onBeforeMount, defineComponent } from '@vue/composition-api'
-
-import TheJoin from '../components/join/TheJoin'
-import useAuthStore from '../composition/useAuthStore'
-import InvalidInvitation from '../components/join/InvalidInvitation'
-import TheCreateNewAccount from '../components/join/TheCreateNewAccount'
+<script setup lang="ts">
+import TheJoin from '../components/join/TheJoin.vue'
+import { useAuthStore } from '@/features/auth/useAuthStore'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
+import { ref, computed, onBeforeMount } from '@vue/composition-api'
+import InvalidInvitation from '../components/join/InvalidInvitation.vue'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
-import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress'
+import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 
-export default defineComponent({
-  name: 'join',
+const authStore = useAuthStore()
+const router = useRouterAskAnna()
+const workspaceStore = useWorkspaceStore()
+const { token, peopleId, workspaceId } = router.route.value.params
 
-  components: {
-    TheJoin,
-    InvalidInvitation,
-    TheCreateNewAccount,
-    AskAnnaLoadingProgress
-  },
+const loading = ref(true)
+const isInvitationValid = computed(
+  () => Boolean(workspaceStore.invitation.value.email) && workspaceStore.invitation.value.status !== 'accepted'
+)
 
-  setup(_, context) {
-    const authStore = useAuthStore()
-    const workspaceStore = useWorkspaceStore()
-    const { token, peopleId, workspaceId } = context.root.$route.params
+const fetchData = async () => {
+  loading.value = true
+  await authStore.logout(false)
+  await workspaceStore.getInvitetionInfo({
+    token,
+    peopleId,
+    workspaceId
+  })
+  loading.value = false
+}
 
-    const loading = ref(true)
-    const isInvitationValid = computed(
-      () => Boolean(workspaceStore.invitation.value.email) && workspaceStore.invitation.value.status !== 'accepted'
-    )
-
-    const fetchData = async () => {
-      loading.value = true
-      await authStore.actions.logout(false)
-      await workspaceStore.getInvitetionInfo({
-        token,
-        peopleId,
-        workspaceId
-      })
-      loading.value = false
-    }
-
-    onBeforeMount(() => fetchData())
-
-    return {
-      loading,
-      isInvitationValid
-    }
-  }
-})
+onBeforeMount(() => fetchData())
 </script>
 <style scoped>
 .join-wrapper {
@@ -80,8 +62,7 @@ export default defineComponent({
   height: 74px;
   margin-bottom: 6px;
 }
-.login-expansion .v-expansion-panel {
-}
+
 .colored-border {
   border: 1px solid;
 }

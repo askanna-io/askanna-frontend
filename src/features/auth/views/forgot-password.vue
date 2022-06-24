@@ -21,25 +21,11 @@
   </v-row>
 </template>
 
-<script>
-import { ref, defineComponent } from '@vue/composition-api'
-import ForgotPasswordSentForm from '../components/account/ForgotPasswordSentForm'
+<script setup lang="ts">
+import { ref } from '@vue/composition-api'
+import ForgotPasswordSentForm from '../components/account/ForgotPasswordSentForm.vue'
 
-export default defineComponent({
-  name: 'forgot-password',
-
-  components: {
-    ForgotPasswordSentForm
-  },
-
-  setup() {
-    const panel = ref(0)
-
-    return {
-      panel
-    }
-  }
-})
+const panel = ref(0)
 </script>
 <style>
 .login-wrapper {

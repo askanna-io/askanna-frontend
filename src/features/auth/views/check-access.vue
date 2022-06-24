@@ -4,88 +4,74 @@
   </ask-anna-loading-progress>
 </template>
 
-<script>
+<script setup lang="ts">
+import { useUserStoreP } from '@/features/user/useUserStore'
+import usePrepareAccount from '@/features/auth/usePrepareAccount'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useUserStore from '@/features/user/composition/useUserStore'
-import usePrepareAccount from '@/features/auth/composition/usePrepareAccount'
-import WorkspaceNotReady from '@/features/workspace/components/WorkspaceNotReady'
-import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress'
-import { ref, computed, onBeforeMount, onUnmounted, defineComponent } from '@vue/composition-api'
+import { ref, computed, onBeforeMount, onUnmounted } from '@vue/composition-api'
+import WorkspaceNotReady from '@/features/workspace/components/WorkspaceNotReady.vue'
+import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 
-export default defineComponent({
-  name: 'check-access',
+const token = window.localStorage.getItem('token')
 
-  components: {
-    WorkspaceNotReady,
-    AskAnnaLoadingProgress
-  },
+const userStore = useUserStore()
+const userStoreP = useUserStoreP()
 
-  setup(_, context) {
-    const token = window.localStorage.getItem('token')
+const router = useRouterAskAnna()
+const prepareAccount = usePrepareAccount()
 
-    const userStore = useUserStore()
-    const router = useRouterAskAnna()
-
-    const prepareAccount = usePrepareAccount(context)
-
-    const authData = computed(() => {
-      return {
-        username: userStore.state.tempAuth.value.username,
-        password: userStore.state.tempAuth.value.password
-      }
-    })
-
-    const loading = ref(true)
-    const polling = ref(null)
-    const isReady = computed(() => prepareAccount.IsAccountReady.value)
-
-    const checkWorkspace = async () => {
-      await prepareAccount.checkIfWorkspaceIsReady({ ...authData.value })
-
-      if (isReady.value) {
-        clearInterval(polling.value)
-        userStore.mutations.DELETE_TEMP_AUTH()
-
-        const backAfterUrl = window.localStorage.getItem('back_after_login')
-        window.localStorage.setItem('back_after_login', '')
-
-        //check if user need redirect to last visited page
-        if (backAfterUrl && backAfterUrl !== '/') {
-          router.push({ path: backAfterUrl, params: { workspaceId: prepareAccount.workspaceId.value } })
-
-          return
-        }
-
-        router.push({ name: 'workspace', params: { workspaceId: prepareAccount.workspaceId.value } })
-      }
-
-      loading.value = false
-    }
-
-    const checkReadyCycle = () => {
-      polling.value = setInterval(async () => {
-        await checkWorkspace()
-      }, 5000)
-    }
-
-    const fetchData = async () => {
-      await checkWorkspace()
-      if (isReady.value) return
-
-      checkReadyCycle()
-    }
-
-    onBeforeMount(() => token && fetchData())
-
-    onUnmounted(() => {
-      clearInterval(polling.value)
-    })
-
-    return {
-      isReady,
-      loading
-    }
+const authData = computed(() => {
+  return {
+    username: userStoreP.tempAuth.username,
+    password: userStoreP.tempAuth.password
   }
+})
+
+const loading = ref(true)
+const polling = ref(null)
+const isReady = computed(() => prepareAccount.IsAccountReady.value)
+
+const checkWorkspace = async () => {
+  await prepareAccount.checkIfWorkspaceIsReady({ ...authData.value })
+
+  if (isReady.value) {
+    clearInterval(polling.value)
+    userStoreP.tempAuth = { username: '', password: '' }
+
+    const backAfterUrl = window.localStorage.getItem('back_after_login')
+    window.localStorage.setItem('back_after_login', '')
+
+    //check if user need redirect to last visited page
+    if (backAfterUrl && backAfterUrl !== '/') {
+      router.push({ path: backAfterUrl, params: { workspaceId: prepareAccount.workspaceId.value } })
+
+      return
+    }
+
+    router.push({ name: 'workspace', params: { workspaceId: prepareAccount.workspaceId.value } })
+  }
+
+  loading.value = false
+}
+
+const checkReadyCycle = () => {
+  polling.value = setInterval(async () => {
+    await checkWorkspace()
+  }, 5000)
+}
+
+const fetchData = async () => {
+  await checkWorkspace()
+  if (isReady.value) return
+
+  checkReadyCycle()
+}
+
+onBeforeMount(() => token && fetchData())
+
+onUnmounted(() => {
+  clearInterval(polling.value)
 })
 </script>
 <style scoped>

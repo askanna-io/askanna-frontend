@@ -25,7 +25,8 @@
 import useCopy from '@/core/composition/useCopy'
 import { apiUrl } from '@/core/services/api-settings'
 import { defineComponent } from '@vue/composition-api'
-import useAuthStore from '@/features/auth/composition/useAuthStore'
+import { useAuthStore } from '@/features/auth/useAuthStore'
+
 import TheHighlight from '@/core/components/highlight/TheHighlight.vue'
 
 export default defineComponent({

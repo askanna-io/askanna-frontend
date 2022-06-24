@@ -16,10 +16,4 @@
   </v-row>
 </template>
 
-<script>
-import { defineComponent } from '@vue/composition-api'
-
-export default defineComponent({
-  name: 'InvalidInvitation'
-})
-</script>
+<script setup lang="ts"></script>

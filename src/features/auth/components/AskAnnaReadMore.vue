@@ -15,7 +15,7 @@
   </v-card>
 </template>
 
-<script>
+<script lang="ts">
 import { computed, defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
