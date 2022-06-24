@@ -1,5 +1,5 @@
-import useAuthStore from './useAuthStore'
 import { ref } from '@vue/composition-api'
+import { useAuthStore } from './useAuthStore'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import { useWorkspacesStore } from '@/features/workspaces/useWorkspacesStore'
 
@@ -12,7 +12,7 @@ export default function () {
   const IsAccountReady = ref(false)
 
   const loginUser = async ({ username = '', password = '' }) => {
-    return await authStore.actions.login({ username, password, redirect: false })
+    return await authStore.login({ username, password, redirect: false })
   }
 
   const getWorkspace = async () => {
@@ -36,7 +36,7 @@ export default function () {
       }
     }
 
-    if (!authStore.state.authToken.value) {
+    if (!authStore.authToken) {
       router.push({ name: 'signin' })
 
       return

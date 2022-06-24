@@ -8,40 +8,34 @@
   </v-card>
 </template>
 
-<script>
+<script setup lang="ts">
+import usePrepareAccount from '@/features/auth/usePrepareAccount'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import usePrepareAccount from '../../composition/usePrepareAccount'
-import { ref, inject, computed, onBeforeMount, onUnmounted, defineComponent } from '@vue/composition-api'
+import { ref, inject, computed, onBeforeMount, onUnmounted } from '@vue/composition-api'
 
-export default defineComponent({
-  name: 'WaitBeforeCreateAccount',
+const authData = inject('authData')
 
-  setup(_, context) {
-    const router = useRouterAskAnna()
-    const prepareAccount = usePrepareAccount(context)
+const router = useRouterAskAnna()
+const prepareAccount = usePrepareAccount()
 
-    const authData = inject('authData')
+const polling = ref(null)
+const isReady = computed(() => prepareAccount.IsAccountReady.value)
 
-    const polling = ref(null)
-    const isReady = computed(() => prepareAccount.IsAccountReady.value)
+const checkIsReady = async () => {
+  polling.value = setInterval(async () => {
+    await prepareAccount.checkIfWorkspaceIsReady({ ...authData.value })
 
-    const checkIsReady = async () => {
-      polling.value = setInterval(async () => {
-        await prepareAccount.checkIfWorkspaceIsReady({ ...authData.value })
-
-        if (isReady.value) {
-          clearInterval(polling.value)
-          router.push({ name: 'workspace', params: { workspaceId: prepareAccount.workspaceId.value } })
-        }
-      }, 5000)
-    }
-
-    onBeforeMount(() => checkIsReady())
-
-    onUnmounted(() => {
+    if (isReady.value) {
       clearInterval(polling.value)
-    })
-  }
+      router.push({ name: 'workspace', params: { workspaceId: prepareAccount.workspaceId.value } })
+    }
+  }, 5000)
+}
+
+onBeforeMount(() => checkIsReady())
+
+onUnmounted(() => {
+  clearInterval(polling.value)
 })
 </script>
 <style scoped>

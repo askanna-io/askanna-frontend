@@ -32,50 +32,36 @@
   </div>
 </template>
 
-<script>
-import useAuthStore from '@/features/auth/composition/useAuthStore'
-import ResetForm from '../../components/account/reset-password/ResetForm'
-import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress'
-import { ref, toRefs, computed, reactive, onBeforeMount, defineComponent } from '@vue/composition-api'
-import InvalidResetPasswordToken from '../../components/account/reset-password/InvalidResetPasswordToken'
+<script setup lang="ts">
+import { ref, onBeforeMount } from '@vue/composition-api'
+import { useAuthStore } from '@/features/auth/useAuthStore'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
+import ResetForm from '../../components/account/reset-password/ResetForm.vue'
+import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
+import InvalidResetPasswordToken from '../../components/account/reset-password/InvalidResetPasswordToken.vue'
 
-export default defineComponent({
-  name: 'resetPassword',
+const authStore = useAuthStore()
+const router = useRouterAskAnna()
 
-  components: {
-    ResetForm,
-    AskAnnaLoadingProgress,
-    InvalidResetPasswordToken
-  },
+const { token, uid } = router.route.value.query
 
-  setup(props, context) {
-    const authStore = useAuthStore()
-    const { token, uid } = context.root.$route.query
+const loading = ref(true)
+const isInvitationValid = ref(false)
 
-    const loading = ref(true)
-    const isInvitationValid = ref(false)
+const fetchData = async () => {
+  loading.value = true
+  const tokenStatus = await authStore.validateResetToken({
+    uid,
+    token
+  })
 
-    const fetchData = async () => {
-      loading.value = true
-      const tokenStatus = await authStore.actions.validateResetToken({
-        uid,
-        token
-      })
-
-      if (tokenStatus && tokenStatus.status === 'valid') {
-        isInvitationValid.value = true
-      }
-      loading.value = false
-    }
-
-    onBeforeMount(() => fetchData())
-
-    return {
-      loading,
-      isInvitationValid
-    }
+  if (tokenStatus && tokenStatus.status === 'valid') {
+    isInvitationValid.value = true
   }
-})
+  loading.value = false
+}
+
+onBeforeMount(() => fetchData())
 </script>
 <style scoped>
 .login-wrapper {

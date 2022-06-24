@@ -40,33 +40,16 @@
   </div>
 </template>
 
-<script>
-import TheConnectAccount from './TheConnectAccount'
-import TheCreateNewAccount from './TheCreateNewAccount'
-import { ref, computed, defineComponent } from '@vue/composition-api'
-import AskAnnaReadMore from '@/features/auth/components/AskAnnaReadMore'
+<script setup lang="ts">
+import { ref, computed } from '@vue/composition-api'
+import TheConnectAccount from './TheConnectAccount.vue'
+import TheCreateNewAccount from './TheCreateNewAccount.vue'
+import AskAnnaReadMore from '@/features/auth/components/AskAnnaReadMore.vue'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 
-export default defineComponent({
-  name: 'TheJoin',
-
-  components: {
-    AskAnnaReadMore,
-    TheConnectAccount,
-    TheCreateNewAccount
-  },
-
-  setup() {
-    const panel = ref(0)
-    const workspaceStore = useWorkspaceStore()
-    const workspaceName = computed(() => workspaceStore.invitation.value.workspace.name)
-
-    return {
-      panel,
-      workspaceName
-    }
-  }
-})
+const panel = ref(0)
+const workspaceStore = useWorkspaceStore()
+const workspaceName = computed(() => workspaceStore.invitation.value.workspace.name)
 </script>
 <style scoped>
 .login-expansion .v-expansion-panel {

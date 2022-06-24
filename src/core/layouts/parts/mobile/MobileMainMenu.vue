@@ -27,7 +27,8 @@ import { computed } from '@vue/composition-api'
 import MobileProjectMenu from './MobileProjectMenu.vue'
 import MobileWorkspaceMenu from './MobileWorkspaceMenu.vue'
 import { useMobileStore } from '@/core/store/useMobileStore'
-import useAuthStore from '@/features/auth/composition/useAuthStore'
+import { useAuthStore } from '@/features/auth/useAuthStore'
+
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 
 const emit = defineEmits('onClose')
@@ -48,7 +49,7 @@ const profileRoute = computed(() => {
 
 const isSticky = computed(() => mobileStore.isMenuOpen && mobileStore.isMenuSticked)
 
-const logout = () => authStore.actions.logout()
+const logout = () => authStore.logout()
 
 const handleClickOnMenuItem = () => emit('onClose')
 </script>

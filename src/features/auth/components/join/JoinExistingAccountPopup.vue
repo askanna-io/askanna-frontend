@@ -17,9 +17,7 @@
         </v-card-text>
 
         <v-card-actions class="mx-4">
-          <v-btn color="primary" text outlined small class="mr-4" @click.stop="handleLogin(true)">
-            YES
-          </v-btn>
+          <v-btn color="primary" text outlined small class="mr-4" @click.stop="handleLogin(true)"> YES </v-btn>
           <v-btn class="mr-4" text outlined small @click.stop="handleLogin(false)">
             NO, I WANT TO USE ANOTHER ACCOUNT
           </v-btn>
@@ -28,37 +26,31 @@
     </v-dialog>
   </div>
 </template>
-<script>
-import { computed, defineComponent } from '@vue/composition-api'
+<script setup lang="ts">
+import { computed } from '@vue/composition-api'
 
-export default defineComponent({
-  name: 'JoinExistingAccountPopup',
-
-  props: {
-    value: {
-      type: Boolean,
-      default: () => false
-    },
-    workspaceName: {
-      type: String,
-      default: () => ''
-    }
+const props = defineProps({
+  value: {
+    type: Boolean,
+    default: () => false
   },
-
-  setup(props, context) {
-    const dialog = computed({
-      get: () => {
-        return props.value
-      },
-      set: val => {
-        context.emit('changeValue', val)
-      }
-    })
-
-    const handleLogin = val => context.emit('changeValue', val)
-    const handleClose = () => context.emit('closeDialog')
-
-    return { dialog, handleLogin, handleClose }
+  workspaceName: {
+    type: String,
+    default: () => ''
   }
 })
+
+const emit = defineEmits(['changeValue', 'closeDialog'])
+
+const dialog = computed({
+  get: () => {
+    return props.value
+  },
+  set: val => {
+    emit('changeValue', val)
+  }
+})
+
+const handleLogin = val => emit('changeValue', val)
+const handleClose = () => emit('closeDialog')
 </script>

@@ -29,39 +29,28 @@
   </div>
 </template>
 
-<script>
-import Signin from './signin'
-import Signup from './signup'
-import SigninThankYou from './signin-thank-you'
-import AskAnnaReadMore from '@/features/auth/components/AskAnnaReadMore'
-import { ref, provide, readonly, defineComponent } from '@vue/composition-api'
-import WaitBeforeCreateAccount from '@/features/auth/components/signup/WaitBeforeCreateAccount'
+<script setup lang="ts">
+import Signin from './signin.vue'
+import Signup from './signup.vue'
+import SigninThankYou from './signin-thank-you.vue'
+import { ref, provide, readonly } from '@vue/composition-api'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
+import AskAnnaReadMore from '@/features/auth/components/AskAnnaReadMore.vue'
+import WaitBeforeCreateAccount from '@/features/auth/components/signup/WaitBeforeCreateAccount.vue'
 
-export default defineComponent({
-  name: 'SigninIndex',
+const router = useRouterAskAnna()
 
-  components: { Signin, Signup, SigninThankYou, AskAnnaReadMore, WaitBeforeCreateAccount },
+const panelValue = router.route.value.name === 'signin' ? 0 : 1
 
-  setup(_, context) {
-    const { name } = context.root.$route
-    const panelValue = name === 'signin' ? 0 : 1
+const signUpStep = ref(0)
+const panel = ref(panelValue)
+const authData = ref({ username: '', password: '' })
 
-    const signUpStep = ref(0)
-    const panel = ref(panelValue)
-    const authData = ref({ username: '', password: '' })
+const updateAuthData = value => (authData.value = value)
+const updateSignUpStep = value => (signUpStep.value = value)
 
-    const updateAuthData = value => (authData.value = value)
-    const updateSignUpStep = value => (signUpStep.value = value)
-
-    provide('authData', readonly(authData))
-    provide('updateAuthData', updateAuthData)
-    provide('signUpStep', readonly(signUpStep))
-    provide('updateSignUpStep', updateSignUpStep)
-
-    return {
-      panel,
-      signUpStep
-    }
-  }
-})
+provide('authData', readonly(authData))
+provide('updateAuthData', updateAuthData)
+provide('signUpStep', readonly(signUpStep))
+provide('updateSignUpStep', updateSignUpStep)
 </script>

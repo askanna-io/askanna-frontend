@@ -1,23 +1,10 @@
 <template>
-  <v-btn text small class="mr-4 mt-4 text--secondary" @click="handleOpenForgotPage">
-    Forgot my password
-  </v-btn>
+  <v-btn text small class="mr-4 mt-4 text--secondary" @click="handleOpenForgotPage"> Forgot my password </v-btn>
 </template>
-<script>
-import { defineComponent } from '@vue/composition-api'
+<script setup lang="ts">
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 
-export default defineComponent({
-  name: 'ForgotPasswordLink',
+const router = useRouterAskAnna()
 
-  setup(_) {
-    const router = useRouterAskAnna()
-
-    const handleOpenForgotPage = () => router.push({ name: 'forgot-password' })
-
-    return {
-      handleOpenForgotPage
-    }
-  }
-})
+const handleOpenForgotPage = () => router.push({ name: 'forgot-password' })
 </script>

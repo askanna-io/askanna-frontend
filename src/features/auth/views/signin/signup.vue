@@ -14,15 +14,6 @@
   </v-expansion-panel>
 </template>
 
-<script>
-import TheSignUp from '@/features/auth/components/signup/TheSignUp'
-import { ref, defineComponent } from '@vue/composition-api'
-
-export default defineComponent({
-  name: 'Signup',
-
-  components: {
-    TheSignUp
-  }
-})
+<script setup lang="ts">
+import TheSignUp from '@/features/auth/components/signup/TheSignUp.vue'
 </script>
