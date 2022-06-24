@@ -5,10 +5,9 @@
 </template>
 
 <script setup lang="ts">
-import { useUserStoreP } from '@/features/user/useUserStore'
+import { useUserStore } from '@/features/user/useUserStore'
 import usePrepareAccount from '@/features/auth/usePrepareAccount'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import useUserStore from '@/features/user/composition/useUserStore'
 import { ref, computed, onBeforeMount, onUnmounted } from '@vue/composition-api'
 import WorkspaceNotReady from '@/features/workspace/components/WorkspaceNotReady.vue'
 import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
@@ -16,15 +15,13 @@ import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgr
 const token = window.localStorage.getItem('token')
 
 const userStore = useUserStore()
-const userStoreP = useUserStoreP()
-
 const router = useRouterAskAnna()
 const prepareAccount = usePrepareAccount()
 
 const authData = computed(() => {
   return {
-    username: userStoreP.tempAuth.username,
-    password: userStoreP.tempAuth.password
+    username: userStore.tempAuth.username,
+    password: userStore.tempAuth.password
   }
 })
 
@@ -37,7 +34,7 @@ const checkWorkspace = async () => {
 
   if (isReady.value) {
     clearInterval(polling.value)
-    userStoreP.tempAuth = { username: '', password: '' }
+    userStore.tempAuth = { username: '', password: '' }
 
     const backAfterUrl = window.localStorage.getItem('back_after_login')
     window.localStorage.setItem('back_after_login', '')

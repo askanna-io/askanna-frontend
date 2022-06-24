@@ -61,9 +61,9 @@
 <script setup lang="ts">
 import '@/core/plugins/intercom.js'
 import useTitle from '@/core/composition/useTitle'
+import { useUserStore } from '@/features/user/useUserStore'
 import { useMobileStore } from '@/core/store/useMobileStore'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import useUserStore from '@/features/user/composition/useUserStore'
 import TheSnackBar from '@/core/components/snackBar/TheSnackBar.vue'
 
 import { useProjectsStore } from '@/features/projects/useProjectsStore'
@@ -86,10 +86,10 @@ const workspacesStore = useWorkspacesStore()
 const showAppBarIcon = computed(() => !routerAA.route.value.meta?.hideAppBarIcon)
 
 const fetchData = async () => {
-  await userStore.actions.getGlobalProfile()
+  await userStore.getGlobalProfile()
 
   if (token) {
-    await userStore.actions.getUserProfile()
+    await userStore.getUserProfile()
   }
   await projectsStore.getProjects()
   await workspacesStore.getAllWorkspaces()

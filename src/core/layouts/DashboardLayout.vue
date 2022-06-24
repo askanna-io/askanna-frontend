@@ -54,8 +54,8 @@ import TheSnackBar from '@/core/components/snackBar/TheSnackBar.vue'
 import UpdateApp from '@/core/components/shared/updateApp/UpdateApp.vue'
 import TheUploadStatus from '@/core/components/uploadStatus/TheUploadStatus.vue'
 
+import { useUserStore } from '@/features/user/useUserStore'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import useUserStore from '@/features/user/composition/useUserStore'
 import { useProjectsStore } from '@/features/projects/useProjectsStore'
 import { computed, onBeforeMount, onUpdated } from '@vue/composition-api'
 import useProjectStore from '@/features/project/composition/useProjectStore'
@@ -76,10 +76,10 @@ const showAppBarIcon = computed(() => !router.route.value.meta?.hideAppBarIcon)
 const handleChangeSticked = () => (projectStore.stickedVM.value = !projectStore.stickedVM.value)
 
 const fetchData = async () => {
-  await userStore.actions.getGlobalProfile()
+  await userStore.getGlobalProfile()
 
   if (token) {
-    await userStore.actions.getUserProfile()
+    await userStore.getUserProfile()
   }
 
   await projectsStore.getProjects()

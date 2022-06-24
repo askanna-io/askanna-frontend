@@ -6,7 +6,7 @@ import { api } from '@/core/services/api-settings'
 import apiService from '@/core/services/apiService'
 import { useLogger } from '@/core/composition/useLogger'
 import { apiStringify } from '@/core/services/api-settings'
-import { useUserStoreP } from '@/features/user/useUserStore'
+import { useUserStore } from '@/features/user/useUserStore'
 
 const apiAccounts = apiStringify('accounts')
 
@@ -49,7 +49,7 @@ export const useAuthStore = defineStore('auth', {
         this.authToken = data.key
         localStorage.setItem('token', data.key)
 
-        const userStore = useUserStoreP()
+        const userStore = useUserStore()
         userStore.tempAuth = { username, password }
 
         if (redirect) router.push({ name: 'check-access' })

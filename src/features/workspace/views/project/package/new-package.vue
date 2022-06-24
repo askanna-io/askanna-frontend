@@ -1,7 +1,7 @@
 <template>
   <v-row align="center" justify="center">
     <v-col cols="12" class="pt-0 pb-0">
-      <package-toolbar :breadcrumbs="breadcrumbs" v-if="isLoggedIn">
+      <package-toolbar :breadcrumbs="breadcrumbs" v-if="userStore.isLoggedIn">
         <template v-slot:left>
           <span class="text-body-2">New Package</span>
         </template>
@@ -27,9 +27,9 @@
 
 <script setup lang="ts">
 import { ref, computed } from '@vue/composition-api'
+import { useUserStore } from '@/features/user/useUserStore'
 import usePermission from '@/core/composition/usePermission'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import useUserStore from '@/features/user/composition/useUserStore'
 import usePackages from '@/features/packages/composition/usePackages'
 import useProjectStore from '@/features/project/composition/useProjectStore'
 import usePackageStore from '@/features/package/composition/usePackageStore'
@@ -50,8 +50,6 @@ const isRaplace = ref(false)
 const packageId = router.route.value.params.packageId || ''
 
 const projectCodeCreate = computed(() => permission.getFor(permission.labels.projectCodeCreate))
-
-const isLoggedIn = computed(() => !!userStore.state.globalProfile.value.short_uuid)
 const isProcessing = computed(() => packageStore.processingList.value.find(item => item.packageId === packageId))
 
 const handleReplace = () => (isRaplace.value = !isRaplace.value)
