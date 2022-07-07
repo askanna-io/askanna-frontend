@@ -19,14 +19,15 @@
 </template>
 <script setup lang="ts">
 import { throttle } from 'lodash'
-import { useRouter } from '@u3u/vue-hooks'
 import useQuery from '@/core/composition/useQuery'
+import { useRouter, useWindowSize } from '@u3u/vue-hooks'
 import { useMetricStore } from '@/features/metric/useMetricStore'
 import { ref, computed, onBeforeMount } from '@vue/composition-api'
 import useProjectStore from '@/features/project/composition/useProjectStore'
 import MetricTableView from '@/features/metric/components/metric-table/MetricTableView.vue'
 
 const { route } = useRouter()
+const { height } = useWindowSize()
 const metricStore = useMetricStore()
 const projectStore = useProjectStore()
 
@@ -60,8 +61,9 @@ const tableHeight = computed(() => {
   }
 
   const count = items.value.reduce(calcHeigth, 0)
+  const adjusHeight = count > height.value ? height.value - 340 : count + 80
 
-  return count + 80
+  return adjusHeight
 })
 
 const query = useQuery({
