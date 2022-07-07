@@ -19,8 +19,8 @@
 </template>
 <script setup lang="ts">
 import { throttle } from 'lodash'
-import { useRouter } from '@u3u/vue-hooks'
 import useQuery from '@/core/composition/useQuery'
+import { useRouter, useWindowSize } from '@u3u/vue-hooks'
 import { ref, computed, onBeforeMount } from '@vue/composition-api'
 import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
 import useProjectStore from '@/features/project/composition/useProjectStore'
@@ -28,6 +28,7 @@ import useRuninfoVariablesStore from '@/features/runinfo-variables/composition/u
 import VariablesTableView from '@/features/runinfo-variables/components/metric-table/VariablesTableView.vue'
 
 const { route } = useRouter()
+const { height } = useWindowSize()
 const jobRunStore = useJobRunStore()
 const projectStore = useProjectStore()
 const runinfoVariablesStore = useRuninfoVariablesStore()
@@ -61,8 +62,9 @@ const tableHeight = computed(() => {
   }
 
   const count = items.value.reduce(calcHeigth, 0)
+  const adjusHeight = count > height.value ? height.value - 340 : count + 80
 
-  return count + 80
+  return adjusHeight
 })
 
 const loadingByParams = computed(() => runinfoVariablesStore.state.loading.value.variablesByParams)
