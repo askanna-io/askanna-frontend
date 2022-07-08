@@ -122,7 +122,7 @@ const renderMarkdown = () => {
         } catch (__) {}
       }
 
-      return '<pre class="hljs"><code>' + md.value.utils.escapeHtml(str) + '</code></pre>'
+      return '<pre class="hljs"><code>' + markdown.utils.escapeHtml(str) + '</code></pre>'
     }
   })
     .use(MarkdownItAbbr)
@@ -185,6 +185,7 @@ const renderMarkdown = () => {
 
   md.value = markdown.render(sourceComputed.value)
 }
+
 const findUpTag = (el, tag: string) => {
   while (el.parentNode) {
     el = el.parentNode
