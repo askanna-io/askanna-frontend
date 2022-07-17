@@ -42,7 +42,7 @@ export default defineComponent({
     const pythonCode = `import requests
 
 url = "${apiUrl}/v1/run/${jobId}/"
-headers = {'Authorization': "Token ${authStore.authToken.value}"}
+headers = {'Authorization': "Token ${authStore.authToken}"}
 data={
         "parameter": "test",
         "data": {
