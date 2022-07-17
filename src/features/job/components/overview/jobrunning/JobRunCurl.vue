@@ -25,8 +25,8 @@
 import useCopy from '@/core/composition/useCopy'
 import { apiUrl } from '@/core/services/api-settings'
 import { defineComponent } from '@vue/composition-api'
-import useJobStore from '@/features/job/composition/useJobStore'
 import { useAuthStore } from '@/features/auth/useAuthStore'
+import useJobStore from '@/features/job/composition/useJobStore'
 
 import TheHighlight from '@/core/components/highlight/TheHighlight.vue'
 
@@ -45,7 +45,7 @@ export default defineComponent({
     const curl = `curl -X POST \\
 -d '{"data": {"foo": "bar"}}' \\
 -H 'Content-Type: application/json' \\
--H 'Authorization: Token ${authStore.authToken.value}' \\
+-H 'Authorization: Token ${authStore.authToken}' \\
 '${apiUrl}/v1/run/${jobId}/'`
 
     const handleCopy = () => copy.handleCopyText(curl)
