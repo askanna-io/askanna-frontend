@@ -1,21 +1,12 @@
 type apiPoint<T> = { [key: string]: T }
 type apiUrl = (ids: apiUrlFunctionParams) => string
-type AuthApiUrl = () => string
+
 export type apiUrlFunctionParams = {
   [key: string]: string
 }
 
 interface ApiSettings {
-  url: () => string
   apiUrl: () => string
-  auth: {
-    login: AuthApiUrl
-    logout: apiUrl
-    currentUser: AuthApiUrl
-    resetPassword: AuthApiUrl
-    validateResetToken: AuthApiUrl
-    confirmResetPassword: AuthApiUrl
-  }
   points: {
     [pointServiceName: string]: apiPoint<apiUrl>
   }
@@ -28,21 +19,16 @@ export const url = process.env.VUE_APP_URL
 export const apiUrl = process.env.VUE_APP_API_URL
 
 export const api: ApiSettings = {
-  url: () => `${apiUrl}/`,
   apiUrl: () => `${apiUrl}/v1/`,
-  // auth api
-  auth: {
-    login: () => `rest-auth/login/`,
-    logout: () => `rest-auth/logout/`,
-    currentUser: () => 'rest-auth/user/',
-    resetPassword: () => `rest-auth/password/reset/`,
-    validateResetToken: () => `rest-auth/password/token-status/`,
-    confirmResetPassword: () => `rest-auth/password/reset/confirm/`
-  },
   points: {
     auth: {
-      logout: () => `rest-auth/logout/`,
-      getCurrentUser: () => 'rest-auth/user/'
+      login: () => `auth/login/`,
+      logout: () => `auth/logout/`,
+      currentUser: () => 'uth/user/',
+      getCurrentUser: () => 'auth/user/',
+      resetPassword: () => `auth/password/reset/`,
+      validateResetToken: () => `auth/password/token-status/`,
+      confirmResetPassword: () => `auth/password/reset/confirm/`
     },
     accounts: {
       create: () => `accounts/`
@@ -127,9 +113,8 @@ export const api: ApiSettings = {
     user: {
       globalProfile: () => 'me/',
       globalProfileAvatar: () => 'me/avatar/',
-
       getAccounts: () => 'accounts/',
-      getProfile: () => 'rest-auth/user/',
+      getProfile: () => 'auth/user/',
       updateAccount: id => `accounts/${id}/`
     },
     metric: {
