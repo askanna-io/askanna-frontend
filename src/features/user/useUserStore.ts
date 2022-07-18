@@ -51,11 +51,12 @@ export const useUserStore = defineStore('user', {
 
   actions: {
     async getUserProfile() {
-      const url = api.url() + api.points.user.getProfile({})
-
       let result
       try {
-        result = await axios.get(url)
+        result = await apiService({
+          serviceName,
+          action: apiActions.getProfile
+        })
       } catch (e) {
         const logger = useLogger()
 
@@ -67,10 +68,10 @@ export const useUserStore = defineStore('user', {
         return
       }
 
-      this.userProfile = result.data
+      this.userProfile = result
 
       if (process.env.VUE_APP_SENTRY === 'on') {
-        const { email, short_uuid: id } = result.data
+        const { email, short_uuid: id } = result
         Sentry.setUser({ id, email, username: email })
       }
 

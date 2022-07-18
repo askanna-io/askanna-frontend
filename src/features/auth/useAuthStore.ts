@@ -10,6 +10,9 @@ import { useUserStore } from '@/features/user/useUserStore'
 
 const apiAccounts = apiStringify('accounts')
 
+const serviceName = 'auth'
+const api = apiStringify(serviceName)
+
 export const useAuthStore = defineStore('auth', {
   state: () => {
     return {
@@ -27,34 +30,24 @@ export const useAuthStore = defineStore('auth', {
 
   actions: {
     async login({ username, password, redirect = true }: { username: string; password: string; redirect?: boolean }) {
-      const url = api.url() + api.auth.login()
-
-      axios.defaults.xsrfCookieName = 'csrftoken'
-      axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
-
       try {
-        const result = await axios.post(
-          url,
-          { username, password },
-          {
-            headers: {
-              'askanna-agent': 'webui',
-              'askanna-agent-version': process.env.VERSION
-            }
-          }
-        )
-        const { data } = result
+        const result = await apiService({
+          serviceName,
+          method: 'post',
+          action: api.login,
+          data: { username, password }
+        })
 
-        this.userId = data.userId
-        this.authToken = data.key
-        localStorage.setItem('token', data.key)
+        this.userId = result.userId
+        this.authToken = result.key
+        localStorage.setItem('token', result.key)
 
         const userStore = useUserStore()
         userStore.tempAuth = { username, password }
 
         if (redirect) router.push({ name: 'check-access' })
 
-        return data
+        return result
       } catch (error: any) {
         const logger = useLogger()
 
@@ -70,7 +63,11 @@ export const useAuthStore = defineStore('auth', {
 
     async logout(redirect = true) {
       try {
-        await axios.post(api.url() + api.auth.logout({}))
+        await apiService({
+          serviceName,
+          method: 'post',
+          action: api.logout
+        })
       } catch (error: any) {
         const logger = useLogger()
 
@@ -110,14 +107,14 @@ export const useAuthStore = defineStore('auth', {
       return response
     },
 
-    async resetPassword(payload) {
-      const url = api.url() + api.auth.resetPassword()
-
-      axios.defaults.xsrfCookieName = 'csrftoken'
-      axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
-
+    async resetPassword(data) {
       try {
-        const result = await axios.post(url, payload)
+        const result = await apiService({
+          data,
+          serviceName,
+          method: 'post',
+          action: api.resetPassword
+        })
 
         return result
       } catch (error: any) {
@@ -129,16 +126,16 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    async confirmResetPassword(payload) {
+    async confirmResetPassword(data) {
       const logger = useLogger()
 
-      const url = api.url() + api.auth.confirmResetPassword()
-
-      axios.defaults.xsrfCookieName = 'csrftoken'
-      axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
-
       try {
-        const result = await axios.post(url, payload)
+        const result = await apiService({
+          data,
+          serviceName,
+          method: 'post',
+          action: api.confirmResetPassword
+        })
 
         logger.success(`Your password has been reset successfully!`)
 
@@ -152,14 +149,12 @@ export const useAuthStore = defineStore('auth', {
 
     async validateResetToken(params) {
       let result
-      const url = api.url() + api.auth.validateResetToken()
-
-      axios.defaults.xsrfCookieName = 'csrftoken'
-      axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
 
       try {
-        result = await axios.get(url, {
-          params
+        result = await apiService({
+          params,
+          serviceName,
+          action: api.validateResetToken
         })
       } catch (error: any) {
         const logger = useLogger()
@@ -169,7 +164,7 @@ export const useAuthStore = defineStore('auth', {
         return error
       }
 
-      return result && result.data
+      return result
     }
   }
 })
