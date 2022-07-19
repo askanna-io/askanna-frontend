@@ -91,7 +91,7 @@ code_quality:
     - kubernetes
   variables:
     GIT_STRATEGY: none
-    ASKANNA_DEPLOY_BRANCH: master
+    ASKANNA_DEPLOY_BRANCH: main
     ASKANNA_DEPLOY_PRODUCT: askanna-frontend
   script:
     - curl -X POST -F token=${CI_JOB_TOKEN} -F ref=${ASKANNA_DEPLOY_BRANCH} -F variables[product]=${ASKANNA_DEPLOY_PRODUCT} -F variables[branch]=${CI_COMMIT_REF_SLUG} -F variables[action]=deploy -F variables[slug]=${CI_ENVIRONMENT_SLUG} ${ASKANNA_DEPLOY_TRIGGER}
