@@ -153,7 +153,7 @@ export const compareItems = {
     items: [
       {
         title: 'File name',
-        field: 'result.original_name',
+        field: 'result.name',
         type: 'text',
         getRouteParams: () => ({})
       },
