@@ -6,9 +6,10 @@ import apiService from '@/core/services/apiService'
 import { useLogger } from '@/core/composition/useLogger'
 import { useUserStore } from '@/features/user/useUserStore'
 import { apiStringify } from '@/core/services/api-settings'
+import { useGeneralStore } from '@/core/store/useGeneralStore'
+
 const { isNavigationFailure, NavigationFailureType } = VueRouter
 import { workspaceState, WORKSPACE_STORE, action, mutation } from './types'
-import { mutation as gMutation, GENERAL_STORE } from '@/core/store/general/types'
 
 const serviceName = WORKSPACE_STORE
 const api = apiStringify(serviceName)
@@ -35,7 +36,9 @@ export const actions: ActionTree<workspaceState, RootState> = {
     }
 
     commit(mutation.SET_WORKSPACE, workspace)
-    commit(`${GENERAL_STORE}/${gMutation.SET_BREADCRUMB_PARAMS}`, { workspaceId: workspace.name }, { root: true })
+
+    const generalStore = useGeneralStore()
+    generalStore.setBreadcrumbParams({ workspaceId: workspace.name })
   },
 
   async [action.updateWorkspace]({ state, commit }, data) {
@@ -57,7 +60,9 @@ export const actions: ActionTree<workspaceState, RootState> = {
     }
 
     commit(mutation.SET_WORKSPACE, workspace)
-    commit(`${GENERAL_STORE}/${gMutation.SET_BREADCRUMB_PARAMS}`, { workspaceId: workspace.name }, { root: true })
+
+    const generalStore = useGeneralStore()
+    generalStore.setBreadcrumbParams({ workspaceId: workspace.name })
 
     return workspace
   },

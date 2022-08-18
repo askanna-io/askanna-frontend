@@ -1,51 +1,37 @@
 <template>
   <v-card flat class="px-3 mt-2 br-none" outlined>
-    <ask-anna-loading-progress :type="'table-row'" :loading="jobsLoading">
+    <ask-anna-loading-progress :type="'table-row'" :loading="jobsStore.loading">
       <v-row align="center" justify="center">
         <v-col cols="12" class="pa-0">
-          <jobs-list :jobList="projectJobs" />
+          <jobs-list :jobList="jobsStore.jobs" />
         </v-col>
       </v-row>
     </ask-anna-loading-progress>
   </v-card>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { onBeforeMount } from '@vue/composition-api'
+import { useJobsStore } from '@/features/jobs/useJobsStore'
 import { useFileStore } from '@/features/file/useFileStore'
 import JobsList from '@/features/jobs/components/JobsList.vue'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
-import useProjectStore from '@/features/project/composition/useProjectStore'
-import { computed, defineComponent, onBeforeMount } from '@vue/composition-api'
+import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 
-export default defineComponent({
-  name: 'jobs',
+const fileStore = useFileStore()
+const jobsStore = useJobsStore()
+const router = useRouterAskAnna()
+const jobRunStore = useJobRunStore()
 
-  components: {
-    JobsList
-  },
+const { projectId } = router.route.value.params
 
-  setup(_, context) {
-    const fileStore = useFileStore()
-    const jobRunStore = useJobRunStore()
-    const projectStore = useProjectStore()
+const fetchData = async () => {
+  fileStore.$reset()
+  await jobRunStore.actions.resetStore()
+  await jobsStore.$reset()
+  await jobsStore.getProjectJobs(projectId)
+}
 
-    const { projectId } = context.root.$route.params
-
-    const fetchData = async () => {
-      fileStore.$reset()
-      await jobRunStore.actions.resetStore()
-      await projectStore.resetProjectJobs()
-      await projectStore.getProjectJobs(projectId)
-    }
-
-    onBeforeMount(() => fetchData())
-
-    const projectJobs = computed(() => projectStore.projectJobs.value)
-
-    return {
-      projectJobs,
-      jobsLoading: projectStore.jobsLoading
-    }
-  }
-})
+onBeforeMount(() => fetchData())
 </script>

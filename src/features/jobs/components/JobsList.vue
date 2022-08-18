@@ -36,7 +36,7 @@
             :items="runs"
             :count="count"
             :height="calcSubHeight"
-            :loading="jobRunsLoading"
+            :loading="runsLoading"
             :tableClass="'job-sub-table'"
             @onChangeParams="params => handleChangeParams({ uuid: item.short_uuid, params })"
           />
@@ -72,111 +72,77 @@
   </v-data-table>
 </template>
 
-<script lang="ts">
-import { useWindowSize } from '@u3u/vue-hooks'
-import { JobsListHeaders } from '../utils/index'
-import useMoment from '@/core/composition/useMoment'
-import JobRuns from '@/features/jobrun/components/JobRuns.vue'
+<script setup lang="ts">
+import { JobsListHeaders } from '../helper'
+import { ref, computed } from '@vue/composition-api'
+import { useRunsStore } from '@/features/runs/useRunsStore'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import useJobRunStore from '../../jobrun/composition/useJobRunStore'
-import { ref, computed, defineComponent } from '@vue/composition-api'
+
+import JobRuns from '@/features/jobrun/components/JobRuns.vue'
 import AskAnnaAlertStatus from '@/core/components/shared/AskAnnaAlertStatus.vue'
 import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 
-export default defineComponent({
-  name: 'JobList',
-
-  components: {
-    JobRuns,
-    AskAnnaAlertStatus,
-    AskAnnaLoadingProgress
-  },
-
-  props: {
-    jobList: {
-      type: Array,
-      default: () => []
-    }
-  },
-
-  setup(_, context) {
-    const moment = useMoment()
-    const router = useRouterAskAnna()
-    const { height } = useWindowSize()
-    const jobRunStore = useJobRunStore()
-
-    const expanded = ref([])
-    const selection = ref(2)
-    const loading = ref(true)
-    const currentJob = ref(true)
-
-    const count = computed(() => jobRunStore.state.runs.value.count)
-    const runs = computed(() => jobRunStore.state.runs.value.results)
-    const jobRunsLoading = computed(() => jobRunStore.state.jobRunsLoading.value)
-
-    const calcSubHeight = computed(() => {
-      const rowHeight = 64
-      const countItems = count.value
-      const subRowHeiht = countItems >= 5 ? 280 : countItems * rowHeight + 70
-
-      return subRowHeiht
-    })
-
-    const getHeaders = (isMobile: boolean) =>
-      isMobile ? JobsListHeaders(isMobile).filter(el => el.isShowOnMobile) : JobsListHeaders(isMobile)
-
-    const handleJobClick = item => {
-      router.push({
-        name: 'workspace-project-job-overiew',
-        params: { ...context.root.$route.params, jobId: item.short_uuid || 'jobname' }
-      })
-    }
-
-    const handleExpand = async ({ item }) => {
-      loading.value = true
-
-      currentJob.value = item
-      await jobRunStore.getRunsJob({ uuid: item.short_uuid, params: { offset: 0, limit: 5 } })
-
-      loading.value = false
-    }
-
-    const routeLinkParams = item => {
-      return {
-        name: 'workspace-project-job-overiew',
-        params: {
-          ...context.root.$route.params,
-          jobId: item.short_uuid
-        }
-      }
-    }
-
-    const handleChangeParams = async ({ uuid, params }) => {
-      await jobRunStore.getRunsJob({
-        uuid,
-        params
-      })
-    }
-
-    return {
-      runs,
-      count,
-      height,
-      loading,
-      expanded,
-      selection,
-      calcSubHeight,
-      jobRunsLoading,
-      ...moment,
-      getHeaders,
-      routeLinkParams,
-
-      handleExpand,
-      handleJobClick,
-      handleChangeParams
-    }
+defineProps({
+  jobList: {
+    type: Array,
+    default: () => []
   }
 })
+
+const runsStore = useRunsStore()
+const router = useRouterAskAnna()
+
+const expanded = ref([])
+const loading = ref(true)
+const currentJob = ref(true)
+
+const count = computed(() => runsStore.runs.count)
+const runs = computed(() => runsStore.runs.results)
+const runsLoading = computed(() => runsStore.runsLoading)
+
+const calcSubHeight = computed(() => {
+  const rowHeight = 64
+  const countItems = count.value
+  const subRowHeiht = countItems >= 5 ? 280 : countItems * rowHeight + 70
+
+  return subRowHeiht
+})
+
+const getHeaders = (isMobile: boolean) =>
+  isMobile ? JobsListHeaders(isMobile).filter(el => el.isShowOnMobile) : JobsListHeaders(isMobile)
+
+const handleJobClick = item => {
+  router.push({
+    name: 'workspace-project-job-overiew',
+    params: { ...router.route.value.params, jobId: item.short_uuid || 'jobname' }
+  })
+}
+
+const handleExpand = async ({ item }) => {
+  loading.value = true
+
+  currentJob.value = item
+  await runsStore.getRuns({ uuid: item.short_uuid, params: { offset: 0, limit: 5 } })
+
+  loading.value = false
+}
+
+const routeLinkParams = item => {
+  return {
+    name: 'workspace-project-job-overiew',
+    params: {
+      ...router.route.value.params,
+      jobId: item.short_uuid
+    }
+  }
+}
+
+const handleChangeParams = async ({ uuid, params }) => {
+  await runsStore.getRuns({
+    uuid,
+    params
+  })
+}
 </script>
 
 <style lang="scss">

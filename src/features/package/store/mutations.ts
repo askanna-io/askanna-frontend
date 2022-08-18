@@ -8,7 +8,7 @@ export const mutations: MutationTree<PackageState> = {
     const re = /(?:\.([^.]+))?$/
     const files = data.files.map((file: File) => {
       const fileExt = re.exec(file.name)
-      const ext = (!file.is_dir && fileExt && typeof fileExt[1] !== 'undefined' && fileExt[1]) || 'txt'
+      const ext = (file.type === 'file' && fileExt && typeof fileExt[1] !== 'undefined' && fileExt[1]) || 'txt'
 
       return { ...file, ext }
     })

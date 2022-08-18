@@ -3,21 +3,21 @@
 </template>
 
 <script lang="ts">
+import { useJobStore } from '@/features/job/useJobStore'
 import useInterval from '@/core/composition/useInterval'
-import useJobStore from '@/features/job/composition/useJobStore'
+import { useJobsStore } from '@/features/jobs/useJobsStore'
 import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
-import useProjectStore from '@/features/project/composition/useProjectStore'
 import { computed, watchEffect, defineComponent, onBeforeMount } from '@vue/composition-api'
 
 export default defineComponent({
   setup(_, context) {
     const jobStore = useJobStore()
+    const jobsStore = useJobsStore()
     const jobRunStore = useJobRunStore()
-    const projectStore = useProjectStore()
 
     const { isSet, setIntervalFn, clearIntervalFn } = useInterval()
 
-    const jobRunStatus = computed(() => jobStore.jobrun.value.status)
+    const jobRunStatus = computed(() => jobStore.run.status)
     const isFinished = computed(() => jobRunStatus.value === 'failed' || jobRunStatus.value === 'finished')
 
     const checkStatus = () => {
@@ -36,9 +36,9 @@ export default defineComponent({
     const fetchData = async () => {
       const { jobId, projectId, jobRunId } = context.root.$route.params
 
-      if (jobStore.job.value.short_uuid !== jobId) {
-        await projectStore.resetProjectJobs()
-        await projectStore.getProjectJobs(projectId)
+      if (jobStore.job.short_uuid !== jobId) {
+        await jobsStore.$reset()
+        await jobsStore.getProjectJobs(projectId)
 
         await jobStore.getJob(jobId)
       }

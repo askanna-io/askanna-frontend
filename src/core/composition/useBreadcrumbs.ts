@@ -1,7 +1,7 @@
 import { get } from 'lodash'
 import { useRouter } from '@u3u/vue-hooks'
 import { computed } from '@vue/composition-api'
-import useGeneralStore from '@/core/store/general/useGeneralStore'
+import { useGeneralStore } from '@/core/store/useGeneralStore'
 
 export default function ({ start = 0, end = undefined }) {
   const { route: crcRoute } = useRouter()
@@ -23,7 +23,7 @@ export default function ({ start = 0, end = undefined }) {
         let title = route.meta.breadcrumb
         Object.entries(crcRoute.value.params).forEach(([key, value]) => {
           path = path.replace(`:${key}`, value)
-          const name = get(generalStore.breadcrumbParams.value, key)
+          const name = get(generalStore.breadcrumbParams, key)
           title = title.replace(`:${key}`, name || value)
         })
 

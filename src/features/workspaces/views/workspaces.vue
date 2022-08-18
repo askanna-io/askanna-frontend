@@ -62,6 +62,7 @@ import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStor
 
 import WorkspacesToolbar from '@/features/workspaces/components/WorkspacesToolbar.vue'
 import WorkspacesCardItem from '@/features/workspaces/components/WorkspacesCardItem.vue'
+import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 import ConfirmDeleteWorkspacePopup from '@/features/workspace/components/project/ConfirmDeleteWorkspacePopup.vue'
 
 const routerAA = useRouterAskAnna()

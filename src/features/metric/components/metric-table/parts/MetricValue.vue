@@ -1,7 +1,9 @@
-<script lang="ts">
+<template>
+  <component :is="TypeComponent" v-bind="props" />
+</template>
+<script setup lang="ts">
 import { get } from 'lodash'
 import MetricTagType from './types/MetricTagType.vue'
-import { defineComponent } from '@vue/composition-api'
 import MetricTimeType from './types/MetricTimeType.vue'
 import MetricDateType from './types/MetricDateType.vue'
 import MetricFloatType from './types/MetricFloatType.vue'
@@ -11,64 +13,62 @@ import MetricIntegerType from './types/MetricIntegerType.vue'
 import MetricDateTimeType from './types/MetricDateTimeType.vue'
 import MetricDictionaryType from './types/MetricDictionaryType.vue'
 
-export default defineComponent({
-  name: 'MetricValue',
-
-  functional: true,
-
-  props: {
-    isLabel: {
-      type: Boolean,
-      default: () => false
-    },
-    fullText: {
-      type: Boolean,
-      default: () => false
-    },
-    isLabels: {
-      type: Boolean,
-      default: () => false
-    },
-    maxStringLength: {
-      type: Number,
-      default: () => 20
-    },
-    metricRow: {
-      type: Object,
-      default: function () {
-        return {
-          name: '',
-          type: '',
-          value: ''
-        }
+const props = defineProps({
+  isShowName: {
+    type: Boolean,
+    default: () => false
+  },
+  preview: {
+    type: Boolean,
+    default: () => true
+  },
+  isLabel: {
+    type: Boolean,
+    default: () => false
+  },
+  fullText: {
+    type: Boolean,
+    default: () => false
+  },
+  isLabels: {
+    type: Boolean,
+    default: () => false
+  },
+  maxStringLength: {
+    type: Number,
+    default: () => 20
+  },
+  metricRow: {
+    type: Object,
+    default: function () {
+      return {
+        name: '',
+        type: '',
+        value: ''
       }
     }
-  },
-
-  render(h, context) {
-    const { metricRow } = context.props
-    const types = {
-      tag: MetricTagType,
-      date: MetricDateType,
-      time: MetricTimeType,
-      float: MetricFloatType,
-      string: MetricStringType,
-      boolean: MetricBooleanType,
-      list: MetricDictionaryType,
-      list_integer: MetricDictionaryType,
-      list_float: MetricDictionaryType,
-      list_boolean: MetricDictionaryType,
-      list_string: MetricDictionaryType,
-      list_time: MetricDictionaryType,
-      list_date: MetricDictionaryType,
-      list_datetime: MetricDictionaryType,
-      integer: MetricIntegerType,
-      datetime: MetricDateTimeType,
-      dictionary: MetricDictionaryType
-    }
-    const TypeComponent = get(types, metricRow.type)
-
-    return h(TypeComponent, { props: context.props })
   }
 })
+
+const { metricRow } = props
+const types = {
+  tag: MetricTagType,
+  date: MetricDateType,
+  time: MetricTimeType,
+  float: MetricFloatType,
+  string: MetricStringType,
+  boolean: MetricBooleanType,
+  list: MetricDictionaryType,
+  list_integer: MetricDictionaryType,
+  list_float: MetricDictionaryType,
+  list_boolean: MetricDictionaryType,
+  list_string: MetricDictionaryType,
+  list_time: MetricDictionaryType,
+  list_date: MetricDictionaryType,
+  list_datetime: MetricDictionaryType,
+  integer: MetricIntegerType,
+  datetime: MetricDateTimeType,
+  dictionary: MetricDictionaryType
+}
+const TypeComponent = get(types, metricRow.type)
 </script>

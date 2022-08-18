@@ -61,7 +61,13 @@ const types = [
     comporasionFn: item => item.routes === props.routeName
   },
   {
-    routes: ['workspace-project-job-overiew', 'workspace-project-job-jobruns', 'workspace-project-job-edit'],
+    routes: [
+      'workspace-project-job-edit',
+      'workspace-project-job-overiew',
+      'workspace-project-job-jobruns',
+      'workspace-project-jobs-job-runs-table',
+      'workspace-project-jobs-job-runs-compare'
+    ],
     component: JobNavBar,
     comporasionFn: item => item.routes.some(route => route === props.routeName)
   },

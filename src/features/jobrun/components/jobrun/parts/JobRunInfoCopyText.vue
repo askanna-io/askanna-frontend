@@ -1,7 +1,7 @@
 <template>
   <div>
     <span class="font-weight-bold">{{ text }}:&nbsp;</span>
-    <ask-anna-copy-text
+    <AskAnnaCopyText
       :text="value"
       :iconColor="'grey lighten-2'"
       :buttonType="{ text: true }"
@@ -10,6 +10,8 @@
   </div>
 </template>
 <script setup lang="ts">
+import AskAnnaCopyText from '@/core/components/shared/AskAnnaCopyText.vue'
+
 defineProps({
   text: {
     type: String,

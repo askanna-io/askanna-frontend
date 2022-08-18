@@ -64,7 +64,7 @@ export interface JobRun {
     name: string
     uuid: string
   }
-  owner: {
+  created_by: {
     name: string
   }
   trigger: {
@@ -197,7 +197,7 @@ export class JobRunModel {
         name: '',
         uuid: ''
       },
-      owner: {
+      created_by: {
         name: ''
       },
       trigger: {
@@ -229,7 +229,7 @@ export class JobRunModel {
 export interface File {
   path: string
   parent: string
-  is_dir: boolean
+  file: 'file' | 'directory'
   size: number
   last_modified: string
   name: string

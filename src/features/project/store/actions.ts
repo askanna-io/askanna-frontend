@@ -5,9 +5,9 @@ import VueRouter from 'vue-router'
 import apiService from '@/core/services/apiService'
 import { useLogger } from '@/core/composition/useLogger'
 import { apiStringify } from '@/core/services/api-settings'
+import { useGeneralStore } from '@/core/store/useGeneralStore'
 const { isNavigationFailure, NavigationFailureType } = VueRouter
 
-import { mutation as gMutation, GENERAL_STORE } from '@/core/store/general/types'
 import { WORKSPACE_STORE, mutation as wMutation } from '@/features/workspace/store/types'
 import { projectState, PROJECT_STORE, action, mutation, ProjectModel, ProjectVisibility } from './types'
 
@@ -42,12 +42,9 @@ export const actions: ActionTree<projectState, RootState> = {
     }
 
     commit(mutation.SET_PROJECT, project)
-    commit(`${GENERAL_STORE}/${gMutation.SET_BREADCRUMB_PARAMS}`, { projectId: project.name }, { root: true })
-    commit(
-      `${GENERAL_STORE}/${gMutation.SET_BREADCRUMB_PARAMS}`,
-      { workspaceId: project.workspace.name },
-      { root: true }
-    )
+
+    const generalStore = useGeneralStore()
+    generalStore.setBreadcrumbParams({ projectId: project.name, workspaceId: project.workspace.name })
 
     commit(mutation.SET_LOADING, { name: 'projectLoading', value: false })
 
@@ -89,60 +86,6 @@ export const actions: ActionTree<projectState, RootState> = {
     }
 
     commit(mutation.SET_PROJECTS, projects)
-  },
-
-  async [action.getProjectJobs]({ commit }, uuid) {
-    commit(mutation.SET_LOADING, { name: 'jobsLoading', value: true })
-
-    let jobs
-    try {
-      jobs = await apiService({
-        action: api.jobs,
-        serviceName,
-        uuid
-      })
-    } catch (error) {
-      const logger = useLogger()
-
-      commit(mutation.SET_LOADING, { name: 'jobsLoading', value: false })
-
-      logger.error('Error on load project jobs in getProjectJobs action.\nError: ', error)
-
-      return
-    }
-
-    await Promise.all(
-      map(jobs, async (job: any) => {
-        const runs = await apiService({
-          action: api.getLastJobRun,
-          serviceName,
-          uuid: job.short_uuid,
-          params: {
-            limit: 1,
-            offset: 0
-          }
-        })
-        const run =
-          runs && runs.results.length
-            ? runs.results[0]
-            : { status: 'NOT_RUNS', created: '', started: '', finished: '', updated: '' }
-        job.runs = {
-          count: runs.count,
-          status: {
-            status: run.status,
-            created: run.created,
-            started: run.started,
-            finished: run.finished,
-            updated: run.modified
-          }
-        }
-
-        return job
-      })
-    )
-
-    commit(mutation.SET_PROJECT_JOBS, jobs)
-    commit(mutation.SET_LOADING, { name: 'jobsLoading', value: false })
   },
 
   async [action.resetProjectJobs]({ commit }) {
@@ -244,7 +187,9 @@ export const actions: ActionTree<projectState, RootState> = {
     }
 
     commit(mutation.SET_PROJECT, project)
-    commit(`${GENERAL_STORE}/${gMutation.SET_BREADCRUMB_PARAMS}`, { projectId: project.name }, { root: true })
+
+    const generalStore = useGeneralStore()
+    generalStore.setBreadcrumbParams({ projectId: project.name })
 
     return project
   },

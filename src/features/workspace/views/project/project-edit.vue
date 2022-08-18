@@ -32,6 +32,7 @@ import { useProjectsStore } from '@/features/projects/useProjectsStore'
 import { ref, watch, computed, onBeforeMount } from '@vue/composition-api'
 import useProjectStore from '@/features/project/composition/useProjectStore'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
+import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 
 const { route } = useRouter()
 const snackBar = useSnackBar()

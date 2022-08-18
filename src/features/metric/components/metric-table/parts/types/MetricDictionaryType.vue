@@ -4,10 +4,11 @@
       <div v-on="on" class="cursor--pointer">
         <v-tooltip v-if="!$vuetify.breakpoint.xsOnly" top left :nudge-left="100" content-class="opacity-1">
           <template v-slot:activator="{ on }">
-            <div v-on="on">
+            <div v-on="on" class="d-flex">
+              <div v-if="isShowName">{{ metricRow.name }}:&nbsp;</div>
               <textarea
                 readonly
-                cols="80"
+                :cols="cols"
                 :rows="calcRows"
                 v-model="previewJson"
                 class="noselect cursor--pointer"
@@ -32,7 +33,7 @@
       <v-app-bar dense height="40" flat>
         Name: {{ metricRow.name }}
         <v-spacer />
-        <v-btn small outlined color="secondary" @click="handleCopy" class="mr-1 btn--hover">
+        <v-btn small outlined color="secondary" @click="handleCopy" class="mx-2 btn--hover">
           <v-icon color="secondary" left>mdi-content-copy</v-icon>Copy
         </v-btn>
         <v-btn small icon @click="handleClose">
@@ -49,9 +50,17 @@ import { ref, computed } from '@vue/composition-api'
 import TheHighlight from '@/core/components/highlight/TheHighlight.vue'
 
 const props = defineProps({
+  isShowName: {
+    type: Boolean,
+    default: () => false
+  },
   maxStringLength: {
     type: Number,
     default: () => 20
+  },
+  preview: {
+    type: Boolean,
+    default: () => true
   },
   fullText: {
     type: Boolean,
@@ -79,6 +88,8 @@ const getLines = text => {
   return text.split(BREAK_LINE_REGEXP)
 }
 
+const cols = computed(() => (props.preview ? 80 : 1))
+
 const jsonString = computed(() => {
   let result = ''
 
@@ -92,12 +103,16 @@ const jsonString = computed(() => {
 })
 
 const calcRows = computed(() => {
+  if (!props.preview) return 1
+
   let preview = getLines(jsonString.value)
 
   return preview.length > 6 ? 6 : preview.length
 })
 
 const previewJson = computed(() => {
+  if (!props.preview) return '...*'
+
   let preview = getLines(jsonString.value)
   if (preview.length > 6) {
     preview = preview.slice(0, 5)

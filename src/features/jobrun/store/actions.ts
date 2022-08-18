@@ -6,38 +6,14 @@ import VueRouter from 'vue-router'
 import apiService from '@/core/services/apiService'
 import { useLogger } from '@/core/composition/useLogger'
 import { apiStringify } from '@/core/services/api-settings'
+import { useGeneralStore } from '@/core/store/useGeneralStore'
 const { isNavigationFailure, NavigationFailureType } = VueRouter
-import { jobRunState, JobRun, JOB_RUN_STORE, stateType } from './types'
-import { mutation as gMutation, GENERAL_STORE } from '@/core/store/general/types'
+import { jobRunState, JOB_RUN_STORE, stateType } from './types'
 
 const serviceName = JOB_RUN_STORE
 const api = apiStringify(serviceName)
 
 export const actions: ActionTree<jobRunState, RootState> = {
-  async [type.action.getRunsJob]({ commit }, { uuid, params }) {
-    commit(type.mutation.SET_LOADING, { name: stateType.jobRunsLoading, value: true })
-
-    let runs: JobRun[]
-    try {
-      runs = await apiService({
-        uuid,
-        params,
-        serviceName,
-        action: api.runs
-      })
-    } catch (e) {
-      const logger = useLogger()
-
-      logger.error('Error on runs job in getRunsJob action.\nError: ', e)
-      commit(type.mutation.SET_LOADING, { name: stateType.jobRunsLoading, value: false })
-
-      return
-    }
-
-    commit(type.SET_JOB_RUNS, runs)
-    commit(type.mutation.SET_LOADING, { name: stateType.jobRunsLoading, value: false })
-  },
-
   async [type.action.resetStore]({ commit }) {
     commit(type.mutation.UPDATE_JOB_RUN_STORE)
   },
@@ -75,7 +51,9 @@ export const actions: ActionTree<jobRunState, RootState> = {
 
     commit(type.SET_JOB_RUN, jobRun)
     commit(type.mutation.SET_LOADING, { name: stateType.jobRunLoading, value: false })
-    commit(`${GENERAL_STORE}/${gMutation.SET_BREADCRUMB_PARAMS}`, { jobRunId: jobRun.name }, { root: true })
+
+    const generalStore = useGeneralStore()
+    generalStore.setBreadcrumbParams({ jobRunId: jobRun.name })
   },
 
   async [type.action.udapteJobRun]({ commit }, { uuid, data }) {
@@ -99,7 +77,9 @@ export const actions: ActionTree<jobRunState, RootState> = {
     isUpdated = true
 
     commit(type.SET_JOB_RUN, jobRun)
-    commit(`${GENERAL_STORE}/${gMutation.SET_BREADCRUMB_PARAMS}`, { jobRunId: jobRun.name }, { root: true })
+
+    const generalStore = useGeneralStore()
+    generalStore.setBreadcrumbParams({ jobRunId: jobRun.name })
 
     return isUpdated
   },

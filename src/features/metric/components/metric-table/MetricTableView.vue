@@ -52,6 +52,7 @@
             <td class="text-left">
               <metric-value :metricRow="item.metric" :fullText="true" :isLabels="isLabels" />
             </td>
+
             <template v-if="labels.length">
               <metric-table-label-td
                 v-for="label in labels"

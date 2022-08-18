@@ -20,53 +20,34 @@
   </div>
 </template>
 
-<script lang="ts">
-import useJobStore from '@/features/job/composition/useJobStore'
-import { computed, defineComponent } from '@vue/composition-api'
+<script setup lang="ts">
+import { computed } from '@vue/composition-api'
+import { useJobStore } from '@/features/job/useJobStore'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
 import JobRunInfo from '@/features/jobrun/components/jobrun/JobRunInfo.vue'
 import AskAnnaDescription from '@/core/components/shared/AskAnnaDescription.vue'
+import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 
-export default defineComponent({
-  name: 'Overview',
+const jobStore = useJobStore()
+const jobRunStore = useJobRunStore()
+const { route } = useRouterAskAnna()
 
-  components: {
-    JobRunInfo,
-    AskAnnaDescription
-  },
+const { jobId, jobRunId } = route.value.params
 
-  setup(_, context) {
-    const jobStore = useJobStore()
-    const jobRunStore = useJobRunStore()
+const jobName = computed(() => jobStore.job.name)
+const jobRunStatus = computed(() => jobStore.run)
+const loadingStatus = computed(() => jobStore.runStatusLoading)
 
-    const { jobId, jobRunId } = context.root.$route.params
+const jobRun = computed(() => jobRunStore.state.jobRun.value)
+const loading = computed(() => jobRunStore.state.jobRunLoading.value)
 
-    const jobName = computed(() => jobStore.job.value.name)
-    const jobRunStatus = computed(() => jobStore.jobrun.value)
-    const loadingStatus = computed(() => jobStore.jobRunStatusLoading.value)
+const description = computed(() => jobRunStore.state.jobRun.value.description)
+const isDescriptionNotEmpty = computed(() => description.value && description.value !== '<p></p>')
 
-    const jobRun = computed(() => jobRunStore.state.jobRun.value)
-    const loading = computed(() => jobRunStore.state.jobRunLoading.value)
+const fetchData = async () => {
+  await jobStore.getJobRunStatus(jobRunId)
+}
 
-    const description = computed(() => jobRunStore.state.jobRun.value.description)
-    const isDescriptionNotEmpty = computed(() => description.value && description.value !== '<p></p>')
-
-    const fetchData = async () => {
-      await jobStore.getJobRunStatus(jobRunId)
-    }
-
-    fetchData()
-
-    return {
-      jobId,
-      jobRun,
-      jobName,
-      loading,
-      description,
-      jobRunStatus,
-      loadingStatus,
-      isDescriptionNotEmpty
-    }
-  }
-})
+fetchData()
 </script>

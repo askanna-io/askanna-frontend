@@ -47,11 +47,11 @@
         </v-btn>
       </v-col>
     </v-row>
-    <v-row v-if="jobRunStatus">
+    <v-row v-if="runStatus">
       <v-col cols="12" sm="12">
         <p>
           You have successfully started the run{{ runName }}. The current status is:
-          <ask-anna-chip-status :status="jobRunStatus" /><br />{{ startedTtext }}
+          <ask-anna-chip-status :status="runStatus" /><br />{{ startedTtext }}
         </p>
 
         <v-btn small outlined color="secondary" class="mr-1 btn--hover" @click="hadnleOpenJobRun">
@@ -65,7 +65,7 @@
 <script setup lang="ts">
 import { set } from 'lodash'
 import useMoment from '@/core/composition/useMoment'
-import useJobStore from '@/features/job/composition/useJobStore'
+import { useJobStore } from '@/features/job/useJobStore'
 import { ref, computed, onUnmounted } from '@vue/composition-api'
 import AskAnnaCode from '@/core/components/shared/AskAnnaCode.vue'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
@@ -75,8 +75,6 @@ import AskAnnaDescription from '@/core/components/shared/AskAnnaDescription.vue'
 const moment = useMoment()
 const jobStore = useJobStore()
 const router = useRouterAskAnna()
-
-jobStore.resetJobRun()
 
 const run = ref({
   code: '',
@@ -89,10 +87,8 @@ const polling = ref(null)
 const isValid = ref(false)
 const startTime = ref(null)
 
-const jobRun = computed(() => jobStore.jobrun.value)
-const jobRunId = computed(() => jobStore.jobrun.value.short_uuid)
-const jobRunStatus = computed(() => jobStore.jobrun.value.status)
-const isFinished = computed(() => jobRunStatus.value === 'failed' || jobRunStatus.value === 'finished')
+const runStatus = computed(() => jobStore.run.status)
+const isFinished = computed(() => jobStore.run.status === 'failed' || jobStore.run.status === 'finished')
 const startedTtext = computed(() =>
   isFinished.value
     ? `The duration of the run was ${calculateDuration.value}.`
@@ -110,7 +106,7 @@ const handleRunJob = async () => {
 
   runName.value = run.value.name ? ` "${run.value.name}"` : ''
 
-  await jobStore.startJob({ ...run.value })
+  await jobStore.startJob(run.value)
 
   clearInterval(timer.value)
   clearInterval(polling.value)
@@ -132,15 +128,15 @@ const handleValidate = async (value: boolean) => (isValid.value = value)
 const hadnleOpenJobRun = () => {
   router.push({
     name: 'workspace-project-jobs-job-jobrun',
-    params: { ...router.route.value.params, jobRunId: jobRunId.value }
+    params: { ...router.route.value.params, jobRunId: jobStore.run.short_uuid }
   })
 }
 
 const calculateDuration = computed(() => {
   if (isFinished.value) {
-    return moment.durationHumanizeBySecond(jobRun.value.duration)
+    return moment.durationHumanizeBySecond(jobStore.run.duration)
   }
-  return moment.durationHumanize(jobRun.value.created, startTime.value)
+  return moment.durationHumanize(jobStore.run.created, startTime.value)
 })
 
 const checkStatus = () => {

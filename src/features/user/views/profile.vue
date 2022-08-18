@@ -86,6 +86,7 @@ import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import { useSnackBar } from '@/core/components/snackBar/useSnackBar'
 import { watch, ref, reactive, computed } from '@vue/composition-api'
 import UserProfile from '@/features/user/components/profile/UserProfile.vue'
+import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 import UserWorkspaceProfile from '@/features/workspace/components/profile/UserWorkspaceProfile.vue'
 import UserWorkspaceProfileAvatar from '@/features/workspace/components/profile/UserWorkspaceProfileAvatar.vue'
 

@@ -59,12 +59,13 @@
         </v-btn>
       </v-flex>
 
-      <v-alert v-if="isFileEmpty" class="ma-4 text-center" dense outlined>{{ textNoData }}.</v-alert>
+      <v-alert v-if="isFileEmpty" class="ma-4 text-center" dense outlined>{{ textNoData }}</v-alert>
     </div>
   </ask-anna-loading-progress>
 </template>
 <script setup lang="ts">
 import PreviewFileType from './PreviewFileType.vue'
+import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 
 defineProps({
   loading: {
@@ -112,7 +113,7 @@ defineProps({
   },
   textNoData: {
     type: String,
-    default: () => 'There is no result available for this run'
+    default: () => 'There is no result available for this run.'
   },
   images: {
     type: Array,

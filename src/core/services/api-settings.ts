@@ -34,15 +34,15 @@ export const api: ApiSettings = {
       create: () => `accounts/`
     },
     jobs: {
-      list: () => `job/`
+      list: () => `job/`,
+      jobs: id => `project/${id}/jobs/`,
+      getLastJobRun: id => `job/${id}/runs/`
     },
     project: {
       get: id => `project/${id}/`,
       list: () => `project/`,
       projectMe: id => `project/${id}/me/`,
-      jobs: id => `project/${id}/jobs/`,
       packages: id => `project/${id}/packages/`,
-      getLastJobRun: id => `job/${id}/runs/`,
       create: () => 'project/',
       update: id => `project/${id}/`,
       templates: () => 'project_template/',
@@ -122,6 +122,9 @@ export const api: ApiSettings = {
       getMetricMeta: jobRunShortId => `runinfo/${jobRunShortId}/`
     },
     runifo: {
+      getVariables: jobRunShortId => `runinfo/${jobRunShortId}/variables/`
+    },
+    variable: {
       getVariables: jobRunShortId => `runinfo/${jobRunShortId}/variables/`
     }
   }

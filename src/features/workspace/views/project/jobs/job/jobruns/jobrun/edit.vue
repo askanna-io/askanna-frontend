@@ -69,6 +69,7 @@ import { useSnackBar } from '@/core/components/snackBar/useSnackBar'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
 import AskAnnaDescription from '@/core/components/shared/AskAnnaDescription.vue'
+import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 
 const snackBar = useSnackBar()
 const router = useRouterAskAnna()

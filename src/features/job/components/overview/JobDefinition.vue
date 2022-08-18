@@ -11,25 +11,7 @@
           <v-row>
             <v-col cols="12"><JobRunInfoCopyText text="SUUID" :value="job.short_uuid" /></v-col>
             <v-col cols="12">
-              <div class="code-wrapper">
-                <span class="font-weight-bold">Code:</span
-                ><v-btn
-                  color="primary"
-                  class="pl-1 pr-0 text-body-1 text-transform--initial AskAnna-text--initial text-body-1"
-                  text
-                  x-small
-                  @click="handleGoToCode"
-                >
-                  {{ lastPackage.short_uuid }}</v-btn
-                >
-                <ask-anna-copy-text
-                  :showText="false"
-                  :iconColor="'grey lighten-2'"
-                  :buttonType="{ text: true }"
-                  :text="lastPackage.short_uuid"
-                  :styleClasses="'px-0 white font-weight-regular text--regular body-1'"
-                />
-              </div>
+              <AskAnnaLinkCopy text="Code: " :value="lastPackage.short_uuid" @click="handleGoToCode" />
             </v-col>
             <v-col cols="12"
               ><job-run-info-env
@@ -123,6 +105,7 @@
 <script setup lang="ts">
 import { computed } from '@vue/composition-api'
 import NotificationsEmail from './NotificationsEmail.vue'
+import AskAnnaLinkCopy from '@/core/components/shared/AskAnnaLinkCopy.vue'
 import JobRunInfoEnv from '@/features/jobrun/components/jobrun/parts/JobRunInfoEnv.vue'
 import JobRunInfoCopyText from '@/features/jobrun/components/jobrun/parts/JobRunInfoCopyText.vue'
 

@@ -1,11 +1,9 @@
 <template>
   <div class="d-flex align-baseline">
-    <div class="text-body-1">
-      <span class="font-weight-bold">{{ text }}:</span>
+    <div v-if="text" class="text-body-1">
+      <span class="font-weight-bold">{{ text }}:&nbsp;</span>
     </div>
-    <v-btn color="primary" @click="handleOpenPeoplePopUp" class="px-1 AskAnna-text--initial text-body-1" text x-small>
-      {{ value.name }}</v-btn
-    >
+    <span @click="handleOpenPeoplePopUp" class="primary--text ask-anna-link"> {{ value.name }}</span>
 
     <workspace-people-popup
       simple

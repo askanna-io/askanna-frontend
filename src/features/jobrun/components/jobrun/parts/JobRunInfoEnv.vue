@@ -3,7 +3,8 @@
     <template v-slot:activator="{ on }">
       <div v-on="on">
         <span
-          ><span class="font-weight-bold">{{ text }}: </span>{{ fullValue ? value.name : envNameSliced }}</span
+          ><span v-if="text" class="font-weight-bold">{{ text }}: </span
+          >{{ fullValue ? value.name : envNameSliced }}</span
         >
         <ask-anna-copy-text
           :showText="false"

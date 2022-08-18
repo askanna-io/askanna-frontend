@@ -1,12 +1,11 @@
-import useGeneralStore from '@/core/store/general/useGeneralStore'
+import { useGeneralStore } from '@/core/store/useGeneralStore'
 import { ref, onUnmounted, computed } from '@vue/composition-api'
 
 export default function () {
   const intervalKeys = ref<string[]>([])
   const generalStore = useGeneralStore()
 
-  // @ts-expect-error
-  const interval = computed(() => generalStore.interval.value)
+  const interval = computed(() => generalStore.interval)
 
   const setIntervalFn = (key: string, handler: TimerHandler) => {
     intervalKeys.value.push(key)

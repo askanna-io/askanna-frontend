@@ -25,6 +25,7 @@ import { useMetricStore } from '@/features/metric/useMetricStore'
 import { ref, computed, onBeforeMount } from '@vue/composition-api'
 import useProjectStore from '@/features/project/composition/useProjectStore'
 import MetricTableView from '@/features/metric/components/metric-table/MetricTableView.vue'
+import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 
 const { route } = useRouter()
 const { height } = useWindowSize()

@@ -12,7 +12,8 @@ import { get } from 'lodash'
 import { computed } from '@vue/composition-api'
 
 const props = defineProps({
-  status: String
+  status: String,
+  value: String
 })
 
 const COLORS = {
@@ -54,7 +55,9 @@ const TEXTS = {
   RUNNING: 'In progress',
   FINISHED: 'Finished'
 }
-const status = computed(() => (props.status ? props.status.toUpperCase() : 'UNDEFINED'))
+
+const val = computed(() => props.status || props.value)
+const status = computed(() => (val.value ? val.value.toUpperCase() : 'UNDEFINED'))
 
 const statusIcon = computed(() => get(ICONS, status.value))
 const statusColor = computed(() => get(COLORS, status.value))

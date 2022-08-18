@@ -32,8 +32,8 @@
   </div>
 </template>
 <script lang="ts">
+import { useJobStore } from '@/features/job/useJobStore'
 import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
-import useJobStore from '@/features/job/composition/useJobStore'
 import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
 
 import JobToolBar from './parts/JobToolBar.vue'
@@ -80,7 +80,7 @@ export default defineComponent({
     const jobStore = useJobStore()
     const jobRunStore = useJobRunStore()
 
-    const jobName = computed(() => jobStore.job.value.name)
+    const jobName = computed(() => jobStore.job.name)
     const breadcrumbs = useBreadcrumbs({ start: 0, end: 6 })
 
     const onStick = data => props.handleOnStick(data.sticked)

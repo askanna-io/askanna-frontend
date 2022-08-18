@@ -32,7 +32,10 @@
     </v-app-bar>
 
     <v-main class="scrollbar">
-      <v-container class="a-content" :class="{ 'px-0 mx-0 pt-1': $vuetify.breakpoint.xsOnly }">
+      <v-container
+        class="a-content"
+        :class="{ 'px-0 mx-0 pt-1': $vuetify.breakpoint.xsOnly, 'a-content--full': mobileStore.isFullScreen }"
+      >
         <MobileMainMenu v-if="mobileStore.isMenuOpen" @onClose="handleOnCloseMobileMenu" />
         <router-view />
       </v-container>
@@ -100,7 +103,7 @@ onUpdated(() => {
   }
 })
 </script>
-<style scoped>
+<style scoped lang="scss">
 .logo {
   height: 30px;
 }
@@ -109,5 +112,9 @@ onUpdated(() => {
 }
 .a-content {
   max-width: 1248px;
+
+  &--full {
+    max-width: 100%;
+  }
 }
 </style>

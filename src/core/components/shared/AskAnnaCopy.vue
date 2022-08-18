@@ -35,7 +35,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { useWindowSize } from '@u3u/vue-hooks'
 import useCopy from '@/core/composition/useCopy'
 import useSlicedText from '@/core/composition/useSlicedText'
