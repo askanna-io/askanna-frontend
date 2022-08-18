@@ -74,7 +74,7 @@ export interface JobRun {
     extension: string
     lines: number
     mimetype: string
-    original_name: string
+    name: string
     size: number
   }
   environment: {
@@ -213,7 +213,7 @@ export class JobRunModel {
         lines: 0,
         mimetype: '',
         extension: '',
-        original_name: ''
+        name: ''
       },
       environment: {
         name: '',

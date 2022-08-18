@@ -3,7 +3,7 @@
     <v-toolbar v-if="!fileStore.loading && !fileStore.isFileEmpty" dense flat color="grey lighten-4">
       <v-flex class="d-flex">
         <div class="cut-text d-flex align-center">
-          {{ jobRun.result.original_name
+          {{ jobRun.result.name
           }}<span v-if="!$vuetify.breakpoint.xsOnly" class="pl-3"
             >({{ `${humanize.humanizeSize(fileStore.size)}` }}{{ metaInfo }})</span
           >
@@ -170,7 +170,7 @@ const handleDownload = async () => {
 
   forceFileDownload.trigger({
     source: fileStore.rawFile,
-    name: `run_${jobRunStore.state.jobRun.value.short_uuid}_result_${jobRunStore.state.jobRun.value.result.original_name}`
+    name: `run_${jobRunStore.state.jobRun.value.short_uuid}_result_${jobRunStore.state.jobRun.value.result.name}`
   })
 }
 
