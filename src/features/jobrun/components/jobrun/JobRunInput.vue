@@ -102,7 +102,7 @@ const currentView = ref(views[0])
 
 const maxHeight = computed(() => height.value - 150)
 const jobRunShortId = computed(() => jobRunStore.state.jobRun.value.short_uuid)
-const payloadUuid = computed(() => jobRunStore.state.jobRun.value.payload.short_uuid)
+const payloadUuid = computed(() => jobRunStore.state.jobRun.value.payload?.short_uuid)
 
 const handleDownload = async () => {
   const { short_uuid } = jobRunStore.state.jobRun.value

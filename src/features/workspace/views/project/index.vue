@@ -26,10 +26,10 @@
 import useProjectStore from '@/features/project/composition/useProjectStore'
 
 import { useRouter } from '@u3u/vue-hooks'
+import { useJobStore } from '@/features/job/useJobStore'
 import { ref, watch, computed } from '@vue/composition-api'
 import { useFileStore } from '@/features/file/useFileStore'
 import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
-import useJobStore from '@/features/job/composition/useJobStore'
 import useProject from '@/features/project/composition/useProject'
 import useFileExtension from '@/core/composition/useFileExtension'
 import usePackageStore from '@/features/package/composition/usePackageStore'
@@ -46,7 +46,7 @@ const packageStore = usePackageStore()
 
 const fileSource = ref('')
 
-const job = computed(() => jobStore.job.value)
+const job = computed(() => jobStore.job)
 const routeName = computed(() => route.value.name)
 const isShowReadmeFile = computed(() => routeName.value === 'workspace-project-code')
 const jobEnd = computed(() => (route.value.name.indexOf('jobs-name') >= 1 ? 5 : 3))

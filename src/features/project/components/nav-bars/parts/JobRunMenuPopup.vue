@@ -86,7 +86,7 @@ const handleDeleteConfirmRun = async () => {
   deleteRunConfirmPopup.value = false
   menu.value = false
   if (isDeleted) {
-    router.push({ name: 'workspace-project-job-jobruns' })
+    router.push({ name: 'workspace-project-jobs-job-runs-table' })
   }
 }
 </script>

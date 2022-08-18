@@ -1,16 +1,9 @@
 <template>
   <v-menu v-model="menu" :close-on-content-click="false" offset-y top>
     <template v-slot:activator="{ on }">
-      <div v-on="on" class="cursor--pointer">
-        <v-tooltip v-if="!$vuetify.breakpoint.xsOnly" top :nudge-left="nudgeLeft" content-class="opacity-1">
-          <template v-slot:activator="{ on }">
-            <div v-on="on" ref="divRef" :style="divStyles">
-              {{ metricRow.value }}
-            </div>
-          </template>
-          <span class="AskAnna-string-type" v-html="metricRow.value" />
-        </v-tooltip>
-        <div v-else v-on="on" ref="divRef" :style="divStyles">
+      <div v-on="on" class="list__item-content cursor--pointer">
+        <div ref="divRef" class="list__item-value d-flex" :style="divStyles">
+          <div v-if="isShowName">{{ metricRow.name }}:&nbsp;</div>
           {{ metricRow.value }}
         </div>
       </div>
@@ -19,7 +12,7 @@
       <v-app-bar dense height="40" flat>
         Name: {{ metricRow.name }}
         <v-spacer />
-        <v-btn small outlined color="secondary" @click="handleCopy" class="mr-1 btn--hover">
+        <v-btn small outlined color="secondary" @click="handleCopy" class="mx-2 btn--hover">
           <v-icon color="secondary" left>mdi-content-copy</v-icon>Copy
         </v-btn>
         <v-btn small icon @click="handleClose">
@@ -31,6 +24,7 @@
   </v-menu>
 </template>
 <script setup lang="ts">
+import useCopy from '@/core/composition/useCopy'
 import { ref, watch } from '@vue/composition-api'
 import TheHighlight from '@/core/components/highlight/TheHighlight.vue'
 
@@ -40,6 +34,10 @@ const props = defineProps({
     default: () => false
   },
   isLabels: {
+    type: Boolean,
+    default: () => false
+  },
+  isShowName: {
     type: Boolean,
     default: () => false
   },
@@ -54,6 +52,7 @@ const props = defineProps({
     }
   }
 })
+const copy = useCopy()
 
 const menu = ref(false)
 const divRef = ref(null)
@@ -82,8 +81,20 @@ watch(divRef, async divRef => {
 const handleClose = () => (menu.value = false)
 const handleCopy = () => copy.handleCopyText(props.metricRow.value)
 </script>
-<style scoped>
+<style lang="scss" scoped>
 .AskAnna-string-type {
   white-space: break-spaces;
+}
+
+.list {
+  &__item-content {
+    display: flex;
+    height: 100%;
+    align-items: center;
+  }
+
+  &__item-value {
+    width: 100%;
+  }
 }
 </style>

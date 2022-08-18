@@ -12,7 +12,7 @@ const fileStore = useFileStore()
 const jobRunStore = useJobRunStore()
 
 const jobRunShortId = computed(() => jobRunStore.state.jobRun.value.short_uuid)
-const payloadUuid = computed(() => jobRunStore.state.jobRun.value.payload.short_uuid)
+const payloadUuid = computed(() => jobRunStore.state.jobRun.value.payload?.short_uuid)
 
 const handleViewPayload = async (jobRunShortId, payloadUuid) => {
   if (payloadUuid) {

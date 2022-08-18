@@ -4,6 +4,8 @@
       <v-row no-gutters>
         <v-col class="mb-4" v-for="(item, index2) in group" :key="`${index}-${index2}`" cols="12">
           <component
+            link
+            :to="item.to"
             :key="index2"
             :text="item.text"
             :value="item.value"
@@ -24,9 +26,9 @@ import JobRunInfoText from './parts/JobRunInfoText.vue'
 import JobRunInfoStatus from './parts/JobRunInfoStatus.vue'
 import JobRunInfoAvatar from './parts/JobRunInfoAvatar.vue'
 import useGroupArray from '@/core/composition/useGroupArray'
-import JobRunInfoPackage from './parts/JobRunInfoPackage.vue'
 import JobRunInfoCopyText from './parts/JobRunInfoCopyText.vue'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
+import AskAnnaLinkCopy from '@/core/components/shared/AskAnnaLinkCopy.vue'
 
 import { JobRun, JobRunModel } from '../../store/types'
 import { ref, computed, onUnmounted, defineComponent } from '@vue/composition-api'
@@ -40,7 +42,7 @@ export default defineComponent({
     JobRunInfoText,
     JobRunInfoStatus,
     JobRunInfoAvatar,
-    JobRunInfoPackage,
+    AskAnnaLinkCopy,
     JobRunInfoCopyText
   },
 
@@ -152,14 +154,15 @@ export default defineComponent({
           visibility: true
         },
         {
-          text: 'Code',
+          text: 'Code: ',
+          to: 'workspace-project-job-overiew',
           value: props.jobRun.package.short_uuid,
-          component: 'JobRunInfoPackage',
+          component: 'AskAnnaLinkCopy',
           visibility: true
         },
         {
           text: 'By',
-          value: props.jobRun.owner,
+          value: props.jobRun.created_by,
           component: 'JobRunInfoAvatar',
           visibility: true
         },

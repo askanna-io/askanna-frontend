@@ -11,7 +11,7 @@
   >
     <template v-slot:item.type="{ item }">
       <router-link class="table-link table-link--unformated" :to="getRoutePath(item)">
-        <v-icon v-if="item.is_dir">mdi-folder</v-icon>
+        <v-icon v-if="item.type === 'directory'">mdi-folder</v-icon>
         <v-icon v-else>
           {{ getIcons(item.ext) }}
         </v-icon>

@@ -60,7 +60,7 @@
         </td>
         <td class="text-start">
           <router-link class="table-link table-link--unformated" :to="routeLinkParams({ item })">
-            <ask-anna-copy :text="item.owner.name" smartSlice :showCopyButton="false" :width="12" />
+            <ask-anna-copy :text="item.created_by.name" smartSlice :showCopyButton="false" :width="12" />
           </router-link>
         </td>
         <td class="text-start">
@@ -206,14 +206,14 @@ export default defineComponent({
         params: {
           ...context.root.$route.params,
           jobRunId: item.short_uuid,
-          jobId: item.jobdef.short_uuid
+          jobId: item.job.short_uuid
         }
       }
     }
 
     const getPayloadTitle = payload => {
       let title = 'No input'
-      if (payload.lines >= 1) {
+      if (payload?.lines >= 1) {
         title = `${numeral.numberFormated(payload.lines)} line${payload.lines > 1 ? 's' : ''}`
       }
       return title

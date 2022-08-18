@@ -70,7 +70,6 @@ export const action = {
   createProject: 'createProject',
   deleteProject: 'deleteProject',
   updateProject: 'updateProject',
-  getProjectJobs: 'getProjectJobs',
   getLastPackage: 'getLastPackage',
   resetProjectJobs: 'resetProjectJobs',
   resetProjectData: 'resetProjectData',

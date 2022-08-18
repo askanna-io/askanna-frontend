@@ -101,10 +101,9 @@ defineProps({
         size: 0,
         name: '',
         path: '',
-        type: '',
         parent: '/',
-        is_dir: true,
-        last_modified: ''
+        last_modified: '',
+        type: 'directory'
       }
     }
   },

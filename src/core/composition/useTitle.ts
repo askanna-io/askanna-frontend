@@ -1,7 +1,7 @@
 import { get } from 'lodash'
 import { useRouter } from '@u3u/vue-hooks'
 import { watchEffect, computed } from '@vue/composition-api'
-import useGeneralStore from '@/core/store/general/useGeneralStore'
+import { useGeneralStore } from '@/core/store/useGeneralStore'
 
 export default function () {
   const { route } = useRouter()
@@ -14,7 +14,7 @@ export default function () {
       let pageTitle = route.value.meta?.title || route.value.params.title || ''
       // replace uuid to name
       Object.entries(route.value.params).forEach(([key, value]) => {
-        const name = get(generalStore.breadcrumbParams.value, key)
+        const name = get(generalStore.breadcrumbParams, key)
         pageTitle = pageTitle.replace(key, name || value)
       })
 

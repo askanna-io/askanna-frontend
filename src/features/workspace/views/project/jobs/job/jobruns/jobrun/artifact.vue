@@ -67,6 +67,7 @@ import useProjectStore from '@/features/project/composition/useProjectStore'
 import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
 import PackageToolbar from '@/features/package/components/PackageToolbar.vue'
 import useTriggerFileDownload from '@/core/composition/useTriggerFileDownload'
+import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 
 const copy = useCopy()
 const ext = useFileExtension()
@@ -92,7 +93,7 @@ const images = computed(() => jobRunStore.state.artifactData.value.files.filter(
 
 const calcHeight = computed(() => height.value - 370)
 const path = computed(() => router.route.value.params.folderName || '/')
-const artifactUuid = computed(() => jobRunStore.state.jobRun.value.artifact.short_uuid)
+const artifactUuid = computed(() => jobRunStore.state.jobRun.value?.artifact?.short_uuid)
 
 const breadcrumbsComputed = computed(() => {
   const first = {
@@ -122,9 +123,9 @@ const currentPath = computed(() => {
 
 const parentPath = computed(() => {
   let parentPathTemp
-  if (currentPath.value && currentPath.value.is_dir && path.value !== '/') {
+  if (currentPath.value && currentPath.value.type === 'directory' && path.value !== '/') {
     parentPathTemp = jobRunStore.state.artifactData.value.files.find(
-      file => file.name === currentPath.value.parent && file.is_dir
+      file => file.name === currentPath.value.parent && file.type === 'directory'
     )
     parentPathTemp = {
       ...parentPathTemp,
@@ -137,7 +138,7 @@ const parentPath = computed(() => {
 })
 
 const filePath = computed(() =>
-  currentPath.value && !currentPath.value.is_dir && currentPath.value.name !== '' ? currentPath.value.path : ''
+  currentPath.value && currentPath.value.type === 'file' && currentPath.value.name !== '' ? currentPath.value.path : ''
 )
 
 const treeView = computed(() => {
@@ -162,7 +163,7 @@ const handleDownload = async () => {
   const artifactData = jobRunStore.state.artifactData.value
   const url = await jobRunStore.actions.downloadPackage({
     jobRunShortId: jobRunId,
-    artifactShortId: jobRunStore.state.jobRun.value.artifact.short_uuid
+    artifactShortId: jobRunStore.state.jobRun.value.artifact?.short_uuid
   })
 
   triggerFileDownload.trigger({ url, name: artifactData.filename })
@@ -206,7 +207,7 @@ const fetchData = async () => {
     await jobRunStore.actions.getJobRun(jobRunId)
   }
 
-  if (!jobRunId || !jobRunStore.state.jobRun.value.artifact.short_uuid) {
+  if (!jobRunId || !artifactUuid.value) {
     fileStore.loading = false
 
     return
@@ -215,7 +216,7 @@ const fetchData = async () => {
   await jobRunStore.actions.getInitialJobRunArtifact({
     uuid: {
       jobRunShortId: jobRunId,
-      artifactShortId: jobRunStore.state.jobRun.value.artifact.short_uuid
+      artifactShortId: artifactUuid.value
     }
   })
 }
@@ -223,7 +224,7 @@ const fetchData = async () => {
 onBeforeMount(() => fetchData())
 
 watch(filePath, async filePath => {
-  if (!currentPath.value || (currentPath.value && currentPath.value.is_dir)) fileStore.$reset()
+  if (!currentPath.value || (currentPath.value && currentPath.value.type === 'directory')) fileStore.$reset()
 
   if (filePath === '') return
 

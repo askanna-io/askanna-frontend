@@ -36,6 +36,7 @@
 import useSanitizeHTML from '@/core/composition/useSanitizeHTML'
 import WorkspacePeopleToolbar from './WorkspacePeopleToolbar.vue'
 import WorkspacePeopleCardItem from './WorkspacePeopleCardItem.vue'
+import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 
 defineProps({
   workspaceName: {

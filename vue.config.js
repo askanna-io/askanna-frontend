@@ -85,6 +85,7 @@ module.exports = {
     disableHostCheck: true
   },
   configureWebpack: {
+    devtool: 'source-map',
     plugins: [
       new handlerAfterCompilerDoneHook(createAskAnnaConfig),
       new RobotstxtPlugin(robotstxtOpt),

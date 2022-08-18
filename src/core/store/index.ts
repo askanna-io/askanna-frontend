@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import * as at from './actionTypes'
-import { general } from './general'
 import $axios from '@/core/plugins/axios'
 import Vuex, { StoreOptions } from 'vuex'
 import { api } from '../services/api-settings'
@@ -31,7 +30,7 @@ Vue.use(Vuex)
 
 const store: StoreOptions<RootState> = {
   plugins: [createPersistedState({ paths: persistedStores.filter(store => store === 'auth') })],
-  modules: { ...stores, general },
+  modules: stores,
   strict: process.env.NODE_ENV !== 'production',
   state: {
     version: '1.0.0',

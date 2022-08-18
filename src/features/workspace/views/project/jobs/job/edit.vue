@@ -68,13 +68,14 @@
 
 <script setup lang="ts">
 import { set } from 'lodash'
+import { useJobStore } from '@/features/job/useJobStore'
 import usePermission from '@/core/composition/usePermission'
-import useJobStore from '@/features/job/composition/useJobStore'
 import { useSnackBar } from '@/core/components/snackBar/useSnackBar'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useValidationRules from '@/core/composition/useValidationRules'
 import { ref, watch, computed, onBeforeMount } from '@vue/composition-api'
 import AskAnnaDescription from '@/core/components/shared/AskAnnaDescription.vue'
+import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 import ConfirmChangeJobNamePopup from '@/features/job/components/popup/ConfirmChangeJobNamePopup.vue'
 
 const jobStore = useJobStore()
@@ -92,14 +93,14 @@ const RULE = computed(() => validationRules.RULES)
 const projectJobEdit = computed(() => permission.getFor(permission.labels.projectJobEdit))
 
 const fetchData = async () => {
-  await jobStore.resetStore()
+  await jobStore.$reset()
   await jobStore.getJob(jobId)
 }
 
 onBeforeMount(() => fetchData())
 
-const job = computed(() => jobStore.job.value)
-const loading = computed(() => jobStore.jobLoading.value)
+const job = computed(() => jobStore.job)
+const loading = computed(() => jobStore.loading)
 
 const isStateNotChanged = ref(true)
 const jobState = ref({

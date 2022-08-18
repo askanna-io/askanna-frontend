@@ -74,6 +74,7 @@ import PackageToolbar from '@/features/package/components/PackageToolbar.vue'
 import usePackagesStore from '@/features/packages/composition/usePackagesStore'
 import PackageProcessing from '@/features/package/components/PackageProcessing.vue'
 import { ref, watch, onBeforeMount, onUnmounted, computed } from '@vue/composition-api'
+import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 
 const copy = useCopy()
 const ext = useFileExtension()
@@ -179,13 +180,13 @@ const currentPath = computed(() => {
 })
 
 const filePath = computed(() =>
-  currentPath.value && !currentPath.value.is_dir && currentPath.value.name !== '' ? currentPath.value.path : ''
+  currentPath.value && currentPath.value.type === 'file' && currentPath.value.name !== '' ? currentPath.value.path : ''
 )
 const parentPath = computed(() => {
   let parentPathTemp
-  if (currentPath.value && currentPath.value.is_dir && path.value !== '/') {
+  if (currentPath.value && currentPath.value.type === 'directory' && path.value !== '/') {
     parentPathTemp = packageStore.state.packageData.value.files.find(
-      file => file.name === currentPath.value.parent && file.is_dir
+      file => file.name === currentPath.value.parent && file.type === 'directory'
     )
     parentPathTemp = {
       ...parentPathTemp,

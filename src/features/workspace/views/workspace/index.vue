@@ -43,6 +43,7 @@ import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 import WorkspaceToolbar from '@/features/workspace/components/WorkspaceToolbar.vue'
+import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 import ConfirmDeleteWorkspacePopup from '@/features/workspace/components/project/ConfirmDeleteWorkspacePopup.vue'
 
 const { route } = useRouter()

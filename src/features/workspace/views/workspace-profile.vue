@@ -139,6 +139,7 @@ import { watch, ref, reactive, computed } from '@vue/composition-api'
 import useImageUrlToBase64 from '@/core/composition/useImageUrlToBase64'
 import UserProfile from '@/features/user/components/profile/UserProfile.vue'
 import useWorkSpaceStore from '@/features/workspace/composition/useWorkSpaceStore'
+import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 import UserWorkspaceProfile from '@/features/workspace/components/profile/UserWorkspaceProfile.vue'
 import UserWorkspaceProfileAvatar from '@/features/workspace/components/profile/UserWorkspaceProfileAvatar.vue'
 

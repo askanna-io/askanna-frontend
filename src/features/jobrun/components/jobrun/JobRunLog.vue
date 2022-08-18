@@ -76,8 +76,8 @@ import { throttle } from 'lodash'
 import goTo from 'vuetify/lib/services/goto'
 import useCopy from '@/core/composition/useCopy'
 import useQuery from '@/core/composition/useQuery'
+import { useJobStore } from '@/features/job/useJobStore'
 import { useRouter, useWindowSize } from '@u3u/vue-hooks'
-import useJobStore from '@/features/job/composition/useJobStore'
 import TheHighlight from '@/core/components/highlight/TheHighlight.vue'
 import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
@@ -99,7 +99,7 @@ const scrollLoading = ref(false)
 const isAutoUpdateLog = ref(true)
 const isCheckStatusRuning = ref(false)
 
-const jobRunStatus = computed(() => jobStore.jobrun.value.status)
+const jobRunStatus = computed(() => jobStore.run.status)
 const isFinished = computed(() => jobRunStatus.value === 'failed' || jobRunStatus.value === 'finished')
 
 const isLoadingLogs = computed(

@@ -1,7 +1,7 @@
 <template>
-  <td class="text-left" :key="label" :style="labelStyles">
+  <component :is="tag" class="text-left" :key="label" :style="labelStyles">
     <metric-value :metricRow="labelValue" :isLabels="isLabels" :isLabel="isLabel" />
-  </td>
+  </component>
 </template>
 <script setup lang="ts">
 import MetricValue from './MetricValue.vue'
@@ -11,6 +11,10 @@ const props = defineProps({
   isLabel: {
     type: Boolean,
     default: () => false
+  },
+  tag: {
+    type: String,
+    default: 'td'
   },
   labels: Array,
   label: String,

@@ -2,30 +2,28 @@
   <router-view />
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { onBeforeMount } from '@vue/composition-api'
 import { useFileStore } from '@/features/file/useFileStore'
-import useJobStore from '@/features/job/composition/useJobStore'
+import { useJobStore } from '@/features/job/useJobStore'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
-import { onBeforeMount, defineComponent } from '@vue/composition-api'
 
-export default defineComponent({
-  setup(_, context) {
-    const { jobId } = context.root.$route.params
+const jobStore = useJobStore()
+const fileStore = useFileStore()
+const jobRunStore = useJobRunStore()
+const { route } = useRouterAskAnna()
 
-    const jobStore = useJobStore()
-    const fileStore = useFileStore()
-    const jobRunStore = useJobRunStore()
+const { jobId } = route.value.params
 
-    onBeforeMount(() => {
-      const fetchData = async () => {
-        fileStore.$reset()
-        await jobStore.resetStore()
-        await jobRunStore.actions.resetStore()
-        await jobStore.getJob(jobId)
-      }
-
-      fetchData()
-    })
+onBeforeMount(() => {
+  const fetchData = async () => {
+    await fileStore.$reset()
+    await jobStore.$reset()
+    await jobRunStore.actions.resetStore()
+    await jobStore.getJob(jobId)
   }
+
+  fetchData()
 })
 </script>

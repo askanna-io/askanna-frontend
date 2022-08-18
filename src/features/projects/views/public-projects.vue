@@ -53,6 +53,7 @@ import useSanitizeHTML from '@/core/composition/useSanitizeHTML'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import { useProjectsStore } from '@/features/projects/useProjectsStore'
 
+import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 import PublicProjectsToolbar from '../components/public-projects/PublicProjectsToolbar.vue'
 import WorkspaceProjectCardItem from '@/features/workspace/components/WorkspaceProjectCardItem.vue'
 

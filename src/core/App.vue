@@ -81,6 +81,10 @@ const handleOnScroll = () => (mobileStore.isMenuSticked = window.pageYOffset > 1
   }
 }
 
+.v-application .list ul {
+  padding-left: 0;
+}
+
 .v-application--is-ltr .v-data-table--fixed-header.askanna-table .v-data-footer {
   margin-right: 0 !important;
 }

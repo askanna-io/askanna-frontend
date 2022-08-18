@@ -40,7 +40,7 @@
       <v-card-title v-if="!sticked" :class="{ 'py-1 pl-3 ': $vuetify.breakpoint.xsOnly }">
         <span class="title font-weight-light"
           >Run{{ runName }}
-          <ask-anna-copy-text
+          <AskAnnaCopyText
             v-if="!jobRun.name"
             :text="jobRun.short_uuid"
             :buttonType="{ text: true }"
@@ -77,15 +77,16 @@
 <script setup lang="ts">
 import { useRouter } from '@u3u/vue-hooks'
 import { computed } from '@vue/composition-api'
+import { useJobStore } from '@/features/job/useJobStore'
 import usePermission from '@/core/composition/usePermission'
 import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
-import useJobStore from '@/features/job/composition/useJobStore'
 import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
 
 import JobToolBar from './parts/JobToolBar.vue'
 import JobRunToolBar from './parts/JobRunToolBar.vue'
 import ProjectToolBar from './parts/ProjectToolBar.vue'
 import JobRunMenuPopup from './parts/JobRunMenuPopup.vue'
+import AskAnnaCopyText from '@/core/components/shared/AskAnnaCopyText.vue'
 import JobRunInfoStatus from '@/features/jobrun/components/jobrun/parts/JobRunInfoStatus.vue'
 
 const props = defineProps({
@@ -125,9 +126,9 @@ const breadcrumbs = useBreadcrumbs({ start: 0, end: 6 })
 const projectRunEdit = computed(() => permission.getFor(permission.labels.projectRunEdit))
 
 const { jobRunId } = route.value.params
-const jobName = computed(() => jobStore.job.value.name)
+const jobName = computed(() => jobStore.job.name)
+const jobRunStatus = computed(() => jobStore.run.status)
 const jobRun = computed(() => jobRunStore.state.jobRun.value)
-const jobRunStatus = computed(() => jobStore.jobrun.value.status)
 const runName = computed(() => (jobRun.value.name ? `: ${jobRun.value.name}` : ':'))
 
 const isEditJobRunView = computed(() => route.value.name === 'workspace-project-jobs-job-jobrun-edit')

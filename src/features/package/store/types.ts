@@ -9,12 +9,11 @@ export interface PackageData {
 export interface File {
   path: string
   parent: string
-  is_dir: boolean
   size: number
   last_modified: string
   name: string
-  type: string
   ext: string
+  type: 'file' | 'directory'
 }
 
 export interface Package {

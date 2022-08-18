@@ -12,11 +12,12 @@ import useQuery from '@/core/composition/useQuery'
 import { computed, onBeforeMount, defineComponent } from '@vue/composition-api'
 import MetricJsonView from '@/features/metric/components/metric-table/MetricJsonView.vue'
 import useRuninfoVariablesStore from '@/features/runinfo-variables/composition/useRuninfoVariablesStore'
+import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 
 export default defineComponent({
   name: 'json-view',
 
-  components: { MetricJsonView },
+  components: { MetricJsonView, AskAnnaLoadingProgress },
 
   setup(_, context) {
     const { height } = useWindowSize()

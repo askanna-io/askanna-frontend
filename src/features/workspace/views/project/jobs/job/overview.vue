@@ -11,7 +11,7 @@
       :job="job"
       :nextRun="nextRun"
       :schedules="schedules"
-      :lastPackage="lastPackage"
+      :lastPackage="projectStore.lastPackage.value"
       @handleGoToCode="handleGoToCode"
     />
     <v-divider v-if="projectRunCreate" />
@@ -19,73 +19,52 @@
   </v-card>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import useMoment from '@/core/composition/useMoment'
+import { useJobStore } from '@/features/job/useJobStore'
 import useCronstrue from '@/core/composition/useCronstrue'
 import usePermission from '@/core/composition/usePermission'
-import useJobStore from '@/features/job/composition/useJobStore'
+import { computed, onBeforeMount } from '@vue/composition-api'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
+import useProjectStore from '@/features/project/composition/useProjectStore'
+
 import JobDefinition from '@job/components/overview/JobDefinition.vue'
 import JobRunning from '@/features/job/components/overview/JobRunning.vue'
-import useProjectStore from '@/features/project/composition/useProjectStore'
-import { onBeforeMount, defineComponent, computed } from '@vue/composition-api'
 import AskAnnaDescription from '@/core/components/shared/AskAnnaDescription.vue'
 
-export default defineComponent({
-  components: {
-    JobRunning,
-    JobDefinition,
-    AskAnnaDescription
-  },
+const moment = useMoment()
+const jobStore = useJobStore()
+const cronstrue = useCronstrue()
+const { route } = useRouterAskAnna()
+const permission = usePermission()
+const projectStore = useProjectStore()
 
-  setup(_, context) {
-    const moment = useMoment()
-    const jobStore = useJobStore()
-    const cronstrue = useCronstrue()
-    const permission = usePermission()
+const { workspaceId, projectId } = route.value.params
 
-    const projectStore = useProjectStore()
-    const router = useRouterAskAnna()
+const projectRunCreate = computed(() => permission.getFor(permission.labels.projectRunCreate))
 
-    const projectRunCreate = computed(() => permission.getFor(permission.labels.projectRunCreate))
+const job = computed(() => jobStore.job)
+const nextRun = computed(() => moment.nextClosestData(jobStore.job.schedules.map(s => s.next_run)))
+const schedules = computed(() =>
+  jobStore.job.schedules.map(item => ({
+    ...item,
+    next_run: moment.$moment.tz(item.next_run, item.cron_timezone).local().format(' Do MMMM YYYY, h:mm a'),
+    humanizeFormat: cronstrue.humanizeCron(item.cron_definition),
+    isDifferentTimeZone: moment.checkIfTimeZoneEq(item.cron_timezone)
+  }))
+)
 
-    const { workspaceId, projectId } = context.root.$route.params
+const handleGoToCode = () =>
+  router.push({
+    name: 'workspace-project-code',
+    params: { projectId, workspaceId, packageId: projectStore.lastPackage.value.short_uuid }
+  })
 
-    onBeforeMount(() => {
-      const fetchData = async () => {
-        await projectStore.getLastPackage(projectId)
-      }
+const fetchData = async () => {
+  await projectStore.getLastPackage(projectId)
+}
 
-      fetchData()
-    })
-
-    const job = computed(() => jobStore.job.value)
-    const nextRun = computed(() => moment.nextClosestData(job.value.schedules.map(s => s.next_run)))
-    const schedules = computed(() =>
-      job.value.schedules.map(item => ({
-        ...item,
-        next_run: moment.$moment.tz(item.next_run, item.cron_timezone).local().format(' Do MMMM YYYY, h:mm a'),
-        humanizeFormat: cronstrue.humanizeCron(item.cron_definition),
-        isDifferentTimeZone: moment.checkIfTimeZoneEq(item.cron_timezone)
-      }))
-    )
-
-    const handleGoToCode = () =>
-      router.push({
-        name: 'workspace-project-code',
-        params: { projectId, workspaceId, packageId: projectStore.lastPackage.value.short_uuid }
-      })
-
-    return {
-      ...jobStore,
-      job,
-      nextRun,
-      schedules,
-      projectRunCreate,
-      lastPackage: projectStore.lastPackage,
-
-      handleGoToCode
-    }
-  }
+onBeforeMount(() => {
+  fetchData()
 })
 </script>

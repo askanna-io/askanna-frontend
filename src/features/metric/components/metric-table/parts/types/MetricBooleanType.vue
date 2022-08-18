@@ -1,37 +1,39 @@
-<script>
-import { defineComponent } from '@vue/composition-api'
+<template>
+  <span>
+    <span v-if="isShowName">{{ metricRow.name }}:&nbsp;</span>
+    <v-icon>{{ icon }}</v-icon></span
+  >
+</template>
+<script setup lang="ts">
+import { computed } from '@vue/composition-api'
 
-export default defineComponent({
-  name: 'MetricBooleanType',
-
-  functional: true,
-
-  props: {
-    metricRow: {
-      type: Object,
-      default: function () {
-        return {
-          name: '',
-          type: '',
-          value: ''
-        }
+const props = defineProps({
+  isShowName: {
+    type: Boolean,
+    default: () => false
+  },
+  metricRow: {
+    type: Object,
+    default: function () {
+      return {
+        name: '',
+        type: '',
+        value: ''
       }
     }
-  },
-
-  render(h, context) {
-    const { metricRow } = context.props
-
-    let icon = 'mdi-close'
-
-    if (metricRow.value === 'null') {
-      icon = 'mdi-record'
-    }
-    if (metricRow.value === true) {
-      icon = 'mdi-check'
-    }
-
-    return <v-icon>{icon}</v-icon>
   }
+})
+
+const icon = computed(() => {
+  let icon = 'mdi-close'
+
+  if (props.metricRow.value === 'null') {
+    icon = 'mdi-record'
+  }
+  if (props.metricRow.value === true) {
+    icon = 'mdi-check'
+  }
+
+  return icon
 })
 </script>

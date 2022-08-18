@@ -26,6 +26,7 @@ import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
 import useProjectStore from '@/features/project/composition/useProjectStore'
 import useRuninfoVariablesStore from '@/features/runinfo-variables/composition/useRuninfoVariablesStore'
 import VariablesTableView from '@/features/runinfo-variables/components/metric-table/VariablesTableView.vue'
+import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 
 const { route } = useRouter()
 const { height } = useWindowSize()

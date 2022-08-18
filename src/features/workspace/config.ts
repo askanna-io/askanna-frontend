@@ -4,8 +4,34 @@ const jobRun = [
   {
     path: '',
     component: () =>
-      import(/* webpackChunkName: "workspace-project-job-runs" */ './views/project/jobs/job/jobruns/runs.vue'),
-    name: 'workspace-project-job-jobruns'
+      import(/* webpackChunkName: "workspace-project-job-runs" */ './views/project/jobs/job/jobruns/runs/index.vue'),
+    name: 'workspace-project-job-jobruns',
+    redirect: { name: 'workspace-project-jobs-job-runs-table' },
+
+    children: [
+      {
+        path: 'table',
+        component: () =>
+          import(
+            /* webpackChunkName: "workspace-project-uuid-jobs-name-runs-table-view" */ './views/project/jobs/job/jobruns/runs/table-view.vue'
+          ),
+        name: 'workspace-project-jobs-job-runs-table',
+        meta: {
+          tabValue: 'table'
+        }
+      },
+      {
+        path: 'compare',
+        component: () =>
+          import(
+            /* webpackChunkName: "workspace-project-uuid-jobs-name-runs-compare-view" */ './views/project/jobs/job/jobruns/runs/compare-view.vue'
+          ),
+        name: 'workspace-project-jobs-job-runs-compare',
+        meta: {
+          tabValue: 'compare'
+        }
+      }
+    ]
   },
   {
     path: 'run-does-not-exist',
