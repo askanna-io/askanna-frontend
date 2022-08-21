@@ -47,9 +47,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from '@vue/composition-api'
 import { useMobileStore } from '@/core/store/useMobileStore'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
+import { ref, watch, computed, onBeforeUnmount } from '@vue/composition-api'
 import { useCompareRunsStore } from '@/features/compare-runs/useCompareRunsStore'
 
 const mobileStore = useMobileStore()
@@ -58,9 +58,7 @@ const compareRunsStore = useCompareRunsStore()
 
 compareRunsStore.$reset()
 
-const tabValue = computed(() => route.value.meta.tabValue)
-
-const counts = [4, 5, 6, 7, 10, 15]
+const tabValue = computed(() => route?.value.meta?.tabValue)
 
 const views = [
   { name: 'Table', value: 'table', icon: 'mdi-table' },
@@ -86,4 +84,6 @@ watch(
 )
 
 init()
+
+onBeforeUnmount(() => (mobileStore.isFullScreen = false))
 </script>
