@@ -40,3 +40,12 @@ export default defineComponent({
   }
 })
 </script>
+<style lang="scss">
+.a-content {
+  max-width: 1248px;
+
+  &--full {
+    max-width: 100%;
+  }
+}
+</style>

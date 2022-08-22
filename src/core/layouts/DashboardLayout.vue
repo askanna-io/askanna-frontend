@@ -110,11 +110,4 @@ onUpdated(() => {
 .logo.--mobile {
   height: 67px;
 }
-.a-content {
-  max-width: 1248px;
-
-  &--full {
-    max-width: 100%;
-  }
-}
 </style>
