@@ -11,6 +11,8 @@
       :job="job"
       :nextRun="nextRun"
       :schedules="schedules"
+      :routeParams="routeParams"
+      :to="'workspace-project-code'"
       :lastPackage="projectStore.lastPackage.value"
       @handleGoToCode="handleGoToCode"
     />
@@ -35,9 +37,9 @@ import AskAnnaDescription from '@/core/components/shared/AskAnnaDescription.vue'
 const moment = useMoment()
 const jobStore = useJobStore()
 const cronstrue = useCronstrue()
-const { route } = useRouterAskAnna()
 const permission = usePermission()
 const projectStore = useProjectStore()
+const { route, router } = useRouterAskAnna()
 
 const { workspaceId, projectId } = route.value.params
 
@@ -59,6 +61,8 @@ const handleGoToCode = () =>
     name: 'workspace-project-code',
     params: { projectId, workspaceId, packageId: projectStore.lastPackage.value.short_uuid }
   })
+
+const routeParams = computed(() => ({ projectId, workspaceId, packageId: projectStore.lastPackage.value.short_uuid }))
 
 const fetchData = async () => {
   await projectStore.getLastPackage(projectId)

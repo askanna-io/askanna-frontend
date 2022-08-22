@@ -1,7 +1,7 @@
 <template>
   <div class="code-wrapper as">
     <span v-if="text" class="font-weight-bold mr-1">{{ text }}</span>
-    <router-link class="ask-anna-link" @click="handleOnClick" :to="routeLinkParams()">
+    <router-link class="ask-anna-link" @click.native="handleOnClick" :to="routeLinkParams()">
       {{ value }}
     </router-link>
     <AskAnnaCopyText
