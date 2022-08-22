@@ -11,7 +11,13 @@
           <v-row>
             <v-col cols="12"><JobRunInfoCopyText text="SUUID" :value="job.short_uuid" /></v-col>
             <v-col cols="12">
-              <AskAnnaLinkCopy text="Code: " :value="lastPackage.short_uuid" @click="handleGoToCode" />
+              <AskAnnaLinkCopy
+                text="Code: "
+                :to="to"
+                :routeParams="routeParams"
+                :value="lastPackage.short_uuid"
+                @click="handleGoToCode"
+              />
             </v-col>
             <v-col cols="12"
               ><job-run-info-env
@@ -109,7 +115,7 @@ import AskAnnaLinkCopy from '@/core/components/shared/AskAnnaLinkCopy.vue'
 import JobRunInfoEnv from '@/features/jobrun/components/jobrun/parts/JobRunInfoEnv.vue'
 import JobRunInfoCopyText from '@/features/jobrun/components/jobrun/parts/JobRunInfoCopyText.vue'
 
-const emits = defineEmits('handleGoToCode')
+const emits = defineEmits(['handleGoToCode'])
 const props = defineProps({
   job: {
     type: Object,
@@ -147,6 +153,14 @@ const props = defineProps({
         short_uuid: ''
       }
     }
+  },
+  to: {
+    type: String,
+    default: () => ''
+  },
+  routeParams: {
+    type: Object,
+    default: () => {}
   }
 })
 
