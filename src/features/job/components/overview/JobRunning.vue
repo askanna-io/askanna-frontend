@@ -28,33 +28,32 @@
 </template>
 
 <script setup lang="ts">
-import JobRunCurl from './jobrunning/JobRunCurl.vue'
-import JobRunPython from './jobrunning/JobRunPython.vue'
-import JobRunPlatform from './jobrunning/JobRunPlatform.vue'
 import { ref } from '@vue/composition-api'
+import RunCurl from './run/RunCurl.vue'
+import RunPython from './run/RunPython.vue'
+import RunPlatform from './run/RunPlatform.vue'
 
-const versions = ['package v1', 'package v2']
 const currentTab = ref('workspace-project-job-running-curl')
 
 const tabs = [
   {
     id: 0,
     name: 'Platform',
-    component: JobRunPlatform,
+    component: RunPlatform,
     to: 'workspace-project-job-running-platform',
     show: true
   },
   {
     id: 1,
     name: 'Curl',
-    component: JobRunCurl,
+    component: RunCurl,
     to: 'workspace-project-job-running-curl',
     show: true
   },
   {
     id: 2,
     name: 'Python',
-    component: JobRunPython,
+    component: RunPython,
     to: 'workspace-project-job-running-python',
     show: true
   }

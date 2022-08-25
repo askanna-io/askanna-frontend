@@ -20,7 +20,7 @@
         <v-form ref="newProjectFastForm" @submit.prevent="handlerCreateProject">
           <v-col cols="12" class="pb-0">
             <v-text-field
-              v-model="projectStore.projectName.value"
+              v-model="projectStore.project.name"
               @input="handleOnInput"
               small
               dense
@@ -38,7 +38,7 @@
               outlined
               color="secondary"
               class="mr-1 btn--hover"
-              :disabled="!projectStore.projectName.value"
+              :disabled="!projectStore.project.name"
               @click="handlerCreateProject"
             >
               Create
@@ -58,9 +58,9 @@
 import { ref, computed } from '@vue/composition-api'
 import usePermission from '@/core/composition/usePermission'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
+import { useProjectStore } from '@/features/project/useProjectStore'
 import useValidationRules from '@/core/composition/useValidationRules'
 import { useProjectsStore } from '@/features/projects/useProjectsStore'
-import useProjectStore from '@/features/project/composition/useProjectStore'
 
 const router = useRouterAskAnna()
 const permission = usePermission()
@@ -98,7 +98,7 @@ const handlerCreateProject = async () => {
   menu.value = false
   isFormValid.value = false
   projectStore.resetProjectData()
-  projectStore.projectName.value = ''
+  projectStore.project.name = ''
 }
 
 const handleOnInput = val => {

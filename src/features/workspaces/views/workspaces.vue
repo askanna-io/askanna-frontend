@@ -57,8 +57,8 @@
 import { ref, computed } from '@vue/composition-api'
 import useSanitizeHTML from '@/core/composition/useSanitizeHTML'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
+import { useWorkspaceStore } from '@/features/workspace/useWorkspaceStore'
 import { useWorkspacesStore } from '@/features/workspaces/useWorkspacesStore'
-import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 
 import WorkspacesToolbar from '@/features/workspaces/components/WorkspacesToolbar.vue'
 import WorkspacesCardItem from '@/features/workspaces/components/WorkspacesCardItem.vue'
@@ -94,7 +94,7 @@ const handleOpenWorkspaceRemove = item => {
 const handleCloseWorkspaceRemove = () => (deleteWorkspaceConfirmPopup.value = false)
 
 const handleDeleteConfirmWorkspace = async () => {
-  await workspaceStore.actions.deleteWorkspace(workspace.value)
+  await workspaceStore.deleteWorkspace(workspace.value)
   deleteWorkspaceConfirmPopup.value = false
 
   await workspacesStore.getAllWorkspaces()

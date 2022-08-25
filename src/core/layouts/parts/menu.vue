@@ -95,90 +95,50 @@
   </div>
 </template>
 
-<script>
-import useProjectStore from '@project/composition/useProjectStore'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-
+<script setup lang="ts">
 import useTitle from '@/core/composition/useTitle'
-import { useAuthStore } from '@/features/auth/useAuthStore'
+import { ref, computed } from '@vue/composition-api'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
+import { useWorkspaceStore } from '@/features/workspace/useWorkspaceStore'
+import { useWorkspacesStore } from '@/features/workspaces/useWorkspacesStore'
 
-import { computed, defineComponent } from '@vue/composition-api'
-import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
+useTitle()
+const workspaceStore = useWorkspaceStore()
+const { route, router } = useRouterAskAnna()
+const workspacesStore = useWorkspacesStore()
 
-export default defineComponent({
-  name: 'AskAnnaMainMenu',
-
-  setup(_, context) {
-    useTitle(context)
-    const authStore = useAuthStore()
-    const router = useRouterAskAnna()
-    const projectStore = useProjectStore()
-    const workspaceStore = useWorkspaceStore()
-
-    const logout = () => authStore.logout()
-    const workspaces = computed(() => workspaceStore.workspaces.value.results)
-
-    const isMember = computed(() => workspaceStore.workspace.value.is_member)
-    const showAppBarIcon = computed(() => !context.root.$route.meta?.hideAppBarIcon)
-    const workspaceShortUuid = computed(() => workspaceStore.workspace.value.short_uuid)
-
-    const profileRoute = computed(() => {
-      if (isMember.value) {
-        return { name: 'workspace-profile', params: { workspaceId: workspaceShortUuid.value } }
-      }
-      return { name: 'profile' }
-    })
-
-    const handleChangeWorkspace = ({ short_uuid }) => {
-      if (workspaceShortUuid.value === short_uuid && context.root.$route.name !== 'projects') return
-      router.push({ path: `/${short_uuid}`, params: { workspace: short_uuid } })
-    }
-
-    const handleOpen = name => router.push({ name })
-
-    return {
-      isMember,
-      profileRoute,
-      showAppBarIcon,
-      ...projectStore,
-      logout,
-      workspaces,
-      workspaceShortUuid,
-
-      handleOpen,
-      handleChangeWorkspace
-    }
+const project = ref('')
+const menu = ref(false)
+const projects = [
+  { text: 'Your workspaces', icon: 'fas fa-project-diagram' },
+  { text: 'Shared workspaces', icon: '  ' }
+]
+const projectsList = [
+  {
+    icon: 'mdi-semantic-web',
+    iconClass: 'grey lighten-1 white--text',
+    title: 'AskAnna startup',
+    subtitle: 'AskAnna'
   },
+  {
+    icon: 'mdi-semantic-web',
+    iconClass: 'grey lighten-1 white--text',
+    title: 'AskAnna HQ',
+    subtitle: 'Andrii Shapovalov'
+  },
+  {
+    icon: 'mdi-semantic-web',
+    iconClass: 'grey lighten-1 white--text',
+    title: 'AskAnna Sandbox',
+    subtitle: 'Andrii Shapovalov'
+  }
+]
 
-  data: () => ({
-    text: '',
-    project: '',
-    menu: false,
-    items: [{ title: 'Workspace', name: 'workspace', icon: 'mdi-view-dashboard' }],
-    projects: [
-      { text: 'Your workspaces', icon: 'fas fa-project-diagram' },
-      { text: 'Shared workspaces', icon: '  ' }
-    ],
-    projectsList: [
-      {
-        icon: 'mdi-semantic-web',
-        iconClass: 'grey lighten-1 white--text',
-        title: 'AskAnna startup',
-        subtitle: 'AskAnna'
-      },
-      {
-        icon: 'mdi-semantic-web',
-        iconClass: 'grey lighten-1 white--text',
-        title: 'AskAnna HQ',
-        subtitle: 'Andrii Shapovalov'
-      },
-      {
-        icon: 'mdi-semantic-web',
-        iconClass: 'grey lighten-1 white--text',
-        title: 'AskAnna Sandbox',
-        subtitle: 'Andrii Shapovalov'
-      }
-    ]
-  })
-})
+const workspaces = computed(() => workspacesStore.workspaces.results)
+const workspaceShortUuid = computed(() => workspaceStore.workspace.short_uuid)
+
+const handleChangeWorkspace = ({ short_uuid }) => {
+  if (workspaceShortUuid.value === short_uuid && route.value.name !== 'projects') return
+  router.push({ path: `/${short_uuid}`, params: { workspace: short_uuid } })
+}
 </script>

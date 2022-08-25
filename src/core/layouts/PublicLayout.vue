@@ -69,11 +69,11 @@ import { useMobileStore } from '@/core/store/useMobileStore'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import TheSnackBar from '@/core/components/snackBar/TheSnackBar.vue'
 
+import { useProjectStore } from '@/features/project/useProjectStore'
 import { useProjectsStore } from '@/features/projects/useProjectsStore'
 import UpdateApp from '@/core/components/shared/updateApp/UpdateApp.vue'
 import { computed, onUpdated, onBeforeMount } from '@vue/composition-api'
 import MobilePublicMainMenu from './parts/mobile/MobilePublicMainMenu.vue'
-import useProjectStore from '@/features/project/composition/useProjectStore'
 import { useWorkspacesStore } from '@/features/workspaces/useWorkspacesStore'
 
 useTitle()
@@ -104,7 +104,7 @@ const handleOpenMenu = () => {
   mobileStore.isMenuSticked = window.pageYOffset > 1
 }
 
-const handleChangeSticked = () => (projectStore.stickedVM.value = !projectStore.stickedVM.value)
+const handleChangeSticked = () => (projectStore.menu.sticked = !projectStore.menu.sticked)
 
 onBeforeMount(() => fetchData())
 

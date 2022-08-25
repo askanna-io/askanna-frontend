@@ -59,9 +59,10 @@
 import { computed } from '@vue/composition-api'
 import usePermission from '@/core/composition/usePermission'
 import useSanitizeHTML from '@/core/composition/useSanitizeHTML'
+import { usePeopleStore } from '@/features/people/usePeopleStore'
 import WorkspaceProjectCardItem from './WorkspaceProjectCardItem.vue'
 import WorkspaceProjectListItem from './WorkspaceProjectListItem.vue'
-import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
+import { useWorkspaceProjectsStore } from '@/features/workspace/useWorkspaceProjectsStore'
 
 defineProps({
   workspaceName: {
@@ -93,10 +94,11 @@ defineProps({
 })
 
 const permission = usePermission()
+const peopleStore = usePeopleStore()
 const sanitizeHTML = useSanitizeHTML()
-const workspaceStore = useWorkspaceStore()
+const workspaceProjectsStore = useWorkspaceProjectsStore()
 
 const isSignIn = computed(() => permission.token)
-const loading = computed(() => workspaceStore.loading.value.projects)
-const isWorkspaceViewer = computed(() => workspaceStore.currentPeople.value.role.code === 'WV')
+const loading = computed(() => workspaceProjectsStore.loading)
+const isWorkspaceViewer = computed(() => peopleStore.currentPeople.role.code === 'WV')
 </script>

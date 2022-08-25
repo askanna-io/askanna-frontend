@@ -1,5 +1,5 @@
 <template>
-  <ask-anna-loading-progress :loading="loadingPackages">
+  <ask-anna-loading-progress :loading="packagesStore.loadingPackages">
     <v-row align="center" justify="center">
       <v-col cols="12" class="pt-0">
         <v-data-table
@@ -9,7 +9,7 @@
           :mobile-breakpoint="0"
           :headers="headersComputed"
           :options="{ itemsPerPage: -1 }"
-          :items="projectPackages.results"
+          :items="packagesStore.projectPackages.results"
           class="job-table askanna-table scrollbar cursor--pointer"
           @click:row="handleClickRow"
         >
@@ -99,24 +99,26 @@
 
 <script lang="ts">
 import { throttle } from 'lodash'
-import { useRouter, useWindowSize } from '@u3u/vue-hooks'
 import useCopy from '@/core/composition/useCopy'
 import useQuery from '@/core/composition/useQuery'
 import useMoment from '@/core/composition/useMoment'
+import { useRouter, useWindowSize } from '@/core/plugins/vue-hooks'
 import useSlicedText from '@/core/composition/useSlicedText'
 import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
+import { useProjectStore } from '@/features/project/useProjectStore'
+import { usePackagesStore } from '@/features/packages/usePackagesStore'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
-import useProjectStore from '@/features/project/composition/useProjectStore'
 import PackageToolbar from '@/features/package/components/PackageToolbar.vue'
-import usePackagesStore from '@/features/packages/composition/usePackagesStore'
 import { computed, defineComponent, onBeforeMount } from '@vue/composition-api'
+import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 
 export default defineComponent({
   name: 'history',
 
   components: {
-    PackageToolbar
+    PackageToolbar,
+    AskAnnaLoadingProgress
   },
 
   setup(_, context) {
@@ -131,9 +133,10 @@ export default defineComponent({
     const forceFileDownload = useForceFileDownload()
     const breadcrumbs = useBreadcrumbs({ start: 2 })
 
-    const sticked = computed(() => !projectStore.stickedVM.value)
-    const next = computed(() => packagesStore.projectPackages.value.next)
-    const packageId = computed(() => projectStore.project.value.package.short_uuid)
+    const sticked = computed(() => !projectStore.menu.sticked)
+    const next = computed(() => packagesStore.projectPackages.next)
+    const packageId = computed(() => projectStore.project.package.short_uuid)
+
     const { projectId } = route.value.params
 
     const query = useQuery({
@@ -262,7 +265,6 @@ export default defineComponent({
 
     return {
       ...moment,
-      ...packagesStore,
       sticked,
       headers,
       throttle,
@@ -271,6 +273,7 @@ export default defineComponent({
       packageId,
       slicedText,
       handleCopy,
+      packagesStore,
       headersComputed,
       breadcrumbsComputed,
 

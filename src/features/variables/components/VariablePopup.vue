@@ -1,6 +1,6 @@
 <template>
   <v-dialog
-    v-model="variablePopupVmodel"
+    v-model="variablesStore.variablePopup"
     max-width="500px"
     persistent
     @click:outside="handleClose"
@@ -89,8 +89,8 @@
 </template>
 <script setup lang="ts">
 import useValidationRules from '@/core/composition/useValidationRules'
+import { useVariablesStore } from '@/features/variables/useVariablesStore'
 import { ref, reactive, computed, onBeforeUnmount } from '@vue/composition-api'
-import useVariablesStore from '@/features/variables/composition/useVariablesStore'
 import VariableConfirmDeletePopup from '@/features/variables/components/VariableConfirmDeletePopup.vue'
 
 const props = defineProps({
@@ -112,10 +112,9 @@ const errorData = reactive({
 const reset = () => variableFormRef.value.reset()
 const resetValidation = () => variableFormRef.value.resetValidation()
 
-const { setVariable, resetVariable, createVariable, updateVariable, deleteVariable, variablePopupVmodel } =
-  variablesStore
+const { setVariable, resetVariable, createVariable, updateVariable, deleteVariable } = variablesStore
 
-const variable = computed(() => variablesStore.variable.value)
+const variable = computed(() => variablesStore.variable)
 
 const state = reactive({
   dialog: false,
@@ -159,7 +158,7 @@ const handleClose = async () => {
 
   state.isSaved = true
   state.isValueChanged = false
-  variablePopupVmodel.value = false
+  variablesStore.variablePopup = false
 }
 
 const handleCloseDelete = () => {

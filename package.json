@@ -24,7 +24,6 @@
     "@tiptap/vue-2": "2.0.0-beta.77",
     "@types/lodash": "4.14.178",
     "@types/numeral": "2.0.2",
-    "@u3u/vue-hooks": "2.0.1",
     "@vue/composition-api": "1.4.9",
     "axios": "0.21.1",
     "blueimp-canvas-to-blob": "^3.29.0",
@@ -65,8 +64,6 @@
     "vue-router": "^3.5.3",
     "vue-sticky-directive": "0.0.10",
     "vuetify": "2.6.6",
-    "vuex": "^3.6.2",
-    "vuex-persistedstate": "3.1.0",
     "xlsx": "0.18.4"
   },
   "devDependencies": {
@@ -83,7 +80,6 @@
     "@vue/cli-plugin-pwa": "~4.5.15",
     "@vue/cli-plugin-router": "~4.5.15",
     "@vue/cli-plugin-typescript": "4.5.15",
-    "@vue/cli-plugin-vuex": "~4.5.15",
     "@vue/cli-service": "~4.5.15",
     "@vue/eslint-config-prettier": "^6.0.0",
     "@vue/eslint-config-typescript": "^7.0.0",

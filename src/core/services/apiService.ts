@@ -1,5 +1,5 @@
-import $axios from '@/core/plugins/axios'
 import { api } from './api-settings'
+import $axios from '@/core/plugins/axios'
 import { Method, ResponseType, AxiosTransformer } from 'axios'
 
 interface ServiceParams {

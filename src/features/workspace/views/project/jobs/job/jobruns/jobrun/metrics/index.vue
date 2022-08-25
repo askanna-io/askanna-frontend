@@ -79,7 +79,7 @@ const metricStore = useMetricStore()
 const chartDownload = useChartDownload()
 const forceFileDownload = useForceFileDownload()
 
-const { jobRunId: uuid } = router.route.value.params
+const { runId: uuid } = router.route.value.params
 
 const views = [
   { name: 'Table', value: 'table', icon: 'mdi-table' },

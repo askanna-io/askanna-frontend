@@ -1,7 +1,7 @@
 <template>
   <v-card class="mx-auto" flat>
     <ask-anna-loading-progress :type="'table-row'" :loading="loading">
-      <job-runs
+      <runs
         :items="runs"
         :count="count"
         :itemsPerPage="25"
@@ -17,15 +17,12 @@
 import { useRunsStore } from '@/features/runs/useRunsStore'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import { ref, onBeforeMount, computed } from '@vue/composition-api'
-import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
 
-import JobRuns from '@/features/jobrun/components/JobRuns.vue'
+import Runs from '@/features/runs/components/Runs.vue'
 import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 
-const { route } = useRouterAskAnna()
-const jobRunStore = useJobRunStore()
-
 const runsStore = useRunsStore()
+const { route } = useRouterAskAnna()
 
 const { jobId: uuid } = route.value.params
 

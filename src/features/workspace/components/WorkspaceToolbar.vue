@@ -131,7 +131,7 @@
   </v-toolbar>
 </template>
 <script setup lang="ts">
-import { useRouter } from '@u3u/vue-hooks'
+import { useRouter } from '@/core/plugins/vue-hooks'
 import { computed } from '@vue/composition-api'
 import useSortFilter from '@/core/composition/useSortFilter'
 import usePermission from '@/core/composition/usePermission'

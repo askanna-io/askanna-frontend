@@ -109,12 +109,12 @@
 import { set } from 'lodash'
 import { ref, computed } from '@vue/composition-api'
 import usePermission from '@/core/composition/usePermission'
-import { useSnackBar } from '@/core/components/snackBar/useSnackBar'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
+import { useSnackBar } from '@/core/components/snackBar/useSnackBar'
 import useValidationRules from '@/core/composition/useValidationRules'
+import { useWorkspaceStore } from '@/features/workspace/useWorkspaceStore'
 import { useWorkspacesStore } from '@/features/workspaces/useWorkspacesStore'
 import AskAnnaDescription from '@/core/components/shared/AskAnnaDescription.vue'
-import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 import ChangeWorkspaceVisibilityPopup from '@/features/workspace/components/workspace-edit/ChangeWorkspaceVisibilityPopup.vue'
 
 const snackBar = useSnackBar()
@@ -128,7 +128,7 @@ const isStateNotChanged = ref(true)
 const isVisibilityChanged = ref(false)
 const isShowConfirmChangeVisibility = ref(false)
 
-const workspace = computed(() => workspaceStore.workspace.value)
+const workspace = computed(() => workspaceStore.workspace)
 
 const workspaceState = ref({
   name: workspace.value.name,

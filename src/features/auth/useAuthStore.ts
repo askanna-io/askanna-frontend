@@ -1,8 +1,6 @@
-import axios from 'axios'
 import router from '@/core/router'
 import { defineStore } from 'pinia'
 import * as Sentry from '@sentry/browser'
-import { api } from '@/core/services/api-settings'
 import apiService from '@/core/services/apiService'
 import { useLogger } from '@/core/composition/useLogger'
 import { apiStringify } from '@/core/services/api-settings'

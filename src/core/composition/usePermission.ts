@@ -1,33 +1,28 @@
-import { useRouter } from '@u3u/vue-hooks'
+import { useRouter } from '@/core/plugins/vue-hooks'
 import { computed } from '@vue/composition-api'
-import { PERMISSIONS_LABELS } from '@/features/workspace/store/const'
-import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
+import { PERMISSIONS_LABELS } from '@/features/workspace/const'
+import { usePeopleStore } from '@/features/people/usePeopleStore'
 
 export default () => {
   const { route } = useRouter()
-  const workspaceStore = useWorkspaceStore()
+  const peopleStore = usePeopleStore()
 
   const token = computed(() => window.localStorage.getItem('token'))
 
   const isWorkspaceViewer = computed(
-    () =>
-      !token.value ||
-      !workspaceStore.state.currentPeople.value.role.code ||
-      workspaceStore.state.currentPeople.value.role.code === 'WV'
+    () => !token.value || !peopleStore.currentPeople.role.code || peopleStore.currentPeople.role.code === 'WV'
   )
 
   const isAllowedToView = computed(() => {
     const routePermission =
-      workspaceStore.getters.currentPeoplePermission.value &&
-      workspaceStore.getters.currentPeoplePermission.value[route.value.meta?.permission]
+      peopleStore.currentPeoplePermission && peopleStore.currentPeoplePermission[route.value.meta?.permission]
 
     return typeof routePermission === 'undefined' || routePermission
   })
 
+  // @TODO ref to use lodash get
   const getFor = (label: string) =>
-    workspaceStore.getters.currentPeoplePermission.value
-      ? !!workspaceStore.getters.currentPeoplePermission.value[label]
-      : false
+    peopleStore.currentPeoplePermission ? !!peopleStore.currentPeoplePermission[label] : false
 
   return {
     getFor,

@@ -5,11 +5,11 @@
 import { computed } from '@vue/composition-api'
 
 import JobNavBar from './JobNavBar.vue'
+import RunNavBar from './RunNavBar.vue'
 import DefaultBar from './DefaultBar.vue'
-import JobRunNavBar from './JobRunNavBar.vue'
 import JobNavBarNotExist from './JobNavBarNotExist.vue'
 import PackageBarNotExist from './PackageBarNotExist.vue'
-import JobRunNavBarNotExist from './JobRunNavBarNotExist.vue'
+import RunNavBarNotExist from './RunNavBarNotExist.vue'
 
 const props = defineProps({
   routeName: {
@@ -28,7 +28,9 @@ const props = defineProps({
     type: Object,
     default: function () {
       return {
-        name: ''
+        name: '',
+        description: '',
+        permission: {}
       }
     }
   },
@@ -83,12 +85,12 @@ const types = [
   },
   {
     routes: 'workspace-project-jobs-job-jobrun',
-    component: JobRunNavBar,
+    component: RunNavBar,
     comporasionFn: () => props.routeName.indexOf('workspace-project-jobs-job-jobrun') !== -1
   },
   {
     routes: 'workspace-project-job-run-does-not-exist',
-    component: JobRunNavBarNotExist,
+    component: RunNavBarNotExist,
     comporasionFn: item => item.routes === props.routeName
   }
 ]

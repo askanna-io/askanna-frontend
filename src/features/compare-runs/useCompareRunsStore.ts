@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { set, map, uniqBy } from 'lodash'
+import { Run } from '@/features/run/types'
 import apiService from '@/core/services/apiService'
-import { JobRun } from '@/features/jobrun/store/types'
 import { useLogger } from '@/core/composition/useLogger'
 import { apiStringify } from '@/core/services/api-settings'
 import useMapMetrics, { MetricItem, MetricRowItem, RowItem } from './useMapMetrics'
@@ -21,12 +21,12 @@ export const useCompareRunsStore = defineStore('compare-runs', {
       isResultExist: false,
       isArtifacExist: false,
       isVariableExist: false,
-      runs: { next: '', previous: '', count: 0, results: [] as JobRun[] },
+      runs: { next: '', previous: '', count: 0, results: [] as Run[] },
       labels: [] as MetricItem[],
       metrics: [] as RowItem[],
       variables: [] as RowItem[],
       variableLabels: [] as MetricItem[],
-      jobRunsLoading: true,
+      runIdsLoading: true,
       runIds: [] as string[],
       metricParams: {
         next: '',
@@ -129,13 +129,13 @@ export const useCompareRunsStore = defineStore('compare-runs', {
     },
 
     async getRunsJob({ uuid, params }) {
-      this.jobRunsLoading = true
+      this.runIdsLoading = true
 
       let runs = {
         count: 0,
         next: '',
         previous: '',
-        results: [] as JobRun[]
+        results: [] as Run[]
       }
 
       try {
@@ -149,7 +149,7 @@ export const useCompareRunsStore = defineStore('compare-runs', {
         const logger = useLogger()
 
         logger.error('Error on runs job in getRunsJob action.\nError: ', e)
-        this.jobRunsLoading = false
+        this.runIdsLoading = false
 
         return
       }
@@ -193,7 +193,7 @@ export const useCompareRunsStore = defineStore('compare-runs', {
         this.variables = [...this.variables, ...resultVariable]
       }
 
-      this.jobRunsLoading = false
+      this.runIdsLoading = false
     },
 
     async loadMoreMetrics() {

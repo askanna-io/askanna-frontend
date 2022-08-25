@@ -1,12 +1,12 @@
 import Vue from 'vue'
 import './core/components'
 import VueAxios from 'vue-axios'
-import hooks from '@u3u/vue-hooks'
+import { app, router } from './core'
 import Beta from '@/core/plugins/beta'
 import VueFileAgent from 'vue-file-agent'
 import $axios from '@/core/plugins/axios'
 import Sticky from 'vue-sticky-directive'
-import { app, router, store } from './core'
+import hooks from '@/core/plugins/vue-hooks'
 import vuetify from '@/core/plugins/vuetify'
 import 'vue-file-agent/dist/vue-file-agent.css'
 import VueCompositionApi from '@vue/composition-api'
@@ -91,7 +91,6 @@ router.beforeEach((to, previus, next) => {
 new Vue({
   router,
   pinia,
-  store,
   vuetify,
   render: h => h(app)
 }).$mount('#app')

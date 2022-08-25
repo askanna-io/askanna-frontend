@@ -46,31 +46,31 @@ import usePermission from '@/core/composition/usePermission'
 import { computed, onBeforeMount } from '@vue/composition-api'
 import Project from '@/features/project/components/Project.vue'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
+import { useProjectStore } from '@/features/project/useProjectStore'
 import { useProjectsStore } from '@/features/projects/useProjectsStore'
-import useProjectStore from '@/features/project/composition/useProjectStore'
-import useWorkSpaceStore from '@/features/workspace/composition/useWorkSpaceStore'
+import { useWorkspaceStore } from '@/features/workspace/useWorkspaceStore'
 
 const router = useRouterAskAnna()
 const permission = usePermission()
 const projectStore = useProjectStore()
 const projectsStore = useProjectsStore()
-const workSpaceStore = useWorkSpaceStore()
+const workSpaceStore = useWorkspaceStore()
 
-const workspaceName = computed(() => workSpaceStore.workspace.value.name)
-const workspaceProjectVisibility = computed(() => workSpaceStore.state.workspace.value.visibility)
+const workspaceName = computed(() => workSpaceStore.workspace.name)
+const workspaceProjectVisibility = computed(() => workSpaceStore.workspace.visibility)
 const workspaceProjectCreate = computed(() => permission.getFor(permission.labels.workspaceProjectCreate))
 
 const fetchData = async () => await projectStore.getProjectTemplates()
 
 onBeforeMount(() => fetchData())
 
-const projectData = computed(() => projectStore.project.value)
-const projectTemplates = computed(() => projectStore.projectTemplates.value)
+const projectData = computed(() => projectStore.project)
+const projectTemplates = computed(() => projectStore.projectTemplates)
 
 const breadcrumbs = computed(() => [
   {
-    title: workSpaceStore.workspace.value.name,
-    to: `/${workSpaceStore.workspace.value.short_uuid}`,
+    title: workSpaceStore.workspace.name,
+    to: `/${workSpaceStore.workspace.short_uuid}`,
     disabled: false
   },
   {

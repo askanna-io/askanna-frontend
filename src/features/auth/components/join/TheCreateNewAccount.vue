@@ -67,15 +67,15 @@
 
 <script setup lang="ts">
 import { useAuthStore } from '@/features/auth/useAuthStore'
+import { usePeopleStore } from '@/features/people/usePeopleStore'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
+import { ref, watch, reactive, computed } from '@vue/composition-api'
 import useValidationRules from '@/core/composition/useValidationRules'
-import { ref, watch, toRefs, reactive, computed } from '@vue/composition-api'
-import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 
 const authStore = useAuthStore()
 const router = useRouterAskAnna()
+const peopleStore = usePeopleStore()
 const { RULES } = useValidationRules()
-const workspaceStore = useWorkspaceStore()
 
 const { token, peopleId, workspaceId } = router.route.value.params
 const loadingTexts = ['Creating accout', 'Sign in', 'Accept invitataion', 'Join to workspace']
@@ -89,10 +89,10 @@ const isShowPassword = ref(false)
 
 const formData = reactive({
   name: '',
-  email: workspaceStore.invitation.value.email || '',
   username: '',
   password: '',
-  terms_of_use: false
+  terms_of_use: false,
+  email: peopleStore.invitation.email || ''
 })
 
 let error = reactive({
@@ -142,7 +142,7 @@ const handleLogin = async () => {
   if (account && account.short_uuid && auth && auth.key) {
     step.value = 2
 
-    invatation = await workspaceStore.actions.acceptInvitetion({
+    invatation = await peopleStore.acceptInvitetion({
       token,
       peopleId,
       workspaceId

@@ -4,7 +4,7 @@
   </li>
 </template>
 <script setup lang="ts">
-import { useWindowSize } from '@u3u/vue-hooks'
+import { useWindowSize } from '@/core/plugins/vue-hooks'
 import { computed } from '@vue/composition-api'
 import ComparisonListItemEnv from './ComparisonListItemEnv.vue'
 import ComparisonListItemText from './ComparisonListItemText.vue'
@@ -18,7 +18,7 @@ import ComparisonListItemDuration from './ComparisonListItemDuration.vue'
 import AskAnnaChipStatus from '@/core/components/shared/AskAnnaChipStatus.vue'
 import AskAnnaTextSlicedCopy from '@/core/components/shared/AskAnnaTextSlicedCopy.vue'
 import AskAnnaLinkCopyOnHover from '@/core/components/shared/AskAnnaLinkCopyOnHover.vue'
-import JobRunInfoAvatar from '@/features/jobrun/components/jobrun/parts/JobRunInfoAvatar.vue'
+import RunInfoAvatar from '@/features/run/components/parts/RunInfoAvatar.vue'
 
 const props = defineProps({
   value: {
@@ -90,7 +90,7 @@ const components = [
   },
   {
     type: ['by'],
-    component: JobRunInfoAvatar
+    component: RunInfoAvatar
   },
   {
     type: ['trigger'],

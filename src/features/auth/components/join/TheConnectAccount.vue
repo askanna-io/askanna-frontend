@@ -57,15 +57,15 @@
 import { get } from 'lodash'
 import { useAuthStore } from '@/features/auth/useAuthStore'
 import { ref, reactive, computed } from '@vue/composition-api'
+import { usePeopleStore } from '@/features/people/usePeopleStore'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import JoinExistingAccountPopup from './JoinExistingAccountPopup.vue'
 import useValidationRules from '@/core/composition/useValidationRules'
-import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 
 const authStore = useAuthStore()
 const router = useRouterAskAnna()
+const peopleStore = usePeopleStore()
 const { RULES } = useValidationRules()
-const workspaceStore = useWorkspaceStore()
 
 const { token, peopleId, workspaceId, workspaceName } = router.route.value.params
 const loadingTexts = ['Login on AskAnna', 'Accept invitataion', 'Join to workspace']
@@ -113,7 +113,7 @@ const handleLogin = async () => {
   if (auth && auth.key) {
     step.value = 1
 
-    result = await workspaceStore.acceptInvitetion({
+    result = await peopleStore.acceptInvitetion({
       token,
       peopleId,
       workspaceId

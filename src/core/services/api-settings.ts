@@ -36,7 +36,7 @@ export const api: ApiSettings = {
     jobs: {
       list: () => `job/`,
       jobs: id => `project/${id}/jobs/`,
-      getLastJobRun: id => `job/${id}/runs/`
+      getLastRun: id => `job/${id}/runs/`
     },
     project: {
       get: id => `project/${id}/`,
@@ -73,21 +73,21 @@ export const api: ApiSettings = {
       stop: id => `job/${id}/stop/`,
       result: id => `job/${id}/result/`,
       runs: id => `job/${id}/runs/`,
-      getJobRun: id => `runinfo/${id}/`,
+      getRun: id => `runinfo/${id}/`,
       jobrunStatus: id => `status/${id}/`,
-      getJobRunPayload: ({ jobRunShortId, payloadUuid }) => `runinfo/${jobRunShortId}/payload/${payloadUuid}/`
+      getRunPayload: ({ runShortId, payloadUuid }) => `runinfo/${runShortId}/payload/${payloadUuid}/`
     },
-    jobrun: {
+    run: {
       get: id => `runinfo/${id}/`,
       runs: id => `job/${id}/runs/`,
       delete: id => `runinfo/${id}/`,
-      getJobRun: id => `runinfo/${id}/`,
-      getJobRunResult: id => `result/${id}/`,
-      getJobRunLog: id => `log/${id}/`,
-      getDownloadLink: ({ jobRunShortId, artifactShortId }) =>
-        `runinfo/${jobRunShortId}/artifact/${artifactShortId}/download/`,
-      getJobRunPayload: ({ jobRunShortId, payloadUuid }) => `runinfo/${jobRunShortId}/payload/${payloadUuid}/`,
-      getJobRunArtifact: ({ jobRunShortId, artifactShortId }) => `runinfo/${jobRunShortId}/artifact/${artifactShortId}/`
+      getRun: id => `runinfo/${id}/`,
+      getRunResult: id => `result/${id}/`,
+      getRunLog: id => `log/${id}/`,
+      getDownloadLink: ({ runShortId, artifactShortId }) =>
+        `runinfo/${runShortId}/artifact/${artifactShortId}/download/`,
+      getRunPayload: ({ runShortId, payloadUuid }) => `runinfo/${runShortId}/payload/${payloadUuid}/`,
+      getRunArtifact: ({ runShortId, artifactShortId }) => `runinfo/${runShortId}/artifact/${artifactShortId}/`
     },
     workspace: {
       list: () => `workspace/`,
@@ -100,7 +100,7 @@ export const api: ApiSettings = {
       changeRole: ({ workspaceId, peopleId }) => `workspace/${workspaceId}/people/${peopleId}/`,
       acceptInvitetion: ({ workspaceId, peopleId }) => `workspace/${workspaceId}/people/${peopleId}/`,
       getProjectPackages: id => `project/${id}/packages/`,
-      getWorkspacePeople: id => `workspace/${id}/people/`,
+      getPeople: id => `workspace/${id}/people/`,
       setPeopleAvatar: ({ workspaceId, peopleId }) => `workspace/${workspaceId}/people/${peopleId}/avatar/`
     },
     result: {
@@ -118,14 +118,14 @@ export const api: ApiSettings = {
       updateAccount: id => `accounts/${id}/`
     },
     metric: {
-      getMetric: jobRunShortId => `runinfo/${jobRunShortId}/metrics/`,
-      getMetricMeta: jobRunShortId => `runinfo/${jobRunShortId}/`
+      getMetric: runShortId => `runinfo/${runShortId}/metrics/`,
+      getMetricMeta: runShortId => `runinfo/${runShortId}/`
     },
     runifo: {
-      getVariables: jobRunShortId => `runinfo/${jobRunShortId}/variables/`
+      getVariables: runShortId => `runinfo/${runShortId}/variables/`
     },
     variable: {
-      getVariables: jobRunShortId => `runinfo/${jobRunShortId}/variables/`
+      getVariables: runShortId => `runinfo/${runShortId}/variables/`
     }
   }
 }

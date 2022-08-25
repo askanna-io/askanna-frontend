@@ -9,7 +9,7 @@
           :class="{ 'py-0': $vuetify.breakpoint.xsOnly }"
         >
           <v-row>
-            <v-col cols="12"><JobRunInfoCopyText text="SUUID" :value="job.short_uuid" /></v-col>
+            <v-col cols="12"><RunInfoCopyText text="SUUID" :value="job.short_uuid" /></v-col>
             <v-col cols="12">
               <AskAnnaLinkCopy
                 text="Code: "
@@ -20,7 +20,7 @@
               />
             </v-col>
             <v-col cols="12"
-              ><job-run-info-env
+              ><run-info-env
                 text="Environment"
                 :fullMode="false"
                 :value="environment"
@@ -112,8 +112,8 @@
 import { computed } from '@vue/composition-api'
 import NotificationsEmail from './NotificationsEmail.vue'
 import AskAnnaLinkCopy from '@/core/components/shared/AskAnnaLinkCopy.vue'
-import JobRunInfoEnv from '@/features/jobrun/components/jobrun/parts/JobRunInfoEnv.vue'
-import JobRunInfoCopyText from '@/features/jobrun/components/jobrun/parts/JobRunInfoCopyText.vue'
+import RunInfoEnv from '@/features/run/components/parts/RunInfoEnv.vue'
+import RunInfoCopyText from '@/features/run/components/parts/RunInfoCopyText.vue'
 
 const emits = defineEmits(['handleGoToCode'])
 const props = defineProps({

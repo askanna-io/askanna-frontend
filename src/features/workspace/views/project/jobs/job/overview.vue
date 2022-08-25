@@ -13,7 +13,7 @@
       :schedules="schedules"
       :routeParams="routeParams"
       :to="'workspace-project-code'"
-      :lastPackage="projectStore.lastPackage.value"
+      :lastPackage="projectStore.lastPackage"
       @handleGoToCode="handleGoToCode"
     />
     <v-divider v-if="projectRunCreate" />
@@ -28,7 +28,7 @@ import useCronstrue from '@/core/composition/useCronstrue'
 import usePermission from '@/core/composition/usePermission'
 import { computed, onBeforeMount } from '@vue/composition-api'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import useProjectStore from '@/features/project/composition/useProjectStore'
+import { useProjectStore } from '@/features/project/useProjectStore'
 
 import JobDefinition from '@job/components/overview/JobDefinition.vue'
 import JobRunning from '@/features/job/components/overview/JobRunning.vue'
@@ -59,10 +59,10 @@ const schedules = computed(() =>
 const handleGoToCode = () =>
   router.push({
     name: 'workspace-project-code',
-    params: { projectId, workspaceId, packageId: projectStore.lastPackage.value.short_uuid }
+    params: { projectId, workspaceId, packageId: projectStore.lastPackage.short_uuid }
   })
 
-const routeParams = computed(() => ({ projectId, workspaceId, packageId: projectStore.lastPackage.value.short_uuid }))
+const routeParams = computed(() => ({ projectId, workspaceId, packageId: projectStore.lastPackage.short_uuid }))
 
 const fetchData = async () => {
   await projectStore.getLastPackage(projectId)

@@ -5,11 +5,11 @@
         :job="job"
         :routeName="routeName"
         :handleOnStick="handleOnStick"
-        :sticked="projectStore.stickedVM.value"
+        :project="projectStore.project"
+        :sticked="projectStore.menu.sticked"
         :projectBreadcrumbs="projectBreadcrumbs"
-        :project="projectStore.state.project.value"
         :handleShowProjectBar="handleShowProjectBar"
-        :isShowProjectBar="projectStore.state.menu.isShowProjectBar"
+        :isShowProjectBar="projectStore.menu.isShowProjectBar"
       />
       <router-view />
     </v-card>
@@ -23,16 +23,16 @@
 </template>
 
 <script setup lang="ts">
-import useProjectStore from '@/features/project/composition/useProjectStore'
-
-import { useRouter } from '@u3u/vue-hooks'
+import { useRouter } from '@/core/plugins/vue-hooks'
+import useProject from '@/features/project/useProject'
 import { useJobStore } from '@/features/job/useJobStore'
 import { ref, watch, computed } from '@vue/composition-api'
 import { useFileStore } from '@/features/file/useFileStore'
 import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
-import useProject from '@/features/project/composition/useProject'
 import useFileExtension from '@/core/composition/useFileExtension'
-import usePackageStore from '@/features/package/composition/usePackageStore'
+import { useProjectStore } from '@/features/project/useProjectStore'
+import { usePackageStore } from '@/features/package/usePackageStore'
+
 import ProjectNavBar from '@/features/project/components/nav-bars/ProjectNavBar.vue'
 import PreviewFileTypeMardown from '@/features/file/components/PreviewFileTypeMardown.vue'
 
@@ -54,28 +54,24 @@ const end = computed(() => (route.value.name === 'workspace-project-job-overiew'
 const projectBreadcrumbs = useBreadcrumbs({ start: 0, end: end.value })
 
 const readmeFile = computed(() =>
-  packageStore.packageData.value.files.find(item => item.parent === '/' && item.name.toLowerCase() === 'readme.md')
+  packageStore.packageData.files.find(item => item.parent === '/' && item.name.toLowerCase() === 'readme.md')
 )
 
-const images = computed(() => packageStore.packageData.value.files.filter(item => ext.images.includes(item.ext)))
-const cdnBaseUrl = computed(() => packageStore.packageData.value.cdn_base_url)
+const images = computed(() => packageStore.packageData.files.filter(item => ext.images.includes(item.ext)))
+const cdnBaseUrl = computed(() => packageStore.packageData.cdn_base_url)
 
-const handleShowProjectBar = () =>
-  projectStore.actions.setMenu({
-    name: 'menu.isShowProjectBar',
-    value: !projectStore.state.menu.value.isShowProjectBar
-  })
+const handleShowProjectBar = () => (projectStore.menu.isShowProjectBar = !projectStore.menu.isShowProjectBar)
 
 const handleOnStick = value => {
-  projectStore.actions.setMenu({ name: 'menu.isSticked', value })
-  if (!value) projectStore.actions.setMenu({ name: 'menu.sticked', value: false })
+  projectStore.menu.isSticked = value
+  if (!value) projectStore.menu.sticked = false
 }
 
 watch(readmeFile, async readmeFile => {
   if (!isShowReadmeFile.value || !readmeFile) return
 
   fileSource.value = await fileStore.getFullFile({
-    url: `${packageStore.state.packageData.value.cdn_base_url}/${readmeFile.path}`
+    url: `${packageStore.packageData.cdn_base_url}/${readmeFile.path}`
   })
 })
 </script>

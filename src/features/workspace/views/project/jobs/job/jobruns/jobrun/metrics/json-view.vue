@@ -7,7 +7,7 @@
 </template>
 <script lang="ts">
 import { throttle } from 'lodash'
-import { useWindowSize } from '@u3u/vue-hooks'
+import { useWindowSize } from '@/core/plugins/vue-hooks'
 import useQuery from '@/core/composition/useQuery'
 import { useMetricStore } from '@/features/metric/useMetricStore'
 import { computed, onBeforeMount, defineComponent } from '@vue/composition-api'
@@ -23,7 +23,7 @@ export default defineComponent({
     const { height } = useWindowSize()
     const metricStore = useMetricStore()
 
-    const { jobRunId: uuid } = context.root.$route.params
+    const { runId: uuid } = context.root.$route.params
     const next = computed(() => metricStore.metricJSON.next)
 
     const query = useQuery({

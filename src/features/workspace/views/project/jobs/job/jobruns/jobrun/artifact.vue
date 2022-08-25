@@ -1,5 +1,5 @@
 <template>
-  <ask-anna-loading-progress :loading="jobRunArtifactLoading" classes="mx-4 mb-4" fullWidth>
+  <ask-anna-loading-progress :loading="runArtifactLoading" classes="mx-4 mb-4" fullWidth>
     <v-row align="center" justify="center">
       <v-col cols="12" class="pt-0 pb-0">
         <package-toolbar
@@ -53,54 +53,54 @@
   </ask-anna-loading-progress>
 </template>
 <script setup lang="ts">
-import { useWindowSize } from '@u3u/vue-hooks'
+import { useWindowSize } from '@/core/plugins/vue-hooks'
 import useCopy from '@/core/composition/useCopy'
+import { useRunStore } from '@/features/run/useRunStore'
 import { useFileStore } from '@/features/file/useFileStore'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useFileExtension from '@/core/composition/useFileExtension'
-import PackageFile from '@/features/package/components/PackageFile.vue'
-import PackageTree from '@/features/package/components/PackageTree.vue'
-import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
+import { useProjectStore } from '@/features/project/useProjectStore'
 import { ref, watch, onBeforeMount, computed } from '@vue/composition-api'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
-import useProjectStore from '@/features/project/composition/useProjectStore'
 import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
-import PackageToolbar from '@/features/package/components/PackageToolbar.vue'
 import useTriggerFileDownload from '@/core/composition/useTriggerFileDownload'
+
+import PackageFile from '@/features/package/components/PackageFile.vue'
+import PackageTree from '@/features/package/components/PackageTree.vue'
+import PackageToolbar from '@/features/package/components/PackageToolbar.vue'
 import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 
 const copy = useCopy()
 const ext = useFileExtension()
+const runStore = useRunStore()
 const fileStore = useFileStore()
 const router = useRouterAskAnna()
 const { height } = useWindowSize()
-const jobRunStore = useJobRunStore()
 const projectStore = useProjectStore()
 const forceFileDownload = useForceFileDownload()
 const triggerFileDownload = useTriggerFileDownload()
 const breadcrumbs = usePackageBreadcrumbs({ start: 8, end: 9 })
 
-const { jobId, jobRunId, projectId, workspaceId } = router.route.value.params
+const { jobId, runId, projectId, workspaceId } = router.route.value.params
 
 const downloadArtifact = ref(false)
 
-const sticked = computed(() => !projectStore.stickedVM.value)
+const sticked = computed(() => !projectStore.menu.sticked)
+const runArtifactLoading = computed(() => runStore.runArtifactLoading)
 
-const jobRunArtifactLoading = computed(() => jobRunStore.state.jobRunArtifactLoading.value)
-
-const cdnBaseUrl = computed(() => jobRunStore.state.artifactData.value.cdn_base_url)
-const images = computed(() => jobRunStore.state.artifactData.value.files.filter(item => ext.images.includes(item.ext)))
+const cdnBaseUrl = computed(() => runStore.artifactData.cdn_base_url)
+const images = computed(() => runStore.artifactData.files.filter(item => ext.images.includes(item.ext)))
 
 const calcHeight = computed(() => height.value - 370)
 const path = computed(() => router.route.value.params.folderName || '/')
-const artifactUuid = computed(() => jobRunStore.state.jobRun.value?.artifact?.short_uuid)
+const artifactUuid = computed(() => runStore.run?.artifact?.short_uuid)
 
 const breadcrumbsComputed = computed(() => {
   const first = {
     title: `Artifact: #${artifactUuid.value.slice(0, 4)}`,
     to: {
       name: 'workspace-project-jobs-job-jobrun-artifact',
-      params: { workspaceId, projectId, jobId, jobRunId }
+      params: { workspaceId, projectId, jobId, runId }
     },
     exact: true,
     disabled: false,
@@ -114,17 +114,16 @@ const breadcrumbsComputed = computed(() => {
 const currentPath = computed(() => {
   const pathArray = path.value.split('/')
   const fileName = pathArray.pop()
-  const current = jobRunStore.state.artifactData.value.files.find(
-    item => item.name === fileName && item.path === path.value
-  )
+  const current = runStore.artifactData.files.find(item => item.name === fileName && item.path === path.value)
 
   return current
 })
 
 const parentPath = computed(() => {
   let parentPathTemp
+
   if (currentPath.value && currentPath.value.type === 'directory' && path.value !== '/') {
-    parentPathTemp = jobRunStore.state.artifactData.value.files.find(
+    parentPathTemp = runStore.artifactData.files.find(
       file => file.name === currentPath.value.parent && file.type === 'directory'
     )
     parentPathTemp = {
@@ -142,16 +141,16 @@ const filePath = computed(() =>
 )
 
 const treeView = computed(() => {
-  const tree = jobRunStore.state.artifactData.value.files.filter(item => item.parent === path.value)
+  const tree = runStore.artifactData.files.filter(item => item.parent === path.value)
 
   return parentPath.value ? [parentPath.value, ...tree] : tree
 })
 
 const getRoutePath = item => {
-  let path = `/${workspaceId}/project/${projectId}/jobs/${jobId}/runs/${jobRunId}/artifact/${item.path}`
+  let path = `/${workspaceId}/project/${projectId}/jobs/${jobId}/runs/${runId}/artifact/${item.path}`
 
   if (typeof item.path === 'undefined') {
-    path = `/${workspaceId}/project/${projectId}/jobs/${jobId}/runs/${jobRunId}/artifact/`
+    path = `/${workspaceId}/project/${projectId}/jobs/${jobId}/runs/${runId}/artifact/`
   }
 
   return { path }
@@ -160,10 +159,10 @@ const getRoutePath = item => {
 const handleDownload = async () => {
   downloadArtifact.value = true
 
-  const artifactData = jobRunStore.state.artifactData.value
-  const url = await jobRunStore.actions.downloadPackage({
-    jobRunShortId: jobRunId,
-    artifactShortId: jobRunStore.state.jobRun.value.artifact?.short_uuid
+  const artifactData = runStore.artifactData
+  const url = await runStore.downloadPackage({
+    runShortId: runId,
+    artifactShortId: runStore.run.artifact?.short_uuid
   })
 
   triggerFileDownload.trigger({ url, name: artifactData.filename })
@@ -174,7 +173,7 @@ const handleDownload = async () => {
 // download full version of result without formating
 const handleDownloadFile = async () => {
   await fileStore.getFullFile({
-    url: `${jobRunStore.state.artifactData.value.cdn_base_url}/${currentPath.value.path}`
+    url: `${runStore.artifactData.cdn_base_url}/${currentPath.value.path}`
   })
 
   forceFileDownload.trigger({
@@ -185,7 +184,7 @@ const handleDownloadFile = async () => {
 
 const handleCopy = async (view: string) => {
   const fileSource = await fileStore.getFullFile({
-    url: `${jobRunStore.state.artifactData.value.cdn_base_url}/${currentPath.value.path}`
+    url: `${runStore.artifactData.cdn_base_url}/${currentPath.value.path}`
   })
 
   if (fileStore.isFileImg) {
@@ -200,22 +199,22 @@ const handleCopy = async (view: string) => {
 const fetchData = async () => {
   fileStore.$reset()
 
-  const { jobRunId } = router.route.value.params
+  const { runId } = router.route.value.params
 
-  if (jobRunStore.state.jobRun.value.short_uuid !== jobRunId) {
-    await jobRunStore.actions.resetStore()
-    await jobRunStore.actions.getJobRun(jobRunId)
+  if (runStore.run.short_uuid !== runId) {
+    await runStore.resetStore()
+    await runStore.getRun(runId)
   }
 
-  if (!jobRunId || !artifactUuid.value) {
+  if (!runId || !artifactUuid.value) {
     fileStore.loading = false
 
     return
   }
 
-  await jobRunStore.actions.getInitialJobRunArtifact({
+  await runStore.getInitialRunArtifact({
     uuid: {
-      jobRunShortId: jobRunId,
+      runShortId: runId,
       artifactShortId: artifactUuid.value
     }
   })
@@ -231,7 +230,7 @@ watch(filePath, async filePath => {
   await fileStore.getFilePreview({
     size: currentPath.value.size,
     extension: currentPath.value.ext,
-    url: `${jobRunStore.state.artifactData.value.cdn_base_url}/${filePath}`
+    url: `${runStore.artifactData.cdn_base_url}/${filePath}`
   })
 })
 </script>

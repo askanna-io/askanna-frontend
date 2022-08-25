@@ -1,25 +1,41 @@
 import { defineStore } from 'pinia'
 
+export type IntervalMap = Record<string, Number>
+
 interface BreadcrumbParams {
   jobId?: string
-  jobRunId?: string
+  runId?: string
   projectId?: string
   workspaceId?: string
 }
 
-export const useGeneralStore = defineStore('general', {
+export interface GeneralState {
+  projectId: string
+  breadcrumbParams: {
+    jobId: string
+    jobRunId: string
+    projectId: string
+    workspaceId: string
+  }
+  interval: any
+}
+
+const GENERAL_STORE = 'general'
+
+export const useGeneralStore = defineStore(GENERAL_STORE, {
   state: () => {
     return {
       projectId: '',
       breadcrumbParams: {
         jobId: '',
-        jobRunId: '',
+        runId: '',
         projectId: '',
         workspaceId: ''
       },
       interval: new Map()
     }
   },
+
   actions: {
     async setBreadcrumbParams(data: BreadcrumbParams) {
       this.breadcrumbParams = { ...this.breadcrumbParams, ...data }

@@ -40,7 +40,7 @@ export const useJobsStore = defineStore(SERVICE_NAME, {
         map(jobs, async (job: any) => {
           const runs = await apiService({
             uuid: job.short_uuid,
-            action: api.getLastJobRun,
+            action: api.getLastRun,
             serviceName: SERVICE_NAME,
             params: {
               limit: 1,

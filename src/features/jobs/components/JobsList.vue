@@ -32,7 +32,7 @@
     <template v-slot:expanded-item="{ item }">
       <td :colspan="8" class="pa-0">
         <ask-anna-loading-progress v-if="item.runs.count" :type="'table-row'" :loading="loading">
-          <job-runs
+          <runs
             :items="runs"
             :count="count"
             :height="calcSubHeight"
@@ -78,7 +78,7 @@ import { ref, computed } from '@vue/composition-api'
 import { useRunsStore } from '@/features/runs/useRunsStore'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 
-import JobRuns from '@/features/jobrun/components/JobRuns.vue'
+import Runs from '@/features/runs/components/Runs.vue'
 import AskAnnaAlertStatus from '@/core/components/shared/AskAnnaAlertStatus.vue'
 import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 

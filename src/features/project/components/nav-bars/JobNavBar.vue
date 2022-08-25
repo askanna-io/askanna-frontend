@@ -65,7 +65,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { useRouter } from '@u3u/vue-hooks'
+import { useRouter } from '@/core/plugins/vue-hooks'
 import { computed } from '@vue/composition-api'
 import JobToolBar from './parts/JobToolBar.vue'
 import JobMenuPopup from './parts/JobMenuPopup.vue'

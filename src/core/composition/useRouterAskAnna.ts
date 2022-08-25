@@ -1,6 +1,6 @@
 //@ts-nocheck
 import VueRouter from 'vue-router'
-import { useRouter } from '@u3u/vue-hooks'
+import { useRouter } from '@/core/plugins/vue-hooks'
 import type { RawLocation } from 'vue-router'
 import { useLogger } from '@/core/composition/useLogger'
 

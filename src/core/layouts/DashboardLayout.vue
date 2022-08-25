@@ -59,9 +59,9 @@ import TheUploadStatus from '@/core/components/uploadStatus/TheUploadStatus.vue'
 
 import { useUserStore } from '@/features/user/useUserStore'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
+import { useProjectStore } from '@/features/project/useProjectStore'
 import { useProjectsStore } from '@/features/projects/useProjectsStore'
 import { computed, onBeforeMount, onUpdated } from '@vue/composition-api'
-import useProjectStore from '@/features/project/composition/useProjectStore'
 import { useWorkspacesStore } from '@/features/workspaces/useWorkspacesStore'
 
 const token = window.localStorage.getItem('token')
@@ -76,7 +76,7 @@ const workspacesStore = useWorkspacesStore()
 
 const showAppBarIcon = computed(() => !router.route.value.meta?.hideAppBarIcon)
 
-const handleChangeSticked = () => (projectStore.stickedVM.value = !projectStore.stickedVM.value)
+const handleChangeSticked = () => (projectStore.menu.sticked = !projectStore.menu.sticked)
 
 const fetchData = async () => {
   await userStore.getGlobalProfile()

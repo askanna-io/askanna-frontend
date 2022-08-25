@@ -1,4 +1,4 @@
-import { useStore } from '@u3u/vue-hooks'
+import { useStore } from '@/core/plugins/vue-hooks'
 
 export default () => {
   const fetchData = (...params: any) => {

@@ -54,8 +54,8 @@
 import { ref, computed } from '@vue/composition-api'
 import usePermission from '@/core/composition/usePermission'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
+import { useProjectStore } from '@/features/project/useProjectStore'
 import { useProjectsStore } from '@/features/projects/useProjectsStore'
-import useProjectStore from '@/features/project/composition/useProjectStore'
 import ConfirmDeleteProjectPopup from '@/features/project/components/popup/ConfirmDeleteProjectPopup.vue'
 
 const props = defineProps({
@@ -63,6 +63,7 @@ const props = defineProps({
     type: Object,
     default: function () {
       return {
+        name: '',
         runtime: 0,
         memory: 0,
         created: '',
@@ -111,7 +112,7 @@ const handleOpenConfirmEditProject = () =>
   })
 
 const handleDeleteConfirmPorject = async () => {
-  await projectStore.actions.deleteProject(props.project)
+  await projectStore.deleteProject(props.project)
   await projectsStore.getProjects()
 
   deleteProjectConfirmPopup.value = false

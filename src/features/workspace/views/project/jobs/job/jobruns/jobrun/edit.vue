@@ -54,7 +54,7 @@
     <v-alert v-else class="mx-4 text-center" dense outlined>
       You are not allowed to edit this run. I can bring you back toto the run
       <router-link :to="{ name: 'workspace-project-jobs-job-jobrun-overview' }" class="ask-anna-link">{{
-        jobRun.name || jobRun.short_uuid
+        run.name || run.short_uuid
       }}</router-link
       >.
     </v-alert>
@@ -63,37 +63,37 @@
 
 <script setup lang="ts">
 import { set } from 'lodash'
+import { useRunStore } from '@/features/run/useRunStore'
 import { ref, watch, computed } from '@vue/composition-api'
 import usePermission from '@/core/composition/usePermission'
 import { useSnackBar } from '@/core/components/snackBar/useSnackBar'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
 import AskAnnaDescription from '@/core/components/shared/AskAnnaDescription.vue'
 import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 
+const runStore = useRunStore()
 const snackBar = useSnackBar()
 const router = useRouterAskAnna()
 const permission = usePermission()
-const jobRunStore = useJobRunStore()
 
-const jobRun = computed(() => jobRunStore.state.jobRun.value)
-const loading = computed(() => jobRunStore.state.jobRunLoading.value)
+const run = computed(() => runStore.run)
+const loading = computed(() => runStore.runLoading)
 const projectRunEdit = computed(() => permission.getFor(permission.labels.projectRunEdit))
 
 const isStateNotChanged = ref(true)
-const run = ref({
-  name: jobRun.value.name,
-  description: jobRun.value.description
+const data = ref({
+  name: run.value.name,
+  description: run.value.description
 })
 
 const handleOnInput = (value, path) => {
   isStateNotChanged.value = false
-  set(run.value, path, value)
+  set(data.value, path, value)
 }
 
 const handleSaveDescription = async () => {
-  const isUpdated = await jobRunStore.udapteJobRun({
-    uuid: jobRunStore.state.jobRun.value.short_uuid,
+  const isUpdated = await runStore.udapteRun({
+    uuid: runStore.run.short_uuid,
     data: { description: run.value.description }
   })
 
@@ -103,9 +103,9 @@ const handleSaveDescription = async () => {
 }
 
 const handleSave = async () => {
-  const isUpdated = await jobRunStore.udapteJobRun({
-    uuid: jobRunStore.state.jobRun.value.short_uuid,
-    data: run.value
+  const isUpdated = await runStore.udapteRun({
+    uuid: runStore.run.short_uuid,
+    data: data.value
   })
   if (isUpdated) {
     snackBar.showSnackBar({ message: 'The runifo was updated', color: 'success' })
@@ -120,10 +120,10 @@ const handleClose = () =>
 
 const handleOnChange = () => (isStateNotChanged.value = false)
 
-watch(jobRun, jobRun => {
-  run.value = {
-    name: jobRun.name,
-    description: jobRun.description
+watch(run, run => {
+  data.value = {
+    name: run.name,
+    description: run.description
   }
 })
 </script>

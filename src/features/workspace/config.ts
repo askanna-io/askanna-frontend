@@ -1,6 +1,6 @@
-import { PERMISSIONS_LABELS } from '@/features/workspace/store/const'
+import { PERMISSIONS_LABELS } from '@/features/workspace/const'
 
-const jobRun = [
+const run = [
   {
     path: '',
     component: () =>
@@ -46,12 +46,12 @@ const jobRun = [
     }
   },
   {
-    path: ':jobRunId',
+    path: ':runId',
     name: 'workspace-project-jobs-job-jobrun',
     redirect: { name: 'workspace-project-jobs-job-jobrun-overview' },
     meta: {
-      title: 'Run: jobRunId',
-      breadcrumb: 'Run - :jobRunId'
+      title: 'Run: runId',
+      breadcrumb: 'Run - :runId'
     },
     component: () =>
       import(
@@ -67,7 +67,7 @@ const jobRun = [
           ),
         name: 'workspace-project-jobs-job-jobrun-edit',
         meta: {
-          title: 'Run: jobRunId',
+          title: 'Run: runId',
           permission: PERMISSIONS_LABELS.projectRunEdit
         }
       },
@@ -79,7 +79,7 @@ const jobRun = [
           ),
         name: 'workspace-project-jobs-job-jobrun-overview',
         meta: {
-          title: 'Run: jobRunId'
+          title: 'Run: runId'
         }
       },
       {
@@ -90,7 +90,7 @@ const jobRun = [
           ),
         name: 'workspace-project-jobs-job-jobrun-input',
         meta: {
-          title: 'Run: jobRunId'
+          title: 'Run: runId'
         }
       },
       {
@@ -101,7 +101,7 @@ const jobRun = [
           ),
         name: 'workspace-project-jobs-job-jobrun-result',
         meta: {
-          title: 'Run: jobRunId'
+          title: 'Run: runId'
         }
       },
       {
@@ -113,7 +113,7 @@ const jobRun = [
           ),
         name: 'workspace-project-jobs-job-jobrun-metrics',
         meta: {
-          title: 'Run: jobRunId'
+          title: 'Run: runId'
         },
         children: [
           {
@@ -125,7 +125,7 @@ const jobRun = [
             name: 'workspace-project-jobs-job-jobrun-metrics-table',
             meta: {
               tabValue: 'table',
-              title: 'Run: jobRunId'
+              title: 'Run: runId'
             }
           },
           {
@@ -137,7 +137,7 @@ const jobRun = [
             name: 'workspace-project-jobs-job-jobrun-metrics-chart',
             meta: {
               tabValue: 'chart',
-              title: 'Run: jobRunId'
+              title: 'Run: runId'
             }
           },
           {
@@ -149,7 +149,7 @@ const jobRun = [
             name: 'workspace-project-jobs-job-jobrun-metrics-json',
             meta: {
               tabValue: 'json',
-              title: 'Run: jobRunId'
+              title: 'Run: runId'
             }
           }
         ]
@@ -169,7 +169,7 @@ const jobRun = [
               ),
             name: 'workspace-project-jobs-job-jobrun-artifact',
             meta: {
-              title: 'Run: jobRunId'
+              title: 'Run: runId'
             },
 
             children: [
@@ -181,7 +181,7 @@ const jobRun = [
                   ),
                 name: 'workspace-project-jobs-job-jobrun-artifact-folder',
                 meta: {
-                  title: 'Run: jobRunId',
+                  title: 'Run: runId',
                   breadcrumb: ':folderName'
                 }
               }
@@ -207,7 +207,7 @@ const jobRun = [
             name: 'workspace-project-jobs-job-jobrun-variables-table',
             meta: {
               tabValue: 'table',
-              title: 'Run: jobRunId'
+              title: 'Run: runId'
             }
           },
           {
@@ -219,7 +219,7 @@ const jobRun = [
             name: 'workspace-project-jobs-job-jobrun-variables-json',
             meta: {
               tabValue: 'json',
-              title: 'Run: jobRunId'
+              title: 'Run: runId'
             }
           }
         ]
@@ -239,7 +239,7 @@ const jobRun = [
               ),
             name: 'workspace-project-jobs-job-jobrun-code',
             meta: {
-              title: 'Run: jobRunId'
+              title: 'Run: runId'
             },
             children: [
               {
@@ -250,7 +250,7 @@ const jobRun = [
                   ),
                 name: 'workspace-project-jobs-job-jobrun-code-folder',
                 meta: {
-                  title: 'Run: jobRunId',
+                  title: 'Run: runId',
                   breadcrumb: ':folderName'
                 }
               }
@@ -278,7 +278,7 @@ const jobRun = [
           ),
         name: 'workspace-project-jobs-job-jobrun-log',
         meta: {
-          title: 'Run: jobRunId'
+          title: 'Run: runId'
         }
       }
     ]
@@ -408,7 +408,7 @@ const JobRoutes = [
         meta: {
           breadcrumb: 'Runs'
         },
-        children: jobRun
+        children: run
       },
       {
         path: 'edit',

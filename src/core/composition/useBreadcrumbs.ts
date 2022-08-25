@@ -1,11 +1,11 @@
 import { get } from 'lodash'
-import { useRouter } from '@u3u/vue-hooks'
+import { useRouter } from '@/core/plugins/vue-hooks'
 import { computed } from '@vue/composition-api'
 import { useGeneralStore } from '@/core/store/useGeneralStore'
 
 export default function ({ start = 0, end = undefined }) {
-  const { route: crcRoute } = useRouter()
   const generalStore = useGeneralStore()
+  const { route: crcRoute } = useRouter()
 
   const getBreadcrumbs = computed(() => {
     let breadcrumbs: any = []
