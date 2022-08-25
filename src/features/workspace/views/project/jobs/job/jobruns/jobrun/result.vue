@@ -1,36 +1,36 @@
 <template>
-  <job-run-result v-if="jobRun.short_uuid" :jobRun="jobRun" />
+  <run-result v-if="run.short_uuid" :run="run" />
 </template>
 
 <script lang="ts">
+import { useRunStore } from '@/features/run/useRunStore'
 import { useFileStore } from '@/features/file/useFileStore'
-import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
-import JobRunResult from '@/features/jobrun/components/jobrun/JobRunResult.vue'
+import RunResult from '@/features/run/components/RunResult.vue'
 import { computed, defineComponent, onBeforeMount } from '@vue/composition-api'
 
 export default defineComponent({
-  components: { JobRunResult },
+  components: { RunResult },
 
   setup(_, context) {
     const fileStore = useFileStore()
-    const jobRunStore = useJobRunStore()
+    const runStore = useRunStore()
 
-    const jobRun = computed(() => jobRunStore.state.jobRun.value)
+    const run = computed(() => runStore.run)
 
     const fetchData = async () => {
       fileStore.$reset()
 
-      const { jobRunId } = context.root.$route.params
+      const { runId } = context.root.$route.params
 
-      if (jobRunStore.state.jobRun.value.short_uuid !== jobRunId) {
-        await jobRunStore.actions.resetStore()
-        await jobRunStore.actions.getJobRun(jobRunId)
+      if (runStore.run.short_uuid !== runId) {
+        await runStore.resetStore()
+        await runStore.getRun(runId)
       }
     }
 
     onBeforeMount(() => fetchData())
 
-    return { jobRun }
+    return { run }
   }
 })
 </script>

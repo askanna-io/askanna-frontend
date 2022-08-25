@@ -67,8 +67,8 @@ import UploadProcessDialod from './UploadProcessDialod.vue'
 
 import Resumablejs from '@/core/plugins/resumable.js'
 import { apiUrl } from '@/core/services/api-settings'
-import usePackageStore from '@/features/package/composition/usePackageStore'
-import useProjectStore from '@/features/project/composition/useProjectStore'
+import { useProjectStore } from '@/features/project/useProjectStore'
+import { usePackageStore } from '@/features/package/usePackageStore'
 import { useUploadStatus } from '@/core/components/uploadStatus/useUploadStatus'
 
 import { ref, watch, reactive, computed, defineComponent, onMounted } from '@vue/composition-api'
@@ -106,7 +106,6 @@ export default defineComponent({
   setup(props, context) {
     const packageStore = usePackageStore()
     const uploadStatus = useUploadStatus()
-    const projectStore = useProjectStore()
 
     const r = ref(null)
     const draggable = ref(null)

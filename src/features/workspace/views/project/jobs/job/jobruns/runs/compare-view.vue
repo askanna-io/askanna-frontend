@@ -11,7 +11,7 @@
               :key="index"
               :type="'run-suuid'"
               :value="run.short_uuid"
-              :routeParams="{ jobRunId: run.short_uuid }"
+              :routeParams="{ runId: run.short_uuid }"
               to="workspace-project-jobs-job-jobrun-overview"
             />
           </ComparisonList>
@@ -30,7 +30,12 @@
                   :class="item.class"
                   :params="item.params"
                   :value="get(run, item.field)"
-                  :routeParams="item.getRouteParams({ ...route.params, jobRunId: run.short_uuid })"
+                  :routeParams="
+                    item.getRouteParams({
+                      ...route.params,
+                      runId: run.short_uuid
+                    })
+                  "
                 />
               </template>
             </template>
@@ -188,7 +193,7 @@
 
 <script setup lang="ts">
 import { get } from 'lodash'
-import { useWindowSize } from '@u3u/vue-hooks'
+import { useWindowSize } from '@/core/plugins/vue-hooks'
 import { useMobileStore } from '@/core/store/useMobileStore'
 import { compareItems } from '@/features/compare-runs/helper'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'

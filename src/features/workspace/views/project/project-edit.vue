@@ -23,15 +23,17 @@
 
 <script setup lang="ts">
 import { set } from 'lodash'
-import { useRouter } from '@u3u/vue-hooks'
+import { useRouter } from '@/core/plugins/vue-hooks'
 import usePermission from '@/core/composition/usePermission'
-import Project from '@/features/project/components/Project.vue'
-import { useSnackBar } from '@/core/components/snackBar/useSnackBar'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
+import { useProjectStore } from '@/features/project/useProjectStore'
+import { useSnackBar } from '@/core/components/snackBar/useSnackBar'
 import { useProjectsStore } from '@/features/projects/useProjectsStore'
+import { useWorkspaceStore } from '@/features/workspace/useWorkspaceStore'
 import { ref, watch, computed, onBeforeMount } from '@vue/composition-api'
-import useProjectStore from '@/features/project/composition/useProjectStore'
-import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
+import { useWorkspaceProjectsStore } from '@/features/workspace/useWorkspaceProjectsStore'
+
+import Project from '@/features/project/components/Project.vue'
 import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 
 const { route } = useRouter()
@@ -41,14 +43,16 @@ const permission = usePermission()
 const projectStore = useProjectStore()
 const projectsStore = useProjectsStore()
 const workspaceStore = useWorkspaceStore()
+const workspaceProjectsStore = useWorkspaceProjectsStore()
 
 const { routeBackTo = 'workspace-project' } = route.value.params
 
-const projectData = computed(() => projectStore.project.value)
-const loading = computed(() => projectStore.projectLoading.value)
-const projectTemplates = computed(() => projectStore.projectTemplates.value)
+const projectData = computed(() => projectStore.project)
+const loading = computed(() => projectStore.projectLoading)
+const projectTemplates = computed(() => projectStore.projectTemplates)
+
+const workspaceProjectVisibility = computed(() => workspaceStore.workspace.visibility)
 const projectInfoEdit = computed(() => permission.getFor(permission.labels.projectInfoEdit))
-const workspaceProjectVisibility = computed(() => workspaceStore.state.workspace.value.visibility)
 
 const projectState = ref({
   name: projectData.value.name,
@@ -68,7 +72,7 @@ const handleUpdate = async () => {
   const project = await projectStore.updateProject(projectState.value)
 
   if (routeBackTo === 'workspace') {
-    await workspaceStore.getInitialWorkpaceProjects({ params: { limit: 99, offset: 0 } })
+    await workspaceProjectsStore.getInitialWorkpaceProjects({ params: { limit: 99, offset: 0 } })
   }
 
   if (project?.short_uuid) {

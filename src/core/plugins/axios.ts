@@ -1,6 +1,6 @@
 import axios from 'axios'
 import VueRouter from 'vue-router'
-import { useRouter } from '@u3u/vue-hooks'
+import { useRouter } from '@/core/plugins/vue-hooks'
 const { isNavigationFailure, NavigationFailureType } = VueRouter
 // create axios instance and set csrftoken for Django
 const $axios = axios

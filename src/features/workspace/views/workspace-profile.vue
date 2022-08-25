@@ -133,12 +133,13 @@
 
 <script setup lang="ts">
 import { useUserStore } from '@/features/user/useUserStore'
+import { usePeopleStore } from '@/features/people/usePeopleStore'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import { useSnackBar } from '@/core/components/snackBar/useSnackBar'
 import { watch, ref, reactive, computed } from '@vue/composition-api'
 import useImageUrlToBase64 from '@/core/composition/useImageUrlToBase64'
+import { useWorkspaceStore } from '@/features/workspace/useWorkspaceStore'
 import UserProfile from '@/features/user/components/profile/UserProfile.vue'
-import useWorkSpaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 import UserWorkspaceProfile from '@/features/workspace/components/profile/UserWorkspaceProfile.vue'
 import UserWorkspaceProfileAvatar from '@/features/workspace/components/profile/UserWorkspaceProfileAvatar.vue'
@@ -146,7 +147,8 @@ import UserWorkspaceProfileAvatar from '@/features/workspace/components/profile/
 const snackBar = useSnackBar()
 const userStore = useUserStore()
 const router = useRouterAskAnna()
-const workSpaceStore = useWorkSpaceStore()
+const peopleStore = usePeopleStore()
+const workSpaceStore = useWorkspaceStore()
 const imageUrlToBase64 = useImageUrlToBase64()
 
 const profileForm = ref(null)
@@ -190,14 +192,14 @@ const isSaveDisabled = computed(
     !state.isUseAskAnnaProfileChanged
 )
 
-const workspaceName = computed(() => workSpaceStore.workspace.value.name)
-const workspaceProfile = computed(() => workSpaceStore.state.currentPeople.value)
+const workspaceProfile = computed(() => peopleStore.currentPeople)
+const workspaceName = computed(() => workSpaceStore.workspace.name)
 const useAskAnnaProfile = computed({
   get: () => {
     return workspaceProfile.value.use_global_profile
   },
   set: use_global_profile => {
-    workSpaceStore.mutations.SET_CURRENT_PEOPLE({
+    peopleStore.setCurretPeople({
       use_global_profile
     })
   }
@@ -208,8 +210,8 @@ const roleName = computed(() => roleFilters[workspaceProfile.value.role.code])
 
 const breadcrumbs = computed(() => [
   {
-    title: workSpaceStore.workspace.value.name,
-    to: `/${workSpaceStore.workspace.value.short_uuid}`,
+    title: workSpaceStore.workspace.name,
+    to: `/${workSpaceStore.workspace.short_uuid}`,
     disabled: false
   },
   {
@@ -239,7 +241,7 @@ const handleSave = async () => {
   }
 
   if (state.isUseAskAnnaProfileChanged) {
-    workspaceData = await workSpaceStore.actions.updateWorkspaceProfile({
+    workspaceData = await peopleStore.updateWorkspaceProfile({
       use_global_profile: useAskAnnaProfile.value
     })
     if (!workspaceData || !workspaceData.short_uuid) {
@@ -248,7 +250,7 @@ const handleSave = async () => {
   }
 
   if (state.isWorkspaceDataChanged) {
-    workspaceData = await workSpaceStore.actions.updateWorkspaceProfile({
+    workspaceData = await peopleStore.updateWorkspaceProfile({
       ...state.workspaceData,
       use_global_profile: useAskAnnaProfile.value
     })
@@ -258,7 +260,7 @@ const handleSave = async () => {
   }
 
   if (state.isWorkspaceAvatarChanged) {
-    const result = await workSpaceStore.actions.setPeopleAvatar({
+    const result = await peopleStore.setPeopleAvatar({
       avatar: state.avatar
     })
 
@@ -286,19 +288,19 @@ const handleSave = async () => {
 
   if (isSuccess) {
     snackBar.showSnackBar({
-      message: 'Your changes are saved successfully',
+      timeout: 5000,
       color: 'success',
-      timeout: 5000
+      message: 'Your changes are saved successfully'
     })
     router.router.go(-1)
 
     userStore.getGlobalProfile()
-    workSpaceStore.actions.getCurrentPeople({ workspaceId: workSpaceStore.workspace.value.short_uuid })
+    peopleStore.getCurrentPeople({ workspaceId: workSpaceStore.workspace.short_uuid })
   } else {
     snackBar.showSnackBar({
-      message: 'Something went wrong with saving your changes',
+      timeout: 5000,
       color: 'failed',
-      timeout: 5000
+      message: 'Something went wrong with saving your changes'
     })
   }
 }

@@ -44,12 +44,13 @@
 import { ref, computed } from '@vue/composition-api'
 import TheConnectAccount from './TheConnectAccount.vue'
 import TheCreateNewAccount from './TheCreateNewAccount.vue'
+import { usePeopleStore } from '@/features/people/usePeopleStore'
 import AskAnnaReadMore from '@/features/auth/components/AskAnnaReadMore.vue'
-import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 
 const panel = ref(0)
-const workspaceStore = useWorkspaceStore()
-const workspaceName = computed(() => workspaceStore.invitation.value.workspace.name)
+const peopleStore = usePeopleStore()
+
+const workspaceName = computed(() => peopleStore.invitation.workspace.name)
 </script>
 <style scoped>
 .login-expansion .v-expansion-panel {

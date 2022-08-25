@@ -15,7 +15,7 @@
 <script>
 import usePermission from '@/core/composition/usePermission'
 import { computed, defineComponent } from '@vue/composition-api'
-import useWorkSpaceStore from '@/features/workspace/composition/useWorkSpaceStore'
+import { useWorkspaceStore } from '@/features/workspace/useWorkspaceStore'
 import AskAnnaPageDoesNotExist from '@/core/components/shared/AskAnnaPageDoesNotExist'
 
 export default defineComponent({
@@ -25,12 +25,12 @@ export default defineComponent({
 
   setup(_, context) {
     const permission = usePermission()
-    const workSpaceStore = useWorkSpaceStore(context)
+    const workSpaceStore = useWorkspaceStore()
 
     const breadcrumbs = computed(() => [
       {
-        title: workSpaceStore.workspace.value.name,
-        to: `/${workSpaceStore.workspace.value.short_uuid}`,
+        title: workSpaceStore.workspace.name,
+        to: `/${workSpaceStore.workspace.short_uuid}`,
         disabled: false
       },
       {

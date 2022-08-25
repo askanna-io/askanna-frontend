@@ -25,7 +25,7 @@
         <v-list-item href="https://docs.askanna.io" target="_blank">
           <v-list-item-title>Documentation</v-list-item-title>
         </v-list-item>
-        <v-list-item :key="'logout'" exact @click="authStore.logout()"> Logout </v-list-item>
+        <v-list-item :key="'logout'" exact @click="authStore.logout()">Logout </v-list-item>
       </v-list>
     </v-menu>
     <v-btn v-if="isReview" small icon class="white--text" @click.stop="drawer = !drawer">
@@ -40,19 +40,21 @@ import { computed } from '@vue/composition-api'
 import useTitle from '@/core/composition/useTitle'
 import { useAuthStore } from '@/features/auth/useAuthStore'
 import { useUserStore } from '@/features/user/useUserStore'
+import { usePeopleStore } from '@/features/people/usePeopleStore'
+import { useWorkspaceStore } from '@/features/workspace/useWorkspaceStore'
 import { useUploadStatus } from '@/core/components/uploadStatus/useUploadStatus'
-import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 
 useTitle()
 const authStore = useAuthStore()
 const userStore = useUserStore()
+const peopleStore = usePeopleStore()
 const uploadStatus = useUploadStatus()
 const workspaceStore = useWorkspaceStore()
 
-const isMember = computed(() => workspaceStore.workspace.value.is_member)
+const isMember = computed(() => workspaceStore.workspace.is_member)
 
-const workspaceProfile = computed(() => workspaceStore.state.currentPeople.value)
-const workspaceShortUuid = computed(() => workspaceStore.workspace.value.short_uuid)
+const workspaceProfile = computed(() => peopleStore.currentPeople)
+const workspaceShortUuid = computed(() => workspaceStore.workspace.short_uuid)
 
 const profileRoute = computed(() => {
   if (isMember.value) {

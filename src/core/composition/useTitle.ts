@@ -1,5 +1,5 @@
 import { get } from 'lodash'
-import { useRouter } from '@u3u/vue-hooks'
+import { useRouter } from '@/core/plugins/vue-hooks'
 import { watchEffect, computed } from '@vue/composition-api'
 import { useGeneralStore } from '@/core/store/useGeneralStore'
 

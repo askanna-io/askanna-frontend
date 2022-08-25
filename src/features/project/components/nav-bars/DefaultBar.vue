@@ -70,69 +70,56 @@
     </v-card>
   </div>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 import ProjectMenu from './parts/ProjectMenu.vue'
+import { ref, computed } from '@vue/composition-api'
 import usePermission from '@/core/composition/usePermission'
-import { ref, computed, defineComponent } from '@vue/composition-api'
+import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
+
 import AskAnnaDescription from '@/core/components/shared/AskAnnaDescription.vue'
 import ProjectMenuPopup from '@/features/project/components/ProjectMenuPopup.vue'
 
-export default defineComponent({
-  name: 'DefaultBar',
-
-  components: { ProjectMenu, ProjectMenuPopup, AskAnnaDescription },
-
-  props: {
-    project: {
-      type: Object,
-      default: function () {
-        return {
-          name: '',
-          description: ''
-        }
+const props = defineProps({
+  project: {
+    type: Object,
+    default: function () {
+      return {
+        name: '',
+        description: '',
+        permission: {}
       }
-    },
-    projectBreadcrumbs: {
-      type: Array,
-      default: []
-    },
-    isShowProjectBar: {
-      type: Boolean,
-      default: false
-    },
-    sticked: {
-      type: Boolean,
-      default: false
-    },
-    handleOnStick: {
-      type: Function,
-      default: () => {}
     }
   },
-
-  setup(props, context) {
-    const refToolbar = ref(null)
-    const permission = usePermission()
-
-    const projectRemove = computed(() => permission.getFor(permission.labels.projectRemove))
-    const projectInfoEdit = computed(() => permission.getFor(permission.labels.projectInfoEdit))
-
-    const onStick = data => {
-      props.handleOnStick(data.sticked)
-    }
-
-    const isEditProjectView = computed(() => context.root.$route.name === 'workspace-project-edit')
-
-    return {
-      onStick,
-      refToolbar,
-      projectRemove,
-      projectInfoEdit,
-      isEditProjectView,
-      routerParams: context.root.$route.params
-    }
+  projectBreadcrumbs: {
+    type: Array,
+    default: []
+  },
+  isShowProjectBar: {
+    type: Boolean,
+    default: false
+  },
+  sticked: {
+    type: Boolean,
+    default: false
+  },
+  handleOnStick: {
+    type: Function,
+    default: () => {}
   }
 })
+
+const refToolbar = ref(null)
+const permission = usePermission()
+const { route } = useRouterAskAnna()
+
+const projectRemove = computed(() => permission.getFor(permission.labels.projectRemove))
+const projectInfoEdit = computed(() => permission.getFor(permission.labels.projectInfoEdit))
+
+const onStick = data => {
+  props.handleOnStick(data.sticked)
+}
+
+const isEditProjectView = computed(() => route.value.name === 'workspace-project-edit')
 </script>
 <style lang="scss">
 .mobile-view {

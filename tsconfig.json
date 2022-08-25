@@ -4,8 +4,8 @@
   "paths": {
     "@core/*": ["core/*"],
     "@job/*": ["features/job/*"],
+    "@run/*": ["features/run/*"],
     "@jobs/*": ["features/jobs/*"],
-    "@jobrun/*": ["features/jobrun/*"],
     "@project/*": ["features/project/*"],
     "@package/*": ["features/package/*"],
     "@packages/*": ["features/packages/*"]

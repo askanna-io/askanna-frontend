@@ -41,13 +41,16 @@ const props = defineProps({
     type: Object,
     default: function () {
       return {
-        status: 'UNDIFENED',
-        runtime: 0,
+        name: '',
         memory: 0,
-        return_payload: null,
-        stdout: null,
+        description: '',
+        permission: {},
+        runtime: 0,
         created: '',
-        finished: ''
+        stdout: null,
+        finished: '',
+        status: 'UNDIFENED',
+        return_payload: null
       }
     }
   },

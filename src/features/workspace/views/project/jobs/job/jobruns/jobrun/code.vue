@@ -1,5 +1,5 @@
 <template>
-  <ask-anna-loading-progress :loading="packageLoading && !isProcessing">
+  <ask-anna-loading-progress :loading="loading && !isProcessing">
     <v-row align="center" justify="center">
       <v-col cols="12" class="pt-0 pb-0">
         <package-toolbar
@@ -58,46 +58,45 @@
 </template>
 
 <script setup lang="ts">
-import { useWindowSize } from '@u3u/vue-hooks'
+import { useWindowSize } from '@/core/plugins/vue-hooks'
 import useCopy from '@/core/composition/useCopy'
+import { useRunStore } from '@/features/run/useRunStore'
 import { useFileStore } from '@/features/file/useFileStore'
 import PackageFile from '@package/components/PackageFile.vue'
 import PackageTree from '@package/components/PackageTree.vue'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import useFileExtension from '@/core/composition/useFileExtension'
-import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
+import { useProjectStore } from '@/features/project/useProjectStore'
+import { usePackageStore } from '@/features/package/usePackageStore'
+import { usePackagesStore } from '@/features/packages/usePackagesStore'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
-import useProjectStore from '@/features/project/composition/useProjectStore'
-import usePackageStore from '@/features/package/composition/usePackageStore'
 import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
 import PackageToolbar from '@/features/package/components/PackageToolbar.vue'
-import usePackagesStore from '@/features/packages/composition/usePackagesStore'
 import PackageProcessing from '@/features/package/components/PackageProcessing.vue'
 import { ref, watch, onBeforeMount, onUnmounted, computed } from '@vue/composition-api'
 import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 
 const copy = useCopy()
+const runStore = useRunStore()
 const ext = useFileExtension()
 const fileStore = useFileStore()
 const router = useRouterAskAnna()
 const { height } = useWindowSize()
-const jobRunStore = useJobRunStore()
 const packageStore = usePackageStore()
 const projectStore = useProjectStore()
 const packagesStore = usePackagesStore()
 const forceFileDownload = useForceFileDownload()
 const breadcrumbs = usePackageBreadcrumbs({ start: 8, end: 9 })
 
-const { workspaceId, projectId, jobId, jobRunId, folderName = '' } = router.route.value.params
+const { workspaceId, projectId, jobId, runId, folderName = '' } = router.route.value.params
 
 const polling = ref(null)
 const downloadPackage = ref(false)
 
-const packageLoading = computed(() => packageStore.state.packageLoading.value)
-const packageId = computed(() => jobRunStore.state.jobRun.value.package.short_uuid)
-
-const cdnBaseUrl = computed(() => packageStore.packageData.value.cdn_base_url)
-const images = computed(() => packageStore.packageData.value.files.filter(item => ext.images.includes(item.ext)))
+const loading = computed(() => packageStore.loading)
+const packageId = computed(() => runStore.run.package.short_uuid)
+const cdnBaseUrl = computed(() => packageStore.packageData.cdn_base_url)
+const images = computed(() => packageStore.packageData.files.filter(item => ext.images.includes(item.ext)))
 
 const breadcrumbsComputed = computed(() => {
   const first = {
@@ -115,18 +114,18 @@ const breadcrumbsComputed = computed(() => {
   return [first, ...breadcrumbs.value]
 })
 
-const sticked = computed(() => !projectStore.stickedVM.value)
+const sticked = computed(() => !projectStore.menu.sticked)
 
 const fetchData = async () => {
   fileStore.$reset()
 
-  const { jobRunId } = router.route.value.params
+  const { runId } = router.route.value.params
 
-  if (jobRunStore.state.jobRun.value.short_uuid !== jobRunId) {
-    await jobRunStore.actions.resetStore()
-    await jobRunStore.actions.getJobRun(jobRunId)
+  if (runStore.run.short_uuid !== runId) {
+    await runStore.resetStore()
+    await runStore.getRun(runId)
   }
-  const packageId = jobRunStore.state.jobRun.value.package.short_uuid
+  const packageId = runStore.run.package.short_uuid
 
   if (packageId === '') {
     return
@@ -148,7 +147,7 @@ const getPackage = async () =>
   await packageStore.getPackage({
     projectId,
     folderName,
-    packageId: jobRunStore.state.jobRun.value.package.short_uuid,
+    packageId: runStore.run.package.short_uuid,
     failedRoute: 'workspace-project-jobs-job-jobrun-code-does-not-exist'
   })
 
@@ -167,14 +166,12 @@ const checkProcessing = () => {
 
 const calcHeight = computed(() => height.value - 370)
 const path = computed(() => router.route.value.params.folderName || '/')
-const isProcessing = computed(() => packageStore.state.processingList.value.find(item => item.packageId === packageId))
+const isProcessing = computed(() => packageStore.processingList.find(item => item.packageId === packageId))
 
 const currentPath = computed(() => {
   const pathArray = path.value.split('/')
   const fileName = pathArray.pop()
-  const current = packageStore.state.packageData.value.files.find(
-    item => item.name === fileName && item.path === path.value
-  )
+  const current = packageStore.packageData.files.find(item => item.name === fileName && item.path === path.value)
 
   return current
 })
@@ -185,7 +182,7 @@ const filePath = computed(() =>
 const parentPath = computed(() => {
   let parentPathTemp
   if (currentPath.value && currentPath.value.type === 'directory' && path.value !== '/') {
-    parentPathTemp = packageStore.state.packageData.value.files.find(
+    parentPathTemp = packageStore.packageData.files.find(
       file => file.name === currentPath.value.parent && file.type === 'directory'
     )
     parentPathTemp = {
@@ -199,16 +196,16 @@ const parentPath = computed(() => {
 })
 
 const treeView = computed(() => {
-  const tree = packageStore.state.packageData.value.files.filter(item => item.parent === path.value)
+  const tree = packageStore.packageData.files.filter(item => item.parent === path.value)
 
   return parentPath.value ? [parentPath.value, ...tree] : tree
 })
 
 const getRoutePath = item => {
-  let path = `/${workspaceId}/project/${projectId}/jobs/${jobId}/runs/${jobRunId}/code/${item.path}`
+  let path = `/${workspaceId}/project/${projectId}/jobs/${jobId}/runs/${runId}/code/${item.path}`
 
   if (typeof item.path === 'undefined') {
-    path = `/${workspaceId}/project/${projectId}/jobs/${jobId}/runs/${jobRunId}/code/`
+    path = `/${workspaceId}/project/${projectId}/jobs/${jobId}/runs/${runId}/code/`
   }
 
   return { path }
@@ -217,12 +214,12 @@ const getRoutePath = item => {
 const handleDownload = async () => {
   downloadPackage.value = true
 
-  const packageData = packageStore.state.packageData.value
-  const source = await packagesStore.actions.downloadPackage({
+  const packageData = packageStore.packageData
+  const source = await packagesStore.downloadPackage({
     projectId,
     packageId: packageData.short_uuid
   })
-  forceFileDownload.trigger({ source, name: `run_${jobRunId}_code_${packageData.filename}` })
+  forceFileDownload.trigger({ source, name: `run_${runId}_code_${packageData.filename}` })
 
   downloadPackage.value = false
 }
@@ -230,7 +227,7 @@ const handleDownload = async () => {
 // download full version of result without formating
 const handleDownloadFile = async () => {
   await fileStore.getFullFile({
-    url: `${packageStore.state.packageData.value.cdn_base_url}/${currentPath.value.path}`
+    url: `${packageStore.packageData.cdn_base_url}/${currentPath.value.path}`
   })
 
   forceFileDownload.trigger({
@@ -241,7 +238,7 @@ const handleDownloadFile = async () => {
 
 const handleCopy = async (view: string) => {
   const fileSource = await fileStore.getFullFile({
-    url: `${packageStore.state.packageData.value.cdn_base_url}/${currentPath.value.path}`
+    url: `${packageStore.packageData.cdn_base_url}/${currentPath.value.path}`
   })
 
   if (fileStore.isFileImg) {
@@ -261,7 +258,7 @@ watch(filePath, async filePath => {
   await fileStore.getFilePreview({
     size: currentPath.value.size,
     extension: currentPath.value.ext,
-    url: `${packageStore.state.packageData.value.cdn_base_url}/${filePath}`
+    url: `${packageStore.packageData.cdn_base_url}/${filePath}`
   })
 })
 </script>

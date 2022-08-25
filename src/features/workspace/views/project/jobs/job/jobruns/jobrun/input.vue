@@ -1,51 +1,51 @@
 <template>
-  <JobRunInput />
+  <RunInput />
 </template>
 
 <script setup lang="ts">
+import { useRunStore } from '@/features/run/useRunStore'
 import { useFileStore } from '@/features/file/useFileStore'
-import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
-import JobRunInput from '@/features/jobrun/components/jobrun/JobRunInput.vue'
+import RunInput from '@/features/run/components/RunInput.vue'
 import { watch, computed, onBeforeMount, onMounted } from '@vue/composition-api'
 
+const runStore = useRunStore()
 const fileStore = useFileStore()
-const jobRunStore = useJobRunStore()
 
-const jobRunShortId = computed(() => jobRunStore.state.jobRun.value.short_uuid)
-const payloadUuid = computed(() => jobRunStore.state.jobRun.value.payload?.short_uuid)
+const runShortId = computed(() => runStore.run.short_uuid)
+const payloadUuid = computed(() => runStore.run.payload?.short_uuid)
 
-const handleViewPayload = async (jobRunShortId, payloadUuid) => {
+const handleViewPayload = async (runShortId, payloadUuid) => {
   if (payloadUuid) {
     await fileStore.getFilePreview({
       extension: 'json',
-      serviceName: 'jobrun',
-      serviceAction: 'getJobRunPayload',
-      uuid: { jobRunShortId, payloadUuid },
-      size: jobRunStore.state.jobRun.value.payload.size
+      serviceName: 'run',
+      size: runStore.run.payload.size,
+      serviceAction: 'getRunPayload',
+      uuid: { runShortId, payloadUuid }
     })
   }
 }
 
-watch(jobRunShortId, jobRunShortId => {
-  if (!payloadUuid.value && jobRunShortId) {
+watch(runShortId, runShortId => {
+  if (!payloadUuid.value && runShortId) {
     fileStore.loading = false
   }
 })
 
 watch(payloadUuid, (payloadUuid, previusPayloadUuid) => {
   if (fileStore.isFileEmpty || previusPayloadUuid !== payloadUuid) {
-    handleViewPayload(jobRunShortId.value, payloadUuid)
+    handleViewPayload(runShortId.value, payloadUuid)
   }
 })
 
 onBeforeMount(() => {
   fileStore.$reset()
 
-  handleViewPayload(jobRunShortId.value, payloadUuid.value)
+  handleViewPayload(runShortId.value, payloadUuid.value)
 })
 
 onMounted(() => {
-  if (!payloadUuid.value && jobRunShortId.value) {
+  if (!payloadUuid.value && runShortId.value) {
     fileStore.loading = false
   }
 })

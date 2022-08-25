@@ -20,10 +20,10 @@
 <script setup lang="ts">
 import { throttle } from 'lodash'
 import useQuery from '@/core/composition/useQuery'
-import { useRouter, useWindowSize } from '@u3u/vue-hooks'
+import { useRouter, useWindowSize } from '@/core/plugins/vue-hooks'
 import { useMetricStore } from '@/features/metric/useMetricStore'
 import { ref, computed, onBeforeMount } from '@vue/composition-api'
-import useProjectStore from '@/features/project/composition/useProjectStore'
+import { useProjectStore } from '@/features/project/useProjectStore'
 import MetricTableView from '@/features/metric/components/metric-table/MetricTableView.vue'
 import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 
@@ -32,7 +32,7 @@ const { height } = useWindowSize()
 const metricStore = useMetricStore()
 const projectStore = useProjectStore()
 
-const { jobRunId: uuid } = route.value.params
+const { runId: uuid } = route.value.params
 
 const isSorted = ref(false)
 const metricsQuery = ref({})
@@ -40,7 +40,7 @@ const metricsQuery = ref({})
 const next = computed(() => metricStore.metrics.next)
 const items = computed(() => metricStore.metrics.results)
 const loading = computed(() => metricStore.loading.metric)
-const sticked = computed(() => !projectStore.stickedVM.value)
+const sticked = computed(() => !projectStore.menu.sticked)
 const labels = computed(() => metricStore.metricMeta.label_names)
 
 const queryParams = computed({

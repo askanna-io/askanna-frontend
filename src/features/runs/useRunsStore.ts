@@ -1,11 +1,12 @@
 import { isArray } from 'lodash'
 import { defineStore } from 'pinia'
+import { Run } from '@/features/run/types'
 import apiService from '@/core/services/apiService'
-import { JobRun } from '@/features/jobrun/store/types'
 import { useLogger } from '@/core/composition/useLogger'
 import { apiStringify } from '@/core/services/api-settings'
 
-const SERVICE_NAME = 'jobrun'
+const SERVICE_NAME = 'run'
+
 const api = apiStringify(SERVICE_NAME)
 
 export const useRunsStore = defineStore('runs', {
@@ -20,7 +21,8 @@ export const useRunsStore = defineStore('runs', {
     async getRuns({ uuid, params }) {
       this.runsLoading = true
 
-      let runs: JobRun[]
+      let runs: Run[]
+
       try {
         runs = await apiService({
           uuid,

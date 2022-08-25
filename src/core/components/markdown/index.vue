@@ -21,7 +21,7 @@ import MarkdownItTasklists from 'markdown-it-task-lists'
 import MarkdownItLinkAttributes from 'markdown-it-link-attributes'
 
 import hljs from 'highlight.js'
-import { useRouter } from '@u3u/vue-hooks'
+import { useRouter } from '@/core/plugins/vue-hooks'
 import useCopy from '@/core/composition/useCopy'
 import { escape, unescape, lowerCase, has } from 'lodash'
 import { ref, watch, watchEffect, computed, onUpdated, onMounted } from '@vue/composition-api'

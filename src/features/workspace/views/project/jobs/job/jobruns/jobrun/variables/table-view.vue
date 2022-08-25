@@ -20,30 +20,30 @@
 <script setup lang="ts">
 import { throttle } from 'lodash'
 import useQuery from '@/core/composition/useQuery'
-import { useRouter, useWindowSize } from '@u3u/vue-hooks'
+import { useRunStore } from '@/features/run/useRunStore'
+import { useRouter, useWindowSize } from '@/core/plugins/vue-hooks'
 import { ref, computed, onBeforeMount } from '@vue/composition-api'
-import useJobRunStore from '@/features/jobrun/composition/useJobRunStore'
-import useProjectStore from '@/features/project/composition/useProjectStore'
-import useRuninfoVariablesStore from '@/features/runinfo-variables/composition/useRuninfoVariablesStore'
-import VariablesTableView from '@/features/runinfo-variables/components/metric-table/VariablesTableView.vue'
+import { useProjectStore } from '@/features/project/useProjectStore'
 import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
+import { useRunVariablesStore } from '@/features/run-variables/useRunVariablesStore'
+import VariablesTableView from '@/features/run-variables/components/metric-table/VariablesTableView.vue'
 
 const { route } = useRouter()
+const runStore = useRunStore()
 const { height } = useWindowSize()
-const jobRunStore = useJobRunStore()
 const projectStore = useProjectStore()
-const runinfoVariablesStore = useRuninfoVariablesStore()
+const runVariablesStore = useRunVariablesStore()
 
-const { jobRunId: uuid } = route.value.params
+const { runId: uuid } = route.value.params
 
 const isSorted = ref(false)
 
-const sticked = computed(() => !projectStore.stickedVM.value)
-const next = computed(() => runinfoVariablesStore.state.variables.value.next)
-const labels = computed(() => jobRunStore.state.jobRun.value.variables_meta.label_names)
+const sticked = computed(() => !projectStore.menu.sticked)
+const labels = computed(() => runStore.run.variables_meta.label_names)
+const next = computed(() => runVariablesStore.variables.next)
 
-const items = computed(() => runinfoVariablesStore.state.variables.value.results)
-const loading = computed(() => runinfoVariablesStore.state.loading.value.variables)
+const items = computed(() => runVariablesStore.variables.results)
+const loading = computed(() => runVariablesStore.loading.variables)
 
 const variablesQuery = ref({})
 const queryParams = computed({
@@ -68,7 +68,7 @@ const tableHeight = computed(() => {
   return adjusHeight
 })
 
-const loadingByParams = computed(() => runinfoVariablesStore.state.loading.value.variablesByParams)
+const loadingByParams = computed(() => runVariablesStore.loading.variablesByParams)
 
 const query = useQuery({
   next,
@@ -76,12 +76,12 @@ const query = useQuery({
   limit: 10,
   offset: 100,
   queryParams,
-  storeAction: runinfoVariablesStore.actions.getVariablesByParams
+  storeAction: runVariablesStore.getVariablesByParams
 })
 
 const handleOnSort = async params => {
-  await runinfoVariablesStore.actions.getVariablesInitial({ uuid, params, loading: 'variablesByParams' })
-  await runinfoVariablesStore.actions.setIsFiltered(true)
+  await runVariablesStore.getVariablesInitial({ uuid, params, loading: 'variablesByParams' })
+  await runVariablesStore.setIsFiltered(true)
 
   const { limit, offset, ...rest } = params
   queryParams.value = rest
@@ -92,8 +92,8 @@ const throttled = throttle(query.onScroll, 350)
 const handleOnScroll = e => throttled(e.target.scrollTop)
 
 const fetchData = async () => {
-  await runinfoVariablesStore.actions.setIsFiltered(false)
-  await runinfoVariablesStore.actions.getVariablesInitial({ uuid, params: { limit: 100, offset: 0 } })
+  await runVariablesStore.setIsFiltered(false)
+  await runVariablesStore.getVariablesInitial({ uuid, params: { limit: 100, offset: 0 } })
 }
 
 onBeforeMount(() => fetchData())

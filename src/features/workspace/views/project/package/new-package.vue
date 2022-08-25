@@ -26,37 +26,38 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from '@vue/composition-api'
 import { useUserStore } from '@/features/user/useUserStore'
 import usePermission from '@/core/composition/usePermission'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import usePackages from '@/features/packages/composition/usePackages'
-import useProjectStore from '@/features/project/composition/useProjectStore'
-import usePackageStore from '@/features/package/composition/usePackageStore'
+import { ref, computed, onBeforeMount } from '@vue/composition-api'
+import { useProjectStore } from '@/features/project/useProjectStore'
+import { usePackageStore } from '@/features/package/usePackageStore'
+import { usePackagesStore } from '@/features/packages/usePackagesStore'
 import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
+
 import PackageToolbar from '@/features/package/components/PackageToolbar.vue'
 import PackageProcessing from '@/features/package/components/PackageProcessing.vue'
 import ResumableUpload from '@/features/package/components/resumable-upload/ResumableUpload.vue'
 
-usePackages()
 const userStore = useUserStore()
-const router = useRouterAskAnna()
 const permission = usePermission()
+const { route } = useRouterAskAnna()
 const packageStore = usePackageStore()
 const projectStore = useProjectStore()
+const packagesStore = usePackagesStore()
 const breadcrumbs = usePackageBreadcrumbs()
 
 const isRaplace = ref(false)
-const packageId = router.route.value.params.packageId || ''
+const packageId = route.value.params.packageId || ''
 
 const projectCodeCreate = computed(() => permission.getFor(permission.labels.projectCodeCreate))
-const isProcessing = computed(() => packageStore.processingList.value.find(item => item.packageId === packageId))
+const isProcessing = computed(() => packageStore.processingList.find(item => item.packageId === packageId))
 
 const handleReplace = () => (isRaplace.value = !isRaplace.value)
 
 const handleCloseOutside = async () => {
-  await projectStore.getProjectMe(router.route.value.params.projectId)
-  const project = await projectStore.getProject(router.route.value.params.projectId)
+  await projectStore.getProjectMe(route.value.params.projectId)
+  const project = await projectStore.getProject(route.value.params.projectId)
   if (!project.package.short_uuid || !project.short_uuid) return
 
   await packageStore.getPackage({
@@ -66,6 +67,16 @@ const handleCloseOutside = async () => {
   })
   isRaplace.value = false
 }
+
+const fetchData = async () => {
+  packagesStore.resetStore()
+  const uuid = route.value.params.projectId
+  packagesStore.getProjectPackages({ uuid, params: { limit: 1, offset: 0 } })
+}
+
+onBeforeMount(() => {
+  fetchData()
+})
 </script>
 <style>
 .replace-active {

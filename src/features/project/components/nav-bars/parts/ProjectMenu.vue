@@ -15,11 +15,11 @@
 </template>
 <script setup lang="ts">
 import { invoke } from 'lodash'
-import { useRouter } from '@u3u/vue-hooks'
+import { useRouter } from '@/core/plugins/vue-hooks'
 import { computed } from '@vue/composition-api'
 import usePermission from '@/core/composition/usePermission'
-import useProjectStore from '@/features/project/composition/useProjectStore'
-import usePackageStore from '@/features/package/composition/usePackageStore'
+import { useProjectStore } from '@/features/project/useProjectStore'
+import { usePackageStore } from '@/features/package/usePackageStore'
 
 const props = defineProps({
   projectName: {
@@ -73,8 +73,8 @@ const projectTabs = computed(() => [
   }
 ])
 
-const projectId = computed(() => projectStore.project.value.short_uuid)
-const packageId = computed(() => projectStore.project.value.package.short_uuid)
+const projectId = computed(() => projectStore.project.short_uuid)
+const packageId = computed(() => projectStore.project.package.short_uuid)
 const routeParams = computed(() => ({
   ...route.value.params,
   projectId: projectId.value || route.value.params.projectId,

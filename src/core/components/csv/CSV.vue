@@ -59,7 +59,7 @@
   </v-data-table>
 </template>
 <script setup lang="ts">
-import { useWindowSize } from '@u3u/vue-hooks'
+import { useWindowSize } from '@/core/plugins/vue-hooks'
 import TableGroupedTable from '@/features/file/components/TableGroupedTable.vue'
 
 import { ref, watch, computed } from '@vue/composition-api'

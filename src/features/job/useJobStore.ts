@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router'
 import { defineStore } from 'pinia'
-import { useRouter } from '@u3u/vue-hooks'
+import { useRouter } from '@/core/plugins/vue-hooks'
 import apiService from '@/core/services/apiService'
 import { useLogger } from '@/core/composition/useLogger'
 import { apiStringify } from '@/core/services/api-settings'
@@ -29,7 +29,7 @@ interface Job {
   }
 }
 
-interface JobRun {
+interface Run {
   uuid: string
   status: string
   updated: string
@@ -57,7 +57,7 @@ export const useJobStore = defineStore(SERVICE_NAME, {
     return {
       job: {} as Job,
       loading: true,
-      run: {} as JobRun,
+      run: {} as Run,
       runStatusLoading: true
     }
   },
@@ -118,7 +118,7 @@ export const useJobStore = defineStore(SERVICE_NAME, {
       this.run = run
     },
 
-    async getJobRunStatus(jobRunShortUuid: string) {
+    async getRunStatus(runIdShortUuid: string) {
       this.runStatusLoading = true
 
       let status
@@ -126,12 +126,13 @@ export const useJobStore = defineStore(SERVICE_NAME, {
         status = await apiService({
           action: api.jobrunStatus,
           serviceName: SERVICE_NAME,
-          uuid: jobRunShortUuid || this.run.short_uuid
+          uuid: runIdShortUuid || this.run.short_uuid
         })
       } catch (e) {
         const logger = useLogger()
 
-        logger.error('Error on getjob run status in getJobRunStatus action.\nError: ', e)
+        logger.error('Error on getjob run status in getRunStatus action.\nError: ', e)
+
         return
       }
 

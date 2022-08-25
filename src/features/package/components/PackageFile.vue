@@ -69,7 +69,7 @@
 </template>
 
 <script setup lang="ts">
-import { useWindowSize } from '@u3u/vue-hooks'
+import { useWindowSize } from '@/core/plugins/vue-hooks'
 import { ref, computed } from '@vue/composition-api'
 import useNumeral from '@/core/composition/useNumeral'
 import { useFileStore } from '@/features/file/useFileStore'

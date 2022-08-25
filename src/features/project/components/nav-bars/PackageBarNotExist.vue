@@ -72,7 +72,9 @@ export default defineComponent({
       type: Object,
       default: function () {
         return {
-          name: ''
+          name: '',
+          description: '',
+          permission: {}
         }
       }
     },

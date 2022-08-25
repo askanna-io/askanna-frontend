@@ -23,26 +23,26 @@
 <script setup lang="ts">
 import TheJoin from '../components/join/TheJoin.vue'
 import { useAuthStore } from '@/features/auth/useAuthStore'
+import { usePeopleStore } from '@/features/people/usePeopleStore'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import { ref, computed, onBeforeMount } from '@vue/composition-api'
 import InvalidInvitation from '../components/join/InvalidInvitation.vue'
-import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
 import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 
 const authStore = useAuthStore()
 const router = useRouterAskAnna()
-const workspaceStore = useWorkspaceStore()
+const peopleStore = usePeopleStore()
 const { token, peopleId, workspaceId } = router.route.value.params
 
 const loading = ref(true)
 const isInvitationValid = computed(
-  () => Boolean(workspaceStore.invitation.value.email) && workspaceStore.invitation.value.status !== 'accepted'
+  () => Boolean(peopleStore.invitation.email) && peopleStore.invitation.status !== 'accepted'
 )
 
 const fetchData = async () => {
   loading.value = true
   await authStore.logout(false)
-  await workspaceStore.getInvitetionInfo({
+  await peopleStore.getInvitetionInfo({
     token,
     peopleId,
     workspaceId

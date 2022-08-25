@@ -1,4 +1,4 @@
-import { useRouter } from '@u3u/vue-hooks'
+import { useRouter } from '@/core/plugins/vue-hooks'
 import { computed } from '@vue/composition-api'
 
 export default (params: { start: number; end: number } = { start: 0, end: 6 }) => {

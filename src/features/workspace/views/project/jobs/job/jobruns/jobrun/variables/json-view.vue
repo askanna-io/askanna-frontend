@@ -7,12 +7,12 @@
 </template>
 <script lang="ts">
 import { throttle } from 'lodash'
-import { useWindowSize } from '@u3u/vue-hooks'
+import { useWindowSize } from '@/core/plugins/vue-hooks'
 import useQuery from '@/core/composition/useQuery'
 import { computed, onBeforeMount, defineComponent } from '@vue/composition-api'
-import MetricJsonView from '@/features/metric/components/metric-table/MetricJsonView.vue'
-import useRuninfoVariablesStore from '@/features/runinfo-variables/composition/useRuninfoVariablesStore'
 import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
+import MetricJsonView from '@/features/metric/components/metric-table/MetricJsonView.vue'
+import { useRunVariablesStore } from '@/features/run-variables/useRunVariablesStore'
 
 export default defineComponent({
   name: 'json-view',
@@ -21,10 +21,10 @@ export default defineComponent({
 
   setup(_, context) {
     const { height } = useWindowSize()
-    const runinfoVariablesStore = useRuninfoVariablesStore()
+    const runVariablesStore = useRunVariablesStore()
 
-    const { jobRunId: uuid } = context.root.$route.params
-    const next = computed(() => runinfoVariablesStore.state.variablesJSON.value.next)
+    const { runId: uuid } = context.root.$route.params
+    const next = computed(() => runVariablesStore.variablesJSON.next)
 
     const query = useQuery({
       uuid,
@@ -32,13 +32,11 @@ export default defineComponent({
       limit: 10,
       offset: 10,
       loading: false,
-      storeAction: runinfoVariablesStore.actions.getVariablesJSON
+      storeAction: runVariablesStore.getVariablesJSON
     })
 
-    const loading = computed(() => runinfoVariablesStore.state.loading.value.variablesJSON)
-    const variablesJSON = computed(() =>
-      JSON.stringify(runinfoVariablesStore.state.variablesJSON.value.results, null, 2)
-    )
+    const loading = computed(() => runVariablesStore.loading.variablesJSON)
+    const variablesJSON = computed(() => JSON.stringify(runVariablesStore.variablesJSON.results, null, 2))
 
     const maxHeight = computed(() => height.value - 140)
     const scrollerStyles = computed(() => {
@@ -52,8 +50,7 @@ export default defineComponent({
       throttled(e.target.scrollTop)
     }
 
-    const fetchData = async () =>
-      await runinfoVariablesStore.actions.getVariablesJSON({ uuid, params: { limit: 10, offset: 0 } })
+    const fetchData = async () => await runVariablesStore.getVariablesJSON({ uuid, params: { limit: 10, offset: 0 } })
 
     onBeforeMount(() => fetchData())
 

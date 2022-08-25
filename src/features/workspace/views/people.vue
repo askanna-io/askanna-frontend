@@ -1,17 +1,17 @@
 <template>
   <div>
-    <workspace-people-navbar />
+    <people-navbar />
     <template v-if="isMember">
-      <workspace-people-list
+      <people-list
         :loading="loading"
-        :items="workspacePeople"
+        :items="people"
         :currentUser="currentUser"
         :settings="workspaceSettings"
         :workspaceUuid="workspace.uuid"
         :workspaceName="workspace.name"
         @onSelectPoeple="handleSelectPeople"
       />
-      <workspace-people-popup
+      <people-popup
         v-if="peoplePopup"
         :value="peoplePopup"
         :people="selectedPeople"
@@ -25,21 +25,21 @@
         @onDeleteInivitationPopup="handleDeleteInivitationPopup(true)"
         @onResendInivitationPopup="handleResendInivitationPopup(true)"
       />
-      <workspace-people-confirm-delete-popup
+      <people-confirm-delete-popup
         v-if="peopleConfirmDeletePopup"
         :value="peopleConfirmDeletePopup"
         :peopleName="selectedPeople.name"
         @onDeleteConfirm="handleDeleteItem"
         @onCloseDeletePopup="handleCloseConfirmDeletePopup"
       />
-      <workspace-people-confirm-delete-invitation-popup
+      <people-confirm-delete-invitation-popup
         v-if="deleteInvitationConfirmPopup"
         :peopleName="selectedPeople.name"
         :value="deleteInvitationConfirmPopup"
         @onDeleteConfirm="handleDeleteInvitation"
         @onClose="handleDeleteInivitationPopup(false)"
       />
-      <workspace-people-confirm-resend-invitation-popup
+      <people-confirm-resend-invitation-popup
         v-if="resendInvitationConfirmPopup"
         :peopleName="selectedPeople.name"
         :value="resendInvitationConfirmPopup"
@@ -47,7 +47,7 @@
         @onClose="handleResendInivitationPopup(false)"
       />
 
-      <workspace-people-confirm-change-role-popup
+      <people-confirm-change-role-popup
         v-if="changeRoleConfirmPopup"
         :toRole="changeRoleTo"
         :fromRole="selectedPeople.role.code"
@@ -66,19 +66,23 @@
   </div>
 </template>
 <script setup lang="ts">
-import { useRouter } from '@u3u/vue-hooks'
+import { useRouter } from '@/core/plugins/vue-hooks'
+import { usePeopleStore } from '@/features/people/usePeopleStore'
 import { ref, computed, onBeforeMount } from '@vue/composition-api'
-import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
-import WorkspacePeopleList from '@/features/workspace/components/people/WorkspacePeopleList.vue'
-import WorkspacePeoplePopup from '@/features/workspace/components/people/WorkspacePeoplePopup.vue'
-import WorkspacePeopleNavbar from '@/features/workspace/components/people/WorkspacePeopleNavbar.vue'
-import WorkspacePeopleConfirmDeletePopup from '@/features/workspace/components/people/WorkspacePeopleConfirmDeletePopup.vue'
-import WorkspacePeopleConfirmChangeRolePopup from '@/features/workspace/components/people/WorkspacePeopleConfirmChangeRolePopup.vue'
-import WorkspacePeopleConfirmDeleteInvitationPopup from '@/features/workspace/components/people/WorkspacePeopleConfirmDeleteInvitationPopup.vue'
-import WorkspacePeopleConfirmResendInvitationPopup from '@/features/workspace/components/people/WorkspacePeopleConfirmResendInvitationPopup.vue'
+import { useWorkspaceStore } from '@/features/workspace/useWorkspaceStore'
+
+import PeopleList from '@/features/people/components/PeopleList.vue'
+import PeopleNavbar from '@/features/people/components/PeopleNavbar.vue'
+import PeoplePopup from '@/features/people/components/PeoplePopup.vue'
+import PeopleConfirmDeletePopup from '@/features/people/components/PeopleConfirmDeletePopup.vue'
+import PeopleConfirmChangeRolePopup from '@/features/people/components/PeopleConfirmChangeRolePopup.vue'
+import PeopleConfirmDeleteInvitationPopup from '@/features/people/components/PeopleConfirmDeleteInvitationPopup.vue'
+import PeopleConfirmResendInvitationPopup from '@/features/people/components/PeopleConfirmResendInvitationPopup.vue'
 
 const { route } = useRouter()
+const peopleStore = usePeopleStore()
 const workspaceStore = useWorkspaceStore()
+
 const { workspaceId } = route.value.params
 
 const changeRoleTo = ref('')
@@ -90,22 +94,22 @@ const peopleConfirmDeletePopup = ref(false)
 const deleteInvitationConfirmPopup = ref(false)
 const resendInvitationConfirmPopup = ref(false)
 
+const isMember = computed(() => workspaceStore.workspace.is_member)
 const isPeopleAdmin = computed(() => selectedPeople.value.role === 'WA')
-const isMember = computed(() => workspaceStore.workspace.value.is_member)
 const roleAction = computed(() => (isPeopleAdmin.value ? 'revoke' : 'grant'))
 
-const workspace = computed(() => workspaceStore.workspace.value)
-const currentUser = computed(() => workspaceStore.currentPeople.value)
-const workspaceSettings = computed(() => workspaceStore.workspaceSettings.value)
+const workspace = computed(() => workspaceStore.workspace)
+const currentUser = computed(() => peopleStore.currentPeople)
+const workspaceSettings = computed(() => workspaceStore.workspaceSettings)
 
-const workspacePeople = computed(() => {
+const people = computed(() => {
   const {
     search,
     filter: { role, status },
     sorting: { sortBy, sort }
-  } = workspaceStore.workspacePeopleParams.value
+  } = peopleStore.peopleParams
 
-  let people = [...workspaceStore.workspacePeople.value]
+  let people = [...peopleStore.people]
 
   if (!people.length) return people
 
@@ -132,7 +136,7 @@ const workspacePeople = computed(() => {
   return people
 })
 
-const loading = computed(() => workspaceStore.loading.value.people)
+const loading = computed(() => peopleStore.loading)
 
 const handleValue = value => (peoplePopup.value = value)
 
@@ -146,7 +150,7 @@ const handleChangeRole = async role => {
 }
 
 const handleConfirmChangeRole = async role => {
-  const people = await workspaceStore.actions.changeRole({
+  const people = await peopleStore.changeRole({
     role,
     peopleId: selectedPeople.value.short_uuid,
     workspaceId: selectedPeople.value.workspace.short_uuid
@@ -163,14 +167,14 @@ const handleSelectPeople = people => {
 }
 
 const handleDeleteItem = async () => {
-  await workspaceStore.deleteWorkspacePeople(selectedPeople.value)
+  await peopleStore.deletePeople(selectedPeople.value)
   peopleConfirmDeletePopup.value = false
   peoplePopup.value = false
   deleteInvitationConfirmPopup.value = false
 }
 
 const handleDeleteInvitation = async () => {
-  await workspaceStore.deleteInvitation(selectedPeople.value)
+  await peopleStore.deleteInvitation(selectedPeople.value)
 
   peopleConfirmDeletePopup.value = false
   peoplePopup.value = false
@@ -182,7 +186,7 @@ const handleDeleteInivitationPopup = value => (deleteInvitationConfirmPopup.valu
 const handleResendInivitationPopup = value => (resendInvitationConfirmPopup.value = value)
 
 const handleResendItem = () => {
-  workspaceStore.resendInvitation({
+  peopleStore.resendInvitation({
     peopleId: selectedPeople.value.short_uuid,
     workspaceId: selectedPeople.value.workspace.short_uuid
   })
@@ -191,7 +195,7 @@ const handleResendItem = () => {
 }
 
 const fetchData = async () => {
-  await workspaceStore.actions.getWorkspacePeople({ workspaceId })
+  await peopleStore.getPeople({ workspaceId })
 }
 
 onBeforeMount(() => fetchData())

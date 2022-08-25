@@ -61,7 +61,7 @@
 </template>
 
 <script setup lang="ts">
-import { useWindowSize } from '@u3u/vue-hooks'
+import { useWindowSize } from '@/core/plugins/vue-hooks'
 import Chart from '@/features/charts/components/Chart.vue'
 import { useChartStore } from '@/features/charts/useChartStore'
 import { useMetricStore } from '@/features/metric/useMetricStore'
@@ -92,7 +92,7 @@ const router = useRouterAskAnna()
 const { height } = useWindowSize()
 const metricStore = useMetricStore()
 
-const { jobRunId: uuid } = router.route.value.params
+const { runId: uuid } = router.route.value.params
 
 const activeY = ref()
 const activeS = ref()

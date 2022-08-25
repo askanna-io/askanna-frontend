@@ -12,7 +12,7 @@ import { throttle } from 'lodash'
 import { computed } from '@vue/composition-api'
 import useQuery from '@/core/composition/useQuery'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
+import { useWorkspaceStore } from '@/features/workspace/useWorkspaceStore'
 import { useWorkspaceProjectsStore } from '@/features/workspace/useWorkspaceProjectsStore'
 import WorkspaceProjectList from '@/features/workspace/components/WorkspaceProjectList.vue'
 
@@ -25,7 +25,7 @@ const { workspaceId } = routerAA.route.value.params
 
 const queryParams = computed(() => routerAA.route.value.query)
 
-const next = computed(() => workspaceStore.state.workspaceProjects.value.next)
+const next = computed(() => workspaceProjectsStore.allWorkspaceProjects.next)
 
 const query = useQuery({
   next,
@@ -34,12 +34,10 @@ const query = useQuery({
   queryParams,
   uuid: workspaceId,
   store: workspaceStore,
-  storeAction: workspaceStore.actions.getWorkpaceProjects
+  storeAction: workspaceProjectsStore.getWorkpaceProjects
 })
 
 const onScroll = e => query.onScroll(e.target.documentElement.scrollTop)
-
-workspaceProjectsStore.allWorkspaceProjects = workspaceStore.state.workspaceProjects
 
 const projects = computed(() => workspaceProjectsStore.getProjectsByParams(queryParams.value))
 </script>

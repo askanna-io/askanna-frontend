@@ -19,7 +19,7 @@ export const compareItems = {
         field: 'short_uuid',
         type: 'run-suuid',
         to: 'workspace-project-jobs-job-jobrun-overview',
-        getRouteParams: params => ({ jobRunId: params.jobRunId })
+        getRouteParams: params => ({ runId: params.runId })
       },
       {
         title: 'Start date',
@@ -38,7 +38,7 @@ export const compareItems = {
         type: 'code',
         field: 'package.short_uuid',
         to: 'workspace-project-jobs-job-jobrun-code',
-        getRouteParams: params => ({ jobRunId: params.jobRunId })
+        getRouteParams: params => ({ runId: params.runId })
       },
       {
         title: 'By',

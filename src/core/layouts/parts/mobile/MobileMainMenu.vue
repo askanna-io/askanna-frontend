@@ -25,11 +25,10 @@
 <script setup lang="ts">
 import { computed } from '@vue/composition-api'
 import MobileProjectMenu from './MobileProjectMenu.vue'
+import { useAuthStore } from '@/features/auth/useAuthStore'
 import MobileWorkspaceMenu from './MobileWorkspaceMenu.vue'
 import { useMobileStore } from '@/core/store/useMobileStore'
-import { useAuthStore } from '@/features/auth/useAuthStore'
-
-import useWorkspaceStore from '@/features/workspace/composition/useWorkSpaceStore'
+import { useWorkspaceStore } from '@/features/workspace/useWorkspaceStore'
 
 const emit = defineEmits('onClose')
 
@@ -37,8 +36,8 @@ const authStore = useAuthStore()
 const mobileStore = useMobileStore()
 const workspaceStore = useWorkspaceStore()
 
-const isMember = computed(() => workspaceStore.workspace.value.is_member)
-const workspaceShortUuid = computed(() => workspaceStore.workspace.value.short_uuid)
+const isMember = computed(() => workspaceStore.workspace.is_member)
+const workspaceShortUuid = computed(() => workspaceStore.workspace.short_uuid)
 
 const profileRoute = computed(() => {
   if (isMember.value) {

@@ -9,7 +9,7 @@
 
 <script setup lang="ts">
 import { get } from 'lodash'
-import { useRouter } from '@u3u/vue-hooks'
+import { useRouter } from '@/core/plugins/vue-hooks'
 import Layout from '@/core/layouts/Layout.vue'
 import { computed } from '@vue/composition-api'
 import { routerConfig } from './router/routerConfig'

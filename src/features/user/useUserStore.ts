@@ -15,8 +15,9 @@ export const useUserStore = defineStore('user', {
       userProfile: {
         name: '',
         email: '',
-        password: undefined,
-        short_uuid: ''
+        short_uuid: '',
+        date_joined: '',
+        password: undefined
       },
       globalProfile: {
         uuid: '',

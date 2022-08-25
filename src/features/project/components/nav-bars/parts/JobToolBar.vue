@@ -48,7 +48,7 @@ const { route } = useRouterAskAnna()
 const currentTab = ref('job-overview')
 const params = computed(() => route.value.params)
 
-const jobRunEditTabs = [
+const runIdEditTabs = [
   {
     id: 0,
     name: 'Edit job',
@@ -73,7 +73,8 @@ const jobTools = [
 ]
 
 const tabs = computed(() => {
-  const runTabs = props.isEditJobView ? jobRunEditTabs : jobTools
+  const runTabs = props.isEditJobView ? runIdEditTabs : jobTools
+
   return runTabs.filter(item => item.show)
 })
 </script>

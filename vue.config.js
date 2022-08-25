@@ -96,8 +96,8 @@ module.exports = {
       alias: {
         '@': path.resolve(__dirname, 'src/'),
         '@job': path.resolve(__dirname, 'src/features/job/'),
+        '@run': path.resolve(__dirname, 'src/features/run/'),
         '@jobs': path.resolve(__dirname, 'src/features/jobs/'),
-        '@jobrun': path.resolve(__dirname, 'src/features/jobrun/'),
         '@project': path.resolve(__dirname, 'src/features/project/'),
         '@package': path.resolve(__dirname, 'src/features/package/'),
         '@packages': path.resolve(__dirname, 'src/features/packages/')

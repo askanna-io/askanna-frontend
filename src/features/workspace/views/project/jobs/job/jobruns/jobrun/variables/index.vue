@@ -59,14 +59,14 @@ import useCopy from '@/core/composition/useCopy'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import { ref, computed, onBeforeMount } from '@vue/composition-api'
 import useForceFileDownload from '@/core/composition/useForceFileDownload'
-import useRuninfoVariablesStore from '@/features/runinfo-variables/composition/useRuninfoVariablesStore'
+import { useRunVariablesStore } from '@/features/run-variables/useRunVariablesStore'
 
 const copy = useCopy()
 const router = useRouterAskAnna()
 const forceFileDownload = useForceFileDownload()
-const runinfoVariablesStore = useRuninfoVariablesStore()
+const runVariablesStore = useRunVariablesStore()
 
-const { jobRunId: uuid } = router.route.value.params
+const { runId: uuid } = router.route.value.params
 
 const views = [
   { name: 'Table', value: 'table', icon: 'mdi-table' },
@@ -79,10 +79,10 @@ const currentView = ref(views[0])
 const currentViewIndex = ref(0)
 const currentGroupBy = ref(defaultGroupByValues[0])
 
-const labels = computed(() => runinfoVariablesStore.state.variablesLabels.value)
-const items = computed(() => runinfoVariablesStore.state.variables.value.results)
-const variablesFullData = computed(() => runinfoVariablesStore.state.variablesFullData.value)
-const variablesJSON = computed(() => JSON.stringify(runinfoVariablesStore.state.variablesJSON.value.results, null, 2))
+const labels = computed(() => runVariablesStore.variablesLabels)
+const items = computed(() => runVariablesStore.variables.results)
+const variablesFullData = computed(() => runVariablesStore.variablesFullData)
+const variablesJSON = computed(() => JSON.stringify(runVariablesStore.variablesJSON.results, null, 2))
 
 // set labels to group select if they exist
 const groupByValues = computed(() =>
@@ -96,13 +96,13 @@ const disabledTools = computed(
 )
 
 const handleCopy = async () => {
-  if (!variablesFullData.value) await runinfoVariablesStore.actions.getVariablesFullData({ uuid })
+  if (!variablesFullData.value) await runVariablesStore.getVariablesFullData({ uuid })
 
   copy.handleCopyText(variablesFullData.value)
 }
 
 const handleDownload = async () => {
-  if (!variablesFullData.value) await runinfoVariablesStore.actions.getVariablesFullData({ uuid })
+  if (!variablesFullData.value) await runVariablesStore.getVariablesFullData({ uuid })
 
   forceFileDownload.trigger({ source: variablesFullData.value, name: `run_${uuid}_variables.json` })
 }
