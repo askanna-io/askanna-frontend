@@ -100,7 +100,7 @@ export const useWorkspaceStore = defineStore(WORKSPACE_STORE, {
           serviceName,
           method: 'put',
           action: api.get,
-          uuid: state.workspace.short_uuid
+          uuid: this.workspace.short_uuid
         })
       } catch (error) {
         logger.error('Error on update workspace in getWorkspace action.\nError: ', error)
