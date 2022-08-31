@@ -54,7 +54,7 @@
       </v-flex>
     </v-toolbar>
     <v-flex>
-      <ask-anna-loading-progress classes="mx-4 mb-4" :type="'table-row'" :loading="fileStore.loading" fullWidth>
+      <AskAnnaLoadingProgress classes="mx-4 mb-4" :type="'table-row'" :loading="fileStore.loading" fullWidth>
         <PreviewFile
           :maxHeight="`${maxHeight}px`"
           :fileBlob="fileStore.fileBlob"
@@ -69,7 +69,7 @@
           textNoData="There is no input available for this run."
           @onDownload="handleDownload()"
         />
-      </ask-anna-loading-progress>
+      </AskAnnaLoadingProgress>
     </v-flex>
   </div>
 </template>
@@ -128,7 +128,7 @@ const handleCopy = async () => {
 
 const handleChangeView = (currentViewIndex: number) => {
   currentView.value = views[currentViewIndex]
-  router.push({ name: 'workspace-project-jobs-job-jobrun-input', params: { view: currentView.value.value } })
+  router.push({ name: 'workspace-project-jobs-job-run-input', params: { view: currentView.value.value } })
 }
 
 const fetchData = async () => {

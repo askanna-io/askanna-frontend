@@ -1,5 +1,5 @@
 <template>
-  <ask-anna-loading-progress :type="'table-row'" :loading="loading">
+  <AskAnnaLoadingProgress :type="'table-row'" :loading="loading">
     <v-data-iterator :items="projects" hide-default-footer :no-data-text="''" disable-pagination>
       <template v-slot:header>
         <PublicProjectsToolbar />
@@ -44,7 +44,7 @@
         </v-alert></template
       >
     </v-data-iterator>
-  </ask-anna-loading-progress>
+  </AskAnnaLoadingProgress>
 </template>
 <script setup lang="ts">
 import { ref, computed } from '@vue/composition-api'
@@ -63,7 +63,6 @@ const sanitizeHTML = useSanitizeHTML()
 const projectsStore = useProjectsStore()
 
 const loading = computed(() => projectsStore.loading)
-const isSignIn = computed(() => permission.token.value)
 const query = computed(() => routerAA.route.value.query)
 const projects = computed(() => projectsStore.getProjectsByParams(query.value))
 

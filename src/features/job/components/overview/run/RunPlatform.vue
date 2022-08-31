@@ -127,7 +127,7 @@ const handleValidate = async (value: boolean) => (isValid.value = value)
 
 const hadnleOpenRun = () => {
   router.push({
-    name: 'workspace-project-jobs-job-jobrun',
+    name: 'workspace-project-jobs-job-run',
     params: { ...router.route.value.params, runId: jobStore.run.short_uuid }
   })
 }

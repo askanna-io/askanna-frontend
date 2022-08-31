@@ -62,7 +62,7 @@
       </v-flex>
     </v-toolbar>
     <v-flex id="scroll-target" class="overflow-y-auto" ref="scrolllWrapperRef" :style="scrollerStyles">
-      <ask-anna-loading-progress
+      <AskAnnaLoadingProgress
         :loading="fileStore.loading"
         fullWidth
         height="94"
@@ -83,7 +83,7 @@
           :isFileBigForRawView="fileStore.isFileBigForRawView"
           @onDownload="handleDownload"
         />
-      </ask-anna-loading-progress>
+      </AskAnnaLoadingProgress>
     </v-flex>
   </div>
 </template>
@@ -192,7 +192,7 @@ const handleCopy = async () => {
 
 const handleChangeView = (currentViewIndex: number) => {
   currentView.value = views[currentViewIndex]
-  router.push({ name: 'workspace-project-jobs-job-jobrun-result', params: { view: currentView.value.value } })
+  router.push({ name: 'workspace-project-jobs-job-run-result', params: { view: currentView.value.value } })
 }
 
 onBeforeMount(() => fetchData())

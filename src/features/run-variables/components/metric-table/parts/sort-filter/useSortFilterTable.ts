@@ -26,7 +26,7 @@ export default function (context: SetupContext) {
 
     //change query in params
     context.root.$router.replace({
-      name: 'workspace-project-jobs-job-jobrun-variables',
+      name: 'workspace-project-jobs-job-run-variables',
       query: { ...context.root.$route.query, [path]: value }
     })
 

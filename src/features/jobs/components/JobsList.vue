@@ -31,7 +31,7 @@
     </template>
     <template v-slot:expanded-item="{ item }">
       <td :colspan="8" class="pa-0">
-        <ask-anna-loading-progress v-if="item.runs.count" :type="'table-row'" :loading="loading">
+        <AskAnnaLoadingProgress v-if="item.runs.count" :type="'table-row'" :loading="loading">
           <runs
             :items="runs"
             :count="count"
@@ -40,7 +40,7 @@
             :tableClass="'job-sub-table'"
             @onChangeParams="params => handleChangeParams({ uuid: item.short_uuid, params })"
           />
-        </ask-anna-loading-progress>
+        </AskAnnaLoadingProgress>
 
         <div v-else class="ma-2 text-center">No runs yet</div>
       </td>

@@ -4,7 +4,7 @@
       <people-toolbar :title="workspaceName" />
     </template>
     <template v-slot:default="props">
-      <ask-anna-loading-progress :type="'table-row'" :loading="loading">
+      <AskAnnaLoadingProgress :type="'table-row'" :loading="loading">
         <v-row v-if="!settings.projectView" :class="{ 'px-2': $vuetify.breakpoint.xsOnly }">
           <v-col
             v-for="item in props.items"
@@ -28,7 +28,7 @@
             </v-hover>
           </v-col>
         </v-row>
-      </ask-anna-loading-progress>
+      </AskAnnaLoadingProgress>
     </template>
   </v-data-iterator>
 </template>

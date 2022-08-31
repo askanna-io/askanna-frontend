@@ -1,7 +1,7 @@
 <template>
-  <ask-anna-loading-progress :type="'table-row'" :loading="loading">
+  <AskAnnaLoadingProgress :type="'table-row'" :loading="loading">
     <workspace-not-ready v-if="!isReady" />
-  </ask-anna-loading-progress>
+  </AskAnnaLoadingProgress>
 </template>
 
 <script setup lang="ts">

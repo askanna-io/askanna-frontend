@@ -64,7 +64,7 @@ const router = useRouterAskAnna()
 const menu = ref(false)
 const deleteRunConfirmPopup = ref(false)
 
-const editRunRouteName = 'workspace-project-jobs-job-jobrun-edit'
+const editRunRouteName = 'workspace-project-jobs-job-run-edit'
 
 const run = computed(() => runStore.run)
 const disabledButtonEditRun = computed(() => router.route.value.name === editRunRouteName)

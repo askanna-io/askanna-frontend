@@ -66,7 +66,7 @@
         <td class="text-start">
           <router-link
             class="table-link table-link--unformated"
-            :to="routeLinkParams({ item, name: 'workspace-project-jobs-job-jobrun-input' })"
+            :to="routeLinkParams({ item, name: 'workspace-project-jobs-job-run-input' })"
           >
             {{ getPayloadTitle(item.payload) }}
           </router-link>
@@ -74,7 +74,7 @@
         <td class="text-start">
           <router-link
             class="table-link table-link--unformated"
-            :to="routeLinkParams({ item, name: 'workspace-project-jobs-job-jobrun-metrics' })"
+            :to="routeLinkParams({ item, name: 'workspace-project-jobs-job-run-metrics' })"
           >
             {{ getMetricTitle(item.metrics_meta.count) }}
           </router-link>
@@ -200,7 +200,7 @@ export default defineComponent({
       return moment.durationHumanizeBySecond(item.duration?.toString())
     }
 
-    const routeLinkParams = ({ item, name = 'workspace-project-jobs-job-jobrun-overview' }) => {
+    const routeLinkParams = ({ item, name = 'workspace-project-jobs-job-run-overview' }) => {
       return {
         name,
         params: {

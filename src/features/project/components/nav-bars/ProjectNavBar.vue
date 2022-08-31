@@ -84,9 +84,9 @@ const types = [
     comporasionFn: () => props.routeName.indexOf('job-uuid') !== -1
   },
   {
-    routes: 'workspace-project-jobs-job-jobrun',
+    routes: 'workspace-project-jobs-job-run',
     component: RunNavBar,
-    comporasionFn: () => props.routeName.indexOf('workspace-project-jobs-job-jobrun') !== -1
+    comporasionFn: () => props.routeName.indexOf('workspace-project-jobs-job-run') !== -1
   },
   {
     routes: 'workspace-project-job-run-does-not-exist',
