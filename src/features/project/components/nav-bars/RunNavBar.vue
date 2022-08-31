@@ -131,7 +131,7 @@ const jobName = computed(() => jobStore.job.name)
 const runIdStatus = computed(() => jobStore.run.status)
 const runName = computed(() => (run.value.name ? `: ${run.value.name}` : ':'))
 
-const isEditRunView = computed(() => route.value.name === 'workspace-project-jobs-job-jobrun-edit')
+const isEditRunView = computed(() => route.value.name === 'workspace-project-jobs-job-run-edit')
 
 const onStick = data => props.handleOnStick(data.sticked)
 </script>

@@ -47,7 +47,7 @@
       </v-flex>
     </v-toolbar>
     <v-flex :style="scrollerStyles" class="overflow-y-auto" id="scroll-target">
-      <ask-anna-loading-progress
+      <AskAnnaLoadingProgress
         fullWidth
         height="94"
         :loading="loading"
@@ -66,7 +66,7 @@
         </div>
 
         <v-alert v-else class="ma-4 text-center" dense outlined>There is no log available for this run. </v-alert>
-      </ask-anna-loading-progress>
+      </AskAnnaLoadingProgress>
     </v-flex>
   </div>
 </template>

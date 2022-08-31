@@ -12,31 +12,20 @@
   </ask-anna-page-does-not-exist>
 </template>
 
-<script>
+<script setup lang="ts">
+import { computed } from '@vue/composition-api'
 import usePermission from '@/core/composition/usePermission'
-import { computed, defineComponent } from '@vue/composition-api'
-import AskAnnaPageDoesNotExist from '@/core/components/shared/AskAnnaPageDoesNotExist'
+import AskAnnaPageDoesNotExist from '@/core/components/shared/AskAnnaPageDoesNotExist.vue'
 
-export default defineComponent({
-  name: 'workspace-does-not-exist',
+const permission = usePermission()
 
-  components: { AskAnnaPageDoesNotExist },
-
-  setup() {
-    const permission = usePermission()
-
-    const breadcrumbs = computed(() => [
-      {
-        title: 'Workspace does not exist',
-        to: '',
-        disabled: true
-      }
-    ])
-
-    return {
-      breadcrumbs,
-      isUserLoggedIn: permission.isUserLoggedIn
-    }
+const breadcrumbs = computed(() => [
+  {
+    title: 'Workspace does not exist',
+    to: '',
+    disabled: true
   }
-})
+])
+
+const isUserLoggedIn = computed(() => permission.isUserLoggedIn)
 </script>

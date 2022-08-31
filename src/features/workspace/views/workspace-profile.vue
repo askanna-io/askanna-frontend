@@ -18,7 +18,7 @@
       <span class="title py-1">Edit my profile</span>
     </v-card-title>
 
-    <ask-anna-loading-progress :loading="loading">
+    <AskAnnaLoadingProgress :loading="loading">
       <v-form ref="profileForm">
         <v-card-title class="title py-1">Login information</v-card-title>
         <user-profile
@@ -127,7 +127,7 @@
           </v-row>
         </v-container>
       </v-form>
-    </ask-anna-loading-progress>
+    </AskAnnaLoadingProgress>
   </v-card>
 </template>
 

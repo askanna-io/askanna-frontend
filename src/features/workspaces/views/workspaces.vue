@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ask-anna-loading-progress :type="'table-row'" :loading="loading">
+    <AskAnnaLoadingProgress :type="'table-row'" :loading="loading">
       <v-data-iterator :items="workspaces" hide-default-footer :no-data-text="''" disable-pagination>
         <template v-slot:header>
           <WorkspacesToolbar />
@@ -44,10 +44,10 @@
           </v-alert></template
         >
       </v-data-iterator>
-    </ask-anna-loading-progress>
-    <ConfirmDeleteWorkspacePopup
-      :value="deleteWorkspaceConfirmPopup"
+    </AskAnnaLoadingProgress>
+    <WorkspaceConfirmDeletePopup
       :workspaceName="workspace.name"
+      :value="deleteWorkspaceConfirmPopup"
       @onClose="handleCloseWorkspaceRemove"
       @onDeleteConfirm="handleDeleteConfirmWorkspace"
     />
@@ -63,7 +63,7 @@ import { useWorkspacesStore } from '@/features/workspaces/useWorkspacesStore'
 import WorkspacesToolbar from '@/features/workspaces/components/WorkspacesToolbar.vue'
 import WorkspacesCardItem from '@/features/workspaces/components/WorkspacesCardItem.vue'
 import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
-import ConfirmDeleteWorkspacePopup from '@/features/workspace/components/project/ConfirmDeleteWorkspacePopup.vue'
+import WorkspaceConfirmDeletePopup from '@/features/workspace/components/WorkspaceConfirmDeletePopup.vue'
 
 const routerAA = useRouterAskAnna()
 const sanitizeHTML = useSanitizeHTML()

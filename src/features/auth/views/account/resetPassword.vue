@@ -7,7 +7,7 @@
             <img alt="AskAnna logo" src="@/assets/logo.svg" class="logo" />
           </v-col>
         </v-row>
-        <ask-anna-loading-progress :type="'table-row'" :loading="loading" loadingTitle="Anna is checking your token...">
+        <AskAnnaLoadingProgress :type="'table-row'" :loading="loading" loadingTitle="Anna is checking your token...">
           <v-row align="center" justify="center" v-if="isInvitationValid">
             <v-col cols="6" xl="2" md="4" sm="6" class="rounded">
               <v-expansion-panels class="login-expansion" readonly mandatory>
@@ -26,7 +26,7 @@
           </v-row>
 
           <invalid-reset-password-token v-else />
-        </ask-anna-loading-progress>
+        </AskAnnaLoadingProgress>
       </v-col>
     </v-row>
   </div>

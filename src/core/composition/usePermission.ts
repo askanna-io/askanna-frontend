@@ -1,6 +1,6 @@
 import { useRouter } from '@/core/plugins/vue-hooks'
 import { computed } from '@vue/composition-api'
-import { PERMISSIONS_LABELS } from '@/features/workspace/const'
+import { PERMISSIONS_LABELS } from '@/features/workspace/types'
 import { usePeopleStore } from '@/features/people/usePeopleStore'
 
 export default () => {

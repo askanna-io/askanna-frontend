@@ -1,5 +1,5 @@
 <template>
-  <ask-anna-loading-progress :loading="loading">
+  <AskAnnaLoadingProgress :loading="loading">
     <div>
       <PreviewFileType
         v-if="!isFileEmpty"
@@ -61,7 +61,7 @@
 
       <v-alert v-if="isFileEmpty" class="ma-4 text-center" dense outlined>{{ textNoData }}</v-alert>
     </div>
-  </ask-anna-loading-progress>
+  </AskAnnaLoadingProgress>
 </template>
 <script setup lang="ts">
 import PreviewFileType from './PreviewFileType.vue'

@@ -1,6 +1,6 @@
 <template>
   <v-card flat class="pa-2 text-center">
-    <ask-anna-loading-progress :loading="true" fullWidth loadingTitle="AskAnna is processing the package!" />
+    <AskAnnaLoadingProgress :loading="true" fullWidth loadingTitle="AskAnna is processing the package!" />
   </v-card>
 </template>
 <script>

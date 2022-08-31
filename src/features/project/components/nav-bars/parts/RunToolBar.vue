@@ -48,7 +48,7 @@ const props = defineProps({
 
 const routerAA = useRouterAskAnna()
 
-const currentRunTab = ref('workspace-project-jobs-job-jobrun-input')
+const currentRunTab = ref('workspace-project-jobs-job-run-input')
 
 const params = computed(() => routerAA.route.params)
 
@@ -57,7 +57,7 @@ const runIdEditTabs = [
     id: 0,
     name: 'Edit run info',
     show: true,
-    to: 'workspace-project-jobs-job-jobrun-edit'
+    to: 'workspace-project-jobs-job-run-edit'
   }
 ]
 
@@ -66,49 +66,49 @@ const runIdTabs = [
     id: 0,
     name: 'Overview',
     show: true,
-    to: 'workspace-project-jobs-job-jobrun-overview'
+    to: 'workspace-project-jobs-job-run-overview'
   },
   {
     id: 1,
     name: 'Input',
     show: true,
-    to: 'workspace-project-jobs-job-jobrun-input'
+    to: 'workspace-project-jobs-job-run-input'
   },
   {
     id: 2,
     name: 'Result',
     show: true,
-    to: 'workspace-project-jobs-job-jobrun-result'
+    to: 'workspace-project-jobs-job-run-result'
   },
   {
     id: 3,
     name: 'Metrics',
     show: true,
-    to: 'workspace-project-jobs-job-jobrun-metrics'
+    to: 'workspace-project-jobs-job-run-metrics'
   },
   {
     id: 4,
     name: 'Artifact',
     show: true,
-    to: 'workspace-project-jobs-job-jobrun-artifact'
+    to: 'workspace-project-jobs-job-run-artifact'
   },
   {
     id: 5,
     name: 'Variables',
     show: true,
-    to: 'workspace-project-jobs-job-jobrun-variables'
+    to: 'workspace-project-jobs-job-run-variables'
   },
   {
     id: 6,
     name: 'Code',
     show: true,
-    to: 'workspace-project-jobs-job-jobrun-code'
+    to: 'workspace-project-jobs-job-run-code'
   },
   {
     id: 7,
     name: 'Log',
     show: true,
-    to: 'workspace-project-jobs-job-jobrun-log'
+    to: 'workspace-project-jobs-job-run-log'
   }
 ]
 
