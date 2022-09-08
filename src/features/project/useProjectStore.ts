@@ -39,19 +39,7 @@ export const useProjectStore = defineStore(PROJECT_STORE, {
         isShowProjectBar: false
       },
       projectLoading: true,
-      projectsLoading: true,
-      projectTemplates: [
-        {
-          created: '',
-          deleted: null,
-          modified: '',
-          name: 'Blank project (no template used)',
-          scope: null,
-          short_uuid: '',
-          template_location: '',
-          uuid: ''
-        }
-      ]
+      projectsLoading: true
     }
   },
 
@@ -253,21 +241,6 @@ export const useProjectStore = defineStore(PROJECT_STORE, {
 
     resetProjectData() {
       this.project = new ProjectModel().state
-    },
-
-    async getProjectTemplates() {
-      let projectTemplates
-
-      try {
-        projectTemplates = await apiService({
-          serviceName,
-          action: api.templates
-        })
-      } catch (error) {
-        return
-      }
-
-      this.projectTemplates = [...this.projectTemplates, ...projectTemplates]
     },
 
     async deleteProject(project) {

@@ -22,7 +22,6 @@ export interface ProjectState {
     isShowProjectBar: boolean
   }
   projectsLoading: Boolean
-  projectTemplates: ProjectTemplate[]
 }
 
 export interface ProjectTemplate {

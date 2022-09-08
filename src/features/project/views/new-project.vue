@@ -27,7 +27,6 @@
     <project
       v-if="workspaceProjectCreate"
       :projectData="projectData"
-      :projectTemplates="projectTemplates"
       :workspaceProjectVisibility="workspaceProjectVisibility"
       @handleCreate="handleCreate"
       @handleCancel="handleCancel"
@@ -42,8 +41,8 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from '@vue/composition-api'
 import usePermission from '@/core/composition/usePermission'
-import { computed, onBeforeMount } from '@vue/composition-api'
 import Project from '@/features/project/components/Project.vue'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import { useProjectStore } from '@/features/project/useProjectStore'
@@ -60,12 +59,7 @@ const workspaceName = computed(() => workSpaceStore.workspace.name)
 const workspaceProjectVisibility = computed(() => workSpaceStore.workspace.visibility)
 const workspaceProjectCreate = computed(() => permission.getFor(permission.labels.workspaceProjectCreate))
 
-const fetchData = async () => await projectStore.getProjectTemplates()
-
-onBeforeMount(() => fetchData())
-
 const projectData = computed(() => projectStore.project)
-const projectTemplates = computed(() => projectStore.projectTemplates)
 
 const breadcrumbs = computed(() => [
   {
