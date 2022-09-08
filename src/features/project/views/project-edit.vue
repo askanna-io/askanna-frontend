@@ -5,7 +5,6 @@
         v-if="projectInfoEdit"
         :projectData="projectData"
         :saveButtonText="'Save my changes'"
-        :projectTemplates="projectTemplates"
         :workspaceProjectVisibility="workspaceProjectVisibility"
         @handleCreate="handleUpdate"
         @handleCancel="handleCancel"
@@ -24,13 +23,13 @@
 <script setup lang="ts">
 import { set } from 'lodash'
 import { useRouter } from '@/core/plugins/vue-hooks'
+import { ref, watch, computed } from '@vue/composition-api'
 import usePermission from '@/core/composition/usePermission'
 import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
 import { useProjectStore } from '@/features/project/useProjectStore'
 import { useSnackBar } from '@/core/components/snackBar/useSnackBar'
 import { useProjectsStore } from '@/features/projects/useProjectsStore'
 import { useWorkspaceStore } from '@/features/workspace/useWorkspaceStore'
-import { ref, watch, computed, onBeforeMount } from '@vue/composition-api'
 import { useWorkspaceProjectsStore } from '@/features/workspace/useWorkspaceProjectsStore'
 
 import Project from '@/features/project/components/Project.vue'
@@ -49,7 +48,6 @@ const { routeBackTo = 'workspace-project' } = route.value.params
 
 const projectData = computed(() => projectStore.project)
 const loading = computed(() => projectStore.projectLoading)
-const projectTemplates = computed(() => projectStore.projectTemplates)
 
 const workspaceProjectVisibility = computed(() => workspaceStore.workspace.visibility)
 const projectInfoEdit = computed(() => permission.getFor(permission.labels.projectInfoEdit))
@@ -59,10 +57,6 @@ const projectState = ref({
   visibility: projectData.value.visibility,
   description: projectData.value.description
 })
-
-const fetchData = async () => projectStore.getProjectTemplates()
-
-onBeforeMount(() => fetchData())
 
 const handleOnInput = ({ path, value }) => {
   set(projectState.value, path, value)

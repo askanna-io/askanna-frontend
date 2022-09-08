@@ -84,22 +84,6 @@
             </v-radio-group>
           </v-col>
         </v-row>
-        <v-row align="center" v-if="false">
-          <v-col class="d-flex" cols="12">
-            Do you want to create a project from a template? If yes, which project template?
-          </v-col>
-          <v-col class="d-flex" cols="4">
-            <v-select
-              v-model="template"
-              dense
-              item-text="name"
-              label="Template"
-              no-data-text="as"
-              item-value="short_uuid"
-              :items="projectTemplates"
-            />
-          </v-col>
-        </v-row>
         <v-row>
           <v-col cols="12" sm="6" class="pt-0">
             <v-btn
@@ -131,15 +115,10 @@ const props = defineProps({
     type: Object,
     default: () => ({
       name: '',
-      template: '',
       workspace: '',
       short_uuid: '',
       visibility: 'PRIVATE'
     })
-  },
-  projectTemplates: {
-    type: Array,
-    default: () => []
   },
   saveButtonText: {
     type: String,
@@ -158,10 +137,6 @@ const { RULES } = useValidationRules()
 const isStateNotChanged = ref(!props.projectData.name)
 const nameRules = ref([RULES.required('Project name is required')])
 
-const template = computed({
-  get: () => props.projectData.template,
-  set: value => emit('handleOnInput', { path: 'template', value })
-})
 const newProjectForm = ref(null)
 
 const handleOnInput = (value, path) => {

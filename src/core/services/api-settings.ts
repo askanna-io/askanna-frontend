@@ -45,7 +45,6 @@ export const api: ApiSettings = {
       packages: id => `project/${id}/packages/`,
       create: () => 'project/',
       update: id => `project/${id}/`,
-      templates: () => 'project_template/',
       delete: id => `project/${id}/`
     },
     package: {
