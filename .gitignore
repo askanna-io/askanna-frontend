@@ -2,9 +2,6 @@
 node_modules
 /dist
 
-/tests/e2e/videos/
-/tests/e2e/screenshots/
-
 # local env files
 .env.local
 .env.*.local
@@ -13,9 +10,6 @@ node_modules
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-# npm
-package-lock.json
 
 # Editor directories and files
 .idea
@@ -27,12 +21,8 @@ package-lock.json
 *.sw?
 .lh
 
-package-lock.json
-/src/core/services/api-settings-1.ts
-
 .node-version
 .env
 
-# Allow custom local overrides.
+# Allow local overrides
 docker-compose.override.yml
-
