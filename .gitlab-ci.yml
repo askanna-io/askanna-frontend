@@ -82,6 +82,7 @@ build_beta:
 test_package_lock:
   stage: test
   image: node:lts-alpine
+  needs: []
   script:
     - npm i -g package-lock-check
     - npx package-lock-check
