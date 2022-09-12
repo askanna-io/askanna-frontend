@@ -79,10 +79,12 @@ build_beta:
   only:
     - beta
 
-code_quality:
+test_package_lock:
   stage: test
-  tags:
-    - docker
+  image: node:lts-alpine
+  script:
+    - npm i -g package-lock-check
+    - npx package-lock-check
 
 .deploy:
   stage: deploy
