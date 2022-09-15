@@ -108,7 +108,7 @@ const handleDownload = async () => {
   const { short_uuid } = runStore.run
 
   await fileStore.getFullFile({
-    serviceName: 'jobrun',
+    serviceName: 'run',
     serviceAction: 'getRunPayload',
     uuid: { runShortId: runShortId.value, payloadUuid: payloadUuid.value }
   })
@@ -118,7 +118,7 @@ const handleDownload = async () => {
 
 const handleCopy = async () => {
   await fileStore.getFullFile({
-    serviceName: 'jobrun',
+    serviceName: 'run',
     serviceAction: 'getRunPayload',
     uuid: { runShortId: runShortId.value, payloadUuid: payloadUuid.value }
   })
