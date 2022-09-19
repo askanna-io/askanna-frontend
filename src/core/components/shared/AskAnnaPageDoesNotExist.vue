@@ -35,30 +35,23 @@
   </v-card>
 </template>
 
-<script>
-import { defineComponent } from '@vue/composition-api'
+<script setup lang="ts">
+import { computed } from '@vue/composition-api'
+import usePermission from '@/core/composition/usePermission'
 import TheSignIn from '@/features/auth/components/TheSignIn'
 
-export default defineComponent({
-  name: 'AskAnnaPageDoesNotExist',
-
-  props: {
-    pageTitle: {
-      type: String,
-      default: ''
-    },
-    outlined: {
-      type: Boolean,
-      default: false
-    },
-    isUserLoggedIn: {
-      type: Boolean,
-      default: false
-    }
+defineProps({
+  pageTitle: {
+    type: String,
+    default: ''
   },
-
-  components: {
-    TheSignIn
+  outlined: {
+    type: Boolean,
+    default: false
   }
 })
+
+const permission = usePermission()
+
+const isUserLoggedIn = computed(() => permission.isUserLoggedIn)
 </script>
