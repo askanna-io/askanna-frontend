@@ -53,7 +53,7 @@ const TEXTS = {
   SUBMITTED: 'Submitted',
   IN_PROGRESS: 'In progress',
   RUNNING: 'In progress',
-  FINISHED: 'Finished'
+  FINISHED: 'Succeeded'
 }
 
 const val = computed(() => props.status || props.value)
