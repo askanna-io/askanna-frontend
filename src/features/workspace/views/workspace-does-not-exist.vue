@@ -1,5 +1,5 @@
 <template>
-  <ask-anna-page-does-not-exist pageTitle="workspace" outlined :isUserLoggedIn="isUserLoggedIn">
+  <ask-anna-page-does-not-exist pageTitle="workspace" outlined>
     <template v-slot:header v-if="isUserLoggedIn">
       <v-breadcrumbs :items="breadcrumbs">
         <template v-slot:item="{ item }">
