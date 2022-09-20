@@ -53,6 +53,8 @@ export const useFileStore = defineStore('file', {
 
     fileSourceForCopy() {
       return (currentView: string) => {
+        if (ext.csv.includes(this.fileExtension)) return this.filePreviewByView(currentView)
+
         return currentView === 'raw' ? this.rawFile : this.filePreviewByView(currentView)
       }
     },

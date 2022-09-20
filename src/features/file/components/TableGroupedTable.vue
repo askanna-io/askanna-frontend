@@ -1,7 +1,7 @@
 <template>
   <tbody>
     <template v-for="(item, index) in items">
-      <tr :key="index" class="v-row-group__header">
+      <tr :key="index + group" class="v-row-group__header">
         <td :colspan="headersLength - 1" class="text-start">
           <v-btn
             dark
