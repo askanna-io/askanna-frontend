@@ -40,7 +40,7 @@
       <TableGroupedTable
         v-if="options.groupBy.length"
         ref="tableRef"
-        :key="index"
+        :key="'TableGroupedTable'"
         :items="groupedItems"
         :groupBy="options.groupBy"
         :headersLength="headers.length"
