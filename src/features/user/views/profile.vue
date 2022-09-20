@@ -21,7 +21,7 @@
     <AskAnnaLoadingProgress :loading="loading">
       <v-form ref="profileForm">
         <v-card-title class="title py-1">Login information</v-card-title>
-        <user-profile
+        <UserProfile
           :error="errors"
           :userProfile="userStore.userProfile"
           @onUpdateUserProfile="handleOnUpdateUserProfile"
@@ -81,18 +81,9 @@
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from '@/features/user/useUserStore'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import { useSnackBar } from '@/core/components/snackBar/useSnackBar'
-import { watch, ref, reactive, computed } from '@vue/composition-api'
-import UserProfile from '@/features/user/components/profile/UserProfile.vue'
-import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
-import UserWorkspaceProfile from '@/features/workspace/components/profile/UserWorkspaceProfile.vue'
-import UserWorkspaceProfileAvatar from '@/features/workspace/components/profile/UserWorkspaceProfileAvatar.vue'
-
 const snackBar = useSnackBar()
 const userStore = useUserStore()
-const router = useRouterAskAnna()
+const { router } = useRouterAskAnna()
 
 const profileForm = ref(null)
 
@@ -169,7 +160,7 @@ const handleSave = async () => {
       color: 'success',
       timeout: 5000
     })
-    router.router.go(-1)
+    router.go(-1)
     userStore.getGlobalProfile()
   } else {
     snackBar.showSnackBar({
@@ -184,7 +175,7 @@ const handleCancel = () => {
   if (window.history.length <= 2) {
     router.push({ path: '/' })
   } else {
-    router.router.go(-1)
+    router.go(-1)
   }
 }
 

@@ -2,7 +2,7 @@ export default {
   paths: [
     {
       path: '/profile',
-      component: () => import(/* webpackChunkName: "profile" */ './views/profile.vue'),
+      component: () => import('./views/profile.vue'),
       name: 'profile',
       meta: {
         requiresAuth: true,

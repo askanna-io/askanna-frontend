@@ -2,7 +2,7 @@ export default {
   paths: [
     {
       path: '/workspaces',
-      component: () => import(/* webpackChunkName: "workspaces" */ '../workspaces/views/workspaces.vue'),
+      component: () => import('./views/workspaces.vue'),
       name: 'workspaces',
       meta: {
         hideAppBarIcon: true,

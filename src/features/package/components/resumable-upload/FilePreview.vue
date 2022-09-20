@@ -18,35 +18,27 @@
   </div>
 </template>
 
-<script>
-import { reactive, computed, defineComponent } from '@vue/composition-api'
-
-export default defineComponent({
-  name: 'FilePreview',
-
-  props: {
-    isUploadStart: {
-      type: Boolean,
-      default: false
-    },
-    resumableFile: {
-      type: Object,
-      default: function () {
-        return {
-          name: '',
-          size: 0,
-          type: ''
-        }
+<script setup lang="ts">
+const props = defineProps({
+  isUploadStart: {
+    type: Boolean,
+    default: false
+  },
+  resumableFile: {
+    type: Object,
+    default: function () {
+      return {
+        name: '',
+        size: 0,
+        type: ''
       }
     }
-  },
-
-  setup(props, context) {
-    const handleDeleteFile = () => context.emit('deleteFile', props.resumableFile.uniqueIdentifier)
-
-    return { handleDeleteFile }
   }
 })
+
+const emit = defineEmits(['deleteFile'])
+
+const handleDeleteFile = () => emit('deleteFile', props.resumableFile.uniqueIdentifier)
 </script>
 <style>
 .askanna-alert.v-alert {

@@ -24,11 +24,8 @@
   </v-menu>
 </template>
 <script setup lang="ts">
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import { ref, computed, getCurrentInstance } from '@vue/composition-api'
-
-const router = useRouterAskAnna()
 const context = getCurrentInstance()
+const { router } = useRouterAskAnna()
 
 const menu = ref(false)
 
@@ -37,7 +34,7 @@ const menuItems = computed(() =>
     {
       title: 'Create workspace',
       to: 'workspace-new',
-      isVisible: context.root.proxy.$vuetify.breakpoint.xsOnly
+      isVisible: context?.proxy.$root.$vuetify.breakpoint.xsOnly
     }
   ].filter(el => el.isVisible)
 )

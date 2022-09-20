@@ -1,8 +1,11 @@
 tasks:
-  - name: NPM Serve
-    init: npm install && npm run build
-    command: npm run serve
-  - command: |
+  - name: NPM Dev
+    init: |
+      ln -s .env.development .env.production.local
+      npm install && npm run build
+    command: npm run dev
+  - name: Git
+    command: |
       [[ -n $GPG_KEY ]] && [[ -n $GPG_SIGNING_KEY ]] \
         && echo 'pinentry-mode loopback' >> ~/.gnupg/gpg.conf \
         && gpg --verbose --batch --import <(echo $GPG_KEY|base64 -d) \
@@ -11,8 +14,11 @@ tasks:
         && echo '>> Commits will be signed with a GPG key'
 
 ports:
-  - name: AskAnna Frontend
-    port: 8080
+  - name: AskAnna Frontend Dev
+    port: 5173
+    onOpen: open-browser
+  - name: AskAnna Frontend Preview
+    port: 4173
     onOpen: open-browser
 
 vscode:

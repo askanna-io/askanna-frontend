@@ -1,9 +1,7 @@
 import { get } from 'lodash'
 import { defineStore } from 'pinia'
-import apiService from '@/core/services/apiService'
-import { apiStringify } from '@/core/services/api-settings'
-import usePrettyJSON from '@/core/composition/usePrettyJSON'
-import useFileExtension from '@/core/composition/useFileExtension'
+import apiService from '@/services/apiService'
+import { apiStringify } from '@/services/api-settings'
 
 const ext = useFileExtension()
 const prettyJSON = usePrettyJSON()

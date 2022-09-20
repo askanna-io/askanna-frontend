@@ -26,9 +26,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from '@vue/composition-api'
-import { useUploadStatus } from '@/core/components/uploadStatus/useUploadStatus'
-
 defineProps({
   progress: {
     type: Number,

@@ -1,36 +1,24 @@
 <template>
-  <run-result v-if="run.short_uuid" :run="run" />
+  <RunResult v-if="run.short_uuid" :run="run" />
 </template>
 
-<script lang="ts">
-import { useRunStore } from '@/features/run/useRunStore'
-import { useFileStore } from '@/features/file/useFileStore'
-import RunResult from '@/features/run/components/RunResult.vue'
-import { computed, defineComponent, onBeforeMount } from '@vue/composition-api'
+<script setup lang="ts">
+const runStore = useRunStore()
+const fileStore = useFileStore()
+const { route } = useRouterAskAnna()
 
-export default defineComponent({
-  components: { RunResult },
+const run = computed(() => runStore.run)
 
-  setup(_, context) {
-    const fileStore = useFileStore()
-    const runStore = useRunStore()
+const fetchData = async () => {
+  fileStore.$reset()
 
-    const run = computed(() => runStore.run)
+  const { runId } = route.params
 
-    const fetchData = async () => {
-      fileStore.$reset()
-
-      const { runId } = context.root.$route.params
-
-      if (runStore.run.short_uuid !== runId) {
-        await runStore.resetStore()
-        await runStore.getRun(runId)
-      }
-    }
-
-    onBeforeMount(() => fetchData())
-
-    return { run }
+  if (runStore.run.short_uuid !== runId) {
+    await runStore.resetStore()
+    await runStore.getRun(runId)
   }
-})
+}
+
+onBeforeMount(() => fetchData())
 </script>

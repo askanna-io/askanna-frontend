@@ -1,10 +1,8 @@
-import router from '@/core/router'
+import router from '@/router'
 import { defineStore } from 'pinia'
 import * as Sentry from '@sentry/browser'
-import apiService from '@/core/services/apiService'
-import { useLogger } from '@/core/composition/useLogger'
-import { apiStringify } from '@/core/services/api-settings'
-import { useUserStore } from '@/features/user/useUserStore'
+import apiService from '@/services/apiService'
+import { apiStringify } from '@/services/api-settings'
 
 const apiAccounts = apiStringify('accounts')
 
@@ -78,7 +76,7 @@ export const useAuthStore = defineStore('auth', {
       this.tokenExpires = ''
       localStorage.setItem('token', '')
 
-      if (process.env.VUE_APP_SENTRY === 'on') {
+      if (import.meta.env.VITE_APP_SENTRY === 'on') {
         Sentry.configureScope(scope => scope.setUser(null))
       }
 

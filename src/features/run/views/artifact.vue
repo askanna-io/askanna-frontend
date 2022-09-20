@@ -1,5 +1,5 @@
 <template>
-  <AskAnnaLoadingProgress :loading="runArtifactLoading" classes="mx-4 mb-4" fullWidth>
+  <AskAnnaLoadingProgress :loading="runStore.runArtifactLoading" classes="mx-4 mb-4" fullWidth>
     <v-row align="center" justify="center">
       <v-col cols="12" class="pt-0 pb-0">
         <package-toolbar
@@ -53,35 +53,18 @@
   </AskAnnaLoadingProgress>
 </template>
 <script setup lang="ts">
-import { useWindowSize } from '@/core/plugins/vue-hooks'
-import useCopy from '@/core/composition/useCopy'
-import { useRunStore } from '@/features/run/useRunStore'
-import { useFileStore } from '@/features/file/useFileStore'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import useFileExtension from '@/core/composition/useFileExtension'
-import { useProjectStore } from '@/features/project/useProjectStore'
-import { ref, watch, onBeforeMount, computed } from '@vue/composition-api'
-import useForceFileDownload from '@/core/composition/useForceFileDownload'
-import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
-import useTriggerFileDownload from '@/core/composition/useTriggerFileDownload'
-
-import PackageFile from '@/features/package/components/PackageFile.vue'
-import PackageTree from '@/features/package/components/PackageTree.vue'
-import PackageToolbar from '@/features/package/components/PackageToolbar.vue'
-import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
-
 const copy = useCopy()
 const ext = useFileExtension()
 const runStore = useRunStore()
 const fileStore = useFileStore()
-const router = useRouterAskAnna()
 const { height } = useWindowSize()
+const { route } = useRouterAskAnna()
 const projectStore = useProjectStore()
 const forceFileDownload = useForceFileDownload()
 const triggerFileDownload = useTriggerFileDownload()
 const breadcrumbs = usePackageBreadcrumbs({ start: 8, end: 9 })
 
-const { jobId, runId, projectId, workspaceId } = router.route.value.params
+const { jobId, runId, projectId, workspaceId } = route.params
 
 const downloadArtifact = ref(false)
 
@@ -92,7 +75,7 @@ const cdnBaseUrl = computed(() => runStore.artifactData.cdn_base_url)
 const images = computed(() => runStore.artifactData.files.filter(item => ext.images.includes(item.ext)))
 
 const calcHeight = computed(() => height.value - 370)
-const path = computed(() => router.route.value.params.folderName || '/')
+const path = computed(() => route.params.folderName || '/')
 const artifactUuid = computed(() => runStore.run?.artifact?.short_uuid)
 
 const breadcrumbsComputed = computed(() => {
@@ -199,7 +182,7 @@ const handleCopy = async (view: string) => {
 const fetchData = async () => {
   fileStore.$reset()
 
-  const { runId } = router.route.value.params
+  const { runId } = route.params
 
   if (runStore.run.short_uuid !== runId) {
     await runStore.resetStore()
@@ -220,7 +203,7 @@ const fetchData = async () => {
   })
 }
 
-onBeforeMount(() => fetchData())
+fetchData()
 
 watch(filePath, async filePath => {
   if (!currentPath.value || (currentPath.value && currentPath.value.type === 'directory')) fileStore.$reset()

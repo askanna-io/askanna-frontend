@@ -18,8 +18,6 @@
 </template>
 
 <script setup lang="ts">
-import Markdown from '@/core/components/markdown/index.vue'
-
 defineProps({
   fileSource: {
     type: [String, Object, Blob],

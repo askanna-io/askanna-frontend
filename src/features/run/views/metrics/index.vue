@@ -64,22 +64,14 @@
 </template>
 
 <script setup lang="ts">
-import useCopy from '@/core/composition/useCopy'
-import { useChartStore } from '@/features/charts/useChartStore'
-import useChartDownload from '@/features/charts/useChartDownload'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import { useMetricStore } from '@/features/metric/useMetricStore'
-import { ref, computed, onBeforeMount } from '@vue/composition-api'
-import useForceFileDownload from '@/core/composition/useForceFileDownload'
-
 const copy = useCopy()
 const chart = useChartStore()
-const router = useRouterAskAnna()
 const metricStore = useMetricStore()
 const chartDownload = useChartDownload()
+const { route, router } = useRouterAskAnna()
 const forceFileDownload = useForceFileDownload()
 
-const { runId: uuid } = router.route.value.params
+const { runId: uuid } = route.params
 
 const views = [
   { name: 'Table', value: 'table', icon: 'mdi-table' },
@@ -115,7 +107,7 @@ const handleDownload = async () => {
 
 const fetchData = async () => {
   await metricStore.$reset()
-  const view = router.route.value.meta.tabValue
+  const view = route?.meta.tabValue
   if (view) {
     currentView.value = views.find(item => item.value === view)
     currentViewIndex.value = views.findIndex(item => item.value === view)

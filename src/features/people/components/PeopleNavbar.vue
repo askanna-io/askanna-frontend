@@ -29,10 +29,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed } from '@vue/composition-api'
-import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
-import { useProjectStore } from '@/features/project/useProjectStore'
-
 const projectStore = useProjectStore()
 const breadcrumbs = useBreadcrumbs({ start: 0, end: 3 })
 

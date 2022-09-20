@@ -4,9 +4,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import AskAnnaTextSliced from '@/core/components/shared/AskAnnaTextSliced.vue'
-
-const props = defineProps({
+defineProps({
   value: {
     type: [String, Number],
     default: () => ''

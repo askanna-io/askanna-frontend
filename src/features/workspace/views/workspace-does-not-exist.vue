@@ -1,5 +1,5 @@
 <template>
-  <ask-anna-page-does-not-exist pageTitle="workspace" outlined>
+  <AskAnnaPageDoesNotExist pageTitle="workspace" outlined>
     <template v-slot:header v-if="isUserLoggedIn">
       <v-breadcrumbs :items="breadcrumbs">
         <template v-slot:item="{ item }">
@@ -9,15 +9,11 @@
         </template>
       </v-breadcrumbs>
     </template>
-  </ask-anna-page-does-not-exist>
+  </AskAnnaPageDoesNotExist>
 </template>
 
 <script setup lang="ts">
-import { computed } from '@vue/composition-api'
-import usePermission from '@/core/composition/usePermission'
-import AskAnnaPageDoesNotExist from '@/core/components/shared/AskAnnaPageDoesNotExist.vue'
-
-const permission = usePermission()
+const { isUserLoggedIn } = usePermission()
 
 const breadcrumbs = computed(() => [
   {
@@ -26,6 +22,4 @@ const breadcrumbs = computed(() => [
     disabled: true
   }
 ])
-
-const isUserLoggedIn = computed(() => permission.isUserLoggedIn)
 </script>

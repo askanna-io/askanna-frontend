@@ -58,7 +58,7 @@
           >
             <project-menu :projectName="project.name" :isEditProjectView="isEditProjectView" />
             <v-spacer />
-            <project-menu-popup
+            <ProjectMenuPopup
               v-if="!isEditProjectView && (projectRemove || projectInfoEdit)"
               :project="project"
               :routeToRedirect="'workspace'"
@@ -71,14 +71,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import ProjectMenu from './parts/ProjectMenu.vue'
-import { ref, computed } from '@vue/composition-api'
-import usePermission from '@/core/composition/usePermission'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-
-import AskAnnaDescription from '@/core/components/shared/AskAnnaDescription.vue'
-import ProjectMenuPopup from '@/features/project/components/ProjectMenuPopup.vue'
-
 const props = defineProps({
   project: {
     type: Object,
@@ -119,7 +111,7 @@ const onStick = data => {
   props.handleOnStick(data.sticked)
 }
 
-const isEditProjectView = computed(() => route.value.name === 'workspace-project-edit')
+const isEditProjectView = computed(() => route.name === 'workspace-project-edit')
 </script>
 <style lang="scss">
 .mobile-view {

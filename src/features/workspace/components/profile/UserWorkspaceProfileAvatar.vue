@@ -38,75 +38,60 @@
   </v-container>
 </template>
 
-<script>
+<script setup lang="ts">
 import defaultAvatar from './avatar'
-import { ref, defineComponent } from '@vue/composition-api'
-import useImageUrlToBase64 from '@/core/composition/useImageUrlToBase64'
 
-export default defineComponent({
-  name: 'UserWorkspaceProfileAvatar',
-
-  props: {
-    editMode: {
-      type: Boolean,
-      default: true
-    },
-    workspaceProfile: {
-      type: Object,
-      default: function () {
-        return {
-          name: '',
-          workspace: {},
-          avatar: {
-            icon: '',
-            large: '',
-            medium: '',
-            small: ''
-          }
+defineProps({
+  editMode: {
+    type: Boolean,
+    default: true
+  },
+  workspaceProfile: {
+    type: Object,
+    default: function () {
+      return {
+        name: '',
+        workspace: {},
+        avatar: {
+          icon: '',
+          large: '',
+          medium: '',
+          small: ''
         }
       }
     }
-  },
-
-  setup(_, context) {
-    const imageUrlToBase64 = useImageUrlToBase64()
-
-    const fileInput = ref()
-    const avatar = ref(null)
-    const imageUrl = ref('')
-
-    const hanleBrowse = () => context.refs.fileInput.click()
-
-    const handleOnInput = e => {
-      imageUrlToBase64.getBase64(e, ({ url, result }) => {
-        imageUrl.value = url
-        context.emit('onChangeAvatar', result)
-      })
-    }
-
-    const addFile = e => {
-      const [file] = e.dataTransfer.files
-      handleOnInput(file)
-    }
-
-    const handleRemove = async () => {
-      imageUrlToBase64.convertUrlToBase64(defaultAvatar, ({ url, result }) => {
-        imageUrl.value = url
-        context.emit('onChangeAvatar', result)
-      })
-    }
-
-    return {
-      avatar,
-      addFile,
-      imageUrl,
-      fileInput,
-      hanleBrowse,
-      handleRemove,
-      handleOnInput
-    }
   }
 })
+
+const emit = defineEmits(['onChangeAvatar'])
+
+const context = getCurrentInstance()
+const imageUrlToBase64 = useImageUrlToBase64()
+
+const fileInput = ref()
+const avatar = ref(null)
+const imageUrl = ref('')
+
+const hanleBrowse = () => context?.proxy.$refs.fileInput.click()
+
+const handleOnInput = e => {
+  imageUrlToBase64.getBase64(e, ({ url, result }) => {
+    imageUrl.value = url
+    emit('onChangeAvatar', result)
+  })
+}
+
+const addFile = e => {
+  const [file] = e.dataTransfer.files
+  handleOnInput(file)
+}
+
+const handleRemove = async () => {
+  imageUrlToBase64.convertUrlToBase64(defaultAvatar, ({ url, result }) => {
+    imageUrl.value = url
+    emit('onChangeAvatar', result)
+  })
+}
 </script>
 <style lang="scss">
 .dropbox {

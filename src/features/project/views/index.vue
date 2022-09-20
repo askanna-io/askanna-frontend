@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-card class="mx-auto" :outlined="!$vuetify.breakpoint.xsOnly" :flat="$vuetify.breakpoint.xsOnly" sticky-container>
-      <project-nav-bar
+      <ProjectNavBar
         :job="job"
         :routeName="routeName"
         :handleOnStick="handleOnStick"
@@ -23,34 +23,21 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from '@/core/plugins/vue-hooks'
-import useProject from '@/features/project/useProject'
-import { useJobStore } from '@/features/job/useJobStore'
-import { ref, watch, computed } from '@vue/composition-api'
-import { useFileStore } from '@/features/file/useFileStore'
-import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
-import useFileExtension from '@/core/composition/useFileExtension'
-import { useProjectStore } from '@/features/project/useProjectStore'
-import { usePackageStore } from '@/features/package/usePackageStore'
-
-import ProjectNavBar from '@/features/project/components/nav-bars/ProjectNavBar.vue'
-import PreviewFileTypeMardown from '@/features/file/components/PreviewFileTypeMardown.vue'
-
 useProject()
-const { route } = useRouter()
 const ext = useFileExtension()
 const jobStore = useJobStore()
 const fileStore = useFileStore()
+const { route } = useRouterAskAnna()
 const projectStore = useProjectStore()
 const packageStore = usePackageStore()
 
 const fileSource = ref('')
 
 const job = computed(() => jobStore.job)
-const routeName = computed(() => route.value.name)
+const routeName = computed(() => route.name)
 const isShowReadmeFile = computed(() => routeName.value === 'workspace-project-code')
-const jobEnd = computed(() => (route.value.name.indexOf('jobs-name') >= 1 ? 5 : 3))
-const end = computed(() => (route.value.name === 'workspace-project-job-overiew' ? 6 : jobEnd.value))
+const jobEnd = computed(() => (route.name.indexOf('jobs-name') >= 1 ? 5 : 3))
+const end = computed(() => (route.name === 'workspace-project-job-overiew' ? 6 : jobEnd.value))
 const projectBreadcrumbs = useBreadcrumbs({ start: 0, end: end.value })
 
 const readmeFile = computed(() =>

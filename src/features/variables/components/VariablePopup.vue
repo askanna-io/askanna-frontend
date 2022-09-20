@@ -88,11 +88,6 @@
   </v-dialog>
 </template>
 <script setup lang="ts">
-import useValidationRules from '@/core/composition/useValidationRules'
-import { useVariablesStore } from '@/features/variables/useVariablesStore'
-import { ref, reactive, computed, onBeforeUnmount } from '@vue/composition-api'
-import VariableConfirmDeletePopup from '@/features/variables/components/VariableConfirmDeletePopup.vue'
-
 const props = defineProps({
   projectId: {
     type: String,

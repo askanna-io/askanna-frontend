@@ -30,34 +30,24 @@
   </v-container>
 </template>
 
-<script>
-import { defineComponent } from '@vue/composition-api'
-
-export default defineComponent({
-  name: 'UserWorkspaceProfile',
-
-  props: {
-    editMode: {
-      type: Boolean,
-      default: true
-    },
-    workspaceProfile: {
-      type: Object,
-      default: function () {
-        return {
-          name: '',
-          job_title: ''
-        }
-      }
-    }
+<script setup lang="ts">
+defineProps({
+  editMode: {
+    type: Boolean,
+    default: true
   },
-
-  setup(_, context) {
-    const handleOnInput = (value, path) => context.emit('onUpdateWorkSpaceProfile', { [path]: value })
-
-    return {
-      handleOnInput
+  workspaceProfile: {
+    type: Object,
+    default: function () {
+      return {
+        name: '',
+        job_title: ''
+      }
     }
   }
 })
+
+const emit = defineEmits(['onUpdateWorkSpaceProfile'])
+
+const handleOnInput = (value, path) => emit('onUpdateWorkSpaceProfile', { [path]: value })
 </script>

@@ -24,10 +24,6 @@
   </v-menu>
 </template>
 <script setup lang="ts">
-import usePermission from '@/core/composition/usePermission'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import { ref, computed, getCurrentInstance } from '@vue/composition-api'
-
 const props = defineProps({
   isMember: {
     type: Boolean,
@@ -49,9 +45,9 @@ const props = defineProps({
 
 const emit = defineEmits('onOpenWorkspaceRemove')
 
-const router = useRouterAskAnna()
 const permission = usePermission()
 const context = getCurrentInstance()
+const { router } = useRouterAskAnna()
 
 const menu = ref(false)
 
@@ -63,7 +59,7 @@ const menuItems = computed(() =>
       isVisible:
         permission.getFor(
           permission.labels.workspaceProjectCreate || props.permission[permission.labels.workspaceProjectCreate]
-        ) && context.root.proxy.$vuetify.breakpoint.xsOnly
+        ) && context?.proxy.$root.$vuetify.breakpoint.xsOnly
     },
     {
       title: 'Edit workspace',

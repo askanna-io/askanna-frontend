@@ -1,9 +1,8 @@
-**/Dockerfile
-.dockerignore
+Dockerfile*
 docker-compose*.yml
 
-.git
-.gitignore
-
-build
+k8s-chart
 node_modules
+
+.*
+!.env.production*

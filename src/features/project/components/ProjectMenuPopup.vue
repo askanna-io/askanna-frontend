@@ -51,13 +51,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from '@vue/composition-api'
-import usePermission from '@/core/composition/usePermission'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import { useProjectStore } from '@/features/project/useProjectStore'
-import { useProjectsStore } from '@/features/projects/useProjectsStore'
-import ConfirmDeleteProjectPopup from '@/features/project/components/popup/ConfirmDeleteProjectPopup.vue'
-
 const props = defineProps({
   project: {
     type: Object,

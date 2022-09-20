@@ -43,12 +43,6 @@
 </template>
 
 <script setup lang="ts">
-import TableSort from './TableSort.vue'
-import FilterNameValue from './FilterNameValue.vue'
-import AutocompleteFilter from './AutocompleteFilter.vue'
-
-import { ref, inject, computed } from '@vue/composition-api'
-
 const typeValues = ['boolean', 'date', 'datetime', 'dictionary', 'float', 'integer', 'string', 'tag', 'time']
 
 const menu = ref()

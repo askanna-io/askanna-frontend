@@ -1,5 +1,5 @@
 <template>
-  <ask-anna-page-does-not-exist pageTitle="project" outlined>
+  <AskAnnaPageDoesNotExist pageTitle="project" outlined>
     <template v-slot:header v-if="isUserLoggedIn">
       <v-breadcrumbs :items="breadcrumbs">
         <template v-slot:item="{ item }">
@@ -9,41 +9,23 @@
         </template>
       </v-breadcrumbs>
     </template>
-  </ask-anna-page-does-not-exist>
+  </AskAnnaPageDoesNotExist>
 </template>
 
 <script>
-import usePermission from '@/core/composition/usePermission'
-import { computed, defineComponent } from '@vue/composition-api'
-import { useWorkspaceStore } from '@/features/workspace/useWorkspaceStore'
-import AskAnnaPageDoesNotExist from '@/core/components/shared/AskAnnaPageDoesNotExist'
+const { isUserLoggedIn } = usePermission()
+const workSpaceStore = useWorkspaceStore()
 
-export default defineComponent({
-  name: 'project-does-not-exist',
-
-  components: { AskAnnaPageDoesNotExist },
-
-  setup(_, context) {
-    const permission = usePermission()
-    const workSpaceStore = useWorkspaceStore()
-
-    const breadcrumbs = computed(() => [
-      {
-        title: workSpaceStore.workspace.name,
-        to: `/${workSpaceStore.workspace.short_uuid}`,
-        disabled: false
-      },
-      {
-        title: 'Project does not exist',
-        to: '',
-        disabled: true
-      }
-    ])
-
-    return {
-      breadcrumbs,
-      isUserLoggedIn: permission.isUserLoggedIn
-    }
+const breadcrumbs = computed(() => [
+  {
+    title: workSpaceStore.workspace.name,
+    to: `/${workSpaceStore.workspace.short_uuid}`,
+    disabled: false
+  },
+  {
+    title: 'Project does not exist',
+    to: '',
+    disabled: true
   }
-})
+])
 </script>

@@ -41,9 +41,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from '@vue/composition-api'
-import WorkspaceToolbarMenu from '@/features/workspace/components/WorkspaceToolbarMenu.vue'
-
 const emit = defineEmits('onOpenWorkspaceRemove')
 
 const handleOpenConfirmRemoveWorkspace = () => emit('onOpenWorkspaceRemove')

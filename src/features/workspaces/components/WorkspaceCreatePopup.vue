@@ -23,8 +23,5 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from '@vue/composition-api'
-import WorkspaceCreateForm from './WorkspaceCreateForm.vue'
-
 const menu = ref()
 </script>

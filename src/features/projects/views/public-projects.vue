@@ -47,27 +47,16 @@
   </AskAnnaLoadingProgress>
 </template>
 <script setup lang="ts">
-import { ref, computed } from '@vue/composition-api'
-import usePermission from '@/core/composition/usePermission'
-import useSanitizeHTML from '@/core/composition/useSanitizeHTML'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import { useProjectsStore } from '@/features/projects/useProjectsStore'
-
-import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
-import PublicProjectsToolbar from '../components/public-projects/PublicProjectsToolbar.vue'
-import WorkspaceProjectCardItem from '@/features/workspace/components/WorkspaceProjectCardItem.vue'
-
-const permission = usePermission()
-const routerAA = useRouterAskAnna()
 const sanitizeHTML = useSanitizeHTML()
 const projectsStore = useProjectsStore()
+const { route, router } = useRouterAskAnna()
 
+const query = computed(() => route.query)
 const loading = computed(() => projectsStore.loading)
-const query = computed(() => routerAA.route.value.query)
 const projects = computed(() => projectsStore.getProjectsByParams(query.value))
 
 const handleOpenProject = project => {
-  routerAA.push({
+  router.push({
     name: 'workspace-project-code',
     params: {
       projectId: project.short_uuid,

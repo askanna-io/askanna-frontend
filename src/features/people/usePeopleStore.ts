@@ -1,10 +1,7 @@
 import { defineStore } from 'pinia'
 import { set, get, map } from 'lodash'
-import apiService from '@/core/services/apiService'
-import { useLogger } from '@/core/composition/useLogger'
-import { apiStringify } from '@/core/services/api-settings'
-import { useUserStore } from '@/features/user/useUserStore'
-import { useWorkspaceStore } from '@/features/workspace/useWorkspaceStore'
+import apiService from '@/services/apiService'
+import { apiStringify } from '@/services/api-settings'
 import { PEOPLE_STORE, PersonModel, WORKSPACE_STORE, InvitationModel } from './types'
 
 const serviceName = WORKSPACE_STORE
@@ -348,7 +345,7 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
 
       const name = people.name || people.membership.name || userStore.globalProfile.name
 
-      if (people && process.env.VUE_APP_INTERCOM === 'on') {
+      if (people && import.meta.env.VITE_APP_INTERCOM === 'on') {
         window.Intercom('boot', {
           app_id: 'c6wuieqm',
           name: name,

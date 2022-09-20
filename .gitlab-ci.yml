@@ -24,9 +24,9 @@ include:
     - kubernetes
   image:
     name: gcr.io/kaniko-project/executor:debug
-    entrypoint: [""]
+    entrypoint: ['']
   variables:
-    DOCKER_FILE: $CI_PROJECT_DIR/compose/Dockerfile.deploy
+    DOCKER_FILE: $CI_PROJECT_DIR/compose/Dockerfile.production
     DOCKER_DESTINATION: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   before_script:
     - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
@@ -37,7 +37,7 @@ build_base:
   stage: build-base
   extends: .use-kaniko
   variables:
-    DOCKER_FILE: $CI_PROJECT_DIR/compose/Dockerfile.base    
+    DOCKER_FILE: $CI_PROJECT_DIR/compose/Dockerfile.base
   script:
     - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $DOCKER_FILE --destination $DOCKER_BASE_IMAGE
   rules:
@@ -53,13 +53,17 @@ build_base:
 build_master:
   stage: build-deploy
   extends: .use-kaniko
+  variables:
+    KUBERNETES_MEMORY_REQUEST: 6Gi
   only:
     - master
 
 build_review:
   stage: build-deploy
   extends:
-    - .use-kaniko 
+    - .use-kaniko
+  variables:
+    KUBERNETES_MEMORY_REQUEST: 6Gi
   script:
     - cp .env.review .env.production.local
     - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $DOCKER_FILE --destination $DOCKER_REVIEW --build-arg BASE_IMAGE=$DOCKER_BASE_IMAGE
@@ -73,6 +77,8 @@ build_beta:
   stage: build-deploy
   extends:
     - .use-kaniko
+  variables:
+    KUBERNETES_MEMORY_REQUEST: 6Gi
   script:
     - cp .env.beta .env.production.local
     - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $DOCKER_FILE --destination $DOCKER_DESTINATION --build-arg BASE_IMAGE=$DOCKER_BASE_IMAGE
@@ -162,11 +168,11 @@ stop_review:
     - beta
 
 .functions: &functions |
-    # Functions
-    function init_k8s() {
-        gcloud auth activate-service-account --project $GCP_PROJECT --key-file $GCP_SERVICE_ACCOUNT_FILE_AA_SERVICES
-        gcloud container clusters get-credentials $GKE_CLUSTER_NAME --zone $GKE_CLUSTER_ZONE --project $GCP_PROJECT
-    }
+  # Functions
+  function init_k8s() {
+      gcloud auth activate-service-account --project $GCP_PROJECT --key-file $GCP_SERVICE_ACCOUNT_FILE_AA_SERVICES
+      gcloud container clusters get-credentials $GKE_CLUSTER_NAME --zone $GKE_CLUSTER_ZONE --project $GCP_PROJECT
+  }
 
 before_script:
   - *functions

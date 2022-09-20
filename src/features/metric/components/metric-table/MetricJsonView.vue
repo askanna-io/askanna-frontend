@@ -11,8 +11,6 @@
 </template>
 
 <script setup lang="ts">
-import TheHighlight from '@/core/components/highlight/TheHighlight.vue'
-
 defineProps({
   jsonString: String
 })

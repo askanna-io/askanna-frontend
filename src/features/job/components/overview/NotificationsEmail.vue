@@ -6,7 +6,7 @@
           <div class="code-wrapper">
             <span class="font-weight-bold">{{ title }}:</span>
             <template v-if="isSetNotifications">
-              <notifications-email-popup :notifications="notifications" />
+              <NotificationsEmailPopup :notifications="notifications" />
             </template>
             <template v-else>
               <span class="pl-1 primary--hover"> No </span>
@@ -20,9 +20,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed } from '@vue/composition-api'
-import NotificationsEmailPopup from './NotificationsEmailPopup.vue'
-
 const props = defineProps({
   title: {
     type: String,

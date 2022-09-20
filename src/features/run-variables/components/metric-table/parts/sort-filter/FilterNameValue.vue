@@ -12,35 +12,22 @@
   />
 </template>
 
-<script>
-import { inject, defineComponent, computed } from '@vue/composition-api'
-
-export default defineComponent({
-  name: 'FilterNameValue',
-
-  props: {
-    label: {
-      type: String,
-      default: ''
-    },
-    filterName: {
-      type: String,
-      default: ''
-    }
+<script setup lang="ts">
+const props = defineProps({
+  label: {
+    type: String,
+    default: ''
   },
-
-  setup(props) {
-    const state = inject('state')
-    const changeState = inject('changeState')
-
-    const computedValue = computed(() => state[props.filterName])
-
-    const handleChange = value => changeState({ path: props.filterName, value })
-
-    return {
-      handleChange,
-      computedValue
-    }
+  filterName: {
+    type: String,
+    default: ''
   }
 })
+
+const state = inject('state')
+const changeState = inject('changeState')
+
+const computedValue = computed(() => state[props.filterName])
+
+const handleChange = value => changeState({ path: props.filterName, value })
 </script>

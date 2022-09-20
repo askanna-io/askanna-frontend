@@ -1,65 +1,46 @@
 # AskAnna Frontend
 
-This repository holds code for the AskAnna Frontend. Code is written in Typescript and using the
-VueJS framework.
+This repository holds code for the AskAnna Frontend. Code is written in Typescript and using the VueJS framework.
 
 ## Development using Docker
 
 You can use Docker Compose to run the project locally.
 
-First you need to a little local configuration. The next commands you only have to run once.
-The next configuration only has to be done once. Docker compose will use these files while
-building the container.
+First, you need to do some minor local configuration. The following command, you only have to run initially. Docker
+compose will use these files while building the container.
 
-```shell
+```bash
 ln -s .env.development .env.production.local
 ```
 
-Use the following command to start a Docker container running the AskAnna frontend:
+Use the following command to start a Docker container running the AskAnna Frontend:
 
-```shell
-docker-compose up
+```bash
+docker compose up
 ```
 
-After creating the container, you can open the frontend:
-[http://localhost:8080](http://localhost:8080). Please mind that we don't support HTTPS for local
-development.
+After creating the container, you can open the frontend: [http://localhost:5173](http://localhost:5173). Please mind
+that we don't support HTTPS for local development.
 
-If you have changed the Dockerfile or changed something in `package.json`, please allow Docker to
-rebuild the image:
+The container starts a local web server with
+[Hot Module Replacement](https://vitejs.dev/guide/features.html#hot-module-replacement). It will automatically provide
+instant updates when you save a change.
 
-```shell
-docker-compose up --build
-```
-
-Any change in the `src` folder will be automatically picked up and rebuild in this modus.
-
-### Change AskAnna backend
-
-When you develop locally, by default it will use the backend hosted at `https://api.askanna.eu`. In
-the file `.env.development` you can change the value `VUE_APP_API_URL`. For example, if you have
-the AskAnna Backend running locally you could set the value to `http://localhost:8000`.
+If you want to run a web server that serves the build solution from `./dist`, you can change the target in the file
+`docker-compose.yml` and set it to `preview-stage`.
 
 ### Removing docker-compose setup
 
-In case you don't want to develop or run `askanna-frontend` locally anymore, or something happened
-which corrupted your installation. You can execute the following to remove `askanna-frontend` from
-your system:
+In case you don't want to run the AskAnna Frontend container anymore, or something happened which corrupted your
+installation. You can execute the following to remove Askanna Frontend container from your system:
 
 ```bash
-docker-compose rm --stop -v -f
+docker compose rm --stop -v -f
 ```
-
-This will remove all volumes which where created for `askanna-frontend` to run.
 
 ## Development without Docker
 
-### Vue specific configuration for docker
-
-In the root folder in the file `vue.config.js` we configured `host` to `0.0.0.0`. When used in a
-non-Docker setup, you will be exposing the application publicly on the local network. **BE AWARE!**
-
-### Project setup
+### Install packages
 
 ```shell
 npm install
@@ -68,7 +49,7 @@ npm install
 ### Compiles and hot-reloads for development
 
 ```shell
-npm run serve
+npm run dev
 ```
 
 ### Compiles and minifies for production
@@ -77,23 +58,21 @@ npm run serve
 npm run build
 ```
 
-### Run your unit tests
+### Run preview of the build solution
 
 ```shell
-npm run test:unit
+npm run preview
 ```
 
-### Run your end-to-end tests
+Note: you first need to build, before you can run the preview
 
-```shell
-npm run test:e2e
-```
+## Change AskAnna backend
 
-### Lints and fixes files
+When you develop locally, by default it will use the backend hosted at `https://api.askanna.eu`. In the file
+`.env.development` you can change the value `VITE_APP_API_URL`. For example, if you have the AskAnna Backend running
+locally you could set the value to `http://localhost:8000`.
 
-```shell
-npm run lint
-```
+This will remove all volumes which where created for `askanna-frontend` to run.
 
 ## Customize configuration
 

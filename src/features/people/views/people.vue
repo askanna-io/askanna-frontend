@@ -1,8 +1,8 @@
 <template>
   <div>
-    <people-navbar />
+    <PeopleNavbar />
     <template v-if="isMember">
-      <people-list
+      <PeopleList
         :loading="loading"
         :items="people"
         :currentUser="currentUser"
@@ -11,7 +11,7 @@
         :workspaceName="workspace.name"
         @onSelectPoeple="handleSelectPeople"
       />
-      <people-popup
+      <PeoplePopup
         v-if="peoplePopup"
         :value="peoplePopup"
         :people="selectedPeople"
@@ -25,21 +25,21 @@
         @onDeleteInivitationPopup="handleDeleteInivitationPopup(true)"
         @onResendInivitationPopup="handleResendInivitationPopup(true)"
       />
-      <people-confirm-delete-popup
+      <PeopleConfirmDeletePopup
         v-if="peopleConfirmDeletePopup"
         :value="peopleConfirmDeletePopup"
         :peopleName="selectedPeople.name"
         @onDeleteConfirm="handleDeleteItem"
         @onCloseDeletePopup="handleCloseConfirmDeletePopup"
       />
-      <people-confirm-delete-invitation-popup
+      <PeopleConfirmDeleteInvitationPopup
         v-if="deleteInvitationConfirmPopup"
         :peopleName="selectedPeople.name"
         :value="deleteInvitationConfirmPopup"
         @onDeleteConfirm="handleDeleteInvitation"
         @onClose="handleDeleteInivitationPopup(false)"
       />
-      <people-confirm-resend-invitation-popup
+      <PeopleConfirmResendInvitationPopup
         v-if="resendInvitationConfirmPopup"
         :peopleName="selectedPeople.name"
         :value="resendInvitationConfirmPopup"
@@ -47,7 +47,7 @@
         @onClose="handleResendInivitationPopup(false)"
       />
 
-      <people-confirm-change-role-popup
+      <PeopleConfirmChangeRolePopup
         v-if="changeRoleConfirmPopup"
         :toRole="changeRoleTo"
         :fromRole="selectedPeople.role.code"
@@ -66,24 +66,13 @@
   </div>
 </template>
 <script setup lang="ts">
-import { useRouter } from '@/core/plugins/vue-hooks'
-import { usePeopleStore } from '@/features/people/usePeopleStore'
-import { ref, computed, onBeforeMount } from '@vue/composition-api'
-import { useWorkspaceStore } from '@/features/workspace/useWorkspaceStore'
+import { useRoute } from 'vue-router/composables'
 
-import PeopleList from '@/features/people/components/PeopleList.vue'
-import PeopleNavbar from '@/features/people/components/PeopleNavbar.vue'
-import PeoplePopup from '@/features/people/components/PeoplePopup.vue'
-import PeopleConfirmDeletePopup from '@/features/people/components/PeopleConfirmDeletePopup.vue'
-import PeopleConfirmChangeRolePopup from '@/features/people/components/PeopleConfirmChangeRolePopup.vue'
-import PeopleConfirmDeleteInvitationPopup from '@/features/people/components/PeopleConfirmDeleteInvitationPopup.vue'
-import PeopleConfirmResendInvitationPopup from '@/features/people/components/PeopleConfirmResendInvitationPopup.vue'
-
-const { route } = useRouter()
+const route = useRoute()
 const peopleStore = usePeopleStore()
 const workspaceStore = useWorkspaceStore()
 
-const { workspaceId } = route.value.params
+const { workspaceId } = route.params
 
 const changeRoleTo = ref('')
 const peoplePopup = ref(false)

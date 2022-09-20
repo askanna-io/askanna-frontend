@@ -1,10 +1,7 @@
 import VueRouter from 'vue-router'
 import { defineStore } from 'pinia'
-import { useRouter } from '@/core/plugins/vue-hooks'
-import apiService from '@/core/services/apiService'
-import { useLogger } from '@/core/composition/useLogger'
-import { apiStringify } from '@/core/services/api-settings'
-import { useGeneralStore } from '@/core/store/useGeneralStore'
+import apiService from '@/services/apiService'
+import { apiStringify } from '@/services/api-settings'
 
 interface Schedule {
   last_run: string
@@ -48,7 +45,6 @@ interface Run {
 }
 
 const SERVICE_NAME = 'job'
-const { router } = useRouter()
 const api = apiStringify(SERVICE_NAME)
 const { isNavigationFailure, NavigationFailureType } = VueRouter
 
@@ -78,11 +74,7 @@ export const useJobStore = defineStore(SERVICE_NAME, {
 
         logger.error('Error on load job in getJob action.\nError: ', error)
 
-        router.push({ name: 'workspace-project-job-does-not-exist' }).catch(failure => {
-          if (isNavigationFailure(failure, NavigationFailureType.redirected)) {
-            logger.error('Error on redirect to workspace-project-job-does-not-exist.\nError: ', failure)
-          }
-        })
+        this.$routerAskAnna.push({ name: 'workspace-project-job-does-not-exist' })
 
         return
       }

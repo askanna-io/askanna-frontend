@@ -20,17 +20,11 @@
     </v-flex>
   </v-toolbar>
 </template>
-<script>
-import { defineComponent } from '@vue/composition-api'
-
-export default defineComponent({
-  name: 'ArtifactToolbar',
-
-  props: {
-    breadcrumbs: {
-      type: Array,
-      default: () => []
-    }
+<script setup lang="ts">
+defineProps({
+  breadcrumbs: {
+    type: Array,
+    default: () => []
   }
 })
 </script>

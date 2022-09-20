@@ -29,70 +29,41 @@
   </v-menu>
 </template>
 
-<script>
-import { ref, computed, defineComponent } from '@vue/composition-api'
-
-export default defineComponent({
-  name: 'LableFilter',
-
-  props: {
-    title: {
-      type: String,
-      default: ''
-    }
-  },
-
-  setup(props, context) {
-    const items = [
-      {
-        icon: 'mdi-sort-alphabetical-ascending',
-        text: 'Sort A -> Z'
-      },
-      {
-        icon: 'mdi-sort-alphabetical-descending',
-        text: 'Sort Z -> A'
-      }
-    ]
-
-    const model = ref(null)
-    const model2 = ref(null)
-
-    const menu = ref()
-
-    const message = ref()
-
-    const selectedValue = ref([])
-
-    const active = ref(false)
-
-    const isActive = computed(() => active.value || typeof model.value === 'number' || menu.value)
-
-    const colorComputed = computed(() => {
-      if (isActive.value) {
-        return typeof model.value === 'number' ? 'primary' : 'secondary'
-      }
-
-      return 'grey lighten-5'
-    })
-
-    const handleOnBlur = () => (active.value = false)
-    const handleOnHover = () => (active.value = true)
-
-    return {
-      model2,
-      menu,
-      items,
-      model,
-      message,
-      isActive,
-      selectedValue,
-      colorComputed,
-
-      handleOnBlur,
-      handleOnHover
-    }
+<script setup lang="ts">
+defineProps({
+  title: {
+    type: String,
+    default: ''
   }
 })
+
+const items = [
+  {
+    icon: 'mdi-sort-alphabetical-ascending',
+    text: 'Sort A -> Z'
+  },
+  {
+    icon: 'mdi-sort-alphabetical-descending',
+    text: 'Sort Z -> A'
+  }
+]
+
+const menu = ref()
+const model = ref(null)
+const active = ref(false)
+
+const isActive = computed(() => active.value || typeof model.value === 'number' || menu.value)
+
+const colorComputed = computed(() => {
+  if (isActive.value) {
+    return typeof model.value === 'number' ? 'primary' : 'secondary'
+  }
+
+  return 'grey lighten-5'
+})
+
+const handleOnBlur = () => (active.value = false)
+const handleOnHover = () => (active.value = true)
 </script>
 <style>
 .big-json {

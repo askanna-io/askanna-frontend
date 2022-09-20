@@ -1,5 +1,4 @@
 import { set } from 'lodash'
-import { ref, readonly, computed, provide, reactive, SetupContext } from '@vue/composition-api'
 interface MetricNameParams {
   ordering?: string
   metric_name?: string
@@ -7,7 +6,8 @@ interface MetricNameParams {
   metric_value?: string
 }
 
-export default function (context: SetupContext) {
+export default function (context) {
+  const { route, router } = useRouterAskAnna()
   const lastScrollTop = ref(0)
 
   const state = reactive({
@@ -25,9 +25,9 @@ export default function (context: SetupContext) {
     lastScrollTop.value = 0
 
     //change query in params
-    context.root.$router.replace({
+    router.replace({
       name: 'workspace-project-jobs-job-run-metrics',
-      query: { ...context.root.$route.query, [path]: value }
+      query: { ...route.query, [path]: value }
     })
 
     // emit event to parent component
@@ -75,7 +75,7 @@ export default function (context: SetupContext) {
   provide('isActiveLabelFilter', readonly(isActiveLabelFilter))
 
   const initState = () => {
-    const { ordering = '', metric_name, metric_value, metric_type, label_name, label_value } = context.root.$route.query
+    const { ordering = '', metric_name, metric_value, metric_type, label_name, label_value } = route.query
     Object.assign(state, { ordering, metric_name, metric_value, metric_type, label_name, label_value })
 
     // emit event to parent component

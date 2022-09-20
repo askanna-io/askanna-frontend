@@ -3,21 +3,14 @@
 </template>
 
 <script setup lang="ts">
-import { onUpdated, onBeforeMount } from '@vue/composition-api'
-import { usePeopleStore } from '@/features/people/usePeopleStore'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import { useWorkspaceStore } from '@/features/workspace/useWorkspaceStore'
-import { useWorkspacesStore } from '@/features/workspaces/useWorkspacesStore'
-import { useWorkspaceProjectsStore } from '@/features/workspace/useWorkspaceProjectsStore'
-
 const token = window.localStorage.getItem('token')
 
 const reShortUuid = /[0-9a-zA-Z]{4}\-[0-9a-zA-Z]{4}\-[0-9a-zA-Z]{4}\-[0-9a-zA-Z]{4}$/g
 
-const router = useRouterAskAnna()
 const peopleStore = usePeopleStore()
 const workspaceStore = useWorkspaceStore()
 const workspacesStore = useWorkspacesStore()
+const { route, router } = useRouterAskAnna()
 const workspaceProjectsStore = useWorkspaceProjectsStore()
 
 const initWorkspace = async workspaceId => {
@@ -45,7 +38,7 @@ const fetchData = async () => {
   await workspaceProjectsStore.$reset()
 
   // check rounte param workspaceId, get from store if not present in params
-  let { workspaceId } = router.route.value.params
+  let { workspaceId } = route.params
 
   if (workspaceId === 'workspace' && workspacesStore.workspaces.results.length) {
     workspaceId = workspacesStore.workspaces.results[0].short_uuid
@@ -65,7 +58,7 @@ onBeforeMount(() => fetchData())
 onUpdated(async () => {
   if (!token) return
 
-  const { workspaceId } = router.route.value.params
+  const { workspaceId } = route.params
 
   if (workspaceId === workspaceStore.workspace.short_uuid) return
 

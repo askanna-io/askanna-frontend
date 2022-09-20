@@ -64,17 +64,10 @@
 
 <script setup lang="ts">
 import { set } from 'lodash'
-import useMoment from '@/core/composition/useMoment'
-import { useJobStore } from '@/features/job/useJobStore'
-import { ref, computed, onUnmounted } from '@vue/composition-api'
-import AskAnnaCode from '@/core/components/shared/AskAnnaCode.vue'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import AskAnnaChipStatus from '@/core/components/shared/AskAnnaChipStatus.vue'
-import AskAnnaDescription from '@/core/components/shared/AskAnnaDescription.vue'
 
 const moment = useMoment()
 const jobStore = useJobStore()
-const router = useRouterAskAnna()
+const { route, router } = useRouterAskAnna()
 
 const run = ref({
   code: '',
@@ -128,7 +121,7 @@ const handleValidate = async (value: boolean) => (isValid.value = value)
 const hadnleOpenRun = () => {
   router.push({
     name: 'workspace-project-jobs-job-run',
-    params: { ...router.route.value.params, runId: jobStore.run.short_uuid }
+    params: { ...route.params, runId: jobStore.run.short_uuid }
   })
 }
 

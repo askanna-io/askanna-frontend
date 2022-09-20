@@ -13,10 +13,6 @@
   </v-flex>
 </template>
 <script setup lang="ts">
-import RunMenuPopup from './RunMenuPopup.vue'
-import { ref, computed } from '@vue/composition-api'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-
 const props = defineProps({
   runId: {
     type: String,
@@ -46,11 +42,11 @@ const props = defineProps({
   }
 })
 
-const routerAA = useRouterAskAnna()
+const { route } = useRouterAskAnna()
 
 const currentRunTab = ref('workspace-project-jobs-job-run-input')
 
-const params = computed(() => routerAA.route.params)
+const params = computed(() => route.params)
 
 const runIdEditTabs = [
   {

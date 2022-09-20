@@ -21,25 +21,15 @@
   </div>
 </template>
 
-<script lang="ts">
-import useCopy from '@/core/composition/useCopy'
-import { apiUrl } from '@/core/services/api-settings'
-import { defineComponent } from '@vue/composition-api'
-import { useAuthStore } from '@/features/auth/useAuthStore'
+<script setup lang="ts">
+import { apiUrl } from '@/services/api-settings'
 
-import TheHighlight from '@/core/components/highlight/TheHighlight.vue'
+const copy = useCopy()
+const authStore = useAuthStore()
+const { route } = useRouterAskAnna()
 
-export default defineComponent({
-  name: 'RunPython',
-
-  components: { TheHighlight },
-
-  setup(_, context) {
-    const copy = useCopy()
-    const authStore = useAuthStore()
-
-    const { jobId } = context.root.$route.params
-    const pythonCode = `import requests
+const { jobId } = route.params
+const pythonCode = `import requests
 
 url = "${apiUrl}/v1/run/${jobId}/"
 headers = {'Authorization': "Token ${authStore.authToken}"}
@@ -59,14 +49,7 @@ response = requests.post(url,
 print(response.status_code)
 print(response.json())`
 
-    const handleCopy = () => copy.handleCopyText(pythonCode)
-
-    return {
-      pythonCode,
-      handleCopy
-    }
-  }
-})
+const handleCopy = () => copy.handleCopyText(pythonCode)
 </script>
 <style>
 .curl-code code {

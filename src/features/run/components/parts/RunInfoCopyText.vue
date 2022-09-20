@@ -10,8 +10,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import AskAnnaCopyText from '@/core/components/shared/AskAnnaCopyText.vue'
-
 defineProps({
   text: {
     type: String,

@@ -47,7 +47,7 @@
             flat
             :class="{ 'br-r5 ma-3': !$vuetify.breakpoint.xsOnly, 'ma-0 mr-4 with-tabs': $vuetify.breakpoint.xsOnly }"
           >
-            <job-tool-bar
+            <JobToolBar
               v-if="!sticked"
               :showTitle="false"
               :jobName="job.name"
@@ -57,7 +57,7 @@
 
             <v-spacer />
 
-            <job-menu-popup v-if="!isEditJobView && projectJobEdit" :job="job" />
+            <JobMenuPopup v-if="!isEditJobView && projectJobEdit" :job="job" />
           </v-toolbar>
         </v-col>
       </v-row>
@@ -65,14 +65,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import { useRouter } from '@/core/plugins/vue-hooks'
-import { computed } from '@vue/composition-api'
-import JobToolBar from './parts/JobToolBar.vue'
-import JobMenuPopup from './parts/JobMenuPopup.vue'
-import ProjectToolBar from './parts/ProjectToolBar.vue'
-import usePermission from '@/core/composition/usePermission'
-import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
-
 const props = defineProps({
   job: {
     type: Object,
@@ -101,7 +93,7 @@ const props = defineProps({
   }
 })
 
-const { route } = useRouter()
+const { route } = useRouterAskAnna()
 const permission = usePermission()
 const breadcrumbs = useBreadcrumbs({ start: 0, end: 5 })
 
@@ -109,5 +101,5 @@ const projectJobEdit = computed(() => permission.getFor(permission.labels.projec
 
 const onStick = data => props.handleOnStick(data.sticked)
 
-const isEditJobView = computed(() => route.value.name === 'workspace-project-job-edit')
+const isEditJobView = computed(() => route.name === 'workspace-project-job-edit')
 </script>

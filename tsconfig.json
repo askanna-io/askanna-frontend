@@ -1,41 +1,28 @@
 {
-  "moduleResolution": "node",
-  "baseUrl": "src",
-  "paths": {
-    "@core/*": ["core/*"],
-    "@job/*": ["features/job/*"],
-    "@run/*": ["features/run/*"],
-    "@jobs/*": ["features/jobs/*"],
-    "@project/*": ["features/project/*"],
-    "@package/*": ["features/package/*"],
-    "@packages/*": ["features/packages/*"]
-  },
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
     "strict": true,
-    "noImplicitThis": true,
     "jsx": "preserve",
     "importHelpers": true,
     "moduleResolution": "node",
-    "experimentalDecorators": true,
+    "allowJs": true,
+    "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "baseUrl": ".",
-    "types": ["webpack-env", "jest"],
+    "types": [
+      "vite-plugin-vue-layouts/client",
+      "vite-plugin-pages/client",
+      "vite/client",
+      "unplugin-vue2-script-setup/types"
+    ],
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src*"]
     },
     "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "tests/**/*.ts",
-    "tests/**/*.tsx",
-    "src/service-worker.js"
-  ],
-  "exclude": ["node_modules"]
+  "include": ["**/*.ts", "**/*.tsx", "**/*.vue", "tests/**/*.ts", "tests/**/*.tsx", "src/components.d.ts"],
+  "exclude": ["node_modules", "mock", "build", "dist"]
 }

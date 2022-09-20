@@ -2,7 +2,7 @@
   <div>
     <v-row justify="center">
       <v-col cols="8" xl="3" md="6" sm="9" lg="4" class="rounded">
-        <img alt="AskAnna logo" src="@/assets/logo.svg" class="logo" />
+        <img alt="AskAnna logo" src="/assets/logo.svg" class="logo" />
         <v-expansion-panels class="login-expansion" v-model="panel">
           <signin v-if="!signUpStep" />
           <template v-if="!signUpStep">
@@ -10,7 +10,7 @@
           </template>
           <v-expand-transition>
             <template v-if="signUpStep === 1">
-              <wait-before-create-account />
+              <SignUpWaitBeforeCreateAccount />
             </template>
           </v-expand-transition>
         </v-expansion-panels>
@@ -21,7 +21,7 @@
       <v-col cols="8" xl="3" md="6" sm="9" lg="4" class="rounded">
         <v-expansion-panels class="login-expansion" v-model="panel">
           <v-expand-transition>
-            <ask-anna-read-more />
+            <AskAnnaReadMore />
           </v-expand-transition>
         </v-expansion-panels>
       </v-col>
@@ -30,17 +30,12 @@
 </template>
 
 <script setup lang="ts">
-import Signin from './signin.vue'
-import Signup from './signup.vue'
-import SigninThankYou from './signin-thank-you.vue'
-import { ref, provide, readonly } from '@vue/composition-api'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import AskAnnaReadMore from '@/features/auth/components/AskAnnaReadMore.vue'
-import WaitBeforeCreateAccount from '@/features/auth/components/signup/WaitBeforeCreateAccount.vue'
+import signin from './signin.vue'
+import signup from './signup.vue'
 
-const router = useRouterAskAnna()
+const { route } = useRouterAskAnna()
 
-const panelValue = router.route.value.name === 'signin' ? 0 : 1
+const panelValue = route.name === 'signin' ? 0 : 1
 
 const signUpStep = ref(0)
 const panel = ref(panelValue)

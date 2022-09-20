@@ -9,20 +9,14 @@
 </template>
 <script setup lang="ts">
 import { throttle } from 'lodash'
-import { computed } from '@vue/composition-api'
-import useQuery from '@/core/composition/useQuery'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import { useWorkspaceStore } from '@/features/workspace/useWorkspaceStore'
-import { useWorkspaceProjectsStore } from '@/features/workspace/useWorkspaceProjectsStore'
-import WorkspaceProjectList from '@/features/workspace/components/WorkspaceProjectList.vue'
 
-const routerAA = useRouterAskAnna()
+const { route } = useRouterAskAnna()
 const workspaceStore = useWorkspaceStore()
 const workspaceProjectsStore = useWorkspaceProjectsStore()
 
-const { workspaceId } = routerAA.route.value.params
+const { workspaceId } = route.params
 
-const queryParams = computed(() => routerAA.route.value.query)
+const queryParams = computed(() => route.query)
 const next = computed(() => workspaceProjectsStore.allWorkspaceProjects.next)
 const projects = computed(() => workspaceProjectsStore.getProjectsByParams(queryParams.value))
 

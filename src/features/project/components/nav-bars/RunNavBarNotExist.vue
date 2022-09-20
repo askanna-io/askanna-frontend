@@ -32,13 +32,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed } from '@vue/composition-api'
-import { useJobStore } from '@/features/job/useJobStore'
-import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
-
-import JobToolBar from './parts/JobToolBar.vue'
-import ProjectToolBar from './parts/ProjectToolBar.vue'
-
 const props = defineProps({
   job: {
     type: Object,

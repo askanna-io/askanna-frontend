@@ -2,8 +2,6 @@
   <component :is="TypeComponent" v-bind="props" />
 </template>
 <script setup lang="ts">
-import { computed } from '@vue/composition-api'
-
 import JobNavBar from './JobNavBar.vue'
 import RunNavBar from './RunNavBar.vue'
 import DefaultBar from './DefaultBar.vue'
@@ -66,7 +64,7 @@ const types = [
     routes: [
       'workspace-project-job-edit',
       'workspace-project-job-overiew',
-      'workspace-project-job-jobruns',
+      'workspace-project-job-runs',
       'workspace-project-jobs-job-runs-table',
       'workspace-project-jobs-job-runs-compare'
     ],

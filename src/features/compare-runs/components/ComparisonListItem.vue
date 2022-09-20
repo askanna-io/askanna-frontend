@@ -4,8 +4,6 @@
   </li>
 </template>
 <script setup lang="ts">
-import { useWindowSize } from '@/core/plugins/vue-hooks'
-import { computed } from '@vue/composition-api'
 import ComparisonListItemEnv from './ComparisonListItemEnv.vue'
 import ComparisonListItemText from './ComparisonListItemText.vue'
 import ComparisonListItemDate from './ComparisonListItemDate.vue'
@@ -15,9 +13,9 @@ import ComparisonListItemMetric from './ComparisonListItemMetric.vue'
 import ComparisonListItemTrigger from './ComparisonListItemTrigger.vue'
 import ComparisonListItemTextSize from './ComparisonListItemTextSize.vue'
 import ComparisonListItemDuration from './ComparisonListItemDuration.vue'
-import AskAnnaChipStatus from '@/core/components/shared/AskAnnaChipStatus.vue'
-import AskAnnaTextSlicedCopy from '@/core/components/shared/AskAnnaTextSlicedCopy.vue'
-import AskAnnaLinkCopyOnHover from '@/core/components/shared/AskAnnaLinkCopyOnHover.vue'
+import AskAnnaChipStatus from '@/components/AskAnnaChipStatus.vue'
+import AskAnnaTextSlicedCopy from '@/components/AskAnnaTextSlicedCopy.vue'
+import AskAnnaLinkCopyOnHover from '@/components/AskAnnaLinkCopyOnHover.vue'
 import RunInfoAvatar from '@/features/run/components/parts/RunInfoAvatar.vue'
 
 const props = defineProps({

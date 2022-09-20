@@ -27,9 +27,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from '@vue/composition-api'
-import usePermission from '@/core/composition/usePermission'
-
 const emits = defineEmits('openVariablePopup')
 
 const permission = usePermission()

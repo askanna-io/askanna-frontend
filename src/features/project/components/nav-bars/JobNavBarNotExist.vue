@@ -15,7 +15,7 @@
       <v-card :flat="!sticked" v-if="sticked" :class="{ 'ma-3': sticked }">
         <v-divider v-if="!sticked" />
         <v-slide-y-transition>
-          <project-tool-bar v-if="sticked" :projectName="project.name" />
+          <ProjectToolBar v-if="sticked" :projectName="project.name" />
         </v-slide-y-transition>
       </v-card>
     </div>
@@ -31,9 +31,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import ProjectToolBar from './parts/ProjectToolBar.vue'
-import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
-
 const props = defineProps({
   job: {
     type: Object,

@@ -2,9 +2,6 @@
   <span>{{ computedValue }}</span>
 </template>
 <script setup lang="ts">
-import { computed } from '@vue/composition-api'
-import useSizeHumanize from '@/core/composition/useSizeHumanize'
-
 const props = defineProps({
   value: {
     type: [String, Number],

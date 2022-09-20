@@ -96,17 +96,12 @@
       </v-menu>
       <template v-if="workspacePeopleInviteCreate">
         <v-spacer />
-        <people-invite-popup :workspaceName="title" />
+        <PeopleInvitePopup :workspaceName="title" />
       </template>
     </template>
   </v-toolbar>
 </template>
 <script setup lang="ts">
-import { ref, computed } from '@vue/composition-api'
-import usePermission from '@/core/composition/usePermission'
-import { usePeopleStore } from '@/features/people/usePeopleStore'
-import PeopleInvitePopup from './PeopleInvitePopup.vue'
-
 defineProps({
   title: {
     type: String,

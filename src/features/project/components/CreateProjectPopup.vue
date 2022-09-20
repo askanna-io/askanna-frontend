@@ -55,32 +55,25 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from '@vue/composition-api'
-import usePermission from '@/core/composition/usePermission'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import { useProjectStore } from '@/features/project/useProjectStore'
-import useValidationRules from '@/core/composition/useValidationRules'
-import { useProjectsStore } from '@/features/projects/useProjectsStore'
-
-const router = useRouterAskAnna()
 const permission = usePermission()
 const projectStore = useProjectStore()
-const projectsStore = useProjectsStore()
-
-const workspaceProjectCreate = computed(() => permission.getFor(permission.labels.workspaceProjectCreate))
 const { RULES } = useValidationRules()
+const projectsStore = useProjectsStore()
+const { route, router } = useRouterAskAnna()
 
 const menu = ref()
 const isFormValid = ref(true)
 const newProjectFastForm = ref(null)
 const nameRules = ref([RULES.required('Project name is required')])
 
+const workspaceProjectCreate = computed(() => permission.getFor(permission.labels.workspaceProjectCreate))
+
 projectStore.resetProjectData()
 
 const handleMoreOptions = () =>
   router.push({
     name: 'workspace-new-project',
-    params: { workspaceId: router.route.value.params.workspaceId }
+    params: { workspaceId: route.params.workspaceId }
   })
 
 const handlerCreateProject = async () => {
@@ -90,7 +83,7 @@ const handlerCreateProject = async () => {
     return
   }
 
-  await projectStore.createProjectShortWay(router.route.value.params.workspaceId)
+  await projectStore.createProjectShortWay(route.params.workspaceId)
   await projectsStore.getProjects() // call get all project to updated them on menu
 
   resetValidation()

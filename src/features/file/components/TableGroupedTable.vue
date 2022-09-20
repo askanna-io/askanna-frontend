@@ -29,7 +29,6 @@
   </tbody>
 </template>
 <script setup lang="ts">
-import { ref, computed } from '@vue/composition-api'
 const props = defineProps({
   groupBy: {
     type: Array,

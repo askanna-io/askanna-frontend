@@ -69,15 +69,6 @@
 </template>
 
 <script setup lang="ts">
-import { useWindowSize } from '@/core/plugins/vue-hooks'
-import { ref, computed } from '@vue/composition-api'
-import useNumeral from '@/core/composition/useNumeral'
-import { useFileStore } from '@/features/file/useFileStore'
-import { useMobileStore } from '@/core/store/useMobileStore'
-import useSizeHumanize from '@/core/composition/useSizeHumanize'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import PreviewFile from '@/features/file/components/PreviewFile.vue'
-
 defineProps({
   file: Blob,
   fileSource: [String, Object, Blob],

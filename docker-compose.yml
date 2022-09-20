@@ -1,13 +1,13 @@
-version: '3'
+version: "3"
 
 services:
   frontend:
     build:
       context: .
-      target: base-stage
-      dockerfile: ./compose/Dockerfile
+      target: dev-stage  # Use `preview-stage` as target to get a preview of the build solution without auto-reload
+      dockerfile: ./compose/Dockerfile.local
     volumes:
       - .:/app
-      - /app/node_modules
     ports:
-      - "8080:8080"
+      - "4173:4173"  # For preview web server
+      - "5173:5173"  # For development web server

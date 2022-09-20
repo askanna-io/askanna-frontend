@@ -16,7 +16,6 @@
 </template>
 <script setup lang="ts">
 import { get } from 'lodash'
-import { computed } from '@vue/composition-api'
 
 const props = defineProps({
   fileExtension: {

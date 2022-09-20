@@ -6,7 +6,7 @@ export default {
   paths: [
     {
       path: '/workspace-new',
-      component: () => import(/* webpackChunkName: "workspace-new" */ './views/workspace-new.vue'),
+      component: () => import('./views/workspace-new.vue'),
       name: 'workspace-new',
       meta: {
         hideAppBarIcon: true,
@@ -15,8 +15,7 @@ export default {
     },
     {
       path: '/workspace-does-not-exist',
-      component: () =>
-        import(/* webpackChunkName: "workspace-does-not-exist" */ './views/workspace-does-not-exist.vue'),
+      component: () => import('./views/workspace-does-not-exist.vue'),
       name: 'workspace-does-not-exist',
       meta: {
         hideAppBarIcon: true,
@@ -27,7 +26,7 @@ export default {
     {
       path: '/:workspaceId',
       caseSensitive: true,
-      component: () => import(/* webpackChunkName: "workspace" */ './views/index.vue'),
+      component: () => import('./views/index.vue'),
       meta: {
         hideAppBarIcon: true,
         title: 'Workspace: workspaceId',
@@ -37,14 +36,14 @@ export default {
       children: [
         {
           path: '',
-          component: () => import(/* webpackChunkName: "workspace-index" */ './views/workspace-index.vue'),
+          component: () => import('./views/workspace-index.vue'),
           meta: {
             hideAppBarIcon: true
           },
           children: [
             {
               path: '',
-              component: () => import(/* webpackChunkName: "workspace-projects" */ './views/workspace-projects.vue'),
+              component: () => import('./views/workspace-projects.vue'),
               name: 'workspace',
               meta: {
                 requiresAuth: false,
@@ -55,7 +54,7 @@ export default {
             },
             {
               path: 'edit',
-              component: () => import(/* webpackChunkName: "workspace-edit" */ './views/workspace-edit.vue'),
+              component: () => import('./views/workspace-edit.vue'),
               name: 'workspace-edit',
               meta: {
                 breadcrumb: 'Edit',
@@ -69,7 +68,7 @@ export default {
         ...projectRoutes,
         {
           path: 'profile',
-          component: () => import(/* webpackChunkName: "workspace-profile" */ './views/workspace-profile.vue'),
+          component: () => import('./views/workspace-profile.vue'),
           name: 'workspace-profile',
           meta: {
             requiresAuth: true,

@@ -37,7 +37,7 @@
       </v-col>
       <v-col cols="4" class="align-self-center" style="min-width: 100px">
         <v-flex class="d-flex justify-end">
-          <create-project-popup v-if="!isEditWorkspaceView && !$vuetify.breakpoint.xsOnly" />
+          <CreateProjectPopup v-if="!isEditWorkspaceView && !$vuetify.breakpoint.xsOnly" />
           <v-btn @click="toggleFilter" small text icon
             ><v-icon :color="filterMenuStyle.color">{{ filterMenuStyle.icon }}</v-icon></v-btn
           >
@@ -131,12 +131,7 @@
   </v-toolbar>
 </template>
 <script setup lang="ts">
-import { useRouter } from '@/core/plugins/vue-hooks'
-import { computed } from '@vue/composition-api'
-import useSortFilter from '@/core/composition/useSortFilter'
-import usePermission from '@/core/composition/usePermission'
-import WorkspaceToolbarMenu from './WorkspaceToolbarMenu.vue'
-import CreateProjectPopup from '@/features/project/components/CreateProjectPopup.vue'
+import { useRoute } from 'vue-router/composables'
 
 defineProps({
   isMember: {
@@ -184,11 +179,11 @@ const {
   debounceedSearch
 } = useSortFilter('Project', 'projects')
 
-const { route } = useRouter()
+const route = useRoute()
 const permission = usePermission()
 
 const isSignIn = computed(() => permission.token.value)
-const isEditWorkspaceView = computed(() => route.value.name === 'workspace-edit')
+const isEditWorkspaceView = computed(() => route.name === 'workspace-edit')
 
 const handleOpenConfirmRemoveWorkspace = () => emit('onOpenWorkspaceRemove')
 </script>

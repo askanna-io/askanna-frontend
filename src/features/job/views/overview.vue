@@ -3,10 +3,10 @@
     <v-card-title>Description</v-card-title>
     <v-divider />
 
-    <ask-anna-description class="mx-2" preview readonly :description="job.description" />
+    <AskAnnaDescription class="mx-2" preview readonly :description="job.description" />
 
     <v-divider />
-    <job-definition
+    <JobDefinition
       v-if="job.short_uuid"
       :job="job"
       :nextRun="nextRun"
@@ -17,23 +17,11 @@
       @handleGoToCode="handleGoToCode"
     />
     <v-divider v-if="projectRunCreate" />
-    <job-running v-if="projectRunCreate" />
+    <JobRunning v-if="projectRunCreate" />
   </v-card>
 </template>
 
 <script setup lang="ts">
-import useMoment from '@/core/composition/useMoment'
-import { useJobStore } from '@/features/job/useJobStore'
-import useCronstrue from '@/core/composition/useCronstrue'
-import usePermission from '@/core/composition/usePermission'
-import { computed, onBeforeMount } from '@vue/composition-api'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import { useProjectStore } from '@/features/project/useProjectStore'
-
-import JobDefinition from '@job/components/overview/JobDefinition.vue'
-import JobRunning from '@/features/job/components/overview/JobRunning.vue'
-import AskAnnaDescription from '@/core/components/shared/AskAnnaDescription.vue'
-
 const moment = useMoment()
 const jobStore = useJobStore()
 const cronstrue = useCronstrue()
@@ -41,7 +29,7 @@ const permission = usePermission()
 const projectStore = useProjectStore()
 const { route, router } = useRouterAskAnna()
 
-const { workspaceId, projectId } = route.value.params
+const { workspaceId, projectId } = route.params
 
 const projectRunCreate = computed(() => permission.getFor(permission.labels.projectRunCreate))
 

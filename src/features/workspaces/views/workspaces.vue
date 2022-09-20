@@ -54,31 +54,20 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, computed } from '@vue/composition-api'
-import useSanitizeHTML from '@/core/composition/useSanitizeHTML'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import { useWorkspaceStore } from '@/features/workspace/useWorkspaceStore'
-import { useWorkspacesStore } from '@/features/workspaces/useWorkspacesStore'
-
-import WorkspacesToolbar from '@/features/workspaces/components/WorkspacesToolbar.vue'
-import WorkspacesCardItem from '@/features/workspaces/components/WorkspacesCardItem.vue'
-import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
-import WorkspaceConfirmDeletePopup from '@/features/workspace/components/WorkspaceConfirmDeletePopup.vue'
-
-const routerAA = useRouterAskAnna()
 const sanitizeHTML = useSanitizeHTML()
 const workspaceStore = useWorkspaceStore()
+const { route, router } = useRouterAskAnna()
 const workspacesStore = useWorkspacesStore()
 
 const workspace = ref({})
 const deleteWorkspaceConfirmPopup = ref(false)
 
-const query = computed(() => routerAA.route.value.query)
+const query = computed(() => route.query)
 const loading = computed(() => workspacesStore.loadingAll)
 const workspaces = computed(() => workspacesStore.getWorkspacesByParams(query.value))
 
 const handleOpenWorkspace = workspace => {
-  routerAA.push({
+  router.push({
     name: 'workspace',
     params: {
       workspaceId: workspace.short_uuid,

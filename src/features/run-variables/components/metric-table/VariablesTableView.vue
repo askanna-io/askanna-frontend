@@ -81,7 +81,6 @@ import SortFilterByMetricLabel from './parts/sort-filter/SortFilterByMetricLabel
 import MetricValue from '@/features/metric/components/metric-table/parts/MetricValue.vue'
 
 import useSortFilterTable from './parts/sort-filter/useSortFilterTable'
-import { ref, watch, defineComponent, computed } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'VariablesTableView',

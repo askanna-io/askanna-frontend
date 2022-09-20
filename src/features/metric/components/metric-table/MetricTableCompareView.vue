@@ -80,7 +80,6 @@ import SortFilterByMetricValue from './parts/sort-filter/SortFilterByMetricValue
 import SortFilterByMetricLabel from './parts/sort-filter/SortFilterByMetricLabel.vue'
 
 import useSortFilterTable from './parts/sort-filter/useSortFilterTable'
-import { ref, watch, defineComponent, computed } from '@vue/composition-api'
 
 export default defineComponent({
   name: 'MetricTableView',

@@ -4,9 +4,6 @@
   >
 </template>
 <script setup lang="ts">
-import { computed } from '@vue/composition-api'
-import useMoment from '@/core/composition/useMoment'
-
 const props = defineProps({
   isShowName: {
     type: Boolean,

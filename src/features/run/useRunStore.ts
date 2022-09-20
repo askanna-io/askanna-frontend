@@ -1,17 +1,13 @@
-import router from '@/core/router'
-import { defineStore } from 'pinia'
 import VueRouter from 'vue-router'
+import { defineStore } from 'pinia'
 import { set, debounce } from 'lodash'
 import { RunModel, ArtifactModel } from './types'
 const { isNavigationFailure, NavigationFailureType } = VueRouter
 
-import apiService from '@/core/services/apiService'
-import { useLogger } from '@/core/composition/useLogger'
-import { apiStringify } from '@/core/services/api-settings'
-import { useGeneralStore } from '@/core/store/useGeneralStore'
+import apiService from '@/services/apiService'
+import { apiStringify } from '@/services/api-settings'
 
 const serviceName = 'run'
-
 const api = apiStringify(serviceName)
 
 export const useRunStore = defineStore('run', {
@@ -70,11 +66,7 @@ export const useRunStore = defineStore('run', {
 
         logger.error('Error on run job in getRun action.\nError: ', e)
 
-        router.push({ name: 'workspace-project-job-run-does-not-exist' }).catch(failure => {
-          if (isNavigationFailure(failure, NavigationFailureType.redirected)) {
-            logger.error('Error on redirect to workspace-project-job-run-does-not-exist.\nError: ', failure)
-          }
-        })
+        this.$routerAskAnna.push({ name: 'workspace-project-job-run-does-not-exist' })
 
         return
       }
@@ -129,7 +121,7 @@ export const useRunStore = defineStore('run', {
     },
 
     async getRunLog({ uuid, params }) {
-      const turnOnScrollLoading = function () {
+      const turnOnScrollLoading = () => {
         this.runlogScrollLoading = true
       }
       const throttled = debounce(turnOnScrollLoading, 1000, { trailing: false, leading: true })
@@ -161,7 +153,7 @@ export const useRunStore = defineStore('run', {
         results: [...this.runLog.results, ...list]
       }
 
-      const turnOffScrollLoading = function () {
+      const turnOffScrollLoading = () => {
         this.runlogScrollLoading = false
       }
 

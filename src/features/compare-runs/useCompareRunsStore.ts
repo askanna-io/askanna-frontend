@@ -1,10 +1,9 @@
 import { defineStore } from 'pinia'
 import { set, map, uniqBy } from 'lodash'
 import { Run } from '@/features/run/types'
-import apiService from '@/core/services/apiService'
-import { useLogger } from '@/core/composition/useLogger'
-import { apiStringify } from '@/core/services/api-settings'
-import useMapMetrics, { MetricItem, MetricRowItem, RowItem } from './useMapMetrics'
+import apiService from '@/services/apiService'
+import { MetricItem, RowItem } from './useMapMetrics'
+import { apiStringify } from '@/services/api-settings'
 
 const logger = useLogger()
 const jobApi = apiStringify('job')

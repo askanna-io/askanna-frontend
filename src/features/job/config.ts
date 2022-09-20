@@ -4,8 +4,7 @@ import { PERMISSIONS_LABELS } from '@/features/workspace/types'
 export const jobRoutes = [
   {
     path: 'job-does-not-exist',
-    component: () =>
-      import(/* webpackChunkName: "workspace-project-job-does-not-exist" */ './views/job-does-not-exist.vue'),
+    component: () => import('./views/job-does-not-exist.vue'),
     name: 'workspace-project-job-does-not-exist',
     meta: {
       title: 'Oops...we cannot find this job',
@@ -16,7 +15,7 @@ export const jobRoutes = [
     path: ':jobId',
     redirect: { name: 'workspace-project-job-overiew' },
 
-    component: () => import(/* webpackChunkName: "workspace-project-uuid-jobs-id" */ './views/index.vue'),
+    component: () => import('./views/index.vue'),
     meta: {
       breadcrumb: 'Job - :jobId'
     },
@@ -24,7 +23,7 @@ export const jobRoutes = [
       runsRoutes,
       {
         path: 'overview',
-        component: () => import(/* webpackChunkName: "workspace-project-job-overiew" */ './views/overview.vue'),
+        component: () => import('./views/overview.vue'),
         name: 'workspace-project-job-overiew',
         meta: {
           breadcrumb: 'Overview'
@@ -32,7 +31,7 @@ export const jobRoutes = [
       },
       {
         path: 'edit',
-        component: () => import(/* webpackChunkName: "workspace-project-job-edit" */ './views/edit.vue'),
+        component: () => import('./views/edit.vue'),
         name: 'workspace-project-job-edit',
         meta: {
           breadcrumb: 'Edit',

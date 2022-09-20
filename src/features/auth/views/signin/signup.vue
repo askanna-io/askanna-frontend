@@ -9,11 +9,7 @@
       </v-row>
     </v-expansion-panel-header>
     <v-expansion-panel-content>
-      <the-sign-up />
+      <SignUp />
     </v-expansion-panel-content>
   </v-expansion-panel>
 </template>
-
-<script setup lang="ts">
-import TheSignUp from '@/features/auth/components/signup/TheSignUp.vue'
-</script>

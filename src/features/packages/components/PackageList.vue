@@ -40,70 +40,53 @@
       </v-menu>
     </template>
     <template v-slot:no-data>
-      <v-icon :size="25" left>
-        mdi-package-down
-      </v-icon>
+      <v-icon :size="25" left> mdi-package-down </v-icon>
       You don't have packages yet.
     </template>
   </v-data-table>
 </template>
 
-<script>
-import { defineComponent } from '@vue/composition-api'
-import useMoment from '@/core/composition/useMoment'
-
-export default defineComponent({
-  name: 'PackageList',
-
-  props: {
-    workspaceName: {
-      type: String,
-      default: ''
-    },
-    items: {
-      type: Array,
-      default: () => []
-    },
-    loading: {
-      type: Boolean,
-      default: true
-    },
-    settings: {
-      type: Object,
-      default: function () {
-        return {
-          projectView: 1
-        }
-      }
-    }
+<script setup lang="ts">
+defineProps({
+  workspaceName: {
+    type: String,
+    default: ''
   },
-
-  setup(props, context) {
-    const moment = useMoment(context)
-
-    const headers = [
-      {
-        text: 'Name',
-        align: 'left',
-        value: 'filename',
-        class: 'text-left text-subtitle-2 font-weight-bold h-20'
-      },
-      { text: 'Created', value: 'created', class: 'text-left text-subtitle-2 font-weight-bold h-20' },
-      { text: '', value: 'uuid', sortable: false, class: 'text-left text-subtitle-2 font-weight-bold h-20' },
-      { text: '', value: 'menu', class: 'text-left text-subtitle-2 font-weight-bold h-20' }
-    ]
-
-    const handleClickRow = ({ short_uuid }) => context.emit('handleClickRow', short_uuid)
-    const handleDownload = async packageData => context.emit('handleDownload', packageData)
-    const handleHistory = ({ short_uuid }) => context.emit('handleHistory', short_uuid)
-
-    return {
-      ...moment,
-      headers,
-      handleHistory,
-      handleDownload,
-      handleClickRow
+  items: {
+    type: Array,
+    default: () => []
+  },
+  loading: {
+    type: Boolean,
+    default: true
+  },
+  settings: {
+    type: Object,
+    default: function () {
+      return {
+        projectView: 1
+      }
     }
   }
 })
+
+const emit = defineEmits(['handleClickRow', 'handleDownload', 'handleHistory'])
+
+const { $moment } = useMoment()
+
+const headers = [
+  {
+    text: 'Name',
+    align: 'left',
+    value: 'filename',
+    class: 'text-left text-subtitle-2 font-weight-bold h-20'
+  },
+  { text: 'Created', value: 'created', class: 'text-left text-subtitle-2 font-weight-bold h-20' },
+  { text: '', value: 'uuid', sortable: false, class: 'text-left text-subtitle-2 font-weight-bold h-20' },
+  { text: '', value: 'menu', class: 'text-left text-subtitle-2 font-weight-bold h-20' }
+]
+
+const handleClickRow = ({ short_uuid }) => emit('handleClickRow', short_uuid)
+const handleDownload = async packageData => emit('handleDownload', packageData)
+const handleHistory = ({ short_uuid }) => emit('handleHistory', short_uuid)
 </script>

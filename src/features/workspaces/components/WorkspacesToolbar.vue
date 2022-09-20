@@ -135,11 +135,6 @@
   </v-toolbar>
 </template>
 <script setup lang="ts">
-import usePermission from '@/core/composition/usePermission'
-import useSortFilter from '@/core/composition/useSortFilter'
-import WorkspaceCreatePopup from './WorkspaceCreatePopup.vue'
-import WorkspacesToolbarMenu from './WorkspacesToolbarMenu.vue'
-
 const permission = usePermission()
 const {
   search,

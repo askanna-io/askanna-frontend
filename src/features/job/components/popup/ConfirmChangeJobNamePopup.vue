@@ -36,46 +36,31 @@
     </v-card>
   </v-dialog>
 </template>
-<script>
-import useSlicedText from '@/core/composition/useSlicedText'
-import { computed, defineComponent } from '@vue/composition-api'
-
-export default defineComponent({
-  name: 'ConfirmChangeJobNamePopup',
-
-  props: {
-    value: {
-      type: Boolean,
-      default: false
-    },
-    jobName: {
-      type: String,
-      default: () => ''
-    }
+<script setup lang="ts">
+const props = defineProps({
+  value: {
+    type: Boolean,
+    default: false
   },
-
-  setup(props, context) {
-    const slicedText = useSlicedText()
-
-    const name = computed(() => slicedText(props.jobName, 17))
-
-    const valueModel = computed({
-      get: () => props.value,
-      set: () => context.emit('onClose')
-    })
-
-    const close = () => context.emit('onClose')
-    const confirmChange = () => context.emit('onConfirmChangeName')
-
-    return {
-      name,
-      valueModel,
-
-      close,
-      confirmChange
-    }
+  jobName: {
+    type: String,
+    default: () => ''
   }
 })
+
+const emit = defineEmits(['onClose', 'onConfirmChangeName'])
+
+const slicedText = useSlicedText()
+
+const name = computed(() => slicedText(props.jobName, 17))
+
+const valueModel = computed({
+  get: () => props.value,
+  set: () => emit('onClose')
+})
+
+const close = () => emit('onClose')
+const confirmChange = () => emit('onConfirmChangeName')
 </script>
 <style scoped>
 .break {

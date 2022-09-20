@@ -24,10 +24,6 @@
   </v-menu>
 </template>
 <script setup lang="ts">
-import useCopy from '@/core/composition/useCopy'
-import { ref, watch } from '@vue/composition-api'
-import TheHighlight from '@/core/components/highlight/TheHighlight.vue'
-
 const props = defineProps({
   isLabel: {
     type: Boolean,
@@ -60,7 +56,7 @@ const divStyles = ref({})
 
 const nudgeLeft = ref(0)
 
-watch(divRef, async divRef => {
+watchEffect(divRef, async divRef => {
   if (!divRef) return
 
   let width = divRef.clientWidth || divRef.scrollWidth

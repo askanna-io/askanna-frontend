@@ -1,6 +1,4 @@
 import * as d3 from 'd3'
-import useMoment from '@/core/composition/useMoment'
-import useNumeral from '@/core/composition/useNumeral'
 
 const numeral = useNumeral()
 const { $moment } = useMoment()

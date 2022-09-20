@@ -9,23 +9,12 @@
       </v-row>
     </v-expansion-panel-header>
     <v-expansion-panel-content>
-      <the-sign-in />
-      <forgot-password-link />
+      <SignIn />
+      <SignInForgotPasswordLink />
     </v-expansion-panel-content>
   </v-expansion-panel>
 </template>
 
-<script setup lang="ts">
-import TheSignIn from '../../components/TheSignIn.vue'
-import ForgotPasswordLink from '../../components/account/ForgotPasswordLink.vue'
-
-defineProps({
-  title: {
-    type: String,
-    default: () => 'Sign in'
-  }
-})
-</script>
 <style>
 .login-wrapper {
   height: 100vh;

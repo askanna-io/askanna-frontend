@@ -5,7 +5,7 @@ import { PERMISSIONS_LABELS } from '@/features/workspace/types'
 export const projectRoutes = [
   {
     path: 'new-project',
-    component: () => import(/* webpackChunkName: "workspace-new-project" */ './views/new-project.vue'),
+    component: () => import('./views/new-project.vue'),
     name: 'workspace-new-project',
     meta: {
       hideAppBarIcon: true,
@@ -15,7 +15,7 @@ export const projectRoutes = [
   },
   {
     path: 'project-does-not-exist',
-    component: () => import(/* webpackChunkName: "project-does-not-exist" */ './views/project-does-not-exist.vue'),
+    component: () => import('./views/project-does-not-exist.vue'),
     name: 'project-does-not-exist',
     meta: {
       requiresAuth: false,
@@ -26,7 +26,7 @@ export const projectRoutes = [
   },
   {
     path: 'project/:projectId',
-    component: () => import(/* webpackChunkName: "workspace-project" */ './views/index.vue'),
+    component: () => import('./views/index.vue'),
     meta: {
       hideAppBarIcon: true,
       breadcrumb: 'Project - :projectId',
@@ -46,7 +46,7 @@ export const projectRoutes = [
       {
         path: 'variables',
         name: 'workspace-project-variables',
-        component: () => import(/* webpackChunkName: "workspace-project-variables" */ './views/variables.vue'),
+        component: () => import('./views/variables.vue'),
         meta: {
           hideAppBarIcon: true,
           breadcrumb: 'Variables'
@@ -55,8 +55,7 @@ export const projectRoutes = [
       packageRoutes,
       {
         path: 'code-does-not-exist',
-        component: () =>
-          import(/* webpackChunkName: "workspace-project-code-does-not-exist" */ './views/code-does-not-exist.vue'),
+        component: () => import('./views/code-does-not-exist.vue'),
         name: 'workspace-project-code-does-not-exist',
         meta: {
           hideAppBarIcon: true,
@@ -67,7 +66,7 @@ export const projectRoutes = [
       {
         path: 'edit',
         name: 'workspace-project-edit',
-        component: () => import(/* webpackChunkName: "workspace-project-edit" */ './views/project-edit.vue'),
+        component: () => import('./views/project-edit.vue'),
         meta: {
           breadcrumb: 'Edit',
           hideAppBarIcon: true,

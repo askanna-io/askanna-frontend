@@ -114,37 +114,15 @@
 </template>
 
 <script setup lang="ts">
-import { useWindowSize } from '@/core/plugins/vue-hooks'
-import useCopy from '@/core/composition/useCopy'
-import useMoment from '@/core/composition/useMoment'
-import { useFileStore } from '@/features/file/useFileStore'
-import usePermission from '@/core/composition/usePermission'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import useFileExtension from '@/core/composition/useFileExtension'
-import { useProjectStore } from '@/features/project/useProjectStore'
-import { usePackageStore } from '@/features/package/usePackageStore'
-import { usePackagesStore } from '@/features/packages/usePackagesStore'
-import useForceFileDownload from '@/core/composition/useForceFileDownload'
-import usePackageBreadcrumbs from '@/core/composition/usePackageBreadcrumbs'
-import { ref, watch, onBeforeMount, onUnmounted, computed } from '@vue/composition-api'
-
-import PackageFile from '@/features/package/components/PackageFile.vue'
-import PackageTree from '@/features/package/components/PackageTree.vue'
-import PackageToolbar from '@/features/package/components/PackageToolbar.vue'
-import PackageProcessing from '@/features/package/components/PackageProcessing.vue'
-import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
-import ResumableUpload from '@/features/package/components/resumable-upload/ResumableUpload.vue'
-
 const copy = useCopy()
 const moment = useMoment()
 const ext = useFileExtension()
 const fileStore = useFileStore()
-const router = useRouterAskAnna()
 const permission = usePermission()
 const { height } = useWindowSize()
 const packageStore = usePackageStore()
 const projectStore = useProjectStore()
-
+const { route, router } = useRouterAskAnna()
 const packagesStore = usePackagesStore()
 const breadcrumbs = usePackageBreadcrumbs()
 const forceFileDownload = useForceFileDownload()
@@ -153,12 +131,12 @@ const menu = ref(false)
 const polling = ref(null)
 const isRaplace = ref(false)
 
-const params = computed(() => router.route.value.params)
+const params = computed(() => route.params)
 
 const projectCodeCreate = computed(() => permission.getFor(permission.labels.projectCodeCreate))
 
 const sticked = computed(() => !projectStore.menu.sticked)
-const { useProjectPackageId = false } = router.route.value.meta
+const { useProjectPackageId = false } = route.meta
 
 const projectIdCd = computed(() => projectStore.project.short_uuid)
 const packageIdCd = computed(() => projectStore.project.package.short_uuid)
@@ -216,7 +194,7 @@ const checkProcessing = () => {
 
 const calcHeight = computed(() => height.value - 370)
 const path = computed(() => {
-  let a = router.route.value.params.folderName || '/'
+  let a = route.params.folderName || '/'
   return a
 })
 const isProcessing = computed(() => packageStore.processingList.find(item => item.packageId === packageId.value))
@@ -284,8 +262,8 @@ const handleDownload = async () => {
 const handleReplace = () => (isRaplace.value = !isRaplace.value)
 
 const handleCloseOutside = async () => {
-  await projectStore.getProjectMe(router.route.value.params.projectId)
-  const project = await projectStore.getProject(router.route.value.params.projectId)
+  await projectStore.getProjectMe(route.params.projectId)
+  const project = await projectStore.getProject(route.params.projectId)
   if (!project.package.short_uuid || !project.short_uuid) return
 
   await packageStore.getPackage({

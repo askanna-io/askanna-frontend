@@ -6,11 +6,7 @@
       </v-row>
     </v-toolbar>
     <v-card-text>
-      <the-sign-in submitButtonTitle="Sign in" />
+      <SignIn submitButtonTitle="Sign in" />
     </v-card-text>
   </v-card>
 </template>
-
-<script setup lang="ts">
-import TheSignIn from '../../components/TheSignIn.vue'
-</script>

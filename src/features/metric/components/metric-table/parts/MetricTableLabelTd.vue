@@ -1,12 +1,9 @@
 <template>
   <component :is="tag" class="text-left" :key="label" :style="labelStyles">
-    <metric-value :metricRow="labelValue" :isLabels="isLabels" :isLabel="isLabel" />
+    <MetricValue :metricRow="labelValue" :isLabels="isLabels" :isLabel="isLabel" />
   </component>
 </template>
 <script setup lang="ts">
-import MetricValue from './MetricValue.vue'
-import { computed } from '@vue/composition-api'
-
 const props = defineProps({
   isLabel: {
     type: Boolean,

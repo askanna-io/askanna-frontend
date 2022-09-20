@@ -19,20 +19,13 @@
 </template>
 <script setup lang="ts">
 import { throttle } from 'lodash'
-import useQuery from '@/core/composition/useQuery'
-import { useRouter, useWindowSize } from '@/core/plugins/vue-hooks'
-import { useMetricStore } from '@/features/metric/useMetricStore'
-import { ref, computed, onBeforeMount } from '@vue/composition-api'
-import { useProjectStore } from '@/features/project/useProjectStore'
-import MetricTableView from '@/features/metric/components/metric-table/MetricTableView.vue'
-import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 
-const { route } = useRouter()
 const { height } = useWindowSize()
 const metricStore = useMetricStore()
+const { route } = useRouterAskAnna()
 const projectStore = useProjectStore()
 
-const { runId: uuid } = route.value.params
+const { runId: uuid } = route.params
 
 const isSorted = ref(false)
 const metricsQuery = ref({})

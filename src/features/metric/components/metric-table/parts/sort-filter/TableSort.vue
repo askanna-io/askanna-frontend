@@ -14,51 +14,37 @@
   </v-list>
 </template>
 
-<script>
-import { inject, defineComponent } from '@vue/composition-api'
-
-export default defineComponent({
-  name: 'TableSort',
-
-  props: {
-    title: {
-      type: String,
-      default: ''
-    },
-    sortBy: {
-      type: String,
-      default: ''
-    },
-    disabled: {
-      type: Boolean,
-      default: () => false
-    }
+<script setup lang="ts">
+const props = defineProps({
+  title: {
+    type: String,
+    default: ''
   },
-
-  setup(props) {
-    const items = [
-      {
-        sort: `${props.sortBy}`,
-        text: 'Sort A -> Z',
-        icon: 'mdi-sort-alphabetical-ascending'
-      },
-      {
-        sort: `-${props.sortBy}`,
-        text: 'Sort Z -> A',
-        icon: 'mdi-sort-alphabetical-descending'
-      }
-    ]
-
-    const state = inject('state')
-    const changeState = inject('changeState')
-
-    const handleChange = value => changeState({ path: 'ordering', value })
-
-    return {
-      items,
-      state,
-      handleChange
-    }
+  sortBy: {
+    type: String,
+    default: ''
+  },
+  disabled: {
+    type: Boolean,
+    default: () => false
   }
 })
+
+const items = [
+  {
+    sort: `${props.sortBy}`,
+    text: 'Sort A -> Z',
+    icon: 'mdi-sort-alphabetical-ascending'
+  },
+  {
+    sort: `-${props.sortBy}`,
+    text: 'Sort Z -> A',
+    icon: 'mdi-sort-alphabetical-descending'
+  }
+]
+
+const state = inject('state')
+const changeState = inject('changeState')
+
+const handleChange = value => changeState({ path: 'ordering', value })
 </script>

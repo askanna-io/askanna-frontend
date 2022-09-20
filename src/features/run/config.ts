@@ -3,8 +3,7 @@ import { PERMISSIONS_LABELS } from '@/features/workspace/types'
 export const runRoutes = [
   {
     path: 'run-does-not-exist',
-    component: () =>
-      import(/* webpackChunkName: "workspace-project-job-run-does-not-exist" */ './views/run-does-not-exist.vue'),
+    component: () => import('./views/run-does-not-exist.vue'),
     name: 'workspace-project-job-run-does-not-exist',
     meta: {
       title: 'Oops...we cannot find this jobrun',
@@ -19,13 +18,12 @@ export const runRoutes = [
       title: 'Run: runId',
       breadcrumb: 'Run - :runId'
     },
-    component: () => import(/* webpackChunkName: "workspace-project-uuid-jobs-name-run" */ './views/index.vue'),
+    component: () => import('./views/index.vue'),
 
     children: [
       {
         path: 'edit',
-        component: () =>
-          import(/* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-edit" */ './views/edit.vue'),
+        component: () => import('./views/edit.vue'),
         name: 'workspace-project-jobs-job-run-edit',
         meta: {
           title: 'Run: runId',
@@ -34,8 +32,7 @@ export const runRoutes = [
       },
       {
         path: 'overview',
-        component: () =>
-          import(/* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-overview" */ './views/overview.vue'),
+        component: () => import('./views/overview.vue'),
         name: 'workspace-project-jobs-job-run-overview',
         meta: {
           title: 'Run: runId'
@@ -43,8 +40,7 @@ export const runRoutes = [
       },
       {
         path: 'input/:view?',
-        component: () =>
-          import(/* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-input" */ './views/input.vue'),
+        component: () => import('./views/run-input.vue'),
         name: 'workspace-project-jobs-job-run-input',
         meta: {
           title: 'Run: runId'
@@ -52,8 +48,7 @@ export const runRoutes = [
       },
       {
         path: 'result/:view?',
-        component: () =>
-          import(/* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-result" */ './views/result.vue'),
+        component: () => import('./views/result.vue'),
         name: 'workspace-project-jobs-job-run-result',
         meta: {
           title: 'Run: runId'
@@ -62,10 +57,7 @@ export const runRoutes = [
       {
         path: 'metrics',
         redirect: { name: 'workspace-project-jobs-job-run-metrics-table' },
-        component: () =>
-          import(
-            /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-metrics" */ './views/metrics/index.vue'
-          ),
+        component: () => import('./views/metrics/index.vue'),
         name: 'workspace-project-jobs-job-run-metrics',
         meta: {
           title: 'Run: runId'
@@ -73,10 +65,7 @@ export const runRoutes = [
         children: [
           {
             path: 'table',
-            component: () =>
-              import(
-                /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-metrics-table" */ './views/metrics/table-view.vue'
-              ),
+            component: () => import('./views/metrics/table-view.vue'),
             name: 'workspace-project-jobs-job-run-metrics-table',
             meta: {
               tabValue: 'table',
@@ -85,10 +74,7 @@ export const runRoutes = [
           },
           {
             path: 'chart',
-            component: () =>
-              import(
-                /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-chart-json" */ './views/metrics/chart-view.vue'
-              ),
+            component: () => import('./views/metrics/chart-view.vue'),
             name: 'workspace-project-jobs-job-run-metrics-chart',
             meta: {
               tabValue: 'chart',
@@ -97,10 +83,7 @@ export const runRoutes = [
           },
           {
             path: 'json',
-            component: () =>
-              import(
-                /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-metrics-json" */ './views/metrics/json-view.vue'
-              ),
+            component: () => import('./views/metrics/json-view.vue'),
             name: 'workspace-project-jobs-job-run-metrics-json',
             meta: {
               tabValue: 'json',
@@ -111,17 +94,11 @@ export const runRoutes = [
       },
       {
         path: 'artifact',
-        component: () =>
-          import(
-            /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-artifact-index" */ './views/index-artifact.vue'
-          ),
+        component: () => import('./views/index-artifact.vue'),
         children: [
           {
             path: '',
-            component: () =>
-              import(
-                /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-artifact" */ './views/artifact.vue'
-              ),
+            component: () => import('./views/artifact.vue'),
             name: 'workspace-project-jobs-job-run-artifact',
             meta: {
               title: 'Run: runId'
@@ -130,10 +107,7 @@ export const runRoutes = [
             children: [
               {
                 path: ':folderName(.*)',
-                component: () =>
-                  import(
-                    /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-artifact-folder" */ './views/artifact.vue'
-                  ),
+                component: () => import('./views/artifact.vue'),
                 name: 'workspace-project-jobs-job-run-artifact-folder',
                 meta: {
                   title: 'Run: runId',
@@ -147,18 +121,12 @@ export const runRoutes = [
       {
         path: 'variables',
         redirect: { name: 'workspace-project-jobs-job-run-variables-table' },
-        component: () =>
-          import(
-            /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-variables" */ './views/variables/index.vue'
-          ),
+        component: () => import('./views/variables/index.vue'),
         name: 'workspace-project-jobs-job-run-variables',
         children: [
           {
             path: 'table',
-            component: () =>
-              import(
-                /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-variables-table" */ './views/variables/table-view.vue'
-              ),
+            component: () => import('./views/variables/table-view.vue'),
             name: 'workspace-project-jobs-job-run-variables-table',
             meta: {
               tabValue: 'table',
@@ -167,10 +135,7 @@ export const runRoutes = [
           },
           {
             path: 'json',
-            component: () =>
-              import(
-                /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-variables-json" */ './views/variables/json-view.vue'
-              ),
+            component: () => import('./views/variables/json-view.vue'),
             name: 'workspace-project-jobs-job-run-variables-json',
             meta: {
               tabValue: 'json',
@@ -181,12 +146,11 @@ export const runRoutes = [
       },
       {
         path: 'code',
-        component: () => import(/* webpackChunkName: "workspace-project-package-uuid" */ './views/index-code.vue'),
+        component: () => import('./views/index-code.vue'),
         children: [
           {
             path: '',
-            component: () =>
-              import(/* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-code" */ './views/code.vue'),
+            component: () => import('./views/package.vue'),
             name: 'workspace-project-jobs-job-run-code',
             meta: {
               title: 'Run: runId'
@@ -194,10 +158,7 @@ export const runRoutes = [
             children: [
               {
                 path: ':folderName(.*)',
-                component: () =>
-                  import(
-                    /* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-code-folder" */ './views/code.vue'
-                  ),
+                component: () => import('./views/package.vue'),
                 name: 'workspace-project-jobs-job-run-code-folder',
                 meta: {
                   title: 'Run: runId',
@@ -210,10 +171,7 @@ export const runRoutes = [
       },
       {
         path: 'code-does-not-exist',
-        component: () =>
-          import(
-            /* webpackChunkName: "workspace-project-jobs-job-run-code-does-not-exist" */ './views/run-code-does-not-exist.vue'
-          ),
+        component: () => import('./views/run-code-does-not-exist.vue'),
         name: 'workspace-project-jobs-job-run-code-does-not-exist',
         meta: {
           title: 'Oops...we cannot find this package',
@@ -222,8 +180,7 @@ export const runRoutes = [
       },
       {
         path: 'log',
-        component: () =>
-          import(/* webpackChunkName: "workspace-project-uuid-jobs-name-run-uuid-log" */ './views/log.vue'),
+        component: () => import('./views/log.vue'),
         name: 'workspace-project-jobs-job-run-log',
         meta: {
           title: 'Run: runId'
