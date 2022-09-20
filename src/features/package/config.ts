@@ -1,10 +1,10 @@
 export const packageRoutes = {
   path: 'code',
-  component: () => import(/* webpackChunkName: "workspace-project-package" */ './views/package.vue'),
+  component: () => import('./views/package.vue'),
   children: [
     {
       path: '',
-      component: () => import(/* webpackChunkName: "workspace-project-code" */ './views/code.vue'),
+      component: () => import('./views/package-code.vue'),
       meta: {
         useProjectPackageId: true,
         hideAppBarIcon: true
@@ -14,8 +14,8 @@ export const packageRoutes = {
           path: '',
           name: 'workspace-project-code',
           components: {
-            default: () => import(/* webpackChunkName: "workspace-project-package" */ './views/uuid.vue'),
-            newPackage: () => import(/* webpackChunkName: "workspace-project-package-new" */ './views/new-package.vue')
+            default: () => import('./views/uuid.vue'),
+            newPackage: () => import('./views/new-package.vue')
           },
           meta: {
             useProjectPackageId: true,
@@ -25,8 +25,7 @@ export const packageRoutes = {
         },
         {
           path: 'history',
-          component: () =>
-            import(/* webpackChunkName: "workspace-project-code-package-history" */ './views/history.vue'),
+          component: () => import('./views/history.vue'),
           name: 'workspace-project-code-package-history',
           meta: {
             breadcrumb: 'History',
@@ -37,7 +36,7 @@ export const packageRoutes = {
     },
     {
       path: ':packageId',
-      component: () => import(/* webpackChunkName: "workspace-project-package-uuid" */ './views/index.vue'),
+      component: () => import('./views/index.vue'),
       meta: {
         breadcrumb: 'Code - :packageId',
         hideAppBarIcon: true
@@ -47,7 +46,7 @@ export const packageRoutes = {
           path: '',
           name: 'workspace-project-package',
 
-          component: () => import(/* webpackChunkName: "workspace-project-package" */ './views/uuid.vue'),
+          component: () => import('./views/uuid.vue'),
           children: [],
           meta: {
             hideAppBarIcon: true
@@ -57,7 +56,7 @@ export const packageRoutes = {
 
         {
           path: ':folderName(.*)',
-          component: () => import(/* webpackChunkName: "workspace-project-package-folder" */ './views/uuid.vue'),
+          component: () => import('./views/uuid.vue'),
           name: 'workspace-project-package-folder',
           meta: {
             breadcrumb: ':folderName',

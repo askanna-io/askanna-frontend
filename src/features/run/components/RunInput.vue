@@ -74,24 +74,14 @@
   </div>
 </template>
 <script setup lang="ts">
-import { useRunStore } from '../useRunStore'
-import { useWindowSize } from '@/core/plugins/vue-hooks'
-import useCopy from '@/core/composition/useCopy'
-import { useFileStore } from '@/features/file/useFileStore'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import { ref, computed, onBeforeMount } from '@vue/composition-api'
-import PreviewFile from '@/features/file/components/PreviewFile.vue'
-import useForceFileDownload from '@/core/composition/useForceFileDownload'
-import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
-
 const copy = useCopy()
 const runStore = useRunStore()
 const fileStore = useFileStore()
-const router = useRouterAskAnna()
 const { height } = useWindowSize()
+const { route, router } = useRouterAskAnna()
 const forceFileDownload = useForceFileDownload()
 
-const { view } = router.route.value.params
+const { view } = route.params
 
 const views = [
   { name: 'Pretty', value: 'pretty', icon: 'mdi-file-outline' },

@@ -47,18 +47,13 @@
 </template>
 
 <script setup lang="ts">
-import { useMobileStore } from '@/core/store/useMobileStore'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import { ref, watch, computed, onBeforeUnmount } from '@vue/composition-api'
-import { useCompareRunsStore } from '@/features/compare-runs/useCompareRunsStore'
-
 const mobileStore = useMobileStore()
 const { route } = useRouterAskAnna()
 const compareRunsStore = useCompareRunsStore()
 
 compareRunsStore.$reset()
 
-const tabValue = computed(() => route?.value.meta?.tabValue)
+const tabValue = computed(() => route?.meta?.tabValue)
 
 const views = [
   { name: 'Table', value: 'table', icon: 'mdi-table' },
@@ -79,7 +74,7 @@ const init = async () => {
 }
 
 watch(
-  () => route.value.meta,
+  () => route.meta,
   () => init()
 )
 

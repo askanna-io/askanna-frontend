@@ -1,9 +1,8 @@
 import { isArray } from 'lodash'
 import { defineStore } from 'pinia'
 import { Run } from '@/features/run/types'
-import apiService from '@/core/services/apiService'
-import { useLogger } from '@/core/composition/useLogger'
-import { apiStringify } from '@/core/services/api-settings'
+import apiService from '@/services/apiService'
+import { apiStringify } from '@/services/api-settings'
 
 const SERVICE_NAME = 'run'
 

@@ -6,7 +6,7 @@
           ><span v-if="text" class="font-weight-bold">{{ text }}: </span
           >{{ fullValue ? value.name : envNameSliced }}</span
         >
-        <ask-anna-copy-text
+        <AskAnnaCopyText
           :showText="false"
           :text="envNameComputed"
           :iconColor="'grey lighten-2'"
@@ -28,10 +28,6 @@
   </v-tooltip>
 </template>
 <script setup lang="ts">
-import { computed } from '@vue/composition-api'
-import useStartSlicedText from '@/core/composition/useStartSlicedText'
-import AskAnnaCopyText from '@/core/components/shared/AskAnnaCopyText.vue'
-
 const props = defineProps({
   text: {
     type: String,

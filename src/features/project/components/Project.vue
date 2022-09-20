@@ -106,10 +106,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from '@vue/composition-api'
-import useValidationRules from '@/core/composition/useValidationRules'
-import AskAnnaDescription from '@/core/components/shared/AskAnnaDescription.vue'
-
 const props = defineProps({
   projectData: {
     type: Object,

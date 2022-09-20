@@ -21,20 +21,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from '@vue/composition-api'
-import { useJobStore } from '@/features/job/useJobStore'
-import { useRunStore } from '@/features/run/useRunStore'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-
-import RunInfo from '@/features/run/components/RunInfo.vue'
-import AskAnnaDescription from '@/core/components/shared/AskAnnaDescription.vue'
-import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
-
 const jobStore = useJobStore()
 const runStore = useRunStore()
 const { route } = useRouterAskAnna()
 
-const { jobId, runId } = route.value.params
+const { jobId, runId } = route.params
 
 const jobName = computed(() => jobStore.job.name)
 const runIdStatus = computed(() => jobStore.run)

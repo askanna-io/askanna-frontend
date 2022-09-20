@@ -4,7 +4,7 @@
       <div v-on="on">
         <template v-if="text"
           ><span class="font-weight-bold">{{ text }}: &nbsp;</span></template
-        ><ask-anna-chip-status :status="value" />
+        ><AskAnnaChipStatus :status="value" />
       </div>
     </template>
     Status of the run
@@ -12,7 +12,6 @@
 </template>
 
 <script setup lang="ts">
-import AskAnnaChipStatus from '@/core/components/shared/AskAnnaChipStatus.vue'
 defineProps({
   text: {
     type: String,

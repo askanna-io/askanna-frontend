@@ -68,23 +68,14 @@
 
 <script setup lang="ts">
 import { set } from 'lodash'
-import { useJobStore } from '@/features/job/useJobStore'
-import usePermission from '@/core/composition/usePermission'
-import { useSnackBar } from '@/core/components/snackBar/useSnackBar'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import useValidationRules from '@/core/composition/useValidationRules'
-import { ref, watch, computed, onBeforeMount } from '@vue/composition-api'
-import AskAnnaDescription from '@/core/components/shared/AskAnnaDescription.vue'
-import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
-import ConfirmChangeJobNamePopup from '@/features/job/components/popup/ConfirmChangeJobNamePopup.vue'
 
 const jobStore = useJobStore()
 const snackBar = useSnackBar()
-const router = useRouterAskAnna()
+const { route, router } = useRouterAskAnna()
 const permission = usePermission()
 const validationRules = useValidationRules()
 
-const { jobId } = router.route.value.params
+const { jobId } = route.params
 
 const isNameChanged = ref(false)
 const showConfirmPopup = ref(false)

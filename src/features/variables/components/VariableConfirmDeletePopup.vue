@@ -13,39 +13,27 @@
     </v-card>
   </v-dialog>
 </template>
-<script>
-import { computed, defineComponent } from '@vue/composition-api'
-
-export default defineComponent({
-  name: 'VariableConfirmDeletePopup',
-
-  props: {
-    value: {
-      type: Boolean,
-      default: false
-    },
-    variableName: {
-      type: String,
-      default: () => ''
-    }
+<script setup lang="ts">
+const props = defineProps({
+  value: {
+    type: Boolean,
+    default: false
   },
-
-  setup(props, context) {
-    const valueModel = computed({
-      get: () => props.value,
-      set: () => context.emit('onCloseDeletePopup')
-    })
-
-    const deleteItemConfirm = () => context.emit('onDelete')
-    const closeDelete = () => context.emit('onCloseDeletePopup')
-
-    return {
-      valueModel,
-      closeDelete,
-      deleteItemConfirm
-    }
+  variableName: {
+    type: String,
+    default: () => ''
   }
 })
+
+const emit = defineEmits(['onDelete', 'onCloseDeletePopup'])
+
+const valueModel = computed({
+  get: () => props.value,
+  set: () => emit('onCloseDeletePopup')
+})
+
+const deleteItemConfirm = () => emit('onDelete')
+const closeDelete = () => emit('onCloseDeletePopup')
 </script>
 <style scoped>
 .break {

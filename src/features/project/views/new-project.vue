@@ -24,7 +24,7 @@
 
     <v-divider />
 
-    <project
+    <Project
       v-if="workspaceProjectCreate"
       :projectData="projectData"
       :workspaceProjectVisibility="workspaceProjectVisibility"
@@ -41,19 +41,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from '@vue/composition-api'
-import usePermission from '@/core/composition/usePermission'
-import Project from '@/features/project/components/Project.vue'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import { useProjectStore } from '@/features/project/useProjectStore'
-import { useProjectsStore } from '@/features/projects/useProjectsStore'
-import { useWorkspaceStore } from '@/features/workspace/useWorkspaceStore'
-
-const router = useRouterAskAnna()
 const permission = usePermission()
 const projectStore = useProjectStore()
 const projectsStore = useProjectsStore()
 const workSpaceStore = useWorkspaceStore()
+const { route, router } = useRouterAskAnna()
 
 const workspaceName = computed(() => workSpaceStore.workspace.name)
 const workspaceProjectVisibility = computed(() => workSpaceStore.workspace.visibility)
@@ -77,7 +69,7 @@ const breadcrumbs = computed(() => [
 const handleOnInput = data => projectStore.setProject(data)
 
 const handleCreate = async () => {
-  const project = await projectStore.createProjectFullWay(router.route.value.params.workspaceId)
+  const project = await projectStore.createProjectFullWay(route.params.workspaceId)
   if (project && project.short_uuid) {
     await projectsStore.getProjects() // call get all project to updated them on menu
 
@@ -89,6 +81,6 @@ const handleCreate = async () => {
 }
 const handleCancel = () => {
   projectStore.resetProjectData()
-  router.router.go(-1)
+  router.go(-1)
 }
 </script>

@@ -1,0 +1,43 @@
+##################################################################
+# Base image - enough for local development
+##################################################################
+FROM node:lts-alpine as dev-stage
+
+ENV NPM_CONFIG_PREFIX=/node_mdules
+
+WORKDIR /app
+
+RUN mkdir -p ${NPM_CONFIG_PREFIX} && chown -R node:node ${NPM_CONFIG_PREFIX}
+
+COPY package.json package-lock.json ./
+RUN npm install
+
+EXPOSE 5173
+CMD ["npx", "cross-env", "DEBUG=unplugin-vue-components:*", "vite", "--host"]
+
+##################################################################
+# Build image - contains built code
+##################################################################
+FROM dev-stage as build-stage
+
+COPY . .
+
+RUN npm run build
+
+##################################################################
+# Preview image - start a web server to preview the build solution
+##################################################################
+FROM build-stage as preview-stage
+
+COPY . .
+
+EXPOSE 4173
+CMD ["npm", "run", "preview"]
+
+##################################################################
+# Production image - serves built code
+##################################################################
+FROM nginx:stable-alpine as production-stage
+
+COPY --from=build-stage /app/dist /usr/share/nginx/html
+COPY ./compose/vhost.d/default.conf /etc/nginx/conf.d/default.conf

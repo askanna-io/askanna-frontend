@@ -26,24 +26,12 @@
   </v-card>
 </template>
 
-<script>
-import { computed, defineComponent } from '@vue/composition-api'
-
-export default defineComponent({
-  name: 'WorkspaceNotReady',
-
-  setup() {
-    const breadcrumbs = computed(() => [
-      {
-        title: 'Cannot find a workspace',
-        to: '',
-        disabled: true
-      }
-    ])
-
-    return {
-      breadcrumbs
-    }
+<script setup lang="ts">
+const breadcrumbs = [
+  {
+    title: 'Cannot find a workspace',
+    to: '',
+    disabled: true
   }
-})
+]
 </script>

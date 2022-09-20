@@ -32,17 +32,11 @@
     </v-flex>
   </v-toolbar>
 </template>
-<script lang="ts">
-import { defineComponent } from '@vue/composition-api'
-
-export default defineComponent({
-  name: 'PackageToolbar',
-
-  props: {
-    breadcrumbs: {
-      type: Array,
-      default: () => []
-    }
+<script setup lang="ts">
+defineProps({
+  breadcrumbs: {
+    type: Array,
+    default: () => []
   }
 })
 </script>

@@ -8,8 +8,7 @@
 
 <script setup lang="ts">
 // @ts-expect-error
-import Nb from '@/assets/js/notebook.js'
-import { computed } from '@vue/composition-api'
+import Nb from '@/composables/notebook/notebook.js'
 
 const props = defineProps({
   fileSource: {

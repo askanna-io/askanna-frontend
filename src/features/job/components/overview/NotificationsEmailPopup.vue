@@ -52,51 +52,35 @@
     </v-card>
   </v-dialog>
 </template>
-<script>
-import { ref, computed, defineComponent } from '@vue/composition-api'
-
-export default defineComponent({
-  name: 'NotificationsEmailPopup',
-
-  props: {
-    notifications: {
-      type: Object,
-      default: () => ({
-        all: { email: [] },
-        error: { email: [] }
-      })
-    }
-  },
-
-  setup(props) {
-    const dialog = ref(false)
-    const currentTab = ref('workspace-project-job-running-curl')
-
-    const isAllSet = computed(() => props.notifications['all'].email.some(item => item))
-    const isErrorSet = computed(() => props.notifications['error'].email.some(item => item))
-
-    const tabs = computed(() => [
-      {
-        id: 0,
-        name: 'all',
-        show: isAllSet.value
-      },
-      {
-        id: 1,
-        name: 'error',
-        show: isErrorSet.value
-      }
-    ])
-
-    const handleClose = () => (dialog.value = false)
-
-    return {
-      tabs,
-      dialog,
-      currentTab,
-
-      handleClose
-    }
+<script setup lang="ts">
+const props = defineProps({
+  notifications: {
+    type: Object,
+    default: () => ({
+      all: { email: [] },
+      error: { email: [] }
+    })
   }
 })
+
+const dialog = ref(false)
+const currentTab = ref('workspace-project-job-running-curl')
+
+const isAllSet = computed(() => props.notifications['all'].email.some(item => item))
+const isErrorSet = computed(() => props.notifications['error'].email.some(item => item))
+
+const tabs = computed(() => [
+  {
+    id: 0,
+    name: 'all',
+    show: isAllSet.value
+  },
+  {
+    id: 1,
+    name: 'error',
+    show: isErrorSet.value
+  }
+])
+
+const handleClose = () => (dialog.value = false)
 </script>

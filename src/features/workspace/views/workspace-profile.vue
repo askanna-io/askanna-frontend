@@ -21,7 +21,7 @@
     <AskAnnaLoadingProgress :loading="loading">
       <v-form ref="profileForm">
         <v-card-title class="title py-1">Login information</v-card-title>
-        <user-profile
+        <UserProfile
           :error="errors"
           :userProfile="userStore.userProfile"
           @onUpdateUserProfile="handleOnUpdateUserProfile"
@@ -132,22 +132,10 @@
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from '@/features/user/useUserStore'
-import { usePeopleStore } from '@/features/people/usePeopleStore'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import { useSnackBar } from '@/core/components/snackBar/useSnackBar'
-import { watch, ref, reactive, computed } from '@vue/composition-api'
-import useImageUrlToBase64 from '@/core/composition/useImageUrlToBase64'
-import { useWorkspaceStore } from '@/features/workspace/useWorkspaceStore'
-import UserProfile from '@/features/user/components/profile/UserProfile.vue'
-import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
-import UserWorkspaceProfile from '@/features/workspace/components/profile/UserWorkspaceProfile.vue'
-import UserWorkspaceProfileAvatar from '@/features/workspace/components/profile/UserWorkspaceProfileAvatar.vue'
-
 const snackBar = useSnackBar()
 const userStore = useUserStore()
-const router = useRouterAskAnna()
 const peopleStore = usePeopleStore()
+const { router } = useRouterAskAnna()
 const workSpaceStore = useWorkspaceStore()
 const imageUrlToBase64 = useImageUrlToBase64()
 
@@ -292,7 +280,7 @@ const handleSave = async () => {
       color: 'success',
       message: 'Your changes are saved successfully'
     })
-    router.router.go(-1)
+    router.go(-1)
 
     userStore.getGlobalProfile()
     peopleStore.getCurrentPeople({ workspaceId: workSpaceStore.workspace.short_uuid })
@@ -309,7 +297,7 @@ const handleCancel = () => {
   if (window.history.length <= 2) {
     router.push({ path: '/' })
   } else {
-    router.router.go(-1)
+    router.go(-1)
   }
 }
 

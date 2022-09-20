@@ -45,10 +45,6 @@
   </v-menu>
 </template>
 <script setup lang="ts">
-import useCopy from '@/core/composition/useCopy'
-import { ref, computed } from '@vue/composition-api'
-import TheHighlight from '@/core/components/highlight/TheHighlight.vue'
-
 const props = defineProps({
   isShowName: {
     type: Boolean,

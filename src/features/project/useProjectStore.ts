@@ -1,15 +1,11 @@
 import { set } from 'lodash'
-import router from '@/core/router'
+import router from '@/router'
 import VueRouter from 'vue-router'
 import { defineStore } from 'pinia'
-import apiService from '@/core/services/apiService'
-import { useLogger } from '@/core/composition/useLogger'
-import { apiStringify } from '@/core/services/api-settings'
-import { useGeneralStore } from '@/core/store/useGeneralStore'
+import apiService from '@/services/apiService'
+import { apiStringify } from '@/services/api-settings'
 const { isNavigationFailure, NavigationFailureType } = VueRouter
-import { usePeopleStore } from '@/features/people/usePeopleStore'
 import { PROJECT_STORE, ProjectModel, ProjectVisibility } from './types'
-import { useWorkspaceProjectsStore } from '@/features/workspace/useWorkspaceProjectsStore'
 
 const serviceName = PROJECT_STORE
 const api = apiStringify(serviceName)
@@ -61,11 +57,7 @@ export const useProjectStore = defineStore(PROJECT_STORE, {
 
         project = new ProjectModel().state
 
-        router.push({ name: 'project-does-not-exist' }).catch(failure => {
-          if (isNavigationFailure(failure, NavigationFailureType.redirected)) {
-            logger.error('Error on redirect to workspace-project-does-not-exist.\nError: ', failure)
-          }
-        })
+        this.$routerAskAnna.push({ name: 'project-does-not-exist' })
 
         return
       }

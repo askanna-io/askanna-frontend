@@ -34,12 +34,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from '@vue/composition-api'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import useValidationRules from '@/core/composition/useValidationRules'
-import { useWorkspacesStore } from '@/features/workspaces/useWorkspacesStore'
-import { useWorkspaceStore, WorkspaceVisibility } from '@/features/workspace/useWorkspaceStore'
-
 defineProps({
   showCancel: {
     type: Boolean,
@@ -49,11 +43,10 @@ defineProps({
 
 const emit = defineEmits(['onClose'])
 
-const router = useRouterAskAnna()
+const { router } = useRouterAskAnna()
+const { RULES } = useValidationRules()
 const workspaceStore = useWorkspaceStore()
 const workspacesStore = useWorkspacesStore()
-
-const { RULES } = useValidationRules()
 
 const menu = ref()
 const isFormValid = ref(true)

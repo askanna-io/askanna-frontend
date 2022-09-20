@@ -15,11 +15,6 @@
 </template>
 <script setup lang="ts">
 import { invoke } from 'lodash'
-import { useRouter } from '@/core/plugins/vue-hooks'
-import { computed } from '@vue/composition-api'
-import usePermission from '@/core/composition/usePermission'
-import { useProjectStore } from '@/features/project/useProjectStore'
-import { usePackageStore } from '@/features/package/usePackageStore'
 
 const props = defineProps({
   projectName: {
@@ -31,8 +26,8 @@ const props = defineProps({
     default: false
   }
 })
-const { route } = useRouter()
 const permission = usePermission()
+const { route } = useRouterAskAnna()
 const packageStore = usePackageStore()
 const projectStore = useProjectStore()
 
@@ -76,8 +71,8 @@ const projectTabs = computed(() => [
 const projectId = computed(() => projectStore.project.short_uuid)
 const packageId = computed(() => projectStore.project.package.short_uuid)
 const routeParams = computed(() => ({
-  ...route.value.params,
-  projectId: projectId.value || route.value.params.projectId,
+  ...route.params,
+  projectId: projectId.value || route.params.projectId,
   packageId: packageId.value
 }))
 
@@ -89,7 +84,7 @@ const tabs = computed(() => {
 const handlers = {
   getProject: async () => {
     if (!projectId.value) return
-    await projectStore.getProject(route.value.params.projectId)
+    await projectStore.getProject(route.params.projectId)
 
     if (!packageId.value) return
     await packageStore.getPackage({

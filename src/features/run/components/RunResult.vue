@@ -62,7 +62,7 @@
       </v-flex>
     </v-toolbar>
     <v-flex id="scroll-target" class="overflow-y-auto" ref="scrolllWrapperRef" :style="scrollerStyles">
-      <AskAnnaLoadingProgress
+      <ask-anna-loading-progress
         :loading="fileStore.loading"
         fullWidth
         height="94"
@@ -83,23 +83,12 @@
           :isFileBigForRawView="fileStore.isFileBigForRawView"
           @onDownload="handleDownload"
         />
-      </AskAnnaLoadingProgress>
+      </ask-anna-loading-progress>
     </v-flex>
   </div>
 </template>
 <script setup lang="ts">
 import { RunModel } from '../types'
-import { useRunStore } from '../useRunStore'
-import { useWindowSize } from '@/core/plugins/vue-hooks'
-import useCopy from '@/core/composition/useCopy'
-import useNumeral from '@/core/composition/useNumeral'
-import { useFileStore } from '@/features/file/useFileStore'
-import useSizeHumanize from '@/core/composition/useSizeHumanize'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import { ref, computed, onBeforeMount } from '@vue/composition-api'
-import PreviewFile from '@/features/file/components/PreviewFile.vue'
-import useForceFileDownload from '@/core/composition/useForceFileDownload'
-import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 
 defineProps({
   run: {
@@ -112,9 +101,9 @@ const copy = useCopy()
 const numeral = useNumeral()
 const runStore = useRunStore()
 const fileStore = useFileStore()
-const router = useRouterAskAnna()
 const { height } = useWindowSize()
 const humanize = useSizeHumanize()
+const { route, router } = useRouterAskAnna()
 const forceFileDownload = useForceFileDownload()
 
 const views = [
@@ -122,7 +111,7 @@ const views = [
   { name: 'Raw', value: 'raw', icon: 'mdi-xml' }
 ]
 
-const { view, runId } = router.route.value.params
+const { view, runId } = route.params
 
 const currentView = ref(views[0])
 const scrolllWrapperRef = ref(null)

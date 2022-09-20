@@ -61,13 +61,6 @@
 </template>
 
 <script setup lang="ts">
-import { useWindowSize } from '@/core/plugins/vue-hooks'
-import Chart from '@/features/charts/components/Chart.vue'
-import { useChartStore } from '@/features/charts/useChartStore'
-import { useMetricStore } from '@/features/metric/useMetricStore'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import { ref, computed, onBeforeMount } from '@vue/composition-api'
-
 const alloweTypes = ['list', 'float', 'integer', 'list_float', 'list_integer']
 
 const xAxisListPredefined = [
@@ -88,11 +81,11 @@ const xAxisListPredefined = [
 ]
 
 const chart = useChartStore()
-const router = useRouterAskAnna()
 const { height } = useWindowSize()
 const metricStore = useMetricStore()
+const { route } = useRouterAskAnna()
 
-const { runId: uuid } = router.route.value.params
+const { runId: uuid } = route.params
 
 const activeY = ref()
 const activeS = ref()

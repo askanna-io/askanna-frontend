@@ -14,8 +14,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from '@vue/composition-api'
-
 const props = defineProps({
   fileBlob: {
     type: Blob,

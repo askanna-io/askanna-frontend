@@ -32,7 +32,7 @@
     <template v-slot:expanded-item="{ item }">
       <td :colspan="8" class="pa-0">
         <AskAnnaLoadingProgress v-if="item.runs.count" :type="'table-row'" :loading="loading">
-          <runs
+          <Runs
             :items="runs"
             :count="count"
             :height="calcSubHeight"
@@ -74,13 +74,6 @@
 
 <script setup lang="ts">
 import { JobsListHeaders } from '../helper'
-import { ref, computed } from '@vue/composition-api'
-import { useRunsStore } from '@/features/runs/useRunsStore'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-
-import Runs from '@/features/runs/components/Runs.vue'
-import AskAnnaAlertStatus from '@/core/components/shared/AskAnnaAlertStatus.vue'
-import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 
 defineProps({
   jobList: {
@@ -90,7 +83,7 @@ defineProps({
 })
 
 const runsStore = useRunsStore()
-const router = useRouterAskAnna()
+const { route, router } = useRouterAskAnna()
 
 const expanded = ref([])
 const loading = ref(true)
@@ -114,7 +107,7 @@ const getHeaders = (isMobile: boolean) =>
 const handleJobClick = item => {
   router.push({
     name: 'workspace-project-job-overiew',
-    params: { ...router.route.value.params, jobId: item.short_uuid || 'jobname' }
+    params: { ...route.params, jobId: item.short_uuid || 'jobname' }
   })
 }
 
@@ -131,7 +124,7 @@ const routeLinkParams = item => {
   return {
     name: 'workspace-project-job-overiew',
     params: {
-      ...router.route.value.params,
+      ...route.params,
       jobId: item.short_uuid
     }
   }

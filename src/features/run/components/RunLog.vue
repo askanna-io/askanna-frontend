@@ -62,7 +62,7 @@
             :loading="isLoadingLogs"
             v-scroll:#scroll-target="throttle(onScroll, 1500)"
           />
-          <ask-anna-loading-dots-flashing v-if="isLoadingLogs" />
+          <AskAnnaLoadingDotsFlashing v-if="isLoadingLogs" />
         </div>
 
         <v-alert v-else class="ma-4 text-center" dense outlined>There is no log available for this run. </v-alert>
@@ -74,24 +74,12 @@
 <script setup lang="ts">
 import { throttle } from 'lodash'
 import goTo from 'vuetify/lib/services/goto'
-import useCopy from '@/core/composition/useCopy'
-import useQuery from '@/core/composition/useQuery'
-import { useRunStore } from '@/features/run/useRunStore'
-import { useJobStore } from '@/features/job/useJobStore'
-import { useRouter, useWindowSize } from '@/core/plugins/vue-hooks'
-import useForceFileDownload from '@/core/composition/useForceFileDownload'
-import { ref, watchEffect, computed, onBeforeMount, onUnmounted } from '@vue/composition-api'
-
-import TheHighlight from '@/core/components/highlight/TheHighlight.vue'
-import AskAnnaChipPlayStop from '@/core/components/shared/AskAnnaChipPlayStop.vue'
-import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
-import AskAnnaLoadingDotsFlashing from '@/core/components/shared/AskAnnaLoadingDotsFlashing.vue'
 
 const copy = useCopy()
-const { route } = useRouter()
 const jobStore = useJobStore()
 const runStore = useRunStore()
 const { height } = useWindowSize()
+const { route } = useRouterAskAnna()
 const forceFileDownload = useForceFileDownload()
 
 const logRef = ref(null)
@@ -108,7 +96,7 @@ const isLoadingLogs = computed(
 )
 
 const next = computed(() => runStore.runLog.next)
-const runId = computed(() => route.value.params.runId)
+const runId = computed(() => route.params.runId)
 
 const query = useQuery({
   next,

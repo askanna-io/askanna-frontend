@@ -56,14 +56,6 @@
   </v-data-iterator>
 </template>
 <script setup lang="ts">
-import { computed } from '@vue/composition-api'
-import usePermission from '@/core/composition/usePermission'
-import useSanitizeHTML from '@/core/composition/useSanitizeHTML'
-import { usePeopleStore } from '@/features/people/usePeopleStore'
-import WorkspaceProjectCardItem from './WorkspaceProjectCardItem.vue'
-import WorkspaceProjectListItem from './WorkspaceProjectListItem.vue'
-import { useWorkspaceProjectsStore } from '@/features/workspace/useWorkspaceProjectsStore'
-
 defineProps({
   workspaceName: {
     type: String,

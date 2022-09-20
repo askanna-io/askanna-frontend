@@ -16,11 +16,6 @@ interface Invitation {
   front_end_url: string
 }
 
-enum WorkspaceVisibility {
-  PUBLIC = 'PUBLIC',
-  PRIVATE = 'PRIVATE'
-}
-
 export interface Person {
   uuid: string
   short_uuid: string

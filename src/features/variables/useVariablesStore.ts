@@ -1,9 +1,8 @@
 import { set } from 'lodash'
 import { defineStore } from 'pinia'
-import apiService from '@/core/services/apiService'
-import { useLogger } from '@/core/composition/useLogger'
+import apiService from '@/services/apiService'
+import { apiStringify } from '@/services/api-settings'
 import { VariableModel, VARIABLES_STORE } from './types'
-import { apiStringify } from '@/core/services/api-settings'
 
 const serviceName = VARIABLES_STORE
 const api = apiStringify(serviceName)

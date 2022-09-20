@@ -44,10 +44,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from '@vue/composition-api'
-import usePermission from '@/core/composition/usePermission'
-import AskAnnaCopy from '@/core/components/shared/AskAnnaCopy.vue'
-
 defineProps({
   items: {
     type: Array,

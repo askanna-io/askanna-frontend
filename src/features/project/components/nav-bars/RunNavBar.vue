@@ -75,20 +75,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import { useRouter } from '@/core/plugins/vue-hooks'
-import { computed } from '@vue/composition-api'
-import { useRunStore } from '@/features/run/useRunStore'
-import { useJobStore } from '@/features/job/useJobStore'
-import usePermission from '@/core/composition/usePermission'
-import useBreadcrumbs from '@/core/composition/useBreadcrumbs'
-
-import JobToolBar from './parts/JobToolBar.vue'
-import RunToolBar from './parts/RunToolBar.vue'
-import RunMenuPopup from './parts/RunMenuPopup.vue'
-import ProjectToolBar from './parts/ProjectToolBar.vue'
-import AskAnnaCopyText from '@/core/components/shared/AskAnnaCopyText.vue'
-import RunInfoStatus from '@/features/run/components/parts/RunInfoStatus.vue'
-
 const props = defineProps({
   job: {
     type: Object,
@@ -117,21 +103,21 @@ const props = defineProps({
   }
 })
 
-const { route } = useRouter()
 const jobStore = useJobStore()
 const runStore = useRunStore()
 const permission = usePermission()
+const { route } = useRouterAskAnna()
 const breadcrumbs = useBreadcrumbs({ start: 0, end: 6 })
 
 const projectRunEdit = computed(() => permission.getFor(permission.labels.projectRunEdit))
 
-const { runId } = route.value.params
+const { runId } = route.params
 const run = computed(() => runStore.run)
 const jobName = computed(() => jobStore.job.name)
 const runIdStatus = computed(() => jobStore.run.status)
 const runName = computed(() => (run.value.name ? `: ${run.value.name}` : ':'))
 
-const isEditRunView = computed(() => route.value.name === 'workspace-project-jobs-job-run-edit')
+const isEditRunView = computed(() => route.name === 'workspace-project-jobs-job-run-edit')
 
 const onStick = data => props.handleOnStick(data.sticked)
 </script>

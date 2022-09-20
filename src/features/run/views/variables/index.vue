@@ -55,18 +55,12 @@
 </template>
 
 <script setup lang="ts">
-import useCopy from '@/core/composition/useCopy'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import { ref, computed, onBeforeMount } from '@vue/composition-api'
-import useForceFileDownload from '@/core/composition/useForceFileDownload'
-import { useRunVariablesStore } from '@/features/run-variables/useRunVariablesStore'
-
 const copy = useCopy()
-const router = useRouterAskAnna()
+const { route, router } = useRouterAskAnna()
 const forceFileDownload = useForceFileDownload()
 const runVariablesStore = useRunVariablesStore()
 
-const { runId: uuid } = router.route.value.params
+const { runId: uuid } = route.params
 
 const views = [
   { name: 'Table', value: 'table', icon: 'mdi-table' },
@@ -116,7 +110,7 @@ const handleChangeView = (index: number) => {
 }
 
 onBeforeMount(() => {
-  const view = router.route.value?.meta.tabValue
+  const view = route.meta.tabValue
   if (view) {
     currentView.value = views.find(item => item.value === view)
   }

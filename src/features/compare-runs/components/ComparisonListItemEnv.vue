@@ -50,10 +50,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed } from '@vue/composition-api'
-import useStartSlicedText from '@/core/composition/useStartSlicedText'
-import AskAnnaCopyText from '@/core/components/shared/AskAnnaCopyText.vue'
-
 const props = defineProps({
   value: {
     type: Object,

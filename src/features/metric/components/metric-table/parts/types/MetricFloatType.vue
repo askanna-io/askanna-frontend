@@ -24,11 +24,6 @@
   </v-menu>
 </template>
 <script setup lang="ts">
-import useCopy from '@/core/composition/useCopy'
-import useNumeral from '@/core/composition/useNumeral'
-import { ref, watch, computed } from '@vue/composition-api'
-import TheHighlight from '@/core/components/highlight/TheHighlight.vue'
-
 const props = defineProps({
   isShowName: {
     type: Boolean,
@@ -64,7 +59,7 @@ const divStyles = ref({})
 
 const slicedNumber = computed(() => numeral.numberFormated(props.metricRow.value))
 
-watch(divRef, async divRef => {
+watchEffect(() => {
   if (!divRef) return
 
   let width = divRef.clientWidth || divRef.scrollWidth

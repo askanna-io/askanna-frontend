@@ -36,76 +36,59 @@
     </v-card>
   </v-dialog>
 </template>
-<script>
-import useSlicedText from '@/core/composition/useSlicedText'
-import { computed, defineComponent } from '@vue/composition-api'
-
-export default defineComponent({
-  name: 'ChangeWorkspaceVisibilityPopup',
-
-  props: {
-    value: {
-      type: Boolean,
-      default: false
-    },
-    visibility: {
-      type: String,
-      default: () => 'public'
-    },
-    workspaceName: {
-      type: String,
-      default: () => ''
-    }
+<script setup lang="ts">
+const props = defineProps({
+  value: {
+    type: Boolean,
+    default: false
   },
-
-  setup(props, context) {
-    const slicedText = useSlicedText()
-
-    const name = computed(() => slicedText(props.workspaceName, 17))
-    const title = computed(() => slicedText(props.workspaceName, 27))
-
-    const visibilityHandler = {
-      PUBLIC: {
-        name: 'public',
-        title: `You are about to set the visibility of the workspace <b>${name.value}</b> to public. When you change the visibility to public, then:`,
-        list: [
-          'people who are not signed in can view and discover this workspace name and description',
-          'people can explore and view the public projects of this workspace'
-        ],
-        bottomInfo: `Important: it can be that some of the projects already have the visibility status set to public. If you allow public visibility of the workspace <b>${name.value}</b> then these projects will directly become publicly visible.`
-      },
-
-      PRIVATE: {
-        name: 'private',
-
-        title: `You are about to set the visibility of the workspace <b>${name.value}</b> to private. When you change the visibility to private, then:`,
-        list: [
-          'people who are not signed in cannot view and discover this workspace name and description',
-          'people cannot explore and view the public projects of this workspace'
-        ]
-      }
-    }
-
-    const visibilityInfo = computed(() => visibilityHandler[props.visibility])
-
-    const valueModel = computed({
-      get: () => props.value,
-      set: () => context.emit('onCancel')
-    })
-
-    const handleCancel = () => context.emit('onCancel')
-    const handleConfirm = () => context.emit('onConfirm')
-
-    return {
-      title,
-      name,
-      valueModel,
-      handleCancel,
-      handleConfirm,
-      visibilityInfo
-    }
+  visibility: {
+    type: String,
+    default: () => 'public'
+  },
+  workspaceName: {
+    type: String,
+    default: () => ''
   }
 })
+
+const emit = defineEmits(['onCancel', 'onConfirm'])
+
+const slicedText = useSlicedText()
+
+const name = computed(() => slicedText(props.workspaceName, 17))
+
+const visibilityHandler = {
+  PUBLIC: {
+    name: 'public',
+    title: `You are about to set the visibility of the workspace <b>${name.value}</b> to public. When you change the visibility to public, then:`,
+    list: [
+      'people who are not signed in can view and discover this workspace name and description',
+      'people can explore and view the public projects of this workspace'
+    ],
+    bottomInfo: `Important: it can be that some of the projects already have the visibility status set to public. If you allow public visibility of the workspace <b>${name.value}</b> then these projects will directly become publicly visible.`
+  },
+
+  PRIVATE: {
+    name: 'private',
+
+    title: `You are about to set the visibility of the workspace <b>${name.value}</b> to private. When you change the visibility to private, then:`,
+    list: [
+      'people who are not signed in cannot view and discover this workspace name and description',
+      'people cannot explore and view the public projects of this workspace'
+    ]
+  }
+}
+
+const visibilityInfo = computed(() => visibilityHandler[props.visibility])
+
+const valueModel = computed({
+  get: () => props.value,
+  set: () => emit('onCancel')
+})
+
+const handleCancel = () => emit('onCancel')
+const handleConfirm = () => emit('onConfirm')
 </script>
 <style scoped>
 .break {

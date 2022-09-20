@@ -3,9 +3,9 @@
     <template v-slot:activator="{ on, attrs }">
       <span v-on="on" class="pr-5 cursor--pointer" @mouseover="handleOnHover" @mouseleave="handleOnBlur">
         Value
-        <span class="mr-5" style="position: relative;">
+        <span class="mr-5" style="position: relative">
           <v-icon
-            style="left: 3px; top: 1px; right: auto; position: absolute;"
+            style="left: 3px; top: 1px; right: auto; position: absolute"
             v-show="isActive"
             v-bind="attrs"
             text
@@ -35,56 +35,27 @@
       <v-card-actions v-if="false">
         <v-spacer />
 
-        <v-btn small outlined text class="btn--hover" @click="menu = false">
-          Cancel
-        </v-btn>
-        <v-btn small outlined color="secondary" text class="btn--hover" @click="handleApply">
-          Apply
-        </v-btn>
+        <v-btn small outlined text class="btn--hover" @click="menu = false"> Cancel </v-btn>
+        <v-btn small outlined color="secondary" text class="btn--hover" @click="handleApply"> Apply </v-btn>
       </v-card-actions>
     </v-card>
   </v-menu>
 </template>
 
-<script>
-import TableSort from './TableSort'
-import FilterNameValue from './FilterNameValue'
-import AutocompleteFilter from './AutocompleteFilter'
+<script setup lang="ts">
+const typeValues = ['boolean', 'date', 'datetime', 'dictionary', 'float', 'integer', 'string', 'tag', 'time']
 
-import { ref, inject, computed, defineComponent } from '@vue/composition-api'
+const menu = ref()
+const active = ref(false)
 
-export default defineComponent({
-  name: 'SortFilterByMetricValue',
+const isActiveMetricValue = inject('isActiveMetricValue')
 
-  components: { TableSort, FilterNameValue, AutocompleteFilter },
+const isActive = computed(() => active.value || isActiveMetricValue.value || menu.value)
 
-  setup() {
-    const typeValues = ['boolean', 'date', 'datetime', 'dictionary', 'float', 'integer', 'string', 'tag', 'time']
+const handleOnBlur = () => (active.value = false)
+const handleOnHover = () => (active.value = true)
 
-    const menu = ref()
-    const active = ref(false)
+const getColor = () => (isActiveMetricValue.value ? 'primary' : 'secondary')
 
-    const isActiveMetricValue = inject('isActiveMetricValue')
-
-    const isActive = computed(() => active.value || isActiveMetricValue.value || menu.value)
-
-    const handleOnBlur = () => (active.value = false)
-    const handleOnHover = () => (active.value = true)
-
-    const getColor = () => (isActiveMetricValue.value ? 'primary' : 'secondary')
-
-    const handleApply = () => {}
-
-    return {
-      menu,
-      getColor,
-      isActive,
-      typeValues,
-
-      handleOnBlur,
-      handleOnHover,
-      handleApply
-    }
-  }
-})
+const handleApply = () => {}
 </script>

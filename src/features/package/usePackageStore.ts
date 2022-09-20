@@ -1,11 +1,7 @@
-import router from '@/core/router'
-import VueRouter from 'vue-router'
 import { defineStore } from 'pinia'
 import { File, Package } from './types'
-import apiService from '@/core/services/apiService'
-import { useLogger } from '@/core/composition/useLogger'
-import { apiStringify } from '@/core/services/api-settings'
-const { isNavigationFailure, NavigationFailureType } = VueRouter
+import apiService from '@/services/apiService'
+import { apiStringify } from '@/services/api-settings'
 
 const serviceName = 'package'
 const api = apiStringify(serviceName)
@@ -63,11 +59,8 @@ export const usePackageStore = defineStore('package', {
         const logger = useLogger()
 
         const name = failedRoute || 'workspace-project-code-does-not-exist'
-        router.push({ name }).catch(failure => {
-          if (isNavigationFailure(failure, NavigationFailureType.redirected)) {
-            logger.error('Error on redirect to workspace-project-code-does-not-exist.\nError: ', failure)
-          }
-        })
+
+        this.$routerAskAnna.push({ name })
 
         if (loading) this.loading = false
 

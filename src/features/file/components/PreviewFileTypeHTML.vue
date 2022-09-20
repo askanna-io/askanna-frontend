@@ -28,8 +28,6 @@
 </template>
 <script setup lang="ts">
 import { throttle } from 'lodash'
-import { ref, watch, computed } from '@vue/composition-api'
-import TheHighlight from '@/core/components/highlight/TheHighlight.vue'
 
 const props = defineProps({
   view: {

@@ -43,8 +43,6 @@
 <script setup lang="ts">
 import { get } from 'lodash'
 import { headers, FileIcons } from '../utils/index'
-import useMoment from '@/core/composition/useMoment'
-import useSizeHumanize from '@/core/composition/useSizeHumanize'
 
 defineProps({
   items: {

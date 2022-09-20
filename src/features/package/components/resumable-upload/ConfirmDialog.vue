@@ -16,30 +16,23 @@
   </v-dialog>
 </template>
 
-<script>
-import { ref, computed, defineComponent } from '@vue/composition-api'
-
-export default defineComponent({
-  name: 'ConfirmDialog',
-  props: {
-    isReplace: {
-      type: Boolean,
-      default: false
-    }
-  },
-
-  setup(props, context) {
-    const dialog = ref(true)
-
-    const text = computed(() => (props.isReplace ? 'replace' : 'upload'))
-
-    const handleStartUpload = () => context.emit('uploadStarted')
-    const handleCancelStartUpload = () => {
-      context.emit('cancelUploadStarted')
-      dialog.value = false
-    }
-
-    return { text, dialog, handleStartUpload, handleCancelStartUpload }
+<script setup lang="ts">
+const props = defineProps({
+  isReplace: {
+    type: Boolean,
+    default: false
   }
 })
+const emit = defineEmits(['uploadStarted', 'cancelUploadStarted'])
+
+const dialog = ref(true)
+
+const text = computed(() => (props.isReplace ? 'replace' : 'upload'))
+
+const handleStartUpload = () => emit('uploadStarted')
+
+const handleCancelStartUpload = () => {
+  emit('cancelUploadStarted')
+  dialog.value = false
+}
 </script>

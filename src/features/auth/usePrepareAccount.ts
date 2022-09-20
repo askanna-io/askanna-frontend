@@ -1,11 +1,6 @@
-import { ref } from '@vue/composition-api'
-import { useAuthStore } from './useAuthStore'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import { useWorkspacesStore } from '@/features/workspaces/useWorkspacesStore'
-
 export default function () {
   const authStore = useAuthStore()
-  const router = useRouterAskAnna()
+  const { router } = useRouterAskAnna()
   const workspacesStore = useWorkspacesStore()
 
   const workspaceId = ref('')

@@ -22,29 +22,16 @@
 
 <script setup lang="ts">
 import { set } from 'lodash'
-import { useRouter } from '@/core/plugins/vue-hooks'
-import { ref, watch, computed } from '@vue/composition-api'
-import usePermission from '@/core/composition/usePermission'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import { useProjectStore } from '@/features/project/useProjectStore'
-import { useSnackBar } from '@/core/components/snackBar/useSnackBar'
-import { useProjectsStore } from '@/features/projects/useProjectsStore'
-import { useWorkspaceStore } from '@/features/workspace/useWorkspaceStore'
-import { useWorkspaceProjectsStore } from '@/features/workspace/useWorkspaceProjectsStore'
 
-import Project from '@/features/project/components/Project.vue'
-import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
-
-const { route } = useRouter()
 const snackBar = useSnackBar()
-const router = useRouterAskAnna()
 const permission = usePermission()
 const projectStore = useProjectStore()
 const projectsStore = useProjectsStore()
 const workspaceStore = useWorkspaceStore()
+const { route, router } = useRouterAskAnna()
 const workspaceProjectsStore = useWorkspaceProjectsStore()
 
-const { routeBackTo = 'workspace-project' } = route.value.params
+const { routeBackTo = 'workspace-project' } = route.params
 
 const projectData = computed(() => projectStore.project)
 const loading = computed(() => projectStore.projectLoading)

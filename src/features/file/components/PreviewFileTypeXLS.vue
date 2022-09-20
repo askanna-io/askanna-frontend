@@ -88,9 +88,6 @@
 
 <script setup lang="ts">
 import { utils, read } from 'xlsx'
-import { useWindowSize } from '@/core/plugins/vue-hooks'
-import TableGroupedTable from './TableGroupedTable.vue'
-import { ref, watch, computed, watchEffect } from '@vue/composition-api'
 
 const props = defineProps({
   fileSource: {

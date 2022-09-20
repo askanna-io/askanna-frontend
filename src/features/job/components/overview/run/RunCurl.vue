@@ -21,42 +21,23 @@
   </div>
 </template>
 
-<script lang="ts">
-import useCopy from '@/core/composition/useCopy'
-import { apiUrl } from '@/core/services/api-settings'
-import { useJobStore } from '@/features/job/useJobStore'
-import { defineComponent } from '@vue/composition-api'
-import { useAuthStore } from '@/features/auth/useAuthStore'
-import TheHighlight from '@/core/components/highlight/TheHighlight.vue'
+<script setup lang="ts">
+import { apiUrl } from '@/services/api-settings'
 
-export default defineComponent({
-  name: 'RunCurl',
+const copy = useCopy()
+const jobStore = useJobStore()
 
-  components: { TheHighlight },
+const authStore = useAuthStore()
+const { route } = useRouterAskAnna()
+const { jobId } = route.params
 
-  setup(_, context) {
-    const copy = useCopy()
-    const jobStore = useJobStore()
-
-    const authStore = useAuthStore()
-    const { jobId } = context.root.$route.params
-
-    const curl = `curl -X POST \\
+const curl = `curl -X POST \\
 -d '{"data": {"foo": "bar"}}' \\
 -H 'Content-Type: application/json' \\
 -H 'Authorization: Token ${authStore.authToken}' \\
 '${apiUrl}/v1/run/${jobId}/'`
 
-    const handleCopy = () => copy.handleCopyText(curl)
-
-    return {
-      curl,
-      ...jobStore,
-      jobId,
-      handleCopy
-    }
-  }
-})
+const handleCopy = () => copy.handleCopyText(curl)
 </script>
 <style>
 .curl-code code {

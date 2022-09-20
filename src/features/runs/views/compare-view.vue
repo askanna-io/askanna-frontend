@@ -193,25 +193,14 @@
 
 <script setup lang="ts">
 import { get } from 'lodash'
-import { useWindowSize } from '@/core/plugins/vue-hooks'
-import { useMobileStore } from '@/core/store/useMobileStore'
 import { compareItems } from '@/features/compare-runs/helper'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import { ref, watch, computed, onBeforeMount } from '@vue/composition-api'
-import { useCompareRunsStore } from '@/features/compare-runs/useCompareRunsStore'
-import ComparisonList from '@/features/compare-runs/components/ComparisonList.vue'
-import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
-import CollapsibleSection from '@/features/compare-runs/components/CollapsibleSection.vue'
-import ComparisonListItem from '@/features/compare-runs/components/ComparisonListItem.vue'
-import ComparisonListTitle from '@/features/compare-runs/components/ComparisonListTitle.vue'
-import AskAnnaLoadingDotsFlashing from '@/core/components/shared/AskAnnaLoadingDotsFlashing.vue'
 
 const { height } = useWindowSize()
 const mobileStore = useMobileStore()
 const { route } = useRouterAskAnna()
 const compareRunsStore = useCompareRunsStore()
 
-const { jobId: uuid } = route.value.params
+const { jobId: uuid } = route.params
 
 let loading = ref(true)
 const currentScrollTop = ref(0)

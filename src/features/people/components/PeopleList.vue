@@ -1,7 +1,7 @@
 <template>
   <v-data-iterator :items="items" hide-default-footer :no-data-text="''" disable-pagination>
     <template v-slot:header>
-      <people-toolbar :title="workspaceName" />
+      <PeopleToolbar :title="workspaceName" />
     </template>
     <template v-slot:default="props">
       <AskAnnaLoadingProgress :type="'table-row'" :loading="loading">
@@ -18,7 +18,7 @@
             :class="{ 'pb-0': $vuetify.breakpoint.xsOnly }"
           >
             <v-hover v-slot:default="{ hover }" open-delay="200">
-              <people-card-item
+              <PeopleCardItem
                 :people="item"
                 :hover="hover"
                 :workspaceName="workspaceName"
@@ -33,11 +33,6 @@
   </v-data-iterator>
 </template>
 <script setup lang="ts">
-import PeopleToolbar from './PeopleToolbar.vue'
-import PeopleCardItem from './PeopleCardItem.vue'
-import useSanitizeHTML from '@/core/composition/useSanitizeHTML'
-import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
-
 defineProps({
   workspaceName: {
     type: String,

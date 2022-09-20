@@ -84,176 +84,150 @@
   </v-data-table>
 </template>
 
-<script lang="ts">
-import useCopy from '@/core/composition/useCopy'
-import useMoment from '@/core/composition/useMoment'
-import useNumeral from '@/core/composition/useNumeral'
-import { ref, watch, defineComponent } from '@vue/composition-api'
-import AskAnnaChipStatus from '@/core/components/shared/AskAnnaChipStatus.vue'
-
-export default defineComponent({
-  name: 'Runs',
-
-  components: {
-    AskAnnaChipStatus
+<script setup lang="ts">
+const props = defineProps({
+  count: {
+    type: Number,
+    default: () => 0
+  },
+  items: {
+    type: Array,
+    default: () => []
+  },
+  height: {
+    type: Number,
+    default: () => 300
   },
 
-  props: {
-    count: {
-      type: Number,
-      default: () => 0
-    },
-    items: {
-      type: Array,
-      default: () => []
-    },
-    height: {
-      type: Number,
-      default: () => 300
-    },
-
-    tableClass: {
-      type: String,
-      default: () => ''
-    },
-    routeName: {
-      type: String,
-      default: () => ''
-    },
-    loading: {
-      type: Boolean,
-      default: () => false
-    },
-    itemsPerPage: {
-      type: Number,
-      default: () => 5
-    }
+  tableClass: {
+    type: String,
+    default: () => ''
   },
+  routeName: {
+    type: String,
+    default: () => ''
+  },
+  loading: {
+    type: Boolean,
+    default: () => false
+  },
+  itemsPerPage: {
+    type: Number,
+    default: () => 5
+  }
+})
 
-  setup(props, context) {
-    const copy = useCopy()
-    const moment = useMoment()
-    const numeral = useNumeral()
+const emit = defineEmits(['onChangeParams'])
 
-    const page = ref(0)
-    const pageCount = ref(0)
-    const options = ref({ itemsPerPage: props.itemsPerPage, page: 1 })
+const copy = useCopy()
+const numeral = useNumeral()
+const { route } = useRouterAskAnna()
+const { $moment, durationHumanizeBySecond } = useMoment()
 
-    const getHeaders = isMobile => [
-      {
-        text: 'SUUID',
-        sortable: false,
-        value: 'info',
-        width: isMobile ? '50px' : '110px',
-        class: 'text-left text-subtitle-2 font-weight-bold h-20'
-      },
-      {
-        text: 'Name',
-        width: isMobile ? '170px' : '30%',
-        sortable: false,
-        value: 'name',
-        class: 'text-left text-subtitle-2 font-weight-bold h-20'
-      },
-      {
-        text: 'Status',
-        width: '160px',
-        sortable: false,
-        value: 'status',
-        class: 'text-left text-subtitle-2 font-weight-bold h-20'
-      },
-      {
-        text: 'Timing',
-        width: '350px',
-        sortable: false,
-        value: 'runtime',
-        class: 'text-left text-subtitle-2 font-weight-bold h-20'
-      },
-      {
-        text: 'By',
-        value: 'by',
-        width: '150px',
-        sortable: false,
-        class: 'text-left text-subtitle-2 font-weight-bold h-20'
-      },
-      {
-        text: 'Input',
-        width: '100px',
-        sortable: false,
-        value: 'payload',
-        class: 'text-left text-subtitle-2 font-weight-bold h-20'
-      },
-      {
-        width: '120px',
-        text: 'Metrics',
-        sortable: false,
-        value: 'metrics_meta',
-        class: 'text-left text-subtitle-2 font-weight-bold h-20'
-      }
-    ]
+const page = ref(0)
+const pageCount = ref(0)
+const options = ref({ itemsPerPage: props.itemsPerPage, page: 1 })
 
-    const handleCopy = id => copy.handleCopyText(id)
+const getHeaders = isMobile => [
+  {
+    text: 'SUUID',
+    sortable: false,
+    value: 'info',
+    width: isMobile ? '50px' : '110px',
+    class: 'text-left text-subtitle-2 font-weight-bold h-20'
+  },
+  {
+    text: 'Name',
+    width: isMobile ? '170px' : '30%',
+    sortable: false,
+    value: 'name',
+    class: 'text-left text-subtitle-2 font-weight-bold h-20'
+  },
+  {
+    text: 'Status',
+    width: '160px',
+    sortable: false,
+    value: 'status',
+    class: 'text-left text-subtitle-2 font-weight-bold h-20'
+  },
+  {
+    text: 'Timing',
+    width: '350px',
+    sortable: false,
+    value: 'runtime',
+    class: 'text-left text-subtitle-2 font-weight-bold h-20'
+  },
+  {
+    text: 'By',
+    value: 'by',
+    width: '150px',
+    sortable: false,
+    class: 'text-left text-subtitle-2 font-weight-bold h-20'
+  },
+  {
+    text: 'Input',
+    width: '100px',
+    sortable: false,
+    value: 'payload',
+    class: 'text-left text-subtitle-2 font-weight-bold h-20'
+  },
+  {
+    width: '120px',
+    text: 'Metrics',
+    sortable: false,
+    value: 'metrics_meta',
+    class: 'text-left text-subtitle-2 font-weight-bold h-20'
+  }
+]
 
-    const calculateDuration = item => {
-      const status = item.status.toLowerCase()
-      if (status === 'queued' || status === 'pending') return 'Not started'
+const handleCopy = id => copy.handleCopyText(id)
 
-      return moment.durationHumanizeBySecond(item.duration?.toString())
-    }
+const calculateDuration = item => {
+  const status = item.status.toLowerCase()
+  if (status === 'queued' || status === 'pending') return 'Not started'
 
-    const routeLinkParams = ({ item, name = 'workspace-project-jobs-job-run-overview' }) => {
-      return {
-        name,
-        params: {
-          ...context.root.$route.params,
-          runId: item.short_uuid,
-          jobId: item.job.short_uuid
-        }
-      }
-    }
+  return durationHumanizeBySecond(item.duration?.toString())
+}
 
-    const getPayloadTitle = payload => {
-      let title = 'No input'
-      if (payload?.lines >= 1) {
-        title = `${numeral.numberFormated(payload.lines)} line${payload.lines > 1 ? 's' : ''}`
-      }
-      return title
-    }
-
-    const getMetricTitle = count => {
-      let title = 'No metrics'
-      if (count >= 1) {
-        title = `${numeral.numberFormated(count)} metric${count > 1 ? 's' : ''}`
-      }
-      return title
-    }
-
-    watch(options, async (options, currentOptions) => {
-      const { itemsPerPage: limit = 5, page = 1 } = options
-      const { itemsPerPage: currentLimit = 5, page: currentPage = 1 } = currentOptions
-
-      if (limit === currentLimit && page === currentPage) return
-
-      const params = {
-        limit,
-        offset: (page - 1) * limit
-      }
-
-      context.emit('onChangeParams', params)
-    })
-
-    return {
-      ...moment,
-      page,
-      options,
-      pageCount,
-      handleCopy,
-      getHeaders,
-      getMetricTitle,
-      getPayloadTitle,
-      routeLinkParams,
-      calculateDuration
+const routeLinkParams = ({ item, name = 'workspace-project-jobs-job-run-overview' }) => {
+  return {
+    name,
+    params: {
+      ...route.params,
+      runId: item.short_uuid,
+      jobId: item.job.short_uuid
     }
   }
+}
+
+const getPayloadTitle = payload => {
+  let title = 'No input'
+  if (payload?.lines >= 1) {
+    title = `${numeral.numberFormated(payload.lines)} line${payload.lines > 1 ? 's' : ''}`
+  }
+  return title
+}
+
+const getMetricTitle = count => {
+  let title = 'No metrics'
+  if (count >= 1) {
+    title = `${numeral.numberFormated(count)} metric${count > 1 ? 's' : ''}`
+  }
+  return title
+}
+
+watch(options, async (options, currentOptions) => {
+  const { itemsPerPage: limit = 5, page = 1 } = options
+  const { itemsPerPage: currentLimit = 5, page: currentPage = 1 } = currentOptions
+
+  if (limit === currentLimit && page === currentPage) return
+
+  const params = {
+    limit,
+    offset: (page - 1) * limit
+  }
+
+  emit('onChangeParams', params)
 })
 </script>
 <style scoped>

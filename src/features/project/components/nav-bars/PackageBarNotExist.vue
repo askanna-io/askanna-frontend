@@ -47,63 +47,49 @@
       <v-slide-y-transition>
         <div v-if="!sticked">
           <v-toolbar dense color="white" flat class="br-r5 ma-3">
-            <project-menu :projectName="project.name" />
+            <ProjectMenu :projectName="project.name" />
             <v-spacer />
 
-            <project-menu-popup :project="project" :routeToRedirect="'workspace'" />
+            <ProjectMenuPopup :project="project" :routeToRedirect="'workspace'" />
           </v-toolbar>
         </div>
       </v-slide-y-transition>
     </v-card>
   </div>
 </template>
-<script lang="ts">
-import ProjectMenu from './parts/ProjectMenu.vue'
-import { ref, defineComponent } from '@vue/composition-api'
-import ProjectMenuPopup from '@/features/project/components/ProjectMenuPopup.vue'
-
-export default defineComponent({
-  name: 'PackageBarNotExist',
-
-  components: { ProjectMenu, ProjectMenuPopup },
-
-  props: {
-    project: {
-      type: Object,
-      default: function () {
-        return {
-          name: '',
-          description: '',
-          permission: {}
-        }
+<script setup lang="ts">
+const props = defineProps({
+  project: {
+    type: Object,
+    default: function () {
+      return {
+        name: '',
+        description: '',
+        permission: {}
       }
-    },
-    projectBreadcrumbs: {
-      type: Array,
-      default: []
-    },
-    isShowProjectBar: {
-      type: Boolean,
-      default: false
-    },
-    sticked: {
-      type: Boolean,
-      default: false
-    },
-    handleOnStick: {
-      type: Function,
-      default: () => {}
     }
   },
-
-  setup(props, context) {
-    const refToolbar = ref(null)
-
-    const onStick = data => {
-      props.handleOnStick(data.sticked)
-    }
-
-    return { onStick, refToolbar, routerParams: context.root.$route.params }
+  projectBreadcrumbs: {
+    type: Array,
+    default: []
+  },
+  isShowProjectBar: {
+    type: Boolean,
+    default: false
+  },
+  sticked: {
+    type: Boolean,
+    default: false
+  },
+  handleOnStick: {
+    type: Function,
+    default: () => {}
   }
 })
+
+const refToolbar = ref(null)
+
+const onStick = data => {
+  props.handleOnStick(data.sticked)
+}
 </script>

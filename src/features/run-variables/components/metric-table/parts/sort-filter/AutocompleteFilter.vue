@@ -12,41 +12,28 @@
   />
 </template>
 
-<script>
-import { inject, defineComponent, computed } from '@vue/composition-api'
-
-export default defineComponent({
-  name: 'AutocompleteFilter',
-
-  props: {
-    label: {
-      type: String,
-      default: ''
-    },
-    items: {
-      type: Array,
-      default: () => []
-    },
-    filterName: {
-      type: String,
-      default: ''
-    }
+<script setup lang="ts">
+const props = defineProps({
+  label: {
+    type: String,
+    default: ''
   },
-
-  setup(props) {
-    const state = inject('state')
-    const changeState = inject('changeState')
-
-    const computedValue = computed(() => state[props.filterName])
-
-    const handleChange = value => changeState({ path: props.filterName, value })
-
-    return {
-      handleChange,
-      computedValue
-    }
+  items: {
+    type: Array,
+    default: () => []
+  },
+  filterName: {
+    type: String,
+    default: ''
   }
 })
+
+const state = inject('state')
+const changeState = inject('changeState')
+
+const computedValue = computed(() => state[props.filterName])
+
+const handleChange = value => changeState({ path: props.filterName, value })
 </script>
 <style>
 .autocomplete-filter .v-input__append-inner .v-input__icon.v-input__icon--append {

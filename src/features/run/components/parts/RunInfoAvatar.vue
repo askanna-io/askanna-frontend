@@ -5,7 +5,7 @@
     </div>
     <span @click="handleOpenPeoplePopUp" class="primary--text ask-anna-link"> {{ value.name }}</span>
 
-    <people-popup
+    <PeoplePopup
       simple
       :people="value"
       :value="peoplePopup"
@@ -16,11 +16,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, computed } from '@vue/composition-api'
-import { usePeopleStore } from '@/features/people/usePeopleStore'
-import PeoplePopup from '@/features/people/components/PeoplePopup.vue'
-import { useWorkspaceStore } from '@/features/workspace/useWorkspaceStore'
-
 defineProps({
   text: {
     type: String,

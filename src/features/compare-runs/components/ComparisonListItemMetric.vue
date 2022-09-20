@@ -2,8 +2,6 @@
   <MetricValue :metricRow="value.metric" :fullText="true" :isLabels="value.isLabels" />
 </template>
 <script setup lang="ts">
-import MetricValue from '@/features/metric/components/metric-table/parts/MetricValue.vue'
-
 defineProps({
   value: {
     type: Object,

@@ -42,7 +42,7 @@
         </v-card-actions>
       </v-card>
     </v-menu>
-    <confirm-delete-run-popup
+    <ConfirmDeleteRunPopup
       :runInfo="run"
       :value="deleteRunConfirmPopup"
       @onClose="handlCloseConfirmDeletePopup"
@@ -52,14 +52,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from '@vue/composition-api'
-import { useRunStore } from '@/features/run/useRunStore'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-
-import ConfirmDeleteRunPopup from '@/features/project/components/popup/ConfirmDeleteRunPopup.vue'
-
 const runStore = useRunStore()
-const router = useRouterAskAnna()
+const { route, router } = useRouterAskAnna()
 
 const menu = ref(false)
 const deleteRunConfirmPopup = ref(false)
@@ -67,7 +61,7 @@ const deleteRunConfirmPopup = ref(false)
 const editRunRouteName = 'workspace-project-jobs-job-run-edit'
 
 const run = computed(() => runStore.run)
-const disabledButtonEditRun = computed(() => router.route.value.name === editRunRouteName)
+const disabledButtonEditRun = computed(() => route.name === editRunRouteName)
 const handlerOpenEditRunPage = async () => {
   router.push({ name: editRunRouteName })
   handleClose()

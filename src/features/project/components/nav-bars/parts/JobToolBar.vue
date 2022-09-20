@@ -21,9 +21,6 @@
   </v-flex>
 </template>
 <script setup lang="ts">
-import { ref, computed } from '@vue/composition-api'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-
 const props = defineProps({
   projectName: {
     type: String,
@@ -46,7 +43,7 @@ const props = defineProps({
 const { route } = useRouterAskAnna()
 
 const currentTab = ref('job-overview')
-const params = computed(() => route.value.params)
+const params = computed(() => route.params)
 
 const runIdEditTabs = [
   {

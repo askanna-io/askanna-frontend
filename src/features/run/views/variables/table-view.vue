@@ -19,22 +19,14 @@
 </template>
 <script setup lang="ts">
 import { throttle } from 'lodash'
-import useQuery from '@/core/composition/useQuery'
-import { useRunStore } from '@/features/run/useRunStore'
-import { useRouter, useWindowSize } from '@/core/plugins/vue-hooks'
-import { ref, computed, onBeforeMount } from '@vue/composition-api'
-import { useProjectStore } from '@/features/project/useProjectStore'
-import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
-import { useRunVariablesStore } from '@/features/run-variables/useRunVariablesStore'
-import VariablesTableView from '@/features/run-variables/components/metric-table/VariablesTableView.vue'
 
-const { route } = useRouter()
 const runStore = useRunStore()
 const { height } = useWindowSize()
+const { route } = useRouterAskAnna()
 const projectStore = useProjectStore()
 const runVariablesStore = useRunVariablesStore()
 
-const { runId: uuid } = route.value.params
+const { runId: uuid } = route.params
 
 const isSorted = ref(false)
 
@@ -96,5 +88,5 @@ const fetchData = async () => {
   await runVariablesStore.getVariablesInitial({ uuid, params: { limit: 100, offset: 0 } })
 }
 
-onBeforeMount(() => fetchData())
+onMounted(() => fetchData())
 </script>

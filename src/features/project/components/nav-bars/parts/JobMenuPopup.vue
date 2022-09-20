@@ -42,7 +42,7 @@
         </v-card-actions>
       </v-card>
     </v-menu>
-    <confirm-delete-job-popup
+    <ConfirmDeleteJobPopup
       :jobName="job.name"
       :value="deleteJobConfirmPopup"
       @onClose="handlCloseConfirmDeletePopup"
@@ -51,75 +51,48 @@
   </div>
 </template>
 
-<script lang="ts">
-import { useJobStore } from '@/features/job/useJobStore'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import { ref, defineComponent, computed } from '@vue/composition-api'
-import ConfirmDeleteJobPopup from '@/features/project/components/popup/ConfirmDeleteJobPopup.vue'
-
-export default defineComponent({
-  name: 'JobMenuPopup',
-
-  components: {
-    ConfirmDeleteJobPopup
-  },
-
-  props: {
-    job: {
-      type: Object,
-      default: function () {
-        return {
-          name: '',
-          short_uuid: '',
-          description: ''
-        }
+<script setup lang="ts">
+const props = defineProps({
+  job: {
+    type: Object,
+    default: function () {
+      return {
+        name: '',
+        short_uuid: '',
+        description: ''
       }
-    }
-  },
-
-  setup(props, context) {
-    const jobStore = useJobStore()
-    const router = useRouterAskAnna()
-
-    const menu = ref(false)
-    const deleteJobConfirmPopup = ref(false)
-
-    const editJobRouteName = 'workspace-project-job-edit'
-
-    const disabledButtonEditJob = computed(() => context.root.$route.name === editJobRouteName)
-
-    const handlerOpenEditJobPage = async () => {
-      router.push({ name: editJobRouteName })
-      handleClose()
-    }
-
-    const handleOpenConfirmDeleteJob = async () => (deleteJobConfirmPopup.value = true)
-
-    const handlCloseConfirmDeletePopup = () => (deleteJobConfirmPopup.value = false)
-
-    const handleClose = () => (menu.value = false)
-
-    const handleDeleteConfirmJob = async () => {
-      const isDeleted = await jobStore.deleteJob(props.job)
-
-      deleteJobConfirmPopup.value = false
-      menu.value = false
-      if (isDeleted) {
-        router.push({ name: 'workspace-project-jobs' })
-      }
-    }
-
-    return {
-      menu,
-      deleteJobConfirmPopup,
-      disabledButtonEditJob,
-
-      handleClose,
-      handleDeleteConfirmJob,
-      handlerOpenEditJobPage,
-      handleOpenConfirmDeleteJob,
-      handlCloseConfirmDeletePopup
     }
   }
 })
+
+const jobStore = useJobStore()
+const { route, router } = useRouterAskAnna()
+
+const menu = ref(false)
+const deleteJobConfirmPopup = ref(false)
+
+const editJobRouteName = 'workspace-project-job-edit'
+
+const disabledButtonEditJob = computed(() => route.name === editJobRouteName)
+
+const handlerOpenEditJobPage = async () => {
+  router.push({ name: editJobRouteName })
+  handleClose()
+}
+
+const handleOpenConfirmDeleteJob = async () => (deleteJobConfirmPopup.value = true)
+
+const handlCloseConfirmDeletePopup = () => (deleteJobConfirmPopup.value = false)
+
+const handleClose = () => (menu.value = false)
+
+const handleDeleteConfirmJob = async () => {
+  const isDeleted = await jobStore.deleteJob(props.job)
+
+  deleteJobConfirmPopup.value = false
+  menu.value = false
+  if (isDeleted) {
+    router.push({ name: 'workspace-project-jobs' })
+  }
+}
 </script>

@@ -6,9 +6,6 @@
   </v-chip-group>
 </template>
 <script setup lang="ts">
-import { ref } from '@vue/composition-api'
-import MetricValue from '@/features/metric/components/metric-table/parts/MetricValue.vue'
-
 defineProps({
   value: {
     type: Object,

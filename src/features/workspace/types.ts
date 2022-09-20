@@ -1,23 +1,3 @@
-interface Workspace {
-  uuid: string
-  deleted: null
-  name: string
-  status: number
-  created: string
-  modified: string
-  short_uuid: string
-  is_member: boolean
-  description: string
-  activate_date: string
-  deactivate_date: string | null
-  visibility: WorkspaceVisibility
-}
-
-enum WorkspaceVisibility {
-  PUBLIC = 'PUBLIC',
-  PRIVATE = 'PRIVATE'
-}
-
 export const WORKSPACE_STORE = 'workspace'
 
 interface IPERMISSIONS_LABELS {

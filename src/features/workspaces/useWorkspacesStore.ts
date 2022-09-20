@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
-import apiService from '@/core/services/apiService'
-import { apiStringify } from '@/core/services/api-settings'
-import useSortFilterHelper from '@/core/composition/useSortFilterHelper'
+import apiService from '@/services/apiService'
+import { apiStringify } from '@/services/api-settings'
 
 const serviceName = 'workspace'
 const api = apiStringify(serviceName)

@@ -114,11 +114,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from '@vue/composition-api'
-import useSlicedText from '@/core/composition/useSlicedText'
-import { usePeopleStore } from '@/features/people/usePeopleStore'
-import useValidationRules from '@/core/composition/useValidationRules'
-
 const props = defineProps({
   workspaceName: {
     type: String,
@@ -128,7 +123,7 @@ const props = defineProps({
 
 const slicedText = useSlicedText()
 const peopleStore = usePeopleStore()
-const validationRules = useValidationRules()
+const { isValidEmail } = useValidationRules()
 
 const currentRole = computed(() => peopleStore.currentPeople.role.code)
 
@@ -153,7 +148,7 @@ const loadingText = ref('Sending...')
 const title = computed(() => slicedText(props.workspaceName, 27))
 
 const invitationBtnText = computed(() => (invitationItems.value.length > 1 ? 'Send invitations' : 'Send invitation'))
-const inValidEmails = computed(() => invitationItems.value.filter(email => !validationRules.isValidEmail(email)))
+const inValidEmails = computed(() => invitationItems.value.filter(email => !isValidEmail(email)))
 const invitedEmails = computed(() =>
   invitationItems.value.filter(email => peopleStore.people.some(item => item.email === email) && email)
 )
@@ -187,7 +182,7 @@ const handleSentInvitation = async () => {
 const handleRemove = item => invitationItems.value.splice(invitationItems.value.indexOf(item), 1)
 
 const handleRemoveInValidEmails = () => {
-  invitationItems.value = invitationItems.value.filter(email => validationRules.isValidEmail(email))
+  invitationItems.value = invitationItems.value.filter(email => isValidEmail(email))
 }
 
 const handleRemoveInvitedEmails = () => {
@@ -195,7 +190,7 @@ const handleRemoveInvitedEmails = () => {
 }
 
 const getStyle = email => {
-  const isEmailValid = !validationRules.isValidEmail(email)
+  const isEmailValid = !isValidEmail(email)
   const isExist = peopleStore.people.find(item => item.email === email)
   const isInvited = isExist && isExist.status === 'invited'
   const isAccepted = isExist && isExist.status === 'accepted'

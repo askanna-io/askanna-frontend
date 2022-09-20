@@ -93,7 +93,7 @@
         >
           <v-row>
             <v-col cols="12"
-              ><notifications-email
+              ><NotificationsEmail
                 title="Notification"
                 :fullMode="false"
                 :nudgeLeft="nudgeLeft"
@@ -109,12 +109,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from '@vue/composition-api'
-import NotificationsEmail from './NotificationsEmail.vue'
-import AskAnnaLinkCopy from '@/core/components/shared/AskAnnaLinkCopy.vue'
-import RunInfoEnv from '@/features/run/components/parts/RunInfoEnv.vue'
-import RunInfoCopyText from '@/features/run/components/parts/RunInfoCopyText.vue'
-
 const emits = defineEmits(['handleGoToCode'])
 const props = defineProps({
   job: {

@@ -11,20 +11,12 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount } from '@vue/composition-api'
-import { useRunStore } from '@/features/run/useRunStore'
-import { useJobsStore } from '@/features/jobs/useJobsStore'
-import { useFileStore } from '@/features/file/useFileStore'
-import JobsList from '@/features/jobs/components/JobsList.vue'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
-
 const runStore = useRunStore()
 const fileStore = useFileStore()
 const jobsStore = useJobsStore()
-const router = useRouterAskAnna()
+const { route } = useRouterAskAnna()
 
-const { projectId } = router.route.value.params
+const { projectId } = route.params
 
 const fetchData = async () => {
   fileStore.$reset()

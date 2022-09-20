@@ -32,10 +32,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from '@vue/composition-api'
-import usePermission from '@/core/composition/usePermission'
-import ProjectMenuPopup from '@/features/project/components/ProjectMenuPopup.vue'
-
 const props = defineProps({
   project: {
     type: Object,

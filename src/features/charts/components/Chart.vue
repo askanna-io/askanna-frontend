@@ -8,10 +8,6 @@
 <script setup lang="ts">
 import * as d3 from 'd3'
 import { get } from 'lodash'
-import { ref, watch } from '@vue/composition-api'
-import useLineChart from '@/features/charts/useLineChart'
-import useChartLegend from '@/features/charts/useChartLegend'
-import { useChartStore } from '@/features/charts/useChartStore'
 
 const props = defineProps({
   data: {

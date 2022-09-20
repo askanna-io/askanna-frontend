@@ -1,17 +1,13 @@
-import { useRouter } from '@/core/plugins/vue-hooks'
-import { useProjectStore } from './useProjectStore'
-import { computed, onBeforeMount, onUnmounted, watch } from '@vue/composition-api'
-
 export default function () {
-  const { route } = useRouter()
-  const projectStore: any = useProjectStore()
+  const { route } = useRouterAskAnna()
+  const projectStore = useProjectStore()
 
-  const projectIdCd = computed(() => route.value.params.projectId)
+  const projectIdCd = computed(() => route.params.projectId)
 
   const fetchData = async () => {
     projectStore.resetProjectData()
 
-    const { projectId } = route.value.params
+    const { projectId } = route.params
 
     await projectStore.getProjectMe(projectId)
     await projectStore.getProject(projectId)

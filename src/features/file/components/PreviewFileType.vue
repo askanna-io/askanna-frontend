@@ -2,13 +2,11 @@
   <component :is="TypeComponent" v-bind="props" />
 </template>
 <script setup lang="ts">
-import { computed } from '@vue/composition-api'
 import PreviewFileTypeXLS from './PreviewFileTypeXLS.vue'
 import PreviewFileTypeCSV from './PreviewFileTypeCSV.vue'
 import PreviewFileTypeHTML from './PreviewFileTypeHTML.vue'
 import PreviewFileTypeImage from './PreviewFileTypeImage.vue'
 import PreviewFileTypeMardown from './PreviewFileTypeMardown.vue'
-import useFileExtension from '@/core/composition/useFileExtension'
 import PreviewFileTypeNotebook from './PreviewFileTypeNotebook.vue'
 import PreviewFileTypeLanguage from './PreviewFileTypeLanguage.vue'
 import PreviewFileTypeDownloadable from './PreviewFileTypeDownloadable.vue'

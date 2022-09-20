@@ -1,21 +1,14 @@
 <template>
   <AskAnnaLoadingProgress :type="'table-row'" :loading="loading">
-    <workspace-not-ready v-if="!isReady" />
+    <WorkspaceNotReady v-if="!isReady" />
   </AskAnnaLoadingProgress>
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from '@/features/user/useUserStore'
-import usePrepareAccount from '@/features/auth/usePrepareAccount'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import { ref, computed, onBeforeMount, onUnmounted } from '@vue/composition-api'
-import WorkspaceNotReady from '@/features/workspace/components/WorkspaceNotReady.vue'
-import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
-
 const token = window.localStorage.getItem('token')
 
 const userStore = useUserStore()
-const router = useRouterAskAnna()
+const { router } = useRouterAskAnna()
 const prepareAccount = usePrepareAccount()
 
 const authData = computed(() => {
@@ -74,7 +67,7 @@ onUnmounted(() => {
 <style scoped>
 .join-wrapper {
   height: 100vh;
-  background-image: url('~@/assets/bg/askanna-bg-01.svg');
+  background-image: url('/assets/bg/askanna-bg-01.svg');
   background-size: cover;
 }
 .logo {

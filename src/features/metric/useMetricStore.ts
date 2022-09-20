@@ -1,8 +1,7 @@
 import { set } from 'lodash'
 import { defineStore } from 'pinia'
-import apiService from '@/core/services/apiService'
-import { useLogger } from '@/core/composition/useLogger'
-import { apiStringify } from '@/core/services/api-settings'
+import apiService from '@/services/apiService'
+import { apiStringify } from '@/services/api-settings'
 
 const logger = useLogger()
 const serviceName = 'metric'

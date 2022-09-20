@@ -128,10 +128,6 @@
   </v-row>
 </template>
 <script setup lang="ts">
-import { computed } from '@vue/composition-api'
-import usePermission from '@/core/composition/usePermission'
-import useSlicedText from '@/core/composition/useSlicedText'
-
 const props = defineProps({
   people: {
     type: Object,

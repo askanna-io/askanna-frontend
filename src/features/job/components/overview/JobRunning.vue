@@ -28,7 +28,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from '@vue/composition-api'
 import RunCurl from './run/RunCurl.vue'
 import RunPython from './run/RunPython.vue'
 import RunPlatform from './run/RunPlatform.vue'

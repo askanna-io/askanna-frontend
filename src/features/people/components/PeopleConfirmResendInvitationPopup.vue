@@ -33,9 +33,6 @@
   </v-dialog>
 </template>
 <script setup lang="ts">
-import { computed } from '@vue/composition-api'
-import useSlicedText from '@/core/composition/useSlicedText'
-
 const props = defineProps({
   value: {
     type: Boolean,
@@ -48,10 +45,6 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['onClose', 'onResendConfirm'])
-
-const slicedText = useSlicedText()
-
-const name = computed(() => slicedText(props.peopleName, 17))
 
 const valueModel = computed({
   get: () => props.value,

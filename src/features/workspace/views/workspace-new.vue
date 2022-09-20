@@ -103,16 +103,9 @@
 </template>
 <script setup lang="ts">
 import { set } from 'lodash'
-import { ref, computed } from '@vue/composition-api'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import { useSnackBar } from '@/core/components/snackBar/useSnackBar'
-import useValidationRules from '@/core/composition/useValidationRules'
-import { useWorkspaceStore } from '@/features/workspace/useWorkspaceStore'
-import { useWorkspacesStore } from '@/features/workspaces/useWorkspacesStore'
-import AskAnnaDescription from '@/core/components/shared/AskAnnaDescription.vue'
 
 const snackBar = useSnackBar()
-const router = useRouterAskAnna()
+const { router } = useRouterAskAnna()
 const { RULES } = useValidationRules()
 const workspaceStore = useWorkspaceStore()
 const workspacesStore = useWorkspacesStore()

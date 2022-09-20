@@ -46,9 +46,7 @@
   </v-card>
 </template>
 <script setup lang="ts">
-import { ref } from '@vue/composition-api'
-import { url } from '@/core/services/api-settings'
-import AskAnnaCopyText from '@/core/components/shared/AskAnnaCopyText.vue'
+import { url } from '@/services/api-settings'
 
 const props = defineProps({
   projectShortUuid: {

@@ -1,5 +1,5 @@
 <template>
-  <ask-anna-page-does-not-exist pageTitle="project" outlined>
+  <AskAnnaPageDoesNotExist pageTitle="project" outlined>
     <template v-slot:header v-if="isUserLoggedIn">
       <v-breadcrumbs :items="breadcrumbs">
         <template v-slot:item="{ item }">
@@ -9,15 +9,10 @@
         </template>
       </v-breadcrumbs>
     </template>
-  </ask-anna-page-does-not-exist>
+  </AskAnnaPageDoesNotExist>
 </template>
 
 <script setup lang="ts">
-import { computed } from '@vue/composition-api'
-import usePermission from '@/core/composition/usePermission'
-import { useWorkspaceStore } from '@/features/workspace/useWorkspaceStore'
-import AskAnnaPageDoesNotExist from '@/core/components/shared/AskAnnaPageDoesNotExist.vue'
-
 const permission = usePermission()
 const workSpaceStore = useWorkspaceStore()
 

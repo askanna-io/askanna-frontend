@@ -27,7 +27,7 @@
         <br />
         <ul>
           <li>
-            All data related to the <b>{{ workspaceName }}</b> workspace will be removed
+            All data related to the <b>{{ workspaceName }}</b> workspace will be removed
           </li>
           <li>
             If other workspaces in AskAnna or external systems use projects, jobs, files or other parts of the
@@ -52,9 +52,6 @@
   </v-dialog>
 </template>
 <script setup lang="ts">
-import { computed } from '@vue/composition-api'
-import useSlicedText from '@/core/composition/useSlicedText'
-
 const props = defineProps({
   value: {
     type: Boolean,

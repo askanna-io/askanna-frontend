@@ -2,7 +2,7 @@
   <div class="join-wrapper">
     <v-row justify="center">
       <v-col cols="8" xl="3" md="6" sm="9" lg="4" class="rounded pb-0">
-        <img alt="AskAnna logo" src="@/assets/logo.svg" class="logo" />
+        <img alt="AskAnna logo" src="/assets/logo.svg" class="logo" />
       </v-col>
     </v-row>
     <v-row align="center" justify="center">
@@ -12,8 +12,8 @@
           :loading="loading"
           loadingTitle="Anna is checking your invitation..."
         >
-          <the-join v-if="isInvitationValid" />
-          <invalid-invitation v-else />
+          <Join v-if="isInvitationValid" />
+          <JoinInvalidInvitation v-else />
         </AskAnnaLoadingProgress>
       </v-col>
     </v-row>
@@ -21,18 +21,10 @@
 </template>
 
 <script setup lang="ts">
-import TheJoin from '../components/join/TheJoin.vue'
-import { useAuthStore } from '@/features/auth/useAuthStore'
-import { usePeopleStore } from '@/features/people/usePeopleStore'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import { ref, computed, onBeforeMount } from '@vue/composition-api'
-import InvalidInvitation from '../components/join/InvalidInvitation.vue'
-import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
-
 const authStore = useAuthStore()
-const router = useRouterAskAnna()
+const { route } = useRouterAskAnna()
 const peopleStore = usePeopleStore()
-const { token, peopleId, workspaceId } = router.route.value.params
+const { token, peopleId, workspaceId } = route.params
 
 const loading = ref(true)
 const isInvitationValid = computed(
@@ -41,12 +33,14 @@ const isInvitationValid = computed(
 
 const fetchData = async () => {
   loading.value = true
+
   await authStore.logout(false)
   await peopleStore.getInvitetionInfo({
     token,
     peopleId,
     workspaceId
   })
+
   loading.value = false
 }
 
@@ -55,7 +49,7 @@ onBeforeMount(() => fetchData())
 <style scoped>
 .join-wrapper {
   height: 100vh;
-  background-image: url('~@/assets/bg/askanna-bg-01.svg');
+  background-image: url('/assets/bg/askanna-bg-01.svg');
   background-size: cover;
 }
 .logo {

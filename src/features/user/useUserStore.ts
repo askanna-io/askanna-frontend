@@ -1,9 +1,7 @@
-import axios from 'axios'
 import { defineStore } from 'pinia'
 import * as Sentry from '@sentry/browser'
-import apiService from '@/core/services/apiService'
-import { useLogger } from '@/core/composition/useLogger'
-import { api, apiStringify } from '@/core/services/api-settings'
+import apiService from '@/services/apiService'
+import { apiStringify } from '@/services/api-settings'
 
 const serviceName = 'user'
 const apiActions = apiStringify('user')
@@ -71,7 +69,7 @@ export const useUserStore = defineStore('user', {
 
       this.userProfile = result
 
-      if (process.env.VUE_APP_SENTRY === 'on') {
+      if (import.meta.env.VITE_APP_SENTRY === 'on') {
         const { email, short_uuid: id } = result
         Sentry.setUser({ id, email, username: email })
       }

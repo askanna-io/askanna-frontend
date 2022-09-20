@@ -63,18 +63,11 @@
 
 <script setup lang="ts">
 import { set } from 'lodash'
-import { useRunStore } from '@/features/run/useRunStore'
-import { ref, watch, computed } from '@vue/composition-api'
-import usePermission from '@/core/composition/usePermission'
-import { useSnackBar } from '@/core/components/snackBar/useSnackBar'
-import useRouterAskAnna from '@/core/composition/useRouterAskAnna'
-import AskAnnaDescription from '@/core/components/shared/AskAnnaDescription.vue'
-import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
 
 const runStore = useRunStore()
 const snackBar = useSnackBar()
-const router = useRouterAskAnna()
 const permission = usePermission()
+const { router } = useRouterAskAnna()
 
 const run = computed(() => runStore.run)
 const loading = computed(() => runStore.runLoading)

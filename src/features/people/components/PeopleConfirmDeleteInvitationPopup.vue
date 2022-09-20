@@ -37,9 +37,6 @@
   </v-dialog>
 </template>
 <script setup lang="ts">
-import { computed } from '@vue/composition-api'
-import useSlicedText from '@/core/composition/useSlicedText'
-
 const props = defineProps({
   value: {
     type: Boolean,

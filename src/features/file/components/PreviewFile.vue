@@ -64,9 +64,6 @@
   </AskAnnaLoadingProgress>
 </template>
 <script setup lang="ts">
-import PreviewFileType from './PreviewFileType.vue'
-import AskAnnaLoadingProgress from '@/core/components/shared/AskAnnaLoadingProgress.vue'
-
 defineProps({
   loading: {
     type: Boolean,

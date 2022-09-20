@@ -2,61 +2,50 @@
   <router-view />
 </template>
 
-<script lang="ts">
-import { useJobStore } from '@/features/job/useJobStore'
-import useInterval from '@/core/composition/useInterval'
-import { useRunStore } from '@/features/run/useRunStore'
-import { useJobsStore } from '@/features/jobs/useJobsStore'
-import { computed, watchEffect, defineComponent, onBeforeMount } from '@vue/composition-api'
+<script setup lang="ts">
+const jobStore = useJobStore()
+const runStore = useRunStore()
+const jobsStore = useJobsStore()
+const { route } = useRouterAskAnna()
 
-export default defineComponent({
-  setup(_, context) {
-    const jobStore = useJobStore()
-    const runStore = useRunStore()
-    const jobsStore = useJobsStore()
+const { isSet, setIntervalFn, clearIntervalFn } = useInterval()
 
-    const { isSet, setIntervalFn, clearIntervalFn } = useInterval()
+const runStatus = computed(() => jobStore.run.status)
+const isFinished = computed(() => runStatus.value === 'failed' || runStatus.value === 'finished')
 
-    const runIdStatus = computed(() => jobStore.run.status)
-    const isFinished = computed(() => runIdStatus.value === 'failed' || runIdStatus.value === 'finished')
+const checkStatus = () => {
+  if (isSet('checkStatus')) return
+  setIntervalFn('checkStatus', async () => {
+    const { runId } = route.params
 
-    const checkStatus = () => {
-      if (isSet('checkStatus')) return
-      setIntervalFn('checkStatus', async () => {
-        const { runId } = context.root.$route.params
-
-        await jobStore.getRunStatus(runId)
-        if (isFinished.value) {
-          await runStore.getRun(runId)
-          clearIntervalFn('checkStatus')
-        }
-      })
-    }
-
-    const fetchData = async () => {
-      const { jobId, projectId, runId } = context.root.$route.params
-
-      if (jobStore.job.short_uuid !== jobId) {
-        await jobsStore.$reset()
-        await jobsStore.getProjectJobs(projectId)
-
-        await jobStore.getJob(jobId)
-      }
+    await jobStore.getRunStatus(runId)
+    if (isFinished.value) {
       await runStore.getRun(runId)
-      await jobStore.getRunStatus(runId)
+      clearIntervalFn('checkStatus')
     }
+  })
+}
 
-    onBeforeMount(() => {
-      fetchData()
-    })
+const fetchData = async () => {
+  const { jobId, projectId, runId } = route.params
 
-    const stopWatchRunStatus = watchEffect(() => {
-      if (runIdStatus.value && !isFinished.value) {
-        checkStatus()
+  if (jobStore.job.short_uuid !== jobId) {
+    await jobsStore.$reset()
+    await jobsStore.getProjectJobs(projectId)
 
-        stopWatchRunStatus && stopWatchRunStatus()
-      }
-    })
+    await jobStore.getJob(jobId)
+  }
+  await runStore.getRun(runId)
+  await jobStore.getRunStatus(runId)
+}
+
+onBeforeMount(() => {
+  fetchData()
+})
+
+watchEffect(() => {
+  if (runStatus.value && !isFinished.value) {
+    checkStatus()
   }
 })
 </script>
