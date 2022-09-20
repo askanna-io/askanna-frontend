@@ -28,10 +28,7 @@
         name="input-10-1"
         label="Password"
         counter
-        :rules="[
-          RULES.required('The password is required'),
-          RULES.min('The password should be longer than 10 characters', 10)
-        ]"
+        :rules="[RULES.required('The password is required')]"
         @click:append="isShowPassword = !isShowPassword"
       />
       <input type="password" style="display: none" browserAutocomplete="new-password" autocomplete="new-password" />
