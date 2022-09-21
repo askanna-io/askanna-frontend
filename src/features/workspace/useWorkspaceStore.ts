@@ -1,15 +1,20 @@
-import router from '@/router'
-import VueRouter from 'vue-router'
 import { defineStore } from 'pinia'
 import { WORKSPACE_STORE } from './types'
 import apiService from '@/services/apiService'
 import { apiStringify } from '@/services/api-settings'
 
-const { isNavigationFailure, NavigationFailureType } = VueRouter
-
 export enum WorkspaceVisibility {
   PUBLIC = 'PUBLIC',
   PRIVATE = 'PRIVATE'
+}
+
+export const defaultWorkspace = {
+  name: '',
+  uuid: '',
+  short_uuid: '',
+  description: '',
+  is_member: false,
+  visibility: WorkspaceVisibility.PRIVATE
 }
 
 interface Workspace {
@@ -33,6 +38,7 @@ export const useWorkspaceStore = defineStore(WORKSPACE_STORE, {
         is_member: false,
         visibility: WorkspaceVisibility.PRIVATE
       },
+      newWorkspace: { ...defaultWorkspace },
       workspaceSettings: {
         projectView: 0
       }

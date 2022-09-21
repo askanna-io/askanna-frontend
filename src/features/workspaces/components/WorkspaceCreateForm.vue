@@ -2,7 +2,7 @@
   <v-form ref="newWorkspaceFastForm" @submit.prevent="handlerCreateProject">
     <v-col cols="12" class="pb-0">
       <v-text-field
-        v-model="workspaceStore.workspace.name"
+        v-model="workspaceStore.newWorkspace.name"
         @input="handleOnInput"
         small
         dense
@@ -20,8 +20,8 @@
         outlined
         color="secondary"
         class="mr-1 btn--hover"
-        :disabled="!workspaceStore.workspace.name"
-        @click="handlerCreateProject"
+        :disabled="!workspaceStore.newWorkspace.name"
+        @click="handlerCreate"
       >
         Create
       </v-btn>
@@ -43,12 +43,13 @@ defineProps({
 
 const emit = defineEmits(['onClose'])
 
+const snackBar = useSnackBar()
 const { router } = useRouterAskAnna()
 const { RULES } = useValidationRules()
 const workspaceStore = useWorkspaceStore()
 const workspacesStore = useWorkspacesStore()
 
-const menu = ref()
+const formRef = ref(null)
 const isFormValid = ref(true)
 const newWorkspaceFastForm = ref(null)
 const nameRules = ref([RULES.required('Workspace name is required')])
@@ -60,24 +61,29 @@ const handleMoreOptions = () => {
   })
 }
 
-const handlerCreateProject = async () => {
-  if (!newWorkspaceFastForm.value.validate()) {
+const handlerCreate = async () => {
+  if (!formRef.value.validate()) {
     isFormValid.value = false
 
     return
   }
 
   await workspaceStore.createWorkspace({
-    name: workspaceStore.workspace.name,
+    name: workspaceStore.newWorkspace.name,
     visibility: WorkspaceVisibility.PRIVATE
   })
   await workspacesStore.getAllWorkspaces()
 
+  snackBar.showSnackBar({
+    timeout: 2500,
+    color: 'success',
+    message: `The workspace ${workspaceStore.newWorkspace.name} was created`
+  })
+
   resetValidation()
   nameRules.value = []
-  menu.value = false
   isFormValid.value = true
-  workspaceStore.workspace.name = ''
+  workspaceStore.newWorkspace = { ...defaultWorkspace }
 }
 
 const handleOnInput = val => {
@@ -86,11 +92,18 @@ const handleOnInput = val => {
 
 const handleCancel = () => {
   nameRules.value = []
-  menu.value = false
-  workspaceStore.workspace.name = ''
+  workspaceStore.newWorkspace = { ...defaultWorkspace }
   isFormValid.value = true
   emit('onClose')
 }
 
-const resetValidation = () => newWorkspaceFastForm.value.resetValidation()
+const resetValidation = () => formRef.value.resetValidation()
+
+defineExpose({
+  newWorkspaceFastForm
+})
+
+onMounted(() => {
+  formRef.value = newWorkspaceFastForm.value
+})
 </script>

@@ -33,6 +33,7 @@ declare global {
   const config: typeof import('./features/workspaces/config')['default']
   const createApp: typeof import('vue')['createApp']
   const customRef: typeof import('vue')['customRef']
+  const defaultWorkspace: typeof import('./features/workspace/useWorkspaceStore')['defaultWorkspace']
   const defineAsyncComponent: typeof import('vue')['defineAsyncComponent']
   const defineComponent: typeof import('vue')['defineComponent']
   const effectScope: typeof import('vue')['effectScope']
@@ -188,6 +189,7 @@ declare module '@vue/runtime-core' {
     readonly config: UnwrapRef<typeof import('./features/workspaces/config')['default']>
     readonly createApp: UnwrapRef<typeof import('vue')['createApp']>
     readonly customRef: UnwrapRef<typeof import('vue')['customRef']>
+    readonly defaultWorkspace: UnwrapRef<typeof import('./features/workspace/useWorkspaceStore')['defaultWorkspace']>
     readonly defineAsyncComponent: UnwrapRef<typeof import('vue')['defineAsyncComponent']>
     readonly defineComponent: UnwrapRef<typeof import('vue')['defineComponent']>
     readonly effectScope: UnwrapRef<typeof import('vue')['effectScope']>
