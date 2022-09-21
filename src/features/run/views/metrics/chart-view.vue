@@ -165,7 +165,8 @@ const data = computed(() => {
         }
 
         if (activeX.value.value >= 3) {
-          x = label?.value[index]
+          const iterationLabel = cr.label.find(l => l.name === activeX.value.name)
+          x = iterationLabel?.value[index]
         }
 
         return { x, y, z: label.value }
