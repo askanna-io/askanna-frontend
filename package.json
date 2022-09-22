@@ -54,7 +54,7 @@
     "vue-file-agent": "1.7.3",
     "vue-router": "3.6.5",
     "vue-sticky-directive": "0.0.10",
-    "vuetify": "2.6.9",
+    "vuetify": "2.6.10",
     "xlsx": "0.18.4"
   },
   "devDependencies": {
