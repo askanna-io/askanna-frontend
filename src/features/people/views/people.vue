@@ -28,20 +28,20 @@
       <PeopleConfirmDeletePopup
         v-if="peopleConfirmDeletePopup"
         :value="peopleConfirmDeletePopup"
-        :peopleName="selectedPeople.name"
+        :peopleName="selectedPeople.name || selectedPeople.email"
         @onDeleteConfirm="handleDeleteItem"
         @onCloseDeletePopup="handleCloseConfirmDeletePopup"
       />
       <PeopleConfirmDeleteInvitationPopup
         v-if="deleteInvitationConfirmPopup"
-        :peopleName="selectedPeople.name"
+        :peopleName="selectedPeople.name || selectedPeople.email"
         :value="deleteInvitationConfirmPopup"
         @onDeleteConfirm="handleDeleteInvitation"
         @onClose="handleDeleteInivitationPopup(false)"
       />
       <PeopleConfirmResendInvitationPopup
         v-if="resendInvitationConfirmPopup"
-        :peopleName="selectedPeople.name"
+        :peopleName="selectedPeople.name || selectedPeople.email"
         :value="resendInvitationConfirmPopup"
         @onResendConfirm="handleResendItem"
         @onClose="handleResendInivitationPopup(false)"

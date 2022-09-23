@@ -107,6 +107,7 @@ const calcHeight = isMobile => {
 }
 
 .long {
+  max-width: 275px;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
