@@ -111,7 +111,7 @@ const workspaceStore = useWorkspaceStore()
 const workspacesStore = useWorkspacesStore()
 
 const isVisibilityChanged = ref(false)
-const isStateNotChanged = ref(!workspaceStore.workspace.name)
+const isStateNotChanged = ref(!workspaceStore.newWorkspace.name)
 
 const breadcrumbs = computed(() => [
   {
@@ -127,9 +127,9 @@ const breadcrumbs = computed(() => [
 ])
 
 const workspaceState = ref({
-  name: workspaceStore.workspace.name,
-  visibility: workspaceStore.workspace.visibility,
-  description: workspaceStore.workspace.description
+  name: workspaceStore.newWorkspace.name,
+  visibility: workspaceStore.newWorkspace.visibility,
+  description: workspaceStore.newWorkspace.description
 })
 
 const handleOnInput = (value, path) => {
@@ -153,7 +153,10 @@ const handleSave = async () => {
       color: 'success',
       message: `The workspace ${workspace.name} was created`
     })
+
     handleClose()
+    workspaceStore.newWorkspace = { ...defaultWorkspace }
+
     await workspacesStore.getAllWorkspaces() // call get all workspaces to updated them on menu
   }
 }
