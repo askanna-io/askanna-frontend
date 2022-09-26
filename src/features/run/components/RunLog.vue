@@ -84,19 +84,13 @@ const forceFileDownload = useForceFileDownload()
 
 const logRef = ref(null)
 const polling = ref(null)
-const scrollLoading = ref(false)
 const isAutoUpdateLog = ref(true)
-const isCheckStatusRuning = ref(false)
 
+const runId = computed(() => route.params.runId)
+const next = computed(() => runStore.runLog.next)
 const runIdStatus = computed(() => jobStore.run.status)
 const isFinished = computed(() => runIdStatus.value === 'failed' || runIdStatus.value === 'finished')
-
-const isLoadingLogs = computed(
-  () => (!isFinished.value || scrollLoading.value) && runIdStatus.value && isAutoUpdateLog.value
-)
-
-const next = computed(() => runStore.runLog.next)
-const runId = computed(() => route.params.runId)
+const isLoadingLogs = computed(() => !isFinished.value && runIdStatus.value && isAutoUpdateLog.value)
 
 const query = useQuery({
   next,
@@ -136,10 +130,7 @@ const loading = computed(() => runStore.runlogLoading)
 const scrollerStyles = computed(() => ({ 'max-height': `${maxHeight.value}px` }))
 const logNoAvailable = computed(() => !runStore.runLog.results.length && !loading.value)
 
-const handleAutoUpdate = () => {
-  scrollLoading.value = true
-  isAutoUpdateLog.value = !isAutoUpdateLog.value
-}
+const handleAutoUpdate = () => (isAutoUpdateLog.value = !isAutoUpdateLog.value)
 
 const handleCopy = async () => {
   await getFullRun()
@@ -155,7 +146,6 @@ const handleDownload = async () => {
 const onScroll = e => {
   if (!isFinished.value) return
 
-  scrollLoading.value = true
   query.onScroll(e.target.scrollTop)
 }
 
@@ -168,6 +158,7 @@ const getFullRun = async () => {
 const checkLogs = () => {
   polling.value = setInterval(async () => {
     if (!isAutoUpdateLog.value) return
+
     // scroll window and log container to bottom
     await runStore.getRunLog({
       uuid: runId.value,
@@ -179,6 +170,10 @@ const checkLogs = () => {
     if (logNoAvailable.value || isFinished.value) {
       clearInterval(polling.value)
     }
+
+    if (isFinished.value && countLogs.value === runStore.runLog.results.length) {
+      isAutoUpdateLog.value = false
+    }
   }, 5000)
 }
 
@@ -189,26 +184,13 @@ const fetchData = async () => {
 
 onBeforeMount(() => fetchData())
 
-watchEffect(() => {
-  // check status, eneable auto-update logs
-  if (!isCheckStatusRuning.value && runIdStatus.value && !isFinished.value) {
-    checkLogs()
-    isCheckStatusRuning.value = true
-  }
-
-  // disable load animation logic
-  if (isFinished.value && countLogs.value === runStore.runLog.results.length) {
-    scrollLoading.value = false
-    isAutoUpdateLog.value = false
-    isCheckStatusRuning.value = true
-
-    return
-  }
-})
+// check status on load if run is not finished yet
+if (runIdStatus.value && !isFinished.value) {
+  checkLogs()
+}
 
 onUnmounted(() => {
   clearInterval(polling.value)
-  isCheckStatusRuning.value = false
 })
 </script>
 <style scoped lang="scss">
