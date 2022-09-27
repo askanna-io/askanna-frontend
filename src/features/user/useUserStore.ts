@@ -69,7 +69,7 @@ export const useUserStore = defineStore('user', {
 
       this.userProfile = result
 
-      if (import.meta.env.VITE_APP_SENTRY === 'on') {
+      if (import.meta.env.VITE_APP_SENTRY_URL) {
         const { email, short_uuid: id } = result
         Sentry.setUser({ id, email, username: email })
       }

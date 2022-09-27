@@ -76,7 +76,7 @@ export const useAuthStore = defineStore('auth', {
       this.tokenExpires = ''
       localStorage.setItem('token', '')
 
-      if (import.meta.env.VITE_APP_SENTRY === 'on') {
+      if (import.meta.env.VITE_APP_SENTRY_URL) {
         Sentry.configureScope(scope => scope.setUser(null))
       }
 
