@@ -137,7 +137,7 @@ const variables = computed(() => {
     },
     {
       text: 'Code: ',
-      to: 'workspace-project-job-overiew',
+      to: 'workspace-project-code',
       value: props.run.package.short_uuid,
       component: AskAnnaLinkCopy,
       visibility: true
