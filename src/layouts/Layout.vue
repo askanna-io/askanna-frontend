@@ -19,13 +19,14 @@ const props = defineProps({
   }
 })
 
+const authStore = useAuthStore()
+
 const Layout = computed(() => {
   const layout = props.layout
-  const token = window.localStorage.getItem('token')
 
   switch (true) {
     case layout === 'dashboard':
-      return token ? DashboardLayout : PublicLayout
+      return authStore.authToken ? DashboardLayout : PublicLayout
 
     case layout === 'login':
       return LogindLayout

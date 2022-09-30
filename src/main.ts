@@ -50,17 +50,15 @@ pinia.use(({ store }) => {
 //check if the current user is authenticated
 const notAllowedRouteWithToken = ['signin', 'signup']
 
-router.beforeEach((to, previus, next) => {
-  if (to.name === next.name) return
-  if (to.name === previus.name && to.hash) return
+router.beforeEach((to, previous, next) => {
+  if (to.name === next.name || to.name === previous.name) return
+  if (to.name === previous.name && to.hash) return
 
   const token = window.localStorage.getItem('token')
   const isRequiresAuth = to.matched.some(route => route.meta.requiresAuth)
   const isNotAllowedWithToken = notAllowedRouteWithToken.some(route => route === to.name)
 
   if (isRequiresAuth && !token && to.name !== 'signin') {
-    window.localStorage.setItem('back_after_login', window.location.pathname)
-
     next({
       name: 'projects'
     })
@@ -68,6 +66,15 @@ router.beforeEach((to, previus, next) => {
     next('/')
   } else {
     next()
+  }
+})
+
+router.afterEach(to => {
+  const token = window.localStorage.getItem('token')
+  const isErrorPage = to.name?.includes('does-not-exist')
+
+  if (!token && to?.name !== 'signin' && !isErrorPage) {
+    window.localStorage.setItem('back_after_login', window.location.pathname)
   }
 })
 
