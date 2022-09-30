@@ -64,6 +64,7 @@
 
 <script setup lang="ts">
 import { set } from 'lodash'
+import { Run } from '@//features/run/types'
 
 const moment = useMoment()
 const jobStore = useJobStore()
@@ -80,8 +81,8 @@ const polling = ref(null)
 const isValid = ref(false)
 const startTime = ref(null)
 
-const runStatus = computed(() => jobStore.run.status)
-const isFinished = computed(() => jobStore.run.status === 'failed' || jobStore.run.status === 'finished')
+const runStatus = computed(() => jobStore.newRun.status)
+const isFinished = computed(() => jobStore.newRun.status === 'failed' || jobStore.newRun.status === 'finished')
 const startedTtext = computed(() =>
   isFinished.value
     ? `The duration of the run was ${calculateDuration.value}.`
@@ -121,20 +122,20 @@ const handleValidate = async (value: boolean) => (isValid.value = value)
 const hadnleOpenRun = () => {
   router.push({
     name: 'workspace-project-jobs-job-run',
-    params: { ...route.params, runId: jobStore.run.short_uuid }
+    params: { ...route.params, runId: jobStore.newRun.short_uuid }
   })
 }
 
 const calculateDuration = computed(() => {
   if (isFinished.value) {
-    return moment.durationHumanizeBySecond(jobStore.run.duration)
+    return moment.durationHumanizeBySecond(jobStore.newRun.duration)
   }
-  return moment.durationHumanize(jobStore.run.created, startTime.value)
+  return moment.durationHumanize(jobStore.newRun.created, startTime.value)
 })
 
 const checkStatus = () => {
   polling.value = setInterval(async () => {
-    await jobStore.getRunStatus()
+    await jobStore.getRunStatus(jobStore.newRun.short_uuid, true)
     if (isFinished.value) {
       clearInterval(timer.value)
       clearInterval(polling.value)
@@ -145,5 +146,6 @@ const checkStatus = () => {
 onUnmounted(() => {
   clearInterval(timer.value)
   clearInterval(polling.value)
+  jobStore.newRun = {} as Run
 })
 </script>
