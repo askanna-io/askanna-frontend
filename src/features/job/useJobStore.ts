@@ -26,27 +26,8 @@ interface Job {
   }
 }
 
-interface Run {
-  uuid: string
-  status: string
-  updated: string
-  created: string
-  finished: string
-  next_url: string
-  short_uuid: string
-  message_type: string
-  environment: {
-    name: string
-    label: string
-    timezone: string
-    description: string
-    image: { name: string; tag: string; digest: string }
-  }
-}
-
 const SERVICE_NAME = 'job'
 const api = apiStringify(SERVICE_NAME)
-const { isNavigationFailure, NavigationFailureType } = VueRouter
 
 export const useJobStore = defineStore(SERVICE_NAME, {
   state: () => {
@@ -54,6 +35,7 @@ export const useJobStore = defineStore(SERVICE_NAME, {
       job: {} as Job,
       loading: true,
       run: {} as Run,
+      newRun: {} as Run,
       runStatusLoading: true
     }
   },
@@ -107,10 +89,10 @@ export const useJobStore = defineStore(SERVICE_NAME, {
       }
       logger.success('Job was started')
 
-      this.run = run
+      this.newRun = run
     },
 
-    async getRunStatus(runIdShortUuid: string) {
+    async getRunStatus(runIdShortUuid: string, isNewRun: boolean = false) {
       this.runStatusLoading = true
 
       let status
@@ -128,7 +110,11 @@ export const useJobStore = defineStore(SERVICE_NAME, {
         return
       }
 
-      this.run = { ...this.run, ...status }
+      if (isNewRun) {
+        this.newRun = { ...this.newRun, ...status }
+      } else {
+        this.run = { ...this.run, ...status }
+      }
 
       this.runStatusLoading = false
     },
