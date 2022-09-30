@@ -8,13 +8,13 @@ import Sticky from 'vue-sticky-directive'
 import { BrowserTracing } from '@sentry/tracing'
 import { createPinia, PiniaVuePlugin } from 'pinia'
 
-if (import.meta.env.VUE_APP_SENTRY === 'on') {
+if (import.meta.env.VITE_APP_SENTRY_URL) {
   const rate: number = parseFloat(<string>import.meta.env.VITE_APP_SENTRY_TRACES_RATE || '0')
 
   Sentry.init({
     Vue,
     ignoreErrors: ['Non-Error exception captured', 'Non-Error promise rejection captured'],
-    dsn: 'https://c3668b20284540cb91541549285dcc94@o451235.ingest.sentry.io/5436959',
+    dsn: import.meta.env.VITE_APP_SENTRY_URL,
     environment: import.meta.env.VITE_APP_SENTRY_ENV,
     integrations: [
       new BrowserTracing({
