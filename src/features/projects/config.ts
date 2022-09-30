@@ -1,7 +1,7 @@
 export default {
   paths: [
     {
-      path: '/projects/',
+      path: '/projects',
       component: () => import('./views/public-projects.vue'),
       name: 'projects',
       meta: {
