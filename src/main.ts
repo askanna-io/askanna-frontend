@@ -18,8 +18,7 @@ if (import.meta.env.VITE_APP_SENTRY_URL) {
     environment: import.meta.env.VITE_APP_SENTRY_ENV,
     integrations: [
       new BrowserTracing({
-        routingInstrumentation: Sentry.vueRouterInstrumentation(router),
-        tracingOrigins: [import.meta.env.VITE_APP_API_URL, /^\//]
+        routingInstrumentation: Sentry.vueRouterInstrumentation(router)
       })
     ],
     tracesSampleRate: rate
