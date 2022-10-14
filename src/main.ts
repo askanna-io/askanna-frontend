@@ -50,7 +50,7 @@ pinia.use(({ store }) => {
 const notAllowedRouteWithToken = ['signin', 'signup']
 
 router.beforeEach((to, previous, next) => {
-  if (to.name === next.name || to.name === previous.name) return
+  if (to.path !== '/' && (to?.path === next?.path || to?.path === previous?.path)) return
   if (to.name === previous.name && to.hash) return
 
   const token = window.localStorage.getItem('token')
