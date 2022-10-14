@@ -75,7 +75,9 @@ export const usePackagesStore = defineStore(type.PACKAGES_STORE, {
       let packageSource
       try {
         packageSource = await apiService({
-          url
+          url,
+          responseType: 'blob',
+          transformResponse: [data => data]
         })
       } catch (e) {
         const logger = useLogger()
