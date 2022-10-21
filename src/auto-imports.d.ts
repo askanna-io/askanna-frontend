@@ -27,7 +27,7 @@ declare global {
   const VariableModel: typeof import('./features/variables/types')['VariableModel']
   const WORKSPACE_STORE: typeof import('./features/workspace/types')['WORKSPACE_STORE']
   const WorkspaceVisibility: typeof import('./features/workspace/useWorkspaceStore')['WorkspaceVisibility']
-  const action: typeof import('./features/run-variables/types')['action']
+  const action: typeof import('./features/run/types')['action']
   const compareItems: typeof import('./features/compare-runs/helper')['compareItems']
   const computed: typeof import('vue')['computed']
   const config: typeof import('./features/workspaces/config')['default']
@@ -48,7 +48,7 @@ declare global {
   const jobRoutes: typeof import('./features/job/config')['jobRoutes']
   const jobsRoutes: typeof import('./features/jobs/config')['jobsRoutes']
   const markRaw: typeof import('vue')['markRaw']
-  const mutation: typeof import('./features/run-variables/types')['mutation']
+  const mutation: typeof import('./features/run/types')['mutation']
   const nextTick: typeof import('vue')['nextTick']
   const onActivated: typeof import('vue')['onActivated']
   const onBeforeMount: typeof import('vue')['onBeforeMount']
@@ -76,7 +76,7 @@ declare global {
   const shallowReactive: typeof import('vue')['shallowReactive']
   const shallowReadonly: typeof import('vue')['shallowReadonly']
   const shallowRef: typeof import('vue')['shallowRef']
-  const stateType: typeof import('./features/run-variables/types')['stateType']
+  const stateType: typeof import('./features/run/types')['stateType']
   const toRaw: typeof import('vue')['toRaw']
   const toRef: typeof import('vue')['toRef']
   const toRefs: typeof import('vue')['toRefs']
@@ -183,7 +183,7 @@ declare module '@vue/runtime-core' {
     readonly VariableModel: UnwrapRef<typeof import('./features/variables/types')['VariableModel']>
     readonly WORKSPACE_STORE: UnwrapRef<typeof import('./features/workspace/types')['WORKSPACE_STORE']>
     readonly WorkspaceVisibility: UnwrapRef<typeof import('./features/workspace/useWorkspaceStore')['WorkspaceVisibility']>
-    readonly action: UnwrapRef<typeof import('./features/run-variables/types')['action']>
+    readonly action: UnwrapRef<typeof import('./features/run/types')['action']>
     readonly compareItems: UnwrapRef<typeof import('./features/compare-runs/helper')['compareItems']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
     readonly config: UnwrapRef<typeof import('./features/workspaces/config')['default']>
@@ -204,7 +204,7 @@ declare module '@vue/runtime-core' {
     readonly jobRoutes: UnwrapRef<typeof import('./features/job/config')['jobRoutes']>
     readonly jobsRoutes: UnwrapRef<typeof import('./features/jobs/config')['jobsRoutes']>
     readonly markRaw: UnwrapRef<typeof import('vue')['markRaw']>
-    readonly mutation: UnwrapRef<typeof import('./features/run-variables/types')['mutation']>
+    readonly mutation: UnwrapRef<typeof import('./features/run/types')['mutation']>
     readonly nextTick: UnwrapRef<typeof import('vue')['nextTick']>
     readonly onActivated: UnwrapRef<typeof import('vue')['onActivated']>
     readonly onBeforeMount: UnwrapRef<typeof import('vue')['onBeforeMount']>
@@ -232,7 +232,7 @@ declare module '@vue/runtime-core' {
     readonly shallowReactive: UnwrapRef<typeof import('vue')['shallowReactive']>
     readonly shallowReadonly: UnwrapRef<typeof import('vue')['shallowReadonly']>
     readonly shallowRef: UnwrapRef<typeof import('vue')['shallowRef']>
-    readonly stateType: UnwrapRef<typeof import('./features/run-variables/types')['stateType']>
+    readonly stateType: UnwrapRef<typeof import('./features/run/types')['stateType']>
     readonly toRaw: UnwrapRef<typeof import('vue')['toRaw']>
     readonly toRef: UnwrapRef<typeof import('vue')['toRef']>
     readonly toRefs: UnwrapRef<typeof import('vue')['toRefs']>
