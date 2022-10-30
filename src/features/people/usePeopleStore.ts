@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { set, get, map } from 'lodash'
 import apiService from '@/services/apiService'
 import { apiStringify } from '@/services/api-settings'
-import { PEOPLE_STORE, PersonModel, WORKSPACE_STORE, InvitationModel } from './types'
+import { PEOPLE_STORE, PersonModel, InvitationModel } from './types'
 
 const serviceName = WORKSPACE_STORE
 const api = apiStringify(WORKSPACE_STORE)

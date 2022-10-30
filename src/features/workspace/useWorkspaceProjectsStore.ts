@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia'
-import { WORKSPACE_STORE } from './types'
 import apiService from '@/services/apiService'
 import { apiStringify } from '@/services/api-settings'
 

@@ -10,15 +10,15 @@ const { route } = useRouterAskAnna()
 
 const { isSet, setIntervalFn, clearIntervalFn } = useInterval()
 
-const runStatus = computed(() => jobStore.run.status)
-const isFinished = computed(() => runStatus.value === 'failed' || runStatus.value === 'finished')
+const runStatus = computed(() => runStore.run.status)
+const isFinished = computed(() => FINISHED_STATUSES.includes(runStatus.value?.toLowerCase()))
 
 const checkStatus = () => {
   if (isSet('checkStatus')) return
   setIntervalFn('checkStatus', async () => {
     const { runId } = route.params
 
-    await jobStore.getRunStatus(runId)
+    await runStore.getRunStatus(runId)
     if (isFinished.value) {
       await runStore.getRun(runId)
       clearIntervalFn('checkStatus')
@@ -36,7 +36,7 @@ const fetchData = async () => {
     await jobStore.getJob(jobId)
   }
   await runStore.getRun(runId)
-  await jobStore.getRunStatus(runId)
+  await runStore.getRunStatus(runId)
 }
 
 onBeforeMount(() => {

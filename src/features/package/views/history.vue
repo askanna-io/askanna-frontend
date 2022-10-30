@@ -222,10 +222,7 @@ const handleClickRow = ({ short_uuid, versionId }) => {
 }
 
 const handleDownload = async packageData => {
-  const source = await packagesStore.downloadPackage({
-    projectId: packageData.project.short_uuid,
-    packageId: packageData.short_uuid
-  })
+  const source = await packagesStore.downloadPackage(packageData.short_uuid)
   forceFileDownload.trigger({ source, name: `code_${packageData.short_uuid}_${packageData.filename}` })
 }
 

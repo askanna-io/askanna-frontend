@@ -44,6 +44,7 @@ export const useWorkspaceStore = defineStore(WORKSPACE_STORE, {
       }
     }
   },
+
   getters: {
     isWorkspacePublic: state => state.workspace.visibility === 'PUBLIC'
   },

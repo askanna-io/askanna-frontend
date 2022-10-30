@@ -88,12 +88,10 @@
   </div>
 </template>
 <script setup lang="ts">
-import { RunModel } from '../types'
-
 defineProps({
   run: {
     type: Object,
-    default: new RunModel().state
+    default: () => {}
   }
 })
 

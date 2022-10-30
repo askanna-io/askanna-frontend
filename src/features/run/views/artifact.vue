@@ -1,8 +1,8 @@
 <template>
-  <AskAnnaLoadingProgress :loading="runStore.runArtifactLoading" classes="mx-4 mb-4" fullWidth>
+  <AskAnnaLoadingProgress :loading="runArtifactLoading" classes="mx-4 mb-4" fullWidth>
     <v-row align="center" justify="center">
       <v-col cols="12" class="pt-0 pb-0">
-        <package-toolbar
+        <PackageToolbar
           v-if="artifactUuid"
           v-sticky="sticked"
           :sticky-z-index="1"
@@ -28,7 +28,7 @@
               </div>
             </v-slide-y-transition>
           </template>
-        </package-toolbar>
+        </PackageToolbar>
         <PackageFile
           v-if="filePath"
           :images="images"
@@ -71,8 +71,8 @@ const downloadArtifact = ref(false)
 const sticked = computed(() => !projectStore.menu.sticked)
 const runArtifactLoading = computed(() => runStore.runArtifactLoading)
 
-const cdnBaseUrl = computed(() => runStore.artifactData.cdn_base_url)
-const images = computed(() => runStore.artifactData.files.filter(item => ext.images.includes(item.ext)))
+const cdnBaseUrl = computed(() => runStore.artifactData?.cdn_base_url)
+const images = computed(() => runStore.artifactData?.files.filter(item => ext.images.includes(item.ext)))
 
 const calcHeight = computed(() => height.value - 370)
 const path = computed(() => route.params.folderName || '/')
@@ -97,7 +97,7 @@ const breadcrumbsComputed = computed(() => {
 const currentPath = computed(() => {
   const pathArray = path.value.split('/')
   const fileName = pathArray.pop()
-  const current = runStore.artifactData.files.find(item => item.name === fileName && item.path === path.value)
+  const current = runStore.artifactData?.files?.find(item => item.name === fileName && item.path === path.value)
 
   return current
 })
@@ -106,7 +106,7 @@ const parentPath = computed(() => {
   let parentPathTemp
 
   if (currentPath.value && currentPath.value.type === 'directory' && path.value !== '/') {
-    parentPathTemp = runStore.artifactData.files.find(
+    parentPathTemp = runStore.artifactData?.files.find(
       file => file.name === currentPath.value.parent && file.type === 'directory'
     )
     parentPathTemp = {
@@ -124,7 +124,7 @@ const filePath = computed(() =>
 )
 
 const treeView = computed(() => {
-  const tree = runStore.artifactData.files.filter(item => item.parent === path.value)
+  const tree = runStore.artifactData?.files?.filter(item => item.parent === path.value)
 
   return parentPath.value ? [parentPath.value, ...tree] : tree
 })
@@ -156,7 +156,7 @@ const handleDownload = async () => {
 // download full version of result without formating
 const handleDownloadFile = async () => {
   await fileStore.getFullFile({
-    url: `${runStore.artifactData.cdn_base_url}/${currentPath.value.path}`
+    url: `${runStore.artifactData?.cdn_base_url}/${currentPath.value.path}`
   })
 
   forceFileDownload.trigger({
@@ -167,7 +167,7 @@ const handleDownloadFile = async () => {
 
 const handleCopy = async (view: string) => {
   const fileSource = await fileStore.getFullFile({
-    url: `${runStore.artifactData.cdn_base_url}/${currentPath.value.path}`
+    url: `${runStore.artifactData?.cdn_base_url}/${currentPath.value.path}`
   })
 
   if (fileStore.isFileImg) {
@@ -213,7 +213,7 @@ watch(filePath, async filePath => {
   await fileStore.getFilePreview({
     size: currentPath.value.size,
     extension: currentPath.value.ext,
-    url: `${runStore.artifactData.cdn_base_url}/${filePath}`
+    url: `${runStore.artifactData?.cdn_base_url}/${filePath}`
   })
 })
 </script>

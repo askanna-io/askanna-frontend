@@ -34,10 +34,9 @@ export const usePackageStore = defineStore('package', {
       let packageData
       try {
         packageData = await apiService({
-          uuid,
           serviceName,
           action: api.get,
-          params: { limit: 1, offset: 0 }
+          uuid: uuid.packageId
         })
       } catch (e) {
         if (e.response && e.response.status === 500) {

@@ -1,9 +1,5 @@
-import VueRouter from 'vue-router'
 import { defineStore } from 'pinia'
 import { set, debounce } from 'lodash'
-import { RunModel, ArtifactModel } from './types'
-const { isNavigationFailure, NavigationFailureType } = VueRouter
-
 import apiService from '@/services/apiService'
 import { apiStringify } from '@/services/api-settings'
 
@@ -19,8 +15,10 @@ export const useRunStore = defineStore('run', {
         results: []
       },
       openRunResult: false,
-      run: new RunModel().state,
+      run: {} as Run,
+      newRun: {} as Run,
       runLoading: true,
+      runStatusLoading: true,
       runsLoading: false,
       runlogLoading: true,
       runArtifactLoading: false,
@@ -32,10 +30,9 @@ export const useRunStore = defineStore('run', {
       runLogFullVersion: [],
       runlogScrollLoading: false,
       variables_meta: { label_names: [] },
-      artifactData: new ArtifactModel().state
+      artifactData: {} as Package
     }
   },
-  getters: {},
 
   actions: {
     async resetStore() {
@@ -57,9 +54,9 @@ export const useRunStore = defineStore('run', {
 
       try {
         run = await apiService({
-          action: api.getRun,
+          uuid,
           serviceName,
-          uuid
+          action: api.getRun
         })
       } catch (e) {
         const logger = useLogger()
@@ -77,6 +74,58 @@ export const useRunStore = defineStore('run', {
 
       const generalStore = useGeneralStore()
       generalStore.setBreadcrumbParams({ runId: run.name })
+    },
+
+    async getRunStatus(runIdShortUuid: string, isNewRun: boolean = false) {
+      this.runStatusLoading = true
+
+      let status
+      try {
+        status = await apiService({
+          serviceName,
+          action: api.jobrunStatus,
+          uuid: runIdShortUuid || this.run.short_uuid
+        })
+      } catch (e) {
+        const logger = useLogger()
+
+        logger.error('Error on getjob run status in getRunStatus action.\nError: ', e)
+
+        return
+      }
+
+      if (isNewRun) {
+        this.newRun = { ...this.newRun, ...status }
+      } else {
+        this.run = { ...this.run, ...status }
+      }
+
+      this.runStatusLoading = false
+    },
+
+    async startRun({ code, ...params }, uuid: string) {
+      const logger = useLogger()
+
+      let run
+      try {
+        run = await apiService({
+          action: api.start,
+          method: 'post',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          uuid,
+          params,
+          data: code,
+          serviceName
+        })
+      } catch (e) {
+        logger.error('Error on start job in startJob action.\nError: ', e)
+        return
+      }
+      logger.success('Job was started')
+
+      this.newRun = run
     },
 
     async udapteRun({ uuid, data }) {
@@ -193,8 +242,8 @@ export const useRunStore = defineStore('run', {
       }
     },
 
-    async getInitialRunArtifact(data) {
-      await this.getRunArtifact(data)
+    async getInitialRunArtifact(params) {
+      await this.getRunArtifact(params)
     },
 
     async getRunArtifact({ uuid, params }) {
@@ -217,6 +266,8 @@ export const useRunStore = defineStore('run', {
 
         return
       }
+
+      console.log(data)
 
       const re = /(?:\.([^.]+))?$/
       const files = data.files.map((file: File) => {

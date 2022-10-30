@@ -67,6 +67,7 @@ import { set } from 'lodash'
 import { Run } from '@//features/run/types'
 
 const moment = useMoment()
+const runStore = useRunStore()
 const jobStore = useJobStore()
 const { route, router } = useRouterAskAnna()
 
@@ -81,8 +82,8 @@ const polling = ref(null)
 const isValid = ref(false)
 const startTime = ref(null)
 
-const runStatus = computed(() => jobStore.newRun.status)
-const isFinished = computed(() => jobStore.newRun.status === 'failed' || jobStore.newRun.status === 'finished')
+const runStatus = computed(() => runStore.newRun.status)
+const isFinished = computed(() => runStore.newRun.status === 'failed' || runStore.newRun.status === 'finished')
 const startedTtext = computed(() =>
   isFinished.value
     ? `The duration of the run was ${calculateDuration.value}.`
@@ -100,7 +101,7 @@ const handleRunJob = async () => {
 
   runName.value = run.value.name ? ` "${run.value.name}"` : ''
 
-  await jobStore.startJob(run.value)
+  await runStore.startRun(run.value, jobStore.job.short_uuid)
 
   clearInterval(timer.value)
   clearInterval(polling.value)
@@ -122,20 +123,20 @@ const handleValidate = async (value: boolean) => (isValid.value = value)
 const hadnleOpenRun = () => {
   router.push({
     name: 'workspace-project-jobs-job-run',
-    params: { ...route.params, runId: jobStore.newRun.short_uuid }
+    params: { ...route.params, runId: runStore.newRun.short_uuid }
   })
 }
 
 const calculateDuration = computed(() => {
   if (isFinished.value) {
-    return moment.durationHumanizeBySecond(jobStore.newRun.duration)
+    return moment.durationHumanizeBySecond(runStore.newRun.duration)
   }
-  return moment.durationHumanize(jobStore.newRun.created, startTime.value)
+  return moment.durationHumanize(runStore.newRun.created, startTime.value)
 })
 
 const checkStatus = () => {
   polling.value = setInterval(async () => {
-    await jobStore.getRunStatus(jobStore.newRun.short_uuid, true)
+    await runStore.getRunStatus(runStore.newRun.short_uuid, true)
     if (isFinished.value) {
       clearInterval(timer.value)
       clearInterval(polling.value)
@@ -146,6 +147,6 @@ const checkStatus = () => {
 onUnmounted(() => {
   clearInterval(timer.value)
   clearInterval(polling.value)
-  jobStore.newRun = {} as Run
+  runStore.newRun = {} as Run
 })
 </script>

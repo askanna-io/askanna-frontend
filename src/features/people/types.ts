@@ -99,7 +99,6 @@ export interface Person {
 }
 
 export const PEOPLE_STORE = 'people'
-export const WORKSPACE_STORE = 'workspace'
 
 export class InvitationModel {
   private _state: Invitation

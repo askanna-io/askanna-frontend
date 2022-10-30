@@ -27,7 +27,7 @@ import RunInfoAvatar from './parts/RunInfoAvatar.vue'
 import RunInfoCopyText from './parts/RunInfoCopyText.vue'
 import AskAnnaLinkCopy from '@/components/AskAnnaLinkCopy.vue'
 
-import { Run, RunModel } from '../types'
+import { Run } from '../types'
 
 const props = defineProps({
   jobId: {
@@ -36,7 +36,7 @@ const props = defineProps({
   },
   run: {
     type: Object as () => Run,
-    default: new RunModel().state
+    default: () => {}
   },
   jobName: {
     type: String,

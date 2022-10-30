@@ -18,11 +18,10 @@ const isNewPackage = computed(() => projectId.value && !packageId.value)
 watch(projectId, async () => getPackage())
 
 const getPackage = async (loading = true) => {
-  if (!packageId.value || !projectId.value) return
+  if (!packageId.value) return
 
   await packageStore.getPackage({
     loading,
-    projectId: projectId.value,
     packageId: packageId.value
   })
 }
