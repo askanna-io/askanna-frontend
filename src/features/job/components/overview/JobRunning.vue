@@ -7,7 +7,7 @@
           <v-tabs v-model="currentTab" left :align-with-title="!$vuetify.breakpoint.xsOnly">
             <v-tabs-slider color="primary" />
             <template v-for="tab of tabs">
-              <v-tab v-if="tab.show" ripple :key="tab.id">
+              <v-tab ripple :key="tab.id">
                 {{ tab.name }}
               </v-tab>
             </template>
@@ -17,7 +17,7 @@
       <v-col cols="12" :class="{ 'pt-0': $vuetify.breakpoint.xsOnly }">
         <v-tabs-items v-model="currentTab">
           <template v-for="tab in tabs">
-            <v-tab-item :key="tab.name" v-if="tab.show">
+            <v-tab-item :key="tab.id">
               <component :is="tab.component" />
             </v-tab-item>
           </template>
@@ -39,22 +39,19 @@ const tabs = [
     id: 0,
     name: 'Platform',
     component: RunPlatform,
-    to: 'workspace-project-job-running-platform',
-    show: true
+    to: 'workspace-project-job-running-platform'
   },
   {
     id: 1,
     name: 'Curl',
     component: RunCurl,
-    to: 'workspace-project-job-running-curl',
-    show: true
+    to: 'workspace-project-job-running-curl'
   },
   {
     id: 2,
     name: 'Python',
     component: RunPython,
-    to: 'workspace-project-job-running-python',
-    show: true
+    to: 'workspace-project-job-running-python'
   }
 ]
 </script>

@@ -1,4 +1,3 @@
-import VueRouter from 'vue-router'
 import { defineStore } from 'pinia'
 import apiService from '@/services/apiService'
 import { apiStringify } from '@/services/api-settings'
@@ -33,10 +32,7 @@ export const useJobStore = defineStore(SERVICE_NAME, {
   state: () => {
     return {
       job: {} as Job,
-      loading: true,
-      run: {} as Run,
-      newRun: {} as Run,
-      runStatusLoading: true
+      loading: true
     }
   },
 
@@ -65,58 +61,6 @@ export const useJobStore = defineStore(SERVICE_NAME, {
 
       const generalStore = useGeneralStore()
       generalStore.setBreadcrumbParams({ jobId: job.name })
-    },
-
-    async startJob({ code, ...params }) {
-      const logger = useLogger()
-
-      let run
-      try {
-        run = await apiService({
-          action: api.start,
-          method: 'post',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          params,
-          data: code,
-          serviceName: SERVICE_NAME,
-          uuid: this.job.short_uuid
-        })
-      } catch (e) {
-        logger.error('Error on start job in startJob action.\nError: ', e)
-        return
-      }
-      logger.success('Job was started')
-
-      this.newRun = run
-    },
-
-    async getRunStatus(runIdShortUuid: string, isNewRun: boolean = false) {
-      this.runStatusLoading = true
-
-      let status
-      try {
-        status = await apiService({
-          action: api.jobrunStatus,
-          serviceName: SERVICE_NAME,
-          uuid: runIdShortUuid || this.run.short_uuid
-        })
-      } catch (e) {
-        const logger = useLogger()
-
-        logger.error('Error on getjob run status in getRunStatus action.\nError: ', e)
-
-        return
-      }
-
-      if (isNewRun) {
-        this.newRun = { ...this.newRun, ...status }
-      } else {
-        this.run = { ...this.run, ...status }
-      }
-
-      this.runStatusLoading = false
     },
 
     async updateJob(data) {

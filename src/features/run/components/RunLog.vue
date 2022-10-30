@@ -2,11 +2,7 @@
   <div>
     <v-toolbar v-if="!logNoAvailable" dense flat color="grey lighten-4">
       <v-flex class="d-flex">
-        <ask-anna-chip-play-stop
-          v-if="!isFinished && runIdStatus"
-          :value="isAutoUpdateLog"
-          @onClick="handleAutoUpdate"
-        />
+        <ask-anna-chip-play-stop v-if="!isFinished && runStatus" :value="isAutoUpdateLog" @onClick="handleAutoUpdate" />
 
         <div class="mr-auto d-flex align-center"></div>
         <div>
@@ -59,10 +55,10 @@
           <TheHighlight
             ref="logRef"
             :value="logs"
-            :loading="isLoadingLogs"
+            :loading="isLoadingLogs || isThreeDotsLoading"
             v-scroll:#scroll-target="throttle(onScroll, 1500)"
           />
-          <AskAnnaLoadingDotsFlashing v-if="isLoadingLogs" />
+          <AskAnnaLoadingDotsFlashing v-if="isLoadingLogs || isThreeDotsLoading" />
         </div>
 
         <v-alert v-else class="ma-4 text-center" dense outlined>There is no log available for this run. </v-alert>
@@ -76,7 +72,6 @@ import { throttle } from 'lodash'
 import goTo from 'vuetify/lib/services/goto'
 
 const copy = useCopy()
-const jobStore = useJobStore()
 const runStore = useRunStore()
 const { height } = useWindowSize()
 const { route } = useRouterAskAnna()
@@ -85,12 +80,14 @@ const forceFileDownload = useForceFileDownload()
 const logRef = ref(null)
 const polling = ref(null)
 const isAutoUpdateLog = ref(true)
+const isThreeDotsLoading = ref(false)
 
 const runId = computed(() => route.params.runId)
 const next = computed(() => runStore.runLog.next)
-const runIdStatus = computed(() => jobStore.run.status)
-const isFinished = computed(() => runIdStatus.value === 'failed' || runIdStatus.value === 'finished')
-const isLoadingLogs = computed(() => !isFinished.value && runIdStatus.value && isAutoUpdateLog.value)
+const countLogs = computed(() => runStore.runLog.count)
+const runStatus = computed(() => runStore.run.status)
+const isFinished = computed(() => FINISHED_STATUSES.includes(runStatus.value?.toLowerCase()))
+const isLoadingLogs = computed(() => !isFinished.value && runStatus.value && isAutoUpdateLog.value)
 
 const query = useQuery({
   next,
@@ -100,7 +97,6 @@ const query = useQuery({
   storeAction: runStore.getRunLog
 })
 
-const countLogs = computed(() => runStore.runLog.count)
 const logs = computed(() => {
   if (!runStore.runLog.results) return ''
 
@@ -130,7 +126,10 @@ const loading = computed(() => runStore.runlogLoading)
 const scrollerStyles = computed(() => ({ 'max-height': `${maxHeight.value}px` }))
 const logNoAvailable = computed(() => !runStore.runLog.results.length && !loading.value)
 
-const handleAutoUpdate = () => (isAutoUpdateLog.value = !isAutoUpdateLog.value)
+const handleAutoUpdate = () => {
+  isAutoUpdateLog.value = !isAutoUpdateLog.value
+  isThreeDotsLoading.value = isAutoUpdateLog.value
+}
 
 const handleCopy = async () => {
   await getFullRun()
@@ -144,9 +143,15 @@ const handleDownload = async () => {
 }
 
 const onScroll = e => {
+  isThreeDotsLoading.value = true
+
   if (!isFinished.value) return
 
   query.onScroll(e.target.scrollTop)
+
+  if (isFinished.value && countLogs.value === runStore.runLog.results.length) {
+    isThreeDotsLoading.value = false
+  }
 }
 
 const getFullRun = async () => {
@@ -169,6 +174,7 @@ const checkLogs = () => {
 
     if (logNoAvailable.value || isFinished.value) {
       clearInterval(polling.value)
+      isAutoUpdateLog.value = false
     }
 
     if (isFinished.value && countLogs.value === runStore.runLog.results.length) {
@@ -185,9 +191,15 @@ const fetchData = async () => {
 onBeforeMount(() => fetchData())
 
 // check status on load if run is not finished yet
-if (runIdStatus.value && !isFinished.value) {
-  checkLogs()
-}
+watch(
+  runStatus,
+  runStatus => {
+    if (runStatus && !isFinished.value) {
+      checkLogs()
+    }
+  },
+  { immediate: true }
+)
 
 onUnmounted(() => {
   clearInterval(polling.value)

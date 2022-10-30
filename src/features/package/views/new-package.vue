@@ -49,7 +49,6 @@ const handleCloseOutside = async () => {
 
   await packageStore.getPackage({
     loading: true,
-    projectId: project.short_uuid,
     packageId: project.package.short_uuid
   })
   isRaplace.value = false

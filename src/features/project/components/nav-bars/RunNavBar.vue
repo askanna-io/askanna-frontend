@@ -114,7 +114,7 @@ const projectRunEdit = computed(() => permission.getFor(permission.labels.projec
 const { runId } = route.params
 const run = computed(() => runStore.run)
 const jobName = computed(() => jobStore.job.name)
-const runIdStatus = computed(() => jobStore.run.status)
+const runIdStatus = computed(() => runStore.run.status)
 const runName = computed(() => (run.value.name ? `: ${run.value.name}` : ':'))
 
 const isEditRunView = computed(() => route.name === 'workspace-project-jobs-job-run-edit')

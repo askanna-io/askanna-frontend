@@ -127,6 +127,8 @@ const packagesStore = usePackagesStore()
 const breadcrumbs = usePackageBreadcrumbs()
 const forceFileDownload = useForceFileDownload()
 
+const { useProjectPackageId = false } = route.meta
+
 const menu = ref(false)
 const polling = ref(null)
 const isRaplace = ref(false)
@@ -136,7 +138,6 @@ const params = computed(() => route.params)
 const projectCodeCreate = computed(() => permission.getFor(permission.labels.projectCodeCreate))
 
 const sticked = computed(() => !projectStore.menu.sticked)
-const { useProjectPackageId = false } = route.meta
 
 const projectIdCd = computed(() => projectStore.project.short_uuid)
 const packageIdCd = computed(() => projectStore.project.package.short_uuid)
@@ -169,12 +170,11 @@ const breadcrumbsComputed = computed(() => {
 const downloadPackage = ref(false)
 
 const getPackage = async (loading = true) => {
-  if (!packageId.value || !params.value.projectId) return
+  if (!packageId.value) return
 
   await packageStore.getPackage({
     loading,
     packageId: packageId.value,
-    projectId: params.value.projectId,
     folderName: params.value.folderName
   })
 }
@@ -250,10 +250,7 @@ const handleDownload = async () => {
   downloadPackage.value = true
 
   const packageData = packageStore.packageData
-  const source = await packagesStore.downloadPackage({
-    projectId: params.value.projectId,
-    packageId: packageData.short_uuid
-  })
+  const source = await packagesStore.downloadPackage(packageData.short_uuid)
   forceFileDownload.trigger({ source, name: `code_${packageData.short_uuid}_${packageData.filename}` })
 
   downloadPackage.value = false
@@ -264,11 +261,10 @@ const handleReplace = () => (isRaplace.value = !isRaplace.value)
 const handleCloseOutside = async () => {
   await projectStore.getProjectMe(route.params.projectId)
   const project = await projectStore.getProject(route.params.projectId)
-  if (!project.package.short_uuid || !project.short_uuid) return
+  if (!project.package.short_uuid) return
 
   await packageStore.getPackage({
     loading: true,
-    projectId: project.short_uuid,
     packageId: project.package.short_uuid
   })
   isRaplace.value = false
@@ -326,7 +322,7 @@ const fetchData = async () => {
 
 onBeforeMount(() => fetchData())
 
-watch(projectIdCd, async () => !loading.value && getPackage())
+watch(projectIdCd, async () => !loading.value && (await getPackage()))
 
 onUnmounted(() => {
   clearInterval(polling.value)

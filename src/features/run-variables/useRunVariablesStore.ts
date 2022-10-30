@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
-import { RUNIFO_VARIABLES_STORE } from './types'
 import apiService from '@/services/apiService'
+import { RUNIFO_VARIABLES_STORE } from './types'
 import { apiStringify } from '@/services/api-settings'
 
 const serviceName = 'runifo'

@@ -6,8 +6,8 @@
     "preview": "cross-env DEBUG=unplugin-vue-components:* vite preview"
   },
   "dependencies": {
-    "@sentry/tracing": "7.13.0",
-    "@sentry/vue": "7.13.0",
+    "@sentry/tracing": "7.14.0",
+    "@sentry/vue": "7.14.0",
     "@tiptap/extension-blockquote": "2.0.0-beta.26",
     "@tiptap/extension-code": "2.0.0-beta.26",
     "@tiptap/extension-code-block-lowlight": "2.0.0-beta.68",
@@ -50,11 +50,11 @@
     "papaparse": "^5.3.2",
     "pinia": "2.0.22",
     "prismjs": "1.29.0",
-    "vue": "2.7.10",
+    "vue": "2.7.11",
     "vue-file-agent": "1.7.3",
     "vue-router": "3.6.5",
     "vue-sticky-directive": "0.0.10",
-    "vuetify": "2.6.10",
+    "vuetify": "2.6.11",
     "xlsx": "0.18.4"
   },
   "devDependencies": {
@@ -69,14 +69,14 @@
     "@types/node": "14.0.1",
     "@types/numeral": "2.0.2",
     "@types/papaparse": "5.3.5",
-    "@typescript-eslint/eslint-plugin": "^5.36.2",
+    "@typescript-eslint/eslint-plugin": "5.36.2",
     "@typescript-eslint/parser": "5.36.2",
-    "@vitejs/plugin-vue2": "1.1.2",
+    "@vitejs/plugin-vue2": "2.0.0",
     "cross-env": "7.0.3",
-    "eslint": "8.23.1",
+    "eslint": "8.25.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-prettier": "4.2.1",
-    "eslint-plugin-vue": "9.4.0",
+    "eslint-plugin-vue": "9.6.0",
     "eslint-plugin-vuetify": "1.1.0",
     "js-yaml": "4.1.0",
     "prettier": "2.7.1",
@@ -84,9 +84,9 @@
     "sass-loader": "12.0.0",
     "typescript": "4.5.5",
     "unplugin-auto-import": "0.11.2",
-    "unplugin-vue-components": "0.22.7",
-    "vite": "3.1.0",
+    "unplugin-vue-components": "0.22.8",
+    "vite": "3.1.7",
     "vite-plugin-html-config": "1.0.10",
-    "vite-plugin-pwa": "0.12.7"
+    "vite-plugin-pwa": "0.13.1"
   }
 }

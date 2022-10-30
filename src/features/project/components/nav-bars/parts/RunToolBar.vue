@@ -5,7 +5,7 @@
     </v-card-title>
 
     <v-tabs v-model="currentRunTab" class="pb-3">
-      <v-tab v-for="tab of tabs" ripple :key="tab.id" :to="{ name: tab.to, params }">
+      <v-tab v-for="tab of tabs" ripple :key="tab.id" :to="{ name: tab.to, params: { ...params, folderName: '' } }">
         {{ tab.name }}
       </v-tab>
       <RunMenuPopup v-if="!isEditRunView && projectRunEdit && $vuetify.breakpoint.xsOnly" class="pt-2" />

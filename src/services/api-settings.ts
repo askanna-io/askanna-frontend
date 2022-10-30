@@ -11,9 +11,6 @@ interface ApiSettings {
     [pointServiceName: string]: apiPoint<apiUrl>
   }
 }
-interface FuaturesApi {
-  [featureApi: string]: (uuid: string) => void | string
-}
 
 export const url = import.meta.env.VITE_APP_URL
 export const apiUrl = import.meta.env.VITE_APP_API_URL
@@ -31,33 +28,33 @@ export const api: ApiSettings = {
       confirmResetPassword: () => `auth/password/reset/confirm/`
     },
     accounts: {
-      create: () => `accounts/`
+      create: () => `account/`
     },
     jobs: {
       list: () => `job/`,
-      jobs: id => `project/${id}/jobs/`,
-      getLastRun: id => `job/${id}/runs/`
+      jobs: id => `project/${id}/job/`,
+      getLastRun: id => `job/${id}/run/`
     },
     project: {
-      get: id => `project/${id}/`,
       list: () => `project/`,
-      projectMe: id => `project/${id}/me/`,
-      packages: id => `project/${id}/packages/`,
       create: () => 'project/',
+      get: id => `project/${id}/`,
       update: id => `project/${id}/`,
-      delete: id => `project/${id}/`
+      delete: id => `project/${id}/`,
+      projectMe: id => `project/${id}/me/`,
+      packages: id => `project/${id}/package/`
     },
     package: {
-      get: ({ projectId, packageId }) => `project/${projectId}/packages/${packageId}/`,
       registerPackage: () => 'package/',
+      get: packageId => `package/${packageId}/`,
+      finishUpload: packageId => `package/${packageId}/finish_upload/`,
       registerChunkPackage: packageId => `package/${packageId}/packagechunk/`,
-      uploadChunkPackage: ({ chunkId, packageId }) => `package/${packageId}/packagechunk/${chunkId}/chunk/`,
-      finishUpload: packageId => `package/${packageId}/finish_upload/`
+      uploadChunkPackage: ({ chunkId, packageId }) => `package/${packageId}/packagechunk/${chunkId}/chunk/`
     },
     packages: {
       list: () => `project/`,
-      projectPackages: id => `project/${id}/packages/`,
-      getDownloadLink: ({ projectId, packageId }) => `project/${projectId}/packages/${packageId}/download/`
+      projectPackages: id => `project/${id}/package/`,
+      getDownloadLink: packageId => `package/${packageId}/download/`
     },
     job: {
       add: () => 'job/',
@@ -66,65 +63,62 @@ export const api: ApiSettings = {
       delete: id => `job/${id}/`,
       info: id => `job/${id}/info/`,
       kill: id => `job/${id}/kill/`,
+      runs: id => `job/${id}/run/`,
+      stop: id => `job/${id}/stop/`,
       pause: id => `job/${id}/pause/`,
       reset: id => `job/${id}/reset/`,
-      start: id => `run/${id}/`,
-      stop: id => `job/${id}/stop/`,
-      result: id => `job/${id}/result/`,
-      runs: id => `job/${id}/runs/`,
-      getRun: id => `runinfo/${id}/`,
-      jobrunStatus: id => `status/${id}/`,
-      getRunPayload: ({ runShortId, payloadUuid }) => `runinfo/${runShortId}/payload/${payloadUuid}/`
+      result: id => `job/${id}/result/`
     },
     run: {
-      get: id => `runinfo/${id}/`,
-      runs: id => `job/${id}/runs/`,
-      delete: id => `runinfo/${id}/`,
-      getRun: id => `runinfo/${id}/`,
-      getRunResult: id => `result/${id}/`,
-      getRunLog: id => `log/${id}/`,
-      getDownloadLink: ({ runShortId, artifactShortId }) =>
-        `runinfo/${runShortId}/artifact/${artifactShortId}/download/`,
-      getRunPayload: ({ runShortId, payloadUuid }) => `runinfo/${runShortId}/payload/${payloadUuid}/`,
-      getRunArtifact: ({ runShortId, artifactShortId }) => `runinfo/${runShortId}/artifact/${artifactShortId}/`
+      get: id => `run/${id}/`,
+      delete: id => `run/${id}/`,
+      getRun: id => `run/${id}/`,
+      runs: id => `job/${id}/run/`,
+      status: id => `run/${id}/status/`,
+      getRunLog: id => `run/${id}/log/`,
+      getRunResult: id => `run/${id}/result/`,
+      start: id => `job/${id}/run/request/batch/`,
+      getRunPayload: ({ runShortId, payloadUuid }) => `run/${runShortId}/payload/${payloadUuid}/`,
+      getRunArtifact: ({ runShortId, artifactShortId }) => `run/${runShortId}/artifact/${artifactShortId}/`,
+      getDownloadLink: ({ runShortId, artifactShortId }) => `run/${runShortId}/artifact/${artifactShortId}/download/`
     },
     workspace: {
       list: () => `workspace/`,
       create: () => `workspace/`,
       get: id => `workspace/${id}/`,
       profile: id => `workspace/${id}/me/`,
-      profileAvatar: id => `workspace/${id}/me/avatar/`,
-      projects: id => `workspace/${id}/projects/`,
+      projects: id => `workspace/${id}/project/`,
+      getPeople: id => `workspace/${id}/people/`,
       invitePeople: id => `workspace/${id}/people/`,
+      profileAvatar: id => `workspace/${id}/me/avatar/`,
+      getProjectPackages: id => `project/${id}/package/`,
       changeRole: ({ workspaceId, peopleId }) => `workspace/${workspaceId}/people/${peopleId}/`,
       acceptInvitetion: ({ workspaceId, peopleId }) => `workspace/${workspaceId}/people/${peopleId}/`,
-      getProjectPackages: id => `project/${id}/packages/`,
-      getPeople: id => `workspace/${id}/people/`,
       setPeopleAvatar: ({ workspaceId, peopleId }) => `workspace/${workspaceId}/people/${peopleId}/avatar/`
     },
     result: {
-      get: id => `result/${id}/`
+      get: id => `run/${id}/result/`
     },
     variables: {
-      list: id => `project/${id}/variables/`,
-      update: ({ projectId, variableId }) => `project/${projectId}/variables/${variableId}/`
+      list: id => `project/${id}/variable/`,
+      update: ({ projectId, variableId }) => `project/${projectId}/variable/${variableId}/`
     },
     user: {
       globalProfile: () => 'me/',
-      globalProfileAvatar: () => 'me/avatar/',
       getAccounts: () => 'accounts/',
       getProfile: () => 'auth/user/',
-      updateAccount: id => `accounts/${id}/`
+      updateAccount: id => `accounts/${id}/`,
+      globalProfileAvatar: () => 'me/avatar/'
     },
     metric: {
-      getMetric: runShortId => `runinfo/${runShortId}/metrics/`,
-      getMetricMeta: runShortId => `runinfo/${runShortId}/`
+      getMetricMeta: runShortId => `run/${runShortId}/`,
+      getMetric: runShortId => `run/${runShortId}/metric/`
     },
     runifo: {
-      getVariables: runShortId => `runinfo/${runShortId}/variables/`
+      getVariables: runShortId => `run/${runShortId}/variable/`
     },
     variable: {
-      getVariables: runShortId => `runinfo/${runShortId}/variables/`
+      getVariables: runShortId => `run/${runShortId}/variable/`
     }
   }
 }

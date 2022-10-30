@@ -84,7 +84,7 @@ const deleteInvitationConfirmPopup = ref(false)
 const resendInvitationConfirmPopup = ref(false)
 
 const isMember = computed(() => workspaceStore.workspace.is_member)
-const isPeopleAdmin = computed(() => selectedPeople.value.role === 'WA')
+const isPeopleAdmin = computed(() => selectedPeople.value?.role === 'WA')
 const roleAction = computed(() => (isPeopleAdmin.value ? 'revoke' : 'grant'))
 
 const workspace = computed(() => workspaceStore.workspace)
@@ -93,7 +93,6 @@ const workspaceSettings = computed(() => workspaceStore.workspaceSettings)
 
 const people = computed(() => {
   const {
-    search,
     filter: { role, status },
     sorting: { sortBy, sort }
   } = peopleStore.peopleParams
@@ -112,8 +111,8 @@ const people = computed(() => {
 
   if (sortBy && sort) {
     people = people.sort((a, b) => {
-      const nameA = (a.name && a.name.toLowerCase()) || a.email.toLowerCase()
-      const nameB = (b.name && b.name.toLowerCase()) || b.email.toLowerCase()
+      const nameA = (a.name && a.name.toLowerCase()) || a.email?.toLowerCase()
+      const nameB = (b.name && b.name.toLowerCase()) || b.email?.toLowerCase()
 
       if (nameA < nameB) return -sort
       if (nameA > nameB) return sort

@@ -27,19 +27,15 @@ const { route } = useRouterAskAnna()
 
 const { jobId, runId } = route.params
 
-const jobName = computed(() => jobStore.job.name)
-const runIdStatus = computed(() => jobStore.run)
-const loadingStatus = computed(() => jobStore.runStatusLoading)
-
 const run = computed(() => runStore.run)
+const runIdStatus = computed(() => runStore.run)
+const jobName = computed(() => jobStore.job.name)
 const loading = computed(() => runStore.runLoading)
-
 const description = computed(() => runStore.run.description)
+const loadingStatus = computed(() => runStore.runStatusLoading)
 const isDescriptionNotEmpty = computed(() => description.value && description.value !== '<p></p>')
 
-const fetchData = async () => {
-  await jobStore.getRunStatus(runId)
-}
+const fetchData = async () => await runStore.getRunStatus(runId)
 
 fetchData()
 </script>

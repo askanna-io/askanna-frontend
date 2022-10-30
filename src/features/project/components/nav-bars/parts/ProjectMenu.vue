@@ -89,7 +89,6 @@ const handlers = {
     if (!packageId.value) return
     await packageStore.getPackage({
       loading: true,
-      projectId: projectId.value,
       packageId: packageId.value
     })
   }

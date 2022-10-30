@@ -76,13 +76,13 @@ const polling = ref(null)
 const downloadPackage = ref(false)
 
 const loading = computed(() => packageStore.loading)
-const packageId = computed(() => runStore.run.package.short_uuid)
-const cdnBaseUrl = computed(() => packageStore.packageData.cdn_base_url)
-const images = computed(() => packageStore.packageData.files.filter(item => ext.images.includes(item.ext)))
+const packageId = computed(() => runStore.run.package?.short_uuid)
+const cdnBaseUrl = computed(() => packageStore.packageData?.cdn_base_url)
+const images = computed(() => packageStore.packageData?.files?.filter(item => ext.images.includes(item.ext)))
 
 const breadcrumbsComputed = computed(() => {
   const first = {
-    title: `Package: #${packageId.value.slice(0, 4)}`,
+    title: `Package: #${packageId.value?.slice(0, 4)}`,
     to: {
       name: 'workspace-project-code',
       params: { workspaceId, projectId, packageId: packageId.value }
@@ -127,7 +127,6 @@ onUnmounted(() => {
 
 const getPackage = async () =>
   await packageStore.getPackage({
-    projectId,
     folderName,
     packageId: runStore.run.package.short_uuid,
     failedRoute: 'workspace-project-jobs-job-run-code-does-not-exist'
@@ -197,10 +196,7 @@ const handleDownload = async () => {
   downloadPackage.value = true
 
   const packageData = packageStore.packageData
-  const source = await packagesStore.downloadPackage({
-    projectId,
-    packageId: packageData.short_uuid
-  })
+  const source = await packagesStore.downloadPackage(packageData.short_uuid)
   forceFileDownload.trigger({ source, name: `run_${runId}_code_${packageData.filename}` })
 
   downloadPackage.value = false

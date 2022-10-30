@@ -39,32 +39,3 @@ interface Variables {
 }
 
 export const RUNIFO_VARIABLES_STORE = 'runinfoVariables'
-
-export const action = {
-  getVariables: 'getVariables',
-  setLoading: 'setLoading',
-  setIsFiltered: 'setIsFiltered',
-  getVariablesJSON: 'getVariablesJSON',
-  getVariablesLabels: 'getVariablesLabels',
-  getVariablesInitial: 'getVariablesInitial',
-  getVariablesByParams: 'getVariablesByParams',
-  getVariablesFullData: 'getVariablesFullData'
-}
-
-export const mutation = {
-  SET_VARIABLES: 'SET_VARIABLES',
-  SET_LOADING: 'SET_LOADING',
-  SET_IS_FILTERED: 'SET_IS_FILTERED',
-  SET_VARIABLES_INIT: 'SET_VARIABLES_INIT',
-  SET_VARIABLES_JSON: 'SET_VARIABLES_JSON',
-  SET_VARIABLES_FULL_DATA: 'SET_VARIABLES_FULL_DATA'
-}
-
-export const stateType = {
-  variables: 'variables',
-  loading: 'loading',
-  isFiltered: 'isFiltered',
-  variablesJSON: 'variablesJSON',
-  variablesLabels: 'variablesLabels',
-  variablesFullData: 'variablesFullData'
-}
