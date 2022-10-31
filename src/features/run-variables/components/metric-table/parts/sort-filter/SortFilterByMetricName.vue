@@ -4,7 +4,7 @@
       <span v-on="on" class="pr-5 cursor--pointer" @mouseover="handleOnHover" @mouseleave="handleOnBlur">
         Name
         <span class="mr-5" style="position: relative">
-          <v-icon
+          <AskAnnaIcon
             v-bind="attrs"
             v-show="isActive"
             text
@@ -16,25 +16,27 @@
             style="left: 3px; top: 1px; right: auto; position: absolute"
           >
             mdi-filter-variant
-          </v-icon>
+          </AskAnnaIcon>
         </span>
       </span>
     </template>
 
-    <v-card>
+    <AskAnnaCard>
       <table-sort title="Name" sortBy="variable.name" />
 
-      <v-divider />
+      <AskAnnaDivider />
 
       <filter-name-value class="mt-2" filterName="variable_name" label="Filter by variable name" />
 
-      <v-card-actions v-if="false">
-        <v-spacer></v-spacer>
+      <AskAnnaCardActions v-if="false">
+        <AskAnnaSpacer />
 
-        <v-btn small outlined text class="btn--hover" @click="menu = false"> Cancel </v-btn>
-        <v-btn small outlined color="secondary" text class="btn--hover" @click="handleApply"> Apply </v-btn>
-      </v-card-actions>
-    </v-card>
+        <AskAnnaButton small outlined text class="btn--hover" @click="menu = false"> Cancel </AskAnnaButton>
+        <AskAnnaButton small outlined color="secondary" text class="btn--hover" @click="handleApply">
+          Apply
+        </AskAnnaButton>
+      </AskAnnaCardActions>
+    </AskAnnaCard>
   </v-menu>
 </template>
 

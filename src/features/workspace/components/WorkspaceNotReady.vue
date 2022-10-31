@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto" outlined>
+  <AskAnnaCard class="mx-auto" outlined>
     <v-breadcrumbs :items="breadcrumbs">
       <template v-slot:item="{ item }">
         <v-breadcrumbs-item :to="item.to" exact>
@@ -7,12 +7,12 @@
         </v-breadcrumbs-item>
       </template>
     </v-breadcrumbs>
-    <v-divider />
-    <v-card-title>
+    <AskAnnaDivider />
+    <AskAnnaCardTitle>
       <span class="title font-weight-light">Oops...we cannot find a workspace for you</span>
-    </v-card-title>
+    </AskAnnaCardTitle>
 
-    <v-card-text>
+    <AskAnnaCardText>
       <p>
         To do something in AskAnna, your account should be a member of a workspace. If you just signed up, it can take
         some time before we have set up everything. Please try again in a minute.
@@ -22,8 +22,8 @@
         <a href="mailto:support@askanna.io" target="_blank">support@askanna.io</a>. We can create a new workspace for
         you!
       </p>
-    </v-card-text>
-  </v-card>
+    </AskAnnaCardText>
+  </AskAnnaCard>
 </template>
 
 <script setup lang="ts">

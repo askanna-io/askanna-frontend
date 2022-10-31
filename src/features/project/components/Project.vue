@@ -1,11 +1,11 @@
 <template>
-  <v-card flat>
+  <AskAnnaCard flat>
     <v-form ref="newProjectForm" @submit.prevent="handleCreate">
-      <v-container fluid class="pt-0">
-        <v-row>
-          <v-col cols="12" sm="5" class="pt-0">
+      <AskAnnaContainer fluid class="pt-0">
+        <AskAnnaRow>
+          <AskAnnaCol cols="12" sm="5" class="pt-0">
             <div class="d-flex transition-swing text-h5 pt-2 pb-4 font-weight-bold">Project profile</div>
-            <v-text-field
+            <AskAnnaTextField
               dense
               outlined
               autofocus
@@ -14,10 +14,10 @@
               :value="projectData.name"
               @input="handleOnInput($event, 'name')"
             />
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="12">
+          </AskAnnaCol>
+        </AskAnnaRow>
+        <AskAnnaRow>
+          <AskAnnaCol cols="12">
             <AskAnnaDescription
               cleared
               outlined
@@ -28,10 +28,10 @@
               @onSave="handleSaveDescription"
               @onChangeDescription="handleOnInput($event, 'description')"
             />
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="12">
+          </AskAnnaCol>
+        </AskAnnaRow>
+        <AskAnnaRow>
+          <AskAnnaCol cols="12">
             <div class="transition-swing text-h5 pt-2 pb-3 font-weight-bold">Project settings</div>
 
             <v-radio-group
@@ -82,11 +82,11 @@
                 </div>
               </template>
             </v-radio-group>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="12" sm="6" class="pt-0">
-            <v-btn
+          </AskAnnaCol>
+        </AskAnnaRow>
+        <AskAnnaRow>
+          <AskAnnaCol cols="12" sm="6" class="pt-0">
+            <AskAnnaButton
               text
               small
               outlined
@@ -96,13 +96,15 @@
               @click="handleCreate"
             >
               {{ saveButtonText }}
-            </v-btn>
-            <v-btn small outlined text color="secondary" class="ma-2 btn--hover" @click="handleCancel"> Cancel </v-btn>
-          </v-col>
-        </v-row>
-      </v-container>
+            </AskAnnaButton>
+            <AskAnnaButton small outlined text color="secondary" class="ma-2 btn--hover" @click="handleCancel">
+              Cancel
+            </AskAnnaButton>
+          </AskAnnaCol>
+        </AskAnnaRow>
+      </AskAnnaContainer>
     </v-form>
-  </v-card>
+  </AskAnnaCard>
 </template>
 
 <script setup lang="ts">

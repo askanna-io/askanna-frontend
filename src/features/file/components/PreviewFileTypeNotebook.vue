@@ -1,9 +1,9 @@
 <template>
-  <v-row align="center" justify="center">
-    <v-col cols="12" :class="{ 'pt-0': $vuetify.breakpoint.xsOnly }">
-      <v-card class="AskAnna--notebook" flat v-html="notebookHtml" />
-    </v-col>
-  </v-row>
+  <AskAnnaRow align="center" justify="center">
+    <AskAnnaCol cols="12" :class="{ 'pt-0': $vuetify.breakpoint.xsOnly }">
+      <AskAnnaCard class="AskAnna--notebook" flat v-html="notebookHtml" />
+    </AskAnnaCol>
+  </AskAnnaRow>
 </template>
 
 <script setup lang="ts">

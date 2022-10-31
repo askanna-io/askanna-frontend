@@ -1,10 +1,10 @@
 <template>
   <v-menu v-model="menu" :close-on-content-click="false" offset-y nudge-bottom="10">
     <template v-slot:activator="{ on }">
-      <v-btn small dark class="white--text" text v-on="on">Workspaces</v-btn>
+      <AskAnnaButton small dark class="white--text" text v-on="on">Workspaces</AskAnnaButton>
     </template>
-    <v-row class="pr-2 white askAnna-main-menu">
-      <v-col cols="5">
+    <AskAnnaRow class="pr-2 white askAnna-main-menu">
+      <AskAnnaCol cols="5">
         <v-list dense>
           <v-list-item-group v-model="listMenu" mandatory color="primary" @change="handleChangeMenu">
             <v-list-item v-for="(item, i) in menuItems" :key="i" aria-readonly>
@@ -14,16 +14,16 @@
             </v-list-item>
           </v-list-item-group>
         </v-list>
-      </v-col>
-      <v-col cols="7" class="pl-0">
+      </AskAnnaCol>
+      <AskAnnaCol cols="7" class="pl-0">
         <template v-if="listMenu === 2">
-          <v-alert class="mb-0 pl-0 pt-0" dense border="left" :height="'100%'" colored-border color="primary">
+          <AskAnnaAlert class="mb-0 pl-0 pt-0" dense border="left" :height="'100%'" colored-border color="primary">
             <WorkspaceCreateForm @onClose="handleCloseMenu" />
-          </v-alert>
+          </AskAnnaAlert>
         </template>
         <template v-else>
-          <v-alert class="mb-0" dense border="left" :height="'100%'" colored-border color="primary">
-            <v-text-field
+          <AskAnnaAlert class="mb-0" dense border="left" :height="'100%'" colored-border color="primary">
+            <AskAnnaTextField
               v-if="!loading && (workspaces.length > 9 || search)"
               v-model="search"
               @input="handleOnSearch()"
@@ -63,7 +63,8 @@
                           }
                         }"
                       >
-                        <v-icon v-text="getIcon(item)" class="pr-2" />{{ item.name }}</router-link
+                        <AskAnnaIcon class="pr-2">{{ getIcon(item) }}</AskAnnaIcon
+                        >{{ item.name }}</router-link
                       >
                     </td>
                   </tr>
@@ -71,14 +72,23 @@
               </template>
             </v-simple-table>
 
-            <v-flex v-if="search && !workspaces.length && !isSearchProcessing" class="px-2 pt-2">No results </v-flex>
-            <v-btn @click="handleCloseMenu" text plain small outlined class="mt-4 mb-0" :to="projectBtnOpt.to">{{
-              projectBtnOpt.title
-            }}</v-btn>
-          </v-alert>
+            <AskAnnaFlex v-if="search && !workspaces.length && !isSearchProcessing" class="px-2 pt-2"
+              >No results
+            </AskAnnaFlex>
+            <AskAnnaButton
+              @click="handleCloseMenu"
+              text
+              plain
+              small
+              outlined
+              class="mt-4 mb-0"
+              :to="projectBtnOpt.to"
+              >{{ projectBtnOpt.title }}</AskAnnaButton
+            >
+          </AskAnnaAlert>
         </template>
-      </v-col>
-    </v-row>
+      </AskAnnaCol>
+    </AskAnnaRow>
   </v-menu>
 </template>
 

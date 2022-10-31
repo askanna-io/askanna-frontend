@@ -1,9 +1,9 @@
 <template>
-  <v-card flat>
-    <v-container fluid>
-      <v-row dense justify="start">
-        <v-col xs="12" sm="6" md="4" lg="4" xl="3">
-          <v-text-field
+  <AskAnnaCard flat>
+    <AskAnnaContainer fluid>
+      <AskAnnaRow dense justify="start">
+        <AskAnnaCol xs="12" sm="6" md="4" lg="4" xl="3">
+          <AskAnnaTextField
             dense
             autofocus
             outlined
@@ -14,11 +14,11 @@
             @input="handleOnInput($event, 'email')"
             :rules="[RULES.required('Email is required'), RULES.email('The email you entered is not valid', 3)]"
           />
-        </v-col>
-      </v-row>
-      <v-row dense justify="start">
-        <v-col xs="12" sm="6" md="4" lg="4" xl="3">
-          <v-text-field
+        </AskAnnaCol>
+      </AskAnnaRow>
+      <AskAnnaRow dense justify="start">
+        <AskAnnaCol xs="12" sm="6" md="4" lg="4" xl="3">
+          <AskAnnaTextField
             dense
             counter
             outlined
@@ -32,11 +32,11 @@
             :rules="[RULES.min('The password should be longer than 10 characters', 10)]"
           />
           <input type="password" style="display: none" browserAutocomplete="new-password" autocomplete="new-password" />
-        </v-col>
-      </v-row>
-      <v-row dense justify="start">
-        <v-col xs="12" sm="6" md="4" lg="4" xl="3">
-          <v-text-field
+        </AskAnnaCol>
+      </AskAnnaRow>
+      <AskAnnaRow dense justify="start">
+        <AskAnnaCol xs="12" sm="6" md="4" lg="4" xl="3">
+          <AskAnnaTextField
             dense
             counter
             outlined
@@ -49,10 +49,10 @@
             :append-icon="isShowNewPassword ? 'far fa-eye' : 'fas fa-eye-slash'"
             :rules="[RULES.min('The new password should be longer than 10 characters', 10)]"
           />
-        </v-col>
-      </v-row>
-    </v-container>
-  </v-card>
+        </AskAnnaCol>
+      </AskAnnaRow>
+    </AskAnnaContainer>
+  </AskAnnaCard>
 </template>
 
 <script setup lang="ts">

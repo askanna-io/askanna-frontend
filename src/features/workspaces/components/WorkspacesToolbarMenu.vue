@@ -9,9 +9,9 @@
     :close-on-content-click="false"
   >
     <template v-slot:activator="{ on, attrs }">
-      <v-btn icon v-bind="attrs" @click.stop.prevent="on.click" small class="">
-        <v-icon>mdi-dots-vertical</v-icon>
-      </v-btn>
+      <AskAnnaButton icon v-bind="attrs" @click.stop.prevent="on.click" small class="">
+        <AskAnnaIcon>mdi-dots-vertical</AskAnnaIcon>
+      </AskAnnaButton>
     </template>
 
     <v-list>

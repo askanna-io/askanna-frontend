@@ -1,11 +1,11 @@
 <template>
   <div class="pt-2">
-    <v-card v-if="isAllowedToView" flat :outlined="!$vuetify.breakpoint.xsOnly">
-      <v-container class="ma-0 pt-0" fluid>
-        <v-row>
-          <v-col cols="12" sm="5">
+    <AskAnnaCard v-if="isAllowedToView" flat :outlined="!$vuetify.breakpoint.xsOnly">
+      <AskAnnaContainer class="ma-0 pt-0" fluid>
+        <AskAnnaRow>
+          <AskAnnaCol cols="12" sm="5">
             <div class="transition-swing text-h5 pt-2 pb-4 font-weight-bold">Workspace profile</div>
-            <v-text-field
+            <AskAnnaTextField
               dense
               autofocus
               outlined
@@ -15,10 +15,10 @@
               :rules="[RULES.required('Workspace name is required')]"
               @input="handleOnInput($event, 'name')"
             />
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="12" class="pt-0">
+          </AskAnnaCol>
+        </AskAnnaRow>
+        <AskAnnaRow>
+          <AskAnnaCol cols="12" class="pt-0">
             <AskAnnaDescription
               cleared
               outlined
@@ -29,10 +29,10 @@
               @onSave="handleSaveDescription"
               @onChangeDescription="handleOnInput($event, 'description')"
             />
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="12">
+          </AskAnnaCol>
+        </AskAnnaRow>
+        <AskAnnaRow>
+          <AskAnnaCol cols="12">
             <div class="transition-swing text-h5 pt-2 pb-3 font-weight-bold">Workspace settings</div>
             <v-radio-group
               mandatory
@@ -62,12 +62,12 @@
                 and description becomes publicly available.
               </div>
             </v-radio-group>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col class="pt-0">
-            <v-card-actions class="pl-0">
-              <v-btn
+          </AskAnnaCol>
+        </AskAnnaRow>
+        <AskAnnaRow>
+          <AskAnnaCol class="pt-0">
+            <AskAnnaCardActions class="pl-0">
+              <AskAnnaButton
                 text
                 small
                 outlined
@@ -77,23 +77,25 @@
                 @click="handlePreSave"
               >
                 Save my changes
-              </v-btn>
-              <v-btn @click="handleClose" small outlined text color="secondary" class="btn--hover"> Cancel </v-btn>
-            </v-card-actions>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-card>
+              </AskAnnaButton>
+              <AskAnnaButton @click="handleClose" small outlined text color="secondary" class="btn--hover">
+                Cancel
+              </AskAnnaButton>
+            </AskAnnaCardActions>
+          </AskAnnaCol>
+        </AskAnnaRow>
+      </AskAnnaContainer>
+    </AskAnnaCard>
     <template v-else>
-      <v-alert v-if="token" class="text-center" dense outlined>
+      <AskAnnaAlert v-if="token" class="text-center" dense outlined>
         You are not allowed to edit this workspace. I can bring you back to the workspace
         <router-link :to="{ name: 'workspace' }" class="ask-anna-link">{{ workspace.name }}</router-link
         >.
-      </v-alert>
-      <v-alert v-else class="text-center" dense outlined>
+      </AskAnnaAlert>
+      <AskAnnaAlert v-else class="text-center" dense outlined>
         You are not allowed to open this page. I can bring you back to
         <router-link :to="{ path: '/' }" class="ask-anna-link">the main page</router-link>.
-      </v-alert>
+      </AskAnnaAlert>
     </template>
 
     <ChangeWorkspaceVisibilityPopup

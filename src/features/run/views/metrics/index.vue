@@ -1,17 +1,17 @@
 <template>
   <div>
-    <v-toolbar
+    <AskAnnaToolbar
       v-if="!disabledTools || isFiltered"
       flat
       dense
       color="grey lighten-4"
       sticky-offset="{top: 48, bottom: 10}"
     >
-      <v-flex class="d-flex">
+      <AskAnnaFlex class="d-flex">
         <div class="mr-auto d-flex align-center"></div>
 
         <div>
-          <v-btn
+          <AskAnnaButton
             v-if="isChartView"
             small
             outlined
@@ -20,10 +20,10 @@
             :disabled="!chart.svgData || disabledTools"
             @click="handleDownloadPNG"
           >
-            <v-icon color="secondary" left>mdi-download</v-icon>Download PNG
-          </v-btn>
+            <AskAnnaIcon color="secondary" left>mdi-download</AskAnnaIcon>Download PNG
+          </AskAnnaButton>
 
-          <v-btn
+          <AskAnnaButton
             v-if="!$vuetify.breakpoint.xsOnly && !isChartView"
             small
             outlined
@@ -32,9 +32,9 @@
             @click="handleDownload"
             :disabled="disabledTools"
           >
-            <v-icon color="secondary" left>mdi-download</v-icon>Download JSON
-          </v-btn>
-          <v-btn
+            <AskAnnaIcon color="secondary" left>mdi-download</AskAnnaIcon>Download JSON
+          </AskAnnaButton>
+          <AskAnnaButton
             v-if="!isChartView"
             small
             outlined
@@ -43,22 +43,29 @@
             class="mr-1 btn--hover"
             :disabled="disabledTools"
           >
-            <v-icon color="secondary" left>mdi-content-copy</v-icon>Copy JSON
-          </v-btn>
+            <AskAnnaIcon color="secondary" left>mdi-content-copy</AskAnnaIcon>Copy JSON
+          </AskAnnaButton>
         </div>
 
         <v-btn-toggle v-model="currentViewIndex" mandatory class="mr-1">
-          <v-tooltip v-for="(view, index) in views" top :key="index">
+          <AskAnnaTooltip v-for="(view, index) in views" top :key="index">
             <template v-slot:activator="{ on }">
-              <v-btn v-on="on" small class="btn--hover" outlined color="secondary" @click="handleChangeView(index)">
-                <v-icon color="secondary">{{ view.icon }}</v-icon>
-              </v-btn>
+              <AskAnnaButton
+                v-on="on"
+                small
+                class="btn--hover"
+                outlined
+                color="secondary"
+                @click="handleChangeView(index)"
+              >
+                <AskAnnaIcon color="secondary">{{ view.icon }}</AskAnnaIcon>
+              </AskAnnaButton>
             </template>
             <span>{{ view.name }}</span>
-          </v-tooltip>
+          </AskAnnaTooltip>
         </v-btn-toggle>
-      </v-flex>
-    </v-toolbar>
+      </AskAnnaFlex>
+    </AskAnnaToolbar>
     <router-view />
   </div>
 </template>

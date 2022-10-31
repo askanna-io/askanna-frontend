@@ -1,5 +1,5 @@
 <template>
-  <v-card
+  <AskAnnaCard
     class="mx-auto h-100"
     :elevation="hover ? 16 : 2"
     :to="{
@@ -12,23 +12,23 @@
       }
     }"
   >
-    <v-toolbar flat dense white--text color="white" class="AskAnna-app-bar">
-      <v-toolbar-title
+    <AskAnnaToolbar flat dense white--text color="white" class="AskAnna-app-bar">
+      <AskAnnaToolbarTitle
         class="title font-weight-light"
         :class="{ 'px-0 pt-2 pr-0': $vuetify.breakpoint.xsOnly, 'pl-4 pt-5': !$vuetify.breakpoint.xsOnly }"
       >
-        <v-icon large> mdi-semantic-web </v-icon>
+        <AskAnnaIcon large> mdi-semantic-web </AskAnnaIcon>
         {{ project.name }}
-      </v-toolbar-title>
-      <v-spacer />
+      </AskAnnaToolbarTitle>
+      <AskAnnaSpacer />
 
       <project-menu-popup v-if="projectInfoEdit" :project="project" :routeBackTo="routeBackTo" />
-    </v-toolbar>
+    </AskAnnaToolbar>
 
-    <v-card-text class="font-weight-bold project--description">
+    <AskAnnaCardText class="font-weight-bold project--description">
       {{ description }}
-    </v-card-text>
-  </v-card>
+    </AskAnnaCardText>
+  </AskAnnaCard>
 </template>
 
 <script setup lang="ts">

@@ -1,18 +1,18 @@
 <template>
   <v-dialog v-model="dialog" max-width="500px">
-    <v-card>
-      <v-card-title> Please confirm that you want to {{ text }} the code </v-card-title>
-      <v-card-text>
-        <v-btn class="my-2 btn--hover" small outlined @click="handleStartUpload" color="primary">
-          <v-icon color="primary" left>mdi-upload</v-icon>Yes, I want to {{ text }} the code
-        </v-btn>
-      </v-card-text>
-      <v-card-actions>
-        <v-btn color="secondary" class="ml-4 btn--hover" small outlined text @click="handleCancelStartUpload">
-          <v-icon color="secondary" left>mdi-close</v-icon>No, I don't want to {{ text }} the code
-        </v-btn>
-      </v-card-actions>
-    </v-card>
+    <AskAnnaCard>
+      <AskAnnaCardTitle> Please confirm that you want to {{ text }} the code </AskAnnaCardTitle>
+      <AskAnnaCardText>
+        <AskAnnaButton class="my-2 btn--hover" small outlined @click="handleStartUpload" color="primary">
+          <AskAnnaIcon color="primary" left>mdi-upload</AskAnnaIcon>Yes, I want to {{ text }} the code
+        </AskAnnaButton>
+      </AskAnnaCardText>
+      <AskAnnaCardActions>
+        <AskAnnaButton color="secondary" class="ml-4 btn--hover" small outlined text @click="handleCancelStartUpload">
+          <AskAnnaIcon color="secondary" left>mdi-close</AskAnnaIcon>No, I don't want to {{ text }} the code
+        </AskAnnaButton>
+      </AskAnnaCardActions>
+    </AskAnnaCard>
   </v-dialog>
 </template>
 

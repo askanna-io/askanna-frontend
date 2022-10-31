@@ -1,6 +1,6 @@
 <template>
-  <v-card px-2 flat>
-    <v-card-text class="pb-0 text-left">
+  <AskAnnaCard px-2 flat>
+    <AskAnnaCardText class="pb-0 text-left">
       <div class="text--primary">REPLACE THIS CODE PACKAGE</div>
 
       <div class="text--primary">
@@ -42,8 +42,8 @@
           <ask-anna-copy-text :text="askannaPushWithMessage" />
         </p>
       </div>
-    </v-card-text>
-  </v-card>
+    </AskAnnaCardText>
+  </AskAnnaCard>
 </template>
 <script setup lang="ts">
 import { url } from '@/services/api-settings'

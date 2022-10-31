@@ -1,7 +1,7 @@
 <template>
-  <AskAnnaLoadingProgress :loading="runArtifactLoading" classes="mx-4 mb-4" fullWidth>
-    <v-row align="center" justify="center">
-      <v-col cols="12" class="pt-0 pb-0">
+  <AskAnnaLoadingProgress :loading="runStore.runArtifactLoading" classes="mx-4 mb-4" fullWidth>
+    <AskAnnaRow align="center" justify="center">
+      <AskAnnaCol cols="12" class="pt-0 pb-0">
         <PackageToolbar
           v-if="artifactUuid"
           v-sticky="sticked"
@@ -10,9 +10,9 @@
           sticky-offset="{top: 52, bottom: 10}"
         >
           <template v-slot:rigth>
-            <v-slide-y-transition>
+            <AskAnnaSlideYTransition>
               <div v-if="!filePath && !$vuetify.breakpoint.xsOnly">
-                <v-btn
+                <AskAnnaButton
                   small
                   outlined
                   color="secondary"
@@ -20,13 +20,13 @@
                   :loading="downloadArtifact"
                   @click="handleDownload()"
                 >
-                  <v-icon color="secondary" left>mdi-download</v-icon>Download
+                  <AskAnnaIcon color="secondary" left>mdi-download</AskAnnaIcon>Download
                   <template v-slot:loader>
                     <span>Downloading...</span>
                   </template>
-                </v-btn>
+                </AskAnnaButton>
               </div>
-            </v-slide-y-transition>
+            </AskAnnaSlideYTransition>
           </template>
         </PackageToolbar>
         <PackageFile
@@ -48,8 +48,8 @@
           :getRoutePath="getRoutePath"
           :noDataAvailable="'There is no artifact available for this run.'"
         />
-      </v-col>
-    </v-row>
+      </AskAnnaCol>
+    </AskAnnaRow>
   </AskAnnaLoadingProgress>
 </template>
 <script setup lang="ts">

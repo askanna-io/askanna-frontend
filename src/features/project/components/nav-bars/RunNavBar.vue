@@ -1,7 +1,7 @@
 <template>
   <div :class="{ 'mb-3': sticked }">
     <div v-sticky="true" on-stick="onStick" :sticky-margin-width="0" sticky-offset="{top: 52, bottom: 10}">
-      <v-toolbar v-if="sticked" dense color="white" class="br-r5 ma-3 askAnna-breadcrumbs" :flat="!sticked">
+      <AskAnnaToolbar v-if="sticked" dense color="white" class="br-r5 ma-3 askAnna-breadcrumbs" :flat="!sticked">
         <div class="">
           <v-breadcrumbs :items="breadcrumbs" class="pl-0" :class="{ 'ma-0 pa-0': $vuetify.breakpoint.xsOnly }">
             <template v-slot:item="{ item }">
@@ -11,18 +11,18 @@
             </template>
           </v-breadcrumbs>
         </div>
-        <v-spacer />
-      </v-toolbar>
-      <v-slide-y-transition>
-        <v-card v-if="sticked" :flat="!sticked" :class="{ 'ma-3': sticked }">
-          <v-divider v-if="!sticked" />
+        <AskAnnaSpacer />
+      </AskAnnaToolbar>
+      <AskAnnaSlideYTransition>
+        <AskAnnaCard v-if="sticked" :flat="!sticked" :class="{ 'ma-3': sticked }">
+          <AskAnnaDivider v-if="!sticked" />
           <project-tool-bar :projectName="project.name" />
-          <v-divider />
+          <AskAnnaDivider />
           <job-tool-bar :jobName="jobName" :projectName="project.name" />
-          <v-divider v-if="sticked" />
+          <AskAnnaDivider v-if="sticked" />
           <run-tool-bar v-if="sticked" :runId="runId" />
-        </v-card>
-      </v-slide-y-transition>
+        </AskAnnaCard>
+      </AskAnnaSlideYTransition>
     </div>
     <div class="askAnna-breadcrumbs" :class="{ 'mb-2 mt-0': $vuetify.breakpoint.xsOnly }">
       <v-breadcrumbs v-if="!sticked" :items="breadcrumbs" :class="{ 'py-0 mt-0 pl-3': $vuetify.breakpoint.xsOnly }">
@@ -34,10 +34,10 @@
       </v-breadcrumbs>
     </div>
 
-    <v-divider v-if="!$vuetify.breakpoint.xsOnly" />
+    <AskAnnaDivider v-if="!$vuetify.breakpoint.xsOnly" />
 
-    <v-card flat>
-      <v-card-title v-if="!sticked" :class="{ 'py-1 pl-3 ': $vuetify.breakpoint.xsOnly }">
+    <AskAnnaCard flat>
+      <AskAnnaCardTitle v-if="!sticked" :class="{ 'py-1 pl-3 ': $vuetify.breakpoint.xsOnly }">
         <span class="title font-weight-light"
           >Run{{ runName }}
           <AskAnnaCopyText
@@ -47,13 +47,13 @@
             :styleClasses="'px-0 white title font-weight-light primary--black '"
           />
         </span>
-        <v-spacer />
+        <AskAnnaSpacer />
         <run-info-status class="title font-weight-light" text="" :value="runIdStatus" />
-      </v-card-title>
+      </AskAnnaCardTitle>
 
-      <v-divider v-if="!sticked && !$vuetify.breakpoint.xsOnly" />
+      <AskAnnaDivider v-if="!sticked && !$vuetify.breakpoint.xsOnly" />
 
-      <v-toolbar
+      <AskAnnaToolbar
         v-if="!sticked"
         flat
         dense
@@ -67,11 +67,11 @@
           :isEditRunView="isEditRunView"
         />
 
-        <v-spacer />
+        <AskAnnaSpacer />
 
         <run-menu-popup v-if="!isEditRunView && projectRunEdit && !$vuetify.breakpoint.xsOnly" />
-      </v-toolbar>
-    </v-card>
+      </AskAnnaToolbar>
+    </AskAnnaCard>
   </div>
 </template>
 <script setup lang="ts">

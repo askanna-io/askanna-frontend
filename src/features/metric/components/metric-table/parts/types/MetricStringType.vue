@@ -8,19 +8,19 @@
         </div>
       </div>
     </template>
-    <v-card>
+    <AskAnnaCard>
       <v-app-bar dense height="40" flat>
         Name: {{ metricRow.name }}
-        <v-spacer />
-        <v-btn small outlined color="secondary" @click="handleCopy" class="mx-2 btn--hover">
-          <v-icon color="secondary" left>mdi-content-copy</v-icon>Copy
-        </v-btn>
-        <v-btn small icon @click="handleClose">
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
+        <AskAnnaSpacer />
+        <AskAnnaButton small outlined color="secondary" @click="handleCopy" class="mx-2 btn--hover">
+          <AskAnnaIcon color="secondary" left>mdi-content-copy</AskAnnaIcon>Copy
+        </AskAnnaButton>
+        <AskAnnaButton small icon @click="handleClose">
+          <AskAnnaIcon>mdi-close</AskAnnaIcon>
+        </AskAnnaButton>
       </v-app-bar>
       <TheHighlight :value="metricRow.value" languageName="text" />
-    </v-card>
+    </AskAnnaCard>
   </v-menu>
 </template>
 <script setup lang="ts">

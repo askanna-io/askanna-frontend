@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto" flat :outlined="!$vuetify.breakpoint.xsOnly">
+  <AskAnnaCard class="mx-auto" flat :outlined="!$vuetify.breakpoint.xsOnly">
     <div class="askAnna-breadcrumbs">
       <v-breadcrumbs :items="breadcrumbs" class="pa-0 pl-3" :class="{ 'pa-4 pl-4': !$vuetify.breakpoint.xsOnly }">
         <template v-slot:item="{ item }">
@@ -9,23 +9,23 @@
         </template>
       </v-breadcrumbs>
     </div>
-    <v-divider class="mt-1" />
-    <v-card-title>
+    <AskAnnaDivider class="mt-1" />
+    <AskAnnaCardTitle>
       <span class="title font-weight-light">Create a new workspace</span>
-    </v-card-title>
+    </AskAnnaCardTitle>
 
-    <v-card-text class="font-weight-bold">
+    <AskAnnaCardText class="font-weight-bold">
       <p>
         Description: A workspace is where you can collaborate with your team, or yourself. Create projects, track your
         runs, invite other people and share what you have achieved.
       </p>
-    </v-card-text>
+    </AskAnnaCardText>
 
-    <v-divider />
-    <v-container class="ma-0 pt-0" fluid>
-      <v-row>
-        <v-col cols="12" sm="5">
-          <v-text-field
+    <AskAnnaDivider />
+    <AskAnnaContainer class="ma-0 pt-0" fluid>
+      <AskAnnaRow>
+        <AskAnnaCol cols="12" sm="5">
+          <AskAnnaTextField
             dense
             autofocus
             outlined
@@ -35,10 +35,10 @@
             :rules="[RULES.required('Workspace name is required')]"
             @input="handleOnInput($event, 'name')"
           />
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="12" class="pt-0">
+        </AskAnnaCol>
+      </AskAnnaRow>
+      <AskAnnaRow>
+        <AskAnnaCol cols="12" class="pt-0">
           <AskAnnaDescription
             cleared
             outlined
@@ -48,10 +48,10 @@
             @onChange="handleOnChange"
             @onChangeDescription="handleOnInput($event, 'description')"
           />
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="12">
+        </AskAnnaCol>
+      </AskAnnaRow>
+      <AskAnnaRow>
+        <AskAnnaCol cols="12">
           <v-radio-group
             mandatory
             hide-details
@@ -78,12 +78,12 @@
               description becomes publicly available.
             </div>
           </v-radio-group>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col class="pt-0">
-          <v-card-actions class="pl-0">
-            <v-btn
+        </AskAnnaCol>
+      </AskAnnaRow>
+      <AskAnnaRow>
+        <AskAnnaCol class="pt-0">
+          <AskAnnaCardActions class="pl-0">
+            <AskAnnaButton
               text
               small
               outlined
@@ -93,13 +93,15 @@
               @click="handleSave"
             >
               CREATE WORKSPACE
-            </v-btn>
-            <v-btn @click="handleClose" small outlined text color="secondary" class="btn--hover">Cancel </v-btn>
-          </v-card-actions>
-        </v-col>
-      </v-row>
-    </v-container>
-  </v-card>
+            </AskAnnaButton>
+            <AskAnnaButton @click="handleClose" small outlined text color="secondary" class="btn--hover"
+              >Cancel
+            </AskAnnaButton>
+          </AskAnnaCardActions>
+        </AskAnnaCol>
+      </AskAnnaRow>
+    </AskAnnaContainer>
+  </AskAnnaCard>
 </template>
 <script setup lang="ts">
 import { set } from 'lodash'

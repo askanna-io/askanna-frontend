@@ -1,11 +1,11 @@
 <template>
   <div>
     <AskAnnaLoadingProgress v-if="projectRunEdit" classes="ma-4" :type="'table-row'" :loading="loading" fullWidth>
-      <v-card flat>
-        <v-container class="ma-0 pt-0" fluid>
-          <v-row>
-            <v-col cols="12" sm="5">
-              <v-text-field
+      <AskAnnaCard flat>
+        <AskAnnaContainer class="ma-0 pt-0" fluid>
+          <AskAnnaRow>
+            <AskAnnaCol cols="12" sm="5">
+              <AskAnnaTextField
                 dense
                 autofocus
                 outlined
@@ -14,10 +14,10 @@
                 label="Run name (optional)"
                 @input="handleOnInput($event, 'name')"
               />
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="12" class="pt-0">
+            </AskAnnaCol>
+          </AskAnnaRow>
+          <AskAnnaRow>
+            <AskAnnaCol cols="12" class="pt-0">
               <AskAnnaDescription
                 cleared
                 outlined
@@ -28,12 +28,12 @@
                 @onSave="handleSaveDescription"
                 @onChangeDescription="handleOnInput($event, 'description')"
               />
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col class="pt-0">
-              <v-card-actions class="pl-0">
-                <v-btn
+            </AskAnnaCol>
+          </AskAnnaRow>
+          <AskAnnaRow>
+            <AskAnnaCol class="pt-0">
+              <AskAnnaCardActions class="pl-0">
+                <AskAnnaButton
                   text
                   small
                   outlined
@@ -43,21 +43,23 @@
                   :disabled="isStateNotChanged"
                 >
                   Save my changes
-                </v-btn>
-                <v-btn @click="handleClose" small outlined text color="secondary" class="btn--hover"> Cancel </v-btn>
-              </v-card-actions>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-card>
+                </AskAnnaButton>
+                <AskAnnaButton @click="handleClose" small outlined text color="secondary" class="btn--hover">
+                  Cancel
+                </AskAnnaButton>
+              </AskAnnaCardActions>
+            </AskAnnaCol>
+          </AskAnnaRow>
+        </AskAnnaContainer>
+      </AskAnnaCard>
     </AskAnnaLoadingProgress>
-    <v-alert v-else class="mx-4 text-center" dense outlined>
+    <AskAnnaAlert v-else class="mx-4 text-center" dense outlined>
       You are not allowed to edit this run. I can bring you back toto the run
       <router-link :to="{ name: 'workspace-project-jobs-job-run-overview' }" class="ask-anna-link">{{
         run.name || run.short_uuid
       }}</router-link
       >.
-    </v-alert>
+    </AskAnnaAlert>
   </div>
 </template>
 

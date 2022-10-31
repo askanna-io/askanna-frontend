@@ -1,5 +1,5 @@
 <template>
-  <v-card
+  <AskAnnaCard
     v-sticky="true"
     class="mx-auto askAnna-main-menu"
     :class="{ 'sticky-fox': isSticky }"
@@ -30,7 +30,7 @@
         <v-list-item-title>Documentation</v-list-item-title>
       </v-list-item>
     </v-list>
-  </v-card>
+  </AskAnnaCard>
 </template>
 
 <script setup lang="ts">

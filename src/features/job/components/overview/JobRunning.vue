@@ -1,9 +1,9 @@
 <template>
-  <v-card class="mx-auto" flat>
-    <v-card-title :class="{ 'pb-0': $vuetify.breakpoint.xsOnly }">Running the job</v-card-title>
-    <v-row>
-      <v-col cols="12" :class="{ 'pt-0': $vuetify.breakpoint.xsOnly }">
-        <v-toolbar dense color="white" class="br-r5" flat transition="slide-y-transition">
+  <AskAnnaCard class="mx-auto" flat>
+    <AskAnnaCardTitle :class="{ 'pb-0': $vuetify.breakpoint.xsOnly }">Running the job</AskAnnaCardTitle>
+    <AskAnnaRow>
+      <AskAnnaCol cols="12" :class="{ 'pt-0': $vuetify.breakpoint.xsOnly }">
+        <AskAnnaToolbar dense color="white" class="br-r5" flat transition="slide-y-transition">
           <v-tabs v-model="currentTab" left :align-with-title="!$vuetify.breakpoint.xsOnly">
             <v-tabs-slider color="primary" />
             <template v-for="tab of tabs">
@@ -12,9 +12,9 @@
               </v-tab>
             </template>
           </v-tabs>
-        </v-toolbar>
-      </v-col>
-      <v-col cols="12" :class="{ 'pt-0': $vuetify.breakpoint.xsOnly }">
+        </AskAnnaToolbar>
+      </AskAnnaCol>
+      <AskAnnaCol cols="12" :class="{ 'pt-0': $vuetify.breakpoint.xsOnly }">
         <v-tabs-items v-model="currentTab">
           <template v-for="tab in tabs">
             <v-tab-item :key="tab.id">
@@ -22,9 +22,9 @@
             </v-tab-item>
           </template>
         </v-tabs-items>
-      </v-col>
-    </v-row>
-  </v-card>
+      </AskAnnaCol>
+    </AskAnnaRow>
+  </AskAnnaCard>
 </template>
 
 <script setup lang="ts">

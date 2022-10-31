@@ -1,8 +1,8 @@
 <template>
   <div>
-    <v-card-title transition="slide-y-transition">
+    <AskAnnaCardTitle transition="slide-y-transition">
       <span class="font-weight-light">Project: {{ projectName }}</span>
-    </v-card-title>
+    </AskAnnaCardTitle>
     <ProjectMenu :projectName="projectName" />
   </div>
 </template>

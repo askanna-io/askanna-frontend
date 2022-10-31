@@ -1,9 +1,9 @@
 <template>
   <v-app>
     <v-main class="login-layout">
-      <v-container fluid pa-0 class="login-layout--container">
+      <AskAnnaContainer fluid pa-0 class="login-layout--container">
         <router-view />
-      </v-container>
+      </AskAnnaContainer>
       <the-snack-bar />
     </v-main>
   </v-app>

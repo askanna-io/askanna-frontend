@@ -10,14 +10,14 @@
       :close-on-content-click="false"
     >
       <template v-slot:activator="{ on, attrs }">
-        <v-btn v-bind="attrs" v-on="on" small rounded class="mr-3">
-          <v-icon color="primary" left>mdi-plus</v-icon>
+        <AskAnnaButton v-bind="attrs" v-on="on" small rounded class="mr-3">
+          <AskAnnaIcon color="primary" left>mdi-plus</AskAnnaIcon>
           Create Workspace
-        </v-btn>
+        </AskAnnaButton>
       </template>
-      <v-card>
+      <AskAnnaCard>
         <WorkspaceCreateForm showCancel @onClose="menu = false" />
-      </v-card>
+      </AskAnnaCard>
     </v-menu>
   </div>
 </template>

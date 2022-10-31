@@ -1,7 +1,7 @@
 <template>
   <div :class="{ 'mb-3': sticked }">
     <div v-sticky="true" on-stick="onStick" :sticky-margin-width="0" sticky-offset="{top: 52, bottom: 10}">
-      <v-toolbar v-if="sticked" dense color="white" class="br-r5 ma-3" :flat="!sticked">
+      <AskAnnaToolbar v-if="sticked" dense color="white" class="br-r5 ma-3" :flat="!sticked">
         <v-breadcrumbs :items="breadcrumbs" class="pl-0">
           <template v-slot:item="{ item }">
             <v-breadcrumbs-item :to="item.to" :exact="item.exact">
@@ -9,16 +9,16 @@
             </v-breadcrumbs-item>
           </template>
         </v-breadcrumbs>
-        <v-spacer />
-      </v-toolbar>
-      <v-slide-y-transition>
-        <v-card v-if="sticked" :flat="!sticked" :class="{ 'ma-3': sticked }">
-          <v-divider v-if="!sticked" />
+        <AskAnnaSpacer />
+      </AskAnnaToolbar>
+      <AskAnnaSlideYTransition>
+        <AskAnnaCard v-if="sticked" :flat="!sticked" :class="{ 'ma-3': sticked }">
+          <AskAnnaDivider v-if="!sticked" />
           <project-tool-bar :projectName="project.name" />
-          <v-divider />
+          <AskAnnaDivider />
           <job-tool-bar :jobName="jobName" :projectName="project.name" />
-        </v-card>
-      </v-slide-y-transition>
+        </AskAnnaCard>
+      </AskAnnaSlideYTransition>
     </div>
     <div class="askAnna-breadcrumbs" :class="{ 'mb-2': $vuetify.breakpoint.xsOnly }">
       <v-breadcrumbs v-if="!sticked" :items="breadcrumbs" :class="{ 'py-0 mt-0 pl-3': $vuetify.breakpoint.xsOnly }">

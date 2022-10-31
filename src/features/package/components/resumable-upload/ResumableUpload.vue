@@ -1,6 +1,6 @@
 <template>
-  <v-row no-gutters class="upload mb-2" ref="uploadContainer">
-    <v-col cols="12">
+  <AskAnnaRow no-gutters class="upload mb-2" ref="uploadContainer">
+    <AskAnnaCol cols="12">
       <div ref="draggable" @click.stop class="is-sortable-disabled is-drag-valid theme-list drop-zone">
         <div class="grid-block-wrapper vue-file-agent file-input-wrapper has-multiple">
           <replace-info v-if="isReplace" :projectShortUuid="projectShortUuid" :workspaceId="workspaceId" />
@@ -20,12 +20,12 @@
         </div>
       </div>
       <span ref="browseButton">
-        <v-btn class="my-2 mr-2 btn--hover" v-if="!isFileAdded" small outlined color="secondary">
-          <v-icon left color="secondary">mdi-upload</v-icon>Browse
-        </v-btn>
+        <AskAnnaButton class="my-2 mr-2 btn--hover" v-if="!isFileAdded" small outlined color="secondary">
+          <AskAnnaIcon left color="secondary">mdi-upload</AskAnnaIcon>Browse
+        </AskAnnaButton>
       </span>
       <span>
-        <v-btn
+        <AskAnnaButton
           class="my-2 mr-2 btn--hover"
           v-if="isFileAdded && fileRecordsForUpload && fileRecordsForUpload.length"
           small
@@ -33,12 +33,12 @@
           @click="handleConfirmUpload"
           color="secondary"
         >
-          <v-icon color="secondary" left>mdi-upload</v-icon>Upload
-        </v-btn>
+          <AskAnnaIcon color="secondary" left>mdi-upload</AskAnnaIcon>Upload
+        </AskAnnaButton>
       </span>
-      <v-btn class="my-2 btn--hover" v-if="isReplace" small outlined @click="handleCancel" color="secondary">
-        <v-icon color="secondary" left>mdi-cancel</v-icon>Cancel
-      </v-btn>
+      <AskAnnaButton class="my-2 btn--hover" v-if="isReplace" small outlined @click="handleCancel" color="secondary">
+        <AskAnnaIcon color="secondary" left>mdi-cancel</AskAnnaIcon>Cancel
+      </AskAnnaButton>
       <confirm-dialog
         v-if="showConfirmation"
         :isReplace="isReplace"
@@ -54,8 +54,8 @@
         @onCloseOutside="handleCloseOutside"
         @confirmationClosed="handleConfirmationClosed"
       />
-    </v-col>
-  </v-row>
+    </AskAnnaCol>
+  </AskAnnaRow>
 </template>
 
 <script setup lang="ts">

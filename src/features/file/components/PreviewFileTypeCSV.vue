@@ -1,5 +1,5 @@
 <template>
-  <v-flex
+  <AskAnnaFlex
     class="fill-height"
     fluid
     :class="{ 'px-0': $vuetify.breakpoint.xsOnly, 'px-5': !$vuetify.breakpoint.xsOnly }"
@@ -7,7 +7,7 @@
     <v-fade-transition mode="out-in">
       <AskAnnaCSV :data="tableData.data" :headers="tableData.headers" :cdnBaseUrl="cdnBaseUrl" />
     </v-fade-transition>
-  </v-flex>
+  </AskAnnaFlex>
 </template>
 
 <script setup lang="ts">

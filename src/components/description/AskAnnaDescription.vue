@@ -6,7 +6,7 @@
       @click="handleOnClickWrapper"
       :class="{ 'mt-5 pt-6': isFullScreen }"
     >
-      <v-card
+      <AskAnnaCard
         class="ask-anna--editor"
         flat
         :outlined="
@@ -39,9 +39,9 @@
             flat
             class="mx-1 mt-2"
           >
-            <v-tooltip top>
+            <AskAnnaTooltip top>
               <template v-slot:activator="{ on }">
-                <v-btn
+                <AskAnnaButton
                   v-on="on"
                   dark
                   icon
@@ -52,15 +52,15 @@
                   @click="editor.chain().focus().toggleBold().run()"
                   :color="editor.isActive('bold') ? 'primary' : 'secondary'"
                 >
-                  <v-icon>mdi-format-bold</v-icon>
-                </v-btn>
+                  <AskAnnaIcon>mdi-format-bold</AskAnnaIcon>
+                </AskAnnaButton>
               </template>
               <span>Bold</span>
-            </v-tooltip>
+            </AskAnnaTooltip>
 
-            <v-tooltip top>
+            <AskAnnaTooltip top>
               <template v-slot:activator="{ on }">
-                <v-btn
+                <AskAnnaButton
                   v-on="on"
                   dark
                   icon
@@ -71,15 +71,15 @@
                   @click="editor.chain().focus().toggleItalic().run()"
                   :color="editor.isActive('italic') ? 'primary' : 'secondary'"
                 >
-                  <v-icon>mdi-format-italic</v-icon>
-                </v-btn>
+                  <AskAnnaIcon>mdi-format-italic</AskAnnaIcon>
+                </AskAnnaButton>
               </template>
               <span>Italic</span>
-            </v-tooltip>
+            </AskAnnaTooltip>
 
-            <v-tooltip top>
+            <AskAnnaTooltip top>
               <template v-slot:activator="{ on }">
-                <v-btn
+                <AskAnnaButton
                   v-on="on"
                   dark
                   icon
@@ -90,15 +90,15 @@
                   @click="editor.chain().focus().toggleUnderline().run()"
                   :color="editor.isActive('underline') ? 'primary' : 'secondary'"
                 >
-                  <v-icon>mdi-format-underline</v-icon>
-                </v-btn>
+                  <AskAnnaIcon>mdi-format-underline</AskAnnaIcon>
+                </AskAnnaButton>
               </template>
               <span>Underline</span>
-            </v-tooltip>
+            </AskAnnaTooltip>
 
-            <v-tooltip top>
+            <AskAnnaTooltip top>
               <template v-slot:activator="{ on }">
-                <v-btn
+                <AskAnnaButton
                   v-on="on"
                   dark
                   icon
@@ -109,17 +109,17 @@
                   @click="editor.chain().focus().toggleStrike().run()"
                   :color="editor.isActive('strike') ? 'primary' : 'secondary'"
                 >
-                  <v-icon>mdi-format-strikethrough</v-icon>
-                </v-btn>
+                  <AskAnnaIcon>mdi-format-strikethrough</AskAnnaIcon>
+                </AskAnnaButton>
               </template>
               <span>Strikethrough</span>
-            </v-tooltip>
+            </AskAnnaTooltip>
 
             <AskAnnaColorPicker @onUnsetColor="handleUnsetHighlight" @onChangeColor="handleOnChangeColor" />
 
-            <v-tooltip top>
+            <AskAnnaTooltip top>
               <template v-slot:activator="{ on }">
-                <v-btn
+                <AskAnnaButton
                   v-on="on"
                   dark
                   icon
@@ -130,15 +130,15 @@
                   :class="{ 'is-active': editor.isActive('paragraph') }"
                   :color="editor.isActive('paragraph') ? 'primary' : 'secondary'"
                 >
-                  <v-icon>mdi-format-paragraph</v-icon>
-                </v-btn>
+                  <AskAnnaIcon>mdi-format-paragraph</AskAnnaIcon>
+                </AskAnnaButton>
               </template>
               <span>Paragraph</span>
-            </v-tooltip>
+            </AskAnnaTooltip>
 
-            <v-tooltip top>
+            <AskAnnaTooltip top>
               <template v-slot:activator="{ on }">
-                <v-btn
+                <AskAnnaButton
                   v-on="on"
                   dark
                   icon
@@ -149,15 +149,15 @@
                   @click="editor.chain().focus().toggleHeading({ level: 1 }).run()"
                   :color="editor.isActive('heading', { level: 1 }) ? 'primary' : 'secondary'"
                 >
-                  <v-icon>mdi-format-header-1</v-icon>
-                </v-btn>
+                  <AskAnnaIcon>mdi-format-header-1</AskAnnaIcon>
+                </AskAnnaButton>
               </template>
               <span>Header 1</span>
-            </v-tooltip>
+            </AskAnnaTooltip>
 
-            <v-tooltip top>
+            <AskAnnaTooltip top>
               <template v-slot:activator="{ on }">
-                <v-btn
+                <AskAnnaButton
                   v-on="on"
                   dark
                   icon
@@ -168,15 +168,15 @@
                   @click="editor.chain().focus().toggleHeading({ level: 2 }).run()"
                   :color="editor.isActive('heading', { level: 2 }) ? 'primary' : 'secondary'"
                 >
-                  <v-icon>mdi-format-header-2</v-icon>
-                </v-btn>
+                  <AskAnnaIcon>mdi-format-header-2</AskAnnaIcon>
+                </AskAnnaButton>
               </template>
               <span>Header 2</span>
-            </v-tooltip>
+            </AskAnnaTooltip>
 
-            <v-tooltip top>
+            <AskAnnaTooltip top>
               <template v-slot:activator="{ on }">
-                <v-btn
+                <AskAnnaButton
                   v-on="on"
                   dark
                   icon
@@ -187,15 +187,15 @@
                   @click="editor.chain().focus().toggleHeading({ level: 3 }).run()"
                   :color="editor.isActive('heading', { level: 3 }) ? 'primary' : 'secondary'"
                 >
-                  <v-icon>mdi-format-header-3</v-icon>
-                </v-btn>
+                  <AskAnnaIcon>mdi-format-header-3</AskAnnaIcon>
+                </AskAnnaButton>
               </template>
               <span>Header 3</span>
-            </v-tooltip>
+            </AskAnnaTooltip>
 
-            <v-tooltip top>
+            <AskAnnaTooltip top>
               <template v-slot:activator="{ on }">
-                <v-btn
+                <AskAnnaButton
                   v-on="on"
                   dark
                   icon
@@ -206,15 +206,15 @@
                   @click="editor.chain().focus().toggleBulletList().run()"
                   :color="editor.isActive('bulletList') ? 'primary' : 'secondary'"
                 >
-                  <v-icon>mdi-format-list-bulleted</v-icon>
-                </v-btn>
+                  <AskAnnaIcon>mdi-format-list-bulleted</AskAnnaIcon>
+                </AskAnnaButton>
               </template>
               <span>Bulleted list</span>
-            </v-tooltip>
+            </AskAnnaTooltip>
 
-            <v-tooltip top>
+            <AskAnnaTooltip top>
               <template v-slot:activator="{ on }">
-                <v-btn
+                <AskAnnaButton
                   v-on="on"
                   dark
                   icon
@@ -225,15 +225,15 @@
                   @click="editor.chain().focus().toggleOrderedList().run()"
                   :color="editor.isActive('orderedList') ? 'primary' : 'secondary'"
                 >
-                  <v-icon>mdi-format-list-numbered</v-icon>
-                </v-btn>
+                  <AskAnnaIcon>mdi-format-list-numbered</AskAnnaIcon>
+                </AskAnnaButton>
               </template>
               <span>Numeric list</span>
-            </v-tooltip>
+            </AskAnnaTooltip>
 
-            <v-tooltip top>
+            <AskAnnaTooltip top>
               <template v-slot:activator="{ on }">
-                <v-btn
+                <AskAnnaButton
                   v-on="on"
                   dark
                   icon
@@ -244,15 +244,15 @@
                   @click="editor.chain().focus().toggleTaskList().run()"
                   :color="editor.isActive('taskList') ? 'primary' : 'secondary'"
                 >
-                  <v-icon>mdi-format-list-checks</v-icon>
-                </v-btn>
+                  <AskAnnaIcon>mdi-format-list-checks</AskAnnaIcon>
+                </AskAnnaButton>
               </template>
               <span>Task list</span>
-            </v-tooltip>
+            </AskAnnaTooltip>
 
-            <v-tooltip top>
+            <AskAnnaTooltip top>
               <template v-slot:activator="{ on }">
-                <v-btn
+                <AskAnnaButton
                   v-on="on"
                   dark
                   icon
@@ -262,15 +262,15 @@
                   class="btn--hover btn--without-text mr-3"
                   @click="editor.chain().focus().setHorizontalRule().run()"
                 >
-                  <v-icon>mdi-minus</v-icon>
-                </v-btn>
+                  <AskAnnaIcon>mdi-minus</AskAnnaIcon>
+                </AskAnnaButton>
               </template>
               <span>Horizontal divider</span>
-            </v-tooltip>
+            </AskAnnaTooltip>
 
-            <v-tooltip top>
+            <AskAnnaTooltip top>
               <template v-slot:activator="{ on }">
-                <v-btn
+                <AskAnnaButton
                   v-on="on"
                   dark
                   icon
@@ -281,15 +281,15 @@
                   @click="editor.chain().focus().toggleBlockquote().run()"
                   :color="editor.isActive('blockquote') ? 'primary' : 'secondary'"
                 >
-                  <v-icon>mdi-format-quote-close</v-icon>
-                </v-btn>
+                  <AskAnnaIcon>mdi-format-quote-close</AskAnnaIcon>
+                </AskAnnaButton>
               </template>
               <span>Quote</span>
-            </v-tooltip>
+            </AskAnnaTooltip>
 
-            <v-tooltip top>
+            <AskAnnaTooltip top>
               <template v-slot:activator="{ on }">
-                <v-btn
+                <AskAnnaButton
                   v-on="on"
                   dark
                   icon
@@ -300,15 +300,15 @@
                   @click="editor.chain().focus().toggleCode().run()"
                   :color="editor.isActive('code') ? 'primary' : 'secondary'"
                 >
-                  <v-icon>mdi-code-tags</v-icon>
-                </v-btn>
+                  <AskAnnaIcon>mdi-code-tags</AskAnnaIcon>
+                </AskAnnaButton>
               </template>
               <span>Code</span>
-            </v-tooltip>
+            </AskAnnaTooltip>
 
-            <v-tooltip top>
+            <AskAnnaTooltip top>
               <template v-slot:activator="{ on }">
-                <v-btn
+                <AskAnnaButton
                   v-on="on"
                   dark
                   icon
@@ -319,11 +319,11 @@
                   @click="editor.chain().focus().toggleCodeBlock().run()"
                   :color="editor.isActive('codeBlock') ? 'primary' : 'secondary'"
                 >
-                  <v-icon>mdi-code-braces</v-icon>
-                </v-btn>
+                  <AskAnnaIcon>mdi-code-braces</AskAnnaIcon>
+                </AskAnnaButton>
               </template>
               <span>Code block</span>
-            </v-tooltip>
+            </AskAnnaTooltip>
 
             <AskAnnaLinkMenu
               :open="isSetLinkOpen"
@@ -332,9 +332,9 @@
               @onOpen="handleOpenSetLink"
             />
 
-            <v-tooltip top>
+            <AskAnnaTooltip top>
               <template v-slot:activator="{ on }">
-                <v-btn
+                <AskAnnaButton
                   v-on="on"
                   dark
                   icon
@@ -344,15 +344,15 @@
                   class="btn--hover btn--without-text mr-1"
                   @click="editor.chain().focus().undo().run()"
                 >
-                  <v-icon>mdi-undo</v-icon>
-                </v-btn>
+                  <AskAnnaIcon>mdi-undo</AskAnnaIcon>
+                </AskAnnaButton>
               </template>
               <span>Undo</span>
-            </v-tooltip>
+            </AskAnnaTooltip>
 
-            <v-tooltip top>
+            <AskAnnaTooltip top>
               <template v-slot:activator="{ on }">
-                <v-btn
+                <AskAnnaButton
                   v-on="on"
                   dark
                   icon
@@ -362,13 +362,13 @@
                   class="btn--hover btn--without-text mr-3"
                   @click="editor.chain().focus().redo().run()"
                 >
-                  <v-icon>mdi-redo</v-icon>
-                </v-btn>
+                  <AskAnnaIcon>mdi-redo</AskAnnaIcon>
+                </AskAnnaButton>
               </template>
               <span>Redo</span>
-            </v-tooltip>
+            </AskAnnaTooltip>
 
-            <v-spacer v-if="!$vuetify.breakpoint.xsOnly" />
+            <AskAnnaSpacer v-if="!$vuetify.breakpoint.xsOnly" />
             <a
               class="ask-anna-link body-2"
               target="_blank"
@@ -377,9 +377,9 @@
             >
               Markdown supported
             </a>
-            <v-tooltip top>
+            <AskAnnaTooltip top>
               <template v-slot:activator="{ on }">
-                <v-btn
+                <AskAnnaButton
                   v-on="on"
                   dark
                   icon
@@ -389,14 +389,14 @@
                   class="btn--hover btn--without-text ml-2"
                   @click="handleFullScreen"
                 >
-                  <v-icon>{{ isFullScreen ? 'mdi-fullscreen-exit' : 'mdi-fullscreen' }}</v-icon>
-                </v-btn>
+                  <AskAnnaIcon>{{ isFullScreen ? 'mdi-fullscreen-exit' : 'mdi-fullscreen' }}</AskAnnaIcon>
+                </AskAnnaButton>
               </template>
               <span>{{ isFullScreen ? 'Exit full screen' : 'Full screen' }}</span>
-            </v-tooltip>
+            </AskAnnaTooltip>
           </component>
         </div>
-        <v-divider v-show="editable" class="" />
+        <AskAnnaDivider v-show="editable" class="" />
 
         <editor-content
           :editor="editor"
@@ -406,7 +406,7 @@
           spellcheck="false"
           class="ma-2 overflow-y-auto"
         />
-      </v-card>
+      </AskAnnaCard>
     </form>
   </FullScreen>
 </template>

@@ -9,13 +9,13 @@
     fixed-header
   >
     <template v-slot:top>
-      <v-subheader>Packages</v-subheader>
-      <v-divider />
+      <AskAnnaSubHeader>Packages</AskAnnaSubHeader>
+      <AskAnnaDivider />
     </template>
 
     <template v-slot:item.uuid="{ item }">
-      <v-chip outlined label color="primary" @click.stop="handleDownload(item)">
-        <v-avatar left><v-icon>mdi-cloud-download</v-icon></v-avatar
+      <AskAnnaChip outlined label color="primary" @click.stop="handleDownload(item)">
+        <AskAnnaAvatar left><AskAnnaIcon>mdi-cloud-download</AskAnnaIcon></AskAnnaAvatar
         >Download</v-chip
       >
     </template>
@@ -27,9 +27,9 @@
     <template v-slot:item.menu="{ item }">
       <v-menu bottom color="primary" :close-on-content-click="false" :nudge-width="200" offset-x :key="item.name">
         <template v-slot:activator="{ on }">
-          <v-btn icon v-on="on" color="primary">
-            <v-icon>mdi-dots-horizontal</v-icon>
-          </v-btn>
+          <AskAnnaButton icon v-on="on" color="primary">
+            <AskAnnaIcon>mdi-dots-horizontal</AskAnnaIcon>
+          </AskAnnaButton>
         </template>
 
         <v-list>
@@ -40,7 +40,7 @@
       </v-menu>
     </template>
     <template v-slot:no-data>
-      <v-icon :size="25" left> mdi-package-down </v-icon>
+      <AskAnnaIcon :size="25" left> mdi-package-down </AskAnnaIcon>
       You don't have packages yet.
     </template>
   </v-data-table>

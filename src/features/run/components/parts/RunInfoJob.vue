@@ -3,7 +3,7 @@
     <div class="text-body-1">
       <span class="font-weight-bold">{{ text }}:</span>
     </div>
-    <v-btn
+    <AskAnnaButton
       color="primary"
       class="px-1 AskAnna-text--initial text-body-1"
       text
@@ -13,7 +13,7 @@
         params: { ...$route.params }
       }"
     >
-      {{ value }}</v-btn
+      {{ value }}</AskAnnaButton
     >
   </div>
 </template>

@@ -1,11 +1,11 @@
 <template>
   <div>
-    <v-tooltip v-if="isSliced" top content-class="opacity-1">
+    <AskAnnaTooltip v-if="isSliced" top content-class="opacity-1">
       <template v-slot:activator="{ on, value: show }">
         <div v-on="on">
           <span>{{ valueSliced }}</span>
 
-          <v-tooltip right content-class="opacity-1">
+          <AskAnnaTooltip right content-class="opacity-1">
             <template v-slot:activator="{ on }">
               <AskAnnaCopyText
                 v-on="on"
@@ -19,17 +19,17 @@
               />
             </template>
             <span>Copy</span>
-          </v-tooltip>
+          </AskAnnaTooltip>
         </div>
       </template>
       <div>{{ value }}</div>
-    </v-tooltip>
+    </AskAnnaTooltip>
 
     <div v-else>
       <v-hover v-slot="{ hover }" open-delay="200">
         <div>
           {{ valueSliced }}
-          <v-tooltip right content-class="opacity-1">
+          <AskAnnaTooltip right content-class="opacity-1">
             <template v-slot:activator="{ on }">
               <AskAnnaCopyText
                 v-on="on"
@@ -43,7 +43,7 @@
               />
             </template>
             <span>Copy</span>
-          </v-tooltip>
+          </AskAnnaTooltip>
         </div>
       </v-hover>
     </div>

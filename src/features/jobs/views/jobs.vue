@@ -1,13 +1,13 @@
 <template>
-  <v-card flat class="px-3 mt-2 br-none" outlined>
+  <AskAnnaCard flat class="px-3 mt-2 br-none" outlined>
     <AskAnnaLoadingProgress :type="'table-row'" :loading="jobsStore.loading">
-      <v-row align="center" justify="center">
-        <v-col cols="12" class="pa-0">
+      <AskAnnaRow align="center" justify="center">
+        <AskAnnaCol cols="12" class="pa-0">
           <jobs-list :jobList="jobsStore.jobs" />
-        </v-col>
-      </v-row>
+        </AskAnnaCol>
+      </AskAnnaRow>
     </AskAnnaLoadingProgress>
-  </v-card>
+  </AskAnnaCard>
 </template>
 
 <script setup lang="ts">

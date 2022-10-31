@@ -1,7 +1,7 @@
 <template>
   <div>
-    <v-toolbar v-if="!fileStore.isFileEmpty" dense flat color="grey lighten-4">
-      <v-flex class="d-flex">
+    <AskAnnaToolbar v-if="!fileStore.isFileEmpty" dense flat color="grey lighten-4">
+      <AskAnnaFlex class="d-flex">
         <div class="mr-auto d-flex align-center" :class="{ 'pr-1': $vuetify.breakpoint.xsOnly }">Payload</div>
 
         <v-btn-toggle
@@ -10,9 +10,9 @@
           class="mr-1"
           :value="currentView.value"
         >
-          <v-tooltip v-for="(view, index) in views" top :key="index">
+          <AskAnnaTooltip v-for="(view, index) in views" top :key="index">
             <template v-slot:activator="{ on }">
-              <v-btn
+              <AskAnnaButton
                 v-on="on"
                 class="btn--hover"
                 :value="view.value"
@@ -21,14 +21,14 @@
                 color="secondary"
                 @click="handleChangeView(index)"
               >
-                <v-icon color="secondary">{{ view.icon }}</v-icon>
-              </v-btn>
+                <AskAnnaIcon color="secondary">{{ view.icon }}</AskAnnaIcon>
+              </AskAnnaButton>
             </template>
             <span>{{ view.name }}</span>
-          </v-tooltip>
+          </AskAnnaTooltip>
         </v-btn-toggle>
         <div class="d-flex">
-          <v-btn
+          <AskAnnaButton
             v-if="!$vuetify.breakpoint.xsOnly"
             small
             :disabled="fileStore.loading || fileStore.isFileEmpty"
@@ -37,10 +37,10 @@
             class="mr-1 btn--hover"
             @click="handleDownload()"
           >
-            <v-icon color="secondary" left>mdi-download</v-icon>Download file
-          </v-btn>
+            <AskAnnaIcon color="secondary" left>mdi-download</AskAnnaIcon>Download file
+          </AskAnnaButton>
 
-          <v-btn
+          <AskAnnaButton
             small
             :disabled="fileStore.loading || fileStore.isFileEmpty"
             outlined
@@ -48,12 +48,12 @@
             @click="handleCopy()"
             class="mr-1 btn--hover"
           >
-            <v-icon left color="secondary">mdi-content-copy</v-icon>Copy
-          </v-btn>
+            <AskAnnaIcon left color="secondary">mdi-content-copy</AskAnnaIcon>Copy
+          </AskAnnaButton>
         </div>
-      </v-flex>
-    </v-toolbar>
-    <v-flex>
+      </AskAnnaFlex>
+    </AskAnnaToolbar>
+    <AskAnnaFlex>
       <AskAnnaLoadingProgress classes="mx-4 mb-4" :type="'table-row'" :loading="fileStore.loading" fullWidth>
         <PreviewFile
           :maxHeight="`${maxHeight}px`"
@@ -70,7 +70,7 @@
           @onDownload="handleDownload()"
         />
       </AskAnnaLoadingProgress>
-    </v-flex>
+    </AskAnnaFlex>
   </div>
 </template>
 <script setup lang="ts">

@@ -1,8 +1,8 @@
 <template>
   <v-data-iterator :items="items" hide-default-footer :no-data-text="''" disable-pagination>
     <template v-slot:default="props">
-      <v-row v-if="!settings.projectView" :class="{ 'px-2': $vuetify.breakpoint.xsOnly }">
-        <v-col
+      <AskAnnaRow v-if="!settings.projectView" :class="{ 'px-2': $vuetify.breakpoint.xsOnly }">
+        <AskAnnaCol
           v-for="item in props.items"
           :key="item.name + item.short_uuid"
           cols="12"
@@ -19,17 +19,23 @@
               :description="sanitizeHTML(item.description)"
             />
           </v-hover>
-        </v-col>
-      </v-row>
+        </AskAnnaCol>
+      </AskAnnaRow>
       <div v-if="settings.projectView">
         <div v-for="item in props.items" :key="item.name + item.short_uuid">
           <workspace-project-list-item :project="item" :workspaceName="workspaceName" cols="12" />
-          <v-divider />
+          <AskAnnaDivider />
         </div>
       </div>
     </template>
     <template v-slot:no-data
-      ><v-alert v-if="!loading" class="mt-2 text-center" dense outlined :class="{ 'ma-2': $vuetify.breakpoint.xsOnly }">
+      ><AskAnnaAlert
+        v-if="!loading"
+        class="mt-2 text-center"
+        dense
+        outlined
+        :class="{ 'ma-2': $vuetify.breakpoint.xsOnly }"
+      >
         <template v-if="isWorkspaceViewer || !isSignIn">
           There are no projects in this workspace that you have access to.
         </template>
@@ -51,7 +57,7 @@
             Or click here to create a new project.</router-link
           >
         </template>
-      </v-alert></template
+      </AskAnnaAlert></template
     >
   </v-data-iterator>
 </template>

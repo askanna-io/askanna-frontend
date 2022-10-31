@@ -12,10 +12,10 @@
     :group-by.sync="activeGroup"
   >
     <template v-slot:top>
-      <v-container v-if="headers.length" fluid class="py-0">
-        <v-row justify="end">
-          <v-col class="d-flex" cols="12" sm="3">
-            <v-select
+      <AskAnnaContainer v-if="headers.length" fluid class="py-0">
+        <AskAnnaRow justify="end">
+          <AskAnnaCol class="d-flex" cols="12" sm="3">
+            <AskAnnaSelect
               label="Group by"
               dense
               v-model="activeGroup"
@@ -26,14 +26,20 @@
               :items="groupItems"
               width="100px"
             >
-            </v-select>
-          </v-col>
+            </AskAnnaSelect>
+          </AskAnnaCol>
 
-          <v-col v-if="!$vuetify.breakpoint.xsOnly" class="d-flex" cols="12" sm="3">
-            <v-text-field dense v-model="search" hide-details label="Search" append-icon="mdi-magnify"></v-text-field>
-          </v-col>
-        </v-row>
-      </v-container>
+          <AskAnnaCol v-if="!$vuetify.breakpoint.xsOnly" class="d-flex" cols="12" sm="3">
+            <AskAnnaTextField
+              dense
+              v-model="search"
+              hide-details
+              label="Search"
+              append-icon="mdi-magnify"
+            ></AskAnnaTextField>
+          </AskAnnaCol>
+        </AskAnnaRow>
+      </AskAnnaContainer>
     </template>
 
     <template v-slot:body="{ items, options, groupedItems }">

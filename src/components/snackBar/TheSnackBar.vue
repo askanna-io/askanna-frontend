@@ -8,9 +8,9 @@
   >
     {{ state.snackbar.message }}
     <template v-slot:action>
-      <v-btn dark icon text @click="state.snackbar.open = false">
-        <v-icon>far fa-times-circle</v-icon>
-      </v-btn>
+      <AskAnnaButton dark icon text @click="state.snackbar.open = false">
+        <AskAnnaIcon>far fa-times-circle</AskAnnaIcon>
+      </AskAnnaButton>
     </template>
   </v-snackbar>
 </template>

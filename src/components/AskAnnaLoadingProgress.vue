@@ -1,12 +1,12 @@
 <template>
   <div>
-    <v-card
+    <AskAnnaCard
       v-if="isLoading"
       outlined
       class="pb-2"
       :class="[{ 'ma-0 my-2': fullWidth, 'ma-2 my-4': !fullWidth }, classes]"
     >
-      <v-card-text class="text-center">
+      <AskAnnaCardText class="text-center">
         <p class="mb-1">{{ loadingTitle }}</p>
 
         <v-progress-linear
@@ -16,8 +16,8 @@
           :value="loadingProgress"
           :reverse="indeterminate"
         />
-      </v-card-text>
-    </v-card>
+      </AskAnnaCardText>
+    </AskAnnaCard>
     <v-expand-transition>
       <slot v-if="!isLoading && !loading" />
     </v-expand-transition>

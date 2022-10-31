@@ -5,8 +5,8 @@
         <PublicProjectsToolbar />
       </template>
       <template v-slot:default="props">
-        <v-row :class="{ 'px-2': $vuetify.breakpoint.xsOnly }">
-          <v-col
+        <AskAnnaRow :class="{ 'px-2': $vuetify.breakpoint.xsOnly }">
+          <AskAnnaCol
             v-for="item in props.items"
             @click="handleOpenProject(item)"
             :key="item.name + item.short_uuid + item.role"
@@ -25,11 +25,11 @@
                 :description="sanitizeHTML(item.description)"
               />
             </v-hover>
-          </v-col>
-        </v-row>
+          </AskAnnaCol>
+        </AskAnnaRow>
       </template>
       <template v-slot:no-data
-        ><v-alert
+        ><AskAnnaAlert
           v-if="!loading"
           dense
           outlined
@@ -41,7 +41,7 @@
             >There are no projects for this filter request.</template
           >
           <template v-else>There are no projects that you have access to.</template>
-        </v-alert></template
+        </AskAnnaAlert></template
       >
     </v-data-iterator>
   </AskAnnaLoadingProgress>

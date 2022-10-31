@@ -8,10 +8,10 @@
       @submit.stop.prevent="handleSentEmail"
       @keyup.native.enter.prevent="handleSentEmail"
     >
-      <v-subheader class="px-0 pb-3"
-        >Enter your email below and we will send you the password reset instructions.</v-subheader
+      <AskAnnaSubHeader class="px-0 pb-3"
+        >Enter your email below and we will send you the password reset instructions.</AskAnnaSubHeader
       >
-      <v-text-field
+      <AskAnnaTextField
         v-model="username"
         dense
         outlined
@@ -23,9 +23,9 @@
         :rules="[RULES.required('The email is required'), RULES.email('The email you entered is not valid', 3)]"
       />
 
-      <v-btn :disabled="!isFormValid" color="primary" @click.stop="handleSentEmail">
+      <AskAnnaButton :disabled="!isFormValid" color="primary" @click.stop="handleSentEmail">
         Email me the reset instructions
-      </v-btn>
+      </AskAnnaButton>
     </v-form>
     <div v-if="isSent">
       <p>We have successfully processed your password reset request.</p>
@@ -35,9 +35,9 @@
         email, contact us at <a href="mailto:support@askanna.io" target="_blank">support@askanna.io</a>.
       </p>
     </div>
-    <v-btn text small class="forgot-link mr-4 mt-4 text--secondary" @click.stop="handleGoToLogin">
+    <AskAnnaButton text small class="forgot-link mr-4 mt-4 text--secondary" @click.stop="handleGoToLogin">
       I remember my password, let's go back
-    </v-btn>
+    </AskAnnaButton>
   </div>
 </template>
 

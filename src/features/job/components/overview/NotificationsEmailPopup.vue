@@ -3,16 +3,16 @@
     <template v-slot:activator="{ on, attrs }">
       <span v-on="on" v-bind="attrs" color="primary" class="pl-1 primary--hover primary--text"> Email</span>
     </template>
-    <v-card class="AskAnna-card AskAnna-card--in-dialog">
-      <v-toolbar flat dense white--text color="white">
-        <v-toolbar-title class="px-0">Notifications</v-toolbar-title>
-        <v-spacer />
+    <AskAnnaCard class="AskAnna-card AskAnna-card--in-dialog">
+      <AskAnnaToolbar flat dense white--text color="white">
+        <AskAnnaToolbarTitle class="px-0">Notifications</AskAnnaToolbarTitle>
+        <AskAnnaSpacer />
 
-        <v-btn icon @click="handleClose">
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
-      </v-toolbar>
-      <v-card-text>
+        <AskAnnaButton icon @click="handleClose">
+          <AskAnnaIcon>mdi-close</AskAnnaIcon>
+        </AskAnnaButton>
+      </AskAnnaToolbar>
+      <AskAnnaCardText>
         <v-tabs v-model="currentTab" left align-with-title>
           <v-tabs-slider color="primary" />
           <template v-for="tab of tabs">
@@ -48,8 +48,8 @@
             </v-tab-item>
           </template>
         </v-tabs-items>
-      </v-card-text>
-    </v-card>
+      </AskAnnaCardText>
+    </AskAnnaCard>
   </v-dialog>
 </template>
 <script setup lang="ts">

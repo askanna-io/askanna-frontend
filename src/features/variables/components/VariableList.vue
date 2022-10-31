@@ -22,7 +22,7 @@
       <ask-anna-copy :text="item.value" smartSlice :width="35" :masked="item.is_masked" expanded />
     </template>
     <template v-slot:item.actions="{ item }">
-      <v-btn
+      <AskAnnaButton
         v-if="projectVariableEdit"
         class="my-2 btn--hover"
         small
@@ -30,8 +30,8 @@
         color="secondary"
         @click="handleEditItem(item)"
       >
-        <v-icon color="secondary" left small class="mr-2">mdi-pencil</v-icon>Edit
-      </v-btn>
+        <AskAnnaIcon color="secondary" left small class="mr-2">mdi-pencil</AskAnnaIcon>Edit
+      </AskAnnaButton>
     </template>
     <template v-slot:no-data>
       <template v-if="projectVariableEdit">

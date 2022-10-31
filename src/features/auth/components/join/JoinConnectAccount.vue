@@ -8,7 +8,7 @@
       @keyup.native.enter="handleLogin"
       @submit.stop="handleLogin"
     >
-      <v-text-field
+      <AskAnnaTextField
         v-model="username"
         :error-messages="error.email"
         :rules="[RULES.required('The email is required'), RULES.email('The email you entered is not valid', 3)]"
@@ -19,7 +19,7 @@
         label="Email"
         required
       />
-      <v-text-field
+      <AskAnnaTextField
         dense
         outlined
         v-model="password"
@@ -36,13 +36,13 @@
         @click:append="isShowPassword = !isShowPassword"
       />
       <input type="password" style="display: none" browserAutocomplete="new-password" autocomplete="new-password" />
-      <v-btn :disabled="!isFormValid" :loading="loading" color="primary" class="mr-4" @click.stop="handleLogin">
+      <AskAnnaButton :disabled="!isFormValid" :loading="loading" color="primary" class="mr-4" @click.stop="handleLogin">
         Sign in, connect and join
         <template v-slot:loader>
           <span>{{ loadingText }}...</span>
-          <v-icon class="ask-anna-btn-loader" dark> mdi-loading </v-icon>
+          <AskAnnaIcon class="ask-anna-btn-loader" dark> mdi-loading </AskAnnaIcon>
         </template>
-      </v-btn>
+      </AskAnnaButton>
     </v-form>
     <JoinExistingAccountPopup
       :value="joinExistDialog"

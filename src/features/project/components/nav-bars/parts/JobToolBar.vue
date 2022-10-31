@@ -1,8 +1,8 @@
 <template>
-  <v-flex>
-    <v-card-title v-if="showTitle">
+  <AskAnnaFlex>
+    <AskAnnaCardTitle v-if="showTitle">
       <span class="title font-weight-light">Job: {{ jobName }}</span>
-    </v-card-title>
+    </AskAnnaCardTitle>
 
     <v-tabs v-model="currentTab" show-arrows :align-with-title="!$vuetify.breakpoint.xsOnly">
       <v-tabs-slider color="primary" />
@@ -18,7 +18,7 @@
         </v-tab>
       </template>
     </v-tabs>
-  </v-flex>
+  </AskAnnaFlex>
 </template>
 <script setup lang="ts">
 const props = defineProps({

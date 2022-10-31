@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card
+    <AskAnnaCard
       v-if="isEditWorkspaceView"
       flat
       class="mx-auto mb-3 pl-2"
@@ -16,7 +16,7 @@
           </template>
         </v-breadcrumbs>
       </div>
-    </v-card>
+    </AskAnnaCard>
     <WorkspaceToolbar
       :isMember="isMember"
       :title="workspace.name"

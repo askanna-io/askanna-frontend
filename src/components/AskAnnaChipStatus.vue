@@ -1,10 +1,10 @@
 <template>
-  <v-chip class="askaanna-chip-status" small label outlined :color="statusColor">
-    <v-avatar left>
-      <v-icon small>{{ statusIcon }}</v-icon>
-    </v-avatar>
+  <AskAnnaChip class="askaanna-chip-status" small label outlined :color="statusColor">
+    <AskAnnaAvatar left>
+      <AskAnnaIcon small>{{ statusIcon }}</AskAnnaIcon>
+    </AskAnnaAvatar>
     {{ statusValue }}
-  </v-chip>
+  </AskAnnaChip>
 </template>
 
 <script setup lang="ts">

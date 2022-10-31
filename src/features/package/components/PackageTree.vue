@@ -11,10 +11,10 @@
   >
     <template v-slot:item.type="{ item }">
       <router-link class="table-link table-link--unformated" :to="getRoutePath(item)">
-        <v-icon v-if="item.type === 'directory'">mdi-folder</v-icon>
-        <v-icon v-else>
+        <AskAnnaIcon v-if="item.type === 'directory'">mdi-folder</AskAnnaIcon>
+        <AskAnnaIcon v-else>
           {{ getIcons(item.ext) }}
-        </v-icon>
+        </AskAnnaIcon>
       </router-link>
     </template>
     <template v-slot:item.name="{ item }">
@@ -33,9 +33,9 @@
       </router-link>
     </template>
     <template v-slot:no-data>
-      <v-alert class="ma-4 text-center" dense outlined>
+      <AskAnnaAlert class="ma-4 text-center" dense outlined>
         {{ noDataAvailable }}
-      </v-alert>
+      </AskAnnaAlert>
     </template>
   </v-data-table>
 </template>

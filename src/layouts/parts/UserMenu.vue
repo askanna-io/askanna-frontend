@@ -1,12 +1,12 @@
 <template>
   <div v-if="!$vuetify.breakpoint.xsOnly" class="text-right">
-    <v-btn @click="uploadStatus.showHideSnackBar()" icon :color="uploadStatus.colorStatus">
-      <v-icon>{{ uploadStatus.iconStatus }}</v-icon>
-    </v-btn>
+    <AskAnnaButton @click="uploadStatus.showHideSnackBar()" icon :color="uploadStatus.colorStatus">
+      <AskAnnaIcon>{{ uploadStatus.iconStatus }}</AskAnnaIcon>
+    </AskAnnaButton>
     <v-menu transition="slide-y-transition" min-width="100px" offset-y close-on-content-click>
       <template v-slot:activator="{ on }">
-        <v-btn icon v-on="on">
-          <v-avatar class="ma-2" rounded="35" :size="35" tile>
+        <AskAnnaButton icon v-on="on">
+          <AskAnnaAvatar class="ma-2" rounded="35" :size="35" tile>
             <v-img
               class="img--rounded"
               :src="
@@ -16,8 +16,8 @@
                 userStore.globalProfile.avatar.small
               "
             />
-          </v-avatar>
-        </v-btn>
+          </AskAnnaAvatar>
+        </AskAnnaButton>
       </template>
 
       <v-list>

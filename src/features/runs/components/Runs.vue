@@ -18,22 +18,28 @@
       <tr>
         <td class="text-start">
           <router-link class="table-link table-link--unformated" :to="routeLinkParams({ item })">
-            <v-tooltip v-if="!$vuetify.breakpoint.xsOnly" top content-class="opacity-1">
+            <AskAnnaTooltip v-if="!$vuetify.breakpoint.xsOnly" top content-class="opacity-1">
               <template v-slot:activator="{ on, value }">
                 <div v-on="on">
-                  <v-btn class="px-0" text small>#{{ item.short_uuid.slice(0, 4) }}</v-btn>
-                  <v-tooltip right content-class="opacity-1">
+                  <AskAnnaButton class="px-0" text small>#{{ item.short_uuid.slice(0, 4) }}</AskAnnaButton>
+                  <AskAnnaTooltip right content-class="opacity-1">
                     <template v-slot:activator="{ on }">
-                      <v-btn icon text x-small v-on="on" v-show="value" @click.prevent="handleCopy(item.short_uuid)"
-                        ><v-icon>mdi-content-copy</v-icon></v-btn
+                      <AskAnnaButton
+                        icon
+                        text
+                        x-small
+                        v-on="on"
+                        v-show="value"
+                        @click.prevent="handleCopy(item.short_uuid)"
+                        ><AskAnnaIcon>mdi-content-copy</AskAnnaIcon></AskAnnaButton
                       >
                     </template>
                     <span>Copy run SUUID</span>
-                  </v-tooltip>
+                  </AskAnnaTooltip>
                 </div>
               </template>
               <span>{{ item.short_uuid }}</span>
-            </v-tooltip>
+            </AskAnnaTooltip>
             <template v-else> #{{ item.short_uuid.slice(0, 4) }} </template>
           </router-link>
         </td>

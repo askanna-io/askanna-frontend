@@ -1,16 +1,16 @@
 <template>
   <div class="AskAnna--job-definition">
-    <v-card-title :class="{ 'pb-0': $vuetify.breakpoint.xsOnly }">Definition</v-card-title>
-    <v-container class="mx-1 py-0" fluid>
-      <v-row>
-        <v-col
+    <AskAnnaCardTitle :class="{ 'pb-0': $vuetify.breakpoint.xsOnly }">Definition</AskAnnaCardTitle>
+    <AskAnnaContainer class="mx-1 py-0" fluid>
+      <AskAnnaRow>
+        <AskAnnaCol
           :cols="$vuetify.breakpoint.xsOnly ? 12 : 2"
           :sm="job.schedules.length ? 4 : 5"
           :class="{ 'py-0': $vuetify.breakpoint.xsOnly }"
         >
-          <v-row>
-            <v-col cols="12"><RunInfoCopyText text="SUUID" :value="job.short_uuid" /></v-col>
-            <v-col cols="12">
+          <AskAnnaRow>
+            <AskAnnaCol cols="12"><RunInfoCopyText text="SUUID" :value="job.short_uuid" /></AskAnnaCol>
+            <AskAnnaCol cols="12">
               <AskAnnaLinkCopy
                 text="Code: "
                 :to="to"
@@ -18,8 +18,8 @@
                 :value="lastPackage.short_uuid"
                 @click="handleGoToCode"
               />
-            </v-col>
-            <v-col cols="12"
+            </AskAnnaCol>
+            <AskAnnaCol cols="12"
               ><run-info-env
                 text="Environment"
                 :fullMode="false"
@@ -27,29 +27,29 @@
                 :nudgeLeft="nudgeLeft"
                 :fullValue="!job.schedules.length"
               />
-            </v-col>
-          </v-row>
-        </v-col>
-        <v-col
+            </AskAnnaCol>
+          </AskAnnaRow>
+        </AskAnnaCol>
+        <AskAnnaCol
           :cols="$vuetify.breakpoint.xsOnly ? 12 : 2"
           :sm="job.schedules.length ? 4 : 5"
           v-if="job.schedules.length || nextRun.datatime"
         >
-          <v-row>
-            <v-col v-if="nextRun.datatime" cols="12">
-              <v-tooltip top left content-class="opacity-1">
+          <AskAnnaRow>
+            <AskAnnaCol v-if="nextRun.datatime" cols="12">
+              <AskAnnaTooltip top left content-class="opacity-1">
                 <template v-slot:activator="{ on }">
                   <span class="hover-text" v-on="on"><span>Next run at </span>{{ nextRun.datatime }}</span>
                 </template>
                 <span>which is {{ prefix }}{{ nextRun.fromNow }}</span>
-              </v-tooltip>
-            </v-col>
-            <v-col v-if="job.schedules.length" cols="12">
-              <v-flex class="d-flex">
+              </AskAnnaTooltip>
+            </AskAnnaCol>
+            <AskAnnaCol v-if="job.schedules.length" cols="12">
+              <AskAnnaFlex class="d-flex">
                 <span class="font-weight-bold">{{ title }}:</span>
                 <ul class="list--unformated">
                   <li class="hover-text" v-for="(item, i) in schedules" :key="i" height="20">
-                    <v-tooltip top left content-class="opacity-1">
+                    <AskAnnaTooltip top left content-class="opacity-1">
                       <template v-slot:activator="{ on, value }">
                         <span class="hover-text" v-on="on">
                           <template v-if="isMultipleSchedules"
@@ -58,7 +58,7 @@
                           <template v-else>
                             {{ item.humanizeFormat.value | lowercase }}
                           </template>
-                          <v-icon
+                          <AskAnnaIcon
                             v-if="item.isDifferentTimeZone"
                             left
                             dense
@@ -66,7 +66,7 @@
                             class="ma-0"
                             :color="getColor(value)"
                             :class="{ 'pl-1': isMultipleSchedules }"
-                            >mdi-map-clock-outline</v-icon
+                            >mdi-map-clock-outline</AskAnnaIcon
                           >
                         </span>
                       </template>
@@ -79,20 +79,20 @@
                         </template>
                         <span>Next:{{ item.next_run }}</span>
                       </div>
-                    </v-tooltip>
+                    </AskAnnaTooltip>
                   </li>
                 </ul>
-              </v-flex>
-            </v-col>
-          </v-row>
-        </v-col>
-        <v-col
+              </AskAnnaFlex>
+            </AskAnnaCol>
+          </AskAnnaRow>
+        </AskAnnaCol>
+        <AskAnnaCol
           :class="{ 'pt-0': $vuetify.breakpoint.xsOnly }"
           :cols="$vuetify.breakpoint.xsOnly ? 12 : 2"
           :sm="job.schedules.length ? 4 : 5"
         >
-          <v-row>
-            <v-col cols="12"
+          <AskAnnaRow>
+            <AskAnnaCol cols="12"
               ><NotificationsEmail
                 title="Notification"
                 :fullMode="false"
@@ -100,11 +100,11 @@
                 :notifications="job.notifications"
                 :fullValue="!job.schedules.length"
               />
-            </v-col>
-          </v-row>
-        </v-col>
-      </v-row>
-    </v-container>
+            </AskAnnaCol>
+          </AskAnnaRow>
+        </AskAnnaCol>
+      </AskAnnaRow>
+    </AskAnnaContainer>
   </div>
 </template>
 

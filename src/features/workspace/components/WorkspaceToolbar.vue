@@ -1,28 +1,30 @@
 <template>
-  <v-toolbar
+  <AskAnnaToolbar
     flat
     dense
     color="grey lighten-4"
     class="br-r5 workspace-toolbar"
     :extended="$vuetify.breakpoint.xsOnly && isFilterOpen"
   >
-    <v-row no-gutters>
-      <v-col cols="8" sm="4" class="align-self-center">
-        <v-flex class="d-flex">
-          <v-toolbar-title v-if="isSignIn"> {{ title }}{{ isEditWorkspaceView ? ' - Edit mode' : '' }}</v-toolbar-title>
-          <v-toolbar-title v-else-if="isWorkspacePublic && !isEditWorkspaceView"> {{ title }}</v-toolbar-title>
-          <v-toolbar-title v-else>Not allowed</v-toolbar-title>
-        </v-flex>
-      </v-col>
-      <v-col
+    <AskAnnaRow no-gutters>
+      <AskAnnaCol cols="8" sm="4" class="align-self-center">
+        <AskAnnaFlex class="d-flex">
+          <AskAnnaToolbarTitle v-if="isSignIn">
+            {{ title }}{{ isEditWorkspaceView ? ' - Edit mode' : '' }}</AskAnnaToolbarTitle
+          >
+          <AskAnnaToolbarTitle v-else-if="isWorkspacePublic && !isEditWorkspaceView"> {{ title }}</AskAnnaToolbarTitle>
+          <AskAnnaToolbarTitle v-else>Not allowed</AskAnnaToolbarTitle>
+        </AskAnnaFlex>
+      </AskAnnaCol>
+      <AskAnnaCol
         v-if="!$vuetify.breakpoint.xsOnly"
         cols="4"
         class="align-self-center"
         style="min-width: 100px; max-width: 100%"
       >
-        <v-flex class="d-flex">
-          <v-flex class="pr-2 block" :class="{ 'w-100p': $vuetify.breakpoint.xsOnly }">
-            <v-text-field
+        <AskAnnaFlex class="d-flex">
+          <AskAnnaFlex class="pr-2 block" :class="{ 'w-100p': $vuetify.breakpoint.xsOnly }">
+            <AskAnnaTextField
               v-if="isFilterOpen"
               v-model="search"
               small
@@ -32,29 +34,29 @@
               @input="debounceedSearch"
               :placeholder="$vuetify.breakpoint.xsOnly ? 'Search...' : 'Search projects...'"
             />
-          </v-flex>
-        </v-flex>
-      </v-col>
-      <v-col cols="4" class="align-self-center" style="min-width: 100px">
-        <v-flex class="d-flex justify-end">
+          </AskAnnaFlex>
+        </AskAnnaFlex>
+      </AskAnnaCol>
+      <AskAnnaCol cols="4" class="align-self-center" style="min-width: 100px">
+        <AskAnnaFlex class="d-flex justify-end">
           <CreateProjectPopup v-if="!isEditWorkspaceView && !$vuetify.breakpoint.xsOnly" />
-          <v-btn @click="toggleFilter" small text icon
-            ><v-icon :color="filterMenuStyle.color">{{ filterMenuStyle.icon }}</v-icon></v-btn
+          <AskAnnaButton @click="toggleFilter" small text icon
+            ><AskAnnaIcon :color="filterMenuStyle.color">{{ filterMenuStyle.icon }}</AskAnnaIcon></AskAnnaButton
           >
           <WorkspaceToolbarMenu
             :isMember="isMember"
             :workspaceUuid="workspaceUuid"
             @onOpenWorkspaceRemove="handleOpenConfirmRemoveWorkspace"
           />
-        </v-flex>
-      </v-col>
-    </v-row>
+        </AskAnnaFlex>
+      </AskAnnaCol>
+    </AskAnnaRow>
 
     <template v-if="isFilterOpen" v-slot:extension>
-      <v-row no-gutters>
-        <v-col cols="12" class="align-self-center">
-          <v-flex class="d-flex" justify-center>
-            <v-text-field
+      <AskAnnaRow no-gutters>
+        <AskAnnaCol cols="12" class="align-self-center">
+          <AskAnnaFlex class="d-flex" justify-center>
+            <AskAnnaTextField
               v-if="isFilterOpen && $vuetify.breakpoint.xsOnly"
               v-model="search"
               small
@@ -75,9 +77,9 @@
               transition="slide-y-transition"
             >
               <template v-slot:activator="{ on }">
-                <v-btn v-on="on" small data-test="workspace-menu-activate-btn"
-                  ><v-icon :color="sortStyle.color">mdi-sort</v-icon
-                  >{{ $vuetify.breakpoint.xsOnly ? '' : sortrTitle }}</v-btn
+                <AskAnnaButton v-on="on" small data-test="workspace-menu-activate-btn"
+                  ><AskAnnaIcon :color="sortStyle.color">mdi-sort</AskAnnaIcon
+                  >{{ $vuetify.breakpoint.xsOnly ? '' : sortrTitle }}</AskAnnaButton
                 >
               </template>
               <v-list>
@@ -99,18 +101,18 @@
               nudge-bottom="10"
             >
               <template v-slot:activator="{ on }">
-                <v-btn class="ml-1" v-on="on" small data-test="workspace-menu-activate-btn">
-                  <v-icon :color="filterStyle.color">mdi-filter-variant</v-icon
+                <AskAnnaButton class="ml-1" v-on="on" small data-test="workspace-menu-activate-btn">
+                  <AskAnnaIcon :color="filterStyle.color">mdi-filter-variant</AskAnnaIcon
                   >{{ $vuetify.breakpoint.xsOnly ? '' : filterTitle }}
-                </v-btn>
+                </AskAnnaButton>
               </template>
-              <v-row class="pa-2 white">
-                <v-col class="d-flex pt-1 pb-1" cols="12">
-                  <v-card flat width="284">
-                    <v-card-subtitle class="pa-0">
+              <AskAnnaRow class="pa-2 white">
+                <AskAnnaCol class="d-flex pt-1 pb-1" cols="12">
+                  <AskAnnaCard flat width="284">
+                    <AskAnnaCardSubTitle class="pa-0">
                       <h3>Project visibility</h3>
-                    </v-card-subtitle>
-                    <v-select
+                    </AskAnnaCardSubTitle>
+                    <AskAnnaSelect
                       v-model="activeRoleFilter"
                       hide-details
                       class="pt-0"
@@ -119,16 +121,16 @@
                       item-value="value"
                       :items="visibilityFilters"
                     >
-                    </v-select>
-                  </v-card>
-                </v-col>
-              </v-row>
+                    </AskAnnaSelect>
+                  </AskAnnaCard>
+                </AskAnnaCol>
+              </AskAnnaRow>
             </v-menu>
-          </v-flex>
-        </v-col>
-      </v-row>
+          </AskAnnaFlex>
+        </AskAnnaCol>
+      </AskAnnaRow>
     </template>
-  </v-toolbar>
+  </AskAnnaToolbar>
 </template>
 <script setup lang="ts">
 import { useRoute } from 'vue-router/composables'

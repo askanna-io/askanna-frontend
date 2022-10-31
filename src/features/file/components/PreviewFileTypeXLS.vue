@@ -1,5 +1,5 @@
 <template>
-  <v-flex
+  <AskAnnaFlex
     class="fill-height pb-3 br-4 pt-0"
     fluid
     :class="{ 'px-0': $vuetify.breakpoint.xsOnly, 'px-5 pa-2': !$vuetify.breakpoint.xsOnly }"
@@ -23,10 +23,10 @@
             :group-by.sync="activeGroup"
           >
             <template v-slot:top>
-              <v-container v-if="tab.headers.length" fluid class="py-0">
-                <v-row justify="end">
-                  <v-col class="d-flex" cols="12" sm="3">
-                    <v-select
+              <AskAnnaContainer v-if="tab.headers.length" fluid class="py-0">
+                <AskAnnaRow justify="end">
+                  <AskAnnaCol class="d-flex" cols="12" sm="3">
+                    <AskAnnaSelect
                       label="Group by"
                       dense
                       v-model="activeGroup"
@@ -37,14 +37,14 @@
                       :items="groupItems(tab.headers)"
                       width="100px"
                     >
-                    </v-select>
-                  </v-col>
+                    </AskAnnaSelect>
+                  </AskAnnaCol>
 
-                  <v-col v-if="!$vuetify.breakpoint.xsOnly" class="d-flex" cols="12" sm="3">
-                    <v-text-field dense v-model="search" hide-details label="Search" append-icon="mdi-magnify" />
-                  </v-col>
-                </v-row>
-              </v-container>
+                  <AskAnnaCol v-if="!$vuetify.breakpoint.xsOnly" class="d-flex" cols="12" sm="3">
+                    <AskAnnaTextField dense v-model="search" hide-details label="Search" append-icon="mdi-magnify" />
+                  </AskAnnaCol>
+                </AskAnnaRow>
+              </AskAnnaContainer>
             </template>
 
             <template v-slot:body="{ items, options, groupedItems }">
@@ -67,14 +67,14 @@
               <template v-else>
                 <tr>
                   <td :colspan="tab.headers.length">
-                    <v-alert class="my-4 text-center v-flex" dense outlined>
+                    <AskAnnaAlert class="my-4 text-center v-flex" dense outlined>
                       <template v-if="search"> There is no data available for this search. </template>
                       <template v-else>
                         This sheet doesn't seem to contain data, or we don't support viewing this type of data.<br />
                         In case you have a question about this, or you need support, send us a message:
                         <a href="mailto:support@askanna.io" target="_blank">support@askanna.io</a>
                       </template>
-                    </v-alert>
+                    </AskAnnaAlert>
                   </td>
                 </tr>
               </template>
@@ -83,7 +83,7 @@
         </v-tab-item>
       </template>
     </v-tabs-items>
-  </v-flex>
+  </AskAnnaFlex>
 </template>
 
 <script setup lang="ts">

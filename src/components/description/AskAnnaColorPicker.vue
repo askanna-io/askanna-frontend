@@ -1,10 +1,10 @@
 <template>
   <v-menu top v-model="menu" :nudge-top="25" :close-on-content-click="false">
     <template v-slot:activator="{ on, attrs }">
-      <v-tooltip top>
+      <AskAnnaTooltip top>
         <template v-slot:activator="{ on: onHover }">
           <span v-on="onHover">
-            <v-btn
+            <AskAnnaButton
               v-bind="attrs"
               v-on="on"
               dark
@@ -15,18 +15,18 @@
               class="btn--hover btn--without-text mr-3"
               :class="{ 'pt-1': $vuetify.breakpoint.xsOnly }"
             >
-              <v-icon>mdi-format-color-fill</v-icon>
-            </v-btn>
+              <AskAnnaIcon>mdi-format-color-fill</AskAnnaIcon>
+            </AskAnnaButton>
           </span>
         </template>
         <span>Highlight</span>
-      </v-tooltip>
+      </AskAnnaTooltip>
     </template>
-    <v-card width="140px" flat class="px-2 pt-2">
-      <v-row no-gutters>
-        <v-col cols="12" class="color-picker-col">
+    <AskAnnaCard width="140px" flat class="px-2 pt-2">
+      <AskAnnaRow no-gutters>
+        <AskAnnaCol cols="12" class="color-picker-col">
           <template v-for="item in swatches">
-            <v-btn
+            <AskAnnaButton
               :key="item"
               x-small
               depressed
@@ -34,14 +34,16 @@
               class="btn--hover btn--without-text color--accent-2"
               @click="handleOnIputColor(item)"
             >
-            </v-btn>
+            </AskAnnaButton>
           </template>
-        </v-col>
-        <v-col cols="12" class="py-2">
-          <v-btn block x-small depressed outlined text class="btn--hover" @click="handleClose"> No highlight </v-btn>
-        </v-col>
-      </v-row>
-    </v-card>
+        </AskAnnaCol>
+        <AskAnnaCol cols="12" class="py-2">
+          <AskAnnaButton block x-small depressed outlined text class="btn--hover" @click="handleClose">
+            No highlight
+          </AskAnnaButton>
+        </AskAnnaCol>
+      </AskAnnaRow>
+    </AskAnnaCard>
   </v-menu>
 </template>
 

@@ -1,13 +1,13 @@
 <template>
   <span>
-    <v-tooltip v-if="isSliced" top content-class="opacity-1">
+    <AskAnnaTooltip v-if="isSliced" top content-class="opacity-1">
       <template v-slot:activator="{ on }">
         <div v-on="on">
           <span>{{ valueSliced }}</span>
         </div>
       </template>
       <div>{{ value }}</div>
-    </v-tooltip>
+    </AskAnnaTooltip>
 
     <template v-else>
       {{ valueSliced }}

@@ -1,6 +1,6 @@
 <template>
   <AskAnnaLoadingProgress :type="'table-row'" :loading="loading">
-    <v-card class="mx-auto mt-3" flat>
+    <AskAnnaCard class="mx-auto mt-3" flat>
       <div ref="verticalScrollContainerRef" class="scroll-container" :style="scrollContainerStyle">
         <CollapsibleSection open readonly class="sticky">
           <ComparisonList>
@@ -105,11 +105,11 @@
                   :fullScreen="mobileStore.isFullScreen"
                 />
               </ComparisonList>
-              <v-divider :key="'divider' + index" class="mb-2" />
+              <AskAnnaDivider :key="'divider' + index" class="mb-2" />
             </template>
           </template>
 
-          <v-btn
+          <AskAnnaButton
             v-if="compareRunsStore.metricParams.next && !compareRunsStore.metricParams.loadMetrics"
             small
             outlined
@@ -118,8 +118,8 @@
             @click="handleShowMoreMetrics"
             :disabled="!compareRunsStore.metricParams.next"
           >
-            <v-icon color="secondary" left>mdi-chevron-down</v-icon>Show more metrics
-          </v-btn>
+            <AskAnnaIcon color="secondary" left>mdi-chevron-down</AskAnnaIcon>Show more metrics
+          </AskAnnaButton>
           <AskAnnaLoadingDotsFlashing v-if="compareRunsStore.metricParams.loadMetrics" inline class="ml-14" />
         </CollapsibleSection>
 
@@ -153,11 +153,11 @@
                   :fullScreen="mobileStore.isFullScreen"
                 />
               </ComparisonList>
-              <v-divider :key="'vdivider' + index" class="mb-2" />
+              <AskAnnaDivider :key="'vdivider' + index" class="mb-2" />
             </template>
           </template>
 
-          <v-btn
+          <AskAnnaButton
             v-if="compareRunsStore.variableParams.next && !compareRunsStore.variableParams.loadVariable"
             small
             outlined
@@ -166,8 +166,8 @@
             @click="handleShowMoreMetrics"
             :disabled="!compareRunsStore.variableParams.next"
           >
-            <v-icon color="secondary" left>mdi-chevron-down</v-icon>Show more variables
-          </v-btn>
+            <AskAnnaIcon color="secondary" left>mdi-chevron-down</AskAnnaIcon>Show more variables
+          </AskAnnaButton>
           <AskAnnaLoadingDotsFlashing v-if="compareRunsStore.variableParams.loadVariable" inline class="ml-14" />
         </CollapsibleSection>
 
@@ -187,7 +187,7 @@
             /> </ComparisonList
         ></CollapsibleSection>
       </div>
-    </v-card>
+    </AskAnnaCard>
   </AskAnnaLoadingProgress>
 </template>
 

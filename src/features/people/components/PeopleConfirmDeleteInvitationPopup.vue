@@ -1,19 +1,21 @@
 <template>
   <v-dialog v-model="valueModel" max-width="650px" @click:outside="closeDelete">
-    <v-card class="AskAnna-card AskAnna-card--in-dialog">
+    <AskAnnaCard class="AskAnna-card AskAnna-card--in-dialog">
       <v-app-bar flat dense white--text color="white">
         <div v-if="$vuetify.breakpoint.xsOnly" class="text-body-1 font-weight-bold">
           Do you want to delete the invitation?
         </div>
 
-        <v-toolbar-title v-else class="px-0 toolbar-title">Do you want to delete the invitation?</v-toolbar-title>
-        <v-spacer />
+        <AskAnnaToolbarTitle v-else class="px-0 toolbar-title"
+          >Do you want to delete the invitation?</AskAnnaToolbarTitle
+        >
+        <AskAnnaSpacer />
 
-        <v-btn icon @click="closeDelete">
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
+        <AskAnnaButton icon @click="closeDelete">
+          <AskAnnaIcon>mdi-close</AskAnnaIcon>
+        </AskAnnaButton>
       </v-app-bar>
-      <v-card-text>
+      <AskAnnaCardText>
         You are about to delete the invitation for <b>{{ peopleName }}</b
         >. Here's what happens when you continue with this action:
         <br />
@@ -26,14 +28,16 @@
         <br />
         The action cannot be undone! Please confirm that you want to delete the invitation for <b>{{ peopleName }}</b
         >:
-      </v-card-text>
-      <v-card-actions :class="{ 'px-3': $vuetify.breakpoint.xsOnly }">
-        <v-btn small outlined text color="secondary" class="mr-1 btn--hover" @click="closeDelete">Cancel</v-btn>
-        <v-btn small outlined text color="error" class="mr-1 btn--hover" @click="deleteItemConfirm"
-          >Delete invitation</v-btn
+      </AskAnnaCardText>
+      <AskAnnaCardActions :class="{ 'px-3': $vuetify.breakpoint.xsOnly }">
+        <AskAnnaButton small outlined text color="secondary" class="mr-1 btn--hover" @click="closeDelete"
+          >Cancel</AskAnnaButton
         >
-      </v-card-actions>
-    </v-card>
+        <AskAnnaButton small outlined text color="error" class="mr-1 btn--hover" @click="deleteItemConfirm"
+          >Delete invitation</AskAnnaButton
+        >
+      </AskAnnaCardActions>
+    </AskAnnaCard>
   </v-dialog>
 </template>
 <script setup lang="ts">

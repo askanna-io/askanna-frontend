@@ -1,12 +1,12 @@
 <template>
   <div class="join-wrapper">
-    <v-row justify="center">
-      <v-col cols="8" xl="3" md="6" sm="9" lg="4" class="rounded pb-0">
+    <AskAnnaRow justify="center">
+      <AskAnnaCol cols="8" xl="3" md="6" sm="9" lg="4" class="rounded pb-0">
         <img alt="AskAnna logo" src="/assets/logo.svg" class="logo" />
-      </v-col>
-    </v-row>
-    <v-row align="center" justify="center">
-      <v-col class="pt-0">
+      </AskAnnaCol>
+    </AskAnnaRow>
+    <AskAnnaRow align="center" justify="center">
+      <AskAnnaCol class="pt-0">
         <AskAnnaLoadingProgress
           :type="'table-row'"
           :loading="loading"
@@ -15,8 +15,8 @@
           <Join v-if="isInvitationValid" />
           <JoinInvalidInvitation v-else />
         </AskAnnaLoadingProgress>
-      </v-col>
-    </v-row>
+      </AskAnnaCol>
+    </AskAnnaRow>
   </div>
 </template>
 

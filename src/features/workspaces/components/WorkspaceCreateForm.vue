@@ -1,7 +1,7 @@
 <template>
   <v-form ref="newWorkspaceFastForm" @submit.prevent="handlerCreateProject">
-    <v-col cols="12" class="pb-0">
-      <v-text-field
+    <AskAnnaCol cols="12" class="pb-0">
+      <AskAnnaTextField
         v-model="workspaceStore.newWorkspace.name"
         @input="handleOnInput"
         small
@@ -12,9 +12,9 @@
         :rules="nameRules"
         :hide-details="isFormValid"
       />
-    </v-col>
-    <v-card-actions>
-      <v-btn
+    </AskAnnaCol>
+    <AskAnnaCardActions>
+      <AskAnnaButton
         text
         small
         outlined
@@ -24,12 +24,12 @@
         @click="handlerCreate"
       >
         Create
-      </v-btn>
-      <v-btn small outlined text color="secondary" class="mr-1 btn--hover" @click="handleMoreOptions">
+      </AskAnnaButton>
+      <AskAnnaButton small outlined text color="secondary" class="mr-1 btn--hover" @click="handleMoreOptions">
         More options
-      </v-btn>
-      <v-btn v-if="showCancel" small outlined text class="mr-1" @click="handleCancel">Cancel</v-btn>
-    </v-card-actions>
+      </AskAnnaButton>
+      <AskAnnaButton v-if="showCancel" small outlined text class="mr-1" @click="handleCancel">Cancel</AskAnnaButton>
+    </AskAnnaCardActions>
   </v-form>
 </template>
 

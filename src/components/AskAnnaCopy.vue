@@ -1,33 +1,33 @@
 <template>
   <div>
-    <v-tooltip top left v-if="!masked" content-class="AskAnna-copy-tooltip opacity-1">
+    <AskAnnaTooltip top left v-if="!masked" content-class="AskAnna-copy-tooltip opacity-1">
       <template v-slot:activator="{ on, value }">
         <div v-on="on">
           <span class="text-no-wrap">{{ prefix }} {{ sliceText }}</span>
-          <v-btn
+          <AskAnnaButton
             v-if="(expanded && isSliced) || (expanded && isSliced && !masked)"
             text
             icon
             class="px-0 ask-anna-copy"
             @click="expand = !expand"
           >
-            <v-icon>mdi-chevron-{{ expand ? 'up' : 'down' }}</v-icon>
-          </v-btn>
-          <v-tooltip v-if="showCopyButton" right content-class="opacity-1">
+            <AskAnnaIcon>mdi-chevron-{{ expand ? 'up' : 'down' }}</AskAnnaIcon>
+          </AskAnnaButton>
+          <AskAnnaTooltip v-if="showCopyButton" right content-class="opacity-1">
             <template v-slot:activator="{ on }">
-              <v-btn icon text x-small v-on="on" v-show="value" @click.stop="handleCopyText(text)"
-                ><v-icon>mdi-content-copy</v-icon></v-btn
+              <AskAnnaButton icon text x-small v-on="on" v-show="value" @click.stop="handleCopyText(text)"
+                ><AskAnnaIcon>mdi-content-copy</AskAnnaIcon></AskAnnaButton
               >
             </template>
             <span>Copy</span>
-          </v-tooltip>
+          </AskAnnaTooltip>
         </div>
       </template>
 
       <span class="hover-content" v-html="text" />
-    </v-tooltip>
+    </AskAnnaTooltip>
     <v-expand-transition>
-      <v-card flat v-show="expand" class="transparent"><div class="expanded" v-html="restOftext" /> </v-card>
+      <AskAnnaCard flat v-show="expand" class="transparent"><div class="expanded" v-html="restOftext" /> </AskAnnaCard>
     </v-expand-transition>
     <span v-if="masked">
       {{ text }}

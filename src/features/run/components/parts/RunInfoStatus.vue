@@ -1,5 +1,5 @@
 <template>
-  <v-tooltip top content-class="opacity-1">
+  <AskAnnaTooltip top content-class="opacity-1">
     <template v-slot:activator="{ on }">
       <div v-on="on">
         <template v-if="text"
@@ -8,7 +8,7 @@
       </div>
     </template>
     Status of the run
-  </v-tooltip>
+  </AskAnnaTooltip>
 </template>
 
 <script setup lang="ts">

@@ -2,25 +2,25 @@
   <div class="text-center">
     <v-dialog content-class="invite-popup" v-model="menu" :close-on-content-click="false" width="500">
       <template v-slot:activator="{ on, attrs }">
-        <v-btn v-bind="attrs" v-on="on" small rounded class="mr-3">
-          <v-icon color="primary" left>mdi-plus</v-icon>
+        <AskAnnaButton v-bind="attrs" v-on="on" small rounded class="mr-3">
+          <AskAnnaIcon color="primary" left>mdi-plus</AskAnnaIcon>
           {{ $vuetify.breakpoint.xsOnly ? 'Invite  people' : 'Invite more people' }}
-        </v-btn>
+        </AskAnnaButton>
       </template>
-      <v-card>
-        <v-toolbar flat dense white--text color="white">
-          <v-toolbar-title class="px-0"
-            >Invite more people to <span class="primary--text">{{ title }}</span></v-toolbar-title
+      <AskAnnaCard>
+        <AskAnnaToolbar flat dense white--text color="white">
+          <AskAnnaToolbarTitle class="px-0"
+            >Invite more people to <span class="primary--text">{{ title }}</span></AskAnnaToolbarTitle
           >
-          <v-spacer />
+          <AskAnnaSpacer />
 
-          <v-btn icon @click="handleCancel">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-toolbar>
-        <v-container id="scroll-target" style="max-height: 400px" class="pl-1 pt-0 overflow-y-auto">
-          <v-row no-gutters>
-            <v-col class="pa-2" cols="12">
+          <AskAnnaButton icon @click="handleCancel">
+            <AskAnnaIcon>mdi-close</AskAnnaIcon>
+          </AskAnnaButton>
+        </AskAnnaToolbar>
+        <AskAnnaContainer id="scroll-target" style="max-height: 400px" class="pl-1 pt-0 overflow-y-auto">
+          <AskAnnaRow no-gutters>
+            <AskAnnaCol class="pa-2" cols="12">
               <v-combobox
                 hide-details=""
                 :delimiters="[' ']"
@@ -37,7 +37,7 @@
                 placeholder="Type emails here"
               >
                 <template v-slot:selection="{ attrs, item, select, selected }">
-                  <v-chip
+                  <AskAnnaChip
                     v-bind="attrs"
                     :input-value="selected"
                     :class="getStyle(item).color"
@@ -45,34 +45,34 @@
                     @click="select"
                     @click:close="handleRemove(item)"
                   >
-                    <v-icon left>
+                    <AskAnnaIcon left>
                       {{ getStyle(item).icon }}
-                    </v-icon>
+                    </AskAnnaIcon>
                     <strong>{{ item }}</strong
                     >&nbsp;
                     <span></span>
-                  </v-chip>
+                  </AskAnnaChip>
                 </template>
               </v-combobox>
-              <v-chip class="mt-2" v-if="inValidEmails.length" color="error" @click="handleRemoveInValidEmails">
-                <v-avatar color="white" left class="error--text">
+              <AskAnnaChip class="mt-2" v-if="inValidEmails.length" color="error" @click="handleRemoveInValidEmails">
+                <AskAnnaAvatar color="white" left class="error--text">
                   {{ inValidEmails.length }}
-                </v-avatar>
+                </AskAnnaAvatar>
                 Remove {{ inValidEmails.length }} invalid email{{ inValidEmails.length > 1 ? 's' : '' }}
-              </v-chip>
-              <v-chip class="mt-2" v-if="invitedEmails.length" color="primary" @click="handleRemoveInvitedEmails">
-                <v-avatar color="white" left class="primary--text">
+              </AskAnnaChip>
+              <AskAnnaChip class="mt-2" v-if="invitedEmails.length" color="primary" @click="handleRemoveInvitedEmails">
+                <AskAnnaAvatar color="white" left class="primary--text">
                   {{ invitedEmails.length }}
-                </v-avatar>
+                </AskAnnaAvatar>
                 Remove {{ invitedEmails.length }} email{{ invitedEmails.length > 1 ? 's' : '' }} of existing member{{
                   invitedEmails.length > 1 ? 's' : ''
                 }}
-              </v-chip>
-            </v-col>
-          </v-row>
-          <v-row no-gutters>
-            <v-col class="pa-2" cols="12">
-              <v-select
+              </AskAnnaChip>
+            </AskAnnaCol>
+          </AskAnnaRow>
+          <AskAnnaRow no-gutters>
+            <AskAnnaCol class="pa-2" cols="12">
+              <AskAnnaSelect
                 v-model="selectedAccess"
                 :items="listAccess"
                 dense
@@ -84,12 +84,12 @@
                 persistent-hint
                 label="Invite as"
               />
-            </v-col>
-          </v-row>
-        </v-container>
+            </AskAnnaCol>
+          </AskAnnaRow>
+        </AskAnnaContainer>
 
-        <v-card-actions>
-          <v-btn
+        <AskAnnaCardActions>
+          <AskAnnaButton
             :disabled="!invitationItems.length || Boolean(inValidEmails.length) || Boolean(invitedEmails.length)"
             :loading="loading"
             text
@@ -99,16 +99,16 @@
             class="ml-0 btn--hover"
             @click="handleSentInvitation"
           >
-            <v-icon left> mdi-mail </v-icon>
+            <AskAnnaIcon left> mdi-mail </AskAnnaIcon>
             {{ invitationBtnText }}
             <template v-slot:loader>
-              <v-icon left> mdi-mail </v-icon>
+              <AskAnnaIcon left> mdi-mail </AskAnnaIcon>
               <span>{{ loadingText }}...</span>
-              <v-icon class="ask-anna-btn-loader"> mdi-loading </v-icon>
+              <AskAnnaIcon class="ask-anna-btn-loader"> mdi-loading </AskAnnaIcon>
             </template>
-          </v-btn>
-        </v-card-actions>
-      </v-card>
+          </AskAnnaButton>
+        </AskAnnaCardActions>
+      </AskAnnaCard>
     </v-dialog>
   </div>
 </template>

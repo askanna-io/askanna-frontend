@@ -1,7 +1,7 @@
 <template>
   <div>
-    <v-toolbar v-if="!fileStore.loading && !fileStore.isFileEmpty" dense flat color="grey lighten-4">
-      <v-flex class="d-flex">
+    <AskAnnaToolbar v-if="!fileStore.loading && !fileStore.isFileEmpty" dense flat color="grey lighten-4">
+      <AskAnnaFlex class="d-flex">
         <div class="cut-text d-flex align-center">
           {{ run.result.name
           }}<span v-if="!$vuetify.breakpoint.xsOnly" class="pl-3"
@@ -15,9 +15,9 @@
           class="mr-1"
           :value="currentView.value"
         >
-          <v-tooltip v-for="(view, index) in views" top :key="index">
+          <AskAnnaTooltip v-for="(view, index) in views" top :key="index">
             <template v-slot:activator="{ on }">
-              <v-btn
+              <AskAnnaButton
                 v-on="on"
                 class="btn--hover"
                 :value="view.value"
@@ -26,14 +26,14 @@
                 color="secondary"
                 @click="handleChangeView(index)"
               >
-                <v-icon color="secondary">{{ view.icon }}</v-icon>
-              </v-btn>
+                <AskAnnaIcon color="secondary">{{ view.icon }}</AskAnnaIcon>
+              </AskAnnaButton>
             </template>
             <span>{{ view.name }}</span>
-          </v-tooltip>
+          </AskAnnaTooltip>
         </v-btn-toggle>
         <div>
-          <v-btn
+          <AskAnnaButton
             v-if="!$vuetify.breakpoint.xsOnly"
             small
             outlined
@@ -45,9 +45,9 @@
             <template v-slot:loader>
               <span>Downloading...</span>
             </template>
-            <v-icon color="secondary" left>mdi-download</v-icon>Download file
-          </v-btn>
-          <v-btn
+            <AskAnnaIcon color="secondary" left>mdi-download</AskAnnaIcon>Download file
+          </AskAnnaButton>
+          <AskAnnaButton
             v-if="fileStore.isFileJSON || fileStore.isFileImg"
             small
             outlined
@@ -56,12 +56,12 @@
             :disabled="fileStore.loading || fileStore.isFileEmpty || fileStore.loadingFullData"
             @click="handleCopy()"
           >
-            <v-icon left color="secondary">mdi-content-copy</v-icon>Copy
-          </v-btn>
+            <AskAnnaIcon left color="secondary">mdi-content-copy</AskAnnaIcon>Copy
+          </AskAnnaButton>
         </div>
-      </v-flex>
-    </v-toolbar>
-    <v-flex id="scroll-target" class="overflow-y-auto" ref="scrolllWrapperRef" :style="scrollerStyles">
+      </AskAnnaFlex>
+    </AskAnnaToolbar>
+    <AskAnnaFlex id="scroll-target" class="overflow-y-auto" ref="scrolllWrapperRef" :style="scrollerStyles">
       <ask-anna-loading-progress
         :loading="fileStore.loading"
         fullWidth
@@ -84,7 +84,7 @@
           @onDownload="handleDownload"
         />
       </ask-anna-loading-progress>
-    </v-flex>
+    </AskAnnaFlex>
   </div>
 </template>
 <script setup lang="ts">

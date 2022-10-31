@@ -4,7 +4,7 @@
       <span v-on="on" class="pr-5 cursor--pointer" @mouseover="handleOnHover" @mouseleave="handleOnBlur">
         Labels
         <span class="mr-5" style="position: relative">
-          <v-icon
+          <AskAnnaIcon
             style="left: 3px; top: 1px; right: auto; position: absolute"
             v-show="isActive"
             v-bind="attrs"
@@ -16,25 +16,27 @@
             filter
           >
             mdi-filter-variant
-          </v-icon>
+          </AskAnnaIcon>
         </span>
       </span>
     </template>
 
-    <v-card>
+    <AskAnnaCard>
       <autocomplete-filter label="Filter by label name" :items="labels" filterName="label_name" />
 
-      <v-divider />
+      <AskAnnaDivider />
 
       <filter-name-value class="pt-2" filterName="label_value" label="Filter by label value" />
 
-      <v-card-actions v-if="false">
-        <v-spacer></v-spacer>
+      <AskAnnaCardActions v-if="false">
+        <AskAnnaSpacer />
 
-        <v-btn small outlined text class="btn--hover" @click="menu = false"> Cancel </v-btn>
-        <v-btn small outlined color="secondary" text class="btn--hover" @click="handleApply"> Apply </v-btn>
-      </v-card-actions>
-    </v-card>
+        <AskAnnaButton small outlined text class="btn--hover" @click="menu = false"> Cancel </AskAnnaButton>
+        <AskAnnaButton small outlined color="secondary" text class="btn--hover" @click="handleApply">
+          Apply
+        </AskAnnaButton>
+      </AskAnnaCardActions>
+    </AskAnnaCard>
   </v-menu>
 </template>
 

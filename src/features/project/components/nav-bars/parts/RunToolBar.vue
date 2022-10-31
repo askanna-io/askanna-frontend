@@ -1,8 +1,8 @@
 <template>
-  <v-flex>
-    <v-card-title v-if="showTitle" :class="{ 'ml-0': $vuetify.breakpoint.xsOnly }">
+  <AskAnnaFlex>
+    <AskAnnaCardTitle v-if="showTitle" :class="{ 'ml-0': $vuetify.breakpoint.xsOnly }">
       <span class="title font-weight-light">Run: #{{ runId }}</span>
-    </v-card-title>
+    </AskAnnaCardTitle>
 
     <v-tabs v-model="currentRunTab" class="pb-3">
       <v-tab v-for="tab of tabs" ripple :key="tab.id" :to="{ name: tab.to, params: { ...params, folderName: '' } }">
@@ -10,7 +10,7 @@
       </v-tab>
       <RunMenuPopup v-if="!isEditRunView && projectRunEdit && $vuetify.breakpoint.xsOnly" class="pt-2" />
     </v-tabs>
-  </v-flex>
+  </AskAnnaFlex>
 </template>
 <script setup lang="ts">
 const props = defineProps({

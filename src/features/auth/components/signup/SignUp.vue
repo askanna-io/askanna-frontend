@@ -6,7 +6,7 @@
     @submit="handleLogin"
     @keyup.native.enter="handleLogin"
   >
-    <v-text-field
+    <AskAnnaTextField
       dense
       outlined
       label="Name"
@@ -15,7 +15,7 @@
       @blur="handleOnBlurName"
       :error-messages="error.name"
     />
-    <v-text-field
+    <AskAnnaTextField
       dense
       outlined
       label="Email"
@@ -24,7 +24,7 @@
       :error-messages="error.email || error.username"
       :rules="[RULES.required('The email is required'), RULES.email('The email you entered is not valid', 3)]"
     />
-    <v-text-field
+    <AskAnnaTextField
       dense
       counter
       outlined
@@ -39,7 +39,7 @@
       ]"
       @click:append="isShowPassword = !isShowPassword"
     />
-    <v-text-field
+    <AskAnnaTextField
       dense
       outlined
       validate-on-blur
@@ -49,7 +49,7 @@
       :rules="[RULES.required('The workspace name is required')]"
     />
 
-    <v-checkbox
+    <AskAnnaCheckbox
       dense
       class="pt-0 mt-0"
       v-model="formData.terms_of_use"
@@ -66,16 +66,16 @@
           </a>
         </div>
       </template>
-    </v-checkbox>
+    </AskAnnaCheckbox>
 
     <input type="password" style="display: none" browserAutocomplete="new-password" autocomplete="new-password" />
-    <v-btn :disabled="!isFormValid" :loading="loading" color="primary" class="mr-4" @click="handleLogin">
+    <AskAnnaButton :disabled="!isFormValid" :loading="loading" color="primary" class="mr-4" @click="handleLogin">
       Create your account
       <template v-slot:loader>
         <span>{{ loadingText }}...</span>
-        <v-icon class="ask-anna-btn-loader" dark> mdi-loading </v-icon>
+        <AskAnnaIcon class="ask-anna-btn-loader" dark> mdi-loading </AskAnnaIcon>
       </template>
-    </v-btn>
+    </AskAnnaButton>
   </v-form>
 </template>
 

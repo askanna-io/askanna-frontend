@@ -7,10 +7,10 @@
     nudge-bottom="10"
   >
     <template v-slot:activator="{ on }">
-      <v-btn small dark class="white--text" text v-on="on">Projects</v-btn>
+      <AskAnnaButton small dark class="white--text" text v-on="on">Projects</AskAnnaButton>
     </template>
-    <v-row class="pr-2 white askAnna-main-menu">
-      <v-col cols="5">
+    <AskAnnaRow class="pr-2 white askAnna-main-menu">
+      <AskAnnaCol cols="5">
         <v-list dense>
           <v-list-item-group v-model="listMenu" color="primary" mandatory @change="handleChangeMenu">
             <v-list-item v-for="(item, i) in projectMenuItems" :key="i" aria-readonly>
@@ -20,10 +20,10 @@
             </v-list-item>
           </v-list-item-group>
         </v-list>
-      </v-col>
-      <v-col cols="7" class="pl-0">
-        <v-alert class="mb-0 pr-0" dense border="left" colored-border color="primary">
-          <v-text-field
+      </AskAnnaCol>
+      <AskAnnaCol cols="7" class="pl-0">
+        <AskAnnaAlert class="mb-0 pr-0" dense border="left" colored-border color="primary">
+          <AskAnnaTextField
             v-if="!projectsStore.loading && (projects.length > 9 || search)"
             v-model="search"
             @input="handleOnSearch()"
@@ -65,7 +65,7 @@
                         }
                       }"
                     >
-                      <v-icon v-text="'mdi-semantic-web'" class="pr-2" />{{ item.name }}</router-link
+                      <AskAnnaIcon class="pr-2">mdi-semantic-web</AskAnnaIcon>{{ item.name }}</router-link
                     >
                   </td>
                 </tr>
@@ -73,13 +73,15 @@
             </template>
           </v-simple-table>
 
-          <v-flex v-if="search && !projects.length && !isSearchProcessing" class="px-2 pt-2">No results </v-flex>
-          <v-btn @click="handleCloseMenu" text plain small outlined class="mt-4 mb-0" :to="projectBtnOpt.to">{{
+          <AskAnnaFlex v-if="search && !projects.length && !isSearchProcessing" class="px-2 pt-2"
+            >No results
+          </AskAnnaFlex>
+          <AskAnnaButton @click="handleCloseMenu" text plain small outlined class="mt-4 mb-0" :to="projectBtnOpt.to">{{
             projectBtnOpt.title
-          }}</v-btn>
-        </v-alert>
-      </v-col>
-    </v-row>
+          }}</AskAnnaButton>
+        </AskAnnaAlert>
+      </AskAnnaCol>
+    </AskAnnaRow>
   </v-menu>
 </template>
 

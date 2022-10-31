@@ -1,22 +1,22 @@
 <template>
   <v-menu v-model="menu" :close-on-content-click="false" :nudge-width="200" nudge-right="60">
     <template v-slot:activator="{ on, attrs }">
-      <v-row v-on="on" @mouseover="handleOnHover" @mouseleave="handleOnBlur">
-        <v-col class="pt-0">
+      <AskAnnaRow v-on="on" @mouseover="handleOnHover" @mouseleave="handleOnBlur">
+        <AskAnnaCol class="pt-0">
           {{ title }}
-          <v-icon v-if="false" v-bind="attrs" text outlined small :color="colorComputed" text-color="white" filter>
+          <AskAnnaIcon v-if="false" v-bind="attrs" text outlined small :color="colorComputed" text-color="white" filter>
             mdi-filter-variant
-          </v-icon>
-        </v-col>
-      </v-row>
+          </AskAnnaIcon>
+        </AskAnnaCol>
+      </AskAnnaRow>
     </template>
 
-    <v-card>
+    <AskAnnaCard>
       <v-list>
         <v-list-item-group v-model="model" color="primary">
           <v-list-item dense v-for="(item, i) in items" :key="i">
             <v-list-item-icon>
-              <v-icon v-text="item.icon"></v-icon>
+              <AskAnnaIcon>{{ item.icon }}</AskAnnaIcon>
             </v-list-item-icon>
 
             <v-list-item-content>
@@ -25,7 +25,7 @@
           </v-list-item>
         </v-list-item-group>
       </v-list>
-    </v-card>
+    </AskAnnaCard>
   </v-menu>
 </template>
 

@@ -1,7 +1,7 @@
 <template>
   <div>
-    <v-row justify="center">
-      <v-col cols="8" xl="3" md="6" sm="9" lg="4" class="rounded">
+    <AskAnnaRow justify="center">
+      <AskAnnaCol cols="8" xl="3" md="6" sm="9" lg="4" class="rounded">
         <img alt="AskAnna logo" src="/assets/logo.svg" class="logo" />
         <v-expansion-panels class="login-expansion" v-model="panel">
           <signin v-if="!signUpStep" />
@@ -15,17 +15,17 @@
           </v-expand-transition>
         </v-expansion-panels>
         <signin-thank-you v-if="signUpStep === 2" />
-      </v-col>
-    </v-row>
-    <v-row v-if="panel" align="center" justify="center">
-      <v-col cols="8" xl="3" md="6" sm="9" lg="4" class="rounded">
+      </AskAnnaCol>
+    </AskAnnaRow>
+    <AskAnnaRow v-if="panel" align="center" justify="center">
+      <AskAnnaCol cols="8" xl="3" md="6" sm="9" lg="4" class="rounded">
         <v-expansion-panels class="login-expansion" v-model="panel">
           <v-expand-transition>
             <AskAnnaReadMore />
           </v-expand-transition>
         </v-expansion-panels>
-      </v-col>
-    </v-row>
+      </AskAnnaCol>
+    </AskAnnaRow>
   </div>
 </template>
 

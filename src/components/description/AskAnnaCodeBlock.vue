@@ -1,6 +1,6 @@
 <template>
   <NodeViewWrapper class="code-block">
-    <v-flex>
+    <AskAnnaFlex>
       <select
         ref="languageSelect"
         contenteditable="false"
@@ -14,7 +14,7 @@
           {{ language }}
         </option>
       </select>
-      <v-btn
+      <AskAnnaButton
         dark
         icon
         text
@@ -22,9 +22,9 @@
         color="secondary"
         class="copy-button white-text--hover btn--without-text"
         @click="handleCopy"
-        ><v-icon>mdi-content-copy</v-icon></v-btn
+        ><AskAnnaIcon>mdi-content-copy</AskAnnaIcon></AskAnnaButton
       >
-    </v-flex>
+    </AskAnnaFlex>
     <pre><NodeViewContent as="code"  /></pre>
   </NodeViewWrapper>
 </template>
