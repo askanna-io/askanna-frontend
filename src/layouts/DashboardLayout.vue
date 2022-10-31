@@ -7,7 +7,7 @@
 
       <div v-else class="pl-9" />
 
-      <v-container fluid class="pl-1">
+      <AskAnnaContainer fluid class="pl-1">
         <div
           class="d-flex align-center"
           align="center"
@@ -18,27 +18,32 @@
           no-gutters
         >
           <div md="auto" sm="12" text-sm-left>
-            <v-btn class="pa-0 mt-1" :to="{ name: 'workspace', params: { ...$route.params } }" text color="transparent">
+            <AskAnnaButton
+              class="pa-0 mt-1"
+              :to="{ name: 'workspace', params: { ...$route.params } }"
+              text
+              color="transparent"
+            >
               <img alt="AskAnna logo" src="/assets/logo.svg" class="logo" />
-            </v-btn>
+            </AskAnnaButton>
           </div>
           <MainMenu />
           <UserMenu />
         </div>
-      </v-container>
+      </AskAnnaContainer>
       <template v-if="$vuetify.breakpoint.xsOnly">
         <v-app-bar-nav-icon @click.stop="handleOpenMenu" />
       </template>
     </v-app-bar>
 
     <v-main class="scrollbar">
-      <v-container
+      <AskAnnaContainer
         class="a-content"
         :class="{ 'px-0 mx-0 pt-1': $vuetify.breakpoint.xsOnly, 'a-content--full': mobileStore.isFullScreen }"
       >
         <MobileMainMenu v-if="mobileStore.isMenuOpen" @onClose="handleOnCloseMobileMenu" />
         <router-view />
-      </v-container>
+      </AskAnnaContainer>
       <the-snack-bar />
       <TheUploadStatus />
       <UpdateApp />

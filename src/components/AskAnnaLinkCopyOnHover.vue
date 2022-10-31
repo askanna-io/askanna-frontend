@@ -4,7 +4,7 @@
       <v-hover v-slot="{ hover }" open-delay="200">
         <div>
           {{ value }}
-          <v-tooltip right content-class="opacity-1">
+          <AskAnnaTooltip right content-class="opacity-1">
             <template v-slot:activator="{ on }">
               <AskAnnaCopyText
                 v-on="on"
@@ -18,7 +18,7 @@
               />
             </template>
             <span>Copy</span>
-          </v-tooltip>
+          </AskAnnaTooltip>
         </div>
       </v-hover>
     </template>

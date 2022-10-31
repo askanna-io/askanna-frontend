@@ -1,6 +1,6 @@
 <template>
-  <v-card px-2 flat>
-    <v-card-text class="pb-0 text-left">
+  <AskAnnaCard px-2 flat>
+    <AskAnnaCardText class="pb-0 text-left">
       <div class="text--primary">
         <p>
           There is no code pushed to this project. Below you can find instructions on how you can use the AskAnna CLI (
@@ -24,14 +24,14 @@
 
         <p>
           In the <span class="font-italic">askanna.yml</span>, you add the next line. Adding this line is the only
-          configuration you need to do. Or you can download<v-tooltip top content-class="opacity-1">
+          configuration you need to do. Or you can download<AskAnnaTooltip top content-class="opacity-1">
             <template v-slot:activator="{ on }">
-              <v-btn v-on="on" class="ml-1" x-small outlined color="secondary" @click.stop="handleDownload">
-                <v-icon small color="secondary">mdi-download</v-icon>
-              </v-btn>
+              <AskAnnaButton v-on="on" class="ml-1" x-small outlined color="secondary" @click.stop="handleDownload">
+                <AskAnnaIcon small color="secondary">mdi-download</AskAnnaIcon>
+              </AskAnnaButton>
             </template>
             <span>Download <i>askanna.yml</i></span>
-          </v-tooltip>
+          </AskAnnaTooltip>
           and use this <span class="font-italic">askanna.yml</span> file.
         </p>
         <p>
@@ -44,8 +44,8 @@
           use <ask-anna-copy-text :text="askannaPushForce" />
         </p>
       </div>
-    </v-card-text>
-  </v-card>
+    </AskAnnaCardText>
+  </AskAnnaCard>
 </template>
 <script setup lang="ts">
 import { url } from '@/services/api-settings'

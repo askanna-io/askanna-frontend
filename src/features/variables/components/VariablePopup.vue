@@ -6,21 +6,21 @@
     @click:outside="handleClose"
     @keydown.esc="handleClose"
   >
-    <v-card min-width="310px" max-width="500px">
+    <AskAnnaCard min-width="310px" max-width="500px">
       <v-app-bar dense color="white" flat>
         <span class="title font-weight-light">{{ formTitle }}</span>
-        <v-spacer />
+        <AskAnnaSpacer />
 
-        <v-btn icon @click="handleClose">
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
+        <AskAnnaButton icon @click="handleClose">
+          <AskAnnaIcon>mdi-close</AskAnnaIcon>
+        </AskAnnaButton>
       </v-app-bar>
-      <v-card-text class="pa-0">
+      <AskAnnaCardText class="pa-0">
         <v-form ref="variableFormRef" v-model="isFormValid" @submit="handleSave">
-          <v-container class="pb-0 pt-0">
-            <v-row>
-              <v-col cols="12" sm="12" md="12" class="pb-0">
-                <v-text-field
+          <AskAnnaContainer class="pb-0 pt-0">
+            <AskAnnaRow>
+              <AskAnnaCol cols="12" sm="12" md="12" class="pb-0">
+                <AskAnnaTextField
                   id="edited-item-name"
                   dense
                   small
@@ -36,10 +36,10 @@
                   ]"
                   @input="handleSetName({ path: 'name', value: $event })"
                 />
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12" sm="12" md="12" class="pb-0">
+              </AskAnnaCol>
+            </AskAnnaRow>
+            <AskAnnaRow>
+              <AskAnnaCol cols="12" sm="12" md="12" class="pb-0">
                 <v-textarea
                   outlined
                   no-resize
@@ -54,31 +54,35 @@
                   ]"
                   @input="handleSetVariable({ path: 'value', value: $event })"
                 />
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col class="pt-0" cols="2">
-                <v-checkbox
+              </AskAnnaCol>
+            </AskAnnaRow>
+            <AskAnnaRow>
+              <AskAnnaCol class="pt-0" cols="2">
+                <AskAnnaCheckbox
                   v-model="maskedModel"
                   hide-details
                   label="Masked"
                   class="mt-0 pt-0"
                   :disabled="isEdit && variable.is_masked && state.isSaved"
                 />
-              </v-col>
-            </v-row>
-          </v-container>
+              </AskAnnaCol>
+            </AskAnnaRow>
+          </AskAnnaContainer>
         </v-form>
-      </v-card-text>
+      </AskAnnaCardText>
 
-      <v-card-actions class="pl-3 pr-2">
-        <v-btn @click="handleClose" small outlined text color="secondary" class="mr-1 btn--hover"> Cancel </v-btn>
-        <v-btn v-if="isEdit" small outlined text color="error" class="mr-1 btn--hover" @click="deleteItem">
+      <AskAnnaCardActions class="pl-3 pr-2">
+        <AskAnnaButton @click="handleClose" small outlined text color="secondary" class="mr-1 btn--hover">
+          Cancel
+        </AskAnnaButton>
+        <AskAnnaButton v-if="isEdit" small outlined text color="error" class="mr-1 btn--hover" @click="deleteItem">
           Delete
-        </v-btn>
-        <v-btn text small outlined color="secondary" class="mr-1 btn--hover" @click="handleSave"> Save </v-btn>
-      </v-card-actions>
-    </v-card>
+        </AskAnnaButton>
+        <AskAnnaButton text small outlined color="secondary" class="mr-1 btn--hover" @click="handleSave">
+          Save
+        </AskAnnaButton>
+      </AskAnnaCardActions>
+    </AskAnnaCard>
     <variable-confirm-delete-popup
       :value="state.dialogDelete"
       :variableName="variable.name"

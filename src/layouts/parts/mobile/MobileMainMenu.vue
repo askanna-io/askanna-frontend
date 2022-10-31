@@ -1,5 +1,5 @@
 <template>
-  <v-card
+  <AskAnnaCard
     v-sticky="true"
     class="mx-auto askAnna-main-menu"
     :class="{ 'sticky-fox': isSticky }"
@@ -19,7 +19,7 @@
         <v-list-item :key="'logout'" exact @click="logout"><v-list-item-title>Logout</v-list-item-title></v-list-item>
       </v-list>
     </v-list>
-  </v-card>
+  </AskAnnaCard>
 </template>
 
 <script setup lang="ts">

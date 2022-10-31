@@ -1,27 +1,35 @@
 <template>
   <v-dialog v-model="dialog" max-width="500px" @click:outside="handleCloseOutside">
-    <v-card>
-      <v-card-title>
+    <AskAnnaCard>
+      <AskAnnaCardTitle>
         Successfully started the upload
         <p class="body-1">
           The upload is running in the background. You can continue working in AskAnna. If you do, you can check the
-          status via <v-icon>{{ uploadStatus.iconStatus }}</v-icon> in the right upper corner.
+          status via <AskAnnaIcon>{{ uploadStatus.iconStatus }}</AskAnnaIcon> in the right upper corner.
         </p>
-      </v-card-title>
-      <v-card-text>
+      </AskAnnaCardTitle>
+      <AskAnnaCardText>
         <v-progress-linear v-if="!isUploadFinish" :buffer-value="progress" stream color="primary" />
-        <v-alert v-else outlined height="40" dense type="success">Upload was finished</v-alert>
-      </v-card-text>
+        <AskAnnaAlert v-else outlined height="40" dense type="success">Upload was finished</AskAnnaAlert>
+      </AskAnnaCardText>
 
-      <v-card-actions class="ml-4">
-        <v-btn v-if="!isUploadFinish" class="btn--hover" color="secondary" small outlined text @click="dialog = false">
-          <v-icon color="secondary" left>mdi-close</v-icon>Close
-        </v-btn>
-        <v-btn v-else color="primary" small outlined text @click="handleOpenPackage">
-          <v-icon small color="secondary" left>mdi-link-box-outline</v-icon>Open the uploaded code
-        </v-btn>
-      </v-card-actions>
-    </v-card>
+      <AskAnnaCardActions class="ml-4">
+        <AskAnnaButton
+          v-if="!isUploadFinish"
+          class="btn--hover"
+          color="secondary"
+          small
+          outlined
+          text
+          @click="dialog = false"
+        >
+          <AskAnnaIcon color="secondary" left>mdi-close</AskAnnaIcon>Close
+        </AskAnnaButton>
+        <AskAnnaButton v-else color="primary" small outlined text @click="handleOpenPackage">
+          <AskAnnaIcon small color="secondary" left>mdi-link-box-outline</AskAnnaIcon>Open the uploaded code
+        </AskAnnaButton>
+      </AskAnnaCardActions>
+    </AskAnnaCard>
   </v-dialog>
 </template>
 

@@ -1,20 +1,20 @@
 <template>
   <div class="pt-2 px-1">
     <template v-if="view === 'pretty'">
-      <v-alert :value="alert" type="error" dense class="ma-1 pa-0">
+      <AskAnnaAlert :value="alert" type="error" dense class="ma-1 pa-0">
         <template slot="prepend">
-          <v-icon class="pl-2">mdi-alert</v-icon>
+          <AskAnnaIcon class="pl-2">mdi-alert</AskAnnaIcon>
         </template>
-        <v-row align="center" class="ma-0 pa-0">
-          <v-col class="grow">
+        <AskAnnaRow align="center" class="ma-0 pa-0">
+          <AskAnnaCol class="grow">
             By default, we block JavaScript for security reasons. To continue to run JavaScript at your own risk, please
             press the allow button.
-          </v-col>
-          <v-col class="shrink">
-            <v-btn @click="handleAllow" outlined small>Allow JavaScript</v-btn>
-          </v-col>
-        </v-row>
-      </v-alert>
+          </AskAnnaCol>
+          <AskAnnaCol class="shrink">
+            <AskAnnaButton @click="handleAllow" outlined small>Allow JavaScript</AskAnnaButton>
+          </AskAnnaCol>
+        </AskAnnaRow>
+      </AskAnnaAlert>
       <div ref="iframeRef" />
     </template>
     <TheHighlight

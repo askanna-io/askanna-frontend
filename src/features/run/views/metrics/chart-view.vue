@@ -1,9 +1,9 @@
 <template>
   <div>
-    <v-container v-if="chart.isEditMode" fluid class="py-0">
-      <v-row class="l-chart" justify="center">
-        <v-col class="d-flex" cols="12" sm="3">
-          <v-select
+    <AskAnnaContainer v-if="chart.isEditMode" fluid class="py-0">
+      <AskAnnaRow class="l-chart" justify="center">
+        <AskAnnaCol class="d-flex" cols="12" sm="3">
+          <AskAnnaSelect
             label="Y-axis"
             dense
             v-model="activeY"
@@ -17,10 +17,10 @@
             :loading="metricStore.loadingMeta"
             width="100px"
           >
-          </v-select>
-        </v-col>
-        <v-col class="d-flex" cols="12" sm="3">
-          <v-select
+          </AskAnnaSelect>
+        </AskAnnaCol>
+        <AskAnnaCol class="d-flex" cols="12" sm="3">
+          <AskAnnaSelect
             label="X-axis"
             dense
             clearable
@@ -35,10 +35,10 @@
             :loading="metricStore.loadingMeta"
             width="100px"
           >
-          </v-select>
-        </v-col>
-        <v-col class="d-flex" cols="12" sm="3" :class="{ 'last-item': !$vuetify.breakpoint.xsOnly }">
-          <v-select
+          </AskAnnaSelect>
+        </AskAnnaCol>
+        <AskAnnaCol class="d-flex" cols="12" sm="3" :class="{ 'last-item': !$vuetify.breakpoint.xsOnly }">
+          <AskAnnaSelect
             label="Series"
             dense
             v-model="activeS"
@@ -52,11 +52,11 @@
             :disabled="!seriesList.length"
             width="100px"
           >
-          </v-select>
-        </v-col>
-      </v-row>
+          </AskAnnaSelect>
+        </AskAnnaCol>
+      </AskAnnaRow>
       <Chart :data="data" :height="chartHeight" :xAxis="activeX" :yAxis="activeY" />
-    </v-container>
+    </AskAnnaContainer>
   </div>
 </template>
 

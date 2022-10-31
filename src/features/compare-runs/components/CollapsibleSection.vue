@@ -6,7 +6,7 @@
           {{ title }}{{ disabled ? ': ' : '' }}
         </h4>
 
-        <v-btn
+        <AskAnnaButton
           v-if="!readonly && !disabled"
           class="collapsible-section__icon mr-1"
           text
@@ -14,8 +14,8 @@
           :color="isOpen ? 'primary' : 'secondary'"
           @click="handleIconClick"
         >
-          <v-icon>{{ icon }}</v-icon>
-        </v-btn>
+          <AskAnnaIcon>{{ icon }}</AskAnnaIcon>
+        </AskAnnaButton>
         <div v-if="disabled" class="ml-1 collapsible-section__no-data">
           <h4 class="secondary--text">{{ noDataText }}</h4>
         </div>

@@ -1,6 +1,6 @@
 <template>
-  <v-row align="center" justify="center">
-    <v-col cols="12" class="pt-0 pb-0">
+  <AskAnnaRow align="center" justify="center">
+    <AskAnnaCol cols="12" class="pt-0 pb-0">
       <package-toolbar :breadcrumbs="breadcrumbs" v-if="userStore.isLoggedIn">
         <template v-slot:left>
           <span class="text-body-2">New Package</span>
@@ -15,14 +15,16 @@
             @cancelUpload="handleReplace"
             @onCloseOutside="handleCloseOutside"
           />
-          <v-alert v-else class="ma-4 text-center" dense outlined>There is no code pushed to this project.</v-alert>
+          <AskAnnaAlert v-else class="ma-4 text-center" dense outlined
+            >There is no code pushed to this project.</AskAnnaAlert
+          >
         </div>
       </v-expand-transition>
       <template v-if="isProcessing">
         <package-processing />
       </template>
-    </v-col>
-  </v-row>
+    </AskAnnaCol>
+  </AskAnnaRow>
 </template>
 
 <script setup lang="ts">

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-sticky="true" on-stick="onStick" sticky-offset="{top: 52, bottom: 10}">
-      <v-toolbar v-if="sticked" ref="refToolbar" dense color="white" class="br-r5 ma-3" :flat="!sticked">
+      <AskAnnaToolbar v-if="sticked" ref="refToolbar" dense color="white" class="br-r5 ma-3" :flat="!sticked">
         <v-breadcrumbs v-if="sticked" class="pl-0" :items="projectBreadcrumbs">
           <template v-slot:item="{ item }">
             <v-breadcrumbs-item :to="item.to" :exact="item.exact">
@@ -9,15 +9,15 @@
             </v-breadcrumbs-item>
           </template>
         </v-breadcrumbs>
-      </v-toolbar>
-      <v-card v-if="sticked" :class="{ 'ma-3': sticked }">
-        <v-card-title transition="slide-y-transition">
-          <v-toolbar dense color="white" flat class="br-r5">
+      </AskAnnaToolbar>
+      <AskAnnaCard v-if="sticked" :class="{ 'ma-3': sticked }">
+        <AskAnnaCardTitle transition="slide-y-transition">
+          <AskAnnaToolbar dense color="white" flat class="br-r5">
             <project-menu :projectName="project.name" />
-            <v-spacer />
-          </v-toolbar>
-        </v-card-title>
-      </v-card>
+            <AskAnnaSpacer />
+          </AskAnnaToolbar>
+        </AskAnnaCardTitle>
+      </AskAnnaCard>
     </div>
 
     <div class="askAnna-breadcrumbs" :class="{ 'mb-2': $vuetify.breakpoint.xsOnly }">
@@ -34,27 +34,27 @@
       </v-breadcrumbs>
     </div>
 
-    <v-divider />
+    <AskAnnaDivider />
 
-    <v-card-title>
-      <v-icon large left> mdi-semantic-web </v-icon>
+    <AskAnnaCardTitle>
+      <AskAnnaIcon large left> mdi-semantic-web </AskAnnaIcon>
       <span class="title font-weight-light">{{ project.name }}</span>
-    </v-card-title>
+    </AskAnnaCardTitle>
 
-    <v-card-text class="ask-anna--editor" v-html="project.description" />
-    <v-divider v-if="!sticked" />
-    <v-card :flat="!sticked" :class="{ 'ma-3': sticked }">
-      <v-slide-y-transition>
+    <AskAnnaCardText class="ask-anna--editor" v-html="project.description" />
+    <AskAnnaDivider v-if="!sticked" />
+    <AskAnnaCard :flat="!sticked" :class="{ 'ma-3': sticked }">
+      <AskAnnaSlideYTransition>
         <div v-if="!sticked">
-          <v-toolbar dense color="white" flat class="br-r5 ma-3">
+          <AskAnnaToolbar dense color="white" flat class="br-r5 ma-3">
             <ProjectMenu :projectName="project.name" />
-            <v-spacer />
+            <AskAnnaSpacer />
 
             <ProjectMenuPopup :project="project" :routeToRedirect="'workspace'" />
-          </v-toolbar>
+          </AskAnnaToolbar>
         </div>
-      </v-slide-y-transition>
-    </v-card>
+      </AskAnnaSlideYTransition>
+    </AskAnnaCard>
   </div>
 </template>
 <script setup lang="ts">

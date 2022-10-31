@@ -1,12 +1,12 @@
 <template>
-  <v-toolbar dense flat class="br-r4 rounded-0 br-t-b br-color-grey">
-    <v-flex class="d-flex">
+  <AskAnnaToolbar dense flat class="br-r4 rounded-0 br-t-b br-color-grey">
+    <AskAnnaFlex class="d-flex">
       <div class="mr-auto d-flex align-center">
         <slot name="left" />
         <div>
           <v-breadcrumbs :items="breadcrumbs" class="pa-0 pl-1">
             <template v-slot:divider>
-              <v-icon>mdi-chevron-right</v-icon>
+              <AskAnnaIcon>mdi-chevron-right</AskAnnaIcon>
             </template>
             <template v-slot:item="{ item }">
               <v-breadcrumbs-item :to="item.to" :exact="item.exact">
@@ -17,8 +17,8 @@
         </div>
       </div>
       <slot name="rigth" />
-    </v-flex>
-  </v-toolbar>
+    </AskAnnaFlex>
+  </AskAnnaToolbar>
 </template>
 <script setup lang="ts">
 defineProps({

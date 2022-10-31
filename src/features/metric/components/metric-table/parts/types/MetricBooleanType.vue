@@ -1,7 +1,7 @@
 <template>
   <span>
     <span v-if="isShowName">{{ metricRow.name }}:&nbsp;</span>
-    <v-icon>{{ icon }}</v-icon></span
+    <AskAnnaIcon>{{ icon }}</AskAnnaIcon></span
   >
 </template>
 <script setup lang="ts">

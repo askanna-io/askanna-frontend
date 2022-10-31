@@ -1,11 +1,11 @@
 <template>
   <div>
-    <v-toolbar v-if="!disabledTools" flat dense color="grey lighten-4" sticky-offset="{top: 48, bottom: 10}">
-      <v-flex class="d-flex">
+    <AskAnnaToolbar v-if="!disabledTools" flat dense color="grey lighten-4" sticky-offset="{top: 48, bottom: 10}">
+      <AskAnnaFlex class="d-flex">
         <div class="mr-auto d-flex align-center"></div>
 
         <div>
-          <v-btn
+          <AskAnnaButton
             v-if="!$vuetify.breakpoint.xsOnly"
             small
             outlined
@@ -14,15 +14,22 @@
             @click="handleDownload"
             :disabled="disabledTools"
           >
-            <v-icon color="secondary" left>mdi-download</v-icon>Download JSON
-          </v-btn>
-          <v-btn small outlined color="secondary" @click="handleCopy" class="mr-1 btn--hover" :disabled="disabledTools">
-            <v-icon color="secondary" left>mdi-content-copy</v-icon>Copy JSON
-          </v-btn>
+            <AskAnnaIcon color="secondary" left>mdi-download</AskAnnaIcon>Download JSON
+          </AskAnnaButton>
+          <AskAnnaButton
+            small
+            outlined
+            color="secondary"
+            @click="handleCopy"
+            class="mr-1 btn--hover"
+            :disabled="disabledTools"
+          >
+            <AskAnnaIcon color="secondary" left>mdi-content-copy</AskAnnaIcon>Copy JSON
+          </AskAnnaButton>
         </div>
 
-        <v-card class="ml-4" flat width="175" color="grey lighten-4" v-if="false">
-          <v-select
+        <AskAnnaCard class="ml-4" flat width="175" color="grey lighten-4" v-if="false">
+          <AskAnnaSelect
             dense
             hide-details
             return-object
@@ -35,21 +42,28 @@
             :menu-props="{ bottom: true, offsetY: true }"
           >
             <template v-slot:selection="{ item }"> Group by: {{ item.name }} </template>
-          </v-select>
-        </v-card>
+          </AskAnnaSelect>
+        </AskAnnaCard>
 
         <v-btn-toggle v-model="currentViewIndex" mandatory class="mr-1">
-          <v-tooltip v-for="(view, index) in views" top :key="index">
+          <AskAnnaTooltip v-for="(view, index) in views" top :key="index">
             <template v-slot:activator="{ on }">
-              <v-btn v-on="on" small class="btn--hover" outlined color="secondary" @click="handleChangeView(index)">
-                <v-icon color="secondary">{{ view.icon }}</v-icon>
-              </v-btn>
+              <AskAnnaButton
+                v-on="on"
+                small
+                class="btn--hover"
+                outlined
+                color="secondary"
+                @click="handleChangeView(index)"
+              >
+                <AskAnnaIcon color="secondary">{{ view.icon }}</AskAnnaIcon>
+              </AskAnnaButton>
             </template>
             <span>{{ view.name }}</span>
-          </v-tooltip>
+          </AskAnnaTooltip>
         </v-btn-toggle>
-      </v-flex>
-    </v-toolbar>
+      </AskAnnaFlex>
+    </AskAnnaToolbar>
     <router-view />
   </div>
 </template>

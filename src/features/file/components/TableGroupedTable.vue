@@ -3,7 +3,7 @@
     <template v-for="(item, index) in items">
       <tr :key="index + group" class="v-row-group__header">
         <td :colspan="headersLength - 1" class="text-start">
-          <v-btn
+          <AskAnnaButton
             dark
             icon
             x-small
@@ -11,8 +11,8 @@
             @click="hadleTogle(index)"
             class="btn--hover btn--without-text mr-3 link-btn"
           >
-            <v-icon>{{ getIcons(index) }}</v-icon>
-          </v-btn>
+            <AskAnnaIcon>{{ getIcons(index) }}</AskAnnaIcon>
+          </AskAnnaButton>
           {{ group }}: {{ item.name }}
         </td>
       </tr>

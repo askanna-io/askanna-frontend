@@ -2,7 +2,7 @@
   <v-menu v-model="menu" :close-on-content-click="false" offset-y top>
     <template v-slot:activator="{ on }">
       <div v-on="on" class="cursor--pointer">
-        <v-tooltip v-if="!$vuetify.breakpoint.xsOnly" top left :nudge-left="100" content-class="opacity-1">
+        <AskAnnaTooltip v-if="!$vuetify.breakpoint.xsOnly" top left :nudge-left="100" content-class="opacity-1">
           <template v-slot:activator="{ on }">
             <div v-on="on" class="d-flex">
               <div v-if="isShowName">{{ metricRow.name }}:&nbsp;</div>
@@ -17,7 +17,7 @@
             </div>
           </template>
           <span>Click to see the value</span>
-        </v-tooltip>
+        </AskAnnaTooltip>
         <textarea
           v-else
           readonly
@@ -29,19 +29,19 @@
         />
       </div>
     </template>
-    <v-card>
+    <AskAnnaCard>
       <v-app-bar dense height="40" flat>
         Name: {{ metricRow.name }}
-        <v-spacer />
-        <v-btn small outlined color="secondary" @click="handleCopy" class="mx-2 btn--hover">
-          <v-icon color="secondary" left>mdi-content-copy</v-icon>Copy
-        </v-btn>
-        <v-btn small icon @click="handleClose">
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
+        <AskAnnaSpacer />
+        <AskAnnaButton small outlined color="secondary" @click="handleCopy" class="mx-2 btn--hover">
+          <AskAnnaIcon color="secondary" left>mdi-content-copy</AskAnnaIcon>Copy
+        </AskAnnaButton>
+        <AskAnnaButton small icon @click="handleClose">
+          <AskAnnaIcon>mdi-close</AskAnnaIcon>
+        </AskAnnaButton>
       </v-app-bar>
       <TheHighlight :value="jsonString" languageName="json" />
-    </v-card>
+    </AskAnnaCard>
   </v-menu>
 </template>
 <script setup lang="ts">

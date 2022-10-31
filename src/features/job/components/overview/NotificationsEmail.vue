@@ -1,6 +1,6 @@
 <template>
   <div class="notification">
-    <v-tooltip top left nudge-right="40" content-class="opacity-1">
+    <AskAnnaTooltip top left nudge-right="40" content-class="opacity-1">
       <template v-slot:activator="{ on }">
         <div v-on="on">
           <div class="code-wrapper">
@@ -16,7 +16,7 @@
       </template>
       <template v-if="isSetNotifications">Click to see details </template>
       <template v-else> For this job, notifications are not configured </template>
-    </v-tooltip>
+    </AskAnnaTooltip>
   </div>
 </template>
 <script setup lang="ts">

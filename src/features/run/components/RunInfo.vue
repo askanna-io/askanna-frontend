@@ -1,8 +1,8 @@
 <template>
-  <v-card class="d-flex justify-space-between ml-4" flat>
-    <v-card v-for="(group, index) in variables" :key="index" flat :width="viewConfig.width">
-      <v-row no-gutters>
-        <v-col class="mb-4" v-for="(item, index2) in group" :key="`${index}-${index2}`" cols="12">
+  <AskAnnaCard class="d-flex justify-space-between ml-4" flat>
+    <AskAnnaCard v-for="(group, index) in variables" :key="index" flat :width="viewConfig.width">
+      <AskAnnaRow no-gutters>
+        <AskAnnaCol class="mb-4" v-for="(item, index2) in group" :key="`${index}-${index2}`" cols="12">
           <component
             link
             :to="item.to"
@@ -12,10 +12,10 @@
             :is="item.component"
             :loading="loadingStatus"
           />
-        </v-col>
-      </v-row>
-    </v-card>
-  </v-card>
+        </AskAnnaCol>
+      </AskAnnaRow>
+    </AskAnnaCard>
+  </AskAnnaCard>
 </template>
 <script setup lang="ts">
 import { get } from 'lodash'

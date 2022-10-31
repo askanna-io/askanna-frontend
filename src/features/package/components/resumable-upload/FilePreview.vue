@@ -10,9 +10,9 @@
       :show-size="1000"
     >
       <template v-slot:selection="{ index, text }">
-        <v-chip color="primary" dark label small>
+        <AskAnnaChip color="primary" dark label small>
           {{ text }}
-        </v-chip>
+        </AskAnnaChip>
       </template>
     </v-file-input>
   </div>

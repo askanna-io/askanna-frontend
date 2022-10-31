@@ -1,5 +1,5 @@
 <template>
-  <v-tooltip top :nudge-left="nudgeLeft" content-class="opacity-1">
+  <AskAnnaTooltip top :nudge-left="nudgeLeft" content-class="opacity-1">
     <template v-slot:activator="{ on }">
       <div v-on="on">
         <span
@@ -25,7 +25,7 @@
       <div>Image name: {{ value.name }}</div>
       <div>Time zone: {{ value.timezone }}</div>
     </template>
-  </v-tooltip>
+  </AskAnnaTooltip>
 </template>
 <script setup lang="ts">
 const props = defineProps({

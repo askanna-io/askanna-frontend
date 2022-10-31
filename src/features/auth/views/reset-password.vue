@@ -1,34 +1,34 @@
 <template>
   <div class="d-flex flex-column justify-center login-wrapper">
-    <v-row align="center" justify="center">
-      <v-col cols="12" class="rounded">
-        <v-row align="center" justify="center">
-          <v-col cols="6" xl="2" md="4" sm="6" class="pb-0 mb-0">
+    <AskAnnaRow align="center" justify="center">
+      <AskAnnaCol cols="12" class="rounded">
+        <AskAnnaRow align="center" justify="center">
+          <AskAnnaCol cols="6" xl="2" md="4" sm="6" class="pb-0 mb-0">
             <img alt="AskAnna logo" src="/assets/logo.svg" class="logo" />
-          </v-col>
-        </v-row>
+          </AskAnnaCol>
+        </AskAnnaRow>
         <AskAnnaLoadingProgress :type="'table-row'" :loading="loading" loadingTitle="Anna is checking your token...">
-          <v-row align="center" justify="center" v-if="isInvitationValid">
-            <v-col cols="6" xl="2" md="4" sm="6" class="rounded">
+          <AskAnnaRow align="center" justify="center" v-if="isInvitationValid">
+            <AskAnnaCol cols="6" xl="2" md="4" sm="6" class="rounded">
               <v-expansion-panels class="login-expansion" readonly mandatory>
                 <v-expansion-panel :key="0" active-class="colored-border">
                   <v-expansion-panel-header hide-actions>
-                    <v-row no-gutters>
-                      <v-col cols="12" class="text-h6">Reset your password</v-col>
-                    </v-row>
+                    <AskAnnaRow no-gutters>
+                      <AskAnnaCol cols="12" class="text-h6">Reset your password</AskAnnaCol>
+                    </AskAnnaRow>
                   </v-expansion-panel-header>
                   <v-expansion-panel-content>
                     <SignInResetForm />
                   </v-expansion-panel-content>
                 </v-expansion-panel>
               </v-expansion-panels>
-            </v-col>
-          </v-row>
+            </AskAnnaCol>
+          </AskAnnaRow>
 
           <SignInInvalidResetPasswordToken v-else />
         </AskAnnaLoadingProgress>
-      </v-col>
-    </v-row>
+      </AskAnnaCol>
+    </AskAnnaRow>
   </div>
 </template>
 

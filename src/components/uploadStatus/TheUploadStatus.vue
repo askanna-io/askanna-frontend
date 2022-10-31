@@ -11,18 +11,18 @@
     <div class="d-flex">
       <div class="mr-auto">Upload statuses:</div>
       <div>
-        <v-btn dark x-small text @click="store.closeSnackBar">Close</v-btn>
+        <AskAnnaButton dark x-small text @click="store.closeSnackBar">Close</AskAnnaButton>
       </div>
       <div v-show="store.uploads.length">
-        <v-btn dark x-small text @click="store.clearSnackBar">Clear</v-btn>
+        <AskAnnaButton dark x-small text @click="store.clearSnackBar">Clear</AskAnnaButton>
       </div>
     </div>
-    <v-divider class="mb-1" />
+    <AskAnnaDivider class="mb-1" />
 
     <template v-if="store.snackbar.message">{{ store.snackbar.message }}</template>
     <div v-for="(item, index) in store.uploads" v-bind:key="item.id + index">
       <small
-        ><v-btn
+        ><AskAnnaButton
           x-small
           link
           depressed
@@ -34,7 +34,7 @@
               packageId: item.packageId
             }
           }"
-          >{{ item.name }}</v-btn
+          >{{ item.name }}</AskAnnaButton
         ></small
       >
       <v-progress-linear class="mt-1" :buffer-value="item.progress" stream color="white" />

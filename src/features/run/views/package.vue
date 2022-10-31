@@ -1,7 +1,7 @@
 <template>
   <AskAnnaLoadingProgress :loading="loading && !isProcessing">
-    <v-row align="center" justify="center">
-      <v-col cols="12" class="pt-0 pb-0">
+    <AskAnnaRow align="center" justify="center">
+      <AskAnnaCol cols="12" class="pt-0 pb-0">
         <package-toolbar
           v-sticky="sticked"
           :sticky-z-index="1"
@@ -9,9 +9,9 @@
           sticky-offset="{top: 52, bottom: 10}"
         >
           <template v-slot:rigth>
-            <v-slide-y-transition>
+            <AskAnnaSlideYTransition>
               <div v-if="!filePath && !$vuetify.breakpoint.xsOnly">
-                <v-btn
+                <AskAnnaButton
                   small
                   outlined
                   color="secondary"
@@ -19,13 +19,13 @@
                   :loading="downloadPackage"
                   @click="handleDownload()"
                 >
-                  <v-icon color="secondary" left>mdi-download</v-icon>Download
+                  <AskAnnaIcon color="secondary" left>mdi-download</AskAnnaIcon>Download
                   <template v-slot:loader>
                     <span>Downloading...</span>
                   </template>
-                </v-btn>
+                </AskAnnaButton>
               </div>
-            </v-slide-y-transition>
+            </AskAnnaSlideYTransition>
           </template>
         </package-toolbar>
         <template v-if="isProcessing">
@@ -52,8 +52,8 @@
             noDataAvailable="This file or directory does not exist"
           />
         </template>
-      </v-col>
-    </v-row>
+      </AskAnnaCol>
+    </AskAnnaRow>
   </AskAnnaLoadingProgress>
 </template>
 

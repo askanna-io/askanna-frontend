@@ -8,7 +8,7 @@
       @submit.stop.prevent="handleResetPassword"
       @keyup.native.enter.prevent="handleResetPassword"
     >
-      <v-text-field
+      <AskAnnaTextField
         dense
         outlined
         v-model="password"
@@ -25,7 +25,9 @@
         @click:append="isShowPassword = !isShowPassword"
       />
 
-      <v-btn :disabled="!isFormValid" color="primary" @click.stop="handleResetPassword"> Reset password </v-btn>
+      <AskAnnaButton :disabled="!isFormValid" color="primary" @click.stop="handleResetPassword">
+        Reset password
+      </AskAnnaButton>
     </v-form>
     <template v-else> Your password has been reset successfully! We will redirect you to the sign-in page. </template>
   </div>

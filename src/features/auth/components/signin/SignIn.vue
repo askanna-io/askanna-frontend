@@ -7,7 +7,7 @@
       @keyup.native.enter="handleLogin"
       @submit.stop="handleLogin"
     >
-      <v-text-field
+      <AskAnnaTextField
         v-model="formData.username"
         :error-messages="error.username || error.name || error.email"
         dense
@@ -18,7 +18,7 @@
         required
         :rules="[RULES.required('The email is required'), RULES.email('The email you entered is not valid', 3)]"
       />
-      <v-text-field
+      <AskAnnaTextField
         v-model="formData.password"
         :error-messages="error.password"
         :type="isShowPassword ? 'text' : 'password'"
@@ -32,9 +32,9 @@
         @click:append="isShowPassword = !isShowPassword"
       />
       <input type="password" style="display: none" browserAutocomplete="new-password" autocomplete="new-password" />
-      <v-btn :disabled="!isFormValid" color="primary" class="mr-4" @click.stop="handleLogin">
+      <AskAnnaButton :disabled="!isFormValid" color="primary" class="mr-4" @click.stop="handleLogin">
         {{ submitButtonTitle }}
-      </v-btn>
+      </AskAnnaButton>
     </v-form>
   </div>
 </template>

@@ -1,18 +1,18 @@
 <template>
-  <v-container class="pt-0 pb-0 fill-height" fluid>
+  <AskAnnaContainer class="pt-0 pb-0 fill-height" fluid>
     <v-fade-transition mode="out-in">
-      <v-row key="0">
-        <v-col cols="12" class="pt-0 pb-0">
-          <v-card class="text-center file-csv" flat>
-            <v-card-text class="pb-1">{{ title }}</v-card-text>
-            <v-icon size="60">
+      <AskAnnaRow key="0">
+        <AskAnnaCol cols="12" class="pt-0 pb-0">
+          <AskAnnaCard class="text-center file-csv" flat>
+            <AskAnnaCardText class="pb-1">{{ title }}</AskAnnaCardText>
+            <AskAnnaIcon size="60">
               {{ icon }}
-            </v-icon>
-          </v-card>
-        </v-col>
-      </v-row>
+            </AskAnnaIcon>
+          </AskAnnaCard>
+        </AskAnnaCol>
+      </AskAnnaRow>
     </v-fade-transition>
-  </v-container>
+  </AskAnnaContainer>
 </template>
 <script setup lang="ts">
 import { get } from 'lodash'

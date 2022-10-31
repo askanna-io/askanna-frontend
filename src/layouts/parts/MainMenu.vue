@@ -1,9 +1,9 @@
 <template>
   <div class="text-sm-center ml-sm-6 ml-md-0 d-none d-sm-flex">
-    <v-flex>
+    <AskAnnaFlex>
       <WorkspaceMenu />
       <ProjectMenu />
-    </v-flex>
+    </AskAnnaFlex>
   </div>
 </template>
 

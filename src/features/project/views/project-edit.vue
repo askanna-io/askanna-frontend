@@ -1,6 +1,6 @@
 <template>
   <AskAnnaLoadingProgress :type="'table-row'" :loading="loading">
-    <v-card flat>
+    <AskAnnaCard flat>
       <Project
         v-if="projectInfoEdit"
         :projectData="projectData"
@@ -11,12 +11,12 @@
         @handleOnInput="handleOnInput"
         @oSaveDescription="handleSaveDescription"
       />
-      <v-alert v-else class="mx-2 my-4 text-center" dense outlined>
+      <AskAnnaAlert v-else class="mx-2 my-4 text-center" dense outlined>
         You are not allowed to edit this project. I can bring you back to the project
         <router-link :to="{ name: 'workspace-project' }" class="ask-anna-link">{{ projectData.name }}</router-link
         >.
-      </v-alert>
-    </v-card>
+      </AskAnnaAlert>
+    </AskAnnaCard>
   </AskAnnaLoadingProgress>
 </template>
 

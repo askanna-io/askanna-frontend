@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto" flat :outlined="!$vuetify.breakpoint.xsOnly">
+  <AskAnnaCard class="mx-auto" flat :outlined="!$vuetify.breakpoint.xsOnly">
     <div class="askAnna-breadcrumbs">
       <v-breadcrumbs :items="breadcrumbs" class="pa-0 pl-3" :class="{ 'pa-4 pl-4': !$vuetify.breakpoint.xsOnly }">
         <template v-slot:item="{ item }">
@@ -9,20 +9,20 @@
         </template>
       </v-breadcrumbs>
     </div>
-    <v-divider class="mt-1" />
-    <v-card-title>
-      <v-icon large left> mdi-semantic-web </v-icon>
+    <AskAnnaDivider class="mt-1" />
+    <AskAnnaCardTitle>
+      <AskAnnaIcon large left> mdi-semantic-web </AskAnnaIcon>
       <span class="title font-weight-light">Create a new project</span>
-    </v-card-title>
+    </AskAnnaCardTitle>
 
-    <v-card-text class="font-weight-bold">
+    <AskAnnaCardText class="font-weight-bold">
       <p>
         A project is where you can collaborate with your team, or yourself. You can house files, code, jobs, runs and
         all (meta) data related to running your projects.
       </p>
-    </v-card-text>
+    </AskAnnaCardText>
 
-    <v-divider />
+    <AskAnnaDivider />
 
     <Project
       v-if="workspaceProjectCreate"
@@ -32,12 +32,12 @@
       @handleCancel="handleCancel"
       @handleOnInput="handleOnInput"
     />
-    <v-alert v-else class="ma-4 text-center" dense outlined>
+    <AskAnnaAlert v-else class="ma-4 text-center" dense outlined>
       You are not allowed to create a project. I can bring you back to the workspace
       <router-link :to="{ name: 'workspace' }" class="ask-anna-link">{{ workspaceName }}</router-link
       >.
-    </v-alert>
-  </v-card>
+    </AskAnnaAlert>
+  </AskAnnaCard>
 </template>
 
 <script setup lang="ts">

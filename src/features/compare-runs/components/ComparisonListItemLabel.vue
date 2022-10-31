@@ -1,8 +1,8 @@
 <template>
   <v-chip-group active-class="primary--text" column>
-    <v-chip v-for="label in value.labels" :key="label.name" small pill @click="handleClick">
+    <AskAnnaChip v-for="label in value.labels" :key="label.name" small pill @click="handleClick">
       <MetricValue :metricRow="label" isShowName isLabels isLabel :preview="false" />
-    </v-chip>
+    </AskAnnaChip>
   </v-chip-group>
 </template>
 <script setup lang="ts">

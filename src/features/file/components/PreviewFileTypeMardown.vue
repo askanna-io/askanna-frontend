@@ -1,5 +1,5 @@
 <template>
-  <v-flex class="fill-height px-5" fluid>
+  <AskAnnaFlex class="fill-height px-5" fluid>
     <v-fade-transition mode="out-in">
       <Markdown
         :images="images"
@@ -14,7 +14,7 @@
         xhtmlOut
       />
     </v-fade-transition>
-  </v-flex>
+  </AskAnnaFlex>
 </template>
 
 <script setup lang="ts">

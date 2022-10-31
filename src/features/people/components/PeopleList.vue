@@ -5,8 +5,8 @@
     </template>
     <template v-slot:default="props">
       <AskAnnaLoadingProgress :type="'table-row'" :loading="loading">
-        <v-row v-if="!settings.projectView" :class="{ 'px-2': $vuetify.breakpoint.xsOnly }">
-          <v-col
+        <AskAnnaRow v-if="!settings.projectView" :class="{ 'px-2': $vuetify.breakpoint.xsOnly }">
+          <AskAnnaCol
             v-for="item in props.items"
             @click="handleSelectPeople(item)"
             :key="item.name + item.short_uuid + item.role"
@@ -26,8 +26,8 @@
                 :description="sanitizeHTML(item.description)"
               />
             </v-hover>
-          </v-col>
-        </v-row>
+          </AskAnnaCol>
+        </AskAnnaRow>
       </AskAnnaLoadingProgress>
     </template>
   </v-data-iterator>

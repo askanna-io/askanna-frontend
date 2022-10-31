@@ -1,12 +1,12 @@
 <template>
-  <v-card class="mx-auto" flat>
-    <v-toolbar flat dense color="grey lighten-4" sticky-offset="{top: 48, bottom: 10}">
-      <v-flex class="d-flex">
+  <AskAnnaCard class="mx-auto" flat>
+    <AskAnnaToolbar flat dense color="grey lighten-4" sticky-offset="{top: 48, bottom: 10}">
+      <AskAnnaFlex class="d-flex">
         <div class="mr-auto d-flex align-center"></div>
 
-        <v-tooltip v-if="currentViewIndex" top>
+        <AskAnnaTooltip v-if="currentViewIndex" top>
           <template v-slot:activator="{ on }">
-            <v-btn
+            <AskAnnaButton
               v-on="on"
               dark
               icon
@@ -16,16 +16,16 @@
               class="btn--hover btn--without-text mx-2"
               @click="handleFullScreen"
             >
-              <v-icon>{{ isFullScreen ? 'mdi-fullscreen-exit' : 'mdi-fullscreen' }}</v-icon>
-            </v-btn>
+              <AskAnnaIcon>{{ isFullScreen ? 'mdi-fullscreen-exit' : 'mdi-fullscreen' }}</AskAnnaIcon>
+            </AskAnnaButton>
           </template>
           <span>{{ isFullScreen ? 'Exit full screen' : 'Full screen' }}</span>
-        </v-tooltip>
+        </AskAnnaTooltip>
 
         <v-btn-toggle v-model="currentViewIndex" mandatory class="mr-1">
-          <v-tooltip v-for="(view, index) in views" top :key="index">
+          <AskAnnaTooltip v-for="(view, index) in views" top :key="index">
             <template v-slot:activator="{ on }">
-              <v-btn
+              <AskAnnaButton
                 small
                 :tag="'a'"
                 v-on="on"
@@ -34,16 +34,16 @@
                 class="btn--hover"
                 :to="{ name: `workspace-project-jobs-job-runs-${view.value}` }"
               >
-                <v-icon color="secondary">{{ view.icon }}</v-icon>
-              </v-btn>
+                <AskAnnaIcon color="secondary">{{ view.icon }}</AskAnnaIcon>
+              </AskAnnaButton>
             </template>
             <span>{{ view.name }}</span>
-          </v-tooltip>
+          </AskAnnaTooltip>
         </v-btn-toggle>
-      </v-flex>
-    </v-toolbar>
+      </AskAnnaFlex>
+    </AskAnnaToolbar>
     <router-view />
-  </v-card>
+  </AskAnnaCard>
 </template>
 
 <script setup lang="ts">

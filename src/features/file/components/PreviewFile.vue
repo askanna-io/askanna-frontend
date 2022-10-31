@@ -11,14 +11,14 @@
         :maxHeight="`${maxHeight}px`"
         :fileExtension="fileExtension"
       />
-      <v-flex
+      <AskAnnaFlex
         v-if="!isFileEmpty && (isFileBig || (isFileBigForRawView && currentView === 'raw')) && isShowFilePreview"
         class="my-2 mb-2 text-center"
       >
         <p v-if="$vuetify.breakpoint.xsOnly" class="px-2">
           ...this is a preview of the file. To download the file, open this page on a laptop or desktop.
         </p>
-        <v-btn
+        <AskAnnaButton
           v-if="!$vuetify.breakpoint.xsOnly"
           text
           small
@@ -32,15 +32,15 @@
           <template v-slot:loader>
             <span>Downloading...</span>
           </template>
-          <v-icon color="secondary" left>mdi-download</v-icon>
+          <AskAnnaIcon color="secondary" left>mdi-download</AskAnnaIcon>
           ...TO SEE THE FULL CONTENT, PLEASE DOWNLOAD THE FILE.
-        </v-btn>
-      </v-flex>
-      <v-flex v-if="!loading && !isFileEmpty && !isShowFilePreview" class="my-2 mb-2 text-center">
+        </AskAnnaButton>
+      </AskAnnaFlex>
+      <AskAnnaFlex v-if="!loading && !isFileEmpty && !isShowFilePreview" class="my-2 mb-2 text-center">
         <p v-if="$vuetify.breakpoint.xsOnly" class="px-2">
           We cannot show a preview of this file. To download the file, open this page on a laptop or desktop.
         </p>
-        <v-btn
+        <AskAnnaButton
           v-if="!$vuetify.breakpoint.xsOnly"
           text
           small
@@ -54,12 +54,12 @@
           <template v-slot:loader>
             <span>Downloading...</span>
           </template>
-          <v-icon color="secondary" left>mdi-download</v-icon>
+          <AskAnnaIcon color="secondary" left>mdi-download</AskAnnaIcon>
           We cannot show a preview of this file. Please download the file.
-        </v-btn>
-      </v-flex>
+        </AskAnnaButton>
+      </AskAnnaFlex>
 
-      <v-alert v-if="isFileEmpty" class="ma-4 text-center" dense outlined>{{ textNoData }}</v-alert>
+      <AskAnnaAlert v-if="isFileEmpty" class="ma-4 text-center" dense outlined>{{ textNoData }}</AskAnnaAlert>
     </div>
   </AskAnnaLoadingProgress>
 </template>

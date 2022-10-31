@@ -3,7 +3,7 @@
     <v-list-item-group :value="state.ordering" @change="handleChange" color="primary">
       <v-list-item dense v-for="(item, i) in items" :key="i" :value="item.sort">
         <v-list-item-icon>
-          <v-icon v-text="item.icon"></v-icon>
+          <AskAnnaIcon>{{ item.icon }}</AskAnnaIcon>
         </v-list-item-icon>
 
         <v-list-item-content>

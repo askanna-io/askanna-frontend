@@ -1,7 +1,7 @@
 <template>
-  <v-btn small outlined color="secondary" class="mr-1 btn--hover" @click="handleClick()">
-    <v-icon left>{{ statusIcon }}</v-icon>
-    <v-tooltip top content-class="opacity-1">
+  <AskAnnaButton small outlined color="secondary" class="mr-1 btn--hover" @click="handleClick()">
+    <AskAnnaIcon left>{{ statusIcon }}</AskAnnaIcon>
+    <AskAnnaTooltip top content-class="opacity-1">
       <template v-slot:activator="{ on }">
         <div v-on="on">
           <template>
@@ -10,8 +10,8 @@
         </div>
       </template>
       Auto-update log
-    </v-tooltip>
-  </v-btn>
+    </AskAnnaTooltip>
+  </AskAnnaButton>
 </template>
 
 <script setup lang="ts">

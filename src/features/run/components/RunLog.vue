@@ -1,14 +1,18 @@
 <template>
   <div>
-    <v-toolbar v-if="!logNoAvailable" dense flat color="grey lighten-4">
-      <v-flex class="d-flex">
-        <ask-anna-chip-play-stop v-if="!isFinished && runStatus" :value="isAutoUpdateLog" @onClick="handleAutoUpdate" />
+    <AskAnnaToolbar v-if="!logNoAvailable" dense flat color="grey lighten-4">
+      <AskAnnaFlex class="d-flex">
+        <AskAnnaChipPlayStop
+          v-if="!isFinished && runStatus"
+          :value="isAutoUpdateLog"
+          @onClick="handleAutoUpdate"
+        />
 
         <div class="mr-auto d-flex align-center"></div>
         <div>
-          <v-tooltip v-if="!$vuetify.breakpoint.xsOnly" top content-class="opacity-1">
+          <AskAnnaTooltip v-if="!$vuetify.breakpoint.xsOnly" top content-class="opacity-1">
             <template v-slot:activator="{ on }">
-              <v-btn
+              <AskAnnaButton
                 v-on="on"
                 small
                 outlined
@@ -17,15 +21,15 @@
                 @click="handleDownload()"
                 :disabled="loading || logNoAvailable"
               >
-                <v-icon left color="secondary">mdi-download</v-icon>Download
-              </v-btn>
+                <AskAnnaIcon left color="secondary">mdi-download</AskAnnaIcon>Download
+              </AskAnnaButton>
             </template>
             <span>Download</span>
-          </v-tooltip>
+          </AskAnnaTooltip>
 
-          <v-tooltip top content-class="opacity-1">
+          <AskAnnaTooltip top content-class="opacity-1">
             <template v-slot:activator="{ on }">
-              <v-btn
+              <AskAnnaButton
                 v-on="on"
                 small
                 outlined
@@ -34,15 +38,15 @@
                 @click="handleCopy()"
                 :disabled="loading || logNoAvailable"
               >
-                <v-icon left color="secondary">mdi-content-copy</v-icon>Copy
-              </v-btn>
+                <AskAnnaIcon left color="secondary">mdi-content-copy</AskAnnaIcon>Copy
+              </AskAnnaButton>
             </template>
             <span>Copy</span>
-          </v-tooltip>
+          </AskAnnaTooltip>
         </div>
-      </v-flex>
-    </v-toolbar>
-    <v-flex :style="scrollerStyles" class="overflow-y-auto" id="scroll-target">
+      </AskAnnaFlex>
+    </AskAnnaToolbar>
+    <AskAnnaFlex :style="scrollerStyles" class="overflow-y-auto" id="scroll-target">
       <AskAnnaLoadingProgress
         fullWidth
         height="94"
@@ -61,9 +65,11 @@
           <AskAnnaLoadingDotsFlashing v-if="isLoadingLogs || isThreeDotsLoading" />
         </div>
 
-        <v-alert v-else class="ma-4 text-center" dense outlined>There is no log available for this run. </v-alert>
+        <AskAnnaAlert v-else class="ma-4 text-center" dense outlined
+          >There is no log available for this run.
+        </AskAnnaAlert>
       </AskAnnaLoadingProgress>
-    </v-flex>
+    </AskAnnaFlex>
   </div>
 </template>
 
@@ -155,8 +161,6 @@ const onScroll = e => {
 }
 
 const getFullRun = async () => {
-  if (fullLog.value && isFinished.value) return
-
   await runStore.getFullVersionRunLog(runId.value)
 }
 

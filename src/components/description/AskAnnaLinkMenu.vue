@@ -1,10 +1,10 @@
 <template>
   <v-menu top v-model="editorStore.isMenuOpen" :nudge-top="25" :close-on-content-click="false">
     <template v-slot:activator="{ on, attrs }">
-      <v-tooltip top>
+      <AskAnnaTooltip top>
         <template v-slot:activator="{ on: onHover }">
           <span v-on="onHover">
-            <v-btn
+            <AskAnnaButton
               v-bind="attrs"
               @click="handleClick"
               v-on="on"
@@ -16,18 +16,18 @@
               :color="isActive ? 'primary' : 'secondary'"
               class="btn--hover btn--without-text mr-3 link-btn"
             >
-              <v-icon>mdi-link</v-icon>
-            </v-btn>
+              <AskAnnaIcon>mdi-link</AskAnnaIcon>
+            </AskAnnaButton>
           </span>
         </template>
         <span>Link</span>
-      </v-tooltip>
+      </AskAnnaTooltip>
     </template>
-    <v-card width="340px" flat class="px-2 pt-2">
+    <AskAnnaCard width="340px" flat class="px-2 pt-2">
       <div v-if="false" class="text-body-1 font-weight-bold">Set the link</div>
-      <v-row>
-        <v-col cols="12" class="color-picker-col">
-          <v-text-field
+      <AskAnnaRow>
+        <AskAnnaCol cols="12" class="color-picker-col">
+          <AskAnnaTextField
             v-model="editorStore.url"
             x-small
             dense
@@ -37,13 +37,15 @@
             hide-details
             @keyup.native.enter="handleSetLink"
           />
-        </v-col>
-        <v-col cols="12" class="py-2">
-          <v-btn small depressed outlined text class="btn--hover mr-2" @click="handleSetLink">Link</v-btn>
-          <v-btn small depressed outlined text class="btn--hover" @click="handleUnlink">Unlink</v-btn>
-        </v-col>
-      </v-row>
-    </v-card>
+        </AskAnnaCol>
+        <AskAnnaCol cols="12" class="py-2">
+          <AskAnnaButton small depressed outlined text class="btn--hover mr-2" @click="handleSetLink"
+            >Link</AskAnnaButton
+          >
+          <AskAnnaButton small depressed outlined text class="btn--hover" @click="handleUnlink">Unlink</AskAnnaButton>
+        </AskAnnaCol>
+      </AskAnnaRow>
+    </AskAnnaCard>
   </v-menu>
 </template>
 

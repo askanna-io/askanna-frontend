@@ -1,6 +1,11 @@
 <template>
   <div>
-    <v-card class="mx-auto" :outlined="!$vuetify.breakpoint.xsOnly" :flat="$vuetify.breakpoint.xsOnly" sticky-container>
+    <AskAnnaCard
+      class="mx-auto"
+      :outlined="!$vuetify.breakpoint.xsOnly"
+      :flat="$vuetify.breakpoint.xsOnly"
+      sticky-container
+    >
       <ProjectNavBar
         :job="job"
         :routeName="routeName"
@@ -12,13 +17,13 @@
         :isShowProjectBar="projectStore.menu.isShowProjectBar"
       />
       <router-view />
-    </v-card>
-    <v-card v-if="isShowReadmeFile && readmeFile" class="mt-3" outlined>
-      <v-card-title flat dense color="white" class="pb-0">
+    </AskAnnaCard>
+    <AskAnnaCard v-if="isShowReadmeFile && readmeFile" class="mt-3" outlined>
+      <AskAnnaCardTitle flat dense color="white" class="pb-0">
         {{ readmeFile.name | capitalize }}
-      </v-card-title>
+      </AskAnnaCardTitle>
       <PreviewFileTypeMardown :fileSource="fileSource" :images="images" :cdnBaseUrl="cdnBaseUrl" />
-    </v-card>
+    </AskAnnaCard>
   </div>
 </template>
 

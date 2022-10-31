@@ -11,15 +11,15 @@
       :close-on-content-click="false"
     >
       <template v-slot:activator="{ on, attrs }">
-        <v-btn v-bind="attrs" v-on="on" small rounded class="mr-3">
-          <v-icon color="primary" left>mdi-plus</v-icon>
+        <AskAnnaButton v-bind="attrs" v-on="on" small rounded class="mr-3">
+          <AskAnnaIcon color="primary" left>mdi-plus</AskAnnaIcon>
           Create Project
-        </v-btn>
+        </AskAnnaButton>
       </template>
-      <v-card>
+      <AskAnnaCard>
         <v-form ref="newProjectFastForm" @submit.prevent="handlerCreateProject">
-          <v-col cols="12" class="pb-0">
-            <v-text-field
+          <AskAnnaCol cols="12" class="pb-0">
+            <AskAnnaTextField
               v-model="projectStore.project.name"
               @input="handleOnInput"
               small
@@ -30,9 +30,9 @@
               :rules="nameRules"
               :hide-details="isFormValid"
             />
-          </v-col>
-          <v-card-actions>
-            <v-btn
+          </AskAnnaCol>
+          <AskAnnaCardActions>
+            <AskAnnaButton
               text
               small
               outlined
@@ -42,14 +42,14 @@
               @click="handlerCreateProject"
             >
               Create
-            </v-btn>
-            <v-btn small outlined text color="secondary" class="mr-1 btn--hover" @click="handleMoreOptions">
+            </AskAnnaButton>
+            <AskAnnaButton small outlined text color="secondary" class="mr-1 btn--hover" @click="handleMoreOptions">
               More options
-            </v-btn>
-            <v-btn small outlined text class="mr-1" @click="handleCancel">Cancel</v-btn>
-          </v-card-actions>
+            </AskAnnaButton>
+            <AskAnnaButton small outlined text class="mr-1" @click="handleCancel">Cancel</AskAnnaButton>
+          </AskAnnaCardActions>
         </v-form>
-      </v-card>
+      </AskAnnaCard>
     </v-menu>
   </div>
 </template>

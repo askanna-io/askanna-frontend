@@ -14,8 +14,8 @@
     @click:row="handleJobClick"
   >
     <template v-slot:top v-if="!$vuetify.breakpoint.xsOnly">
-      <v-card flat>
-        <v-card-text>
+      <AskAnnaCard flat>
+        <AskAnnaCardText>
           A job is a command or a set of commands you want to run in AskAnna. You can use jobs to handle data, get a
           prediction, train a model, et cetera.
           <a
@@ -26,8 +26,8 @@
             Read the documentation</a
           >
           for more information about jobs and how you configure them.
-        </v-card-text>
-      </v-card>
+        </AskAnnaCardText>
+      </AskAnnaCard>
     </template>
     <template v-slot:expanded-item="{ item }">
       <td :colspan="8" class="pa-0">

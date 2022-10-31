@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto" flat>
+  <AskAnnaCard class="mx-auto" flat>
     <AskAnnaLoadingProgress :type="'table-row'" :loading="loading">
       <Runs
         :items="runs"
@@ -10,7 +10,7 @@
         @onChangeParams="handleChangeParams"
       />
     </AskAnnaLoadingProgress>
-  </v-card>
+  </AskAnnaCard>
 </template>
 
 <script setup lang="ts">

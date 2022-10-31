@@ -1,8 +1,8 @@
 <template>
-  <v-container fluid>
-    <v-row dense justify="start" @drop.prevent="addFile" @dragover.prevent>
-      <v-col class="pt-0 pb-0" cols="auto" align-self="start">
-        <v-avatar class="ma-2" rounded="21" :size="false ? 150 : 150" tile>
+  <AskAnnaContainer fluid>
+    <AskAnnaRow dense justify="start" @drop.prevent="addFile" @dragover.prevent>
+      <AskAnnaCol class="pt-0 pb-0" cols="auto" align-self="start">
+        <AskAnnaAvatar class="ma-2" rounded="21" :size="false ? 150 : 150" tile>
           <v-img
             v-if="imageUrl || workspaceProfile.avatar.large"
             class="img--rounded"
@@ -10,9 +10,9 @@
           />
 
           <v-img v-else class="img--rounded" src="@/assets/icons/ask-annna-default-gravatar.png" />
-        </v-avatar>
-      </v-col>
-      <v-col xs="12" sm="2" lg="2" xl="2">
+        </AskAnnaAvatar>
+      </AskAnnaCol>
+      <AskAnnaCol xs="12" sm="2" lg="2" xl="2">
         <input
           type="file"
           :value="avatar"
@@ -21,21 +21,21 @@
           @input="handleOnInput"
           accept="image/png, image/jpeg, image/bmp"
         />
-        <v-row no-gutters v-if="editMode">
-          <v-col class="pb-3">
-            <v-btn x-small block outlined text color="secondary" class="btn--hover" @click="hanleBrowse">
+        <AskAnnaRow no-gutters v-if="editMode">
+          <AskAnnaCol class="pb-3">
+            <AskAnnaButton x-small block outlined text color="secondary" class="btn--hover" @click="hanleBrowse">
               Change my image
-            </v-btn>
-          </v-col>
-          <v-col>
-            <v-btn x-small block outlined text color="secondary" class="btn--hover" @click="handleRemove">
+            </AskAnnaButton>
+          </AskAnnaCol>
+          <AskAnnaCol>
+            <AskAnnaButton x-small block outlined text color="secondary" class="btn--hover" @click="handleRemove">
               Remove my image
-            </v-btn>
-          </v-col>
-        </v-row>
-      </v-col>
-    </v-row>
-  </v-container>
+            </AskAnnaButton>
+          </AskAnnaCol>
+        </AskAnnaRow>
+      </AskAnnaCol>
+    </AskAnnaRow>
+  </AskAnnaContainer>
 </template>
 
 <script setup lang="ts">

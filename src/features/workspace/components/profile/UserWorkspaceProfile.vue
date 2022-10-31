@@ -1,8 +1,8 @@
 <template>
-  <v-container fluid class="pt-0">
-    <v-row dense justify="start">
-      <v-col xs="12" sm="6" md="4" lg="4" xl="3">
-        <v-text-field
+  <AskAnnaContainer fluid class="pt-0">
+    <AskAnnaRow dense justify="start">
+      <AskAnnaCol xs="12" sm="6" md="4" lg="4" xl="3">
+        <AskAnnaTextField
           dense
           outlined
           required
@@ -11,12 +11,12 @@
           :value="workspaceProfile.name"
           @input="handleOnInput($event, 'name')"
         />
-      </v-col>
-    </v-row>
+      </AskAnnaCol>
+    </AskAnnaRow>
 
-    <v-row dense justify="start">
-      <v-col xs="12" sm="6" md="4" lg="4" xl="3">
-        <v-text-field
+    <AskAnnaRow dense justify="start">
+      <AskAnnaCol xs="12" sm="6" md="4" lg="4" xl="3">
+        <AskAnnaTextField
           dense
           outlined
           required
@@ -25,9 +25,9 @@
           :value="workspaceProfile.job_title"
           @input="handleOnInput($event, 'job_title')"
         />
-      </v-col>
-    </v-row>
-  </v-container>
+      </AskAnnaCol>
+    </AskAnnaRow>
+  </AskAnnaContainer>
 </template>
 
 <script setup lang="ts">

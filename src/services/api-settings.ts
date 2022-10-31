@@ -105,9 +105,9 @@ export const api: ApiSettings = {
     },
     user: {
       globalProfile: () => 'me/',
-      getAccounts: () => 'accounts/',
+      getAccounts: () => 'account',
       getProfile: () => 'auth/user/',
-      updateAccount: id => `accounts/${id}/`,
+      updateAccount: id => `account/${id}/`,
       globalProfileAvatar: () => 'me/avatar/'
     },
     metric: {

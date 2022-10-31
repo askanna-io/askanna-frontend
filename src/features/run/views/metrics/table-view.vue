@@ -13,7 +13,9 @@
         @onSort="handleOnSort"
         @onScroll="handleOnScroll"
       />
-      <v-alert v-else class="ma-4 text-center" dense outlined>There are no metrics available for this run. </v-alert>
+      <AskAnnaAlert v-else class="ma-4 text-center" dense outlined
+        >There are no metrics available for this run.
+      </AskAnnaAlert>
     </div>
   </AskAnnaLoadingProgress>
 </template>

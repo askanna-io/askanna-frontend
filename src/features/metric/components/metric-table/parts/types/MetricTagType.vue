@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex">
     <div v-if="isShowName">{{ metricRow.name }}: &nbsp;</div>
-    <v-icon small>mdi-record</v-icon>
+    <AskAnnaIcon small>mdi-record</AskAnnaIcon>
   </div>
 </template>
 <script setup lang="ts">

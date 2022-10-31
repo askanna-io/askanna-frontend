@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto" :outlined="!$vuetify.breakpoint.xsOnly" :flat="$vuetify.breakpoint.xsOnly">
+  <AskAnnaCard class="mx-auto" :outlined="!$vuetify.breakpoint.xsOnly" :flat="$vuetify.breakpoint.xsOnly">
     <div class="askAnna-breadcrumbs">
       <v-breadcrumbs :items="breadcrumbs" :class="{ 'pa-0 pl-3': $vuetify.breakpoint.xsOnly }">
         <template v-slot:item="{ item }">
@@ -9,18 +9,18 @@
         </template>
       </v-breadcrumbs>
     </div>
-    <v-divider v-if="!$vuetify.breakpoint.xsOnly" />
-    <v-card-title>
-      <v-avatar v-if="workspaceProfile.membership.avatar.small" class="ma-2" rounded="35" :size="35" tile>
+    <AskAnnaDivider v-if="!$vuetify.breakpoint.xsOnly" />
+    <AskAnnaCardTitle>
+      <AskAnnaAvatar v-if="workspaceProfile.membership.avatar.small" class="ma-2" rounded="35" :size="35" tile>
         <v-img class="img--rounded" :src="workspaceProfile.membership.avatar.small" />
-      </v-avatar>
-      <v-icon v-else large left> mdi-account </v-icon>
+      </AskAnnaAvatar>
+      <AskAnnaIcon v-else large left> mdi-account </AskAnnaIcon>
       <span class="title py-1">Edit my profile</span>
-    </v-card-title>
+    </AskAnnaCardTitle>
 
     <AskAnnaLoadingProgress :loading="loading">
       <v-form ref="profileForm">
-        <v-card-title class="title py-1">Login information</v-card-title>
+        <AskAnnaCardTitle class="title py-1">Login information</AskAnnaCardTitle>
         <UserProfile
           :error="errors"
           :userProfile="userStore.userProfile"
@@ -35,21 +35,21 @@
 
         <v-tabs-items v-model="currentTab">
           <v-tab-item key="workspace">
-            <v-card-subtitle class="text-body-1">My role: {{ roleName }}</v-card-subtitle>
+            <AskAnnaCardSubTitle class="text-body-1">My role: {{ roleName }}</AskAnnaCardSubTitle>
 
-            <v-container fluid class="pb-0">
-              <v-row dense>
-                <v-col xs="12" sm="6" md="4" lg="4" xl="3">
-                  <v-checkbox
+            <AskAnnaContainer fluid class="pb-0">
+              <AskAnnaRow dense>
+                <AskAnnaCol xs="12" sm="6" md="4" lg="4" xl="3">
+                  <AskAnnaCheckbox
                     :hide-details="useAskAnnaProfile"
                     v-model="useAskAnnaProfile"
                     @change="handleChangeUseAskAnnaProfile"
                     label="Use AskAnna profile"
                     class="mt-0"
                   />
-                </v-col>
-              </v-row>
-            </v-container>
+                </AskAnnaCol>
+              </AskAnnaRow>
+            </AskAnnaContainer>
             <template v-if="!useAskAnnaProfile">
               <user-workspace-profile
                 :editMode="!useAskAnnaProfile"
@@ -57,44 +57,44 @@
                 @onUpdateWorkSpaceProfile="handleOnUpdateWorkSpaceProfile"
               />
 
-              <v-card-title class="text-subtitle-1 py-1">Profile image</v-card-title>
+              <AskAnnaCardTitle class="text-subtitle-1 py-1">Profile image</AskAnnaCardTitle>
               <user-workspace-profile-avatar
                 :editMode="!useAskAnnaProfile"
                 :workspaceProfile="workspaceProfile"
                 @onChangeAvatar="handleOnChangeAvatar"
               />
             </template>
-            <v-card flat v-if="useAskAnnaProfile">
-              <v-container fluid>
-                <v-row dense justify="start">
-                  <v-col xs="12" sm="6" md="4" lg="4" xl="3">
+            <AskAnnaCard flat v-if="useAskAnnaProfile">
+              <AskAnnaContainer fluid>
+                <AskAnnaRow dense justify="start">
+                  <AskAnnaCol xs="12" sm="6" md="4" lg="4" xl="3">
                     <span class="primary--text cursor--pointer" @click="currentTab = 1"
                       >Click here to edit the AskAnna profile</span
                     >
-                  </v-col></v-row
+                  </AskAnnaCol></AskAnnaRow
                 >
-              </v-container>
-            </v-card>
+              </AskAnnaContainer>
+            </AskAnnaCard>
           </v-tab-item>
 
           <v-tab-item key="global">
-            <v-container fluid>
-              <v-row dense>
-                <v-col xs="12" sm="6" md="4" lg="4" xl="3">
+            <AskAnnaContainer fluid>
+              <AskAnnaRow dense>
+                <AskAnnaCol xs="12" sm="6" md="4" lg="4" xl="3">
                   The AskAnna profile is used as the default profile in AskAnna. Read more about this in
                   <a class="ask-anna-link" target="_blank" href="https://docs.askanna.io/account/" @click.stop>
                     the documentation</a
                   >.
-                </v-col>
-              </v-row>
-            </v-container>
+                </AskAnnaCol>
+              </AskAnnaRow>
+            </AskAnnaContainer>
             <user-workspace-profile
               :editMode="true"
               :workspaceProfile="userStore.globalProfile"
               @onUpdateWorkSpaceProfile="handleOnUpdateGlobalProfile"
             />
 
-            <v-card-title class="text-subtitle-1 py-1">Profile image</v-card-title>
+            <AskAnnaCardTitle class="text-subtitle-1 py-1">Profile image</AskAnnaCardTitle>
             <user-workspace-profile-avatar
               :editMode="true"
               :workspaceProfile="userStore.globalProfile"
@@ -103,10 +103,10 @@
           </v-tab-item>
         </v-tabs-items>
 
-        <v-container fluid>
-          <v-row dense justify="start">
-            <v-col xs="12" sm="6" md="2" lg="2">
-              <v-btn
+        <AskAnnaContainer fluid>
+          <AskAnnaRow dense justify="start">
+            <AskAnnaCol xs="12" sm="6" md="2" lg="2">
+              <AskAnnaButton
                 text
                 block
                 small
@@ -117,18 +117,18 @@
                 :disabled="isSaveDisabled"
               >
                 Save my changes
-              </v-btn>
-            </v-col>
-            <v-col xs="12" sm="6" md="2" lg="2">
-              <v-btn small block outlined text color="secondary" class="btn--hover" @click="handleCancel">
+              </AskAnnaButton>
+            </AskAnnaCol>
+            <AskAnnaCol xs="12" sm="6" md="2" lg="2">
+              <AskAnnaButton small block outlined text color="secondary" class="btn--hover" @click="handleCancel">
                 Cancel
-              </v-btn>
-            </v-col>
-          </v-row>
-        </v-container>
+              </AskAnnaButton>
+            </AskAnnaCol>
+          </AskAnnaRow>
+        </AskAnnaContainer>
       </v-form>
     </AskAnnaLoadingProgress>
-  </v-card>
+  </AskAnnaCard>
 </template>
 
 <script setup lang="ts">

@@ -1,25 +1,25 @@
 <template>
-  <v-card class="mx-auto h-100 cursor--pointer" :elevation="hover ? 16 : 2">
+  <AskAnnaCard class="mx-auto h-100 cursor--pointer" :elevation="hover ? 16 : 2">
     <v-app-bar height="10" absolute flat dense white--text color="white">
-      <v-spacer />
-      <v-icon v-if="statusColor" class="mt-5" :color="statusColor">mdi-email-send-outline</v-icon>
+      <AskAnnaSpacer />
+      <AskAnnaIcon v-if="statusColor" class="mt-5" :color="statusColor">mdi-email-send-outline</AskAnnaIcon>
     </v-app-bar>
-    <v-row>
-      <v-col cols="2" class="ml-2">
-        <v-avatar class="ml-1" size="60" tile>
+    <AskAnnaRow>
+      <AskAnnaCol cols="2" class="ml-2">
+        <AskAnnaAvatar class="ml-1" size="60" tile>
           <v-img class="img--rounded" :src="people.avatar.small" />
-        </v-avatar>
-      </v-col>
-      <v-col class="ml-3" cols="9" align-self="start">
+        </AskAnnaAvatar>
+      </AskAnnaCol>
+      <AskAnnaCol class="ml-3" cols="9" align-self="start">
         <v-list-item color="rgba(0, 0, 0, .4)">
           <v-list-item-content>
             <v-list-item-title class="people-title">{{ people.name || people.email }}</v-list-item-title>
             <v-list-item-subtitle>{{ people.role.name }}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
-      </v-col>
-    </v-row>
-  </v-card>
+      </AskAnnaCol>
+    </AskAnnaRow>
+  </AskAnnaCard>
 </template>
 
 <script setup lang="ts">

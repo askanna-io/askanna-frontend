@@ -1,30 +1,30 @@
 <template>
   <v-dialog v-model="valueModel" max-width="650px">
-    <v-card class="AskAnna-card AskAnna-card--in-dialog">
-      <v-toolbar
+    <AskAnnaCard class="AskAnna-card AskAnna-card--in-dialog">
+      <AskAnnaToolbar
         flat
         white--text
         color="white"
         :dense="!$vuetify.breakpoint.xsOnly"
         :height="calcHeight($vuetify.breakpoint.xsOnly)"
       >
-        <v-toolbar-title v-if="!$vuetify.breakpoint.xsOnly" class="px-0 toolbar-title">
+        <AskAnnaToolbarTitle v-if="!$vuetify.breakpoint.xsOnly" class="px-0 toolbar-title">
           <div class="grid-container">
             <div class="pre">Do you want to remove&nbsp;</div>
             <div class="long primary--text">{{ peopleName }}</div>
             <div class="mark pre">&nbsp;?</div>
           </div>
-        </v-toolbar-title>
+        </AskAnnaToolbarTitle>
         <div v-else class="text-body-1 font-weight-bold">
           Do you want to remove <span class="primary--text">{{ peopleName }}</span
           >?
         </div>
-        <v-spacer />
-        <v-btn icon @click="closeDelete">
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
-      </v-toolbar>
-      <v-card-text>
+        <AskAnnaSpacer />
+        <AskAnnaButton icon @click="closeDelete">
+          <AskAnnaIcon>mdi-close</AskAnnaIcon>
+        </AskAnnaButton>
+      </AskAnnaToolbar>
+      <AskAnnaCardText>
         You are about to remove the member <b>{{ peopleName }}</b
         >. Here's what will happen when you remove <b>{{ peopleName }}</b
         >:
@@ -48,14 +48,16 @@
         <br />
         The removal action cannot be undone! Please confirm that you want to remove <b>{{ peopleName }}</b
         >:
-      </v-card-text>
-      <v-card-actions :class="{ 'px-3': $vuetify.breakpoint.xsOnly }">
-        <v-btn small outlined text color="secondary" class="mr-1 btn--hover" @click="closeDelete">Cancel</v-btn>
-        <v-btn small outlined text color="error" class="mr-1 btn--hover" @click="deleteItemConfirm"
-          >Remove{{ $vuetify.breakpoint.xsOnly ? '' : `: ${name}` }}</v-btn
+      </AskAnnaCardText>
+      <AskAnnaCardActions :class="{ 'px-3': $vuetify.breakpoint.xsOnly }">
+        <AskAnnaButton small outlined text color="secondary" class="mr-1 btn--hover" @click="closeDelete"
+          >Cancel</AskAnnaButton
         >
-      </v-card-actions>
-    </v-card>
+        <AskAnnaButton small outlined text color="error" class="mr-1 btn--hover" @click="deleteItemConfirm"
+          >Remove{{ $vuetify.breakpoint.xsOnly ? '' : `: ${name}` }}</AskAnnaButton
+        >
+      </AskAnnaCardActions>
+    </AskAnnaCard>
   </v-dialog>
 </template>
 <script setup lang="ts">

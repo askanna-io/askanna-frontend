@@ -1,5 +1,5 @@
 <template>
-  <v-toolbar
+  <AskAnnaToolbar
     color="grey lighten-4"
     flat
     dense
@@ -8,11 +8,11 @@
     :extended="$vuetify.breakpoint.xsOnly"
     :height="$vuetify.breakpoint.xsOnly ? '30px' : '48px'"
   >
-    <v-toolbar-title> {{ title }} - People</v-toolbar-title>
+    <AskAnnaToolbarTitle> {{ title }} - People</AskAnnaToolbarTitle>
     <template :slot="$vuetify.breakpoint.xsOnly ? 'extension' : 'default'">
-      <v-spacer />
-      <v-spacer />
-      <v-spacer />
+      <AskAnnaSpacer />
+      <AskAnnaSpacer />
+      <AskAnnaSpacer />
       <v-menu
         v-model="sortMenu"
         class="workspace-menu"
@@ -25,7 +25,9 @@
         offset-y
       >
         <template v-slot:activator="{ on }">
-          <v-btn v-on="on" small data-test="workspace-menu-activate-btn"><v-icon>mdi-sort</v-icon>Sort</v-btn>
+          <AskAnnaButton v-on="on" small data-test="workspace-menu-activate-btn"
+            ><AskAnnaIcon>mdi-sort</AskAnnaIcon>Sort</AskAnnaButton
+          >
         </template>
         <v-list>
           <v-list-item-group v-model="activeSort" color="primary">
@@ -45,23 +47,23 @@
         nudge-bottom="10"
       >
         <template v-slot:activator="{ on }">
-          <v-btn
+          <AskAnnaButton
             class="ml-1"
             :class="{ 'mr-5': $vuetify.breakpoint.xsOnly }"
             v-on="on"
             small
             data-test="workspace-menu-activate-btn"
           >
-            <v-icon> mdi-filter-variant </v-icon>Filters
-          </v-btn>
+            <AskAnnaIcon> mdi-filter-variant </AskAnnaIcon>Filters
+          </AskAnnaButton>
         </template>
-        <v-row class="pa-2 white">
-          <v-col class="d-flex pt-1 pb-1" cols="12">
-            <v-card flat width="284">
-              <v-card-subtitle class="pa-0">
+        <AskAnnaRow class="pa-2 white">
+          <AskAnnaCol class="d-flex pt-1 pb-1" cols="12">
+            <AskAnnaCard flat width="284">
+              <AskAnnaCardSubTitle class="pa-0">
                 <h3>Account types</h3>
-              </v-card-subtitle>
-              <v-select
+              </AskAnnaCardSubTitle>
+              <AskAnnaSelect
                 v-model="activeRoleFilter"
                 hide-details
                 class="pt-0"
@@ -70,17 +72,17 @@
                 item-value="value"
                 :items="roleFilters"
               >
-              </v-select>
-            </v-card>
-          </v-col>
-        </v-row>
-        <v-row class="pa-2 white">
-          <v-col class="d-flex pt-1 pb-1" cols="12">
-            <v-card flat width="284">
-              <v-card-subtitle class="pa-0">
+              </AskAnnaSelect>
+            </AskAnnaCard>
+          </AskAnnaCol>
+        </AskAnnaRow>
+        <AskAnnaRow class="pa-2 white">
+          <AskAnnaCol class="d-flex pt-1 pb-1" cols="12">
+            <AskAnnaCard flat width="284">
+              <AskAnnaCardSubTitle class="pa-0">
                 <h3>Account status</h3>
-              </v-card-subtitle>
-              <v-select
+              </AskAnnaCardSubTitle>
+              <AskAnnaSelect
                 hide-details
                 v-model="activeStatusFilter"
                 :items="statusFilters"
@@ -89,17 +91,17 @@
                 no-data-text=""
                 class="pt-0"
               >
-              </v-select>
-            </v-card>
-          </v-col>
-        </v-row>
+              </AskAnnaSelect>
+            </AskAnnaCard>
+          </AskAnnaCol>
+        </AskAnnaRow>
       </v-menu>
       <template v-if="workspacePeopleInviteCreate">
-        <v-spacer />
+        <AskAnnaSpacer />
         <PeopleInvitePopup :workspaceName="title" />
       </template>
     </template>
-  </v-toolbar>
+  </AskAnnaToolbar>
 </template>
 <script setup lang="ts">
 defineProps({

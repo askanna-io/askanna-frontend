@@ -1,5 +1,5 @@
 <template>
-  <v-alert
+  <AskAnnaAlert
     :width="'auto'"
     text
     outlined
@@ -11,7 +11,7 @@
     :class="{ 'px-1': $vuetify.breakpoint.xsOnly }"
   >
     {{ getText($vuetify.breakpoint.xsOnly) }}
-  </v-alert>
+  </AskAnnaAlert>
 </template>
 
 <script setup lang="ts">

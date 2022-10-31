@@ -1,9 +1,9 @@
 <template>
   <span class="ask-anna-copy-text">
     <code v-if="showText" :class="styleClasses">{{ text }}</code>
-    <v-tooltip v-if="showTooltip" top content-class="opacity-1">
+    <AskAnnaTooltip v-if="showTooltip" top content-class="opacity-1">
       <template v-slot:activator="{ on }">
-        <v-btn
+        <AskAnnaButton
           v-on="on"
           v-show="show"
           :icon="icon"
@@ -14,11 +14,11 @@
           @click.prevent="handleCopy"
           :outlined="buttonType.outlined"
         >
-          <v-icon small :color="iconColor">mdi-content-copy</v-icon>
-        </v-btn>
+          <AskAnnaIcon small :color="iconColor">mdi-content-copy</AskAnnaIcon>
+        </AskAnnaButton>
       </template>
       <span>Copy</span>
-    </v-tooltip>
+    </AskAnnaTooltip>
   </span>
 </template>
 

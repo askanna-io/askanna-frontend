@@ -1,23 +1,23 @@
 <template>
   <div :class="{ 'px-4': !$vuetify.breakpoint.xsOnly, 'px-0': $vuetify.breakpoint.xsOnly }">
-    <v-toolbar dense flat color="grey lighten-4" class="br-r4">
-      <v-flex class="d-flex">
+    <AskAnnaToolbar dense flat color="grey lighten-4" class="br-r4">
+      <AskAnnaFlex class="d-flex">
         <div class="mr-auto d-flex align-center">Shell</div>
         <div>
-          <v-tooltip top content-class="opacity-1">
+          <AskAnnaTooltip top content-class="opacity-1">
             <template v-slot:activator="{ on }">
-              <v-btn small v-on="on" class="mr-1 btn--hover" outlined color="secondary" @click="handleCopy()">
-                <v-icon left color="secondary">mdi-content-copy</v-icon>Copy
-              </v-btn>
+              <AskAnnaButton small v-on="on" class="mr-1 btn--hover" outlined color="secondary" @click="handleCopy()">
+                <AskAnnaIcon left color="secondary">mdi-content-copy</AskAnnaIcon>Copy
+              </AskAnnaButton>
             </template>
             <span>Copy</span>
-          </v-tooltip>
+          </AskAnnaTooltip>
         </div>
-      </v-flex>
-    </v-toolbar>
-    <v-flex class="mb-4">
+      </AskAnnaFlex>
+    </AskAnnaToolbar>
+    <AskAnnaFlex class="mb-4">
       <TheHighlight class="curl-code" :value="curl" languageName="json" />
-    </v-flex>
+    </AskAnnaFlex>
   </div>
 </template>
 

@@ -1,8 +1,8 @@
 <template>
-  <v-container class="ma-0 ml-1 pt-0" fluid>
-    <v-row>
-      <v-col :cols="$vuetify.breakpoint.xsOnly ? 12 : 5">
-        <v-text-field
+  <AskAnnaContainer class="ma-0 ml-1 pt-0" fluid>
+    <AskAnnaRow>
+      <AskAnnaCol :cols="$vuetify.breakpoint.xsOnly ? 12 : 5">
+        <AskAnnaTextField
           dense
           outlined
           required
@@ -12,10 +12,10 @@
           :autofocus="!$vuetify.breakpoint.xsOnly"
           @input="handleOnInput($event, 'name')"
         />
-      </v-col>
-    </v-row>
-    <v-row v-if="!$vuetify.breakpoint.xsOnly" class="pt-3">
-      <v-col cols="12">
+      </AskAnnaCol>
+    </AskAnnaRow>
+    <AskAnnaRow v-if="!$vuetify.breakpoint.xsOnly" class="pt-3">
+      <AskAnnaCol cols="12">
         <AskAnnaDescription
           cleared
           outlined
@@ -27,10 +27,10 @@
           :title="'Run description (optional)'"
           @onChangeDescription="handleOnInput($event, 'description')"
         />
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col cols="12" class="pt-6">
+      </AskAnnaCol>
+    </AskAnnaRow>
+    <AskAnnaRow>
+      <AskAnnaCol cols="12" class="pt-6">
         <ask-anna-code
           :code="run.code"
           titleWidth="117px"
@@ -38,28 +38,28 @@
           @validete="handleValidate"
           @onInput="handleOnInput($event, 'code')"
         />
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col class="pt-0">
-        <v-btn small outlined color="secondary" class="mr-1 btn--hover" @click="handleRunJob">
-          <v-icon color="secondary" left>mdi-play</v-icon>Run this job
-        </v-btn>
-      </v-col>
-    </v-row>
-    <v-row v-if="runStatus">
-      <v-col cols="12" sm="12">
+      </AskAnnaCol>
+    </AskAnnaRow>
+    <AskAnnaRow>
+      <AskAnnaCol class="pt-0">
+        <AskAnnaButton small outlined color="secondary" class="mr-1 btn--hover" @click="handleRunJob">
+          <AskAnnaIcon color="secondary" left>mdi-play</AskAnnaIcon>Run this job
+        </AskAnnaButton>
+      </AskAnnaCol>
+    </AskAnnaRow>
+    <AskAnnaRow v-if="runStatus">
+      <AskAnnaCol cols="12" sm="12">
         <p>
           You have successfully started the run{{ runName }}. The current status is:
           <ask-anna-chip-status :status="runStatus" /><br />{{ startedTtext }}
         </p>
 
-        <v-btn small outlined color="secondary" class="mr-1 btn--hover" @click="hadnleOpenRun">
-          <v-icon color="secondary" left>mdi-link</v-icon>Open the run
-        </v-btn>
-      </v-col>
-    </v-row>
-  </v-container>
+        <AskAnnaButton small outlined color="secondary" class="mr-1 btn--hover" @click="hadnleOpenRun">
+          <AskAnnaIcon color="secondary" left>mdi-link</AskAnnaIcon>Open the run
+        </AskAnnaButton>
+      </AskAnnaCol>
+    </AskAnnaRow>
+  </AskAnnaContainer>
 </template>
 
 <script setup lang="ts">

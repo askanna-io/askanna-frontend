@@ -5,11 +5,11 @@
         <v-list-item-title @click="handleClickItem">Workspaces</v-list-item-title>
       </template>
       <template v-slot:appendIcon>
-        <v-icon @click="handleClickItem">mdi-chevron-down</v-icon>
+        <AskAnnaIcon @click="handleClickItem">mdi-chevron-down</AskAnnaIcon>
       </template>
 
-      <v-col cols="12" class="pa-0">
-        <v-text-field
+      <AskAnnaCol cols="12" class="pa-0">
+        <AskAnnaTextField
           v-if="!loading && (workspaces.length > 0 || search)"
           class="mx-1 mt-2"
           v-model="search"
@@ -39,7 +39,7 @@
             @click="handleClickOnMenuItem"
           >
             <v-list-item-icon class="mr-2">
-              <v-icon v-text="getIcon(item)"></v-icon>
+              <AskAnnaIcon>{{ getIcon(item) }}</AskAnnaIcon>
             </v-list-item-icon>
 
             <v-list-item-content>
@@ -48,11 +48,11 @@
           </v-list-item>
         </v-list>
 
-        <v-flex v-if="search && !workspaces.length && !isSearchProcessing" class="px-2 pt-2 pl-4 text--secondary"
-          >No results</v-flex
+        <AskAnnaFlex v-if="search && !workspaces.length && !isSearchProcessing" class="px-2 pt-2 pl-4 text--secondary"
+          >No results</AskAnnaFlex
         >
-        <v-col class="pa-2">
-          <v-btn
+        <AskAnnaCol class="pa-2">
+          <AskAnnaButton
             v-for="projectBtnOpt of explorBtnOpts"
             @click="handleClickOnMenuItem"
             block
@@ -63,10 +63,10 @@
             class="mb-3"
             :key="projectBtnOpt.title"
             :to="projectBtnOpt.to"
-            >{{ projectBtnOpt.title }}</v-btn
-          ></v-col
+            >{{ projectBtnOpt.title }}</AskAnnaButton
+          ></AskAnnaCol
         >
-      </v-col>
+      </AskAnnaCol>
     </v-list-group>
   </div>
 </template>

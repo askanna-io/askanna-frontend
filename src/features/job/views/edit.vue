@@ -1,11 +1,11 @@
 <template>
   <div :class="{ 'pt-4': projectJobEdit }">
     <AskAnnaLoadingProgress v-if="projectJobEdit" :type="'table-row'" :loading="loading" fullWidth>
-      <v-card flat>
-        <v-container class="ma-0 pt-0" fluid>
-          <v-row>
-            <v-col cols="12" sm="5">
-              <v-text-field
+      <AskAnnaCard flat>
+        <AskAnnaContainer class="ma-0 pt-0" fluid>
+          <AskAnnaRow>
+            <AskAnnaCol cols="12" sm="5">
+              <AskAnnaTextField
                 dense
                 autofocus
                 outlined
@@ -15,10 +15,10 @@
                 :rules="[RULE.required('Job name is required')]"
                 @input="handleOnInput($event, 'name')"
               />
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="12" class="pt-0">
+            </AskAnnaCol>
+          </AskAnnaRow>
+          <AskAnnaRow>
+            <AskAnnaCol cols="12" class="pt-0">
               <AskAnnaDescription
                 cleared
                 outlined
@@ -29,12 +29,12 @@
                 @onSave="handleSaveDescription"
                 @onChangeDescription="handleOnInput($event, 'description')"
               />
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col class="pt-0">
-              <v-card-actions class="pl-0">
-                <v-btn
+            </AskAnnaCol>
+          </AskAnnaRow>
+          <AskAnnaRow>
+            <AskAnnaCol class="pt-0">
+              <AskAnnaCardActions class="pl-0">
+                <AskAnnaButton
                   text
                   small
                   outlined
@@ -44,25 +44,27 @@
                   @click="handleShowConfirmationPopup"
                 >
                   Save my changes
-                </v-btn>
-                <v-btn @click="handleClose" small outlined text color="secondary" class="btn--hover"> Cancel </v-btn>
-              </v-card-actions>
-            </v-col>
-          </v-row>
-        </v-container>
+                </AskAnnaButton>
+                <AskAnnaButton @click="handleClose" small outlined text color="secondary" class="btn--hover">
+                  Cancel
+                </AskAnnaButton>
+              </AskAnnaCardActions>
+            </AskAnnaCol>
+          </AskAnnaRow>
+        </AskAnnaContainer>
         <confirm-change-job-name-popup
           :jobName="job.name"
           :value="showConfirmPopup"
           @onClose="handleClosePopup"
           @onConfirmChangeName="handleSave"
         />
-      </v-card>
+      </AskAnnaCard>
     </AskAnnaLoadingProgress>
-    <v-alert v-else class="mx-4 text-center" dense outlined>
+    <AskAnnaAlert v-else class="mx-4 text-center" dense outlined>
       You are not allowed to edit this job. I can bring you back to the job
       <router-link :to="{ name: 'workspace-project-job-overiew' }" class="ask-anna-link">{{ job.name }}</router-link
       >.
-    </v-alert>
+    </AskAnnaAlert>
   </div>
 </template>
 

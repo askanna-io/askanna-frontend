@@ -1,7 +1,7 @@
 <template>
   <div :class="{ 'pt-2': $vuetify.breakpoint.xsOnly }">
-    <v-card flat v-if="!$vuetify.breakpoint.xsOnly">
-      <v-card-text>
+    <AskAnnaCard flat v-if="!$vuetify.breakpoint.xsOnly">
+      <AskAnnaCardText>
         <p>
           Project variables are applied to every run environment within this project. You can use variables for
           settings, passwords, tokens, etcetera. Masked variables can be used for sensitive information.
@@ -14,15 +14,15 @@
           >
           for more information about how you can use variables in the job definition and project code.
         </p>
-      </v-card-text>
-    </v-card>
-    <v-toolbar v-if="projectVariableCreate" color="grey lighten-4" flat dense>
-      <v-spacer />
-      <v-btn @click="handleOpenVariablePopup()" small rounded class="mr-3">
-        <v-icon color="primary" left>mdi-plus</v-icon>
+      </AskAnnaCardText>
+    </AskAnnaCard>
+    <AskAnnaToolbar v-if="projectVariableCreate" color="grey lighten-4" flat dense>
+      <AskAnnaSpacer />
+      <AskAnnaButton @click="handleOpenVariablePopup()" small rounded class="mr-3">
+        <AskAnnaIcon color="primary" left>mdi-plus</AskAnnaIcon>
         New variable
-      </v-btn>
-    </v-toolbar>
+      </AskAnnaButton>
+    </AskAnnaToolbar>
   </div>
 </template>
 

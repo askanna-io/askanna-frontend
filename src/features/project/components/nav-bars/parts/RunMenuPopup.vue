@@ -2,26 +2,26 @@
   <div class="text-center">
     <v-menu v-model="menu" rounded :close-on-content-click="false" left>
       <template v-slot:activator="{ on, attrs }">
-        <v-btn icon v-bind="attrs" @click.stop.prevent="on.click" small>
-          <v-icon>mdi-dots-vertical</v-icon>
-        </v-btn>
+        <AskAnnaButton icon v-bind="attrs" @click.stop.prevent="on.click" small>
+          <AskAnnaIcon>mdi-dots-vertical</AskAnnaIcon>
+        </AskAnnaButton>
       </template>
-      <v-card flat elevation="24" width="300">
-        <v-toolbar flat height="40" class="secondary--text" color="white">
-          <v-toolbar-title class="pl-0">
+      <AskAnnaCard flat elevation="24" width="300">
+        <AskAnnaToolbar flat height="40" class="secondary--text" color="white">
+          <AskAnnaToolbarTitle class="pl-0">
             <span class="title font-weight-light">{{ run.name || 'Run: ' + run.short_uuid }}</span>
-          </v-toolbar-title>
-          <v-spacer />
+          </AskAnnaToolbarTitle>
+          <AskAnnaSpacer />
 
-          <v-btn icon @click.stop.prevent="handleClose" small>
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-toolbar>
+          <AskAnnaButton icon @click.stop.prevent="handleClose" small>
+            <AskAnnaIcon>mdi-close</AskAnnaIcon>
+          </AskAnnaButton>
+        </AskAnnaToolbar>
 
-        <v-card-actions>
-          <v-row dense class="mx-2">
-            <v-col cols="12">
-              <v-btn
+        <AskAnnaCardActions>
+          <AskAnnaRow dense class="mx-2">
+            <AskAnnaCol cols="12">
+              <AskAnnaButton
                 text
                 block
                 small
@@ -31,16 +31,23 @@
                 :disabled="disabledButtonEditRun"
               >
                 Edit run info
-              </v-btn>
-            </v-col>
-            <v-col cols="12">
-              <v-btn small outlined text block color="error" class="btn--hover" @click="handleOpenConfirmDeleteRun"
+              </AskAnnaButton>
+            </AskAnnaCol>
+            <AskAnnaCol cols="12">
+              <AskAnnaButton
+                small
+                outlined
+                text
+                block
+                color="error"
+                class="btn--hover"
+                @click="handleOpenConfirmDeleteRun"
                 >Remove this run
-              </v-btn>
-            </v-col>
-          </v-row>
-        </v-card-actions>
-      </v-card>
+              </AskAnnaButton>
+            </AskAnnaCol>
+          </AskAnnaRow>
+        </AskAnnaCardActions>
+      </AskAnnaCard>
     </v-menu>
     <ConfirmDeleteRunPopup
       :runInfo="run"

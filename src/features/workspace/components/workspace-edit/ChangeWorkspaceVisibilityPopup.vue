@@ -1,17 +1,17 @@
 <template>
   <v-dialog v-model="valueModel" max-width="650px" @click:outside="handleCancel">
-    <v-card class="AskAnna-card AskAnna-card--in-dialog">
-      <v-toolbar flat dense white--text color="white">
-        <v-toolbar-title class="px-0"
-          >Do you want to set the visibility of this workspace to {{ visibilityInfo.name }}?</v-toolbar-title
+    <AskAnnaCard class="AskAnna-card AskAnna-card--in-dialog">
+      <AskAnnaToolbar flat dense white--text color="white">
+        <AskAnnaToolbarTitle class="px-0"
+          >Do you want to set the visibility of this workspace to {{ visibilityInfo.name }}?</AskAnnaToolbarTitle
         >
-        <v-spacer />
+        <AskAnnaSpacer />
 
-        <v-btn icon @click="handleCancel">
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
-      </v-toolbar>
-      <v-card-text>
+        <AskAnnaButton icon @click="handleCancel">
+          <AskAnnaIcon>mdi-close</AskAnnaIcon>
+        </AskAnnaButton>
+      </AskAnnaToolbar>
+      <AskAnnaCardText>
         <span v-html="visibilityInfo.title" />
         <br />
         <br />
@@ -26,14 +26,16 @@
           <br />
         </template>
         <br />
-      </v-card-text>
-      <v-card-actions class="ml-2">
-        <v-btn small outlined text color="secondary" class="mr-1 btn--hover" @click="handleCancel">Cancel</v-btn>
-        <v-btn small outlined text color="error" class="mr-1 btn--hover" @click="handleConfirm"
+      </AskAnnaCardText>
+      <AskAnnaCardActions class="ml-2">
+        <AskAnnaButton small outlined text color="secondary" class="mr-1 btn--hover" @click="handleCancel"
+          >Cancel</AskAnnaButton
+        >
+        <AskAnnaButton small outlined text color="error" class="mr-1 btn--hover" @click="handleConfirm"
           >Change workspace visibility
-        </v-btn>
-      </v-card-actions>
-    </v-card>
+        </AskAnnaButton>
+      </AskAnnaCardActions>
+    </AskAnnaCard>
   </v-dialog>
 </template>
 <script setup lang="ts">

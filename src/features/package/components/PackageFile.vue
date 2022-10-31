@@ -1,30 +1,37 @@
 <template>
-  <v-row align="center" justify="center">
-    <v-col cols="12" class="pt-0 pb-0">
-      <v-toolbar dense flat v-sticky="sticked" :sticky-offset="stickyParams" :sticky-z-index="1">
-        <v-btn icon small @click="handleBack">
-          <v-icon>mdi-arrow-left</v-icon>
-        </v-btn>
+  <AskAnnaRow align="center" justify="center">
+    <AskAnnaCol cols="12" class="pt-0 pb-0">
+      <AskAnnaToolbar dense flat v-sticky="sticked" :sticky-offset="stickyParams" :sticky-z-index="1">
+        <AskAnnaButton icon small @click="handleBack">
+          <AskAnnaIcon>mdi-arrow-left</AskAnnaIcon>
+        </AskAnnaButton>
 
         <div>
           {{ currentPath.name
           }}<span class="pl-3">({{ `${humanize.humanizeSize(currentPath.size)}` }}{{ metaInfo }})</span>
         </div>
 
-        <v-spacer />
+        <AskAnnaSpacer />
 
         <v-btn-toggle v-if="fileStore.isRenderedExt || fileStore.isValidJSON" mandatory class="mr-1">
-          <v-tooltip v-for="(view, index) in views" top :key="index">
+          <AskAnnaTooltip v-for="(view, index) in views" top :key="index">
             <template v-slot:activator="{ on }">
-              <v-btn v-on="on" small class="btn--hover" outlined color="secondary" @click="handleChangeView(index)">
-                <v-icon color="secondary">{{ view.icon }}</v-icon>
-              </v-btn>
+              <AskAnnaButton
+                v-on="on"
+                small
+                class="btn--hover"
+                outlined
+                color="secondary"
+                @click="handleChangeView(index)"
+              >
+                <AskAnnaIcon color="secondary">{{ view.icon }}</AskAnnaIcon>
+              </AskAnnaButton>
             </template>
             <span>{{ view.name }}</span>
-          </v-tooltip>
+          </AskAnnaTooltip>
         </v-btn-toggle>
 
-        <v-btn
+        <AskAnnaButton
           v-if="!$vuetify.breakpoint.xsOnly"
           small
           outlined
@@ -33,9 +40,9 @@
           :disabled="fileStore.loadingFullData"
           @click="handleDownload"
         >
-          <v-icon color="secondary" left>mdi-download</v-icon>Download file
-        </v-btn>
-        <v-btn
+          <AskAnnaIcon color="secondary" left>mdi-download</AskAnnaIcon>Download file
+        </AskAnnaButton>
+        <AskAnnaButton
           v-if="!$vuetify.breakpoint.xsOnly && fileStore.isShowCopyBtn"
           small
           outlined
@@ -43,9 +50,9 @@
           class="mr-1 btn--hover"
           @click="handleCopy"
         >
-          <v-icon color="secondary" left>mdi-content-copy</v-icon>Copy
-        </v-btn>
-      </v-toolbar>
+          <AskAnnaIcon color="secondary" left>mdi-content-copy</AskAnnaIcon>Copy
+        </AskAnnaButton>
+      </AskAnnaToolbar>
       <PreviewFile
         v-if="!fileStore.isFileEmpty"
         :images="images"
@@ -63,9 +70,9 @@
         :fileSource="fileStore.filePreviewByView(currentView.value)"
         @onDownload="handleDownload"
       />
-      <v-alert v-else class="ma-4 text-center" dense outlined>This file is empty.</v-alert>
-    </v-col>
-  </v-row>
+      <AskAnnaAlert v-else class="ma-4 text-center" dense outlined>This file is empty.</AskAnnaAlert>
+    </AskAnnaCol>
+  </AskAnnaRow>
 </template>
 
 <script setup lang="ts">

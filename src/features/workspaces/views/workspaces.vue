@@ -6,8 +6,8 @@
           <WorkspacesToolbar />
         </template>
         <template v-slot:default="props">
-          <v-row :class="{ 'px-2': $vuetify.breakpoint.xsOnly }">
-            <v-col
+          <AskAnnaRow :class="{ 'px-2': $vuetify.breakpoint.xsOnly }">
+            <AskAnnaCol
               v-for="item in props.items"
               @click="handleOpenWorkspace(item)"
               :key="item.name + item.short_uuid"
@@ -26,11 +26,11 @@
                   @onOpenWorkspaceRemove="handleOpenWorkspaceRemove(item)"
                 />
               </v-hover>
-            </v-col>
-          </v-row>
+            </AskAnnaCol>
+          </AskAnnaRow>
         </template>
         <template v-slot:no-data
-          ><v-alert
+          ><AskAnnaAlert
             v-if="!loading"
             class="mt-2 text-center"
             dense
@@ -41,7 +41,7 @@
             <template v-else-if="query.visibility || query.is_member"
               >There are no workspaces for this filter request.</template
             >
-          </v-alert></template
+          </AskAnnaAlert></template
         >
       </v-data-iterator>
     </AskAnnaLoadingProgress>

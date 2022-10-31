@@ -1,7 +1,7 @@
 <template>
   <AskAnnaLoadingProgress :loading="loading">
-    <v-row align="center" justify="center">
-      <v-col cols="12" class="pt-0 pb-0">
+    <AskAnnaRow align="center" justify="center">
+      <AskAnnaCol cols="12" class="pt-0 pb-0">
         <PackageToolbar
           v-sticky="sticked"
           :sticky-z-index="1"
@@ -9,9 +9,9 @@
           sticky-offset="{top: 52, bottom: 10}"
         >
           <template v-slot:rigth>
-            <v-slide-y-transition>
+            <AskAnnaSlideYTransition>
               <div v-if="!filePath" class="d-flex">
-                <v-btn
+                <AskAnnaButton
                   v-if="!$vuetify.breakpoint.xsOnly"
                   small
                   outlined
@@ -20,12 +20,12 @@
                   :loading="downloadPackage"
                   @click="handleDownload()"
                 >
-                  <v-icon color="secondary" left>mdi-download</v-icon>Download
+                  <AskAnnaIcon color="secondary" left>mdi-download</AskAnnaIcon>Download
                   <template v-slot:loader>
                     <span>Downloading...</span>
                   </template>
-                </v-btn>
-                <v-btn
+                </AskAnnaButton>
+                <AskAnnaButton
                   v-if="projectCodeCreate && !$vuetify.breakpoint.xsOnly"
                   small
                   outlined
@@ -34,10 +34,10 @@
                   class="mr-1 btn--hover"
                   @click="handleReplace()"
                 >
-                  <v-icon color="secondary" left>mdi-folder-move</v-icon>Replace
-                </v-btn>
+                  <AskAnnaIcon color="secondary" left>mdi-folder-move</AskAnnaIcon>Replace
+                </AskAnnaButton>
 
-                <v-btn
+                <AskAnnaButton
                   v-if="!$vuetify.breakpoint.xsOnly"
                   small
                   outlined
@@ -45,8 +45,8 @@
                   class="btn--hover"
                   @click="handleHistory()"
                 >
-                  <v-icon color="secondary" left>mdi-history</v-icon>History
-                </v-btn>
+                  <AskAnnaIcon color="secondary" left>mdi-history</AskAnnaIcon>History
+                </AskAnnaButton>
                 <v-menu
                   v-if="$vuetify.breakpoint.xsOnly"
                   v-model="menu"
@@ -58,9 +58,9 @@
                   left
                 >
                   <template v-slot:activator="{ on, attrs }">
-                    <v-btn icon v-bind="attrs" @click.stop.prevent="on.click" small>
-                      <v-icon>mdi-dots-vertical</v-icon>
-                    </v-btn>
+                    <AskAnnaButton icon v-bind="attrs" @click.stop.prevent="on.click" small>
+                      <AskAnnaIcon>mdi-dots-vertical</AskAnnaIcon>
+                    </AskAnnaButton>
                   </template>
                   <v-list dense>
                     <v-list-item dense @click="handleHistory()">
@@ -69,7 +69,7 @@
                   </v-list>
                 </v-menu>
               </div>
-            </v-slide-y-transition>
+            </AskAnnaSlideYTransition>
           </template>
         </PackageToolbar>
         <v-expand-transition>
@@ -108,8 +108,8 @@
             />
           </template>
         </template>
-      </v-col>
-    </v-row>
+      </AskAnnaCol>
+    </AskAnnaRow>
   </AskAnnaLoadingProgress>
 </template>
 

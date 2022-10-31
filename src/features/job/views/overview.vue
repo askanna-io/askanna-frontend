@@ -1,11 +1,11 @@
 <template>
-  <v-card class="mx-auto" flat>
-    <v-card-title>Description</v-card-title>
-    <v-divider />
+  <AskAnnaCard class="mx-auto" flat>
+    <AskAnnaCardTitle>Description</AskAnnaCardTitle>
+    <AskAnnaDivider />
 
     <AskAnnaDescription class="mx-2" preview readonly :description="job.description" />
 
-    <v-divider />
+    <AskAnnaDivider />
     <JobDefinition
       v-if="job.short_uuid"
       :job="job"
@@ -16,9 +16,9 @@
       :lastPackage="projectStore.lastPackage"
       @handleGoToCode="handleGoToCode"
     />
-    <v-divider v-if="projectRunCreate" />
+    <AskAnnaDivider v-if="projectRunCreate" />
     <JobRunning v-if="projectRunCreate" />
-  </v-card>
+  </AskAnnaCard>
 </template>
 
 <script setup lang="ts">

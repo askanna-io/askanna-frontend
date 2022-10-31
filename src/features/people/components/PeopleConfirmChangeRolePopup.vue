@@ -1,14 +1,14 @@
 <template>
   <v-dialog v-model="valueModel" max-width="650px">
-    <v-card class="AskAnna-card AskAnna-card--in-dialog">
-      <v-toolbar
+    <AskAnnaCard class="AskAnna-card AskAnna-card--in-dialog">
+      <AskAnnaToolbar
         flat
         white--text
         color="white"
         :dense="!$vuetify.breakpoint.xsOnly"
         :height="calcHeight($vuetify.breakpoint.xsOnly)"
       >
-        <v-toolbar-title class="px-0 toolbar-title" v-if="!$vuetify.breakpoint.xsOnly">
+        <AskAnnaToolbarTitle class="px-0 toolbar-title" v-if="!$vuetify.breakpoint.xsOnly">
           <div class="grid-container">
             <div class="pre">
               Do you want to make
@@ -17,16 +17,16 @@
             <div>{{ roleInfo.title }}</div>
             <div class="mark pre">?</div>
           </div>
-        </v-toolbar-title>
+        </AskAnnaToolbarTitle>
         <div v-else class="text-body-1 font-weight-bold">
           Do you want to make <span class="primary--text">{{ peopleName }}</span> a workspace {{ roleInfo.title }}?
         </div>
-        <v-spacer />
-        <v-btn icon @click="closeDelete">
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
-      </v-toolbar>
-      <v-card-text>
+        <AskAnnaSpacer />
+        <AskAnnaButton icon @click="closeDelete">
+          <AskAnnaIcon>mdi-close</AskAnnaIcon>
+        </AskAnnaButton>
+      </AskAnnaToolbar>
+      <AskAnnaCardText>
         <template v-if="roleInfo.canNoLongerTitle">
           <span v-html="roleInfo.canNoLongerTitle" />
           <br />
@@ -51,14 +51,16 @@
           </li>
         </ul>
         <br />
-      </v-card-text>
-      <v-card-actions :class="{ 'px-3': $vuetify.breakpoint.xsOnly }">
-        <v-btn small outlined text color="secondary" class="mr-1 btn--hover" @click="closeDelete">Cancel</v-btn>
-        <v-btn small outlined text :color="colorBtn" class="mr-1 btn--hover" @click="changeRoleConfirm">
+      </AskAnnaCardText>
+      <AskAnnaCardActions :class="{ 'px-3': $vuetify.breakpoint.xsOnly }">
+        <AskAnnaButton small outlined text color="secondary" class="mr-1 btn--hover" @click="closeDelete"
+          >Cancel</AskAnnaButton
+        >
+        <AskAnnaButton small outlined text :color="colorBtn" class="mr-1 btn--hover" @click="changeRoleConfirm">
           MAKE {{ $vuetify.breakpoint.xsOnly ? '' : peopleName }} WORKSPACE {{ roleInfo.title }}
-        </v-btn>
-      </v-card-actions>
-    </v-card>
+        </AskAnnaButton>
+      </AskAnnaCardActions>
+    </AskAnnaCard>
   </v-dialog>
 </template>
 <script setup lang="ts">
