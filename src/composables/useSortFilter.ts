@@ -1,7 +1,7 @@
 import { capitalize, debounce } from 'lodash'
 
 export default function sortFilter(sortItem: string, sortItemPlural: string) {
-  const { route, router } = useRouterAskAnna()
+  const { route, replace } = useRouterAskAnna()
 
   const ISMEMBER = {
     '': '',
@@ -115,7 +115,7 @@ export default function sortFilter(sortItem: string, sortItemPlural: string) {
       is_member: typeof is_member === 'undefined' || is_member === '' ? undefined : is_member
     }
 
-    router.replace({
+    replace({
       name: routeName,
       query
     })
