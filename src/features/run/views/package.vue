@@ -76,7 +76,7 @@ const polling = ref(null)
 const downloadPackage = ref(false)
 
 const loading = computed(() => packageStore.loading)
-const packageId = computed(() => runStore.run.package?.short_uuid)
+const packageId = computed(() => runStore.run.package?.suuid)
 const cdnBaseUrl = computed(() => packageStore.packageData?.cdn_base_url)
 const images = computed(() => packageStore.packageData?.files?.filter(item => ext.images.includes(item.ext)))
 
@@ -103,11 +103,11 @@ const fetchData = async () => {
 
   const { runId } = route.params
 
-  if (runStore.run.short_uuid !== runId) {
+  if (runStore.run.suuid !== runId) {
     await runStore.resetStore()
     await runStore.getRun(runId)
   }
-  const packageId = runStore.run.package.short_uuid
+  const packageId = runStore.run.package.suuid
 
   if (packageId === '') {
     return
@@ -128,7 +128,7 @@ onUnmounted(() => {
 const getPackage = async () =>
   await packageStore.getPackage({
     folderName,
-    packageId: runStore.run.package.short_uuid,
+    packageId: runStore.run.package.suuid,
     failedRoute: 'workspace-project-jobs-job-run-code-does-not-exist'
   })
 
@@ -196,7 +196,7 @@ const handleDownload = async () => {
   downloadPackage.value = true
 
   const packageData = packageStore.packageData
-  const source = await packagesStore.downloadPackage(packageData.short_uuid)
+  const source = await packagesStore.downloadPackage(packageData.suuid)
   forceFileDownload.trigger({ source, name: `run_${runId}_code_${packageData.filename}` })
 
   downloadPackage.value = false

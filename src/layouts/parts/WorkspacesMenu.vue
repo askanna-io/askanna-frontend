@@ -49,7 +49,7 @@
                 <tbody>
                   <tr
                     v-for="item in workspaces.slice(0, 9)"
-                    :key="item.short_uuid"
+                    :key="item.suuid"
                     class="cursor--pointer"
                     @click="handleClick(item)"
                   >
@@ -59,7 +59,7 @@
                         :to="{
                           name: 'workspace',
                           params: {
-                            workspaceId: item.short_uuid
+                            workspaceId: item.suuid
                           }
                         }"
                       >
@@ -146,7 +146,7 @@ const handleClick = item => {
   router.push({
     name: 'workspace',
     params: {
-      workspaceId: item.short_uuid
+      workspaceId: item.suuid
     }
   })
 }

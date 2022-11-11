@@ -13,7 +13,7 @@
       <AskAnnaDivider />
     </template>
 
-    <template v-slot:item.uuid="{ item }">
+    <template v-slot:item.suuid="{ item }">
       <AskAnnaChip outlined label color="primary" @click.stop="handleDownload(item)">
         <AskAnnaAvatar left><AskAnnaIcon>mdi-cloud-download</AskAnnaIcon></AskAnnaAvatar
         >Download</v-chip
@@ -82,11 +82,11 @@ const headers = [
     class: 'text-left text-subtitle-2 font-weight-bold h-20'
   },
   { text: 'Created', value: 'created', class: 'text-left text-subtitle-2 font-weight-bold h-20' },
-  { text: '', value: 'uuid', sortable: false, class: 'text-left text-subtitle-2 font-weight-bold h-20' },
+  { text: '', value: 'suuid', sortable: false, class: 'text-left text-subtitle-2 font-weight-bold h-20' },
   { text: '', value: 'menu', class: 'text-left text-subtitle-2 font-weight-bold h-20' }
 ]
 
-const handleClickRow = ({ short_uuid }) => emit('handleClickRow', short_uuid)
+const handleClickRow = ({ suuid }) => emit('handleClickRow', suuid)
 const handleDownload = async packageData => emit('handleDownload', packageData)
-const handleHistory = ({ short_uuid }) => emit('handleHistory', short_uuid)
+const handleHistory = ({ suuid }) => emit('handleHistory', suuid)
 </script>

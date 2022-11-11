@@ -42,7 +42,7 @@ const workspaceStore = useWorkspaceStore()
 const isMember = computed(() => workspaceStore.workspace.is_member)
 
 const workspaceProfile = computed(() => peopleStore.currentPeople)
-const workspaceShortUuid = computed(() => workspaceStore.workspace.short_uuid)
+const workspaceShortUuid = computed(() => workspaceStore.workspace.suuid)
 
 const profileRoute = computed(() => {
   if (isMember.value) {

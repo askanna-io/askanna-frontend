@@ -10,7 +10,7 @@
             <AskAnnaCol
               v-for="item in props.items"
               @click="handleOpenWorkspace(item)"
-              :key="item.name + item.short_uuid"
+              :key="item.name + item.suuid"
               cols="12"
               sm="6"
               md="4"
@@ -70,7 +70,7 @@ const handleOpenWorkspace = workspace => {
   router.push({
     name: 'workspace',
     params: {
-      workspaceId: workspace.short_uuid,
+      workspaceId: workspace.suuid,
       title: `${workspace.name}`
     }
   })

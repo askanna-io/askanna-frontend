@@ -122,8 +122,8 @@ const state = reactive({
   isValueChanged: false
 })
 
-const isEdit = computed(() => Boolean(variable.value.short_uuid))
-const formTitle = computed(() => (variable.value.short_uuid ? 'Edit a variable' : 'Add a variable'))
+const isEdit = computed(() => Boolean(variable.value.suuid))
+const formTitle = computed(() => (variable.value.suuid ? 'Edit a variable' : 'Add a variable'))
 const maskedModel = computed({
   get: () => variable.value.is_masked,
   set: value => {
@@ -139,11 +139,11 @@ const deleteItem = () => {
 }
 
 const handleConfirmDeleteItem = async () => {
-  const { name, short_uuid } = variable.value
+  const { name, suuid } = variable.value
 
   await deleteVariable({
     name,
-    variableId: short_uuid,
+    variableId: suuid,
     projectId: props.projectId
   })
   handleCloseDelete()
@@ -190,7 +190,7 @@ const handleCreateVariable = async () => {
 }
 
 const handleUpdateVariable = async () => {
-  const { name, value, is_masked, short_uuid: variableId } = variable.value
+  const { name, value, is_masked, suuid: variableId } = variable.value
   let data = { name, is_masked }
   if (state.isValueChanged) {
     data.value = value

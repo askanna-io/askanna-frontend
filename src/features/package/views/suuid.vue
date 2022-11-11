@@ -139,10 +139,10 @@ const projectCodeCreate = computed(() => permission.getFor(permission.labels.pro
 
 const sticked = computed(() => !projectStore.menu.sticked)
 
-const projectIdCd = computed(() => projectStore.project.short_uuid)
-const packageIdCd = computed(() => projectStore.project.package.short_uuid)
+const projectIdCd = computed(() => projectStore.project.suuid)
+const packageIdCd = computed(() => projectStore.project.package.suuid)
 const createdDate = computed(() => moment.$moment(packageStore.packageData.created).format(' Do MMMM YYYY, h:mm:ss a'))
-const isLastPackage = computed(() => packageIdCd.value === packageStore.packageData.short_uuid)
+const isLastPackage = computed(() => packageIdCd.value === packageStore.packageData.suuid)
 const packageId = computed(() => (useProjectPackageId ? packageIdCd.value : params.value.packageId))
 const cdnBaseUrl = computed(() => packageStore.packageData.cdn_base_url)
 const images = computed(() => packageStore.packageData.files.filter(item => ext.images.includes(item.ext)))
@@ -250,8 +250,8 @@ const handleDownload = async () => {
   downloadPackage.value = true
 
   const packageData = packageStore.packageData
-  const source = await packagesStore.downloadPackage(packageData.short_uuid)
-  forceFileDownload.trigger({ source, name: `code_${packageData.short_uuid}_${packageData.filename}` })
+  const source = await packagesStore.downloadPackage(packageData.suuid)
+  forceFileDownload.trigger({ source, name: `code_${packageData.suuid}_${packageData.filename}` })
 
   downloadPackage.value = false
 }
@@ -261,11 +261,11 @@ const handleReplace = () => (isRaplace.value = !isRaplace.value)
 const handleCloseOutside = async () => {
   await projectStore.getProjectMe(route.params.projectId)
   const project = await projectStore.getProject(route.params.projectId)
-  if (!project.package.short_uuid) return
+  if (!project.package.suuid) return
 
   await packageStore.getPackage({
     loading: true,
-    packageId: project.package.short_uuid
+    packageId: project.package.suuid
   })
   isRaplace.value = false
 }

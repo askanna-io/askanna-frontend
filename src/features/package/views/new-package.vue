@@ -47,19 +47,19 @@ const handleReplace = () => (isRaplace.value = !isRaplace.value)
 const handleCloseOutside = async () => {
   await projectStore.getProjectMe(route.params.projectId)
   const project = await projectStore.getProject(route.params.projectId)
-  if (!project.package.short_uuid || !project.short_uuid) return
+  if (!project.package.suuid || !project.suuid) return
 
   await packageStore.getPackage({
     loading: true,
-    packageId: project.package.short_uuid
+    packageId: project.package.suuid
   })
   isRaplace.value = false
 }
 
 const fetchData = async () => {
   packagesStore.resetStore()
-  const uuid = route.params.projectId
-  packagesStore.getProjectPackages({ uuid, params: { limit: 1, offset: 0 } })
+  const suuid = route.params.projectId
+  packagesStore.getProjectPackages({ suuid, params: { limit: 1, offset: 0 } })
 }
 
 onBeforeMount(() => {

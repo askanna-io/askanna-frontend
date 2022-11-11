@@ -133,7 +133,7 @@ const handleLogin = async () => {
   })
 
   let invatation = null
-  if (account && account.short_uuid && auth && auth.key) {
+  if (account && account.suuid && auth && auth.key) {
     step.value = 2
 
     invatation = await peopleStore.acceptInvitetion({

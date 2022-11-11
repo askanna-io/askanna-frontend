@@ -28,13 +28,13 @@ defineProps({
     type: Object,
     default: function () {
       return {
-        uuid: '',
+        suuid: '',
         name: '',
         role: '',
         created: '',
         modified: '',
         job_title: '',
-        short_uuid: '',
+        suuid: '',
         last_active: ''
       }
     }

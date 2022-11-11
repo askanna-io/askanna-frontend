@@ -20,7 +20,7 @@
     <WorkspaceToolbar
       :isMember="isMember"
       :title="workspace.name"
-      :workspaceUuid="workspace.short_uuid"
+      :workspaceUuid="workspace.suuid"
       :isWorkspacePublic="isWorkspacePublic"
       :isCurrentUserAdmin="isCurrentUserAdmin"
       @onOpenWorkspaceRemove="handleOpenWorkspaceRemove"

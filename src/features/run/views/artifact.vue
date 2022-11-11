@@ -76,7 +76,7 @@ const images = computed(() => runStore.artifactData?.files.filter(item => ext.im
 
 const calcHeight = computed(() => height.value - 370)
 const path = computed(() => route.params.folderName || '/')
-const artifactUuid = computed(() => runStore.run?.artifact?.short_uuid)
+const artifactUuid = computed(() => runStore.run?.artifact?.suuid)
 
 const breadcrumbsComputed = computed(() => {
   const first = {
@@ -145,7 +145,7 @@ const handleDownload = async () => {
   const artifactData = runStore.artifactData
   const url = await runStore.downloadPackage({
     runShortId: runId,
-    artifactShortId: runStore.run.artifact?.short_uuid
+    artifactShortId: runStore.run.artifact?.suuid
   })
 
   triggerFileDownload.trigger({ url, name: artifactData.filename })
@@ -184,7 +184,7 @@ const fetchData = async () => {
 
   const { runId } = route.params
 
-  if (runStore.run.short_uuid !== runId) {
+  if (runStore.run.suuid !== runId) {
     await runStore.resetStore()
     await runStore.getRun(runId)
   }
@@ -196,7 +196,7 @@ const fetchData = async () => {
   }
 
   await runStore.getInitialRunArtifact({
-    uuid: {
+    suuid: {
       runShortId: runId,
       artifactShortId: artifactUuid.value
     }

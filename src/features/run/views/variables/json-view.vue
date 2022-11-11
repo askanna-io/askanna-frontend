@@ -12,11 +12,11 @@ const { height } = useWindowSize()
 const { route } = useRouterAskAnna()
 const runVariablesStore = useRunVariablesStore()
 
-const { runId: uuid } = route.params
+const { runId: suuid } = route.params
 const next = computed(() => runVariablesStore.variablesJSON.next)
 
 const query = useQuery({
-  uuid,
+  suuid,
   next,
   limit: 10,
   offset: 10,
@@ -39,7 +39,7 @@ const handleOnScroll = e => {
   throttled(e.target.scrollTop)
 }
 
-const fetchData = async () => await runVariablesStore.getVariablesJSON({ uuid, params: { limit: 10, offset: 0 } })
+const fetchData = async () => await runVariablesStore.getVariablesJSON({ suuid, params: { limit: 10, offset: 0 } })
 
 onBeforeMount(() => fetchData())
 </script>

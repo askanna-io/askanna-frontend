@@ -8,14 +8,13 @@ interface Schedule {
   raw_definition: string
 }
 interface Job {
-  uuid: string
   name: string
   title: string
   status: string
   created: string
   timezone: string
   modified: string
-  short_uuid: string
+  suuid: string
   environment: string
   description: string
   schedules?: Schedule[]
@@ -37,13 +36,13 @@ export const useJobStore = defineStore(SERVICE_NAME, {
   },
 
   actions: {
-    async getJob(uuid: string) {
+    async getJob(suuid: string) {
       this.loading = true
 
       let job
       try {
         job = await apiService({
-          uuid,
+          suuid,
           action: api.get,
           serviceName: SERVICE_NAME
         })
@@ -73,7 +72,7 @@ export const useJobStore = defineStore(SERVICE_NAME, {
           method: 'put',
           action: api.update,
           serviceName: SERVICE_NAME,
-          uuid: this.job.short_uuid
+          suuid: this.job.suuid
         })
       } catch (e) {
         logger.error('Error on update job in updateJob action.\nError: ', e)
@@ -91,12 +90,12 @@ export const useJobStore = defineStore(SERVICE_NAME, {
       return true
     },
 
-    async deleteJob({ short_uuid: uuid, name }) {
+    async deleteJob({ suuid: suuid, name }) {
       const logger = useLogger()
 
       try {
         await apiService({
-          uuid,
+          suuid,
           action: api.delete,
           method: 'delete',
           serviceName: SERVICE_NAME

@@ -9,7 +9,7 @@
           <AskAnnaCol
             v-for="item in props.items"
             @click="handleOpenProject(item)"
-            :key="item.name + item.short_uuid + item.role"
+            :key="item.name + item.suuid + item.role"
             cols="12"
             sm="6"
             md="4"
@@ -59,10 +59,10 @@ const handleOpenProject = project => {
   router.push({
     name: 'workspace-project-code',
     params: {
-      projectId: project.short_uuid,
-      workspaceId: project.workspace.short_uuid,
+      projectId: project.suuid,
+      workspaceId: project.workspace.suuid,
       title: `${project.name} - ${project.workspace.name}`,
-      packageId: (project.package && project.package.short_uuid) || ''
+      packageId: (project.package && project.package.suuid) || ''
     }
   })
 }

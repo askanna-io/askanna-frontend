@@ -6,8 +6,8 @@
 const runStore = useRunStore()
 const fileStore = useFileStore()
 
-const runShortId = computed(() => runStore.run.short_uuid)
-const payloadUuid = computed(() => runStore.run.payload?.short_uuid)
+const runShortId = computed(() => runStore.run.suuid)
+const payloadUuid = computed(() => runStore.run.payload?.suuid)
 
 const handleViewPayload = async (runShortId, payloadUuid) => {
   if (payloadUuid) {
@@ -16,7 +16,7 @@ const handleViewPayload = async (runShortId, payloadUuid) => {
       serviceName: 'run',
       size: runStore.run.payload.size,
       serviceAction: 'getRunPayload',
-      uuid: { runShortId, payloadUuid }
+      suuid: { runShortId, payloadUuid }
     })
   }
 }

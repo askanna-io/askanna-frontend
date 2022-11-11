@@ -15,13 +15,13 @@ export const useJobsStore = defineStore(SERVICE_NAME, {
   },
 
   actions: {
-    async getProjectJobs(uuid: string) {
+    async getProjectJobs(suuid: string) {
       this.loading = true
 
       let jobs
       try {
         jobs = await apiService({
-          uuid,
+          suuid,
           action: api.jobs,
           serviceName: SERVICE_NAME
         })
@@ -38,7 +38,7 @@ export const useJobsStore = defineStore(SERVICE_NAME, {
       await Promise.all(
         map(jobs, async (job: any) => {
           const runs = await apiService({
-            uuid: job.short_uuid,
+            suuid: job.suuid,
             action: api.getLastRun,
             serviceName: SERVICE_NAME,
             params: {

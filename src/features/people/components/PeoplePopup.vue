@@ -74,10 +74,7 @@
             </AskAnnaCol>
           </AskAnnaRow>
         </AskAnnaCardActions>
-        <AskAnnaCardActions
-          v-if="currentUser.short_uuid === people.short_uuid"
-          :class="{ 'px-0': $vuetify.breakpoint.xsOnly }"
-        >
+        <AskAnnaCardActions v-if="currentUser.suuid === people.suuid" :class="{ 'px-0': $vuetify.breakpoint.xsOnly }">
           <AskAnnaRow dense class="mx-2" justify="space-between">
             <AskAnnaCol class="text-center" cols="12">
               <AskAnnaButton
@@ -95,9 +92,7 @@
           </AskAnnaRow>
         </AskAnnaCardActions>
         <AskAnnaCardActions
-          v-if="
-            !simple && (workspacePeopleEdit || workspacePeopleRemove) && currentUser.short_uuid !== people.short_uuid
-          "
+          v-if="!simple && (workspacePeopleEdit || workspacePeopleRemove) && currentUser.suuid !== people.suuid"
           :class="{ 'pt-0': isCurrentUserAdmin && people.status !== 'accepted', 'px-0': $vuetify.breakpoint.xsOnly }"
         >
           <AskAnnaRow dense class="mx-2" justify="space-between">
@@ -174,7 +169,7 @@ const props = defineProps({
     type: Object,
     default: function () {
       return {
-        uuid: '',
+        suuid: '',
         name: '',
         role: {
           name: '',
@@ -185,7 +180,7 @@ const props = defineProps({
         created: '',
         modified: '',
         job_title: '',
-        short_uuid: '',
+        suuid: '',
         last_active: ''
       }
     }

@@ -24,17 +24,15 @@ interface Variables {
   name: string
   status: string
   email: string
-  uuid: string
-  short_uuid: string
+  suuid: string
   object_uuid: string
   workspace: {
     name: string
-    short_uuid: string
-    uuid: string
+    suuid: string
   }
   role: string
   job_title: string
-  user: { name: string | null; short_uuid: string | null; uuid: string | null }
+  user: { name: string | null; suuid: string | null }
   front_end_url: string
 }
 

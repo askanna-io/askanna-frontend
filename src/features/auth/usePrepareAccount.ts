@@ -13,7 +13,7 @@ export default function () {
   const getWorkspace = async () => {
     const workspaces = await workspacesStore.getMemberWorkspaces()
     if (workspaces && workspaces.count && workspaces.count > 0) {
-      workspaceId.value = workspaces.results[0].short_uuid
+      workspaceId.value = workspaces.results[0].suuid
 
       return true
     }

@@ -20,7 +20,7 @@ const initWorkspace = async workspaceId => {
     return
   }
 
-  //check if worskpace short_uuid match pattern
+  //check if worskpace suuid match pattern
   // on match get workspace, project, people
   // if not => redirect to /
   const isValidShortUuid = workspaceId.match(reShortUuid)
@@ -41,7 +41,7 @@ const fetchData = async () => {
   let { workspaceId } = route.params
 
   if (workspaceId === 'workspace' && workspacesStore.workspaces.results.length) {
-    workspaceId = workspacesStore.workspaces.results[0].short_uuid
+    workspaceId = workspacesStore.workspaces.results[0].suuid
     router.push({ path: `/${workspaceId}` })
   }
 
@@ -60,7 +60,7 @@ onUpdated(async () => {
 
   const { workspaceId } = route.params
 
-  if (workspaceId === workspaceStore.workspace.short_uuid) return
+  if (workspaceId === workspaceStore.workspace.suuid) return
 
   workspaceProjectsStore.loading = true
 

@@ -101,7 +101,7 @@ const handleRunJob = async () => {
 
   runName.value = run.value.name ? ` "${run.value.name}"` : ''
 
-  await runStore.startRun(run.value, jobStore.job.short_uuid)
+  await runStore.startRun(run.value, jobStore.job.suuid)
 
   clearInterval(timer.value)
   clearInterval(polling.value)
@@ -123,7 +123,7 @@ const handleValidate = async (value: boolean) => (isValid.value = value)
 const hadnleOpenRun = () => {
   router.push({
     name: 'workspace-project-jobs-job-run',
-    params: { ...route.params, runId: runStore.newRun.short_uuid }
+    params: { ...route.params, runId: runStore.newRun.suuid }
   })
 }
 
@@ -136,7 +136,7 @@ const calculateDuration = computed(() => {
 
 const checkStatus = () => {
   polling.value = setInterval(async () => {
-    await runStore.getRunStatus(runStore.newRun.short_uuid, true)
+    await runStore.getRunStatus(runStore.newRun.suuid, true)
     if (isFinished.value) {
       clearInterval(timer.value)
       clearInterval(polling.value)

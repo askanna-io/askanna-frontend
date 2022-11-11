@@ -1,7 +1,7 @@
 import _Vue from 'vue'
 
 type rule<T> = (errorMessage: string, length?: number) => T
-type ruleFunction = (uuid: string) => void
+type ruleFunction = (suuid: string) => void
 
 interface Rules {
   [ruleName: string]: rule<ruleFunction>

@@ -17,13 +17,13 @@
 const runsStore = useRunsStore()
 const { route } = useRouterAskAnna()
 
-const { jobId: uuid } = route.params
+const { jobId: suuid } = route.params
 
 const loading = ref(true)
 
 const fetchData = async () => {
   await runsStore.getRuns({
-    uuid,
+    suuid,
     params: {
       limit: 25,
       offset: 0
@@ -41,7 +41,7 @@ const runsLoading = computed(() => runsStore.runsLoading)
 
 const handleChangeParams = async params => {
   await runsStore.getRuns({
-    uuid,
+    suuid,
     params
   })
 }

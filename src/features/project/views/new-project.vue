@@ -56,7 +56,7 @@ const projectData = computed(() => projectStore.project)
 const breadcrumbs = computed(() => [
   {
     title: workSpaceStore.workspace.name,
-    to: `/${workSpaceStore.workspace.short_uuid}`,
+    to: `/${workSpaceStore.workspace.suuid}`,
     disabled: false
   },
   {
@@ -70,12 +70,12 @@ const handleOnInput = data => projectStore.setProject(data)
 
 const handleCreate = async () => {
   const project = await projectStore.createProjectFullWay(route.params.workspaceId)
-  if (project && project.short_uuid) {
+  if (project && project.suuid) {
     await projectsStore.getProjects() // call get all project to updated them on menu
 
     router.push({
       name: 'workspace-project-code',
-      params: { projectId: project.short_uuid, workspaceId: project.workspace.short_uuid, packageId: '' }
+      params: { projectId: project.suuid, workspaceId: project.workspace.suuid, packageId: '' }
     })
   }
 }

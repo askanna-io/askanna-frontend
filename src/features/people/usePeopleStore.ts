@@ -43,7 +43,7 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
       try {
         people = await apiService({
           serviceName,
-          uuid: workspaceId,
+          suuid: workspaceId,
           action: api.getPeople
         })
       } catch (error) {
@@ -68,9 +68,9 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
             role,
             email,
             front_end_url: window.location.origin,
-            object_uuid: workspaceStore.workspace.uuid
+            object_uuid: workspaceStore.workspace.suuid
           })
-          if (people.short_uuid && people) {
+          if (people.suuid && people) {
             return people
           }
 
@@ -89,7 +89,7 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
       }
     },
 
-    async resendInvitation(uuid) {
+    async resendInvitation(suuid) {
       const logger = useLogger()
       const workspaceStore = useWorkspaceStore()
 
@@ -101,7 +101,7 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
       try {
         response = await apiService({
           data,
-          uuid,
+          suuid,
           serviceName,
           method: 'PATCH',
           action: api.acceptInvitetion
@@ -127,9 +127,9 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
         await apiService({
           action: api.acceptInvitetion,
           method: 'DELETE',
-          uuid: {
-            peopleId: people.short_uuid,
-            workspaceId: people.workspace.short_uuid
+          suuid: {
+            peopleId: people.suuid,
+            workspaceId: people.workspace.suuid
           },
           serviceName
         })
@@ -157,7 +157,7 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
           serviceName,
           method: 'post',
           action: api.invitePeople,
-          uuid: workspaceStore.workspace.short_uuid
+          suuid: workspaceStore.workspace.suuid
         })
       } catch (e) {
         logger.error('Error on upload package in registerPackage action.\nError: ', e)
@@ -181,7 +181,7 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
           serviceName,
           method: 'PATCH',
           action: api.acceptInvitetion,
-          uuid: { workspaceId, peopleId }
+          suuid: { workspaceId, peopleId }
         })
       } catch (e) {
         return e
@@ -204,7 +204,7 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
           serviceName,
           method: 'PATCH',
           action: api.acceptInvitetion,
-          uuid: { workspaceId, peopleId }
+          suuid: { workspaceId, peopleId }
         })
       } catch (e) {
         logger.error('Error on change people Role in changeRole action.\nError: ', e)
@@ -215,7 +215,7 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
         `You have successfully changed the role of ${people.name} for the workspace ${people.workspace.name}.`
       )
 
-      this.people.splice(this.people.map(item => item.short_uuid).indexOf(people.short_uuid), 1, people)
+      this.people.splice(this.people.map(item => item.suuid).indexOf(people.suuid), 1, people)
 
       return people
     },
@@ -230,7 +230,7 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
           serviceName,
           method: 'PATCH',
           action: api.profile,
-          uuid: workspaceStore.workspace.short_uuid
+          suuid: workspaceStore.workspace.suuid
         })
       } catch (e) {
         const logger = useLogger()
@@ -249,7 +249,7 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
         }
       }
 
-      this.people.splice(this.people.map(people => people.short_uuid).indexOf(people.short_uuid), 1, people)
+      this.people.splice(this.people.map(people => people.suuid).indexOf(people.suuid), 1, people)
 
       return people
     },
@@ -262,7 +262,7 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
           serviceName,
           params: { token },
           action: api.acceptInvitetion,
-          uuid: { workspaceId, peopleId }
+          suuid: { workspaceId, peopleId }
         })
       } catch (e) {
         const logger = useLogger()
@@ -286,7 +286,7 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
           serviceName,
           method: 'DELETE',
           action: api.acceptInvitetion,
-          uuid: { workspaceId: people.workspace.short_uuid, peopleId: people.short_uuid }
+          suuid: { workspaceId: people.workspace.suuid, peopleId: people.suuid }
         })
       } catch (e) {
         logger.error('Error on delete people in deletePeople action.\nError: ', e)
@@ -323,7 +323,7 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
         people = await apiService({
           serviceName,
           action: api.profile,
-          uuid: workspaceId || workspaceStore.workspace.short_uuid
+          suuid: workspaceId || workspaceStore.workspace.suuid
         })
       } catch (e) {
         const logger = useLogger()
@@ -350,7 +350,7 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
           app_id: 'c6wuieqm',
           name: name,
           email: people.email,
-          user_id: people.membership?.user?.short_uuid,
+          user_id: people.membership?.user?.suuid,
           created_at: userStore.userProfile?.date_joined
         })
       }
@@ -367,7 +367,7 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
           serviceName,
           method: 'PATCH',
           action: api.profileAvatar,
-          uuid: workspaceStore.workspace.short_uuid
+          suuid: workspaceStore.workspace.suuid
         })
       } catch (e) {
         const logger = useLogger()

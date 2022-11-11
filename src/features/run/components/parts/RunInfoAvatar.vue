@@ -26,8 +26,8 @@ defineProps({
     default: () => {
       return {
         name: '',
-        uuid: '',
-        short_uuid: '',
+
+        suuid: '',
         job_title: '',
         role: {
           name: '',

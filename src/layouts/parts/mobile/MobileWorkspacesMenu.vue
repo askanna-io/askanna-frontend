@@ -28,11 +28,11 @@
         <v-list flat nav dense class="pt-0">
           <v-list-item
             v-for="item in workspaces.slice(0, 5)"
-            :key="item.short_uuid"
+            :key="item.suuid"
             :to="{
               name: 'workspace',
               params: {
-                workspaceId: item.short_uuid
+                workspaceId: item.suuid
               }
             }"
             color="primary"

@@ -43,12 +43,12 @@ export const useCompareRunsStore = defineStore('compare-runs', {
   },
 
   actions: {
-    async getMetric({ uuid, params }) {
+    async getMetric({ suuid, params }) {
       let metric
 
       try {
         metric = await apiService({
-          uuid,
+          suuid,
           params,
           serviceName: 'metric',
           action: metricApi.getMetric
@@ -64,9 +64,9 @@ export const useCompareRunsStore = defineStore('compare-runs', {
 
     async getMetrics({ offset }) {
       return await Promise.all(
-        map(this.runIds, async uuid => {
+        map(this.runIds, async suuid => {
           const metric = await this.getMetric({
-            uuid,
+            suuid,
             params: { limit: 25, offset, ordering: ['metric.name', 'created'] }
           })
 
@@ -77,12 +77,12 @@ export const useCompareRunsStore = defineStore('compare-runs', {
       )
     },
 
-    async getVariable({ uuid, params }) {
+    async getVariable({ suuid, params }) {
       let variable
 
       try {
         variable = await apiService({
-          uuid,
+          suuid,
           params,
           serviceName: 'variable',
           action: variableApi.getVariables
@@ -98,9 +98,9 @@ export const useCompareRunsStore = defineStore('compare-runs', {
 
     async getVariables({ offset }) {
       return await Promise.all(
-        map(this.runIds, async uuid => {
+        map(this.runIds, async suuid => {
           const metric = await this.getVariable({
-            uuid,
+            suuid,
             params: { limit: 25, offset, ordering: ['variable.name', 'created'] }
           })
 
@@ -127,7 +127,7 @@ export const useCompareRunsStore = defineStore('compare-runs', {
       return result
     },
 
-    async getRunsJob({ uuid, params }) {
+    async getRunsJob({ suuid, params }) {
       this.runIdsLoading = true
 
       let runs = {
@@ -139,7 +139,7 @@ export const useCompareRunsStore = defineStore('compare-runs', {
 
       try {
         runs = await apiService({
-          uuid,
+          suuid,
           params,
           serviceName: 'job',
           action: jobApi.runs
@@ -162,7 +162,7 @@ export const useCompareRunsStore = defineStore('compare-runs', {
       this.isArtifacExist = this.runs.results.some(item => item.artifact)
       this.isVariableExist = this.runs.results.some(item => item.variables_meta.count)
 
-      this.runIds = runs.results.map(item => item.short_uuid)
+      this.runIds = runs.results.map(item => item.suuid)
 
       // get metrics
       if (this.isMetricExist) {

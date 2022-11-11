@@ -35,7 +35,7 @@ const props = defineProps({
     default: function () {
       return {
         name: '',
-        short_uuid: '',
+        suuid: '',
         description: ''
       }
     }

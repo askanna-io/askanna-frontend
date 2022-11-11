@@ -14,7 +14,6 @@ declare global {
   const ProjectVisibility: typeof import('./features/project/types')['ProjectVisibility']
   const RUNIFO_VARIABLES_STORE: typeof import('./features/run-variables/types')['RUNIFO_VARIABLES_STORE']
   const VARIABLES_STORE: typeof import('./features/variables/types')['VARIABLES_STORE']
-  const VariableModel: typeof import('./features/variables/types')['VariableModel']
   const WORKSPACE_STORE: typeof import('./features/workspace/types')['WORKSPACE_STORE']
   const WorkspaceVisibility: typeof import('./features/workspace/useWorkspaceStore')['WorkspaceVisibility']
   const compareItems: typeof import('./features/compare-runs/helper')['compareItems']
@@ -157,7 +156,6 @@ declare module '@vue/runtime-core' {
     readonly ProjectVisibility: UnwrapRef<typeof import('./features/project/types')['ProjectVisibility']>
     readonly RUNIFO_VARIABLES_STORE: UnwrapRef<typeof import('./features/run-variables/types')['RUNIFO_VARIABLES_STORE']>
     readonly VARIABLES_STORE: UnwrapRef<typeof import('./features/variables/types')['VARIABLES_STORE']>
-    readonly VariableModel: UnwrapRef<typeof import('./features/variables/types')['VariableModel']>
     readonly WORKSPACE_STORE: UnwrapRef<typeof import('./features/workspace/types')['WORKSPACE_STORE']>
     readonly WorkspaceVisibility: UnwrapRef<typeof import('./features/workspace/useWorkspaceStore')['WorkspaceVisibility']>
     readonly compareItems: UnwrapRef<typeof import('./features/compare-runs/helper')['compareItems']>

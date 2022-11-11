@@ -110,11 +110,10 @@ const currentChunkData = ref({
   uuid: ''
 })
 const currentPackageData = ref({
-  uuid: '',
-  short_uuid: ''
+  suuid: ''
 })
 
-const packageShortUuid = computed(() => currentPackageData.value.short_uuid)
+const packageShortUuid = computed(() => currentPackageData.value.suuid)
 
 const { projectId: projectShortUuid, workspaceId } = route.params
 
@@ -168,7 +167,7 @@ watch(uploadContainer, async uploadContainer => {
       isComplete: file.isComplete(),
       progress: prg,
       projectId: projectShortUuid,
-      packageId: currentPackageData.value.short_uuid
+      packageId: currentPackageData.value.suuid
     })
   })
 
@@ -182,8 +181,8 @@ watch(uploadContainer, async uploadContainer => {
 
 const getTarget = async () => {
   const { uuid } = currentChunkData.value
-  const { short_uuid } = currentPackageData.value
-  const url = `${apiUrl}/v1/package/${short_uuid}/packagechunk/${uuid}/chunk/`
+  const { suuid: packageSuuid } = currentPackageData.value
+  const url = `${apiUrl}/v1/package/${packageSuuid}/packagechunk/${uuid}/chunk/`
 
   return url
 }
@@ -195,9 +194,9 @@ const preprocess = async r => {
 }
 
 const preupload = async () => {
-  const { uuid, short_uuid } = await handleRegisterPackage(file.value)
+  const { suuid } = await handleRegisterPackage(file.value)
 
-  currentPackageData.value = { uuid, short_uuid }
+  currentPackageData.value = { suuid }
   isPackageRegister.value = true
 }
 
@@ -219,11 +218,11 @@ const handleRegisterPackage = async file => {
 }
 
 const handleRegisterChunkPackage = async r => {
-  const { uuid, short_uuid } = currentPackageData.value
+  const { suuid } = currentPackageData.value
   const isLastChunk = r.offset + 1 === r.fileObj.chunks.length
 
   const registerChunk = await packageStore.registerChunkPackage({
-    uuid: short_uuid,
+    suuid,
     data: {
       filename: r.offset + 1,
       size: r.fileObjSize,
@@ -236,7 +235,7 @@ const handleRegisterChunkPackage = async r => {
 }
 
 const handleFinishUpload = async r => {
-  const { short_uuid } = currentPackageData.value
+  const { suuid } = currentPackageData.value
 
   const data = {
     resumableChunkSize: 1024 * 1024,
@@ -250,7 +249,7 @@ const handleFinishUpload = async r => {
     resumableCurrentChunkSize: 1
   }
 
-  const result = await packageStore.finishUpload({ uuid: short_uuid, data })
+  const result = await packageStore.finishUpload({ suuid, data })
 
   isUploadFinish.value = true
   // isUploadStart.value = false
@@ -263,7 +262,7 @@ const handleStartUpload = async () => {
     progress: 0,
     isComplete: false,
     projectId: projectShortUuid,
-    packageId: currentPackageData.value.short_uuid
+    packageId: currentPackageData.value.suuid
   })
 
   r.value.upload()

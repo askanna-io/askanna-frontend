@@ -29,7 +29,7 @@ const checkStatus = () => {
 const fetchData = async () => {
   const { jobId, projectId, runId } = route.params
 
-  if (jobStore.job.short_uuid !== jobId) {
+  if (jobStore.job.suuid !== jobId) {
     await jobsStore.$reset()
     await jobsStore.getProjectJobs(projectId)
 

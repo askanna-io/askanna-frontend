@@ -7,7 +7,7 @@
         :items="people"
         :currentUser="currentUser"
         :settings="workspaceSettings"
-        :workspaceUuid="workspace.uuid"
+        :workspaceUuid="workspace.suuid"
         :workspaceName="workspace.name"
         @onSelectPoeple="handleSelectPeople"
       />
@@ -140,8 +140,8 @@ const handleChangeRole = async role => {
 const handleConfirmChangeRole = async role => {
   const people = await peopleStore.changeRole({
     role,
-    peopleId: selectedPeople.value.short_uuid,
-    workspaceId: selectedPeople.value.workspace.short_uuid
+    peopleId: selectedPeople.value.suuid,
+    workspaceId: selectedPeople.value.workspace.suuid
   })
   if (people) {
     changeRoleConfirmPopup.value = false
@@ -175,8 +175,8 @@ const handleResendInivitationPopup = value => (resendInvitationConfirmPopup.valu
 
 const handleResendItem = () => {
   peopleStore.resendInvitation({
-    peopleId: selectedPeople.value.short_uuid,
-    workspaceId: selectedPeople.value.workspace.short_uuid
+    peopleId: selectedPeople.value.suuid,
+    workspaceId: selectedPeople.value.workspace.suuid
   })
   resendInvitationConfirmPopup.value = false
   peoplePopup.value = false

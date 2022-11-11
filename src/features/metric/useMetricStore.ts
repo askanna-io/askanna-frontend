@@ -47,12 +47,12 @@ export const useMetricStore = defineStore('metric', {
   },
 
   actions: {
-    async getMetric({ uuid, params }) {
+    async getMetric({ suuid, params }) {
       let metric
 
       try {
         metric = await apiService({
-          uuid,
+          suuid,
           params,
           serviceName,
           action: apiActions.getMetric
@@ -66,18 +66,18 @@ export const useMetricStore = defineStore('metric', {
       return metric
     },
 
-    async getMetricInitial({ uuid, params, loading = 'metric' }) {
+    async getMetricInitial({ suuid, params, loading = 'metric' }) {
       set(this, loading, true)
 
-      this.metrics = await this.getMetric({ uuid, params })
+      this.metrics = await this.getMetric({ suuid, params })
 
       set(this, loading, false)
     },
 
-    async getMetricJSON({ uuid, params, loading = true }) {
+    async getMetricJSON({ suuid, params, loading = true }) {
       if (loading) this.loading.metricJSON = true
 
-      const metric = await this.getMetric({ uuid, params })
+      const metric = await this.getMetric({ suuid, params })
 
       this.metricJSON = {
         next: metric.next,
@@ -88,16 +88,16 @@ export const useMetricStore = defineStore('metric', {
       this.loading.metricJSON = false
     },
 
-    async getMetricFullData({ uuid }) {
-      const metric = await this.getMetric({ uuid })
+    async getMetricFullData({ suuid }) {
+      const metric = await this.getMetric({ suuid })
 
       this.metricFullData = JSON.stringify(metric, null, 2)
     },
 
-    async getMetricByParams({ uuid, params, loading = false }) {
+    async getMetricByParams({ suuid, params, loading = false }) {
       if (loading) this.loading.metricByParams = true
 
-      const metric = await this.getMetric({ uuid, params })
+      const metric = await this.getMetric({ suuid, params })
 
       this.metrics = {
         next: metric.next,
@@ -108,13 +108,13 @@ export const useMetricStore = defineStore('metric', {
       if (loading) this.loading.metricByParams = false
     },
 
-    async getMetricMeta(uuid) {
+    async getMetricMeta(suuid) {
       this.loadingMeta = true
       let runInfo
 
       try {
         runInfo = await apiService({
-          uuid,
+          suuid,
           serviceName,
           action: apiActions.getMetricMeta
         })
@@ -126,14 +126,14 @@ export const useMetricStore = defineStore('metric', {
       this.loadingMeta = false
     },
 
-    async getMetricData(uuid: string) {
+    async getMetricData(suuid: string) {
       if (this.isMetricBig) return
 
       const params = {
         limit: 0
       }
 
-      this.metricData = await this.getMetric({ uuid, params })
+      this.metricData = await this.getMetric({ suuid, params })
     }
   }
 })

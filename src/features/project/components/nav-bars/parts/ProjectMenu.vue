@@ -68,8 +68,8 @@ const projectTabs = computed(() => [
   }
 ])
 
-const projectId = computed(() => projectStore.project.short_uuid)
-const packageId = computed(() => projectStore.project.package.short_uuid)
+const projectId = computed(() => projectStore.project.suuid)
+const packageId = computed(() => projectStore.project.package?.suuid)
 const routeParams = computed(() => ({
   ...route.params,
   projectId: projectId.value || route.params.projectId,

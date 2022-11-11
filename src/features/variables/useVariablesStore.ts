@@ -2,7 +2,7 @@ import { set } from 'lodash'
 import { defineStore } from 'pinia'
 import apiService from '@/services/apiService'
 import { apiStringify } from '@/services/api-settings'
-import { VariableModel, VARIABLES_STORE } from './types'
+import { Variable, VARIABLES_STORE } from './types'
 
 const serviceName = VARIABLES_STORE
 const api = apiStringify(serviceName)
@@ -10,7 +10,7 @@ const api = apiStringify(serviceName)
 export const useVariablesStore = defineStore(VARIABLES_STORE, {
   state: () => {
     return {
-      variable: new VariableModel().state,
+      variable: {} as Variable,
       variables: [],
       variablePopup: false,
       variablesLoading: true,
@@ -19,13 +19,13 @@ export const useVariablesStore = defineStore(VARIABLES_STORE, {
   },
 
   actions: {
-    async getVariables(uuid) {
+    async getVariables(suuid) {
       this.variablesLoading = true
 
       let variables
       try {
         variables = await apiService({
-          uuid,
+          suuid,
           serviceName,
           action: api.list
         })
@@ -52,7 +52,7 @@ export const useVariablesStore = defineStore(VARIABLES_STORE, {
           serviceName,
           method: 'post',
           action: api.list,
-          uuid: data.project
+          suuid: data.project
         })
       } catch (error) {
         logger.error('Error on create variable in createVariable action.\nError: ', error)
@@ -65,11 +65,11 @@ export const useVariablesStore = defineStore(VARIABLES_STORE, {
       await this.getVariables(data.project)
     },
 
-    async getVariable(uuid) {
+    async getVariable(suuid) {
       let variable
       try {
         variable = await apiService({
-          uuid,
+          suuid,
           serviceName,
           action: api.update
         })
@@ -92,7 +92,7 @@ export const useVariablesStore = defineStore(VARIABLES_STORE, {
           serviceName,
           method: 'PATCH',
           action: api.update,
-          uuid: { projectId, variableId }
+          suuid: { projectId, variableId }
         })
       } catch (error) {
         logger.error('Error on update variable in updateVariable action.\nError: ', error)
@@ -113,7 +113,7 @@ export const useVariablesStore = defineStore(VARIABLES_STORE, {
           serviceName,
           method: 'delete',
           action: api.update,
-          uuid: { projectId, variableId }
+          suuid: { projectId, variableId }
         })
       } catch (error) {
         logger.error('Error on delete variable in deleteVariable action.\nError: ', error)
@@ -135,7 +135,7 @@ export const useVariablesStore = defineStore(VARIABLES_STORE, {
     },
 
     resetVariable() {
-      this.variable = new VariableModel().state
+      this.variable = {} as Variable
     }
   }
 })

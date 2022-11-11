@@ -2,11 +2,7 @@
   <div>
     <AskAnnaToolbar v-if="!logNoAvailable" dense flat color="grey lighten-4">
       <AskAnnaFlex class="d-flex">
-        <AskAnnaChipPlayStop
-          v-if="!isFinished && runStatus"
-          :value="isAutoUpdateLog"
-          @onClick="handleAutoUpdate"
-        />
+        <AskAnnaChipPlayStop v-if="!isFinished && runStatus" :value="isAutoUpdateLog" @onClick="handleAutoUpdate" />
 
         <div class="mr-auto d-flex align-center"></div>
         <div>
@@ -99,7 +95,7 @@ const query = useQuery({
   next,
   limit: 100,
   offset: 200,
-  uuid: runId.value,
+  suuid: runId.value,
   storeAction: runStore.getRunLog
 })
 
@@ -145,7 +141,7 @@ const handleCopy = async () => {
 const handleDownload = async () => {
   await getFullRun()
 
-  forceFileDownload.trigger({ source: fullLog.value, name: `run_${runStore.run.short_uuid}_log.txt` })
+  forceFileDownload.trigger({ source: fullLog.value, name: `run_${runStore.run.suuid}_log.txt` })
 }
 
 const onScroll = e => {
@@ -170,7 +166,7 @@ const checkLogs = () => {
 
     // scroll window and log container to bottom
     await runStore.getRunLog({
-      uuid: runId.value,
+      suuid: runId.value,
       params: { limit: 1000, offset: runStore.runLog.results.length }
     })
     goTo(logRef.value.$el.scrollHeight)
@@ -189,7 +185,7 @@ const checkLogs = () => {
 
 const fetchData = async () => {
   await runStore.resetRunLog()
-  await runStore.getInitRunLog({ uuid: runId.value, params: { limit: 200, offset: 0 } })
+  await runStore.getInitRunLog({ suuid: runId.value, params: { limit: 200, offset: 0 } })
 }
 
 onBeforeMount(() => fetchData())

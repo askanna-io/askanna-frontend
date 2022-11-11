@@ -40,8 +40,8 @@ export const useProjectsStore = defineStore('projects', {
       this.loading = true
       try {
         this.projects = await apiService({
-          action: api.list,
           serviceName,
+          action: api.list,
           params: this.query
         })
       } catch (error) {

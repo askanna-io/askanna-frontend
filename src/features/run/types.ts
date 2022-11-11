@@ -1,7 +1,7 @@
 export const FINISHED_STATUSES = ['failed', 'finished', 'completed']
 
 export interface Package {
-  uuid: string
+  suuid: string
   cdn_base_url: string
   filename: string
   storage_location: string
@@ -14,13 +14,12 @@ export interface Package {
 
 export interface Run {
   name: string
-  uuid: string
   duration: number | null
   description: string
-  short_uuid: string
+  suuid: string
   payload: {
     duration: number
-    short_uuid: string
+    suuid: string
     size: number | string
   }
   status: string
@@ -32,12 +31,11 @@ export interface Run {
   finished: string
   version: {
     name: string
-    uuid: string
+    suuid: string
   }
   package: {
     name: string
-    uuid: string
-    short_uuid: string
+    suuid: string
   }
   runner: {
     cpu_cores: number
@@ -45,7 +43,7 @@ export interface Run {
     job_status: number
     memory_mib: number
     name: string
-    uuid: string
+    suuid: string
   }
   created_by: {
     name: string

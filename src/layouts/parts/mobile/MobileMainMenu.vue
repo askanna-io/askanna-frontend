@@ -6,8 +6,8 @@
     sticky-offset="{top: 58, bottom: 10}"
   >
     <v-list dense>
-      <MobileWorkspaceMenu @onClose="handleClickOnMenuItem" />
-      <MobileProjectMenu @onClose="handleClickOnMenuItem" />
+      <MobileWorkspacesMenu @onClose="handleClickOnMenuItem" />
+      <MobileProjectsMenu @onClose="handleClickOnMenuItem" />
 
       <v-list class="pt-0">
         <v-list-item @click="handleClickOnMenuItem" href="https://docs.askanna.io" target="_blank">
@@ -23,8 +23,8 @@
 </template>
 
 <script setup lang="ts">
-import MobileProjectMenu from './MobileProjectMenu.vue'
-import MobileWorkspaceMenu from './MobileWorkspaceMenu.vue'
+import MobileProjectsMenu from './MobileProjectsMenu.vue'
+import MobileWorkspacesMenu from './MobileWorkspacesMenu.vue'
 
 const emit = defineEmits('onClose')
 
@@ -33,7 +33,7 @@ const mobileStore = useMobileStore()
 const workspaceStore = useWorkspaceStore()
 
 const isMember = computed(() => workspaceStore.workspace.is_member)
-const workspaceShortUuid = computed(() => workspaceStore.workspace.short_uuid)
+const workspaceShortUuid = computed(() => workspaceStore.workspace.suuid)
 
 const profileRoute = computed(() => {
   if (isMember.value) {

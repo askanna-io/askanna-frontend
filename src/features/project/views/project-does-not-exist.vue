@@ -19,7 +19,7 @@ const workSpaceStore = useWorkspaceStore()
 const breadcrumbs = computed(() => [
   {
     title: workSpaceStore.workspace.name,
-    to: `/${workSpaceStore.workspace.short_uuid}`,
+    to: `/${workSpaceStore.workspace.suuid}`,
     disabled: false
   },
   {

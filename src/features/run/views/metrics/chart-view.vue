@@ -85,7 +85,7 @@ const { height } = useWindowSize()
 const metricStore = useMetricStore()
 const { route } = useRouterAskAnna()
 
-const { runId: uuid } = route.params
+const { runId: suuid } = route.params
 
 const activeY = ref()
 const activeS = ref()
@@ -214,8 +214,8 @@ const hadnleResetX = () => {
 }
 
 const fetchData = async () => {
-  await metricStore.getMetricMeta(uuid)
-  await metricStore.getMetricData(uuid)
+  await metricStore.getMetricMeta(suuid)
+  await metricStore.getMetricData(suuid)
 }
 
 onBeforeMount(() => fetchData())

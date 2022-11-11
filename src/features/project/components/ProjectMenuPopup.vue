@@ -107,8 +107,8 @@ const handleOpenConfirmEditProject = () =>
     name: 'workspace-project-edit',
     params: {
       routeBackTo: props.routeBackTo,
-      projectId: props.project.short_uuid,
-      workspaceId: props.project.workspace.short_uuid
+      projectId: props.project.suuid,
+      workspaceId: props.project.workspace.suuid
     }
   })
 
