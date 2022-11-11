@@ -128,7 +128,7 @@ const fetchData = async () => {
   }
 
   await fileStore.getFilePreview({
-    uuid: runId,
+    suuid: runId,
     serviceName: 'run',
     size: runResult.value.size,
     serviceAction: 'getRunResult',
@@ -150,20 +150,20 @@ const metaInfo = computed(() =>
 const handleDownload = async () => {
   // download full version of result without formating
   await fileStore.getFullFile({
-    uuid: runId,
+    suuid: runId,
     serviceName: 'run',
     serviceAction: 'getRunResult'
   })
 
   forceFileDownload.trigger({
     source: fileStore.rawFile,
-    name: `run_${runStore.run.short_uuid}_result_${runStore.run.result.name}`
+    name: `run_${runStore.run.suuid}_result_${runStore.run.result.name}`
   })
 }
 
 const handleCopy = async () => {
   const fileSource = await fileStore.getFullFile({
-    uuid: runId,
+    suuid: runId,
     serviceName: 'run',
     serviceAction: 'getRunResult'
   })

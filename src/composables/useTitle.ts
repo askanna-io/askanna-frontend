@@ -9,7 +9,7 @@ export default function () {
   const getTitle = function () {
     const title = computed(() => {
       let pageTitle = route.meta?.title || route.params.title || ''
-      // replace uuid to name
+      // replace suuid to name
       Object.entries(route.params).forEach(([key, value]) => {
         const name = get(generalStore.breadcrumbParams, key)
         pageTitle = pageTitle.replace(key, name || value)

@@ -69,7 +69,7 @@ const props = defineProps({
     default: function () {
       return {
         name: '',
-        short_uuid: '',
+        suuid: '',
         description: ''
       }
     }
@@ -80,9 +80,9 @@ const emit = defineEmits(['onClose', 'onDeleteConfirm'])
 
 const slicedText = useSlicedText()
 
-const fullNameOrId = computed(() => props.runInfo.name || props.runInfo.short_uuid)
-const name = computed(() => slicedText(props.runInfo.name, 17) || props.runInfo.short_uuid)
-const title = computed(() => slicedText(props.runInfo.name, 27) || props.runInfo.short_uuid)
+const fullNameOrId = computed(() => props.runInfo.name || props.runInfo.suuid)
+const name = computed(() => slicedText(props.runInfo.name, 17) || props.runInfo.suuid)
+const title = computed(() => slicedText(props.runInfo.name, 27) || props.runInfo.suuid)
 
 const valueModel = computed({
   get: () => props.value,

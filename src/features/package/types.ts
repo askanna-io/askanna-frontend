@@ -9,13 +9,12 @@ export interface File {
 }
 
 export interface Package {
-  uuid: string
   files: File[]
   size: number
   created: string
   filename: string
   project: string
-  short_uuid: string
+  suuid: string
   created_by: number
   created_at: string
   cdn_base_url: string

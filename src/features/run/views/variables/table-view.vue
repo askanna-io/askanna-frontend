@@ -28,7 +28,7 @@ const { route } = useRouterAskAnna()
 const projectStore = useProjectStore()
 const runVariablesStore = useRunVariablesStore()
 
-const { runId: uuid } = route.params
+const { runId: suuid } = route.params
 
 const isSorted = ref(false)
 
@@ -66,7 +66,7 @@ const loadingByParams = computed(() => runVariablesStore.loading.variablesByPara
 
 const query = useQuery({
   next,
-  uuid,
+  suuid,
   limit: 10,
   offset: 100,
   queryParams,
@@ -74,7 +74,7 @@ const query = useQuery({
 })
 
 const handleOnSort = async params => {
-  await runVariablesStore.getVariablesInitial({ uuid, params, loading: 'variablesByParams' })
+  await runVariablesStore.getVariablesInitial({ suuid, params, loading: 'variablesByParams' })
   await runVariablesStore.setIsFiltered(true)
 
   const { limit, offset, ...rest } = params
@@ -87,7 +87,7 @@ const handleOnScroll = e => throttled(e.target.scrollTop)
 
 const fetchData = async () => {
   await runVariablesStore.setIsFiltered(false)
-  await runVariablesStore.getVariablesInitial({ uuid, params: { limit: 100, offset: 0 } })
+  await runVariablesStore.getVariablesInitial({ suuid, params: { limit: 100, offset: 0 } })
 }
 
 onMounted(() => fetchData())

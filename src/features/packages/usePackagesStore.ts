@@ -27,11 +27,11 @@ export const usePackagesStore = defineStore(type.PACKAGES_STORE, {
       this.loadingPackages = false
     },
 
-    async getProjectPackages({ params, uuid }) {
+    async getProjectPackages({ params, suuid }) {
       let packages
       try {
         packages = await apiService({
-          uuid,
+          suuid,
           params,
           serviceName,
           action: api.projectPackages
@@ -51,11 +51,11 @@ export const usePackagesStore = defineStore(type.PACKAGES_STORE, {
       }
     },
 
-    async getTargetPackage(uuid: string) {
+    async getTargetPackage(suuid: string) {
       let packageTarget
       try {
         packageTarget = await apiService({
-          uuid,
+          suuid,
           serviceName,
           action: api.getDownloadLink
         })
@@ -69,8 +69,8 @@ export const usePackagesStore = defineStore(type.PACKAGES_STORE, {
       return packageTarget.target || ''
     },
 
-    async downloadPackage(uuid: string) {
-      const url = await this.getTargetPackage(uuid)
+    async downloadPackage(suuid: string) {
+      const url = await this.getTargetPackage(suuid)
 
       let packageSource
       try {

@@ -10,8 +10,7 @@ export enum WorkspaceVisibility {
 
 export const defaultWorkspace = {
   name: '',
-  uuid: '',
-  short_uuid: '',
+  suuid: '',
   description: '',
   is_member: false,
   visibility: WorkspaceVisibility.PRIVATE
@@ -32,8 +31,8 @@ export const useWorkspaceStore = defineStore(WORKSPACE_STORE, {
       loading: true,
       workspace: {
         name: '',
-        uuid: '',
-        short_uuid: '',
+        suuid: '',
+        suuid: '',
         description: '',
         is_member: false,
         visibility: WorkspaceVisibility.PRIVATE
@@ -69,13 +68,13 @@ export const useWorkspaceStore = defineStore(WORKSPACE_STORE, {
       return workspace
     },
 
-    async getWorkspace(uuid) {
+    async getWorkspace(suuid) {
       let workspace
       try {
         workspace = await apiService({
           action: api.get,
           serviceName,
-          uuid
+          suuid
         })
       } catch (error) {
         const logger = useLogger()
@@ -103,7 +102,7 @@ export const useWorkspaceStore = defineStore(WORKSPACE_STORE, {
           serviceName,
           method: 'put',
           action: api.get,
-          uuid: this.workspace.short_uuid
+          suuid: this.workspace.suuid
         })
       } catch (error) {
         logger.error('Error on update workspace in getWorkspace action.\nError: ', error)
@@ -127,7 +126,7 @@ export const useWorkspaceStore = defineStore(WORKSPACE_STORE, {
           serviceName,
           method: 'delete',
           action: api.delete,
-          uuid: workspace.short_uuid
+          suuid: workspace.suuid
         })
 
         logger.success(`You have successfully deleted the workspace ${workspace.name}`)

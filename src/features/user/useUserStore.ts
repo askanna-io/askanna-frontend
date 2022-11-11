@@ -13,15 +13,15 @@ export const useUserStore = defineStore('user', {
       userProfile: {
         name: '',
         email: '',
-        short_uuid: '',
+        suuid: '',
         date_joined: '',
         password: undefined
       },
       globalProfile: {
-        uuid: '',
+        suuid: '',
         name: '',
         email: '',
-        short_uuid: '',
+        suuid: '',
         job_title: '',
         role: {
           name: '',
@@ -44,7 +44,7 @@ export const useUserStore = defineStore('user', {
   },
 
   getters: {
-    isLoggedIn: state => !!state.globalProfile.short_uuid,
+    isLoggedIn: state => !!state.globalProfile.suuid,
     globalPermission: state => state.globalProfile.permission
   },
 
@@ -70,19 +70,19 @@ export const useUserStore = defineStore('user', {
       this.userProfile = result
 
       if (import.meta.env.VITE_APP_SENTRY_URL) {
-        const { email, short_uuid: id } = result
+        const { email, suuid: id } = result
         Sentry.setUser({ id, email, username: email })
       }
 
       return result
     },
 
-    async updateProfile({ uuid, data }) {
+    async updateProfile({ suuid, data }) {
       let user
       try {
         user = await apiService({
           method: 'PATCH',
-          uuid,
+          suuid,
           data,
           action: apiActions.updateAccount,
           serviceName

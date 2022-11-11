@@ -74,7 +74,7 @@ const { route, router } = useRouterAskAnna()
 const forceFileDownload = useForceFileDownload()
 const runVariablesStore = useRunVariablesStore()
 
-const { runId: uuid } = route.params
+const { runId: suuid } = route.params
 
 const views = [
   { name: 'Table', value: 'table', icon: 'mdi-table' },
@@ -104,15 +104,15 @@ const disabledTools = computed(
 )
 
 const handleCopy = async () => {
-  if (!variablesFullData.value) await runVariablesStore.getVariablesFullData({ uuid })
+  if (!variablesFullData.value) await runVariablesStore.getVariablesFullData({ suuid })
 
   copy.handleCopyText(variablesFullData.value)
 }
 
 const handleDownload = async () => {
-  if (!variablesFullData.value) await runVariablesStore.getVariablesFullData({ uuid })
+  if (!variablesFullData.value) await runVariablesStore.getVariablesFullData({ suuid })
 
-  forceFileDownload.trigger({ source: variablesFullData.value, name: `run_${uuid}_variables.json` })
+  forceFileDownload.trigger({ source: variablesFullData.value, name: `run_${suuid}_variables.json` })
 }
 
 const handleChangeView = (index: number) => {

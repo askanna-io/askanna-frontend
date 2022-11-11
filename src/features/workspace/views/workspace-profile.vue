@@ -199,7 +199,7 @@ const roleName = computed(() => roleFilters[workspaceProfile.value.role.code])
 const breadcrumbs = computed(() => [
   {
     title: workSpaceStore.workspace.name,
-    to: `/${workSpaceStore.workspace.short_uuid}`,
+    to: `/${workSpaceStore.workspace.suuid}`,
     disabled: false
   },
   {
@@ -218,7 +218,7 @@ const handleSave = async () => {
   if (state.isUserDataEdited) {
     userData = await userStore.updateProfile({
       data: state.userData,
-      uuid: userStore.userProfile.short_uuid
+      suuid: userStore.userProfile.suuid
     })
 
     if (userData && userData.response && userData.response.status === 400) {
@@ -232,7 +232,7 @@ const handleSave = async () => {
     workspaceData = await peopleStore.updateWorkspaceProfile({
       use_global_profile: useAskAnnaProfile.value
     })
-    if (!workspaceData || !workspaceData.short_uuid) {
+    if (!workspaceData || !workspaceData.suuid) {
       isSuccess = false
     }
   }
@@ -242,7 +242,7 @@ const handleSave = async () => {
       ...state.workspaceData,
       use_global_profile: useAskAnnaProfile.value
     })
-    if (!workspaceData || !workspaceData.short_uuid) {
+    if (!workspaceData || !workspaceData.suuid) {
       isSuccess = false
     }
   }
@@ -252,14 +252,14 @@ const handleSave = async () => {
       avatar: state.avatar
     })
 
-    if (!result || !result.short_uuid) {
+    if (!result || !result.suuid) {
       isSuccess = false
     }
   }
 
   if (state.isGlobalDataChanged) {
     globalData = await userStore.updateGlobalProfile(state.globalData)
-    if (!globalData || !globalData.short_uuid) {
+    if (!globalData || !globalData.suuid) {
       isSuccess = false
     }
   }
@@ -269,7 +269,7 @@ const handleSave = async () => {
       avatar: state.globalAvatar
     })
 
-    if (!result || !result.short_uuid) {
+    if (!result || !result.suuid) {
       isSuccess = false
     }
   }
@@ -283,7 +283,7 @@ const handleSave = async () => {
     router.go(-1)
 
     userStore.getGlobalProfile()
-    peopleStore.getCurrentPeople({ workspaceId: workSpaceStore.workspace.short_uuid })
+    peopleStore.getCurrentPeople({ workspaceId: workSpaceStore.workspace.suuid })
   } else {
     snackBar.showSnackBar({
       timeout: 5000,

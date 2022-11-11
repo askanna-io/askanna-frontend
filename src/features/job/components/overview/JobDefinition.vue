@@ -5,17 +5,17 @@
       <AskAnnaRow>
         <AskAnnaCol
           :cols="$vuetify.breakpoint.xsOnly ? 12 : 2"
-          :sm="job.schedules.length ? 4 : 5"
+          :sm="job.schedules?.length ? 4 : 5"
           :class="{ 'py-0': $vuetify.breakpoint.xsOnly }"
         >
           <AskAnnaRow>
-            <AskAnnaCol cols="12"><RunInfoCopyText text="SUUID" :value="job.short_uuid" /></AskAnnaCol>
+            <AskAnnaCol cols="12"><RunInfoCopyText text="SUUID" :value="job.suuid" /></AskAnnaCol>
             <AskAnnaCol cols="12">
               <AskAnnaLinkCopy
                 text="Code: "
                 :to="to"
                 :routeParams="routeParams"
-                :value="lastPackage.short_uuid"
+                :value="lastPackage.suuid"
                 @click="handleGoToCode"
               />
             </AskAnnaCol>
@@ -25,26 +25,26 @@
                 :fullMode="false"
                 :value="environment"
                 :nudgeLeft="nudgeLeft"
-                :fullValue="!job.schedules.length"
+                :fullValue="!job.schedules?.length"
               />
             </AskAnnaCol>
           </AskAnnaRow>
         </AskAnnaCol>
         <AskAnnaCol
           :cols="$vuetify.breakpoint.xsOnly ? 12 : 2"
-          :sm="job.schedules.length ? 4 : 5"
-          v-if="job.schedules.length || nextRun.datatime"
+          :sm="job.schedules?.length ? 4 : 5"
+          v-if="job.schedules?.length || nextRun?.datatime"
         >
           <AskAnnaRow>
-            <AskAnnaCol v-if="nextRun.datatime" cols="12">
+            <AskAnnaCol v-if="nextRun?.datatime" cols="12">
               <AskAnnaTooltip top left content-class="opacity-1">
                 <template v-slot:activator="{ on }">
-                  <span class="hover-text" v-on="on"><span>Next run at </span>{{ nextRun.datatime }}</span>
+                  <span class="hover-text" v-on="on"><span>Next run at </span>{{ nextRun?.datatime }}</span>
                 </template>
                 <span>which is {{ prefix }}{{ nextRun.fromNow }}</span>
               </AskAnnaTooltip>
             </AskAnnaCol>
-            <AskAnnaCol v-if="job.schedules.length" cols="12">
+            <AskAnnaCol v-if="job.schedules?.length" cols="12">
               <AskAnnaFlex class="d-flex">
                 <span class="font-weight-bold">{{ title }}:</span>
                 <ul class="list--unformated">
@@ -89,7 +89,7 @@
         <AskAnnaCol
           :class="{ 'pt-0': $vuetify.breakpoint.xsOnly }"
           :cols="$vuetify.breakpoint.xsOnly ? 12 : 2"
-          :sm="job.schedules.length ? 4 : 5"
+          :sm="job.schedules?.length ? 4 : 5"
         >
           <AskAnnaRow>
             <AskAnnaCol cols="12"
@@ -98,7 +98,7 @@
                 :fullMode="false"
                 :nudgeLeft="nudgeLeft"
                 :notifications="job.notifications"
-                :fullValue="!job.schedules.length"
+                :fullValue="!job.schedules?.length"
               />
             </AskAnnaCol>
           </AskAnnaRow>
@@ -144,7 +144,7 @@ const props = defineProps({
     type: Object,
     default: () => {
       return {
-        short_uuid: ''
+        suuid: ''
       }
     }
   },
@@ -158,12 +158,12 @@ const props = defineProps({
   }
 })
 
-const isMultipleSchedules = computed(() => props.job.schedules.length > 1)
+const isMultipleSchedules = computed(() => props.job.schedules?.length > 1)
 const title = computed(() => (isMultipleSchedules.value ? 'Schedules' : 'Schedule'))
 const prefix = computed(() => (props.nextRun.fromNow === 'within a minute' ? '' : 'in '))
 const environment = computed(() => ({ name: props.job.environment, timezone: props.job.timezone }))
 
-const nudgeLeft = computed(() => (environment.value.name.length > 30 ? 0 : 150))
+const nudgeLeft = computed(() => (environment.value.name?.length > 30 ? 0 : 150))
 
 const getColor = active => (active ? 'primary' : 'grey lighten-2')
 

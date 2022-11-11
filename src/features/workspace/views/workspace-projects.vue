@@ -25,7 +25,7 @@ const query = useQuery({
   limit: 18,
   offset: 99,
   queryParams,
-  uuid: workspaceId,
+  suuid: workspaceId,
   store: workspaceStore,
   storeAction: workspaceProjectsStore.getWorkpaceProjects
 })

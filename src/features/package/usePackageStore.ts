@@ -16,9 +16,8 @@ export const usePackageStore = defineStore('package', {
         created: '',
         filename: '',
         project: '',
-        short_uuid: '',
+        suuid: '',
         created_by: 0,
-        uuid: 'string',
         created_at: '',
         cdn_base_url: '',
         files: [] as File[],
@@ -28,7 +27,7 @@ export const usePackageStore = defineStore('package', {
   },
 
   actions: {
-    async getPackage({ loading, failedRoute, ...uuid }) {
+    async getPackage({ loading, failedRoute, ...suuid }) {
       if (loading) this.loading = true
 
       let packageData
@@ -36,14 +35,14 @@ export const usePackageStore = defineStore('package', {
         packageData = await apiService({
           serviceName,
           action: api.get,
-          uuid: uuid.packageId
+          suuid: suuid.packageId
         })
       } catch (e) {
         if (e.response && e.response.status === 500) {
-          const found = this.processingList.find(item => item.packageId === uuid.packageId)
+          const found = this.processingList.find(item => item.packageId === suuid.packageId)
 
           if (!found) {
-            this.processingList.push(uuid)
+            this.processingList.push(suuid)
           }
           this.setPackage({
             packageData: {
@@ -68,7 +67,7 @@ export const usePackageStore = defineStore('package', {
         return
       }
 
-      this.processingList = this.processingList.filter(item => item.packageId !== uuid.packageId)
+      this.processingList = this.processingList.filter(item => item.packageId !== suuid.packageId)
       this.setPackage({ packageData })
       this.loading = false
     },
@@ -92,12 +91,12 @@ export const usePackageStore = defineStore('package', {
       return packageData
     },
 
-    async registerChunkPackage({ uuid, data }) {
+    async registerChunkPackage({ suuid, data }) {
       let result
       try {
         result = await apiService({
           data,
-          uuid,
+          suuid,
           serviceName,
           method: 'post',
           action: api.registerChunkPackage
@@ -111,7 +110,7 @@ export const usePackageStore = defineStore('package', {
       return result
     },
 
-    async finishUpload({ uuid, data }) {
+    async finishUpload({ suuid, data }) {
       let result
       // convert the data to formdata for proper file upload
       const formData = new FormData()
@@ -123,7 +122,7 @@ export const usePackageStore = defineStore('package', {
 
       try {
         result = await apiService({
-          uuid,
+          suuid,
           serviceName,
           method: 'post',
           data: formData,

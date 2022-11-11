@@ -12,7 +12,7 @@ const fetchData = async () => {
 
   const { runId } = route.params
 
-  if (runStore.run.short_uuid !== runId) {
+  if (runStore.run.suuid !== runId) {
     await runStore.resetStore()
     await runStore.getRun(runId)
   }

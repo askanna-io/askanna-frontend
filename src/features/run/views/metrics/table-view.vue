@@ -27,7 +27,7 @@ const metricStore = useMetricStore()
 const { route } = useRouterAskAnna()
 const projectStore = useProjectStore()
 
-const { runId: uuid } = route.params
+const { runId: suuid } = route.params
 
 const isSorted = ref(false)
 const metricsQuery = ref({})
@@ -64,7 +64,7 @@ const tableHeight = computed(() => {
 
 const query = useQuery({
   next,
-  uuid,
+  suuid,
   limit: 10,
   offset: 100,
   queryParams,
@@ -72,7 +72,7 @@ const query = useQuery({
 })
 
 const handleOnSort = async params => {
-  await metricStore.getMetricInitial({ uuid, params, loading: 'metricByParams' })
+  await metricStore.getMetricInitial({ suuid, params, loading: 'metricByParams' })
   metricStore.isFiltered = true
 
   const { limit, offset, ...rest } = params
@@ -86,8 +86,8 @@ const handleOnScroll = e => throttled(e.target.scrollTop)
 const fetchData = async () => {
   metricStore.isFiltered = false
 
-  await metricStore.getMetricMeta(uuid)
-  await metricStore.getMetricInitial({ uuid, params: { limit: 100, offset: 0 } })
+  await metricStore.getMetricMeta(suuid)
+  await metricStore.getMetricInitial({ suuid, params: { limit: 100, offset: 0 } })
 }
 
 onBeforeMount(() => fetchData())

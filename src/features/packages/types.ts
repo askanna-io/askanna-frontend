@@ -8,7 +8,7 @@ export interface Packages {
 }
 
 export interface Package {
-  uuid: string
+  suuid: string
   filename: string
   storage_location: string
   project_id: number

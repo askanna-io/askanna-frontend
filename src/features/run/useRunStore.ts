@@ -47,14 +47,14 @@ export const useRunStore = defineStore('run', {
       this.openRunResult = false
     },
 
-    async getRun(uuid: string) {
+    async getRun(suuid: string) {
       this.runLoading = true
 
       let run = { name: '' }
 
       try {
         run = await apiService({
-          uuid,
+          suuid,
           serviceName,
           action: api.getRun
         })
@@ -84,7 +84,7 @@ export const useRunStore = defineStore('run', {
         status = await apiService({
           serviceName,
           action: api.jobrunStatus,
-          uuid: runIdShortUuid || this.run.short_uuid
+          suuid: runIdShortUuid || this.run.suuid
         })
       } catch (e) {
         const logger = useLogger()
@@ -103,7 +103,7 @@ export const useRunStore = defineStore('run', {
       this.runStatusLoading = false
     },
 
-    async startRun({ code, ...params }, uuid: string) {
+    async startRun({ code, ...params }, suuid: string) {
       const logger = useLogger()
 
       let run
@@ -114,7 +114,7 @@ export const useRunStore = defineStore('run', {
           headers: {
             'Content-Type': 'application/json'
           },
-          uuid,
+          suuid,
           params,
           data: code,
           serviceName
@@ -128,13 +128,13 @@ export const useRunStore = defineStore('run', {
       this.newRun = run
     },
 
-    async udapteRun({ uuid, data }) {
+    async udapteRun({ suuid, data }) {
       let isUpdated = false
       let run = { name: '' }
 
       try {
         run = await apiService({
-          uuid,
+          suuid,
           data,
           serviceName,
           method: 'PATCH',
@@ -169,7 +169,7 @@ export const useRunStore = defineStore('run', {
       this.runlogLoading = false
     },
 
-    async getRunLog({ uuid, params }) {
+    async getRunLog({ suuid, params }) {
       const turnOnScrollLoading = () => {
         this.runlogScrollLoading = true
       }
@@ -183,7 +183,7 @@ export const useRunStore = defineStore('run', {
       }
       try {
         runLog = await apiService({
-          uuid,
+          suuid,
           params,
           serviceName,
           action: api.getRunLog
@@ -211,7 +211,7 @@ export const useRunStore = defineStore('run', {
       throttledOff()
     },
 
-    async getFullVersionRunLog(uuid) {
+    async getFullVersionRunLog(suuid) {
       let runLog = {
         next: 0,
         count: 0,
@@ -221,7 +221,7 @@ export const useRunStore = defineStore('run', {
         runLog = await apiService({
           action: api.getRunLog,
           serviceName,
-          uuid
+          suuid
         })
       } catch (e) {
         const logger = useLogger()
@@ -246,7 +246,7 @@ export const useRunStore = defineStore('run', {
       await this.getRunArtifact(params)
     },
 
-    async getRunArtifact({ uuid, params }) {
+    async getRunArtifact({ suuid, params }) {
       this.runArtifactLoading = true
 
       let data = {}
@@ -254,7 +254,7 @@ export const useRunStore = defineStore('run', {
         data = await apiService({
           action: api.getRunArtifact,
           serviceName,
-          uuid,
+          suuid,
           params
         })
       } catch (e) {
@@ -266,8 +266,6 @@ export const useRunStore = defineStore('run', {
 
         return
       }
-
-      console.log(data)
 
       const re = /(?:\.([^.]+))?$/
       const files = data.files.map((file: File) => {
@@ -281,17 +279,17 @@ export const useRunStore = defineStore('run', {
       this.runArtifactLoading = false
     },
 
-    async downloadPackage(uuid) {
-      const url = await this.getTargetPackage(uuid)
+    async downloadPackage(suuid) {
+      const url = await this.getTargetPackage(suuid)
 
       return url
     },
 
-    async getTargetPackage(uuid: string) {
+    async getTargetPackage(suuid: string) {
       let packageTarget
       try {
         packageTarget = await apiService({
-          uuid,
+          suuid,
           serviceName,
           action: api.getDownloadLink
         })
@@ -305,17 +303,17 @@ export const useRunStore = defineStore('run', {
       return packageTarget.target || ''
     },
 
-    async deleteRunInfo({ short_uuid: uuid, name }) {
+    async deleteRunInfo({ suuid: uuid, name }) {
       const logger = useLogger()
 
       try {
         await apiService({
-          uuid,
+          suuid,
           serviceName,
           method: 'delete',
           action: api.delete
         })
-        logger.success(`You have successfully deleted the run ${name || uuid}`)
+        logger.success(`You have successfully deleted the run ${name || suuid}`)
 
         return true
       } catch (error) {

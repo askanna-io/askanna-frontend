@@ -31,20 +31,14 @@
               <span>{{ item.filename }}</span>
             </AskAnnaTooltip>
           </template>
-          <template v-slot:item.short_uuid="{ item }">
+          <template v-slot:item.suuid="{ item }">
             <AskAnnaTooltip top content-class="opacity-1">
               <template v-slot:activator="{ on, value }">
                 <div v-on="on">
-                  <AskAnnaButton class="px-0" text small>#{{ item.short_uuid.slice(0, 4) }}</AskAnnaButton>
+                  <AskAnnaButton class="px-0" text small>#{{ item.suuid.slice(0, 4) }}</AskAnnaButton>
                   <AskAnnaTooltip v-if="!$vuetify.breakpoint.xsOnly" right content-class="opacity-1">
                     <template v-slot:activator="{ on }">
-                      <AskAnnaButton
-                        icon
-                        text
-                        x-small
-                        v-on="on"
-                        v-show="value"
-                        @click.stop="handleCopy(item.short_uuid)"
+                      <AskAnnaButton icon text x-small v-on="on" v-show="value" @click.stop="handleCopy(item.suuid)"
                         ><AskAnnaIcon>mdi-content-copy</AskAnnaIcon></AskAnnaButton
                       >
                     </template>
@@ -52,7 +46,7 @@
                   </AskAnnaTooltip>
                 </div>
               </template>
-              <span>{{ item.short_uuid }}</span>
+              <span>{{ item.suuid }}</span>
             </AskAnnaTooltip>
           </template>
           <template v-slot:item.created="{ item }">
@@ -83,7 +77,7 @@
               <span>{{ item.description }}</span>
             </AskAnnaTooltip>
           </template>
-          <template v-slot:item.uuid="{ item }">
+          <template v-slot:item.modified="{ item }">
             <AskAnnaTooltip top content-class="opacity-1">
               <template v-slot:activator="{ on }">
                 <div v-on="on">
@@ -127,7 +121,7 @@ const breadcrumbs = useBreadcrumbs({ start: 2 })
 
 const sticked = computed(() => !projectStore.menu.sticked)
 const next = computed(() => packagesStore.projectPackages.next)
-const packageId = computed(() => projectStore.project.package.short_uuid)
+const packageId = computed(() => projectStore.project.package.suuid)
 
 const { projectId } = route.params
 
@@ -135,7 +129,7 @@ const query = useQuery({
   next,
   limit: 18,
   offset: 100,
-  uuid: projectId,
+  suuid: projectId,
   storeAction: packagesStore.getProjectPackages
 })
 
@@ -143,7 +137,7 @@ const onScroll = e => query.onScroll(e.target.documentElement.scrollTop)
 
 const fetchData = async () => {
   await packagesStore.resetStore()
-  await packagesStore.getInitialProjectPackages({ params: { limit: 100, offset: 0 }, uuid: projectId })
+  await packagesStore.getInitialProjectPackages({ params: { limit: 100, offset: 0 }, suuid: projectId })
 }
 
 onBeforeMount(() => fetchData())
@@ -164,7 +158,7 @@ const sortBy = (a, b) => {
 const headers = (isMobile: boolean = false) => [
   {
     text: 'SUUID',
-    value: 'short_uuid',
+    value: 'suuid',
     sortable: false,
     width: isMobile ? '1%' : '10%',
     class: 'text-left text-subtitle-2 font-weight-bold h-20' + (isMobile ? '' : ' w-min-110'),
@@ -195,7 +189,7 @@ const headers = (isMobile: boolean = false) => [
   },
   {
     text: '',
-    value: 'uuid',
+    value: 'modified',
     sortable: false,
     width: '10%',
     class: 'w-min-110 text-left text-subtitle-2 font-weight-bold h-20',
@@ -227,16 +221,16 @@ const breadcrumbsComputed = computed(() => {
   return [first, ...breadcrumbs.value]
 })
 
-const handleClickRow = ({ short_uuid, versionId }) => {
+const handleClickRow = ({ suuid, versionId }) => {
   router.push({
     name: 'workspace-project-package-folder',
-    params: { projectId: route.params.projectId, packageId: short_uuid, versionId, folderName: '' }
+    params: { projectId: route.params.projectId, packageId: suuid, versionId, folderName: '' }
   })
 }
 
 const handleDownload = async packageData => {
-  const source = await packagesStore.downloadPackage(packageData.short_uuid)
-  forceFileDownload.trigger({ source, name: `code_${packageData.short_uuid}_${packageData.filename}` })
+  const source = await packagesStore.downloadPackage(packageData.suuid)
+  forceFileDownload.trigger({ source, name: `code_${packageData.suuid}_${packageData.filename}` })
 }
 
 const handleCopy = id => copy.handleCopyText(id)

@@ -80,13 +80,13 @@ export const useFileStore = defineStore('file', {
     async getFilePreview({
       url,
       size,
-      uuid,
+      suuid,
       extension,
       serviceName,
       serviceAction
     }: {
       url?: string
-      uuid?: string
+      suuid?: string
       extension: string
       serviceName?: string
       size: number | string
@@ -125,7 +125,7 @@ export const useFileStore = defineStore('file', {
       if (allowedImageExts.includes(extension) || blobExts.includes(extension)) {
         response = await apiService({
           url,
-          uuid,
+          suuid,
           action,
           serviceName,
           responseType: 'blob',
@@ -147,7 +147,7 @@ export const useFileStore = defineStore('file', {
         if (this.isFileJSON) {
           response = await apiService({
             url,
-            uuid,
+            suuid,
             action,
             serviceName,
             responseType: 'text',
@@ -157,7 +157,7 @@ export const useFileStore = defineStore('file', {
         } else {
           response = await apiService({
             url,
-            uuid,
+            suuid,
             action,
             serviceName,
             responseType: 'text',
@@ -179,7 +179,7 @@ export const useFileStore = defineStore('file', {
         try {
           response = await apiService({
             url,
-            uuid,
+            suuid,
             action,
             serviceName,
             responseType: 'text',
@@ -216,12 +216,12 @@ export const useFileStore = defineStore('file', {
 
     async getFullFile({
       url,
-      uuid,
+      suuid,
       serviceName,
       serviceAction
     }: {
       url?: string
-      uuid?: string
+      suuid?: string
       serviceName?: string
       serviceAction?: string
     }) {
@@ -242,7 +242,7 @@ export const useFileStore = defineStore('file', {
       try {
         const result = await apiService({
           url,
-          uuid,
+          suuid,
           action,
           serviceName,
           responseType,

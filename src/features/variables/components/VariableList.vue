@@ -4,7 +4,7 @@
     :items="items"
     :headers="headers"
     hide-default-footer
-    item-key="short_uuid"
+    item-key="suuid"
     disable-pagination
     :mobile-breakpoint="0"
   >
@@ -12,8 +12,8 @@
       <slot name="header" />
     </template>
 
-    <template v-slot:item.short_uuid="{ item }">
-      <ask-anna-copy :text="item.short_uuid" prefix="#" :show="4" />
+    <template v-slot:item.suuid="{ item }">
+      <ask-anna-copy :text="item.suuid" prefix="#" :show="4" />
     </template>
     <template v-slot:item.name="{ item }">
       <ask-anna-copy :text="item.name" smartSlice :width="35" />
@@ -61,7 +61,7 @@ const headers = ref([
     text: 'SUUID',
     align: 'start',
     sortable: false,
-    value: 'short_uuid',
+    value: 'suuid',
     width: '10%',
     class: 'text-left text-subtitle-2 font-weight-bold h-20'
   },
@@ -82,5 +82,5 @@ const headers = ref([
   }
 ])
 
-const handleEditItem = item => emits('onEditItem', item.short_uuid)
+const handleEditItem = item => emits('onEditItem', item.suuid)
 </script>

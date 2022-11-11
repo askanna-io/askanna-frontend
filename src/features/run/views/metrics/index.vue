@@ -78,7 +78,7 @@ const chartDownload = useChartDownload()
 const { route, router } = useRouterAskAnna()
 const forceFileDownload = useForceFileDownload()
 
-const { runId: uuid } = route.params
+const { runId: suuid } = route.params
 
 const views = [
   { name: 'Table', value: 'table', icon: 'mdi-table' },
@@ -101,15 +101,15 @@ const disabledTools = computed(
 )
 
 const handleCopy = async () => {
-  if (!metricStore.metricFullData) await metricStore.getMetricFullData({ uuid })
+  if (!metricStore.metricFullData) await metricStore.getMetricFullData({ suuid })
 
   copy.handleCopyText(metricStore.metricFullData)
 }
 
 const handleDownload = async () => {
-  if (!metricStore.metricFullData) await metricStore.getMetricFullData({ uuid })
+  if (!metricStore.metricFullData) await metricStore.getMetricFullData({ suuid })
 
-  forceFileDownload.trigger({ source: metricStore.metricFullData, name: `run_${uuid}_metrics.json` })
+  forceFileDownload.trigger({ source: metricStore.metricFullData, name: `run_${suuid}_metrics.json` })
 }
 
 const fetchData = async () => {
@@ -131,7 +131,7 @@ const handleChangeView = (index: number) => {
 
 const handleDownloadPNG = () => {
   const activeS = chart.activeS ? '_' + chart.activeS : ''
-  chartDownload.save(chart.svgData, `run_${uuid}_metrics_${chart.activeY}_${chart.activeX}${activeS}.png`)
+  chartDownload.save(chart.svgData, `run_${suuid}_metrics_${chart.activeY}_${chart.activeX}${activeS}.png`)
 }
 
 onBeforeMount(() => fetchData())

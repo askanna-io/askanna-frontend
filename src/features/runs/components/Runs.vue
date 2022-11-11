@@ -21,16 +21,10 @@
             <AskAnnaTooltip v-if="!$vuetify.breakpoint.xsOnly" top content-class="opacity-1">
               <template v-slot:activator="{ on, value }">
                 <div v-on="on">
-                  <AskAnnaButton class="px-0" text small>#{{ item.short_uuid.slice(0, 4) }}</AskAnnaButton>
+                  <AskAnnaButton class="px-0" text small>#{{ item.suuid.slice(0, 4) }}</AskAnnaButton>
                   <AskAnnaTooltip right content-class="opacity-1">
                     <template v-slot:activator="{ on }">
-                      <AskAnnaButton
-                        icon
-                        text
-                        x-small
-                        v-on="on"
-                        v-show="value"
-                        @click.prevent="handleCopy(item.short_uuid)"
+                      <AskAnnaButton icon text x-small v-on="on" v-show="value" @click.prevent="handleCopy(item.suuid)"
                         ><AskAnnaIcon>mdi-content-copy</AskAnnaIcon></AskAnnaButton
                       >
                     </template>
@@ -38,9 +32,9 @@
                   </AskAnnaTooltip>
                 </div>
               </template>
-              <span>{{ item.short_uuid }}</span>
+              <span>{{ item.suuid }}</span>
             </AskAnnaTooltip>
-            <template v-else> #{{ item.short_uuid.slice(0, 4) }} </template>
+            <template v-else> #{{ item.suuid.slice(0, 4) }} </template>
           </router-link>
         </td>
         <td class="text-start">
@@ -200,8 +194,8 @@ const routeLinkParams = ({ item, name = 'workspace-project-jobs-job-run-overview
     name,
     params: {
       ...route.params,
-      runId: item.short_uuid,
-      jobId: item.job.short_uuid
+      runId: item.suuid,
+      jobId: item.job.suuid
     }
   }
 }

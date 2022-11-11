@@ -31,12 +31,12 @@ export const useRunVariablesStore = defineStore(RUNIFO_VARIABLES_STORE, {
   },
 
   actions: {
-    async getVariables({ uuid, params }) {
+    async getVariables({ suuid, params }) {
       let variables
 
       try {
         variables = await apiService({
-          uuid,
+          suuid,
           params,
           serviceName,
           action: apiActions.getVariables
@@ -52,19 +52,19 @@ export const useRunVariablesStore = defineStore(RUNIFO_VARIABLES_STORE, {
       return variables
     },
 
-    async getVariablesInitial({ uuid, params, loading = 'variables' }) {
+    async getVariablesInitial({ suuid, params, loading = 'variables' }) {
       this.loading = { ...this.loading, ...{ [loading]: true } }
 
-      const variables = await this.getVariables({ uuid, params })
+      const variables = await this.getVariables({ suuid, params })
 
       this.variables = variables
       this.loading = { ...this.loading, ...{ [loading]: false } }
     },
 
-    async getVariablesJSON({ uuid, params, loading = true }) {
+    async getVariablesJSON({ suuid, params, loading = true }) {
       if (loading) this.loading.variablesJSON = true
 
-      const variables = await this.getVariables({ uuid, params })
+      const variables = await this.getVariables({ suuid, params })
 
       const { count, results, next } = variables
 
@@ -76,16 +76,16 @@ export const useRunVariablesStore = defineStore(RUNIFO_VARIABLES_STORE, {
       if (loading) this.loading.variablesJSON = false
     },
 
-    async getVariablesFullData({ uuid, loading = false }) {
-      const variables = await this.getVariables({ uuid })
+    async getVariablesFullData({ suuid, loading = false }) {
+      const variables = await this.getVariables({ suuid })
 
       this.variablesFullData = JSON.stringify(variables, null, 2)
     },
 
-    async getVariablesByParams({ uuid, params, loading = false }) {
+    async getVariablesByParams({ suuid, params, loading = false }) {
       if (loading) this.loading.variablesByParams = true
 
-      const variables = await dispatch(ac.getVariables, { uuid, params })
+      const variables = await dispatch(ac.getVariables, { suuid, params })
 
       const { count, results, next } = variables
       this.variables = {

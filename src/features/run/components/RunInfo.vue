@@ -112,7 +112,7 @@ const variables = computed(() => {
     },
     {
       text: 'SUUID',
-      value: props.run.short_uuid,
+      value: props.run.suuid,
       component: RunInfoCopyText,
       visibility: true
     },
@@ -138,7 +138,7 @@ const variables = computed(() => {
     {
       text: 'Code: ',
       to: 'workspace-project-code',
-      value: props.run.package.short_uuid,
+      value: props.run.package.suuid,
       component: AskAnnaLinkCopy,
       visibility: true
     },

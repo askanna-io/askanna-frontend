@@ -4,7 +4,7 @@
       <AskAnnaRow v-if="!settings.projectView" :class="{ 'px-2': $vuetify.breakpoint.xsOnly }">
         <AskAnnaCol
           v-for="item in props.items"
-          :key="item.name + item.short_uuid"
+          :key="item.name + item.suuid"
           cols="12"
           sm="6"
           md="4"
@@ -22,7 +22,7 @@
         </AskAnnaCol>
       </AskAnnaRow>
       <div v-if="settings.projectView">
-        <div v-for="item in props.items" :key="item.name + item.short_uuid">
+        <div v-for="item in props.items" :key="item.name + item.suuid">
           <workspace-project-list-item :project="item" :workspaceName="workspaceName" cols="12" />
           <AskAnnaDivider />
         </div>

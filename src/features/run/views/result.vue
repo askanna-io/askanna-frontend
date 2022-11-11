@@ -1,5 +1,5 @@
 <template>
-  <RunResult v-if="run.short_uuid" :run="run" />
+  <RunResult v-if="run.suuid" :run="run" />
 </template>
 
 <script setup lang="ts">
@@ -14,7 +14,7 @@ const fetchData = async () => {
 
   const { runId } = route.params
 
-  if (runStore.run.short_uuid !== runId) {
+  if (runStore.run.suuid !== runId) {
     await runStore.resetStore()
     await runStore.getRun(runId)
   }

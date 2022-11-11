@@ -3,7 +3,7 @@
     fixed-header
     single-expand
     :items="jobList"
-    item-key="short_uuid"
+    item-key="suuid"
     :mobile-breakpoint="0"
     :expanded.sync="expanded"
     :hide-default-footer="!jobList.length"
@@ -38,7 +38,7 @@
             :height="calcSubHeight"
             :loading="runsLoading"
             :tableClass="'job-sub-table'"
-            @onChangeParams="params => handleChangeParams({ uuid: item.short_uuid, params })"
+            @onChangeParams="params => handleChangeParams({ suuid: item.suuid, params })"
           />
         </AskAnnaLoadingProgress>
 
@@ -52,7 +52,7 @@
       </router-link>
     </template>
 
-    <template v-slot:item.uuid="{ item }">
+    <template v-slot:item.suuid="{ item }">
       <router-link class="table-link table-link--unformated" :to="routeLinkParams(item)">
         {{ item.runs.count }}
       </router-link>
@@ -107,7 +107,7 @@ const getHeaders = (isMobile: boolean) =>
 const handleJobClick = item => {
   router.push({
     name: 'workspace-project-job-overiew',
-    params: { ...route.params, jobId: item.short_uuid || 'jobname' }
+    params: { ...route.params, jobId: item.suuid || 'jobname' }
   })
 }
 
@@ -115,7 +115,7 @@ const handleExpand = async ({ item }) => {
   loading.value = true
 
   currentJob.value = item
-  await runsStore.getRuns({ uuid: item.short_uuid, params: { offset: 0, limit: 5 } })
+  await runsStore.getRuns({ suuid: item.suuid, params: { offset: 0, limit: 5 } })
 
   loading.value = false
 }
@@ -125,14 +125,14 @@ const routeLinkParams = item => {
     name: 'workspace-project-job-overiew',
     params: {
       ...route.params,
-      jobId: item.short_uuid
+      jobId: item.suuid
     }
   }
 }
 
-const handleChangeParams = async ({ uuid, params }) => {
+const handleChangeParams = async ({ suuid, params }) => {
   await runsStore.getRuns({
-    uuid,
+    suuid,
     params
   })
 }

@@ -77,9 +77,9 @@ const types = [
     comporasionFn: item => item.routes === props.routeName
   },
   {
-    routes: 'job-uuid',
+    routes: 'job-suuid',
     component: JobNavBar,
-    comporasionFn: () => props.routeName.indexOf('job-uuid') !== -1
+    comporasionFn: () => props.routeName.indexOf('job-suuid') !== -1
   },
   {
     routes: 'workspace-project-jobs-job-run',

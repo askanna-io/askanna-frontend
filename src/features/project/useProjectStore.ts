@@ -27,7 +27,7 @@ export const useProjectStore = defineStore(PROJECT_STORE, {
       },
       jobsLoading: true,
       lastPackage: {
-        short_uuid: ''
+        suuid: ''
       },
       menu: {
         sticked: false,
@@ -40,13 +40,13 @@ export const useProjectStore = defineStore(PROJECT_STORE, {
   },
 
   actions: {
-    async getProject(uuid) {
+    async getProject(suuid) {
       this.projectLoading = true
 
       let project
       try {
         project = await apiService({
-          uuid: uuid,
+          suuid,
           serviceName,
           action: api.get
         })
@@ -72,11 +72,11 @@ export const useProjectStore = defineStore(PROJECT_STORE, {
       return project
     },
 
-    async getProjectMe(uuid) {
+    async getProjectMe(suuid) {
       let projectMe
       try {
         projectMe = await apiService({
-          uuid,
+          suuid,
           serviceName,
           action: api.projectMe
         })
@@ -92,37 +92,17 @@ export const useProjectStore = defineStore(PROJECT_STORE, {
       peopleStore.setCurretPeople({ permission: projectMe.permission })
     },
 
-    async getProjects() {
-      let projects
-
-      try {
-        projects = await apiService({
-          serviceName,
-          action: api.list,
-          params: this.query
-        })
-      } catch (error) {
-        const logger = useLogger()
-
-        logger.error('Error on load projects in getProjects action.\nError: ', error)
-
-        return
-      }
-
-      this.projects = projects
-    },
-
     resetProjectJobs() {
       this.projectJobs = []
     },
 
-    async getLastPackage(uuid) {
+    async getLastPackage(suuid) {
       let packages
-      let packageData = { short_uuid: '' }
+      let packageData = { suuid: '' }
 
       try {
         packages = await apiService({
-          uuid,
+          suuid,
           serviceName,
           params: {
             limit: 1,
@@ -192,7 +172,7 @@ export const useProjectStore = defineStore(PROJECT_STORE, {
       }
 
       const workspaceProjectsStore = useWorkspaceProjectsStore()
-      await workspaceProjectsStore.setWorkspacePprojects({ results: [{ ...project, lastPackage: { short_uuid: '' } }] })
+      await workspaceProjectsStore.setWorkspacePprojects({ results: [{ ...project, lastPackage: { suuid: '' } }] })
 
       logger.success(`The project ${project.name} is created`)
 
@@ -209,7 +189,7 @@ export const useProjectStore = defineStore(PROJECT_STORE, {
           serviceName,
           method: 'put',
           action: api.update,
-          uuid: this.project.short_uuid
+          suuid: this.project.suuid
         })
       } catch (error) {
         logger.error('Error on update project in updateProject action.\nError: ', error as Error)
@@ -243,7 +223,7 @@ export const useProjectStore = defineStore(PROJECT_STORE, {
           serviceName,
           method: 'delete',
           action: api.delete,
-          uuid: project.short_uuid
+          suuid: project.suuid
         })
       } catch (error) {
         logger.error('Error on delete project in deleteProject action.\nError: ', error)

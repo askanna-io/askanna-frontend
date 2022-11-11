@@ -4,18 +4,16 @@ export const enum ProjectVisibility {
 }
 
 interface Project {
-  uuid: string
   name: string
   flows: any[]
   created: string
   modified: string
   template: string
-  short_uuid: string
+  suuid: string
   description: string
   package: {
     name: string
-    uuid: string
-    short_uuid: string
+    suuid: string
   }
   visibility: ProjectVisibility
 }
@@ -35,19 +33,17 @@ export class ProjectModel {
 
   static initialState() {
     return {
-      uuid: '',
       name: '',
       flows: [],
       created: '',
       modified: '',
       template: '',
       permission: {},
-      short_uuid: '',
+      suuid: '',
       description: '',
       package: {
         name: '',
-        uuid: '',
-        short_uuid: ''
+        suuid: ''
       },
       visibility: ProjectVisibility.PRIVATE
     }

@@ -1,15 +1,15 @@
 <template>
   <div class="text-sm-center ml-sm-6 ml-md-0 d-none d-sm-flex">
     <AskAnnaFlex>
-      <WorkspaceMenu />
-      <ProjectMenu />
+      <WorkspacesMenu />
+      <ProjectsMenu />
     </AskAnnaFlex>
   </div>
 </template>
 
 <script setup lang="ts">
-import ProjectMenu from './ProjectMenu.vue'
-import WorkspaceMenu from './WorkspaceMenu.vue'
+import ProjectsMenu from './ProjectsMenu.vue'
+import WorkspacesMenu from './WorkspacesMenu.vue'
 
 useTitle()
 </script>

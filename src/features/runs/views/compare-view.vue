@@ -10,8 +10,8 @@
               v-for="(run, index) in compareRunsStore.runs.results"
               :key="index"
               :type="'run-suuid'"
-              :value="run.short_uuid"
-              :routeParams="{ runId: run.short_uuid }"
+              :value="run.suuid"
+              :routeParams="{ runId: run.suuid }"
               to="workspace-project-jobs-job-run-overview"
             />
           </ComparisonList>
@@ -33,7 +33,7 @@
                   :routeParams="
                     item.getRouteParams({
                       ...route.params,
-                      runId: run.short_uuid
+                      runId: run.suuid
                     })
                   "
                 />
@@ -200,7 +200,7 @@ const mobileStore = useMobileStore()
 const { route } = useRouterAskAnna()
 const compareRunsStore = useCompareRunsStore()
 
-const { jobId: uuid } = route.params
+const { jobId: suuid } = route.params
 
 let loading = ref(true)
 const currentScrollTop = ref(0)
@@ -218,7 +218,7 @@ const fetchData = async () => {
   loading.value = true
 
   await compareRunsStore.getRunsJob({
-    uuid,
+    suuid,
     params: {
       limit: compareRunsStore.selectedCount,
       offset: 0

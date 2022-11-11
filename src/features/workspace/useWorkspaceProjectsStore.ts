@@ -51,7 +51,7 @@ export const useWorkspaceProjectsStore = defineStore('workspaceProjects', {
           params,
           serviceName,
           action: api.projects,
-          uuid: workspaceStore.workspace.short_uuid || workspaceId
+          suuid: workspaceStore.workspace.suuid || workspaceId
         })
       } catch (error) {
         logger.error('Error on load projects in getWorkpaceProjects action.\nError: ', error)
@@ -90,9 +90,7 @@ export const useWorkspaceProjectsStore = defineStore('workspaceProjects', {
     },
 
     deleteWorkspaceProject(projectToDelete) {
-      const results = this.allWorkspaceProjects.results.filter(
-        project => project.short_uuid !== projectToDelete.short_uuid
-      )
+      const results = this.allWorkspaceProjects.results.filter(project => project.suuid !== projectToDelete.suuid)
       this.allWorkspaceProjects = {
         ...this.allWorkspaceProjects,
         results,

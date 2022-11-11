@@ -17,14 +17,14 @@ export const useRunsStore = defineStore('runs', {
   },
 
   actions: {
-    async getRuns({ uuid, params }) {
+    async getRuns({ suuid, params }) {
       this.runsLoading = true
 
       let runs: Run[]
 
       try {
         runs = await apiService({
-          uuid,
+          suuid,
           params,
           action: api.runs,
           serviceName: SERVICE_NAME

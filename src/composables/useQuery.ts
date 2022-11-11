@@ -1,4 +1,4 @@
-export default function ({ next, queryParams = {}, uuid, offset, limit, storeAction, loading }: any) {
+export default function ({ next, queryParams = {}, suuid, offset, limit, storeAction, loading }: any) {
   const currentScrollTop = ref(0)
   const richedOffset = ref(offset)
 
@@ -6,7 +6,7 @@ export default function ({ next, queryParams = {}, uuid, offset, limit, storeAct
     if (scrollTop > currentScrollTop.value && next.value) {
       currentScrollTop.value = scrollTop
       storeAction({
-        uuid,
+        suuid,
         loading,
         params: { limit, offset: richedOffset.value, ...queryParams.value }
       })

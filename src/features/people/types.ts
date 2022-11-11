@@ -2,23 +2,20 @@ interface Invitation {
   name: string
   status: string
   email: string
-  uuid: string
-  short_uuid: string
+  suuid: string
   object_uuid: string
   workspace: {
     name: string
-    uuid: string
-    short_uuid: string
+    suuid: string
   }
   role: string
   job_title: string
-  user: { name: string | null; short_uuid: string | null; uuid: string | null }
+  user: { name: string | null; suuid: string | null }
   front_end_url: string
 }
 
 export interface Person {
-  uuid: string
-  short_uuid: string
+  suuid: string
   name?: string
   email: string
   use_global_profile?: boolean
@@ -30,23 +27,20 @@ export interface Person {
     name: string
     status: string
     email: string
-    uuid: string
-    short_uuid: string
+    suuid: string
     object_uuid: string
     object_type: string
     workspace: {
       relation: string
       name: string
-      uuid: string
-      short_uuid: string
+      suuid: string
     }
     role: string
     job_title: string
     user: {
       relation: string
       name: string
-      uuid: string
-      short_uuid: string
+      suuid: string
     }
     avatar: {
       icon: string
@@ -114,16 +108,15 @@ export class InvitationModel {
   static initialState() {
     return {
       name: '',
-      uuid: '',
+      suuid: '',
       role: '',
       email: '',
       status: '',
       job_title: '',
-      short_uuid: '',
       object_uuid: '',
       front_end_url: '',
-      workspace: { name: '', short_uuid: '', uuid: '' },
-      user: { name: null, short_uuid: null, uuid: null }
+      workspace: { name: '', suuid: '' },
+      user: { name: null, suuid: null }
     }
   }
 }
@@ -141,8 +134,7 @@ export class PersonModel {
 
   static initialState() {
     return {
-      uuid: '',
-      short_uuid: '',
+      suuid: '',
       name: '',
       email: '',
       role: {
@@ -153,23 +145,20 @@ export class PersonModel {
         name: '',
         status: '',
         email: '',
-        uuid: '',
-        short_uuid: '',
+        suuid: '',
         object_uuid: '',
         object_type: '',
         workspace: {
           relation: '',
           name: '',
-          uuid: '',
-          short_uuid: ''
+          suuid: ''
         },
         role: '',
         job_title: '',
         user: {
           relation: '',
           name: '',
-          uuid: '',
-          short_uuid: ''
+          suuid: ''
         },
         avatar: {
           icon: '',

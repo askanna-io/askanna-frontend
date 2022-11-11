@@ -91,26 +91,26 @@ const views = [
 const currentView = ref(views[0])
 
 const maxHeight = computed(() => height.value - 150)
-const runShortId = computed(() => runStore.run.short_uuid)
-const payloadUuid = computed(() => runStore.run.payload?.short_uuid)
+const runShortId = computed(() => runStore.run.suuid)
+const payloadUuid = computed(() => runStore.run.payload?.suuid)
 
 const handleDownload = async () => {
-  const { short_uuid } = runStore.run
+  const { suuid } = runStore.run
 
   await fileStore.getFullFile({
     serviceName: 'run',
     serviceAction: 'getRunPayload',
-    uuid: { runShortId: runShortId.value, payloadUuid: payloadUuid.value }
+    suuid: { runShortId: runShortId.value, payloadUuid: payloadUuid.value }
   })
 
-  forceFileDownload.trigger({ source: fileStore.filePreviewByView('raw'), name: `run_${short_uuid}_payload.json` })
+  forceFileDownload.trigger({ source: fileStore.filePreviewByView('raw'), name: `run_${suuid}_payload.json` })
 }
 
 const handleCopy = async () => {
   await fileStore.getFullFile({
     serviceName: 'run',
     serviceAction: 'getRunPayload',
-    uuid: { runShortId: runShortId.value, payloadUuid: payloadUuid.value }
+    suuid: { runShortId: runShortId.value, payloadUuid: payloadUuid.value }
   })
 
   copy.handleCopyText(fileStore.fileSourceForCopy(currentView.value.value))

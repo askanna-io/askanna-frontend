@@ -56,7 +56,7 @@
     <AskAnnaAlert v-else class="mx-4 text-center" dense outlined>
       You are not allowed to edit this run. I can bring you back toto the run
       <router-link :to="{ name: 'workspace-project-jobs-job-run-overview' }" class="ask-anna-link">{{
-        run.name || run.short_uuid
+        run.name || run.suuid
       }}</router-link
       >.
     </AskAnnaAlert>
@@ -88,7 +88,7 @@ const handleOnInput = (value, path) => {
 
 const handleSaveDescription = async () => {
   const isUpdated = await runStore.udapteRun({
-    uuid: runStore.run.short_uuid,
+    suuid: runStore.run.suuid,
     data: { description: run.value.description }
   })
 
@@ -99,7 +99,7 @@ const handleSaveDescription = async () => {
 
 const handleSave = async () => {
   const isUpdated = await runStore.udapteRun({
-    uuid: runStore.run.short_uuid,
+    suuid: runStore.run.suuid,
     data: data.value
   })
   if (isUpdated) {

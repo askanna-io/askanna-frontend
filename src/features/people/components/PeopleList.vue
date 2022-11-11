@@ -9,7 +9,7 @@
           <AskAnnaCol
             v-for="item in props.items"
             @click="handleSelectPeople(item)"
-            :key="item.name + item.short_uuid + item.role"
+            :key="item.name + item.suuid + item.role"
             cols="12"
             sm="6"
             md="4"

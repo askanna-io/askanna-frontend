@@ -42,7 +42,7 @@
           >Run{{ runName }}
           <AskAnnaCopyText
             v-if="!run.name"
-            :text="run.short_uuid"
+            :text="run.suuid"
             :buttonType="{ text: true }"
             :styleClasses="'px-0 white title font-weight-light primary--black '"
           />

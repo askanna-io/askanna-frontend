@@ -56,7 +56,7 @@ const handleUpdate = async () => {
     await workspaceProjectsStore.getInitialWorkpaceProjects({ params: { limit: 99, offset: 0 } })
   }
 
-  if (project?.short_uuid) {
+  if (project?.suuid) {
     snackBar.showSnackBar({ message: `The project ${project.name} was updated`, color: 'success', timeout: 2500 })
     await projectsStore.getProjects() // call get all project to updated them on menu
     handleCancel()
@@ -66,7 +66,7 @@ const handleUpdate = async () => {
 const handleSaveDescription = async () => {
   const project = await projectStore.updateProject({ description: projectState.value.description })
 
-  if (project?.short_uuid) {
+  if (project?.suuid) {
     snackBar.showSnackBar({ message: `The project ${project.name} was updated`, color: 'success', timeout: 2500 })
   }
 }

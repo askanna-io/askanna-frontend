@@ -9,7 +9,7 @@
       <AskAnnaCard flat elevation="24" width="300">
         <AskAnnaToolbar flat height="40" class="secondary--text" color="white">
           <AskAnnaToolbarTitle class="pl-0">
-            <span class="title font-weight-light">{{ run.name || 'Run: ' + run.short_uuid }}</span>
+            <span class="title font-weight-light">{{ run.name || 'Run: ' + run.suuid }}</span>
           </AskAnnaToolbarTitle>
           <AskAnnaSpacer />
 

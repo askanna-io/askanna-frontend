@@ -127,7 +127,7 @@ const handleSave = async () => {
   if (state.isUserDataEdited) {
     userData = await userStore.updateProfile({
       data: state.userData,
-      uuid: userStore.userProfile.short_uuid
+      suuid: userStore.userProfile.suuid
     })
 
     if (userData && userData.response && userData.response.status === 400) {
@@ -139,7 +139,7 @@ const handleSave = async () => {
 
   if (state.isGlobalDataChanged) {
     globalData = await userStore.updateGlobalProfile(state.globalData)
-    if (!globalData || !globalData.short_uuid) {
+    if (!globalData || !globalData.suuid) {
       isSuccess = false
     }
   }
@@ -149,7 +149,7 @@ const handleSave = async () => {
       avatar: state.globalAvatar
     })
 
-    if (!result || !result.short_uuid) {
+    if (!result || !result.suuid) {
       isSuccess = false
     }
   }

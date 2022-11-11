@@ -14,7 +14,7 @@ export const packageRoutes = {
           path: '',
           name: 'workspace-project-code',
           components: {
-            default: () => import('./views/uuid.vue'),
+            default: () => import('./views/suuid.vue'),
             newPackage: () => import('./views/new-package.vue')
           },
           meta: {
@@ -46,7 +46,7 @@ export const packageRoutes = {
           path: '',
           name: 'workspace-project-package',
 
-          component: () => import('./views/uuid.vue'),
+          component: () => import('./views/suuid.vue'),
           children: [],
           meta: {
             hideAppBarIcon: true
@@ -56,7 +56,7 @@ export const packageRoutes = {
 
         {
           path: ':folderName(.*)',
-          component: () => import('./views/uuid.vue'),
+          component: () => import('./views/suuid.vue'),
           name: 'workspace-project-package-folder',
           meta: {
             breadcrumb: ':folderName',

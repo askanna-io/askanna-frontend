@@ -4,7 +4,7 @@ import { Method, ResponseType, AxiosTransformer } from 'axios'
 
 interface ServiceParams {
   data?: any
-  uuid?: any
+  suuid?: any
   url?: string
   params?: any
   headers?: any
@@ -18,7 +18,7 @@ interface ServiceParams {
 
 const apiService = async ({
   url = '',
-  uuid = '',
+  suuid = '',
   headers = {},
   method = 'get',
   action = 'get',
@@ -30,7 +30,7 @@ const apiService = async ({
   returnFullResponse = false
 }: ServiceParams) => {
   try {
-    const apiUrl = url ? undefined : api.apiUrl() + api.points[serviceName][action](uuid)
+    const apiUrl = url ? undefined : api.apiUrl() + api.points[serviceName][action](suuid)
     let result = null
 
     if (url) {

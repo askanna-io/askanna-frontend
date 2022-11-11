@@ -5,7 +5,7 @@
     :to="{
       name: 'workspace',
       params: {
-        workspaceId: workspace.short_uuid,
+        workspaceId: workspace.suuid,
         title: `${workspace.name}}`
       }
     }"
@@ -28,7 +28,7 @@
           usePermission
           :isMember="workspace.is_member"
           :permission="workspace.permission"
-          :workspaceUuid="workspace.short_uuid"
+          :workspaceUuid="workspace.suuid"
           @onOpenWorkspaceRemove="handleOpenConfirmRemoveWorkspace"
         />
       </div>
@@ -55,8 +55,8 @@ const props = defineProps({
         is_member: true,
         modified: '',
         name: '',
-        short_uuid: '',
-        uuid: '',
+        suuid: '',
+
         visibility: 'PRIVATE'
       }
     }
