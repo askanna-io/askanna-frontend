@@ -43,7 +43,7 @@ const tabs = [
   },
   {
     id: 1,
-    name: 'Curl',
+    name: 'CLI / CURL',
     component: RunCurl,
     to: 'workspace-project-job-running-curl'
   },

@@ -11,6 +11,10 @@ import hljs from 'highlight.js'
 window.hljs = hljs
 
 const props = defineProps({
+  singleLine: {
+    type: Boolean,
+    default: false
+  },
   loading: {
     type: Boolean,
     default: false
@@ -34,7 +38,7 @@ const lineNumber = useLineNumber()
 
 const highlighted = computed(() => {
   let result = hljs.highlight(props.value, { language: props.languageName, ignoreIllegals: true }).value
-  result = lineNumber.lineNumbersValue(result, { maxRowToShow: props.maxRowToShow })
+  result = lineNumber.lineNumbersValue(result, { maxRowToShow: props.maxRowToShow, singleLine: props.singleLine })
 
   return result
 })
