@@ -251,6 +251,7 @@ declare module '@vue/runtime-core' {
     VSnackbar: typeof import('vuetify/lib')['VSnackbar']
     VSpacer: typeof import('vuetify/lib')['VSpacer']
     VSubheader: typeof import('vuetify/lib')['VSubheader']
+    VSwitch: typeof import('vuetify/lib')['VSwitch']
     VTab: typeof import('vuetify/lib')['VTab']
     VTabItem: typeof import('vuetify/lib')['VTabItem']
     VTabs: typeof import('vuetify/lib')['VTabs']
