@@ -1,6 +1,6 @@
 <template>
   <VChipGroup active-class="primary--text" column>
-    <AskAnnaChip v-for="label in value.labels" :key="label.name" small pill @click="handleClick">
+    <AskAnnaChip v-for="label in value.labels" :key="label.name" small pill>
       <MetricValue :metricRow="label" isShowName isLabels isLabel :preview="false" />
     </AskAnnaChip>
   </VChipGroup>
@@ -15,16 +15,8 @@ defineProps({
       metricName: '',
       isLabels: false
     })
-  },
-  count: {
-    type: Number,
-    default: 4
   }
 })
-
-const show = ref(false)
-
-const handleClick = () => (show.value = !show.value)
 </script>
 <style lang="scss">
 .label-item {
