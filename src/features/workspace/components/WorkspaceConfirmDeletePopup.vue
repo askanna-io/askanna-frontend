@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="valueModel" max-width="650px" @click:outside="closeDelete">
+  <VDialog v-model="valueModel" max-width="650px" @click:outside="closeDelete">
     <AskAnnaCard class="AskAnna-card AskAnna-card--in-dialog" :class="{ 'pt-2': $vuetify.breakpoint.xsOnly }">
       <AskAnnaToolbar
         flat
@@ -51,7 +51,7 @@
         </AskAnnaButton>
       </AskAnnaCardActions>
     </AskAnnaCard>
-  </v-dialog>
+  </VDialog>
 </template>
 <script setup lang="ts">
 const props = defineProps({

@@ -1,5 +1,5 @@
 <template>
-  <v-snackbar v-model="snackWithButtons" color="secondary" bottom right timeout="-1">
+  <VSnackbar v-model="snackWithButtons" color="secondary" bottom right timeout="-1">
     A new version of AskAnna is available!
     <template v-slot:action="{ attrs }">
       <AskAnnaButton class="mr-3" small v-bind="attrs" @click="refreshApp">Refresh</AskAnnaButton>
@@ -8,7 +8,7 @@
         <AskAnnaIcon>far fa-times-circle</AskAnnaIcon>
       </AskAnnaButton>
     </template>
-  </v-snackbar>
+  </VSnackbar>
 </template>
 
 <script setup lang="ts">

@@ -1,5 +1,5 @@
 <template>
-  <v-form
+  <VForm
     lazy-validation
     ref="loginFormRef"
     v-model="isFormValid"
@@ -76,15 +76,12 @@
         <AskAnnaIcon class="ask-anna-btn-loader" dark> mdi-loading </AskAnnaIcon>
       </template>
     </AskAnnaButton>
-  </v-form>
+  </VForm>
 </template>
 
 <script setup lang="ts">
 const authStore = useAuthStore()
 const { RULES } = useValidationRules()
-
-const updateAuthData = inject('updateAuthData')
-const updateSignUpStep = inject('updateSignUpStep')
 
 const loading = ref(false)
 const isFormValid = ref(false)
@@ -102,7 +99,7 @@ const formData = reactive({
 
 const loadingTexts = ['Creating accout', 'Creating workspace']
 const loadingText = computed(() => loadingTexts[authStore.signUpStep])
-let error = reactive({ name: '', email: '', username: '', password: '', workspace: '', terms_of_use: '' })
+const error = reactive({ name: '', email: '', username: '', password: '', workspace: '', terms_of_use: '' })
 
 const handleOnBlurName = $e => {
   if (formData.workspace === '' || formData.workspace === formData.name) {
@@ -112,7 +109,8 @@ const handleOnBlurName = $e => {
 }
 
 const handleLogin = async () => {
-  updateSignUpStep(0)
+  authStore.signUpStep = 0
+
   if (!loginFormRef.value.validate()) {
     return
   }
@@ -130,25 +128,23 @@ const handleLogin = async () => {
   })
 
   if (account && account.response && account.response.status === 400) {
-    error = { ...error, ...account.response.data }
+    Object.assign(error, account.response.data)
 
     loading.value = false
 
     return
   }
-  updateAuthData({ username, password: formData.password })
-  updateSignUpStep(1)
+
+  authStore.authData = { username, password: formData.password }
+  authStore.signUpStep = 1
 }
 
-const resetError = () => {
-  error = { name: '', email: '', username: '', password: '', workspace: '', terms_of_use: '' }
-}
+const resetError = () =>
+  Object.assign(error, { name: '', email: '', username: '', password: '', workspace: '', terms_of_use: '' })
 
 watch(formData, _ => {
-  // check if exist error from backend on typing fields, try resest validation
   if (Object.values(error).some(item => item.length)) {
     resetError()
-    loginFormRef.value.resetValidation()
   }
 })
 </script>

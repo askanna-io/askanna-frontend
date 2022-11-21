@@ -1,11 +1,11 @@
 <template>
   <div v-if="isUploadStart">
-    <v-file-input
+    <VFileInput
       class="pr-3"
-      :value="resumableFile.file"
-      color="deep-purple accent-4"
-      label="Replace code by:"
       outlined
+      :value="resumableFile.file"
+      label="Replace code by:"
+      color="deep-purple accent-4"
       @click:clear="handleDeleteFile"
       :show-size="1000"
     >
@@ -14,7 +14,7 @@
           {{ text }}
         </AskAnnaChip>
       </template>
-    </v-file-input>
+    </VFileInput>
   </div>
 </template>
 

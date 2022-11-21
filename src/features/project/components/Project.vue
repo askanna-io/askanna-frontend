@@ -1,6 +1,6 @@
 <template>
   <AskAnnaCard flat>
-    <v-form ref="newProjectForm" @submit.prevent="handleCreate">
+    <VForm ref="newProjectForm" @submit.prevent="handleCreate">
       <AskAnnaContainer fluid class="pt-0">
         <AskAnnaRow>
           <AskAnnaCol cols="12" sm="5" class="pt-0">
@@ -34,7 +34,7 @@
           <AskAnnaCol cols="12">
             <div class="transition-swing text-h5 pt-2 pb-3 font-weight-bold">Project settings</div>
 
-            <v-radio-group
+            <VRadioGroup
               hide-details
               :value="projectData.visibility"
               @change="handleOnInput($event, 'visibility')"
@@ -43,13 +43,13 @@
               <template v-slot:label>
                 <div class="text-subtitle-1 pt-0 font-weight-bold black--text">Visibility</div>
               </template>
-              <v-radio value="PRIVATE" :ripple="false">
+              <VRadio value="PRIVATE" :ripple="false">
                 <template v-slot:label>
                   <div class="primary--black-text">Private</div>
                 </template>
-              </v-radio>
+              </VRadio>
               <div class="pb-2 pl-8">Only workspace and project members can see this project</div>
-              <v-radio value="PUBLIC" :ripple="false" :disabled="workspaceProjectVisibility === 'PRIVATE'">
+              <VRadio value="PUBLIC" :ripple="false" :disabled="workspaceProjectVisibility === 'PRIVATE'">
                 <template v-slot:label>
                   <div
                     class="primary--black-text"
@@ -61,7 +61,7 @@
                     Public
                   </div>
                 </template>
-              </v-radio>
+              </VRadio>
               <div v-if="workspaceProjectVisibility === 'PUBLIC'" class="pl-8">
                 Anyone on the internet can view this project
               </div>
@@ -72,16 +72,16 @@
                 >
                   You cannot select this option, because your workspace does not allow public sharing of projects. If
                   you are a workspace admin, you can change the project visibility in the
-                  <router-link :to="{ name: 'workspace-edit' }" class="ask-anna-link">workspace setting</router-link>.
+                  <RouterLink :to="{ name: 'workspace-edit' }" class="ask-anna-link">workspace setting</RouterLink>.
                 </div>
                 <div v-else class="pl-8 error--text">
                   Your workspace does not allow public sharing of projects. Your workspace setting will overrule the
                   project visibility set to public. If you are a workspace admin, you can change the project visibility
                   in the
-                  <router-link :to="{ name: 'workspace-edit' }" class="ask-anna-link">workspace setting</router-link>.
+                  <RouterLink :to="{ name: 'workspace-edit' }" class="ask-anna-link">workspace setting</RouterLink>.
                 </div>
               </template>
-            </v-radio-group>
+            </VRadioGroup>
           </AskAnnaCol>
         </AskAnnaRow>
         <AskAnnaRow>
@@ -103,7 +103,7 @@
           </AskAnnaCol>
         </AskAnnaRow>
       </AskAnnaContainer>
-    </v-form>
+    </VForm>
   </AskAnnaCard>
 </template>
 

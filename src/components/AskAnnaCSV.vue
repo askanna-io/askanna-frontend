@@ -1,5 +1,5 @@
 <template>
-  <v-data-table
+  <VDataTable
     fixed-header
     :items="data"
     :search="search"
@@ -62,7 +62,7 @@
         </template>
       </tbody>
     </template>
-  </v-data-table>
+  </VDataTable>
 </template>
 <script setup lang="ts">
 const props = defineProps({

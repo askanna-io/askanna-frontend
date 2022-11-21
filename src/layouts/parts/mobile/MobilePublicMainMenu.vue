@@ -5,31 +5,31 @@
     :class="{ 'sticky-fox': isSticky }"
     sticky-offset="{top: 58, bottom: 10}"
   >
-    <v-list dense flat>
-      <v-list-item href="https://askanna.io" link @click="handleClickOnMenuItem" key="find out" target="_blank">
-        <v-list-item-title>Find out more about AskAnna</v-list-item-title>
-      </v-list-item>
+    <VList dense flat>
+      <VListItem href="https://askanna.io" link @click="handleClickOnMenuItem" key="find out" target="_blank">
+        <VListItemTitle>Find out more about AskAnna</VListItemTitle>
+      </VListItem>
 
-      <v-list-item to="/workspaces" @click="handleClickOnMenuItem" key="workspaces">
-        <v-list-item-title>Workspaces</v-list-item-title>
-      </v-list-item>
+      <VListItem to="/workspaces" @click="handleClickOnMenuItem" key="workspaces">
+        <VListItemTitle>Workspaces</VListItemTitle>
+      </VListItem>
 
-      <v-list-item to="/projects" @click="handleClickOnMenuItem" key="projects">
-        <v-list-item-title>Projects</v-list-item-title>
-      </v-list-item>
+      <VListItem to="/projects" @click="handleClickOnMenuItem" key="projects">
+        <VListItemTitle>Projects</VListItemTitle>
+      </VListItem>
 
-      <v-list-item to="/signin" @click="handleClickOnMenuItem" key="signin">
-        <v-list-item-title>Sign in</v-list-item-title>
-      </v-list-item>
+      <VListItem to="/signin" @click="handleClickOnMenuItem" key="signin">
+        <VListItemTitle>Sign in</VListItemTitle>
+      </VListItem>
 
-      <v-list-item to="/signup" @click="handleClickOnMenuItem" key="signup">
-        <v-list-item-title>Sign up</v-list-item-title>
-      </v-list-item>
+      <VListItem to="/signup" @click="handleClickOnMenuItem" key="signup">
+        <VListItemTitle>Sign up</VListItemTitle>
+      </VListItem>
 
-      <v-list-item @click="handleClickOnMenuItem" href="https://docs.askanna.io" target="_blank">
-        <v-list-item-title>Documentation</v-list-item-title>
-      </v-list-item>
-    </v-list>
+      <VListItem @click="handleClickOnMenuItem" href="https://docs.askanna.io" target="_blank">
+        <VListItemTitle>Documentation</VListItemTitle>
+      </VListItem>
+    </VList>
   </AskAnnaCard>
 </template>
 

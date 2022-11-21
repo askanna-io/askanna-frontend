@@ -40,7 +40,7 @@ export const runRoutes = [
       },
       {
         path: 'input/:view?',
-        component: () => import('./views/run-input.vue'),
+        component: () => import('./views/input.vue'),
         name: 'workspace-project-jobs-job-run-input',
         meta: {
           title: 'Run: runId'
@@ -94,27 +94,20 @@ export const runRoutes = [
       },
       {
         path: 'artifact',
-        component: () => import('./views/index-artifact.vue'),
+        component: () => import('./views/artifact.vue'),
+        name: 'workspace-project-jobs-job-run-artifact',
+        meta: {
+          title: 'Run: runId'
+        },
         children: [
           {
-            path: '',
+            path: ':folderName(.*)',
             component: () => import('./views/artifact.vue'),
-            name: 'workspace-project-jobs-job-run-artifact',
+            name: 'workspace-project-jobs-job-run-artifact-folder',
             meta: {
-              title: 'Run: runId'
-            },
-
-            children: [
-              {
-                path: ':folderName(.*)',
-                component: () => import('./views/artifact.vue'),
-                name: 'workspace-project-jobs-job-run-artifact-folder',
-                meta: {
-                  title: 'Run: runId',
-                  breadcrumb: ':folderName'
-                }
-              }
-            ]
+              title: 'Run: runId',
+              breadcrumb: ':folderName'
+            }
           }
         ]
       },
@@ -146,26 +139,20 @@ export const runRoutes = [
       },
       {
         path: 'code',
-        component: () => import('./views/index-code.vue'),
+        component: () => import('./views/package.vue'),
+        name: 'workspace-project-jobs-job-run-code',
+        meta: {
+          title: 'Run: runId'
+        },
         children: [
           {
-            path: '',
+            path: ':folderName(.*)',
             component: () => import('./views/package.vue'),
-            name: 'workspace-project-jobs-job-run-code',
+            name: 'workspace-project-jobs-job-run-code-folder',
             meta: {
-              title: 'Run: runId'
-            },
-            children: [
-              {
-                path: ':folderName(.*)',
-                component: () => import('./views/package.vue'),
-                name: 'workspace-project-jobs-job-run-code-folder',
-                meta: {
-                  title: 'Run: runId',
-                  breadcrumb: ':folderName'
-                }
-              }
-            ]
+              title: 'Run: runId',
+              breadcrumb: ':folderName'
+            }
           }
         ]
       },

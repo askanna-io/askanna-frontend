@@ -1,6 +1,6 @@
 <template>
   <div class="text-center">
-    <v-menu v-model="menu" rounded :close-on-content-click="false" left>
+    <VMenu v-model="menu" rounded :close-on-content-click="false" left>
       <template v-slot:activator="{ on, attrs }">
         <AskAnnaButton icon v-bind="attrs" @click.stop.prevent="on.click" small>
           <AskAnnaIcon>mdi-dots-vertical</AskAnnaIcon>
@@ -48,7 +48,7 @@
           </AskAnnaRow>
         </AskAnnaCardActions>
       </AskAnnaCard>
-    </v-menu>
+    </VMenu>
     <ConfirmDeleteJobPopup
       :jobName="job.name"
       :value="deleteJobConfirmPopup"
@@ -73,7 +73,7 @@ const props = defineProps({
 })
 
 const jobStore = useJobStore()
-const { route, router } = useRouterAskAnna()
+const { route, routerPush } = useRouterAskAnna()
 
 const menu = ref(false)
 const deleteJobConfirmPopup = ref(false)
@@ -83,7 +83,7 @@ const editJobRouteName = 'workspace-project-job-edit'
 const disabledButtonEditJob = computed(() => route.name === editJobRouteName)
 
 const handlerOpenEditJobPage = async () => {
-  router.push({ name: editJobRouteName })
+  routerPush({ name: editJobRouteName })
   handleClose()
 }
 
@@ -99,7 +99,7 @@ const handleDeleteConfirmJob = async () => {
   deleteJobConfirmPopup.value = false
   menu.value = false
   if (isDeleted) {
-    router.push({ name: 'workspace-project-jobs' })
+    routerPush({ name: 'workspace-project-jobs' })
   }
 }
 </script>

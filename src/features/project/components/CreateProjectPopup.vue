@@ -1,6 +1,6 @@
 <template>
   <div class="text-center" v-if="workspaceProjectCreate">
-    <v-menu
+    <VMenu
       eager
       v-model="menu"
       @input="handleOpenMenu"
@@ -17,7 +17,7 @@
         </AskAnnaButton>
       </template>
       <AskAnnaCard>
-        <v-form ref="newProjectFastForm" @submit.prevent="handlerCreateProject">
+        <VForm ref="newProjectFastForm" @submit.prevent="handlerCreateProject">
           <AskAnnaCol cols="12" class="pb-0">
             <AskAnnaTextField
               v-model="projectStore.project.name"
@@ -48,9 +48,9 @@
             </AskAnnaButton>
             <AskAnnaButton small outlined text class="mr-1" @click="handleCancel">Cancel</AskAnnaButton>
           </AskAnnaCardActions>
-        </v-form>
+        </VForm>
       </AskAnnaCard>
-    </v-menu>
+    </VMenu>
   </div>
 </template>
 
@@ -59,7 +59,7 @@ const permission = usePermission()
 const projectStore = useProjectStore()
 const { RULES } = useValidationRules()
 const projectsStore = useProjectsStore()
-const { route, router } = useRouterAskAnna()
+const { route, routerPush } = useRouterAskAnna()
 
 const menu = ref()
 const isFormValid = ref(true)
@@ -71,7 +71,7 @@ const workspaceProjectCreate = computed(() => permission.getFor(permission.label
 projectStore.resetProjectData()
 
 const handleMoreOptions = () =>
-  router.push({
+  routerPush({
     name: 'workspace-new-project',
     params: { workspaceId: route.params.workspaceId }
   })

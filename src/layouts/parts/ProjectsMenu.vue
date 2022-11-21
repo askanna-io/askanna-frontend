@@ -1,25 +1,25 @@
 <template>
-  <v-menu
+  <VMenu
     v-model="projectMenu"
-    class="askAnna-main-menu--wrapper"
-    :close-on-content-click="false"
     offset-y
     nudge-bottom="10"
+    :close-on-content-click="false"
+    class="askAnna-main-menu--wrapper"
   >
     <template v-slot:activator="{ on }">
       <AskAnnaButton small dark class="white--text" text v-on="on">Projects</AskAnnaButton>
     </template>
     <AskAnnaRow class="pr-2 white askAnna-main-menu">
       <AskAnnaCol cols="5">
-        <v-list dense>
-          <v-list-item-group v-model="listMenu" color="primary" mandatory @change="handleChangeMenu">
-            <v-list-item v-for="(item, i) in projectMenuItems" :key="i" aria-readonly>
-              <v-list-item-content>
-                <v-list-item-title v-text="item.text"></v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list-item-group>
-        </v-list>
+        <VList dense>
+          <VListItemGroup v-model="listMenu" color="primary" mandatory @change="handleChangeMenu">
+            <VListItem v-for="(item, i) in projectMenuItems" :key="i" aria-readonly>
+              <VListItemContent>
+                <VListItemTitle v-text="item.text"></VListItemTitle>
+              </VListItemContent>
+            </VListItem>
+          </VListItemGroup>
+        </VList>
       </AskAnnaCol>
       <AskAnnaCol cols="7" class="pl-0">
         <AskAnnaAlert class="mb-0 pr-0" dense border="left" colored-border color="primary">
@@ -54,7 +54,7 @@
                   @click="handleClick(item)"
                 >
                   <td class="px-0">
-                    <router-link
+                    <RouterLink
                       class="table-link table-link--unformated"
                       :to="{
                         name: 'workspace-project',
@@ -65,7 +65,7 @@
                         }
                       }"
                     >
-                      <AskAnnaIcon class="pr-2">mdi-semantic-web</AskAnnaIcon>{{ item.name }}</router-link
+                      <AskAnnaIcon class="pr-2">mdi-semantic-web</AskAnnaIcon>{{ item.name }}</RouterLink
                     >
                   </td>
                 </tr>
@@ -82,12 +82,12 @@
         </AskAnnaAlert>
       </AskAnnaCol>
     </AskAnnaRow>
-  </v-menu>
+  </VMenu>
 </template>
 
 <script setup lang="ts">
-const router = useRouterAskAnna()
 const projectsStore = useProjectsStore()
+const { routerPush } = useRouterAskAnna()
 
 const explorBtnOpts = [
   { id: 0, to: { name: 'projects', query: { is_member: true } }, title: 'All my projects' },
@@ -128,7 +128,7 @@ const handleCloseMenu = () => {
 
 const handleClick = item => {
   handleCloseMenu()
-  router.push({
+  routerPush({
     name: 'workspace-project',
     params: {
       projectId: item.suuid,

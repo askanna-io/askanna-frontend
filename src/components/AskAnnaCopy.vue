@@ -26,9 +26,9 @@
 
       <span class="hover-content" v-html="text" />
     </AskAnnaTooltip>
-    <v-expand-transition>
+    <VExpandTransition>
       <AskAnnaCard flat v-show="expand" class="transparent"><div class="expanded" v-html="restOftext" /> </AskAnnaCard>
-    </v-expand-transition>
+    </VExpandTransition>
     <span v-if="masked">
       {{ text }}
     </span>

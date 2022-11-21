@@ -22,7 +22,7 @@
       </AskAnnaToolbarTitle>
       <AskAnnaSpacer />
 
-      <project-menu-popup v-if="projectInfoEdit" :project="project" :routeBackTo="routeBackTo" />
+      <ProjectMenuPopup v-if="projectInfoEdit" :project="project" :routeBackTo="routeBackTo" />
     </AskAnnaToolbar>
 
     <AskAnnaCardText class="font-weight-bold project--description">

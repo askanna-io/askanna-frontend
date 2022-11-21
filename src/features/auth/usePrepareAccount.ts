@@ -1,13 +1,13 @@
 export default function () {
   const authStore = useAuthStore()
-  const { router } = useRouterAskAnna()
+  const { routerPush } = useRouterAskAnna()
   const workspacesStore = useWorkspacesStore()
 
   const workspaceId = ref('')
   const IsAccountReady = ref(false)
 
   const loginUser = async ({ username = '', password = '' }) => {
-    return await authStore.login({ username, password, redirect: false })
+    return await authStore.login({ username, password })
   }
 
   const getWorkspace = async () => {
@@ -32,7 +32,7 @@ export default function () {
     }
 
     if (!authStore.authToken) {
-      router.push({ name: 'signin' })
+      routerPush({ name: 'signin' })
 
       return
     }

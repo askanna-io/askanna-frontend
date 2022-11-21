@@ -7,11 +7,7 @@
     </AskAnnaRow>
     <AskAnnaRow align="center" justify="center">
       <AskAnnaCol class="pt-0">
-        <AskAnnaLoadingProgress
-          :type="'table-row'"
-          :loading="loading"
-          loadingTitle="Anna is checking your invitation..."
-        >
+        <AskAnnaLoadingProgress :loading="loading" loadingTitle="Anna is checking your invitation...">
           <Join v-if="isInvitationValid" />
           <JoinInvalidInvitation v-else />
         </AskAnnaLoadingProgress>
@@ -22,7 +18,7 @@
 
 <script setup lang="ts">
 const authStore = useAuthStore()
-const { route } = useRouterAskAnna()
+const { route, routerPush } = useRouterAskAnna()
 const peopleStore = usePeopleStore()
 const { token, peopleId, workspaceId } = route.params
 
@@ -34,7 +30,8 @@ const isInvitationValid = computed(
 const fetchData = async () => {
   loading.value = true
 
-  await authStore.logout(false)
+  await authStore.logout()
+  routerPush({ path: '/signin' })
   await peopleStore.getInvitetionInfo({
     token,
     peopleId,

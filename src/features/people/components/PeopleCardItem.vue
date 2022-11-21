@@ -1,22 +1,22 @@
 <template>
   <AskAnnaCard class="mx-auto h-100 cursor--pointer" :elevation="hover ? 16 : 2">
-    <v-app-bar height="10" absolute flat dense white--text color="white">
+    <VAppBar height="10" absolute flat dense white--text color="white">
       <AskAnnaSpacer />
       <AskAnnaIcon v-if="statusColor" class="mt-5" :color="statusColor">mdi-email-send-outline</AskAnnaIcon>
-    </v-app-bar>
+    </VAppBar>
     <AskAnnaRow>
       <AskAnnaCol cols="2" class="ml-2">
         <AskAnnaAvatar class="ml-1" size="60" tile>
-          <v-img class="img--rounded" :src="people.avatar.small" />
+          <VImg class="img--rounded" :src="people.avatar.small" />
         </AskAnnaAvatar>
       </AskAnnaCol>
       <AskAnnaCol class="ml-3" cols="9" align-self="start">
-        <v-list-item color="rgba(0, 0, 0, .4)">
-          <v-list-item-content>
-            <v-list-item-title class="people-title">{{ people.name || people.email }}</v-list-item-title>
+        <VListItem color="rgba(0, 0, 0, .4)">
+          <VListItemContent>
+            <VListItemTitle class="people-title">{{ people.name || people.email }}</VListItemTitle>
             <v-list-item-subtitle>{{ people.role.name }}</v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
+          </VListItemContent>
+        </VListItem>
       </AskAnnaCol>
     </AskAnnaRow>
   </AskAnnaCard>

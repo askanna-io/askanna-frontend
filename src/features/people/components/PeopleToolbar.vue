@@ -13,7 +13,7 @@
       <AskAnnaSpacer />
       <AskAnnaSpacer />
       <AskAnnaSpacer />
-      <v-menu
+      <VMenu
         v-model="sortMenu"
         class="workspace-menu"
         data-test="workspace-menu"
@@ -29,15 +29,15 @@
             ><AskAnnaIcon>mdi-sort</AskAnnaIcon>Sort</AskAnnaButton
           >
         </template>
-        <v-list>
-          <v-list-item-group v-model="activeSort" color="primary">
-            <v-list-item v-for="(item, index) in sortItems" :key="index" @click="handleSort(item)">
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
-            </v-list-item>
-          </v-list-item-group>
-        </v-list>
-      </v-menu>
-      <v-menu
+        <VList>
+          <VListItemGroup v-model="activeSort" color="primary">
+            <VListItem v-for="(item, index) in sortItems" :key="index" @click="handleSort(item)">
+              <VListItemTitle>{{ item.title }}</VListItemTitle>
+            </VListItem>
+          </VListItemGroup>
+        </VList>
+      </VMenu>
+      <VMenu
         v-model="filterMenu"
         transition="slide-y-transition"
         :close-on-content-click="false"
@@ -95,7 +95,7 @@
             </AskAnnaCard>
           </AskAnnaCol>
         </AskAnnaRow>
-      </v-menu>
+      </VMenu>
       <template v-if="workspacePeopleInviteCreate">
         <AskAnnaSpacer />
         <PeopleInvitePopup :workspaceName="title" />

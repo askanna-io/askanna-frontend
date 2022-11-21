@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { Run, Package } from './types'
 import { set, debounce } from 'lodash'
 import apiService from '@/services/apiService'
 import { apiStringify } from '@/services/api-settings'
@@ -29,7 +30,6 @@ export const useRunStore = defineStore('run', {
       },
       runLogFullVersion: [],
       runlogScrollLoading: false,
-      variables_meta: { label_names: [] },
       artifactData: {} as Package
     }
   },
@@ -50,10 +50,8 @@ export const useRunStore = defineStore('run', {
     async getRun(suuid: string) {
       this.runLoading = true
 
-      let run = { name: '' }
-
       try {
-        run = await apiService({
+        this.run = await apiService({
           suuid,
           serviceName,
           action: api.getRun
@@ -63,17 +61,15 @@ export const useRunStore = defineStore('run', {
 
         logger.error('Error on run job in getRun action.\nError: ', e)
 
-        this.$routerAskAnna.push({ name: 'workspace-project-job-run-does-not-exist' })
+        this.$routerAskAnna.routerPush({ name: 'workspace-project-job-run-does-not-exist' })
 
         return
       }
 
-      this.run = run
-
       this.runLoading = false
 
       const generalStore = useGeneralStore()
-      generalStore.setBreadcrumbParams({ runId: run.name })
+      generalStore.setBreadcrumbParams({ runId: this.run.name || '' })
     },
 
     async getRunStatus(runIdShortUuid: string, isNewRun: boolean = false) {

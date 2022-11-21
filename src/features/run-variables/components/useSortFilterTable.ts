@@ -8,7 +8,7 @@ interface MetricNameParams {
 
 export default function (context) {
   const lastScrollTop = ref(0)
-  const { route, router } = useRouterAskAnna()
+  const { route, replace } = useRouterAskAnna()
 
   const state = reactive({
     ordering: '',
@@ -25,7 +25,7 @@ export default function (context) {
     lastScrollTop.value = 0
 
     //change query in params
-    router.replace({
+    replace({
       name: 'workspace-project-jobs-job-run-variables',
       query: { ...route.query, [path]: value }
     })

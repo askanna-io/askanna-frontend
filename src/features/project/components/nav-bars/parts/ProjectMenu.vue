@@ -1,7 +1,7 @@
 <template>
-  <v-tabs class="pb-3" :class="{ 'pl-4': $vuetify.breakpoint.xsOnly }">
+  <VTabs class="pb-3" :class="{ 'pl-4': $vuetify.breakpoint.xsOnly }">
     <template v-for="tab of tabs">
-      <v-tab
+      <VTab
         v-if="tab.show"
         ripple
         :key="tab.id"
@@ -9,9 +9,9 @@
         :to="{ name: tab.to, params: { title: `${tab.name} - ${projectName}`, ...routeParams, ...tab.params } }"
       >
         {{ tab.name }}
-      </v-tab>
+      </VTab>
     </template>
-  </v-tabs>
+  </VTabs>
 </template>
 <script setup lang="ts">
 import { invoke } from 'lodash'

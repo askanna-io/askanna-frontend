@@ -45,7 +45,7 @@
           </AskAnnaSelect>
         </AskAnnaCard>
 
-        <v-btn-toggle v-model="currentViewIndex" mandatory class="mr-1">
+        <VBtnToggle v-model="currentViewIndex" mandatory class="mr-1">
           <AskAnnaTooltip v-for="(view, index) in views" top :key="index">
             <template v-slot:activator="{ on }">
               <AskAnnaButton
@@ -61,16 +61,16 @@
             </template>
             <span>{{ view.name }}</span>
           </AskAnnaTooltip>
-        </v-btn-toggle>
+        </VBtnToggle>
       </AskAnnaFlex>
     </AskAnnaToolbar>
-    <router-view />
+    <RouterView />
   </div>
 </template>
 
 <script setup lang="ts">
 const copy = useCopy()
-const { route, router } = useRouterAskAnna()
+const { route, routerPush } = useRouterAskAnna()
 const forceFileDownload = useForceFileDownload()
 const runVariablesStore = useRunVariablesStore()
 
@@ -120,7 +120,7 @@ const handleChangeView = (index: number) => {
   currentViewIndex.value = index
   if (view.value === currentView.value.value) return
   currentView.value = view
-  router.push({ name: `workspace-project-jobs-job-run-variables-${view.value}` })
+  routerPush({ name: `workspace-project-jobs-job-run-variables-${view.value}` })
 }
 
 onBeforeMount(() => {

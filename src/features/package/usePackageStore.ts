@@ -58,7 +58,7 @@ export const usePackageStore = defineStore('package', {
 
         const name = failedRoute || 'workspace-project-code-does-not-exist'
 
-        this.$routerAskAnna.push({ name })
+        this.$routerAskAnna.routerPush({ name })
 
         if (loading) this.loading = false
 

@@ -1,5 +1,5 @@
 <template>
-  <v-data-iterator :items="items" hide-default-footer :no-data-text="''" disable-pagination>
+  <VDataIterator :items="items" hide-default-footer :no-data-text="''" disable-pagination>
     <template v-slot:default="props">
       <AskAnnaRow v-if="!settings.projectView" :class="{ 'px-2': $vuetify.breakpoint.xsOnly }">
         <AskAnnaCol
@@ -11,14 +11,14 @@
           lg="4"
           :class="{ 'pb-0': $vuetify.breakpoint.xsOnly }"
         >
-          <v-hover v-slot:default="{ hover }" open-delay="200">
+          <VHover v-slot:default="{ hover }" open-delay="200">
             <workspace-project-card-item
               :project="item"
               :workspaceName="workspaceName"
               :hover="hover"
               :description="sanitizeHTML(item.description)"
             />
-          </v-hover>
+          </VHover>
         </AskAnnaCol>
       </AskAnnaRow>
       <div v-if="settings.projectView">
@@ -48,18 +48,18 @@
         <template v-else>
           There are no projects in this workspace. So, let's create one. You can easily do this with the option "+
           CREATE PROJECT" in the grey bar.<br />
-          <router-link
+          <RouterLink
             :to="{
               name: 'workspace-new-project',
               params: { workspaceId: $route.params.workspaceId }
             }"
           >
-            Or click here to create a new project.</router-link
+            Or click here to create a new project.</RouterLink
           >
         </template>
       </AskAnnaAlert></template
     >
-  </v-data-iterator>
+  </VDataIterator>
 </template>
 <script setup lang="ts">
 defineProps({

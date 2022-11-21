@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-form
+    <VForm
       v-if="!isPasswordReset"
       ref="forgotPasswordSentFormRef"
       v-model="isFormValid"
@@ -10,6 +10,7 @@
     >
       <AskAnnaTextField
         dense
+        counter
         outlined
         v-model="password"
         :error-messages="error.new_password1 || error.new_password2"
@@ -21,14 +22,13 @@
         :type="isShowPassword ? 'text' : 'password'"
         name="input-10-1"
         label="New password"
-        counter
         @click:append="isShowPassword = !isShowPassword"
       />
 
       <AskAnnaButton :disabled="!isFormValid" color="primary" @click.stop="handleResetPassword">
         Reset password
       </AskAnnaButton>
-    </v-form>
+    </VForm>
     <template v-else> Your password has been reset successfully! We will redirect you to the sign-in page. </template>
   </div>
 </template>
@@ -42,7 +42,7 @@ type VForm = Vue & {
 
 const authStore = useAuthStore()
 const { RULES } = useValidationRules()
-const { route, router } = useRouterAskAnna()
+const { route, routerPush } = useRouterAskAnna()
 
 const { token, uid } = route.query
 
@@ -76,19 +76,15 @@ const handleResetPassword = async () => {
     return
   }
   isPasswordReset.value = true
-  setTimeout(() => router.push({ name: 'signin' }), 3000)
+  setTimeout(() => routerPush({ name: 'signin' }), 3000)
 }
 
-const resetError = () => {
-  error = { new_password1: '', new_password2: '' }
-}
-const resetValidation = () => forgotPasswordSentForm.value.resetValidation()
+const resetError = () => Object.assign(error, { new_password1: '', new_password2: '' })
 
 watch(password, async () => {
   // check if exist error from backend on typing fields, try resest validation
   if (Object.values(error).some(item => item.length)) {
     resetError()
-    resetValidation()
   }
 })
 </script>

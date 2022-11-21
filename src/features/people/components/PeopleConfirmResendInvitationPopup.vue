@@ -1,7 +1,7 @@
 <template>
-  <v-dialog v-model="valueModel" max-width="650px" @click:outside="closeDelete">
+  <VDialog v-model="valueModel" max-width="650px" @click:outside="closeDelete">
     <AskAnnaCard class="AskAnna-card AskAnna-card--in-dialog">
-      <v-app-bar flat dense white--text color="white">
+      <VAppBar flat dense white--text color="white">
         <div v-if="$vuetify.breakpoint.xsOnly" class="text-body-1 font-weight-bold">
           Do you want to resend the invitation?
         </div>
@@ -13,7 +13,7 @@
         <AskAnnaButton icon @click="closeDelete">
           <AskAnnaIcon>mdi-close</AskAnnaIcon>
         </AskAnnaButton>
-      </v-app-bar>
+      </VAppBar>
       <AskAnnaCardText>
         You are about to resend the invitation for <b>{{ peopleName }}</b
         >. Here's what will happen when you continue with this action:
@@ -34,7 +34,7 @@
         >
       </AskAnnaCardActions>
     </AskAnnaCard>
-  </v-dialog>
+  </VDialog>
 </template>
 <script setup lang="ts">
 const props = defineProps({

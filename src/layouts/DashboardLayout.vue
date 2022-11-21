@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar app clipped-left dark color="primary" :dense="!$vuetify.breakpoint.xsOnly">
+    <VAppBar app clipped-left dark color="primary" :dense="!$vuetify.breakpoint.xsOnly">
       <template v-if="!$vuetify.breakpoint.xsOnly">
         <v-app-bar-nav-icon v-if="showAppBarIcon" @click.stop="handleChangeSticked" />
       </template>
@@ -34,7 +34,7 @@
       <template v-if="$vuetify.breakpoint.xsOnly">
         <v-app-bar-nav-icon @click.stop="handleOpenMenu" />
       </template>
-    </v-app-bar>
+    </VAppBar>
 
     <v-main class="scrollbar">
       <AskAnnaContainer
@@ -42,11 +42,11 @@
         :class="{ 'px-0 mx-0 pt-1': $vuetify.breakpoint.xsOnly, 'a-content--full': mobileStore.isFullScreen }"
       >
         <MobileMainMenu v-if="mobileStore.isMenuOpen" @onClose="handleOnCloseMobileMenu" />
-        <router-view />
+        <RouterView />
       </AskAnnaContainer>
       <the-snack-bar />
       <TheUploadStatus />
-      <UpdateApp />
+      <TheUpdateApp />
     </v-main>
   </v-app>
 </template>

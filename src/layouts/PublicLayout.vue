@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar app clipped-left dark color="primary" :dense="!$vuetify.breakpoint.xsOnly">
+    <VAppBar app clipped-left dark color="primary" :dense="!$vuetify.breakpoint.xsOnly">
       <template v-if="!$vuetify.breakpoint.xsOnly">
         <v-app-bar-nav-icon v-if="showAppBarIcon" @click.stop="handleChangeSticked" />
       </template>
@@ -36,9 +36,9 @@
               </AskAnnaFlex>
             </div>
             <div>
-              <router-link class="ask-anna-link white--text" :to="{ name: 'signin' }"> Sign in </router-link>
+              <RouterLink class="ask-anna-link white--text" :to="{ name: 'signin' }"> Sign in </RouterLink>
               /
-              <router-link class="ask-anna-link white--text" :to="{ name: 'signup' }"> Sign up </router-link>
+              <RouterLink class="ask-anna-link white--text" :to="{ name: 'signup' }"> Sign up </RouterLink>
             </div>
           </template>
         </div>
@@ -46,7 +46,7 @@
       <template v-if="$vuetify.breakpoint.xsOnly">
         <v-app-bar-nav-icon @click.stop="handleOpenMenu" />
       </template>
-    </v-app-bar>
+    </VAppBar>
 
     <v-main class="scrollbar">
       <AskAnnaContainer
@@ -55,10 +55,10 @@
       >
         <MobilePublicMainMenu v-if="mobileStore.isMenuOpen" @onClose="handleOnCloseMobileMenu" />
 
-        <router-view />
+        <RouterView />
       </AskAnnaContainer>
       <the-snack-bar />
-      <UpdateApp />
+      <TheUpdateApp />
     </v-main>
   </v-app>
 </template>

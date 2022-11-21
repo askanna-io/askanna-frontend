@@ -1,5 +1,5 @@
 <template>
-  <v-menu
+  <VMenu
     v-if="menuItems.length"
     bottom
     offset-y
@@ -14,18 +14,18 @@
       </AskAnnaButton>
     </template>
 
-    <v-list>
+    <VList>
       <template v-for="(item, index) in menuItems">
-        <v-list-item v-if="item.isVisible" @click="handleMenuClick(item)" :key="index">
-          <v-list-item-title>{{ item.title }}</v-list-item-title>
-        </v-list-item>
+        <VListItem v-if="item.isVisible" @click="handleMenuClick(item)" :key="index">
+          <VListItemTitle>{{ item.title }}</VListItemTitle>
+        </VListItem>
       </template>
-    </v-list>
-  </v-menu>
+    </VList>
+  </VMenu>
 </template>
 <script setup lang="ts">
 const context = getCurrentInstance()
-const { router } = useRouterAskAnna()
+const { routerPush } = useRouterAskAnna()
 
 const menu = ref(false)
 
@@ -42,7 +42,7 @@ const menuItems = computed(() =>
 const handleMenuClick = item => {
   menu.value = false
 
-  router.push({
+  routerPush({
     name: item.to
   })
 }

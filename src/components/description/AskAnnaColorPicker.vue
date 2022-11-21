@@ -1,5 +1,5 @@
 <template>
-  <v-menu top v-model="menu" :nudge-top="25" :close-on-content-click="false">
+  <VMenu top v-model="menu" :nudge-top="25" :close-on-content-click="false">
     <template v-slot:activator="{ on, attrs }">
       <AskAnnaTooltip top>
         <template v-slot:activator="{ on: onHover }">
@@ -44,7 +44,7 @@
         </AskAnnaCol>
       </AskAnnaRow>
     </AskAnnaCard>
-  </v-menu>
+  </VMenu>
 </template>
 
 <script setup lang="ts">

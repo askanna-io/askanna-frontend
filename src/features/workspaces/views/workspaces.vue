@@ -1,7 +1,7 @@
 <template>
   <div>
-    <AskAnnaLoadingProgress :type="'table-row'" :loading="loading">
-      <v-data-iterator :items="workspaces" hide-default-footer :no-data-text="''" disable-pagination>
+    <AskAnnaLoadingProgress :loading="loading">
+      <VDataIterator :items="workspaces" hide-default-footer :no-data-text="''" disable-pagination>
         <template v-slot:header>
           <WorkspacesToolbar />
         </template>
@@ -17,7 +17,7 @@
               lg="4"
               :class="{ 'pb-0': $vuetify.breakpoint.xsOnly }"
             >
-              <v-hover v-slot:default="{ hover }" open-delay="200">
+              <VHover v-slot:default="{ hover }" open-delay="200">
                 <WorkspacesCardItem
                   :workspace="item"
                   :hover="hover"
@@ -25,7 +25,7 @@
                   :description="sanitizeHTML(item.description)"
                   @onOpenWorkspaceRemove="handleOpenWorkspaceRemove(item)"
                 />
-              </v-hover>
+              </VHover>
             </AskAnnaCol>
           </AskAnnaRow>
         </template>
@@ -41,9 +41,10 @@
             <template v-else-if="query.visibility || query.is_member"
               >There are no workspaces for this filter request.</template
             >
+            <template v-else>There are no workspaces that you have access to.</template>
           </AskAnnaAlert></template
         >
-      </v-data-iterator>
+      </VDataIterator>
     </AskAnnaLoadingProgress>
     <WorkspaceConfirmDeletePopup
       :workspaceName="workspace.name"
@@ -56,8 +57,8 @@
 <script setup lang="ts">
 const sanitizeHTML = useSanitizeHTML()
 const workspaceStore = useWorkspaceStore()
-const { route, router } = useRouterAskAnna()
 const workspacesStore = useWorkspacesStore()
+const { route, routerPush } = useRouterAskAnna()
 
 const workspace = ref({})
 const deleteWorkspaceConfirmPopup = ref(false)
@@ -67,7 +68,7 @@ const loading = computed(() => workspacesStore.loadingAll)
 const workspaces = computed(() => workspacesStore.getWorkspacesByParams(query.value))
 
 const handleOpenWorkspace = workspace => {
-  router.push({
+  routerPush({
     name: 'workspace',
     params: {
       workspaceId: workspace.suuid,

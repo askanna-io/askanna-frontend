@@ -1,6 +1,6 @@
 <template>
   <AskAnnaContainer class="pt-0 pb-0 fill-height" fluid>
-    <v-fade-transition mode="out-in">
+    <VFadeTransition mode="out-in">
       <AskAnnaRow key="0">
         <AskAnnaCol cols="12" class="pt-0 pb-0">
           <AskAnnaCard class="text-center file-csv" flat>
@@ -11,7 +11,7 @@
           </AskAnnaCard>
         </AskAnnaCol>
       </AskAnnaRow>
-    </v-fade-transition>
+    </VFadeTransition>
   </AskAnnaContainer>
 </template>
 <script setup lang="ts">

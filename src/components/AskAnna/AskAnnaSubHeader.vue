@@ -1,7 +1,7 @@
 <template>
-  <v-subheader v-bind="$attrs" v-on="$listeners">
+  <VSubheader v-bind="$attrs" v-on="$listeners">
     <slot />
-  </v-subheader>
+  </VSubheader>
 </template>
 
 <script>

@@ -1,5 +1,5 @@
 <template>
-  <v-snackbar
+  <VSnackbar
     top
     v-model="state.snackbar.open"
     :color="state.snackbar.color"
@@ -12,7 +12,7 @@
         <AskAnnaIcon>far fa-times-circle</AskAnnaIcon>
       </AskAnnaButton>
     </template>
-  </v-snackbar>
+  </VSnackbar>
 </template>
 
 <script ref setup lang="ts">

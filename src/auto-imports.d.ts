@@ -16,9 +16,9 @@ declare global {
   const VARIABLES_STORE: typeof import('./features/variables/types')['VARIABLES_STORE']
   const WORKSPACE_STORE: typeof import('./features/workspace/types')['WORKSPACE_STORE']
   const WorkspaceVisibility: typeof import('./features/workspace/useWorkspaceStore')['WorkspaceVisibility']
+  const auth: typeof import('./features/auth/config')['auth']
   const compareItems: typeof import('./features/compare-runs/helper')['compareItems']
   const computed: typeof import('vue')['computed']
-  const config: typeof import('./features/workspaces/config')['default']
   const createApp: typeof import('vue')['createApp']
   const customRef: typeof import('vue')['customRef']
   const defaultWorkspace: typeof import('./features/workspace/useWorkspaceStore')['defaultWorkspace']
@@ -53,6 +53,7 @@ declare global {
   const packageRoutes: typeof import('./features/package/config')['packageRoutes']
   const peopleRoutes: typeof import('./features/people/config')['peopleRoutes']
   const projectRoutes: typeof import('./features/project/config')['projectRoutes']
+  const projects: typeof import('./features/projects/config')['projects']
   const provide: typeof import('vue')['provide']
   const reactive: typeof import('vue')['reactive']
   const readonly: typeof import('vue')['readonly']
@@ -134,10 +135,13 @@ declare global {
   const useWorkspaceProjectsStore: typeof import('./features/workspace/useWorkspaceProjectsStore')['useWorkspaceProjectsStore']
   const useWorkspaceStore: typeof import('./features/workspace/useWorkspaceStore')['useWorkspaceStore']
   const useWorkspacesStore: typeof import('./features/workspaces/useWorkspacesStore')['useWorkspacesStore']
+  const user: typeof import('./features/user/config')['user']
   const watch: typeof import('vue')['watch']
   const watchEffect: typeof import('vue')['watchEffect']
   const watchPostEffect: typeof import('vue')['watchPostEffect']
   const watchSyncEffect: typeof import('vue')['watchSyncEffect']
+  const workspace: typeof import('./features/workspace/config')['workspace']
+  const workspaces: typeof import('./features/workspaces/config')['workspaces']
 }
 // for vue template auto import
 import { UnwrapRef } from 'vue'
@@ -158,9 +162,9 @@ declare module '@vue/runtime-core' {
     readonly VARIABLES_STORE: UnwrapRef<typeof import('./features/variables/types')['VARIABLES_STORE']>
     readonly WORKSPACE_STORE: UnwrapRef<typeof import('./features/workspace/types')['WORKSPACE_STORE']>
     readonly WorkspaceVisibility: UnwrapRef<typeof import('./features/workspace/useWorkspaceStore')['WorkspaceVisibility']>
+    readonly auth: UnwrapRef<typeof import('./features/auth/config')['auth']>
     readonly compareItems: UnwrapRef<typeof import('./features/compare-runs/helper')['compareItems']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
-    readonly config: UnwrapRef<typeof import('./features/workspaces/config')['default']>
     readonly createApp: UnwrapRef<typeof import('vue')['createApp']>
     readonly customRef: UnwrapRef<typeof import('vue')['customRef']>
     readonly defaultWorkspace: UnwrapRef<typeof import('./features/workspace/useWorkspaceStore')['defaultWorkspace']>
@@ -195,6 +199,7 @@ declare module '@vue/runtime-core' {
     readonly packageRoutes: UnwrapRef<typeof import('./features/package/config')['packageRoutes']>
     readonly peopleRoutes: UnwrapRef<typeof import('./features/people/config')['peopleRoutes']>
     readonly projectRoutes: UnwrapRef<typeof import('./features/project/config')['projectRoutes']>
+    readonly projects: UnwrapRef<typeof import('./features/projects/config')['projects']>
     readonly provide: UnwrapRef<typeof import('vue')['provide']>
     readonly reactive: UnwrapRef<typeof import('vue')['reactive']>
     readonly readonly: UnwrapRef<typeof import('vue')['readonly']>
@@ -276,9 +281,12 @@ declare module '@vue/runtime-core' {
     readonly useWorkspaceProjectsStore: UnwrapRef<typeof import('./features/workspace/useWorkspaceProjectsStore')['useWorkspaceProjectsStore']>
     readonly useWorkspaceStore: UnwrapRef<typeof import('./features/workspace/useWorkspaceStore')['useWorkspaceStore']>
     readonly useWorkspacesStore: UnwrapRef<typeof import('./features/workspaces/useWorkspacesStore')['useWorkspacesStore']>
+    readonly user: UnwrapRef<typeof import('./features/user/config')['user']>
     readonly watch: UnwrapRef<typeof import('vue')['watch']>
     readonly watchEffect: UnwrapRef<typeof import('vue')['watchEffect']>
     readonly watchPostEffect: UnwrapRef<typeof import('vue')['watchPostEffect']>
     readonly watchSyncEffect: UnwrapRef<typeof import('vue')['watchSyncEffect']>
+    readonly workspace: UnwrapRef<typeof import('./features/workspace/config')['workspace']>
+    readonly workspaces: UnwrapRef<typeof import('./features/workspaces/config')['workspaces']>
   }
 }

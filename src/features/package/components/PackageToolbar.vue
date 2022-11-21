@@ -4,11 +4,11 @@
       <div class="mr-auto d-flex align-center overflow-x-overlay">
         <slot name="left" />
         <div class="askAnna-breadcrumbs">
-          <v-breadcrumbs :items="breadcrumbs" class="pa-0 pl-1">
+          <VBreadcrumbs :items="breadcrumbs" class="pa-0 pl-1">
             <template v-slot:item="{ item }">
               <AskAnnaTooltip v-if="item.showTooltip" top content-class="opacity-1" v>
                 <template v-slot:activator="{ on }">
-                  <v-breadcrumbs-item
+                  <VBreadcrumbsItem
                     class="text-body-2"
                     :class="{ 'pr-2': !$vuetify.breakpoint.xsOnly }"
                     v-on="on"
@@ -17,15 +17,15 @@
                     :disabled="item.disabled"
                   >
                     {{ item.title }}
-                  </v-breadcrumbs-item>
+                  </VBreadcrumbsItem>
                 </template>
                 <span v-html="item.tooltip" />
               </AskAnnaTooltip>
-              <v-breadcrumbs-item v-else :to="item.to" :exact="item.exact" :disabled="item.disabled">
+              <VBreadcrumbsItem v-else :to="item.to" :exact="item.exact" :disabled="item.disabled">
                 {{ item.title }}
-              </v-breadcrumbs-item>
+              </VBreadcrumbsItem>
             </template>
-          </v-breadcrumbs>
+          </VBreadcrumbs>
         </div>
       </div>
       <slot name="rigth" />

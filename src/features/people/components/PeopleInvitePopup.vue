@@ -1,6 +1,6 @@
 <template>
   <div class="text-center">
-    <v-dialog content-class="invite-popup" v-model="menu" :close-on-content-click="false" width="500">
+    <VDialog content-class="invite-popup" v-model="menu" :close-on-content-click="false" width="500">
       <template v-slot:activator="{ on, attrs }">
         <AskAnnaButton v-bind="attrs" v-on="on" small rounded class="mr-3">
           <AskAnnaIcon color="primary" left>mdi-plus</AskAnnaIcon>
@@ -21,7 +21,7 @@
         <AskAnnaContainer id="scroll-target" style="max-height: 400px" class="pl-1 pt-0 overflow-y-auto">
           <AskAnnaRow no-gutters>
             <AskAnnaCol class="pa-2" cols="12">
-              <v-combobox
+              <VCombobox
                 hide-details=""
                 :delimiters="[' ']"
                 append-icon=""
@@ -53,7 +53,7 @@
                     <span></span>
                   </AskAnnaChip>
                 </template>
-              </v-combobox>
+              </VCombobox>
               <AskAnnaChip class="mt-2" v-if="inValidEmails.length" color="error" @click="handleRemoveInValidEmails">
                 <AskAnnaAvatar color="white" left class="error--text">
                   {{ inValidEmails.length }}
@@ -109,7 +109,7 @@
           </AskAnnaButton>
         </AskAnnaCardActions>
       </AskAnnaCard>
-    </v-dialog>
+    </VDialog>
   </div>
 </template>
 

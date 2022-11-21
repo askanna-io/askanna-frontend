@@ -1,6 +1,6 @@
 <template>
   <li class="list__item" :class="cssClasses" :style="listItemStyles">
-    <component :is="componentName" v-bind="props" />
+    <Component :is="componentName" v-bind="props" />
   </li>
 </template>
 <script setup lang="ts">

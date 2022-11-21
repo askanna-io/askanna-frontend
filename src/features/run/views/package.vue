@@ -2,7 +2,7 @@
   <AskAnnaLoadingProgress :loading="loading && !isProcessing">
     <AskAnnaRow align="center" justify="center">
       <AskAnnaCol cols="12" class="pt-0 pb-0">
-        <package-toolbar
+        <PackageToolbar
           v-sticky="sticked"
           :sticky-z-index="1"
           :breadcrumbs="breadcrumbsComputed"
@@ -27,9 +27,9 @@
               </div>
             </AskAnnaSlideYTransition>
           </template>
-        </package-toolbar>
+        </PackageToolbar>
         <template v-if="isProcessing">
-          <package-processing />
+          <PackageProcessing />
         </template>
         <template v-else>
           <PackageFile

@@ -6,7 +6,7 @@
       <div class="text--primary">
         <p>
           If you want to replace this code package, you are in the right place. Below you can find instructions on how
-          you can use the AskAnna CLI ( <ask-anna-copy-text :text="cliInstall" />
+          you can use the AskAnna CLI ( <AskAnnaCopyText :text="cliInstall" />
           ) to push a new version of the code to this project.
         </p>
         <p>
@@ -15,8 +15,8 @@
         </p>
         <div>COMMAND LINE INSTRUCTIONS</div>
         <p>
-          If you have installed the AskAnna CLI (<ask-anna-copy-text :text="cliInstall" />), you can use the command
-          line interface as well.
+          If you have installed the AskAnna CLI ( <AskAnnaCopyText :text="cliInstall" />), you can use the command line
+          interface as well.
         </p>
         <p>
           Probably you already have an <span class="font-italic">askanna.yml</span> file in your local directory. If
@@ -29,17 +29,17 @@
           configuration you need to do.
         </p>
         <p>
-          <ask-anna-copy-text :text="projectUrl" />
+          <AskAnnaCopyText :text="projectUrl" />
         </p>
         <p>
           In your terminal, make sure you are in one of the project directories. Now you can run
-          <ask-anna-copy-text :text="askannaPush" />
+          <AskAnnaCopyText :text="askannaPush" />
           and follow the instructions in the terminal. If you don’t want to confirm that you want to replace the current
-          package version, you can use <ask-anna-copy-text :text="askannaPushForce" />
+          package version, you can use <AskAnnaCopyText :text="askannaPushForce" />
         </p>
         <p>
           Optionally you can add a description to the version you push via
-          <ask-anna-copy-text :text="askannaPushWithMessage" />
+          <AskAnnaCopyText :text="askannaPushWithMessage" />
         </p>
       </div>
     </AskAnnaCardText>

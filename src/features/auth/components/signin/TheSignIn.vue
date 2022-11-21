@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-form
+    <VForm
       ref="loginFormRef"
       v-model="isFormValid"
       lazy-validation
@@ -12,10 +12,10 @@
         :error-messages="error.username || error.name || error.email"
         dense
         outlined
+        required
+        label="Email"
         validate-on-blur
         autocomplete="off"
-        label="Email"
-        required
         :rules="[RULES.required('The email is required'), RULES.email('The email you entered is not valid', 3)]"
       />
       <AskAnnaTextField
@@ -35,17 +35,11 @@
       <AskAnnaButton :disabled="!isFormValid" color="primary" class="mr-4" @click.stop="handleLogin">
         {{ submitButtonTitle }}
       </AskAnnaButton>
-    </v-form>
+    </VForm>
   </div>
 </template>
 
 <script setup lang="ts">
-type VForm = Vue & {
-  reset: () => void
-  validate: () => boolean
-  resetValidation: () => void
-}
-
 defineProps({
   submitButtonTitle: {
     type: String,
@@ -54,13 +48,12 @@ defineProps({
 })
 
 const authStore = useAuthStore()
+const { routerPush } = useRouterAskAnna()
 const { RULES } = useValidationRules()
 
-const loginFormRef = ref()
+const loginFormRef = ref(null)
 const isFormValid = ref(false)
 const isShowPassword = ref(false)
-
-const loginForm = computed(() => loginFormRef.value as VForm)
 
 const formData = reactive({
   username: '',
@@ -69,28 +62,24 @@ const formData = reactive({
 let error = reactive({ name: '', email: '', username: '', password: '' })
 
 const handleLogin = async () => {
-  if (!loginForm.value.validate()) {
+  if (!loginFormRef.value.validate()) {
     return
   }
   const authError = await authStore.login(formData)
 
   if (authError && authError.response && authError.response.status === 400) {
-    error = { ...error, ...authError.response.data }
+    Object.assign(error, authError.response.data)
 
     return
   }
+  routerPush({ name: 'check-access' })
 }
 
-const resetValidation = () => loginForm.value.resetValidation()
-const resetError = () => {
-  error = { name: '', email: '', username: '', password: '' }
-}
+const resetError = () => Object.assign(error, { name: '', email: '', username: '', password: '' })
 
-watch(formData, async () => {
-  // check if exist error from backend on typing fields, try resest validation
+watch(formData, () => {
   if (Object.values(error).some(item => item.length)) {
     resetError()
-    resetValidation()
   }
 })
 </script>

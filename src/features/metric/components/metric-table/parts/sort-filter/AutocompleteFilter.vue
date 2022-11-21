@@ -1,5 +1,5 @@
 <template>
-  <v-autocomplete
+  <VAutocomplete
     dense
     outlined
     clearable
@@ -30,7 +30,7 @@ const props = defineProps({
 
 const state = inject('state')
 const changeState = inject('changeState')
-// @todo
+
 const computedValue = computed(() => state[props.filterName])
 
 const handleChange = value => changeState({ path: props.filterName, value })

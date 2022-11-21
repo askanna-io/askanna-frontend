@@ -4,9 +4,9 @@
     fluid
     :class="{ 'px-0': $vuetify.breakpoint.xsOnly, 'px-5': !$vuetify.breakpoint.xsOnly }"
   >
-    <v-fade-transition mode="out-in">
+    <VFadeTransition mode="out-in">
       <AskAnnaCSV :data="tableData.data" :headers="tableData.headers" :cdnBaseUrl="cdnBaseUrl" />
-    </v-fade-transition>
+    </VFadeTransition>
   </AskAnnaFlex>
 </template>
 

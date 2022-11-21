@@ -1,13 +1,13 @@
 <template>
   <AskAnnaCard class="mx-auto" flat :outlined="!$vuetify.breakpoint.xsOnly">
     <div class="askAnna-breadcrumbs">
-      <v-breadcrumbs :items="breadcrumbs" class="pa-0 pl-3" :class="{ 'pa-4 pl-4': !$vuetify.breakpoint.xsOnly }">
+      <VBreadcrumbs :items="breadcrumbs" class="pa-0 pl-3" :class="{ 'pa-4 pl-4': !$vuetify.breakpoint.xsOnly }">
         <template v-slot:item="{ item }">
-          <v-breadcrumbs-item :to="item.to" exact>
+          <VBreadcrumbsItem :to="item.to" exact>
             {{ item.title }}
-          </v-breadcrumbs-item>
+          </VBreadcrumbsItem>
         </template>
-      </v-breadcrumbs>
+      </VBreadcrumbs>
     </div>
     <AskAnnaDivider class="mt-1" />
     <AskAnnaCardTitle>
@@ -52,7 +52,7 @@
       </AskAnnaRow>
       <AskAnnaRow>
         <AskAnnaCol cols="12">
-          <v-radio-group
+          <VRadioGroup
             mandatory
             hide-details
             class="pt-0 mt-0"
@@ -62,22 +62,22 @@
             <template v-slot:label>
               <div class="text-subtitle-1 pt-0 font-weight-bold black--text">Visibility</div>
             </template>
-            <v-radio :ripple="false" value="PRIVATE">
+            <VRadio :ripple="false" value="PRIVATE">
               <template v-slot:label>
                 <div class="primary--black-text">Private</div>
               </template>
-            </v-radio>
+            </VRadio>
             <div class="pb-2 pl-8">Projects in this workspace can only be viewed by workspace or project members.</div>
-            <v-radio :ripple="false" value="PUBLIC">
+            <VRadio :ripple="false" value="PUBLIC">
               <template v-slot:label>
                 <div class="primary--black-text">Public</div>
               </template>
-            </v-radio>
+            </VRadio>
             <div class="pl-8">
               Allow public projects that can be viewed by people without any authentication. Also the workspace name and
               description becomes publicly available.
             </div>
-          </v-radio-group>
+          </VRadioGroup>
         </AskAnnaCol>
       </AskAnnaRow>
       <AskAnnaRow>
@@ -107,8 +107,8 @@
 import { set } from 'lodash'
 
 const snackBar = useSnackBar()
-const { router } = useRouterAskAnna()
 const { RULES } = useValidationRules()
+const { routerPush } = useRouterAskAnna()
 const workspaceStore = useWorkspaceStore()
 const workspacesStore = useWorkspacesStore()
 
@@ -164,7 +164,7 @@ const handleSave = async () => {
 }
 
 const handleClose = () =>
-  router.push({
+  routerPush({
     name: 'workspaces'
   })
 

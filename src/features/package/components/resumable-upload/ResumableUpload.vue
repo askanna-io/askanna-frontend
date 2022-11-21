@@ -3,12 +3,12 @@
     <AskAnnaCol cols="12">
       <div ref="draggable" @click.stop class="is-sortable-disabled is-drag-valid theme-list drop-zone">
         <div class="grid-block-wrapper vue-file-agent file-input-wrapper has-multiple">
-          <replace-info v-if="isReplace" :projectShortUuid="projectShortUuid" :workspaceId="workspaceId" />
-          <new-package-info v-else :projectShortUuid="projectShortUuid" :workspaceId="workspaceId" />
+          <ReplaceInfo v-if="isReplace" :projectShortUuid="projectShortUuid" :workspaceId="workspaceId" />
+          <NewPackageInfo v-else :projectShortUuid="projectShortUuid" :workspaceId="workspaceId" />
           <canvas style="position: fixed; visibility: hidden; z-index: -3"></canvas>
           <div transitionduration="300" pressdelay="0" helperclass="active-sorting-item">
             <div>
-              <file-preview
+              <FilePreview
                 v-for="(resumableFile, index) in fileRecordsForUpload"
                 :isUploadStart="isFileAdded"
                 :resumableFile="resumableFile"
@@ -39,13 +39,13 @@
       <AskAnnaButton class="my-2 btn--hover" v-if="isReplace" small outlined @click="handleCancel" color="secondary">
         <AskAnnaIcon color="secondary" left>mdi-cancel</AskAnnaIcon>Cancel
       </AskAnnaButton>
-      <confirm-dialog
+      <ConfirmDialog
         v-if="showConfirmation"
         :isReplace="isReplace"
         @uploadStarted="handleStartUpload"
         @cancelUploadStarted="handleCancelUploadStarted"
       />
-      <upload-process-dialod
+      <UploadProcessDialog
         v-if="isUploadStart"
         :progress="progress"
         :projectId="projectShortUuid"

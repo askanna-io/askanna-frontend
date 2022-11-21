@@ -1,19 +1,19 @@
 <template>
-  <v-menu v-model="menu" :close-on-content-click="false" offset-y nudge-bottom="10">
+  <VMenu v-model="menu" :close-on-content-click="false" offset-y nudge-bottom="10">
     <template v-slot:activator="{ on }">
       <AskAnnaButton small dark class="white--text" text v-on="on">Workspaces</AskAnnaButton>
     </template>
     <AskAnnaRow class="pr-2 white askAnna-main-menu">
       <AskAnnaCol cols="5">
-        <v-list dense>
-          <v-list-item-group v-model="listMenu" mandatory color="primary" @change="handleChangeMenu">
-            <v-list-item v-for="(item, i) in menuItems" :key="i" aria-readonly>
-              <v-list-item-content>
-                <v-list-item-title v-text="item.text"></v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list-item-group>
-        </v-list>
+        <VList dense>
+          <VListItemGroup v-model="listMenu" mandatory color="primary" @change="handleChangeMenu">
+            <VListItem v-for="(item, i) in menuItems" :key="i" aria-readonly>
+              <VListItemContent>
+                <VListItemTitle v-text="item.text"></VListItemTitle>
+              </VListItemContent>
+            </VListItem>
+          </VListItemGroup>
+        </VList>
       </AskAnnaCol>
       <AskAnnaCol cols="7" class="pl-0">
         <template v-if="listMenu === 2">
@@ -54,7 +54,7 @@
                     @click="handleClick(item)"
                   >
                     <td class="px-0">
-                      <router-link
+                      <RouterLink
                         class="table-link table-link--unformated"
                         :to="{
                           name: 'workspace',
@@ -64,7 +64,7 @@
                         }"
                       >
                         <AskAnnaIcon class="pr-2">{{ getIcon(item) }}</AskAnnaIcon
-                        >{{ item.name }}</router-link
+                        >{{ item.name }}</RouterLink
                       >
                     </td>
                   </tr>
@@ -89,11 +89,11 @@
         </template>
       </AskAnnaCol>
     </AskAnnaRow>
-  </v-menu>
+  </VMenu>
 </template>
 
 <script setup lang="ts">
-const router = useRouterAskAnna()
+const { routerPush } = useRouterAskAnna()
 const workspacesStore = useWorkspacesStore()
 
 const explorBtnOpts = [
@@ -143,7 +143,7 @@ const handleCloseMenu = () => {
 
 const handleClick = item => {
   handleCloseMenu()
-  router.push({
+  routerPush({
     name: 'workspace',
     params: {
       workspaceId: item.suuid

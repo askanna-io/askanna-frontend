@@ -1,25 +1,25 @@
 <template>
   <AskAnnaCard class="mx-auto" :outlined="!$vuetify.breakpoint.xsOnly" :flat="$vuetify.breakpoint.xsOnly">
     <div class="askAnna-breadcrumbs">
-      <v-breadcrumbs :items="breadcrumbs" :class="{ 'pa-0 pl-3': $vuetify.breakpoint.xsOnly }">
+      <VBreadcrumbs :items="breadcrumbs" :class="{ 'pa-0 pl-3': $vuetify.breakpoint.xsOnly }">
         <template v-slot:item="{ item }">
-          <v-breadcrumbs-item :to="item.to" exact>
+          <VBreadcrumbsItem :to="item.to" exact>
             {{ item.title }}
-          </v-breadcrumbs-item>
+          </VBreadcrumbsItem>
         </template>
-      </v-breadcrumbs>
+      </VBreadcrumbs>
     </div>
 
     <AskAnnaDivider v-if="!$vuetify.breakpoint.xsOnly" />
     <AskAnnaCardTitle>
       <AskAnnaAvatar v-if="userStore.globalProfile.avatar.small" class="ma-2" rounded="35" :size="35" tile>
-        <v-img class="img--rounded" :src="userStore.globalProfile.avatar.small" />
+        <VImg class="img--rounded" :src="userStore.globalProfile.avatar.small" />
       </AskAnnaAvatar>
       <AskAnnaIcon v-else large left> mdi-account </AskAnnaIcon>
       <span class="title py-1">Edit my profile</span>
     </AskAnnaCardTitle>
     <AskAnnaLoadingProgress :loading="loading">
-      <v-form ref="profileForm">
+      <VForm ref="profileForm">
         <AskAnnaCardTitle class="title py-1">Login information</AskAnnaCardTitle>
         <UserProfile
           :error="errors"
@@ -75,7 +75,7 @@
             </AskAnnaCol>
           </AskAnnaRow>
         </AskAnnaContainer>
-      </v-form>
+      </VForm>
     </AskAnnaLoadingProgress>
   </AskAnnaCard>
 </template>
@@ -83,7 +83,7 @@
 <script setup lang="ts">
 const snackBar = useSnackBar()
 const userStore = useUserStore()
-const { router } = useRouterAskAnna()
+const { router, routerPush } = useRouterAskAnna()
 
 const profileForm = ref(null)
 
@@ -117,8 +117,6 @@ const breadcrumbs = computed(() => [
     disabled: true
   }
 ])
-
-const resetValidation = () => profileForm.value.resetValidation()
 
 const handleSave = async () => {
   let isSuccess = true
@@ -173,7 +171,7 @@ const handleSave = async () => {
 
 const handleCancel = () => {
   if (window.history.length <= 2) {
-    router.push({ path: '/' })
+    routerPush({ path: '/' })
   } else {
     router.go(-1)
   }
@@ -189,9 +187,7 @@ const handleOnUpdateGlobalProfile = data => {
   state.isGlobalDataChanged = true
 }
 
-const resetError = () => {
-  errors = { name: '', email: '', username: '', password: '', old_password: '' }
-}
+const resetError = () => Object.assign(errors, { name: '', email: '', username: '', password: '', old_password: '' })
 
 const handleOnChangeGlobalAvatar = data => {
   state.globalAvatar = data
@@ -202,7 +198,6 @@ watch(state, _ => {
   // check if exist error from backend on typing fields, try resest validation
   if (Object.values(errors).some(item => item.length)) {
     resetError()
-    resetValidation()
   }
 })
 </script>

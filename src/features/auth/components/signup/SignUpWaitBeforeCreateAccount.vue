@@ -9,9 +9,8 @@
 </template>
 
 <script setup lang="ts">
-const authData = inject('authData')
-
-const { router } = useRouterAskAnna()
+const authStore = useAuthStore()
+const { routerPush } = useRouterAskAnna()
 const prepareAccount = usePrepareAccount()
 
 const polling = ref(null)
@@ -19,11 +18,11 @@ const isReady = computed(() => prepareAccount.IsAccountReady.value)
 
 const checkIsReady = async () => {
   polling.value = setInterval(async () => {
-    await prepareAccount.checkIfWorkspaceIsReady({ ...authData.value })
+    await prepareAccount.checkIfWorkspaceIsReady(authStore.authData)
 
     if (isReady.value) {
       clearInterval(polling.value)
-      router.push({ name: 'workspace', params: { workspaceId: prepareAccount.workspaceId.value } })
+      routerPush({ name: 'workspace', params: { workspaceId: prepareAccount.workspaceId.value } })
     }
   }, 5000)
 }

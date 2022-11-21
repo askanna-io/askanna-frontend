@@ -4,10 +4,10 @@
       <span class="title font-weight-light">Job: {{ jobName }}</span>
     </AskAnnaCardTitle>
 
-    <v-tabs v-model="currentTab" show-arrows :align-with-title="!$vuetify.breakpoint.xsOnly">
-      <v-tabs-slider color="primary" />
+    <VTabs v-model="currentTab" show-arrows :align-with-title="!$vuetify.breakpoint.xsOnly">
+      <VTabsSlider color="primary" />
       <template v-for="tab of tabs">
-        <v-tab
+        <VTab
           v-if="tab.show"
           :key="tab.id"
           exact
@@ -15,9 +15,9 @@
           :to="{ name: tab.to, params: { ...params, title: `${tab.name} - ${projectName}` } }"
         >
           {{ tab.name }}
-        </v-tab>
+        </VTab>
       </template>
-    </v-tabs>
+    </VTabs>
   </AskAnnaFlex>
 </template>
 <script setup lang="ts">

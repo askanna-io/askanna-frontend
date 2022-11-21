@@ -29,7 +29,7 @@
       </AskAnnaCardText>
       <AskAnnaCard flat max-width="400" class="px-3 pb-3">
         <AskAnnaCardTitle class="pa-1">Sign in</AskAnnaCardTitle>
-        <SignIn />
+        <TheSignIn />
       </AskAnnaCard>
     </template>
   </AskAnnaCard>

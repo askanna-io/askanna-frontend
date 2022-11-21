@@ -1,25 +1,25 @@
 <template>
   <AskAnnaCard class="mx-auto" :outlined="!$vuetify.breakpoint.xsOnly" :flat="$vuetify.breakpoint.xsOnly">
     <div class="askAnna-breadcrumbs">
-      <v-breadcrumbs :items="breadcrumbs" :class="{ 'pa-0 pl-3': $vuetify.breakpoint.xsOnly }">
+      <VBreadcrumbs :items="breadcrumbs" :class="{ 'pa-0 pl-3': $vuetify.breakpoint.xsOnly }">
         <template v-slot:item="{ item }">
-          <v-breadcrumbs-item :to="item.to" exact>
+          <VBreadcrumbsItem :to="item.to" exact>
             {{ item.title }}
-          </v-breadcrumbs-item>
+          </VBreadcrumbsItem>
         </template>
-      </v-breadcrumbs>
+      </VBreadcrumbs>
     </div>
     <AskAnnaDivider v-if="!$vuetify.breakpoint.xsOnly" />
     <AskAnnaCardTitle>
       <AskAnnaAvatar v-if="workspaceProfile.membership.avatar.small" class="ma-2" rounded="35" :size="35" tile>
-        <v-img class="img--rounded" :src="workspaceProfile.membership.avatar.small" />
+        <VImg class="img--rounded" :src="workspaceProfile.membership.avatar.small" />
       </AskAnnaAvatar>
       <AskAnnaIcon v-else large left> mdi-account </AskAnnaIcon>
       <span class="title py-1">Edit my profile</span>
     </AskAnnaCardTitle>
 
     <AskAnnaLoadingProgress :loading="loading">
-      <v-form ref="profileForm">
+      <VForm ref="profileForm">
         <AskAnnaCardTitle class="title py-1">Login information</AskAnnaCardTitle>
         <UserProfile
           :error="errors"
@@ -27,14 +27,14 @@
           @onUpdateUserProfile="handleOnUpdateUserProfile"
         />
 
-        <v-tabs v-model="currentTab" class="pl-4">
-          <v-tabs-slider color="primary" />
-          <v-tab ripple key="workspace"> {{ workspaceName }} workspace</v-tab>
-          <v-tab ripple key="global"> AskAnna profile </v-tab>
-        </v-tabs>
+        <VTabs v-model="currentTab" class="pl-4">
+          <VTabsSlider color="primary" />
+          <VTab ripple key="workspace"> {{ workspaceName }} workspace</VTab>
+          <VTab ripple key="global"> AskAnna profile </VTab>
+        </VTabs>
 
-        <v-tabs-items v-model="currentTab">
-          <v-tab-item key="workspace">
+        <VTabsItems v-model="currentTab">
+          <VTabItem key="workspace">
             <AskAnnaCardSubTitle class="text-body-1">My role: {{ roleName }}</AskAnnaCardSubTitle>
 
             <AskAnnaContainer fluid class="pb-0">
@@ -44,21 +44,21 @@
                     :hide-details="useAskAnnaProfile"
                     v-model="useAskAnnaProfile"
                     @change="handleChangeUseAskAnnaProfile"
-                    label="Use AskAnna profile"
                     class="mt-0"
+                    label="Use AskAnna profile"
                   />
                 </AskAnnaCol>
               </AskAnnaRow>
             </AskAnnaContainer>
             <template v-if="!useAskAnnaProfile">
-              <user-workspace-profile
+              <UserWorkspaceProfile
                 :editMode="!useAskAnnaProfile"
                 :workspaceProfile="workspaceProfile"
                 @onUpdateWorkSpaceProfile="handleOnUpdateWorkSpaceProfile"
               />
 
               <AskAnnaCardTitle class="text-subtitle-1 py-1">Profile image</AskAnnaCardTitle>
-              <user-workspace-profile-avatar
+              <UserWorkspaceProfileAvatar
                 :editMode="!useAskAnnaProfile"
                 :workspaceProfile="workspaceProfile"
                 @onChangeAvatar="handleOnChangeAvatar"
@@ -75,9 +75,9 @@
                 >
               </AskAnnaContainer>
             </AskAnnaCard>
-          </v-tab-item>
+          </VTabItem>
 
-          <v-tab-item key="global">
+          <VTabItem key="global">
             <AskAnnaContainer fluid>
               <AskAnnaRow dense>
                 <AskAnnaCol xs="12" sm="6" md="4" lg="4" xl="3">
@@ -88,20 +88,20 @@
                 </AskAnnaCol>
               </AskAnnaRow>
             </AskAnnaContainer>
-            <user-workspace-profile
+            <UserWorkspaceProfile
               :editMode="true"
               :workspaceProfile="userStore.globalProfile"
               @onUpdateWorkSpaceProfile="handleOnUpdateGlobalProfile"
             />
 
             <AskAnnaCardTitle class="text-subtitle-1 py-1">Profile image</AskAnnaCardTitle>
-            <user-workspace-profile-avatar
+            <UserWorkspaceProfileAvatar
               :editMode="true"
               :workspaceProfile="userStore.globalProfile"
               @onChangeAvatar="handleOnChangeGlobalAvatar"
             />
-          </v-tab-item>
-        </v-tabs-items>
+          </VTabItem>
+        </VTabsItems>
 
         <AskAnnaContainer fluid>
           <AskAnnaRow dense justify="start">
@@ -126,7 +126,7 @@
             </AskAnnaCol>
           </AskAnnaRow>
         </AskAnnaContainer>
-      </v-form>
+      </VForm>
     </AskAnnaLoadingProgress>
   </AskAnnaCard>
 </template>
@@ -135,9 +135,9 @@
 const snackBar = useSnackBar()
 const userStore = useUserStore()
 const peopleStore = usePeopleStore()
-const { router } = useRouterAskAnna()
 const workSpaceStore = useWorkspaceStore()
 const imageUrlToBase64 = useImageUrlToBase64()
+const { router, routerPush } = useRouterAskAnna()
 
 const profileForm = ref(null)
 const currentTab = ref('workspace')
@@ -183,14 +183,8 @@ const isSaveDisabled = computed(
 const workspaceProfile = computed(() => peopleStore.currentPeople)
 const workspaceName = computed(() => workSpaceStore.workspace.name)
 const useAskAnnaProfile = computed({
-  get: () => {
-    return workspaceProfile.value.use_global_profile
-  },
-  set: use_global_profile => {
-    peopleStore.setCurretPeople({
-      use_global_profile
-    })
-  }
+  get: () => workspaceProfile.value.use_global_profile,
+  set: use_global_profile => (workspaceProfile.value.use_global_profile = use_global_profile || false)
 })
 
 const loading = computed(() => !workspaceProfile.value.email)
@@ -208,8 +202,6 @@ const breadcrumbs = computed(() => [
     disabled: true
   }
 ])
-
-const resetValidation = () => profileForm.value.resetValidation()
 
 const handleSave = async () => {
   let isSuccess = true
@@ -295,7 +287,7 @@ const handleSave = async () => {
 
 const handleCancel = () => {
   if (window.history.length <= 2) {
-    router.push({ path: '/' })
+    routerPush({ path: '/' })
   } else {
     router.go(-1)
   }
@@ -316,7 +308,7 @@ const handleOnUpdateGlobalProfile = data => {
   state.globalData = { ...state.globalData, ...data }
 }
 
-const resetError = () => (errors = { name: '', email: '', username: '', password: '', old_password: '' })
+const resetError = () => Object.assign(errors, { name: '', email: '', username: '', password: '', old_password: '' })
 
 const handleOnChangeAvatar = data => {
   state.avatar = data
@@ -352,7 +344,6 @@ watch(state, _ => {
   // check if exist error from backend on typing fields, try resest validation
   if (Object.values(errors).some(item => item.length)) {
     resetError()
-    resetValidation()
   }
 })
 </script>

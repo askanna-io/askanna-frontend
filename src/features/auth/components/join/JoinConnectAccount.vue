@@ -1,12 +1,12 @@
 <template>
   <div>
-    <v-form
+    <VForm
       v-if="!isSuccesLogedIn"
       ref="loginFormRef"
       v-model="isFormValid"
       lazy-validation
-      @keyup.native.enter="handleLogin"
       @submit.stop="handleLogin"
+      @keyup.native.enter="handleLogin"
     >
       <AskAnnaTextField
         v-model="username"
@@ -14,10 +14,10 @@
         :rules="[RULES.required('The email is required'), RULES.email('The email you entered is not valid', 3)]"
         dense
         outlined
+        required
+        label="Email"
         validate-on-blur
         autocomplete="off"
-        label="Email"
-        required
       />
       <AskAnnaTextField
         dense
@@ -30,9 +30,9 @@
         ]"
         :append-icon="isShowPassword ? 'far fa-eye' : 'fas fa-eye-slash'"
         :type="isShowPassword ? 'text' : 'password'"
+        counter
         name="input-10-1"
         label="Password"
-        counter
         @click:append="isShowPassword = !isShowPassword"
       />
       <input type="password" style="display: none" browserAutocomplete="new-password" autocomplete="new-password" />
@@ -43,7 +43,7 @@
           <AskAnnaIcon class="ask-anna-btn-loader" dark> mdi-loading </AskAnnaIcon>
         </template>
       </AskAnnaButton>
-    </v-form>
+    </VForm>
     <JoinExistingAccountPopup
       :value="joinExistDialog"
       :workspaceName="workspaceName"
@@ -59,7 +59,7 @@ import { get } from 'lodash'
 const authStore = useAuthStore()
 const peopleStore = usePeopleStore()
 const { RULES } = useValidationRules()
-const { route, router } = useRouterAskAnna()
+const { route, routerPush } = useRouterAskAnna()
 
 const { token, peopleId, workspaceId, workspaceName } = route.params
 const loadingTexts = ['Login on AskAnna', 'Accept invitataion', 'Join to workspace']
@@ -86,7 +86,7 @@ const joinExistDialog = ref(false)
 
 const joinToWorkpase = () => {
   step.value = 2
-  setTimeout(() => router.push({ name: 'workspace', params: { workspaceId } }), 1000)
+  setTimeout(() => routerPush({ name: 'workspace', params: { workspaceId } }), 1000)
 }
 
 const handleLogin = async () => {
@@ -99,7 +99,6 @@ const handleLogin = async () => {
   loading.value = true
 
   const auth = await authStore.login({
-    redirect: false,
     username: username.value,
     password: password.value
   })

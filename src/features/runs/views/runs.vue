@@ -22,7 +22,7 @@
           <span>{{ isFullScreen ? 'Exit full screen' : 'Full screen' }}</span>
         </AskAnnaTooltip>
 
-        <v-btn-toggle v-model="currentViewIndex" mandatory class="mr-1">
+        <VBtnToggle v-model="currentViewIndex" mandatory class="mr-1">
           <AskAnnaTooltip v-for="(view, index) in views" top :key="index">
             <template v-slot:activator="{ on }">
               <AskAnnaButton
@@ -39,10 +39,10 @@
             </template>
             <span>{{ view.name }}</span>
           </AskAnnaTooltip>
-        </v-btn-toggle>
+        </VBtnToggle>
       </AskAnnaFlex>
     </AskAnnaToolbar>
-    <router-view />
+    <RouterView />
   </AskAnnaCard>
 </template>
 

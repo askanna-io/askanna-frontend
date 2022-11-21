@@ -1,7 +1,7 @@
 <template>
-  <v-spacer v-bind="$attrs" v-on="$listeners">
+  <VSpacer v-bind="$attrs" v-on="$listeners">
     <slot />
-  </v-spacer>
+  </VSpacer>
 </template>
 
 <script>

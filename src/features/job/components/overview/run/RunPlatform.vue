@@ -69,7 +69,7 @@ import { Run } from '@//features/run/types'
 const moment = useMoment()
 const runStore = useRunStore()
 const jobStore = useJobStore()
-const { route, router } = useRouterAskAnna()
+const { route, routerPush } = useRouterAskAnna()
 
 const run = ref({
   code: '',
@@ -121,7 +121,7 @@ const handleRunJob = async () => {
 const handleValidate = async (value: boolean) => (isValid.value = value)
 
 const hadnleOpenRun = () => {
-  router.push({
+  routerPush({
     name: 'workspace-project-jobs-job-run',
     params: { ...route.params, runId: runStore.newRun.suuid }
   })

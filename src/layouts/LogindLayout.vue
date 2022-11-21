@@ -2,7 +2,7 @@
   <v-app>
     <v-main class="login-layout">
       <AskAnnaContainer fluid pa-0 class="login-layout--container">
-        <router-view />
+        <RouterView />
       </AskAnnaContainer>
       <the-snack-bar />
     </v-main>
@@ -50,6 +50,7 @@ onUpdated(() => {
 .login-wrapper {
   height: 100vh;
 }
+
 .logo {
   height: 74px;
   margin-bottom: 6px;

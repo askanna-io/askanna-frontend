@@ -3,13 +3,13 @@
     <AskAnnaRow dense justify="start" @drop.prevent="addFile" @dragover.prevent>
       <AskAnnaCol class="pt-0 pb-0" cols="auto" align-self="start">
         <AskAnnaAvatar class="ma-2" rounded="21" :size="false ? 150 : 150" tile>
-          <v-img
+          <VImg
             v-if="imageUrl || workspaceProfile.avatar.large"
             class="img--rounded"
             :src="imageUrl || workspaceProfile.avatar.large"
           />
 
-          <v-img v-else class="img--rounded" src="@/assets/icons/ask-annna-default-gravatar.png" />
+          <VImg v-else class="img--rounded" src="@/assets/icons/ask-annna-default-gravatar.png" />
         </AskAnnaAvatar>
       </AskAnnaCol>
       <AskAnnaCol xs="12" sm="2" lg="2" xl="2">

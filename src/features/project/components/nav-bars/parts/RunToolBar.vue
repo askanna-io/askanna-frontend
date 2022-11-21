@@ -4,12 +4,12 @@
       <span class="title font-weight-light">Run: #{{ runId }}</span>
     </AskAnnaCardTitle>
 
-    <v-tabs v-model="currentRunTab" class="pb-3">
-      <v-tab v-for="tab of tabs" ripple :key="tab.id" :to="{ name: tab.to, params: { ...params, folderName: '' } }">
+    <VTabs v-model="currentRunTab" class="pb-3">
+      <VTab v-for="tab of tabs" ripple :key="tab.id" :to="{ name: tab.to, params: { ...params, folderName: '' } }">
         {{ tab.name }}
-      </v-tab>
+      </VTab>
       <RunMenuPopup v-if="!isEditRunView && projectRunEdit && $vuetify.breakpoint.xsOnly" class="pt-2" />
-    </v-tabs>
+    </VTabs>
   </AskAnnaFlex>
 </template>
 <script setup lang="ts">

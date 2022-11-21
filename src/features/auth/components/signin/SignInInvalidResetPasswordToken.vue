@@ -9,7 +9,7 @@
           <br />
           <br />
           Please try to
-          <router-link :to="{ name: 'forgot-password' }" class="ask-anna-link">reset your password</router-link>
+          <RouterLink :to="{ name: 'forgot-password' }" class="ask-anna-link">reset your password</RouterLink>
           again, or send us an email on <a href="mailto:support@askanna.io" target="_blank">support@askanna.io</a>.
         </AskAnnaCardText>
       </AskAnnaCard>

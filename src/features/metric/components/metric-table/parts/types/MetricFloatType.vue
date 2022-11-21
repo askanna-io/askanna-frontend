@@ -1,5 +1,5 @@
 <template>
-  <v-menu v-model="menu" :close-on-content-click="false" offset-y top>
+  <VMenu v-model="menu" :close-on-content-click="false" offset-y top>
     <template v-slot:activator="{ on }">
       <div v-on="on" class="list__item-content cursor--pointer">
         <div ref="divRef" class="list__item-value d-flex" :style="divStyles">
@@ -9,7 +9,7 @@
       </div>
     </template>
     <AskAnnaCard>
-      <v-app-bar dense height="40" flat>
+      <VAppBar dense height="40" flat>
         Name: {{ metricRow.name }}
         <AskAnnaSpacer />
         <AskAnnaButton small outlined color="secondary" @click="handleCopy" class="mx-2 btn--hover">
@@ -18,10 +18,10 @@
         <AskAnnaButton small icon @click="handleClose">
           <AskAnnaIcon>mdi-close</AskAnnaIcon>
         </AskAnnaButton>
-      </v-app-bar>
+      </VAppBar>
       <TheHighlight :value="slicedNumber" languageName="text" />
     </AskAnnaCard>
-  </v-menu>
+  </VMenu>
 </template>
 <script setup lang="ts">
 const props = defineProps({

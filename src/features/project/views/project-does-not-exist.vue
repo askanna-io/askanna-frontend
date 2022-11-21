@@ -1,13 +1,13 @@
 <template>
   <AskAnnaPageDoesNotExist pageTitle="project" outlined>
     <template v-slot:header v-if="isUserLoggedIn">
-      <v-breadcrumbs :items="breadcrumbs">
+      <VBreadcrumbs :items="breadcrumbs">
         <template v-slot:item="{ item }">
-          <v-breadcrumbs-item :to="item.to" exact>
+          <VBreadcrumbsItem :to="item.to" exact>
             {{ item.title }}
-          </v-breadcrumbs-item>
+          </VBreadcrumbsItem>
         </template>
-      </v-breadcrumbs>
+      </VBreadcrumbs>
     </template>
   </AskAnnaPageDoesNotExist>
 </template>

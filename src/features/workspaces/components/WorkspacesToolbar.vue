@@ -55,7 +55,7 @@
               class="mr-2"
               :placeholder="$vuetify.breakpoint.xsOnly ? 'Search...' : 'Search workspaces...'"
             />
-            <v-menu
+            <VMenu
               v-model="sortMenu"
               bottom
               offset-y
@@ -71,15 +71,15 @@
                   >{{ $vuetify.breakpoint.xsOnly ? '' : sortrTitle }}</AskAnnaButton
                 >
               </template>
-              <v-list>
-                <v-list-item-group v-model="activeSort" color="primary" @change="handleSort('workspaces')">
-                  <v-list-item v-for="(item, index) in sortItems" :key="index">
-                    <v-list-item-title>{{ item.title }}</v-list-item-title>
-                  </v-list-item>
-                </v-list-item-group>
-              </v-list>
-            </v-menu>
-            <v-menu
+              <VList>
+                <VListItemGroup v-model="activeSort" color="primary" @change="handleSort('workspaces')">
+                  <VListItem v-for="(item, index) in sortItems" :key="index">
+                    <VListItemTitle>{{ item.title }}</VListItemTitle>
+                  </VListItem>
+                </VListItemGroup>
+              </VList>
+            </VMenu>
+            <VMenu
               v-model="filterMenu"
               transition="slide-y-transition"
               :close-on-content-click="false"
@@ -127,7 +127,7 @@
                   </AskAnnaCard>
                 </AskAnnaCol>
               </AskAnnaRow>
-            </v-menu>
+            </VMenu>
           </AskAnnaFlex>
         </AskAnnaCol>
       </AskAnnaRow>

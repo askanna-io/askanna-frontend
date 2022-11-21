@@ -1,5 +1,5 @@
 <template>
-  <v-data-table
+  <VDataTable
     fixed-header
     :items="items"
     hide-default-footer
@@ -10,34 +10,34 @@
     class="job-table scrollbar cursor--pointer ask-anna-table ask-anna-table--with-links file-list"
   >
     <template v-slot:item.type="{ item }">
-      <router-link class="table-link table-link--unformated" :to="getRoutePath(item)">
+      <RouterLink class="table-link table-link--unformated" :to="getRoutePath(item)">
         <AskAnnaIcon v-if="item.type === 'directory'">mdi-folder</AskAnnaIcon>
         <AskAnnaIcon v-else>
           {{ getIcons(item.ext) }}
         </AskAnnaIcon>
-      </router-link>
+      </RouterLink>
     </template>
     <template v-slot:item.name="{ item }">
-      <router-link class="table-link table-link--unformated" :to="getRoutePath(item)">
+      <RouterLink class="table-link table-link--unformated" :to="getRoutePath(item)">
         {{ item.name }}
-      </router-link>
+      </RouterLink>
     </template>
     <template v-slot:item.last_modified="{ item }">
-      <router-link class="table-link table-link--unformated" :to="getRoutePath(item)">
+      <RouterLink class="table-link table-link--unformated" :to="getRoutePath(item)">
         {{ item.last_modified ? getUpdateDate($vuetify.breakpoint.xsOnly, item.last_modified) : '' }}
-      </router-link>
+      </RouterLink>
     </template>
     <template v-slot:item.size="{ item }">
-      <router-link class="table-link table-link--unformated" :to="getRoutePath(item)">
+      <RouterLink class="table-link table-link--unformated" :to="getRoutePath(item)">
         {{ sizeHumanize.humanizeSize(item.size) }}
-      </router-link>
+      </RouterLink>
     </template>
     <template v-slot:no-data>
       <AskAnnaAlert class="ma-4 text-center" dense outlined>
         {{ noDataAvailable }}
       </AskAnnaAlert>
     </template>
-  </v-data-table>
+  </VDataTable>
 </template>
 
 <script setup lang="ts">

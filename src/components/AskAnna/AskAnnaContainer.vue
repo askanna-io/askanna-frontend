@@ -1,7 +1,7 @@
 <template>
-  <v-container v-bind="$attrs" v-on="$listeners">
+  <VContainer v-bind="$attrs" v-on="$listeners">
     <slot />
-  </v-container>
+  </VContainer>
 </template>
 
 <script>

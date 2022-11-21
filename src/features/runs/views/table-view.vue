@@ -1,6 +1,6 @@
 <template>
   <AskAnnaCard class="mx-auto" flat>
-    <AskAnnaLoadingProgress :type="'table-row'" :loading="loading">
+    <AskAnnaLoadingProgress :loading="loading">
       <Runs
         :items="runs"
         :count="count"

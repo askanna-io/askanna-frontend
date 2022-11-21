@@ -1,6 +1,6 @@
 <template>
   <div class="text-center pl-1" v-if="true">
-    <v-menu
+    <VMenu
       eager
       offset-y
       v-model="menu"
@@ -18,7 +18,7 @@
       <AskAnnaCard>
         <WorkspaceCreateForm showCancel @onClose="menu = false" />
       </AskAnnaCard>
-    </v-menu>
+    </VMenu>
   </div>
 </template>
 

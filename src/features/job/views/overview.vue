@@ -27,7 +27,7 @@ const jobStore = useJobStore()
 const cronstrue = useCronstrue()
 const permission = usePermission()
 const projectStore = useProjectStore()
-const { route, router } = useRouterAskAnna()
+const { route, routerPush } = useRouterAskAnna()
 
 const { workspaceId, projectId } = route.params
 
@@ -47,7 +47,7 @@ const schedules = computed(() =>
 )
 
 const handleGoToCode = () =>
-  router.push({
+  routerPush({
     name: 'workspace-project-code',
     params: { projectId, workspaceId, packageId: projectStore.lastPackage.suuid }
   })

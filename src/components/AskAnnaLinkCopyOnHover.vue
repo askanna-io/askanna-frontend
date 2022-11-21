@@ -1,7 +1,7 @@
 <template>
-  <router-link class="ask-anna-link" :to="routeLinkParams()" @click="handleOnClick">
+  <RouterLink class="ask-anna-link" :to="routeLinkParams()" @click="handleOnClick">
     <template v-if="!$vuetify.breakpoint.xsOnly">
-      <v-hover v-slot="{ hover }" open-delay="200">
+      <VHover v-slot="{ hover }" open-delay="200">
         <div>
           {{ value }}
           <AskAnnaTooltip right content-class="opacity-1">
@@ -20,11 +20,11 @@
             <span>Copy</span>
           </AskAnnaTooltip>
         </div>
-      </v-hover>
+      </VHover>
     </template>
 
     <template v-else> #{{ value }} </template>
-  </router-link>
+  </RouterLink>
 </template>
 
 <script setup lang="ts">

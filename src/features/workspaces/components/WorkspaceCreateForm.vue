@@ -1,5 +1,5 @@
 <template>
-  <v-form ref="newWorkspaceFastForm" @submit.prevent="handlerCreateProject">
+  <VForm ref="newWorkspaceFastForm" @submit.prevent="handlerCreateProject">
     <AskAnnaCol cols="12" class="pb-0">
       <AskAnnaTextField
         v-model="workspaceStore.newWorkspace.name"
@@ -30,7 +30,7 @@
       </AskAnnaButton>
       <AskAnnaButton v-if="showCancel" small outlined text class="mr-1" @click="handleCancel">Cancel</AskAnnaButton>
     </AskAnnaCardActions>
-  </v-form>
+  </VForm>
 </template>
 
 <script setup lang="ts">
@@ -44,8 +44,8 @@ defineProps({
 const emit = defineEmits(['onClose'])
 
 const snackBar = useSnackBar()
-const { router } = useRouterAskAnna()
 const { RULES } = useValidationRules()
+const { routerPush } = useRouterAskAnna()
 const workspaceStore = useWorkspaceStore()
 const workspacesStore = useWorkspacesStore()
 
@@ -56,7 +56,7 @@ const nameRules = ref([RULES.required('Workspace name is required')])
 
 const handleMoreOptions = () => {
   emit('onClose')
-  router.push({
+  routerPush({
     name: 'workspace-new'
   })
 }

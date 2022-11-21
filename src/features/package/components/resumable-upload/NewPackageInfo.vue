@@ -4,7 +4,7 @@
       <div class="text--primary">
         <p>
           There is no code pushed to this project. Below you can find instructions on how you can use the AskAnna CLI (
-          <ask-anna-copy-text :text="cliInstall" />
+          <AskAnnaCopyText :text="cliInstall" />
           ) to push code to this project.
         </p>
         <p>
@@ -13,7 +13,7 @@
         </p>
         <div>COMMAND LINE INSTRUCTIONS</div>
         <p>
-          If you have installed the AskAnna CLI (<ask-anna-copy-text :text="cliInstall" />
+          If you have installed the AskAnna CLI ( <AskAnnaCopyText :text="cliInstall" />
           ), you can use the command line interface as well.
         </p>
         <p>
@@ -35,13 +35,13 @@
           and use this <span class="font-italic">askanna.yml</span> file.
         </p>
         <p>
-          <ask-anna-copy-text :text="projectUrl" />
+          <AskAnnaCopyText :text="projectUrl" />
         </p>
         <p>
           In your terminal, make sure you are in one of the project directories. Now you can run
-          <ask-anna-copy-text :text="askannaPush" />
+          <AskAnnaCopyText :text="askannaPush" />
           and follow the instructions in the terminal. If you don’t want to confirm every time you push a file, you can
-          use <ask-anna-copy-text :text="askannaPushForce" />
+          use <AskAnnaCopyText :text="askannaPushForce" />
         </p>
       </div>
     </AskAnnaCardText>

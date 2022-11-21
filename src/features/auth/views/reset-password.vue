@@ -7,21 +7,21 @@
             <img alt="AskAnna logo" src="/assets/logo.svg" class="logo" />
           </AskAnnaCol>
         </AskAnnaRow>
-        <AskAnnaLoadingProgress :type="'table-row'" :loading="loading" loadingTitle="Anna is checking your token...">
+        <AskAnnaLoadingProgress :loading="loading" loadingTitle="Anna is checking your token...">
           <AskAnnaRow align="center" justify="center" v-if="isInvitationValid">
             <AskAnnaCol cols="6" xl="2" md="4" sm="6" class="rounded">
-              <v-expansion-panels class="login-expansion" readonly mandatory>
-                <v-expansion-panel :key="0" active-class="colored-border">
-                  <v-expansion-panel-header hide-actions>
+              <VExpansionPanels class="login-expansion" readonly mandatory>
+                <VExpansionPanel :key="0" active-class="colored-border">
+                  <VExpansionPanelHeader hide-actions>
                     <AskAnnaRow no-gutters>
                       <AskAnnaCol cols="12" class="text-h6">Reset your password</AskAnnaCol>
                     </AskAnnaRow>
-                  </v-expansion-panel-header>
-                  <v-expansion-panel-content>
+                  </VExpansionPanelHeader>
+                  <VExpansionPanelContent>
                     <SignInResetForm />
-                  </v-expansion-panel-content>
-                </v-expansion-panel>
-              </v-expansion-panels>
+                  </VExpansionPanelContent>
+                </VExpansionPanel>
+              </VExpansionPanels>
             </AskAnnaCol>
           </AskAnnaRow>
 
@@ -59,9 +59,6 @@ const fetchData = async () => {
 onBeforeMount(() => fetchData())
 </script>
 <style scoped>
-.login-wrapper {
-  height: 100vh;
-}
 .logo {
   height: 74px;
 }

@@ -1,5 +1,5 @@
 <template>
-  <v-snackbar
+  <VSnackbar
     top
     app
     right
@@ -37,9 +37,9 @@
           >{{ item.name }}</AskAnnaButton
         ></small
       >
-      <v-progress-linear class="mt-1" :buffer-value="item.progress" stream color="white" />
+      <VProgressLinear class="mt-1" :buffer-value="item.progress" stream color="white" />
     </div>
-  </v-snackbar>
+  </VSnackbar>
 </template>
 
 <script ref setup lang="ts">

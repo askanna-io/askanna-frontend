@@ -1,5 +1,5 @@
 <template>
-  <workspace-project-list
+  <WorkspaceProjectList
     v-scroll="throttle(onScroll, 1000)"
     :items="projects"
     :queryParams="queryParams"

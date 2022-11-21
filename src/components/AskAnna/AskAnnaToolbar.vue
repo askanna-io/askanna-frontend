@@ -1,5 +1,5 @@
 <template>
-  <v-toolbar v-bind="$attrs" v-on="$listeners">
+  <VToolbar v-bind="$attrs" v-on="$listeners">
     <template v-for="(_, slot) in $slots" #[slot]="scope">
       <slot :name="slot" v-bind="scope" />
     </template>
@@ -7,7 +7,7 @@
     <template v-for="(_, slot) in $slots" #[slot]>
       <slot :name="slot" />
     </template>
-  </v-toolbar>
+  </VToolbar>
 </template>
 
 <script>

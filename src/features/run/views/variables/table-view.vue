@@ -1,5 +1,5 @@
 <template>
-  <AskAnnaLoadingProgress classes="mx-4 mb-4" :type="'table-row'" :loading="loading">
+  <AskAnnaLoadingProgress classes="mx-4 mb-4" :loading="loading">
     <div>
       <VariablesTableView
         v-if="items.length || isSorted"
@@ -33,8 +33,8 @@ const { runId: suuid } = route.params
 const isSorted = ref(false)
 
 const sticked = computed(() => !projectStore.menu.sticked)
-const labels = computed(() => runStore.run.variables_meta.label_names)
 const next = computed(() => runVariablesStore.variables.next)
+const labels = computed(() => runStore.run.variables_meta?.label_names)
 
 const items = computed(() => runVariablesStore.variables.results)
 const loading = computed(() => runVariablesStore.loading.variables)

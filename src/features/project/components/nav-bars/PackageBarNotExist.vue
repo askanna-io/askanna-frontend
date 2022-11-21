@@ -2,18 +2,18 @@
   <div>
     <div v-sticky="true" on-stick="onStick" sticky-offset="{top: 52, bottom: 10}">
       <AskAnnaToolbar v-if="sticked" ref="refToolbar" dense color="white" class="br-r5 ma-3" :flat="!sticked">
-        <v-breadcrumbs v-if="sticked" class="pl-0" :items="projectBreadcrumbs">
+        <VBreadcrumbs v-if="sticked" class="pl-0" :items="projectBreadcrumbs">
           <template v-slot:item="{ item }">
-            <v-breadcrumbs-item :to="item.to" :exact="item.exact">
+            <VBreadcrumbsItem :to="item.to" :exact="item.exact">
               {{ item.title }}
-            </v-breadcrumbs-item>
+            </VBreadcrumbsItem>
           </template>
-        </v-breadcrumbs>
+        </VBreadcrumbs>
       </AskAnnaToolbar>
       <AskAnnaCard v-if="sticked" :class="{ 'ma-3': sticked }">
         <AskAnnaCardTitle transition="slide-y-transition">
           <AskAnnaToolbar dense color="white" flat class="br-r5">
-            <project-menu :projectName="project.name" />
+            <ProjectMenu :projectName="project.name" />
             <AskAnnaSpacer />
           </AskAnnaToolbar>
         </AskAnnaCardTitle>
@@ -21,17 +21,17 @@
     </div>
 
     <div class="askAnna-breadcrumbs" :class="{ 'mb-2': $vuetify.breakpoint.xsOnly }">
-      <v-breadcrumbs
+      <VBreadcrumbs
         v-if="!sticked"
         :items="projectBreadcrumbs"
         :class="{ 'py-0 mt-0 pl-3': $vuetify.breakpoint.xsOnly }"
       >
         <template v-slot:item="{ item }">
-          <v-breadcrumbs-item :to="item.to" :exact="item.exact">
+          <VBreadcrumbsItem :to="item.to" :exact="item.exact">
             {{ item.title }}
-          </v-breadcrumbs-item>
+          </VBreadcrumbsItem>
         </template>
-      </v-breadcrumbs>
+      </VBreadcrumbs>
     </div>
 
     <AskAnnaDivider />

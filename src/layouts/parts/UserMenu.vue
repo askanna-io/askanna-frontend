@@ -3,11 +3,11 @@
     <AskAnnaButton @click="uploadStatus.showHideSnackBar()" icon :color="uploadStatus.colorStatus">
       <AskAnnaIcon>{{ uploadStatus.iconStatus }}</AskAnnaIcon>
     </AskAnnaButton>
-    <v-menu transition="slide-y-transition" min-width="100px" offset-y close-on-content-click>
+    <VMenu transition="slide-y-transition" min-width="100px" offset-y close-on-content-click>
       <template v-slot:activator="{ on }">
         <AskAnnaButton icon v-on="on">
           <AskAnnaAvatar class="ma-2" rounded="35" :size="35" tile>
-            <v-img
+            <VImg
               class="img--rounded"
               :src="
                 (workspaceProfile.membership &&
@@ -20,14 +20,14 @@
         </AskAnnaButton>
       </template>
 
-      <v-list>
-        <v-list-item :key="'profile'" exact :to="profileRoute"> Edit my profile </v-list-item>
-        <v-list-item href="https://docs.askanna.io" target="_blank">
-          <v-list-item-title>Documentation</v-list-item-title>
-        </v-list-item>
-        <v-list-item :key="'logout'" exact @click="authStore.logout()">Logout </v-list-item>
-      </v-list>
-    </v-menu>
+      <VList>
+        <VListItem :key="'profile'" exact :to="profileRoute"> Edit my profile</VListItem>
+        <VListItem href="https://docs.askanna.io" target="_blank">
+          <VListItemTitle>Documentation</VListItemTitle>
+        </VListItem>
+        <VListItem :key="'logout'" exact @click="handleLogout()">Logout</VListItem>
+      </VList>
+    </VMenu>
   </div>
 </template>
 
@@ -37,6 +37,7 @@ const authStore = useAuthStore()
 const userStore = useUserStore()
 const peopleStore = usePeopleStore()
 const uploadStatus = useUploadStatus()
+const { routerPush } = useRouterAskAnna()
 const workspaceStore = useWorkspaceStore()
 
 const isMember = computed(() => workspaceStore.workspace.is_member)
@@ -50,4 +51,9 @@ const profileRoute = computed(() => {
   }
   return { name: 'profile' }
 })
+
+const handleLogout = async () => {
+  await authStore.logout()
+  routerPush({ path: '/signin' })
+}
 </script>

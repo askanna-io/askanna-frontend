@@ -3,36 +3,36 @@
     <div v-sticky="true" on-stick="onStick" sticky-offset="{top: 52, bottom: 10}">
       <AskAnnaToolbar v-if="sticked" ref="refToolbar" dense color="white" class="br-r5 ma-3" :flat="!sticked">
         <div class="askAnna-breadcrumbs">
-          <v-breadcrumbs v-if="sticked" class="pl-0" :items="projectBreadcrumbs">
+          <VBreadcrumbs v-if="sticked" class="pl-0" :items="projectBreadcrumbs">
             <template v-slot:item="{ item }">
-              <v-breadcrumbs-item :to="item.to" :exact="item.exact">
+              <VBreadcrumbsItem :to="item.to" :exact="item.exact">
                 {{ item.title }}
-              </v-breadcrumbs-item>
+              </VBreadcrumbsItem>
             </template>
-          </v-breadcrumbs>
+          </VBreadcrumbs>
         </div>
       </AskAnnaToolbar>
       <AskAnnaCard v-if="sticked" :class="{ 'ma-3': sticked }">
         <AskAnnaCardTitle transition="slide-y-transition">
           <AskAnnaToolbar dense color="white" flat class="br-r5">
-            <project-menu :projectName="project.name" :isEditProjectView="isEditProjectView" />
+            <ProjectMenu :projectName="project.name" :isEditProjectView="isEditProjectView" />
             <AskAnnaSpacer />
           </AskAnnaToolbar>
         </AskAnnaCardTitle>
       </AskAnnaCard>
     </div>
     <div class="askAnna-breadcrumbs" :class="{ 'mb-2': $vuetify.breakpoint.xsOnly }">
-      <v-breadcrumbs
+      <VBreadcrumbs
         v-if="!sticked"
         :items="projectBreadcrumbs"
         :class="{ 'py-0 mt-0 pl-3': $vuetify.breakpoint.xsOnly }"
       >
         <template v-slot:item="{ item }">
-          <v-breadcrumbs-item :to="item.to" :exact="item.exact">
+          <VBreadcrumbsItem :to="item.to" :exact="item.exact">
             {{ item.title }}
-          </v-breadcrumbs-item>
+          </VBreadcrumbsItem>
         </template>
-      </v-breadcrumbs>
+      </VBreadcrumbs>
     </div>
     <AskAnnaDivider v-if="!isEditProjectView && !$vuetify.breakpoint.xsOnly" />
 
@@ -40,7 +40,7 @@
       <AskAnnaIcon large left> mdi-semantic-web </AskAnnaIcon>
       <span class="title font-weight-light">{{ project.name }}</span>
     </AskAnnaCardTitle>
-    <ask-anna-description
+    <AskAnnaDescription
       v-if="!isEditProjectView && project.description !== '<p></p>'"
       readonly
       :description="project.description"
@@ -56,7 +56,7 @@
             color="white"
             :class="{ 'br-r5 ma-3': !$vuetify.breakpoint.xsOnly, 'ma-0 with-tabs': $vuetify.breakpoint.xsOnly }"
           >
-            <project-menu :projectName="project.name" :isEditProjectView="isEditProjectView" />
+            <ProjectMenu :projectName="project.name" :isEditProjectView="isEditProjectView" />
             <AskAnnaSpacer />
             <ProjectMenuPopup
               v-if="!isEditProjectView && (projectRemove || projectInfoEdit)"

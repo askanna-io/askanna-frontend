@@ -2,7 +2,7 @@ import { peopleRoutes } from '@/features/people/config'
 import { projectRoutes } from '@/features/project/config'
 import { PERMISSIONS_LABELS } from '@/features/workspace/types'
 
-export default {
+export const workspace = {
   paths: [
     {
       path: '/workspace-new',

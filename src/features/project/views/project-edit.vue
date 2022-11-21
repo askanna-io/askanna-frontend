@@ -1,5 +1,5 @@
 <template>
-  <AskAnnaLoadingProgress :type="'table-row'" :loading="loading">
+  <AskAnnaLoadingProgress :loading="loading">
     <AskAnnaCard flat>
       <Project
         v-if="projectInfoEdit"
@@ -13,7 +13,7 @@
       />
       <AskAnnaAlert v-else class="mx-2 my-4 text-center" dense outlined>
         You are not allowed to edit this project. I can bring you back to the project
-        <router-link :to="{ name: 'workspace-project' }" class="ask-anna-link">{{ projectData.name }}</router-link
+        <RouterLink :to="{ name: 'workspace-project' }" class="ask-anna-link">{{ projectData.name }}</RouterLink
         >.
       </AskAnnaAlert>
     </AskAnnaCard>
@@ -28,7 +28,7 @@ const permission = usePermission()
 const projectStore = useProjectStore()
 const projectsStore = useProjectsStore()
 const workspaceStore = useWorkspaceStore()
-const { route, router } = useRouterAskAnna()
+const { route, routerPush } = useRouterAskAnna()
 const workspaceProjectsStore = useWorkspaceProjectsStore()
 
 const { routeBackTo = 'workspace-project' } = route.params
@@ -72,7 +72,7 @@ const handleSaveDescription = async () => {
 }
 
 const handleCancel = () => {
-  router.push({
+  routerPush({
     name: routeBackTo
   })
 }

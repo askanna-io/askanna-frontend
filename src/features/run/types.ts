@@ -1,5 +1,10 @@
 export const FINISHED_STATUSES = ['failed', 'finished', 'completed']
 
+export interface LabelName {
+  name: string
+  type: string
+}
+
 export interface Package {
   suuid: string
   cdn_base_url: string
@@ -68,6 +73,11 @@ export interface Run {
     name: string
     label?: string
     timezone: string
+  }
+  variables_meta: {
+    count: number
+    size: number
+    label_names: LabelName[]
   }
 }
 export interface File {

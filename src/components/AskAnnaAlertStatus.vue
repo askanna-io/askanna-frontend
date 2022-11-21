@@ -2,11 +2,11 @@
   <AskAnnaAlert
     :width="'auto'"
     text
-    outlined
     dense
-    :color="statusColor"
-    :icon="statusIcon"
+    outlined
     :height="32"
+    :icon="statusIcon"
+    :color="statusColor"
     class="mb-0 askanna-alert"
     :class="{ 'px-1': $vuetify.breakpoint.xsOnly }"
   >

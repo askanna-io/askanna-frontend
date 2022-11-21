@@ -1,7 +1,7 @@
 <template>
-  <component :is="tag" class="text-left" :key="label" :style="labelStyles">
+  <Component :is="tag" class="text-left" :key="label" :style="labelStyles">
     <MetricValue :metricRow="labelValue" :isLabels="isLabels" :isLabel="isLabel" />
-  </component>
+  </Component>
 </template>
 <script setup lang="ts">
 const props = defineProps({

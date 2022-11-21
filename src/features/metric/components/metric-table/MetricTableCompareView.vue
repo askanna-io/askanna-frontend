@@ -1,5 +1,5 @@
 <template>
-  <v-data-table
+  <VDataTable
     class="pt-2"
     fixed-header
     :height="height"
@@ -16,7 +16,7 @@
             :class="{ 'AskAnna-box-shadow--none': isLabels }"
             class="text-left text-subtitle-2 font-weight-bold h-20"
           >
-            <sort-filter-by-metric-name />
+            <SortFilterByName />
           </th>
 
           <th
@@ -26,7 +26,7 @@
             :class="{ 'AskAnna-box-shadow--none': isLabels }"
             class="text-left text-subtitle-2 font-weight-bold h-20"
           >
-            <sort-filter-by-metric-value />
+            <SortFilterByValue />
           </th>
           <th
             v-if="isLabels"
@@ -52,11 +52,11 @@
           <tr :key="index">
             <td>{{ item.metric[0].name }}</td>
             <td class="text-left" v-for="(metric, index2) in item.metric" :key="index2">
-              <metric-value :metricRow="metric" :fullText="true" :isLabels="isLabels" />
+              <MetricValue :metricRow="metric" :fullText="true" :isLabels="isLabels" />
             </td>
 
             <template v-if="labels.length">
-              <metric-table-label-td
+              <MetricTableLabelTd
                 v-for="label in labels"
                 :key="label.name + index"
                 :label="label.name"
@@ -69,17 +69,14 @@
         </template>
       </tbody>
     </template>
-  </v-data-table>
+  </VDataTable>
 </template>
 <script lang="ts">
 import MetricValue from './parts/MetricValue.vue'
-import LableFilter from './parts/LableFilter.vue'
 import MetricTableLabelTd from './parts/MetricTableLabelTd.vue'
-import SortFilterByMetricName from './parts/sort-filter/SortFilterByMetricName.vue'
-import SortFilterByMetricValue from './parts/sort-filter/SortFilterByMetricValue.vue'
-import SortFilterByMetricLabel from './parts/sort-filter/SortFilterByMetricLabel.vue'
-
 import useSortFilterTable from './parts/sort-filter/useSortFilterTable'
+import SortFilterByName from './parts/sort-filter/SortFilterByName.vue'
+import SortFilterByValue from './parts/sort-filter/SortFilterByValue.vue'
 
 export default defineComponent({
   name: 'MetricTableView',
@@ -102,11 +99,9 @@ export default defineComponent({
 
   components: {
     MetricValue,
-    LableFilter,
     MetricTableLabelTd,
-    SortFilterByMetricName,
-    SortFilterByMetricValue,
-    SortFilterByMetricLabel
+    SortFilterByName,
+    SortFilterByValue
   },
 
   setup(props, context) {

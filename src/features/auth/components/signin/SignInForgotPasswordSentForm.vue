@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-form
+    <VForm
       v-if="!isSent"
       ref="forgotPasswordSentFormRef"
       v-model="isFormValid"
@@ -16,9 +16,9 @@
         dense
         outlined
         required
+        label="Email"
         validate-on-blur
         autocomplete="off"
-        label="Email"
         :error-messages="error.email || error.username"
         :rules="[RULES.required('The email is required'), RULES.email('The email you entered is not valid', 3)]"
       />
@@ -26,7 +26,7 @@
       <AskAnnaButton :disabled="!isFormValid" color="primary" @click.stop="handleSentEmail">
         Email me the reset instructions
       </AskAnnaButton>
-    </v-form>
+    </VForm>
     <div v-if="isSent">
       <p>We have successfully processed your password reset request.</p>
       <p>
@@ -49,7 +49,7 @@ type VForm = Vue & {
 }
 
 const authStore = useAuthStore()
-const { router } = useRouterAskAnna()
+const { routerPush } = useRouterAskAnna()
 const { RULES } = useValidationRules()
 
 const username = ref('')
@@ -80,19 +80,14 @@ const handleSentEmail = async () => {
   isSent.value = true
 }
 
-const handleGoToLogin = () => router.push({ name: 'signin' })
+const handleGoToLogin = () => routerPush({ name: 'signin' })
 
-const resetError = () => {
-  error = { email: '', username: '' }
-}
-
-const resetValidation = () => forgotPasswordSentForm.value.resetValidation()
+const resetError = () => Object.assign(error, { email: '', username: '' })
 
 watch(username, async () => {
   // check if exist error from backend on typing fields, try resest validation
   if (Object.values(error).some(item => item.length)) {
     resetError()
-    resetValidation()
   }
 })
 </script>

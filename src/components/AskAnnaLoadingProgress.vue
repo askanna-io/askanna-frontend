@@ -9,7 +9,7 @@
       <AskAnnaCardText class="text-center">
         <p class="mb-1">{{ loadingTitle }}</p>
 
-        <v-progress-linear
+        <VProgressLinear
           color="primary"
           class="mb-0"
           :buffer-value="bufferValue"
@@ -18,9 +18,9 @@
         />
       </AskAnnaCardText>
     </AskAnnaCard>
-    <v-expand-transition>
+    <VExpandTransition>
       <slot v-if="!isLoading && !loading" />
-    </v-expand-transition>
+    </VExpandTransition>
   </div>
 </template>
 
@@ -37,10 +37,6 @@ const props = defineProps({
     default: false
   },
   loading: {
-    type: Boolean,
-    default: true
-  },
-  simulate: {
     type: Boolean,
     default: true
   },
@@ -87,7 +83,7 @@ const stopLoading = () => {
       bufferValue.value = 100
       loadingProgress.value = 0
     },
-    100,
+    10,
     'later'
   )
 }

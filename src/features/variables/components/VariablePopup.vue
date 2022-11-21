@@ -1,5 +1,5 @@
 <template>
-  <v-dialog
+  <VDialog
     v-model="variablesStore.variablePopup"
     max-width="500px"
     persistent
@@ -7,16 +7,16 @@
     @keydown.esc="handleClose"
   >
     <AskAnnaCard min-width="310px" max-width="500px">
-      <v-app-bar dense color="white" flat>
+      <VAppBar dense color="white" flat>
         <span class="title font-weight-light">{{ formTitle }}</span>
         <AskAnnaSpacer />
 
         <AskAnnaButton icon @click="handleClose">
           <AskAnnaIcon>mdi-close</AskAnnaIcon>
         </AskAnnaButton>
-      </v-app-bar>
+      </VAppBar>
       <AskAnnaCardText class="pa-0">
-        <v-form ref="variableFormRef" v-model="isFormValid" @submit="handleSave">
+        <VForm ref="variableFormRef" v-model="isFormValid" @submit="handleSave">
           <AskAnnaContainer class="pb-0 pt-0">
             <AskAnnaRow>
               <AskAnnaCol cols="12" sm="12" md="12" class="pb-0">
@@ -68,7 +68,7 @@
               </AskAnnaCol>
             </AskAnnaRow>
           </AskAnnaContainer>
-        </v-form>
+        </VForm>
       </AskAnnaCardText>
 
       <AskAnnaCardActions class="pl-3 pr-2">
@@ -89,7 +89,7 @@
       @onDelete="handleConfirmDeleteItem"
       @onCloseDeletePopup="handleCloseDelete"
     />
-  </v-dialog>
+  </VDialog>
 </template>
 <script setup lang="ts">
 const props = defineProps({

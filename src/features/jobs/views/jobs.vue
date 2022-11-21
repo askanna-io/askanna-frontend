@@ -1,9 +1,9 @@
 <template>
   <AskAnnaCard flat class="px-3 mt-2 br-none" outlined>
-    <AskAnnaLoadingProgress :type="'table-row'" :loading="jobsStore.loading">
+    <AskAnnaLoadingProgress :loading="jobsStore.loading">
       <AskAnnaRow align="center" justify="center">
         <AskAnnaCol cols="12" class="pa-0">
-          <jobs-list :jobList="jobsStore.jobs" />
+          <JobsList :jobList="jobsStore.jobs" />
         </AskAnnaCol>
       </AskAnnaRow>
     </AskAnnaLoadingProgress>
