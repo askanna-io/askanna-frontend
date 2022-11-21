@@ -47,7 +47,7 @@
                 >
                   <AskAnnaIcon color="secondary" left>mdi-history</AskAnnaIcon>History
                 </AskAnnaButton>
-                <v-menu
+                <VMenu
                   v-if="$vuetify.breakpoint.xsOnly"
                   v-model="menu"
                   nudge-left="10"
@@ -62,18 +62,18 @@
                       <AskAnnaIcon>mdi-dots-vertical</AskAnnaIcon>
                     </AskAnnaButton>
                   </template>
-                  <v-list dense>
-                    <v-list-item dense @click="handleHistory()">
-                      <v-list-item-title>History</v-list-item-title>
-                    </v-list-item>
-                  </v-list>
-                </v-menu>
+                  <VList dense>
+                    <VListItem dense @click="handleHistory()">
+                      <VListItemTitle>History</VListItemTitle>
+                    </VListItem>
+                  </VList>
+                </VMenu>
               </div>
             </AskAnnaSlideYTransition>
           </template>
         </PackageToolbar>
-        <v-expand-transition>
-          <resumable-upload
+        <VExpandTransition>
+          <ResumableUpload
             v-if="isRaplace"
             isReplace
             @cancelUpload="handleReplace"
@@ -81,9 +81,9 @@
             class="py-2 px-4"
             :id="packageId"
           />
-        </v-expand-transition>
+        </VExpandTransition>
         <template v-if="isProcessing && !isRaplace">
-          <package-processing />
+          <PackageProcessing />
         </template>
         <template v-else>
           <PackageFile
@@ -122,7 +122,7 @@ const permission = usePermission()
 const { height } = useWindowSize()
 const packageStore = usePackageStore()
 const projectStore = useProjectStore()
-const { route, router } = useRouterAskAnna()
+const { route, routerPush } = useRouterAskAnna()
 const packagesStore = usePackagesStore()
 const breadcrumbs = usePackageBreadcrumbs()
 const forceFileDownload = useForceFileDownload()
@@ -240,7 +240,7 @@ const getRoutePath = item => {
 }
 
 const handleHistory = () => {
-  router.push({
+  routerPush({
     name: 'workspace-project-code-package-history',
     params: { projectId: params.value.projectId, packageId: packageId.value }
   })
@@ -269,17 +269,6 @@ const handleCloseOutside = async () => {
   })
   isRaplace.value = false
 }
-
-// check if current package the same as in store
-watch(
-  () => router.route,
-  async () => {
-    if (useProjectPackageId) {
-      isRaplace.value = false
-      await getPackage()
-    }
-  }
-)
 
 const loading = computed(() => packageStore.loading)
 const filePath = computed(() =>
@@ -321,8 +310,7 @@ const fetchData = async () => {
 }
 
 onBeforeMount(() => fetchData())
-
-watch(projectIdCd, async () => !loading.value && (await getPackage()))
+//watch(projectIdCd, async () => !loading.value && (await getPackage()))
 
 onUnmounted(() => {
   clearInterval(polling.value)
@@ -338,6 +326,17 @@ watch(currentPath, async currentPath => {
     url: `${packageStore.packageData.cdn_base_url}/${filePath.value}`
   })
 })
+
+// check if current package the same as in store
+watch(
+  () => route,
+  async () => {
+    if (useProjectPackageId) {
+      isRaplace.value = false
+      await getPackage()
+    }
+  }
+)
 </script>
 <style>
 .replace-active {

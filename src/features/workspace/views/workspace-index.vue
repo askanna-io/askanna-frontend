@@ -8,13 +8,13 @@
       :class="{ 'pa-3 py-3': !$vuetify.breakpoint.xsOnly }"
     >
       <div class="askAnna-breadcrumbs">
-        <v-breadcrumbs :items="breadcrumbs" class="pa-0 pl-1">
+        <VBreadcrumbs :items="breadcrumbs" class="pa-0 pl-1">
           <template v-slot:item="{ item }">
-            <v-breadcrumbs-item :to="item.to" :exact="item.exact">
+            <VBreadcrumbsItem :to="item.to" :exact="item.exact">
               {{ item.title }}
-            </v-breadcrumbs-item>
+            </VBreadcrumbsItem>
           </template>
-        </v-breadcrumbs>
+        </VBreadcrumbs>
       </div>
     </AskAnnaCard>
     <WorkspaceToolbar
@@ -25,8 +25,8 @@
       :isCurrentUserAdmin="isCurrentUserAdmin"
       @onOpenWorkspaceRemove="handleOpenWorkspaceRemove"
     />
-    <AskAnnaLoadingProgress :type="'table-row'" :loading="loading" fullWidth>
-      <router-view />
+    <AskAnnaLoadingProgress :loading="loading" fullWidth>
+      <RouterView />
     </AskAnnaLoadingProgress>
     <WorkspaceConfirmDeletePopup
       :workspaceName="workspace.name"
@@ -39,7 +39,7 @@
 <script setup lang="ts">
 const peopleStore = usePeopleStore()
 const workspaceStore = useWorkspaceStore()
-const { route, router } = useRouterAskAnna()
+const { route, routerPush } = useRouterAskAnna()
 const workspaceProjectsStore = useWorkspaceProjectsStore()
 
 const breadcrumbs = useBreadcrumbs({ start: 0, end: 2 })
@@ -62,7 +62,7 @@ const handleDeleteConfirmWorkspace = async () => {
   deleteWorkspaceConfirmPopup.value = false
 
   if (isDeleted) {
-    router.push({ path: '/' })
+    routerPush({ path: '/' })
   }
 }
 </script>

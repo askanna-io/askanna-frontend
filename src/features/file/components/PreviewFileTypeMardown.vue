@@ -1,6 +1,6 @@
 <template>
   <AskAnnaFlex class="fill-height px-5" fluid>
-    <v-fade-transition mode="out-in">
+    <VFadeTransition mode="out-in">
       <Markdown
         :images="images"
         :source="fileSource"
@@ -13,7 +13,7 @@
         typographer
         xhtmlOut
       />
-    </v-fade-transition>
+    </VFadeTransition>
   </AskAnnaFlex>
 </template>
 

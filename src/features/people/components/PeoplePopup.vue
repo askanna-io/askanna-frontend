@@ -1,21 +1,21 @@
 <template>
   <AskAnnaRow justify="center">
-    <v-dialog v-model="openVmodel" max-width="400px" origin content-class="overflow-x-hidden">
+    <VDialog v-model="openVmodel" max-width="400px" origin content-class="overflow-x-hidden">
       <AskAnnaCard class="text-center position">
-        <v-app-bar flat dense white--text color="white">
+        <VAppBar flat dense white--text color="white">
           <AskAnnaSpacer />
 
           <AskAnnaButton icon @click="openVmodel = false">
             <AskAnnaIcon>mdi-close</AskAnnaIcon>
           </AskAnnaButton>
-        </v-app-bar>
+        </VAppBar>
 
         <AskAnnaContainer pa-0 class="avatar--wrapper">
           <AskAnnaRow>
             <AskAnnaCol class="pt-0 pb-0" cols="12" align-self="start">
               <AskAnnaAvatar rounded="21" :size="people.avatar ? 150 : 150" tile>
-                <v-img v-if="people.avatar" class="img--rounded" :src="people.avatar.large" />
-                <v-img v-else class="img--rounded" src="@/assets/icons/ask-annna-default-gravatar.png" />
+                <VImg v-if="people.avatar" class="img--rounded" :src="people.avatar.large" />
+                <VImg v-else class="img--rounded" src="@/assets/icons/ask-annna-default-gravatar.png" />
               </AskAnnaAvatar>
             </AskAnnaCol>
             <AskAnnaCol :class="[people.avatar ? 'pt-1' : 'pt-0']">
@@ -27,12 +27,12 @@
           <AskAnnaContainer pa-0>
             <AskAnnaRow>
               <AskAnnaCol class="pt-0" cols="12" align-self="start">
-                <v-list-item>
-                  <v-list-item-content>
-                    <v-list-item-title class="title">{{ people.name || people.email }}</v-list-item-title>
-                    <v-list-item-subtitle class="text-subtitle-2">{{ people.job_title }}</v-list-item-subtitle>
-                  </v-list-item-content>
-                </v-list-item>
+                <VListItem>
+                  <VListItemContent>
+                    <VListItemTitle class="title">{{ people.name || people.email }}</VListItemTitle>
+                    <VListItemSubtitle class="text-subtitle-2">{{ people.job_title }}</VListItemSubtitle>
+                  </VListItemContent>
+                </VListItem>
               </AskAnnaCol>
             </AskAnnaRow>
           </AskAnnaContainer>
@@ -160,7 +160,7 @@
           </AskAnnaRow>
         </AskAnnaCardActions>
       </AskAnnaCard>
-    </v-dialog>
+    </VDialog>
   </AskAnnaRow>
 </template>
 <script setup lang="ts">

@@ -4,7 +4,7 @@
   </AskAnnaButton>
 </template>
 <script setup lang="ts">
-const { router } = useRouterAskAnna()
+const { routerPush } = useRouterAskAnna()
 
-const handleOpenForgotPage = () => router.push({ name: 'forgot-password' })
+const handleOpenForgotPage = () => routerPush({ name: 'forgot-password' })
 </script>

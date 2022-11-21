@@ -1,5 +1,5 @@
 <template>
-  <AskAnnaLoadingProgress :type="'table-row'" :loading="loading">
+  <AskAnnaLoadingProgress :loading="loading">
     <AskAnnaCard class="mx-auto mt-3" flat>
       <div ref="verticalScrollContainerRef" class="scroll-container" :style="scrollContainerStyle">
         <CollapsibleSection open readonly class="sticky">
@@ -54,8 +54,7 @@
               v-for="(run, index2) in compareRunsStore.runs.results"
               :key="index2"
               :type="item.type"
-              :value="get(run, item.field)"
-            /> </ComparisonList
+              :value="get(run, item.field)" /></ComparisonList
         ></CollapsibleSection>
 
         <CollapsibleSection

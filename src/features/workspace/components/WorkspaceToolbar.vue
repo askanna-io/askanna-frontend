@@ -66,7 +66,7 @@
               @input="debounceedSearch"
               :placeholder="$vuetify.breakpoint.xsOnly ? 'Search...' : 'Search projects...'"
             />
-            <v-menu
+            <VMenu
               v-model="sortMenu"
               bottom
               offset-y
@@ -82,15 +82,15 @@
                   >{{ $vuetify.breakpoint.xsOnly ? '' : sortrTitle }}</AskAnnaButton
                 >
               </template>
-              <v-list>
-                <v-list-item-group v-model="activeSort" color="primary" @change="handleSort('workspace')">
-                  <v-list-item v-for="(item, index) in sortItems" :key="index">
-                    <v-list-item-title>{{ item.title }}</v-list-item-title>
-                  </v-list-item>
-                </v-list-item-group>
-              </v-list>
-            </v-menu>
-            <v-menu
+              <VList>
+                <VListItemGroup v-model="activeSort" color="primary" @change="handleSort('workspace')">
+                  <VListItem v-for="(item, index) in sortItems" :key="index">
+                    <VListItemTitle>{{ item.title }}</VListItemTitle>
+                  </VListItem>
+                </VListItemGroup>
+              </VList>
+            </VMenu>
+            <VMenu
               v-if="isSignIn"
               v-model="filterMenu"
               transition="slide-y-transition"
@@ -125,7 +125,7 @@
                   </AskAnnaCard>
                 </AskAnnaCol>
               </AskAnnaRow>
-            </v-menu>
+            </VMenu>
           </AskAnnaFlex>
         </AskAnnaCol>
       </AskAnnaRow>

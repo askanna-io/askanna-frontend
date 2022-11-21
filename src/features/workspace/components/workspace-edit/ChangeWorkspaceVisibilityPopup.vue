@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="valueModel" max-width="650px" @click:outside="handleCancel">
+  <VDialog v-model="valueModel" max-width="650px" @click:outside="handleCancel">
     <AskAnnaCard class="AskAnna-card AskAnna-card--in-dialog">
       <AskAnnaToolbar flat dense white--text color="white">
         <AskAnnaToolbarTitle class="px-0"
@@ -36,7 +36,7 @@
         </AskAnnaButton>
       </AskAnnaCardActions>
     </AskAnnaCard>
-  </v-dialog>
+  </VDialog>
 </template>
 <script setup lang="ts">
 const props = defineProps({

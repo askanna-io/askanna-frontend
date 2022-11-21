@@ -1,7 +1,7 @@
 <template>
-  <v-toolbar-title v-bind="$attrs" v-on="$listeners">
+  <VToolbarTitle v-bind="$attrs" v-on="$listeners">
     <slot />
-  </v-toolbar-title>
+  </VToolbarTitle>
 </template>
 
 <script>

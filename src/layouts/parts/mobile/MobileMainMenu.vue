@@ -5,20 +5,20 @@
     :class="{ 'sticky-fox': isSticky }"
     sticky-offset="{top: 58, bottom: 10}"
   >
-    <v-list dense>
+    <VList dense>
       <MobileWorkspacesMenu @onClose="handleClickOnMenuItem" />
       <MobileProjectsMenu @onClose="handleClickOnMenuItem" />
 
-      <v-list class="pt-0">
-        <v-list-item @click="handleClickOnMenuItem" href="https://docs.askanna.io" target="_blank">
-          <v-list-item-title>Documentation</v-list-item-title>
-        </v-list-item>
-        <v-list-item @click="handleClickOnMenuItem" :key="'profile'" exact :to="profileRoute"
-          ><v-list-item-title>Edit my profile</v-list-item-title></v-list-item
+      <VList class="pt-0">
+        <VListItem @click="handleClickOnMenuItem" href="https://docs.askanna.io" target="_blank">
+          <VListItemTitle>Documentation</VListItemTitle>
+        </VListItem>
+        <VListItem @click="handleClickOnMenuItem" :key="'profile'" exact :to="profileRoute"
+          ><VListItemTitle>Edit my profile</VListItemTitle></VListItem
         >
-        <v-list-item :key="'logout'" exact @click="logout"><v-list-item-title>Logout</v-list-item-title></v-list-item>
-      </v-list>
-    </v-list>
+        <VListItem :key="'logout'" exact @click="logout"><VListItemTitle>Logout</VListItemTitle></VListItem>
+      </VList>
+    </VList>
   </AskAnnaCard>
 </template>
 
@@ -30,6 +30,7 @@ const emit = defineEmits('onClose')
 
 const authStore = useAuthStore()
 const mobileStore = useMobileStore()
+const { routerPush } = useRouterAskAnna()
 const workspaceStore = useWorkspaceStore()
 
 const isMember = computed(() => workspaceStore.workspace.is_member)
@@ -44,7 +45,10 @@ const profileRoute = computed(() => {
 
 const isSticky = computed(() => mobileStore.isMenuOpen && mobileStore.isMenuSticked)
 
-const logout = () => authStore.logout()
+const logout = async () => {
+  await authStore.logout()
+  routerPush({ path: '/signin' })
+}
 
 const handleClickOnMenuItem = () => emit('onClose')
 </script>

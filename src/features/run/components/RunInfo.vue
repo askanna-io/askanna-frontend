@@ -3,7 +3,7 @@
     <AskAnnaCard v-for="(group, index) in variables" :key="index" flat :width="viewConfig.width">
       <AskAnnaRow no-gutters>
         <AskAnnaCol class="mb-4" v-for="(item, index2) in group" :key="`${index}-${index2}`" cols="12">
-          <component
+          <Component
             link
             :to="item.to"
             :key="index2"

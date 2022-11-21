@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" max-width="500px" @click:outside="handleCloseOutside">
+  <VDialog v-model="dialog" max-width="500px" @click:outside="handleCloseOutside">
     <AskAnnaCard>
       <AskAnnaCardTitle>
         Successfully started the upload
@@ -9,7 +9,7 @@
         </p>
       </AskAnnaCardTitle>
       <AskAnnaCardText>
-        <v-progress-linear v-if="!isUploadFinish" :buffer-value="progress" stream color="primary" />
+        <VProgressLinear v-if="!isUploadFinish" :buffer-value="progress" stream color="primary" />
         <AskAnnaAlert v-else outlined height="40" dense type="success">Upload was finished</AskAnnaAlert>
       </AskAnnaCardText>
 
@@ -30,7 +30,7 @@
         </AskAnnaButton>
       </AskAnnaCardActions>
     </AskAnnaCard>
-  </v-dialog>
+  </VDialog>
 </template>
 
 <script setup lang="ts">

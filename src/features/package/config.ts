@@ -1,73 +1,65 @@
 export const packageRoutes = {
   path: 'code',
-  component: () => import('./views/package.vue'),
+  component: () => import('./views/index.vue'),
+  meta: {
+    useProjectPackageId: true,
+    hideAppBarIcon: true
+  },
   children: [
     {
       path: '',
-      component: () => import('./views/package-code.vue'),
+      name: 'workspace-project-code',
+      components: {
+        default: () => import('./views/suuid.vue'),
+        newPackage: () => import('./views/new.vue')
+      },
       meta: {
         useProjectPackageId: true,
-        hideAppBarIcon: true
+        hideAppBarIcon: true,
+        title: 'Code | Project: projectId'
       },
       children: [
         {
-          path: '',
-          name: 'workspace-project-code',
-          components: {
-            default: () => import('./views/suuid.vue'),
-            newPackage: () => import('./views/new-package.vue')
-          },
+          path: ':packageId',
+          component: () => import('./views/suuid.vue'),
           meta: {
-            useProjectPackageId: true,
-            hideAppBarIcon: true,
-            title: 'Code | Project: projectId'
-          }
-        },
-        {
-          path: 'history',
-          component: () => import('./views/history.vue'),
-          name: 'workspace-project-code-package-history',
-          meta: {
-            breadcrumb: 'History',
+            breadcrumb: 'Code - :packageId',
             hideAppBarIcon: true
-          }
+          },
+          children: [
+            {
+              path: '',
+              name: 'workspace-project-package',
+
+              component: () => import('./views/suuid.vue'),
+              children: [],
+              meta: {
+                hideAppBarIcon: true
+              },
+              props: true
+            },
+
+            {
+              path: ':folderName(.*)',
+              component: () => import('./views/suuid.vue'),
+              name: 'workspace-project-package-folder',
+              meta: {
+                breadcrumb: ':folderName',
+                hideAppBarIcon: true
+              }
+            }
+          ]
         }
       ]
     },
     {
-      path: ':packageId',
-      component: () => import('./views/index.vue'),
+      path: 'history',
+      component: () => import('./views/history.vue'),
+      name: 'workspace-project-code-package-history',
       meta: {
-        breadcrumb: 'Code - :packageId',
+        breadcrumb: 'History',
         hideAppBarIcon: true
-      },
-      children: [
-        {
-          path: '',
-          name: 'workspace-project-package',
-
-          component: () => import('./views/suuid.vue'),
-          children: [],
-          meta: {
-            hideAppBarIcon: true
-          },
-          props: true
-        },
-
-        {
-          path: ':folderName(.*)',
-          component: () => import('./views/suuid.vue'),
-          name: 'workspace-project-package-folder',
-          meta: {
-            breadcrumb: ':folderName',
-            hideAppBarIcon: true
-          },
-          children: []
-        }
-      ]
+      }
     }
-  ],
-  meta: {
-    hideAppBarIcon: true
-  }
+  ]
 }

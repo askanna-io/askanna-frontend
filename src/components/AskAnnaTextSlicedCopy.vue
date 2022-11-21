@@ -26,7 +26,7 @@
     </AskAnnaTooltip>
 
     <div v-else>
-      <v-hover v-slot="{ hover }" open-delay="200">
+      <VHover v-slot="{ hover }" open-delay="200">
         <div>
           {{ valueSliced }}
           <AskAnnaTooltip right content-class="opacity-1">
@@ -45,7 +45,7 @@
             <span>Copy</span>
           </AskAnnaTooltip>
         </div>
-      </v-hover>
+      </VHover>
     </div>
   </div>
 </template>

@@ -1,7 +1,7 @@
 <template>
-  <v-flex v-bind="$attrs">
+  <VFlex v-bind="$attrs">
     <slot />
-  </v-flex>
+  </VFlex>
 </template>
 
 <script>

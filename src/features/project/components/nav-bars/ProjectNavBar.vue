@@ -1,5 +1,5 @@
 <template>
-  <component :is="TypeComponent" v-bind="props" />
+  <Component :is="TypeComponent" v-bind="props" />
 </template>
 <script setup lang="ts">
 import JobNavBar from './JobNavBar.vue'

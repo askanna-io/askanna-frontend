@@ -1,5 +1,5 @@
 <template>
-  <v-data-table
+  <VDataTable
     fixed-header
     single-expand
     :items="jobList"
@@ -31,7 +31,7 @@
     </template>
     <template v-slot:expanded-item="{ item }">
       <td :colspan="8" class="pa-0">
-        <AskAnnaLoadingProgress v-if="item.runs.count" :type="'table-row'" :loading="loading">
+        <AskAnnaLoadingProgress v-if="item.runs.count" :loading="loading">
           <Runs
             :items="runs"
             :count="count"
@@ -47,21 +47,21 @@
     </template>
 
     <template v-slot:item.name="{ item }">
-      <router-link class="table-link table-link--unformated" :to="routeLinkParams(item)">
+      <RouterLink class="table-link table-link--unformated" :to="routeLinkParams(item)">
         {{ item.name }}
-      </router-link>
+      </RouterLink>
     </template>
 
     <template v-slot:item.suuid="{ item }">
-      <router-link class="table-link table-link--unformated" :to="routeLinkParams(item)">
+      <RouterLink class="table-link table-link--unformated" :to="routeLinkParams(item)">
         {{ item.runs.count }}
-      </router-link>
+      </RouterLink>
     </template>
 
     <template v-slot:item.status="{ item }">
-      <router-link class="table-link table-link--unformated alert" :to="routeLinkParams(item)">
+      <RouterLink class="table-link table-link--unformated alert" :to="routeLinkParams(item)">
         <ask-anna-alert-status :statusData="item.runs.status" />
-      </router-link>
+      </RouterLink>
     </template>
 
     <template v-slot:no-data>
@@ -69,7 +69,7 @@
       <a class="ask-anna-link" href="https://docs.askanna.io/jobs/create-job/" target="_blank">the documentation</a>
       on how you can create a job.
     </template>
-  </v-data-table>
+  </VDataTable>
 </template>
 
 <script setup lang="ts">
@@ -83,7 +83,7 @@ defineProps({
 })
 
 const runsStore = useRunsStore()
-const { route, router } = useRouterAskAnna()
+const { route, routerPush } = useRouterAskAnna()
 
 const expanded = ref([])
 const loading = ref(true)
@@ -105,7 +105,7 @@ const getHeaders = (isMobile: boolean) =>
   isMobile ? JobsListHeaders(isMobile).filter(el => el.isShowOnMobile) : JobsListHeaders(isMobile)
 
 const handleJobClick = item => {
-  router.push({
+  routerPush({
     name: 'workspace-project-job-overiew',
     params: { ...route.params, jobId: item.suuid || 'jobname' }
   })

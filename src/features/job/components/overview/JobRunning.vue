@@ -4,24 +4,24 @@
     <AskAnnaRow>
       <AskAnnaCol cols="12" :class="{ 'pt-0': $vuetify.breakpoint.xsOnly }">
         <AskAnnaToolbar dense color="white" class="br-r5" flat transition="slide-y-transition">
-          <v-tabs v-model="currentTab" left :align-with-title="!$vuetify.breakpoint.xsOnly">
-            <v-tabs-slider color="primary" />
+          <VTabs v-model="currentTab" left :align-with-title="!$vuetify.breakpoint.xsOnly">
+            <VTabsSlider color="primary" />
             <template v-for="tab of tabs">
-              <v-tab ripple :key="tab.id">
+              <VTab ripple :key="tab.id">
                 {{ tab.name }}
-              </v-tab>
+              </VTab>
             </template>
-          </v-tabs>
+          </VTabs>
         </AskAnnaToolbar>
       </AskAnnaCol>
       <AskAnnaCol cols="12" :class="{ 'pt-0': $vuetify.breakpoint.xsOnly }">
-        <v-tabs-items v-model="currentTab">
+        <VTabsItems v-model="currentTab">
           <template v-for="tab in tabs">
-            <v-tab-item :key="tab.id">
-              <component :is="tab.component" />
-            </v-tab-item>
+            <VTabItem :key="tab.id">
+              <Component :is="tab.component" />
+            </VTabItem>
           </template>
-        </v-tabs-items>
+        </VTabsItems>
       </AskAnnaCol>
     </AskAnnaRow>
   </AskAnnaCard>

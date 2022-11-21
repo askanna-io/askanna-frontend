@@ -13,7 +13,7 @@
 
         <AskAnnaSpacer />
 
-        <v-btn-toggle v-if="fileStore.isRenderedExt || fileStore.isValidJSON" mandatory class="mr-1">
+        <VBtnToggle v-if="fileStore.isRenderedExt || fileStore.isValidJSON" mandatory class="mr-1">
           <AskAnnaTooltip v-for="(view, index) in views" top :key="index">
             <template v-slot:activator="{ on }">
               <AskAnnaButton
@@ -29,7 +29,7 @@
             </template>
             <span>{{ view.name }}</span>
           </AskAnnaTooltip>
-        </v-btn-toggle>
+        </VBtnToggle>
 
         <AskAnnaButton
           v-if="!$vuetify.breakpoint.xsOnly"

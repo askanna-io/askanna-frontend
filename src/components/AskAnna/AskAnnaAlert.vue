@@ -1,7 +1,7 @@
 <template>
-  <v-alert v-bind="$attrs" v-on="$listeners">
+  <VAlert v-bind="$attrs" v-on="$listeners">
     <slot />
-  </v-alert>
+  </VAlert>
 </template>
 
 <script>

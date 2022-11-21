@@ -9,7 +9,7 @@ export default () => {
   const logger = useLogger()
   const router = useRouter()
 
-  const push = (location: RawLocation) => {
+  const routerPush = (location: RawLocation) => {
     router.push(location).catch(failure => {
       if (isNavigationFailure(failure, NavigationFailureType.redirected)) {
         logger.error(`Error on redirect to location: ${location}.\nError: `, failure)
@@ -25,5 +25,5 @@ export default () => {
     })
   }
 
-  return { route, router, push, replace }
+  return { route, router, routerPush, replace }
 }

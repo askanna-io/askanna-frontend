@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="valueModel" max-width="450px">
+  <VDialog v-model="valueModel" max-width="450px">
     <AskAnnaCard>
       <AskAnnaCardTitle
         >Are you sure you want to delete variable<span class="primary--text break"
@@ -15,7 +15,7 @@
         >
       </AskAnnaCardActions>
     </AskAnnaCard>
-  </v-dialog>
+  </VDialog>
 </template>
 <script setup lang="ts">
 const props = defineProps({

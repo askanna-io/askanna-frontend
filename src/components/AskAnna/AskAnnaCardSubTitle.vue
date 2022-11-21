@@ -1,7 +1,7 @@
 <template>
-  <v-card-subtitle v-bind="$attrs" v-on="$listeners">
+  <VCardSubtitle v-bind="$attrs" v-on="$listeners">
     <slot />
-  </v-card-subtitle>
+  </VCardSubtitle>
 </template>
 
 <script>

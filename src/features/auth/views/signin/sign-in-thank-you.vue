@@ -6,7 +6,7 @@
       </AskAnnaRow>
     </AskAnnaToolbar>
     <AskAnnaCardText>
-      <SignIn submitButtonTitle="Sign in" />
+      <TheSignIn submitButtonTitle="Sign in" />
     </AskAnnaCardText>
   </AskAnnaCard>
 </template>

@@ -1,9 +1,9 @@
 <template>
-  <v-chip-group active-class="primary--text" column>
+  <VChipGroup active-class="primary--text" column>
     <AskAnnaChip v-for="label in value.labels" :key="label.name" small pill @click="handleClick">
       <MetricValue :metricRow="label" isShowName isLabels isLabel :preview="false" />
     </AskAnnaChip>
-  </v-chip-group>
+  </VChipGroup>
 </template>
 <script setup lang="ts">
 defineProps({

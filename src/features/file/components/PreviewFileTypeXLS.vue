@@ -4,13 +4,13 @@
     fluid
     :class="{ 'px-0': $vuetify.breakpoint.xsOnly, 'px-5 pa-2': !$vuetify.breakpoint.xsOnly }"
   >
-    <v-tabs v-model="currentSheet" left show-arrows center-active>
-      <v-tab v-for="(tab, index) of data" :key="index">Sheet: {{ tab.name }}</v-tab>
-    </v-tabs>
-    <v-tabs-items v-model="currentSheet">
+    <VTabs v-model="currentSheet" left show-arrows center-active>
+      <VTab v-for="(tab, index) of data" :key="index">Sheet: {{ tab.name }}</VTab>
+    </VTabs>
+    <VTabsItems v-model="currentSheet">
       <template v-for="(tab, index) in data">
-        <v-tab-item :key="index" :value="index">
-          <v-data-table
+        <VTabItem :key="index" :value="index">
+          <VDataTable
             :fixed-header="!!tab.headers.length"
             class="xls-table"
             :search="search"
@@ -79,10 +79,10 @@
                 </tr>
               </template>
             </template>
-          </v-data-table>
-        </v-tab-item>
+          </VDataTable>
+        </VTabItem>
       </template>
-    </v-tabs-items>
+    </VTabsItems>
   </AskAnnaFlex>
 </template>
 

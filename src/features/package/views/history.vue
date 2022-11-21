@@ -2,7 +2,7 @@
   <AskAnnaLoadingProgress :loading="packagesStore.loadingPackages">
     <AskAnnaRow align="center" justify="center">
       <AskAnnaCol cols="12" class="pt-0">
-        <v-data-table
+        <VDataTable
           v-scroll="throttle(onScroll, 1000)"
           disable-pagination
           hide-default-footer
@@ -14,7 +14,7 @@
           @click:row="handleClickRow"
         >
           <template v-slot:top>
-            <package-toolbar
+            <PackageToolbar
               v-sticky="sticked"
               :sticky-z-index="1"
               sticky-offset="{top: 52, bottom: 10}"
@@ -98,7 +98,7 @@
               <span>Download</span>
             </AskAnnaTooltip>
           </template>
-        </v-data-table>
+        </VDataTable>
       </AskAnnaCol>
     </AskAnnaRow>
   </AskAnnaLoadingProgress>
@@ -114,7 +114,7 @@ const slicedText = useSlicedText()
 const context = getCurrentInstance()
 const projectStore = useProjectStore()
 const packagesStore = usePackagesStore()
-const { route, router } = useRouterAskAnna()
+const { route, routerPush } = useRouterAskAnna()
 const forceFileDownload = useForceFileDownload()
 
 const breadcrumbs = useBreadcrumbs({ start: 2 })
@@ -222,7 +222,7 @@ const breadcrumbsComputed = computed(() => {
 })
 
 const handleClickRow = ({ suuid, versionId }) => {
-  router.push({
+  routerPush({
     name: 'workspace-project-package-folder',
     params: { projectId: route.params.projectId, packageId: suuid, versionId, folderName: '' }
   })

@@ -1,9 +1,9 @@
 <template>
   <div class="pb-5" :class="{ 'px-0 ': $vuetify.breakpoint.xsOnly, 'px-4': !$vuetify.breakpoint.xsOnly }">
-    <AskAnnaLoadingProgress :type="'table-row'" :loading="loading" fullWidth>
+    <AskAnnaLoadingProgress :loading="loading" fullWidth>
       <AskAnnaCard flat>
         <AskAnnaCardTitle :class="{ 'pt-0': $vuetify.breakpoint.xsOnly }">Information:</AskAnnaCardTitle>
-        <run-info
+        <RunInfo
           :jobId="jobId"
           :run="run"
           :jobName="jobName"
@@ -13,7 +13,7 @@
         <template v-if="isDescriptionNotEmpty">
           <AskAnnaCardTitle class="mt-3">Description:</AskAnnaCardTitle>
 
-          <ask-anna-description class="px-2" preview readonly :description="description" />
+          <AskAnnaDescription class="px-2" preview readonly :description="description" />
         </template>
       </AskAnnaCard>
     </AskAnnaLoadingProgress>

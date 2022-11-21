@@ -1,19 +1,19 @@
 <template>
-  <v-menu :close-on-content-click="false" v-model="menu" :nudge-width="200" nudge-right="60">
+  <VMenu :close-on-content-click="false" v-model="menu" :nudge-width="200" nudge-right="60">
     <template v-slot:activator="{ on, attrs }">
       <span v-on="on" class="pr-5 cursor--pointer" @mouseover="handleOnHover" @mouseleave="handleOnBlur">
-        Value
+        Name
         <span class="mr-5" style="position: relative">
           <AskAnnaIcon
-            style="left: 3px; top: 1px; right: auto; position: absolute"
-            v-show="isActive"
             v-bind="attrs"
+            v-show="isActive"
             text
-            outlined
             small
+            filter
+            outlined
             :color="getColor()"
             text-color="white"
-            filter
+            style="left: 3px; top: 1px; right: auto; position: absolute"
           >
             mdi-filter-variant
           </AskAnnaIcon>
@@ -22,42 +22,43 @@
     </template>
 
     <AskAnnaCard>
-      <table-sort title="Value" sortBy="variable.value" />
+      <SortByType title="Name" :sortBy="`${typeName}.name`" />
 
       <AskAnnaDivider />
 
-      <autocomplete-filter label="Filter by data type" :items="typeValues" filterName="variable_type" />
-
-      <AskAnnaDivider />
-
-      <filter-name-value v-if="false" class="pt-2" filterName="variable_value" label="Filter by variable value" />
+      <FilterByType class="mt-2" :filterName="`${typeName}_name`" :label="`Filter by ${typeName} name`" />
 
       <AskAnnaCardActions v-if="false">
         <AskAnnaSpacer />
 
-        <AskAnnaButton small outlined text class="btn--hover" @click="menu = false"> Cancel </AskAnnaButton>
+        <AskAnnaButton small outlined text class="btn--hover" @click="menu = false">Cancel</AskAnnaButton>
         <AskAnnaButton small outlined color="secondary" text class="btn--hover" @click="handleApply">
           Apply
         </AskAnnaButton>
       </AskAnnaCardActions>
     </AskAnnaCard>
-  </v-menu>
+  </VMenu>
 </template>
 
 <script setup lang="ts">
-const typeValues = ['boolean', 'date', 'datetime', 'dictionary', 'float', 'integer', 'string', 'tag', 'time']
+defineProps({
+  typeName: {
+    type: String,
+    default: 'metric'
+  }
+})
 
 const menu = ref()
 const active = ref(false)
 
-const isActiveMetricValue = inject('isActiveMetricValue')
+const isActiveMetricName = inject('isActiveMetricName')
 
-const isActive = computed(() => active.value || isActiveMetricValue.value || menu.value)
+const isActive = computed(() => active.value || isActiveMetricName.value || menu.value)
 
 const handleOnBlur = () => (active.value = false)
 const handleOnHover = () => (active.value = true)
 
-const getColor = () => (isActiveMetricValue.value ? 'primary' : 'secondary')
+const getColor = () => (isActiveMetricName.value ? 'primary' : 'secondary')
 
 const handleApply = () => {}
 </script>

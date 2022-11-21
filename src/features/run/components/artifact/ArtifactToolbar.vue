@@ -4,16 +4,16 @@
       <div class="mr-auto d-flex align-center">
         <slot name="left" />
         <div>
-          <v-breadcrumbs :items="breadcrumbs" class="pa-0 pl-1">
+          <VBreadcrumbs :items="breadcrumbs" class="pa-0 pl-1">
             <template v-slot:divider>
               <AskAnnaIcon>mdi-chevron-right</AskAnnaIcon>
             </template>
             <template v-slot:item="{ item }">
-              <v-breadcrumbs-item :to="item.to" :exact="item.exact">
+              <VBreadcrumbsItem :to="item.to" :exact="item.exact">
                 {{ item.title }}
-              </v-breadcrumbs-item>
+              </VBreadcrumbsItem>
             </template>
-          </v-breadcrumbs>
+          </VBreadcrumbs>
         </div>
       </div>
       <slot name="rigth" />

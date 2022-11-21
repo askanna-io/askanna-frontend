@@ -81,7 +81,7 @@ export const useWorkspaceStore = defineStore(WORKSPACE_STORE, {
 
         logger.error('Error on load workspace in getWorkspace action.\nError: ', error)
 
-        this.$routerAskAnna.push({ name: 'workspace-does-not-exist' })
+        this.$routerAskAnna.routerPush({ name: 'workspace-does-not-exist' })
 
         return
       }

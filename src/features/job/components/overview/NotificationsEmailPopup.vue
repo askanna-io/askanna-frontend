@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" max-width="500px" persistent @click:outside="handleClose" @keydown.esc="handleClose">
+  <VDialog v-model="dialog" max-width="500px" persistent @click:outside="handleClose" @keydown.esc="handleClose">
     <template v-slot:activator="{ on, attrs }">
       <span v-on="on" v-bind="attrs" color="primary" class="pl-1 primary--hover primary--text"> Email</span>
     </template>
@@ -13,26 +13,26 @@
         </AskAnnaButton>
       </AskAnnaToolbar>
       <AskAnnaCardText>
-        <v-tabs v-model="currentTab" left align-with-title>
-          <v-tabs-slider color="primary" />
+        <VTabs v-model="currentTab" left align-with-title>
+          <VTabsSlider color="primary" />
           <template v-for="tab of tabs">
-            <v-tab v-if="tab.show" ripple :key="tab.id">
+            <VTab v-if="tab.show" ripple :key="tab.id">
               {{ tab.name }}
-            </v-tab>
+            </VTab>
           </template>
-        </v-tabs>
+        </VTabs>
 
-        <v-tabs-items v-model="currentTab">
+        <VTabsItems v-model="currentTab">
           <template v-for="tab in tabs">
-            <v-tab-item :key="tab.name" v-if="tab.show" class="pt-2">
+            <VTabItem :key="tab.name" v-if="tab.show" class="pt-2">
               <div>
                 <h4 class="pl-2 pt-2 pb-2">Email:</h4>
                 <ol>
                   <li v-for="(item, i) in notifications[tab.name].email" :key="i" height="20">
-                    <v-hover v-slot="{ hover }">
+                    <VHover v-slot="{ hover }">
                       <div>
                         {{ item }}
-                        <ask-anna-copy-text
+                        <AskAnnaCopyText
                           v-if="hover"
                           :text="item"
                           :showText="false"
@@ -41,16 +41,16 @@
                           :styleClasses="'px-0 white font-weight-regular text--regular body-1'"
                         />
                       </div>
-                    </v-hover>
+                    </VHover>
                   </li>
                 </ol>
               </div>
-            </v-tab-item>
+            </VTabItem>
           </template>
-        </v-tabs-items>
+        </VTabsItems>
       </AskAnnaCardText>
     </AskAnnaCard>
-  </v-dialog>
+  </VDialog>
 </template>
 <script setup lang="ts">
 const props = defineProps({

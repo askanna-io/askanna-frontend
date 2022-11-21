@@ -1,14 +1,14 @@
 <template>
   <AskAnnaRow align="center" justify="center">
     <AskAnnaCol cols="12" class="pt-0 pb-0">
-      <package-toolbar :breadcrumbs="breadcrumbs" v-if="userStore.isLoggedIn">
+      <PackageToolbar :breadcrumbs="breadcrumbs" v-if="userStore.isLoggedIn">
         <template v-slot:left>
           <span class="text-body-2">New Package</span>
         </template>
-      </package-toolbar>
-      <v-expand-transition>
+      </PackageToolbar>
+      <VExpandTransition>
         <div>
-          <resumable-upload
+          <ResumableUpload
             v-if="projectCodeCreate"
             class="py-2 px-4"
             :id="packageId"
@@ -19,9 +19,9 @@
             >There is no code pushed to this project.</AskAnnaAlert
           >
         </div>
-      </v-expand-transition>
+      </VExpandTransition>
       <template v-if="isProcessing">
-        <package-processing />
+        <PackageProcessing />
       </template>
     </AskAnnaCol>
   </AskAnnaRow>

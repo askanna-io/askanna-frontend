@@ -1,6 +1,6 @@
 <template>
   <div>
-    <AskAnnaLoadingProgress v-if="projectRunEdit" classes="ma-4" :type="'table-row'" :loading="loading" fullWidth>
+    <AskAnnaLoadingProgress v-if="projectRunEdit" classes="ma-4" :loading="loading" fullWidth>
       <AskAnnaCard flat>
         <AskAnnaContainer class="ma-0 pt-0" fluid>
           <AskAnnaRow>
@@ -55,9 +55,9 @@
     </AskAnnaLoadingProgress>
     <AskAnnaAlert v-else class="mx-4 text-center" dense outlined>
       You are not allowed to edit this run. I can bring you back toto the run
-      <router-link :to="{ name: 'workspace-project-jobs-job-run-overview' }" class="ask-anna-link">{{
+      <RouterLink :to="{ name: 'workspace-project-jobs-job-run-overview' }" class="ask-anna-link">{{
         run.name || run.suuid
-      }}</router-link
+      }}</RouterLink
       >.
     </AskAnnaAlert>
   </div>
@@ -69,7 +69,7 @@ import { set } from 'lodash'
 const runStore = useRunStore()
 const snackBar = useSnackBar()
 const permission = usePermission()
-const { router } = useRouterAskAnna()
+const { routerPush } = useRouterAskAnna()
 
 const run = computed(() => runStore.run)
 const loading = computed(() => runStore.runLoading)
@@ -109,7 +109,7 @@ const handleSave = async () => {
 }
 
 const handleClose = () =>
-  router.push({
+  routerPush({
     name: 'workspace-project-jobs-job-run-overview'
   })
 

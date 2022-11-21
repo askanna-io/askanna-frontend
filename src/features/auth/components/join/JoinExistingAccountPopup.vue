@@ -1,6 +1,6 @@
 <template>
   <div class="text-center">
-    <v-dialog v-model="dialog" width="500">
+    <VDialog v-model="dialog" width="500">
       <AskAnnaCard>
         <AskAnnaCardTitle class="headline primary white--text">
           AskAnna warning
@@ -25,7 +25,7 @@
           </AskAnnaButton>
         </AskAnnaCardActions>
       </AskAnnaCard>
-    </v-dialog>
+    </VDialog>
   </div>
 </template>
 <script setup lang="ts">

@@ -1,5 +1,5 @@
 <template>
-  <v-data-table
+  <VDataTable
     v-if="items.length"
     :items="items"
     :headers="headers"
@@ -16,7 +16,7 @@
     <template v-slot:item.suuid="{ item }">
       <AskAnnaChip outlined label color="primary" @click.stop="handleDownload(item)">
         <AskAnnaAvatar left><AskAnnaIcon>mdi-cloud-download</AskAnnaIcon></AskAnnaAvatar
-        >Download</v-chip
+        >Download</AskAnnaChip
       >
     </template>
 
@@ -25,25 +25,25 @@
     </template>
 
     <template v-slot:item.menu="{ item }">
-      <v-menu bottom color="primary" :close-on-content-click="false" :nudge-width="200" offset-x :key="item.name">
+      <VMenu bottom color="primary" :close-on-content-click="false" :nudge-width="200" offset-x :key="item.name">
         <template v-slot:activator="{ on }">
           <AskAnnaButton icon v-on="on" color="primary">
             <AskAnnaIcon>mdi-dots-horizontal</AskAnnaIcon>
           </AskAnnaButton>
         </template>
 
-        <v-list>
-          <v-list-item @click="handleHistory(item)">
-            <v-list-item-title>History</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
+        <VList>
+          <VListItem @click="handleHistory(item)">
+            <VListItemTitle>History</VListItemTitle>
+          </VListItem>
+        </VList>
+      </VMenu>
     </template>
     <template v-slot:no-data>
       <AskAnnaIcon :size="25" left> mdi-package-down </AskAnnaIcon>
       You don't have packages yet.
     </template>
-  </v-data-table>
+  </VDataTable>
 </template>
 
 <script setup lang="ts">

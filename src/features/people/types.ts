@@ -174,7 +174,8 @@ export class PersonModel {
         small: '',
         medium: '',
         large: ''
-      }
+      },
+      use_global_profile: false
     }
   }
 }

@@ -9,7 +9,7 @@
           >
         </div>
         <div class="mr-auto d-flex align-center"></div>
-        <v-btn-toggle
+        <VBtnToggle
           v-if="fileStore.isRenderedExt || fileStore.isValidJSON"
           mandatory
           class="mr-1"
@@ -31,7 +31,7 @@
             </template>
             <span>{{ view.name }}</span>
           </AskAnnaTooltip>
-        </v-btn-toggle>
+        </VBtnToggle>
         <div>
           <AskAnnaButton
             v-if="!$vuetify.breakpoint.xsOnly"
@@ -62,7 +62,7 @@
       </AskAnnaFlex>
     </AskAnnaToolbar>
     <AskAnnaFlex id="scroll-target" class="overflow-y-auto" ref="scrolllWrapperRef" :style="scrollerStyles">
-      <ask-anna-loading-progress
+      <AskAnnaLoadingProgress
         :loading="fileStore.loading"
         fullWidth
         height="94"
@@ -83,7 +83,7 @@
           :isFileBigForRawView="fileStore.isFileBigForRawView"
           @onDownload="handleDownload"
         />
-      </ask-anna-loading-progress>
+      </AskAnnaLoadingProgress>
     </AskAnnaFlex>
   </div>
 </template>
@@ -101,7 +101,7 @@ const runStore = useRunStore()
 const fileStore = useFileStore()
 const { height } = useWindowSize()
 const humanize = useSizeHumanize()
-const { route, router } = useRouterAskAnna()
+const { route, routerPush } = useRouterAskAnna()
 const forceFileDownload = useForceFileDownload()
 
 const views = [
@@ -179,7 +179,7 @@ const handleCopy = async () => {
 
 const handleChangeView = (currentViewIndex: number) => {
   currentView.value = views[currentViewIndex]
-  router.push({ name: 'workspace-project-jobs-job-run-result', params: { view: currentView.value.value } })
+  routerPush({ name: 'workspace-project-jobs-job-run-result', params: { view: currentView.value.value } })
 }
 
 onBeforeMount(() => fetchData())

@@ -1,17 +1,17 @@
 <template>
-  <v-list>
-    <v-list-item-group :value="state.ordering" @change="handleChange" color="primary">
-      <v-list-item dense v-for="(item, i) in items" :key="i" :value="item.sort">
-        <v-list-item-icon>
+  <VList>
+    <VListItemGroup :value="state.ordering" @change="handleChange" color="primary">
+      <VListItem dense v-for="(item, i) in items" :key="i" :value="item.sort">
+        <VListItemIcon>
           <AskAnnaIcon>{{ item.icon }}</AskAnnaIcon>
-        </v-list-item-icon>
+        </VListItemIcon>
 
-        <v-list-item-content>
-          <v-list-item-title v-text="item.text" />
-        </v-list-item-content>
-      </v-list-item>
-    </v-list-item-group>
-  </v-list>
+        <VListItemContent>
+          <VListItemTitle v-text="item.text" />
+        </VListItemContent>
+      </VListItem>
+    </VListItemGroup>
+  </VList>
 </template>
 
 <script setup lang="ts">

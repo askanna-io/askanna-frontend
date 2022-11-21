@@ -60,7 +60,7 @@
     </template>
     <AskAnnaAlert v-else class="text-center" dense outlined>
       You are not allowed to see the peope list of this workspace. I can bring you back to the workspace
-      <router-link :to="{ name: 'workspace' }" class="ask-anna-link">{{ workspace.name }}</router-link
+      <RouterLink :to="{ name: 'workspace' }" class="ask-anna-link">{{ workspace.name }}</RouterLink
       >.
     </AskAnnaAlert>
   </div>

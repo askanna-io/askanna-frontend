@@ -1,6 +1,6 @@
 <template>
-  <AskAnnaLoadingProgress :type="'table-row'" :loading="loading">
-    <v-data-iterator :items="projects" hide-default-footer :no-data-text="''" disable-pagination>
+  <AskAnnaLoadingProgress :loading="loading">
+    <VDataIterator :items="projects" hide-default-footer :no-data-text="''" disable-pagination>
       <template v-slot:header>
         <PublicProjectsToolbar />
       </template>
@@ -16,7 +16,7 @@
             lg="4"
             :class="{ 'pb-0': $vuetify.breakpoint.xsOnly }"
           >
-            <v-hover v-slot:default="{ hover }" open-delay="200">
+            <VHover v-slot:default="{ hover }" open-delay="200">
               <WorkspaceProjectCardItem
                 :project="item"
                 :hover="hover"
@@ -24,7 +24,7 @@
                 :workspaceName="item.workspace.name"
                 :description="sanitizeHTML(item.description)"
               />
-            </v-hover>
+            </VHover>
           </AskAnnaCol>
         </AskAnnaRow>
       </template>
@@ -43,20 +43,20 @@
           <template v-else>There are no projects that you have access to.</template>
         </AskAnnaAlert></template
       >
-    </v-data-iterator>
+    </VDataIterator>
   </AskAnnaLoadingProgress>
 </template>
 <script setup lang="ts">
 const sanitizeHTML = useSanitizeHTML()
 const projectsStore = useProjectsStore()
-const { route, router } = useRouterAskAnna()
+const { route, routerPush } = useRouterAskAnna()
 
 const query = computed(() => route.query)
 const loading = computed(() => projectsStore.loading)
 const projects = computed(() => projectsStore.getProjectsByParams(query.value))
 
 const handleOpenProject = project => {
-  router.push({
+  routerPush({
     name: 'workspace-project-code',
     params: {
       projectId: project.suuid,

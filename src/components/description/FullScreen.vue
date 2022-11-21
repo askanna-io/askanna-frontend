@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-dialog
+    <VDialog
       v-if="dialog"
       content-class="editor--dialog"
       v-model="dialog"
@@ -21,7 +21,7 @@
 
         <slot />
       </AskAnnaCard>
-    </v-dialog>
+    </VDialog>
 
     <slot v-else />
   </div>

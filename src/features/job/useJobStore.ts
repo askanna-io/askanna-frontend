@@ -51,7 +51,7 @@ export const useJobStore = defineStore(SERVICE_NAME, {
 
         logger.error('Error on load job in getJob action.\nError: ', error)
 
-        this.$routerAskAnna.push({ name: 'workspace-project-job-does-not-exist' })
+        this.$routerAskAnna.routerPush({ name: 'workspace-project-job-does-not-exist' })
 
         return
       }

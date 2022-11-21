@@ -1,7 +1,7 @@
 <template>
-  <v-row v-bind="$attrs" v-on="$listeners">
+  <VRow v-bind="$attrs" v-on="$listeners">
     <slot />
-  </v-row>
+  </VRow>
 </template>
 
 <script>

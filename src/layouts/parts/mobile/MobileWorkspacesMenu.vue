@@ -1,8 +1,8 @@
 <template>
   <div>
-    <v-list-group>
+    <VListGroup>
       <template v-slot:activator>
-        <v-list-item-title @click="handleClickItem">Workspaces</v-list-item-title>
+        <VListItemTitle @click="handleClickItem">Workspaces</VListItemTitle>
       </template>
       <template v-slot:appendIcon>
         <AskAnnaIcon @click="handleClickItem">mdi-chevron-down</AskAnnaIcon>
@@ -25,8 +25,8 @@
 
         <v-skeleton-loader v-if="loading" class="mx-auto mt-3" type="heading, text@9"></v-skeleton-loader>
 
-        <v-list flat nav dense class="pt-0">
-          <v-list-item
+        <VList flat nav dense class="pt-0">
+          <VListItem
             v-for="item in workspaces.slice(0, 5)"
             :key="item.suuid"
             :to="{
@@ -42,11 +42,11 @@
               <AskAnnaIcon>{{ getIcon(item) }}</AskAnnaIcon>
             </v-list-item-icon>
 
-            <v-list-item-content>
+            <VListItemContent>
               {{ item.name }}
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
+            </VListItemContent>
+          </VListItem>
+        </VList>
 
         <AskAnnaFlex v-if="search && !workspaces.length && !isSearchProcessing" class="px-2 pt-2 pl-4 text--secondary"
           >No results</AskAnnaFlex
@@ -67,7 +67,7 @@
           ></AskAnnaCol
         >
       </AskAnnaCol>
-    </v-list-group>
+    </VListGroup>
   </div>
 </template>
 

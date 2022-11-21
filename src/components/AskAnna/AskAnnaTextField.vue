@@ -1,5 +1,5 @@
 <template>
-  <v-text-field v-bind="$attrs" v-on="$listeners" :value="value" @input="update">
+  <VTextField v-bind="$attrs" v-on="$listeners" :value="value" @input="update">
     <template v-for="(_, slot) in $slots" #[slot]="scope">
       <slot :name="slot" v-bind="scope" />
     </template>
@@ -7,7 +7,7 @@
     <template v-for="(_, slot) in $slots" #[slot]>
       <slot :name="slot" />
     </template>
-  </v-text-field>
+  </VTextField>
 </template>
 
 <script>

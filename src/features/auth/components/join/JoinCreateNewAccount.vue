@@ -1,5 +1,5 @@
 <template>
-  <v-form
+  <VForm
     ref="loginFormRef"
     lazy-validation
     v-model="isFormValid"
@@ -62,14 +62,14 @@
         <AskAnnaIcon class="ask-anna-btn-loader" dark> mdi-loading </AskAnnaIcon>
       </template>
     </AskAnnaButton>
-  </v-form>
+  </VForm>
 </template>
 
 <script setup lang="ts">
 const authStore = useAuthStore()
 const peopleStore = usePeopleStore()
 const { RULES } = useValidationRules()
-const { route, router } = useRouterAskAnna()
+const { route, routerPush } = useRouterAskAnna()
 
 const { token, peopleId, workspaceId } = route.params
 const loadingTexts = ['Creating accout', 'Sign in', 'Accept invitataion', 'Join to workspace']
@@ -127,7 +127,6 @@ const handleLogin = async () => {
   step.value = 1
 
   const auth = await authStore.login({
-    redirect: false,
     username: username,
     password: formData.password
   })
@@ -146,7 +145,7 @@ const handleLogin = async () => {
   if (invatation && invatation.status === 'accepted') {
     step.value = 3
 
-    setTimeout(() => router.push({ name: 'workspace', params: { workspaceId } }), 1000)
+    setTimeout(() => routerPush({ name: 'workspace', params: { workspaceId } }), 1000)
 
     return
   }
@@ -155,25 +154,12 @@ const handleLogin = async () => {
   step.value = 0
 }
 
-const resetError = () => {
-  error = { name: '', email: '', username: '', password: '', terms_of_use: '' }
-}
+const resetError = () => Object.assign(error, { name: '', email: '', username: '', password: '', terms_of_use: '' })
 
 watch(formData, async () => {
   // check if exist error from backend on typing fields, try resest validation
   if (Object.values(error).some(item => item.length)) {
     resetError()
-    loginFormRef.value.resetValidation()
   }
 })
 </script>
-<style scoped>
-.login-wrapper {
-  height: 100vh;
-  background: rgb(176, 132, 182);
-  background: linear-gradient(0deg, rgba(176, 132, 182, 1) 7%, rgba(14, 43, 50, 1) 57%);
-}
-.logo {
-  height: 27px;
-}
-</style>

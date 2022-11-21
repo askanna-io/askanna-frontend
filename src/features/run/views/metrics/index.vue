@@ -47,7 +47,7 @@
           </AskAnnaButton>
         </div>
 
-        <v-btn-toggle v-model="currentViewIndex" mandatory class="mr-1">
+        <VBtnToggle v-model="currentViewIndex" mandatory class="mr-1">
           <AskAnnaTooltip v-for="(view, index) in views" top :key="index">
             <template v-slot:activator="{ on }">
               <AskAnnaButton
@@ -63,10 +63,10 @@
             </template>
             <span>{{ view.name }}</span>
           </AskAnnaTooltip>
-        </v-btn-toggle>
+        </VBtnToggle>
       </AskAnnaFlex>
     </AskAnnaToolbar>
-    <router-view />
+    <RouterView />
   </div>
 </template>
 
@@ -75,7 +75,7 @@ const copy = useCopy()
 const chart = useChartStore()
 const metricStore = useMetricStore()
 const chartDownload = useChartDownload()
-const { route, router } = useRouterAskAnna()
+const { route, routerPush } = useRouterAskAnna()
 const forceFileDownload = useForceFileDownload()
 
 const { runId: suuid } = route.params
@@ -126,7 +126,7 @@ const handleChangeView = (index: number) => {
   currentViewIndex.value = index
   if (view.value === currentView.value.value) return
   currentView.value = view
-  router.push({ name: `workspace-project-jobs-job-run-metrics-${view.value}` })
+  routerPush({ name: `workspace-project-jobs-job-run-metrics-${view.value}` })
 }
 
 const handleDownloadPNG = () => {

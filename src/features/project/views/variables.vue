@@ -2,7 +2,7 @@
   <div>
     <VariableList :items="variables" @onEditItem="handleEditItem">
       <template slot="header">
-        <variable-list-header @openVariablePopup="handleOpenVariablePopup" />
+        <VariableListHeader @openVariablePopup="handleOpenVariablePopup" />
       </template>
     </VariableList>
     <VariablePopup :projectId="projectId" />

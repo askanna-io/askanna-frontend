@@ -32,7 +32,7 @@
             'is-active': isFocused && !$vuetify.breakpoint.xsOnly && isFullScreen
           }"
         >
-          <component
+          <Component
             v-bind:is="$vuetify.breakpoint.xsOnly ? 'div' : 'v-toolbar'"
             dense
             height="30px"
@@ -394,7 +394,7 @@
               </template>
               <span>{{ isFullScreen ? 'Exit full screen' : 'Full screen' }}</span>
             </AskAnnaTooltip>
-          </component>
+          </Component>
         </div>
         <AskAnnaDivider v-show="editable" class="" />
 

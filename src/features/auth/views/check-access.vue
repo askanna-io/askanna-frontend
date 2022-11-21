@@ -1,5 +1,5 @@
 <template>
-  <AskAnnaLoadingProgress :type="'table-row'" :loading="loading">
+  <AskAnnaLoadingProgress :loading="loading">
     <WorkspaceNotReady v-if="!isReady" />
   </AskAnnaLoadingProgress>
 </template>
@@ -8,7 +8,7 @@
 const token = window.localStorage.getItem('token')
 
 const userStore = useUserStore()
-const { router } = useRouterAskAnna()
+const { routerPush } = useRouterAskAnna()
 const prepareAccount = usePrepareAccount()
 
 const authData = computed(() => {
@@ -34,12 +34,12 @@ const checkWorkspace = async () => {
 
     //check if user need redirect to last visited page
     if (backAfterUrl && backAfterUrl !== '/') {
-      router.push({ path: backAfterUrl, params: { workspaceId: prepareAccount.workspaceId.value } })
+      routerPush({ path: backAfterUrl, params: { workspaceId: prepareAccount.workspaceId.value } })
 
       return
     }
 
-    router.push({ name: 'workspace', params: { workspaceId: prepareAccount.workspaceId.value } })
+    routerPush({ name: 'workspace', params: { workspaceId: prepareAccount.workspaceId.value } })
   }
 
   loading.value = false

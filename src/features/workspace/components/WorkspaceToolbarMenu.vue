@@ -1,5 +1,5 @@
 <template>
-  <v-menu
+  <VMenu
     v-if="menuItems.length"
     bottom
     offset-y
@@ -14,14 +14,14 @@
       </AskAnnaButton>
     </template>
 
-    <v-list>
+    <VList>
       <template v-for="(item, index) in menuItems">
-        <v-list-item v-if="item.isVisible" @click="handleMenuClick(item)" :key="index">
-          <v-list-item-title :class="[item.color]">{{ item.title }}</v-list-item-title>
-        </v-list-item>
+        <VListItem v-if="item.isVisible" @click="handleMenuClick(item)" :key="index">
+          <VListItemTitle :class="[item.color]">{{ item.title }}</VListItemTitle>
+        </VListItem>
       </template>
-    </v-list>
-  </v-menu>
+    </VList>
+  </VMenu>
 </template>
 <script setup lang="ts">
 const props = defineProps({
@@ -47,7 +47,7 @@ const emit = defineEmits('onOpenWorkspaceRemove')
 
 const permission = usePermission()
 const context = getCurrentInstance()
-const { router } = useRouterAskAnna()
+const { routerPush } = useRouterAskAnna()
 
 const menu = ref(false)
 
@@ -86,7 +86,7 @@ const handleMenuClick = item => {
     return
   }
 
-  router.push({
+  routerPush({
     name: item.to,
     params: { workspaceId: props.workspaceUuid }
   })

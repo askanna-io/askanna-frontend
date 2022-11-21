@@ -1,5 +1,5 @@
 <template>
-  <v-data-table
+  <VDataTable
     fixed-header
     :items="items"
     :page.sync="page"
@@ -17,7 +17,7 @@
     <template v-slot:item="{ item }">
       <tr>
         <td class="text-start">
-          <router-link class="table-link table-link--unformated" :to="routeLinkParams({ item })">
+          <RouterLink class="table-link table-link--unformated" :to="routeLinkParams({ item })">
             <AskAnnaTooltip v-if="!$vuetify.breakpoint.xsOnly" top content-class="opacity-1">
               <template v-slot:activator="{ on, value }">
                 <div v-on="on">
@@ -35,53 +35,53 @@
               <span>{{ item.suuid }}</span>
             </AskAnnaTooltip>
             <template v-else> #{{ item.suuid.slice(0, 4) }} </template>
-          </router-link>
+          </RouterLink>
         </td>
         <td class="text-start">
-          <router-link
+          <RouterLink
             :class="{ 'h-100': !item.name }"
             :to="routeLinkParams({ item })"
             class="table-link table-link--unformated"
           >
             {{ item.name }}
-          </router-link>
+          </RouterLink>
         </td>
         <td class="text-start">
-          <router-link class="table-link table-link--unformated" :to="routeLinkParams({ item })">
+          <RouterLink class="table-link table-link--unformated" :to="routeLinkParams({ item })">
             <ask-anna-chip-status :status="item.status" />
-          </router-link>
+          </RouterLink>
         </td>
         <td class="text-start">
-          <router-link class="table-link table-link--unformated" :to="routeLinkParams({ item })">
+          <RouterLink class="table-link table-link--unformated" :to="routeLinkParams({ item })">
             <b>Started:</b> &nbsp;{{ $moment(item.created).format(' Do MMMM YYYY, h:mm:ss a') }}
             <br />
             <b>Duration:</b>&nbsp;{{ calculateDuration(item) }}<br />
-          </router-link>
+          </RouterLink>
         </td>
         <td class="text-start">
-          <router-link class="table-link table-link--unformated" :to="routeLinkParams({ item })">
-            <ask-anna-copy :text="item.created_by.name" smartSlice :showCopyButton="false" :width="12" />
-          </router-link>
+          <RouterLink class="table-link table-link--unformated" :to="routeLinkParams({ item })">
+            <AskAnnaCopy :text="item.created_by.name" smartSlice :showCopyButton="false" :width="12" />
+          </RouterLink>
         </td>
         <td class="text-start">
-          <router-link
+          <RouterLink
             class="table-link table-link--unformated"
             :to="routeLinkParams({ item, name: 'workspace-project-jobs-job-run-input' })"
           >
             {{ getPayloadTitle(item.payload) }}
-          </router-link>
+          </RouterLink>
         </td>
         <td class="text-start">
-          <router-link
+          <RouterLink
             class="table-link table-link--unformated"
             :to="routeLinkParams({ item, name: 'workspace-project-jobs-job-run-metrics' })"
           >
             {{ getMetricTitle(item.metrics_meta.count) }}
-          </router-link>
+          </RouterLink>
         </td>
       </tr>
     </template>
-  </v-data-table>
+  </VDataTable>
 </template>
 
 <script setup lang="ts">

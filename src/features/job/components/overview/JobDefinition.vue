@@ -20,7 +20,7 @@
               />
             </AskAnnaCol>
             <AskAnnaCol cols="12"
-              ><run-info-env
+              ><RunInfoEnv
                 text="Environment"
                 :fullMode="false"
                 :value="environment"

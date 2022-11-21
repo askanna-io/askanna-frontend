@@ -1,7 +1,7 @@
 <template>
-  <v-col v-bind="$attrs" v-on="$listeners">
+  <VCol v-bind="$attrs" v-on="$listeners">
     <slot />
-  </v-col>
+  </VCol>
 </template>
 
 <script>

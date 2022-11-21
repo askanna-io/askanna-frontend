@@ -1,7 +1,7 @@
 <template>
-  <AskAnnaLoadingProgress classes="mx-4 mb-4" :type="'table-row'" :loading="loading">
+  <AskAnnaLoadingProgress classes="mx-4 mb-4" :loading="loading">
     <div>
-      <metric-table-view
+      <MetricTableView
         v-if="items.length || isSorted"
         :isSorted="isSorted"
         :labels="labels"

@@ -1,13 +1,13 @@
 <template>
   <AskAnnaCard class="mx-auto" flat :outlined="!$vuetify.breakpoint.xsOnly">
     <div class="askAnna-breadcrumbs">
-      <v-breadcrumbs :items="breadcrumbs" class="pa-0 pl-3" :class="{ 'pa-4 pl-4': !$vuetify.breakpoint.xsOnly }">
+      <VBreadcrumbs :items="breadcrumbs" class="pa-0 pl-3" :class="{ 'pa-4 pl-4': !$vuetify.breakpoint.xsOnly }">
         <template v-slot:item="{ item }">
-          <v-breadcrumbs-item :to="item.to" exact>
+          <VBreadcrumbsItem :to="item.to" exact>
             {{ item.title }}
-          </v-breadcrumbs-item>
+          </VBreadcrumbsItem>
         </template>
-      </v-breadcrumbs>
+      </VBreadcrumbs>
     </div>
     <AskAnnaDivider class="mt-1" />
     <AskAnnaCardTitle>
@@ -34,7 +34,7 @@
     />
     <AskAnnaAlert v-else class="ma-4 text-center" dense outlined>
       You are not allowed to create a project. I can bring you back to the workspace
-      <router-link :to="{ name: 'workspace' }" class="ask-anna-link">{{ workspaceName }}</router-link
+      <RouterLink :to="{ name: 'workspace' }" class="ask-anna-link">{{ workspaceName }}</RouterLink
       >.
     </AskAnnaAlert>
   </AskAnnaCard>
@@ -45,7 +45,7 @@ const permission = usePermission()
 const projectStore = useProjectStore()
 const projectsStore = useProjectsStore()
 const workSpaceStore = useWorkspaceStore()
-const { route, router } = useRouterAskAnna()
+const { route, routerPush } = useRouterAskAnna()
 
 const workspaceName = computed(() => workSpaceStore.workspace.name)
 const workspaceProjectVisibility = computed(() => workSpaceStore.workspace.visibility)
@@ -73,7 +73,7 @@ const handleCreate = async () => {
   if (project && project.suuid) {
     await projectsStore.getProjects() // call get all project to updated them on menu
 
-    router.push({
+    routerPush({
       name: 'workspace-project-code',
       params: { projectId: project.suuid, workspaceId: project.workspace.suuid, packageId: '' }
     })

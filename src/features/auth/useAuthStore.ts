@@ -1,4 +1,3 @@
-import router from '@/router'
 import { defineStore } from 'pinia'
 import * as Sentry from '@sentry/browser'
 import apiService from '@/services/apiService'
@@ -12,6 +11,8 @@ const api = apiStringify(serviceName)
 export const useAuthStore = defineStore('auth', {
   state: () => {
     return {
+      signUpStep: 0,
+      authData: { username: '', password: '' },
       userId: '',
       userRole: '',
       refreshToken: '',
@@ -25,7 +26,7 @@ export const useAuthStore = defineStore('auth', {
   },
 
   actions: {
-    async login({ username, password, redirect = true }: { username: string; password: string; redirect?: boolean }) {
+    async login({ username, password }: { username: string; password: string }) {
       try {
         const result = await apiService({
           serviceName,
@@ -41,8 +42,6 @@ export const useAuthStore = defineStore('auth', {
         const userStore = useUserStore()
         userStore.tempAuth = { username, password }
 
-        if (redirect) router.push({ name: 'check-access' })
-
         return result
       } catch (error: any) {
         const logger = useLogger()
@@ -57,7 +56,7 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    async logout(redirect = true) {
+    async logout() {
       try {
         await apiService({
           serviceName,
@@ -79,8 +78,6 @@ export const useAuthStore = defineStore('auth', {
       if (import.meta.env.VITE_APP_SENTRY_URL) {
         Sentry.configureScope(scope => scope.setUser(null))
       }
-
-      if (redirect) router.push({ path: '/signin' })
     },
 
     async createAccount(data) {

@@ -1,6 +1,6 @@
 <template>
   <AskAnnaFlex :style="scrollerStyles" class="overflow-y-auto" id="scroll-target">
-    <AskAnnaLoadingProgress :type="'table-row'" classes="mx-4" :loading="loading">
+    <AskAnnaLoadingProgress classes="mx-4" :loading="loading">
       <MetricJsonView :jsonString="variablesJSON" class="mb-3" v-scroll:#scroll-target="handleOnScroll" />
     </AskAnnaLoadingProgress>
   </AskAnnaFlex>

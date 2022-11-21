@@ -1,5 +1,5 @@
 <template>
-  <component :is="Layout" />
+  <Component :is="Layout" />
 </template>
 
 <script setup ref lang="ts">

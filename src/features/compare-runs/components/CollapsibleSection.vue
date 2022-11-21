@@ -21,9 +21,9 @@
         </div>
       </div>
     </summary>
-    <v-expand-transition>
+    <VExpandTransition>
       <div v-if="isOpen && !disabled"><slot /></div
-    ></v-expand-transition>
+    ></VExpandTransition>
   </details>
 </template>
 

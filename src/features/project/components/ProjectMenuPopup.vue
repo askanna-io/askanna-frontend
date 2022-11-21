@@ -1,6 +1,6 @@
 <template>
   <div class="text-center">
-    <v-menu v-model="menu" rounded :close-on-content-click="false" left>
+    <VMenu v-model="menu" rounded :close-on-content-click="false" left>
       <template v-slot:activator="{ on, attrs }">
         <AskAnnaButton icon v-bind="attrs" @click.stop.prevent="on.click" small>
           <AskAnnaIcon>mdi-dots-vertical</AskAnnaIcon>
@@ -48,8 +48,8 @@
           </AskAnnaRow>
         </AskAnnaCardActions>
       </AskAnnaCard>
-    </v-menu>
-    <confirm-delete-project-popup
+    </VMenu>
+    <ConfirmDeleteProjectPopup
       :projectName="project.name"
       :value="deleteProjectConfirmPopup"
       @onClose="handlCloseConfirmDeletePopup"
@@ -85,7 +85,7 @@ const props = defineProps({
   }
 })
 
-const router = useRouterAskAnna()
+const { routerPush } = useRouterAskAnna()
 const permission = usePermission()
 const projectStore = useProjectStore()
 const projectsStore = useProjectsStore()
@@ -103,7 +103,7 @@ const handlCloseConfirmDeletePopup = () => (deleteProjectConfirmPopup.value = fa
 const handleClose = () => (menu.value = false)
 
 const handleOpenConfirmEditProject = () =>
-  router.router.push({
+  routerPush({
     name: 'workspace-project-edit',
     params: {
       routeBackTo: props.routeBackTo,
@@ -121,7 +121,7 @@ const handleDeleteConfirmPorject = async () => {
   menu.value = false
 
   if (props.routeToRedirect) {
-    router.push({ name: props.routeToRedirect })
+    routerPush({ name: props.routeToRedirect })
   }
 }
 </script>

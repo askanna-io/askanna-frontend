@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="valueModel" max-width="650px" @click:outside="close">
+  <VDialog v-model="valueModel" max-width="650px" @click:outside="close">
     <AskAnnaCard class="AskAnna-card AskAnna-card--in-dialog">
       <AskAnnaToolbar flat dense white--text color="white">
         <AskAnnaToolbarTitle class="px-0"
@@ -15,12 +15,12 @@
       <AskAnnaCardText>
         You are about to change the name of job <b>{{ name }}</b
         >. If you want to run a job in AskAnna via a configuration in
-        <ask-anna-copy-text styleClasses="px-2 primary text--white" :showTooltip="false" text="askanna.yml" />, you need
-        to make sure that you have specified a job with the same name in your config file.
+        <AskAnnaCopyText styleClasses="px-2 primary text--white" :showTooltip="false" text="askanna.yml" />, you need to
+        make sure that you have specified a job with the same name in your config file.
         <br />
         <br />
         If you change the name of job <b>{{ name }}</b> and did not update the
-        <ask-anna-copy-text styleClasses="px-2 primary text--white" :showTooltip="false" text="askanna.yml" />
+        <AskAnnaCopyText styleClasses="px-2 primary text--white" :showTooltip="false" text="askanna.yml" />
         configuration, you will not be able to run this job till you updated the config file.
         <br />
         <br />
@@ -36,7 +36,7 @@
         >
       </AskAnnaCardActions>
     </AskAnnaCard>
-  </v-dialog>
+  </VDialog>
 </template>
 <script setup lang="ts">
 const props = defineProps({

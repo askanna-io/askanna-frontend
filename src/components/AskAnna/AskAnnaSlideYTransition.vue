@@ -1,7 +1,7 @@
 <template>
-  <v-slide-y-transition v-bind="$attrs" v-on="$listeners">
+  <VSlideYTransition v-bind="$attrs" v-on="$listeners">
     <slot />
-  </v-slide-y-transition>
+  </VSlideYTransition>
 </template>
 
 <script>

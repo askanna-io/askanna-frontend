@@ -1,10 +1,10 @@
 <template>
-  <v-data-iterator :items="items" hide-default-footer :no-data-text="''" disable-pagination>
+  <VDataIterator :items="items" hide-default-footer :no-data-text="''" disable-pagination>
     <template v-slot:header>
       <PeopleToolbar :title="workspaceName" />
     </template>
     <template v-slot:default="props">
-      <AskAnnaLoadingProgress :type="'table-row'" :loading="loading">
+      <AskAnnaLoadingProgress :loading="loading">
         <AskAnnaRow v-if="!settings.projectView" :class="{ 'px-2': $vuetify.breakpoint.xsOnly }">
           <AskAnnaCol
             v-for="item in props.items"
@@ -17,7 +17,7 @@
             xl="3"
             :class="{ 'pb-0': $vuetify.breakpoint.xsOnly }"
           >
-            <v-hover v-slot:default="{ hover }" open-delay="200">
+            <VHover v-slot:default="{ hover }" open-delay="200">
               <PeopleCardItem
                 :people="item"
                 :hover="hover"
@@ -25,12 +25,12 @@
                 :statusColor="getStatus(item.status)"
                 :description="sanitizeHTML(item.description)"
               />
-            </v-hover>
+            </VHover>
           </AskAnnaCol>
         </AskAnnaRow>
       </AskAnnaLoadingProgress>
     </template>
-  </v-data-iterator>
+  </VDataIterator>
 </template>
 <script setup lang="ts">
 defineProps({

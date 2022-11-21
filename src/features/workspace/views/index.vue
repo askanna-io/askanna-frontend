@@ -1,5 +1,5 @@
 <template>
-  <router-view />
+  <RouterView />
 </template>
 
 <script setup lang="ts">
@@ -10,12 +10,12 @@ const reShortUuid = /[0-9a-zA-Z]{4}\-[0-9a-zA-Z]{4}\-[0-9a-zA-Z]{4}\-[0-9a-zA-Z]
 const peopleStore = usePeopleStore()
 const workspaceStore = useWorkspaceStore()
 const workspacesStore = useWorkspacesStore()
-const { route, router } = useRouterAskAnna()
+const { route, routerPush } = useRouterAskAnna()
 const workspaceProjectsStore = useWorkspaceProjectsStore()
 
 const initWorkspace = async workspaceId => {
   if (!workspaceId) {
-    router.push({ path: `/` })
+    routerPush({ path: `/` })
 
     return
   }
@@ -30,7 +30,7 @@ const initWorkspace = async workspaceId => {
     await workspaceStore.getWorkspace(workspaceId)
     await workspaceProjectsStore.getInitialWorkpaceProjects({ workspaceId, params: { limit: 99, offset: 0 } })
   } else {
-    router.push({ path: `/` })
+    routerPush({ path: `/` })
   }
 }
 
@@ -42,7 +42,7 @@ const fetchData = async () => {
 
   if (workspaceId === 'workspace' && workspacesStore.workspaces.results.length) {
     workspaceId = workspacesStore.workspaces.results[0].suuid
-    router.push({ path: `/${workspaceId}` })
+    routerPush({ path: `/${workspaceId}` })
   }
 
   //get current workspace, first project, people

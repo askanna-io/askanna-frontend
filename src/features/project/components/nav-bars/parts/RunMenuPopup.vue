@@ -1,6 +1,6 @@
 <template>
   <div class="text-center">
-    <v-menu v-model="menu" rounded :close-on-content-click="false" left>
+    <VMenu v-model="menu" rounded :close-on-content-click="false" left>
       <template v-slot:activator="{ on, attrs }">
         <AskAnnaButton icon v-bind="attrs" @click.stop.prevent="on.click" small>
           <AskAnnaIcon>mdi-dots-vertical</AskAnnaIcon>
@@ -48,7 +48,7 @@
           </AskAnnaRow>
         </AskAnnaCardActions>
       </AskAnnaCard>
-    </v-menu>
+    </VMenu>
     <ConfirmDeleteRunPopup
       :runInfo="run"
       :value="deleteRunConfirmPopup"
@@ -60,7 +60,7 @@
 
 <script setup lang="ts">
 const runStore = useRunStore()
-const { route, router } = useRouterAskAnna()
+const { route, routerPush } = useRouterAskAnna()
 
 const menu = ref(false)
 const deleteRunConfirmPopup = ref(false)
@@ -70,7 +70,7 @@ const editRunRouteName = 'workspace-project-jobs-job-run-edit'
 const run = computed(() => runStore.run)
 const disabledButtonEditRun = computed(() => route.name === editRunRouteName)
 const handlerOpenEditRunPage = async () => {
-  router.push({ name: editRunRouteName })
+  routerPush({ name: editRunRouteName })
   handleClose()
 }
 
@@ -89,7 +89,7 @@ const handleDeleteConfirmRun = async () => {
   menu.value = false
 
   if (isDeleted) {
-    router.push({ name: 'workspace-project-jobs-job-runs-table' })
+    routerPush({ name: 'workspace-project-jobs-job-runs-table' })
   }
 }
 </script>

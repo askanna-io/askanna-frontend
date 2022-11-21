@@ -1,5 +1,5 @@
 <template>
-  <v-menu v-model="menu" :close-on-content-click="false" offset-y top>
+  <VMenu v-model="menu" :close-on-content-click="false" offset-y top>
     <template v-slot:activator="{ on }">
       <div v-on="on" class="cursor--pointer">
         <AskAnnaTooltip v-if="!$vuetify.breakpoint.xsOnly" top left :nudge-left="100" content-class="opacity-1">
@@ -30,7 +30,7 @@
       </div>
     </template>
     <AskAnnaCard>
-      <v-app-bar dense height="40" flat>
+      <VAppBar dense height="40" flat>
         Name: {{ metricRow.name }}
         <AskAnnaSpacer />
         <AskAnnaButton small outlined color="secondary" @click="handleCopy" class="mx-2 btn--hover">
@@ -39,10 +39,10 @@
         <AskAnnaButton small icon @click="handleClose">
           <AskAnnaIcon>mdi-close</AskAnnaIcon>
         </AskAnnaButton>
-      </v-app-bar>
+      </VAppBar>
       <TheHighlight :value="jsonString" languageName="json" />
     </AskAnnaCard>
-  </v-menu>
+  </VMenu>
 </template>
 <script setup lang="ts">
 const props = defineProps({
@@ -80,8 +80,8 @@ const menu = ref(false)
 const BREAK_LINE_REGEXP = /\r\n|\r|\n/g
 
 const getLines = text => {
-  if (text.length === 0) return []
-  return text.split(BREAK_LINE_REGEXP)
+  if (text?.length === 0) return []
+  return text?.split(BREAK_LINE_REGEXP)
 }
 
 const cols = computed(() => (props.preview ? 80 : 1))
@@ -103,19 +103,19 @@ const calcRows = computed(() => {
 
   let preview = getLines(jsonString.value)
 
-  return preview.length > 6 ? 6 : preview.length
+  return preview?.length > 6 ? 6 : preview?.length
 })
 
 const previewJson = computed(() => {
   if (!props.preview) return '...*'
 
   let preview = getLines(jsonString.value)
-  if (preview.length > 6) {
-    preview = preview.slice(0, 5)
+  if (preview?.length > 6) {
+    preview = preview?.slice(0, 5)
     preview.push('...')
   }
 
-  return preview.join('\n')
+  return preview?.join('\n')
 })
 
 const handleClose = () => (menu.value = false)

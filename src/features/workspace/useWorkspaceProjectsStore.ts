@@ -9,7 +9,7 @@ const sortFilterHelper = useSortFilterHelper()
 export const useWorkspaceProjectsStore = defineStore('workspaceProjects', {
   state: () => {
     return {
-      loading: false,
+      loading: true,
       allWorkspaceProjects: {
         count: 0,
         next: '',

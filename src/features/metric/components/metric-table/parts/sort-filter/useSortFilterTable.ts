@@ -7,16 +7,16 @@ interface MetricNameParams {
 }
 
 export default function (context) {
-  const { route, router } = useRouterAskAnna()
   const lastScrollTop = ref(0)
+  const { route, replace } = useRouterAskAnna()
 
   const state = reactive({
     ordering: '',
     label_name: '',
     label_value: '',
+    metric_value: '',
     metric_name: '',
-    variables_type: '',
-    metric_value: ''
+    variables_type: ''
   })
 
   const changeState = ({ path, value }: { path: string; value: string }) => {
@@ -25,7 +25,7 @@ export default function (context) {
     lastScrollTop.value = 0
 
     //change query in params
-    router.replace({
+    replace({
       name: 'workspace-project-jobs-job-run-metrics',
       query: { ...route.query, [path]: value }
     })

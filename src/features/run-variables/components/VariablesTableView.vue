@@ -1,5 +1,5 @@
 <template>
-  <v-data-table
+  <VDataTable
     class="pt-2"
     fixed-header
     :height="height"
@@ -16,21 +16,20 @@
             :class="{ 'AskAnna-box-shadow--none': isLabels }"
             class="text-left text-subtitle-2 font-weight-bold h-20"
           >
-            <sort-filter-by-metric-name />
+            <SortFilterByName typeName="variable" />
           </th>
           <th
             :style="rowValueStyle"
             :class="{ 'AskAnna-box-shadow--none': isLabels }"
             class="text-left text-subtitle-2 font-weight-bold h-20"
           >
-            <sort-filter-by-metric-value />
+            <SortFilterByValue typeName="variable" />
           </th>
           <th
             v-if="isLabels"
-            :colspan="labels.length"
+            :colspan="labels?.length"
             class="text-left text-subtitle-2 font-weight-bold h-20 AskAnna-box-shadow--none"
           >
-            <sort-filter-by-metric-label v-if="false" :labels="labels" />
             Labels
           </th>
         </tr>
@@ -54,10 +53,10 @@
           <tr :key="index">
             <td>{{ item.variable.name }}</td>
             <td class="text-left">
-              <metric-value :metricRow="item.variable" :fullText="true" :isLabels="isLabels" />
+              <MetricValue :metricRow="item.variable" :fullText="true" :isLabels="isLabels" />
             </td>
-            <template v-if="labels.length">
-              <metric-table-label-td
+            <template v-if="labels?.length">
+              <MetricTableLabelTd
                 v-for="label in labels"
                 :key="label.name + index"
                 :label="label.name"
@@ -70,17 +69,14 @@
         </template>
       </tbody>
     </template>
-  </v-data-table>
+  </VDataTable>
 </template>
 <script lang="ts">
-import LableFilter from './parts/LableFilter.vue'
-import MetricTableLabelTd from './parts/MetricTableLabelTd.vue'
-import SortFilterByMetricName from './parts/sort-filter/SortFilterByMetricName.vue'
-import SortFilterByMetricValue from './parts/sort-filter/SortFilterByMetricValue.vue'
-import SortFilterByMetricLabel from './parts/sort-filter/SortFilterByMetricLabel.vue'
+import useSortFilterTable from './useSortFilterTable'
 import MetricValue from '@/features/metric/components/metric-table/parts/MetricValue.vue'
-
-import useSortFilterTable from './parts/sort-filter/useSortFilterTable'
+import MetricTableLabelTd from '@/features/metric/components/metric-table/parts/MetricTableLabelTd.vue'
+import SortFilterByName from '@/features/metric/components/metric-table/parts/sort-filter/SortFilterByName.vue'
+import SortFilterByValue from '@/features/metric/components/metric-table/parts/sort-filter/SortFilterByValue.vue'
 
 export default defineComponent({
   name: 'VariablesTableView',
@@ -96,11 +92,9 @@ export default defineComponent({
 
   components: {
     MetricValue,
-    LableFilter,
     MetricTableLabelTd,
-    SortFilterByMetricName,
-    SortFilterByMetricValue,
-    SortFilterByMetricLabel
+    SortFilterByName,
+    SortFilterByValue
   },
 
   setup(props, context) {
@@ -117,15 +111,15 @@ export default defineComponent({
       }
     }
 
-    const isFullText = computed(() => props.labels.length <= 1)
-    const isLabels = computed(() => Boolean(props.labels.length))
+    const isFullText = computed(() => props.labels?.length <= 1)
+    const isLabels = computed(() => Boolean(props.labels?.length))
 
     const rowValueStyle = computed(() => {
       let style = {
         width: '35%',
         minWidth: '240px'
       }
-      if (!props.labels.length) {
+      if (!props.labels?.length) {
         style = {
           width: '80%',
           minWidth: '240px'

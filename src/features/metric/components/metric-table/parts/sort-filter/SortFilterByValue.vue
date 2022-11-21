@@ -1,5 +1,5 @@
 <template>
-  <v-menu :close-on-content-click="false" v-model="menu" :nudge-width="200" nudge-right="60">
+  <VMenu :close-on-content-click="false" v-model="menu" :nudge-width="200" nudge-right="60">
     <template v-slot:activator="{ on, attrs }">
       <span v-on="on" class="pr-5 cursor--pointer" @mouseover="handleOnHover" @mouseleave="handleOnBlur">
         Value
@@ -22,30 +22,26 @@
     </template>
 
     <AskAnnaCard>
-      <table-sort title="Value" sortBy="metric.value" />
+      <SortByType title="Value" :sortBy="`${typeName}.value`" />
 
       <AskAnnaDivider />
 
-      <autocomplete-filter label="Filter by data type" :items="typeValues" filterName="metric_type" />
+      <AutocompleteFilter label="Filter by data type" :items="typeValues" :filterName="`${typeName}_type`" />
 
       <AskAnnaDivider />
-
-      <filter-name-value v-if="false" class="pt-2" filterName="metric_value" label="Filter by metric value" />
-
-      <AskAnnaCardActions v-if="false">
-        <AskAnnaSpacer />
-
-        <AskAnnaButton small outlined text class="btn--hover" @click="menu = false">Cancel</AskAnnaButton>
-        <AskAnnaButton small outlined color="secondary" text class="btn--hover" @click="handleApply"
-          >Apply</AskAnnaButton
-        >
-      </AskAnnaCardActions>
     </AskAnnaCard>
-  </v-menu>
+  </VMenu>
 </template>
 
 <script setup lang="ts">
-const typeValues = ['boolean', 'date', 'datetime', 'dictionary', 'float', 'integer', 'string', 'tag', 'time']
+defineProps({
+  typeName: {
+    type: String,
+    default: 'metric'
+  }
+})
+
+const typeValues = ['boolean', 'date', 'datetime', 'dictionary', 'float', 'integer', 'string', 'tag', 'time', 'list']
 
 const menu = ref()
 const active = ref(false)

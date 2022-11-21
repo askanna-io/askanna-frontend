@@ -1,5 +1,5 @@
 <template>
-  <v-data-table
+  <VDataTable
     class="variables-table ask-anna-table"
     :items="items"
     :headers="headers"
@@ -13,13 +13,13 @@
     </template>
 
     <template v-slot:item.suuid="{ item }">
-      <ask-anna-copy :text="item.suuid" prefix="#" :show="4" />
+      <AskAnnaCopy :text="item.suuid" prefix="#" :show="4" />
     </template>
     <template v-slot:item.name="{ item }">
-      <ask-anna-copy :text="item.name" smartSlice :width="35" />
+      <AskAnnaCopy :text="item.name" smartSlice :width="35" />
     </template>
     <template v-slot:item.value="{ item }">
-      <ask-anna-copy :text="item.value" smartSlice :width="35" :masked="item.is_masked" expanded />
+      <AskAnnaCopy :text="item.value" smartSlice :width="35" :masked="item.is_masked" expanded />
     </template>
     <template v-slot:item.actions="{ item }">
       <AskAnnaButton
@@ -40,7 +40,7 @@
       </template>
       <template v-else> There are no variables available for this project. </template>
     </template>
-  </v-data-table>
+  </VDataTable>
 </template>
 
 <script setup lang="ts">

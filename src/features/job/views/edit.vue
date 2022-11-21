@@ -1,6 +1,6 @@
 <template>
   <div :class="{ 'pt-4': projectJobEdit }">
-    <AskAnnaLoadingProgress v-if="projectJobEdit" :type="'table-row'" :loading="loading" fullWidth>
+    <AskAnnaLoadingProgress v-if="projectJobEdit" :loading="loading" fullWidth>
       <AskAnnaCard flat>
         <AskAnnaContainer class="ma-0 pt-0" fluid>
           <AskAnnaRow>
@@ -52,7 +52,7 @@
             </AskAnnaCol>
           </AskAnnaRow>
         </AskAnnaContainer>
-        <confirm-change-job-name-popup
+        <ConfirmChangeJobNamePopup
           :jobName="job.name"
           :value="showConfirmPopup"
           @onClose="handleClosePopup"
@@ -62,7 +62,7 @@
     </AskAnnaLoadingProgress>
     <AskAnnaAlert v-else class="mx-4 text-center" dense outlined>
       You are not allowed to edit this job. I can bring you back to the job
-      <router-link :to="{ name: 'workspace-project-job-overiew' }" class="ask-anna-link">{{ job.name }}</router-link
+      <RouterLink :to="{ name: 'workspace-project-job-overiew' }" class="ask-anna-link">{{ job.name }}</RouterLink
       >.
     </AskAnnaAlert>
   </div>
@@ -73,9 +73,9 @@ import { set } from 'lodash'
 
 const jobStore = useJobStore()
 const snackBar = useSnackBar()
-const { route, router } = useRouterAskAnna()
 const permission = usePermission()
 const validationRules = useValidationRules()
+const { route, routerPush } = useRouterAskAnna()
 
 const { jobId } = route.params
 
@@ -136,7 +136,7 @@ const handleClosePopup = () => {
   showConfirmPopup.value = false
 }
 const handleClose = () =>
-  router.push({
+  routerPush({
     name: 'workspace-project-job-overiew'
   })
 

@@ -1,7 +1,7 @@
 <template>
-  <v-divider v-bind="$attrs" v-on="$listeners">
+  <VDivider v-bind="$attrs" v-on="$listeners">
     <slot />
-  </v-divider>
+  </VDivider>
 </template>
 
 <script>

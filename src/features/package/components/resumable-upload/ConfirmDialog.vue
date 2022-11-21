@@ -1,7 +1,7 @@
 <template>
-  <v-dialog v-model="dialog" max-width="500px">
+  <VDialog v-model="dialog" max-width="500px">
     <AskAnnaCard>
-      <AskAnnaCardTitle> Please confirm that you want to {{ text }} the code </AskAnnaCardTitle>
+      <AskAnnaCardTitle>Please confirm that you want to {{ text }} the code </AskAnnaCardTitle>
       <AskAnnaCardText>
         <AskAnnaButton class="my-2 btn--hover" small outlined @click="handleStartUpload" color="primary">
           <AskAnnaIcon color="primary" left>mdi-upload</AskAnnaIcon>Yes, I want to {{ text }} the code
@@ -13,7 +13,7 @@
         </AskAnnaButton>
       </AskAnnaCardActions>
     </AskAnnaCard>
-  </v-dialog>
+  </VDialog>
 </template>
 
 <script setup lang="ts">

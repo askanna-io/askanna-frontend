@@ -1,5 +1,5 @@
 <template>
-  <v-breadcrumbs-item v-bind="$attrs" v-on="$listeners">
+  <VBreadcrumbsItem v-bind="$attrs" v-on="$listeners">
     <template v-for="(_, slot) in $slots" #[slot]="scope">
       <slot :name="slot" v-bind="scope" />
     </template>
@@ -8,7 +8,7 @@
       <slot :name="slot" />
     </template>
     <slot />
-  </v-breadcrumbs-item>
+  </VBreadcrumbsItem>
 </template>
 
 <script>

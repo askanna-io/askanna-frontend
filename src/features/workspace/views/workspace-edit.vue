@@ -34,7 +34,7 @@
         <AskAnnaRow>
           <AskAnnaCol cols="12">
             <div class="transition-swing text-h5 pt-2 pb-3 font-weight-bold">Workspace settings</div>
-            <v-radio-group
+            <VRadioGroup
               mandatory
               hide-details
               class="pt-0 mt-0"
@@ -44,24 +44,24 @@
               <template v-slot:label>
                 <div class="text-subtitle-1 pt-0 font-weight-bold black--text">Visibility</div>
               </template>
-              <v-radio :ripple="false" value="PRIVATE">
+              <VRadio :ripple="false" value="PRIVATE">
                 <template v-slot:label>
                   <div class="primary--black-text">Private</div>
                 </template>
-              </v-radio>
+              </VRadio>
               <div class="pb-2 pl-8">
                 Projects in this workspace can only be viewed by workspace or project members.
               </div>
-              <v-radio :ripple="false" value="PUBLIC">
+              <VRadio :ripple="false" value="PUBLIC">
                 <template v-slot:label>
                   <div class="primary--black-text">Public</div>
                 </template>
-              </v-radio>
+              </VRadio>
               <div class="pl-8">
                 Allow public projects that can be viewed by people without any authentication. Also the workspace name
                 and description becomes publicly available.
               </div>
-            </v-radio-group>
+            </VRadioGroup>
           </AskAnnaCol>
         </AskAnnaRow>
         <AskAnnaRow>
@@ -89,12 +89,12 @@
     <template v-else>
       <AskAnnaAlert v-if="token" class="text-center" dense outlined>
         You are not allowed to edit this workspace. I can bring you back to the workspace
-        <router-link :to="{ name: 'workspace' }" class="ask-anna-link">{{ workspace.name }}</router-link
+        <RouterLink :to="{ name: 'workspace' }" class="ask-anna-link">{{ workspace.name }}</RouterLink
         >.
       </AskAnnaAlert>
       <AskAnnaAlert v-else class="text-center" dense outlined>
         You are not allowed to open this page. I can bring you back to
-        <router-link :to="{ path: '/' }" class="ask-anna-link">the main page</router-link>.
+        <RouterLink :to="{ path: '/' }" class="ask-anna-link">the main page</RouterLink>.
       </AskAnnaAlert>
     </template>
 
@@ -111,8 +111,8 @@
 import { set } from 'lodash'
 
 const snackBar = useSnackBar()
-const { router } = useRouterAskAnna()
 const { RULES } = useValidationRules()
+const { routerPush } = useRouterAskAnna()
 const workspaceStore = useWorkspaceStore()
 const workspacesStore = useWorkspacesStore()
 const { token, isAllowedToView } = usePermission()
@@ -177,7 +177,7 @@ const handleSaveDescription = async () => {
 }
 
 const handleClose = () =>
-  router.push({
+  routerPush({
     name: 'workspace'
   })
 

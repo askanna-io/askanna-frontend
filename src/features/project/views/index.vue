@@ -16,7 +16,7 @@
         :handleShowProjectBar="handleShowProjectBar"
         :isShowProjectBar="projectStore.menu.isShowProjectBar"
       />
-      <router-view />
+      <RouterView />
     </AskAnnaCard>
     <AskAnnaCard v-if="isShowReadmeFile && readmeFile" class="mt-3" outlined>
       <AskAnnaCardTitle flat dense color="white" class="pb-0">
