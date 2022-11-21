@@ -57,7 +57,7 @@ const tableHeight = computed(() => {
   }
 
   const count = items.value.reduce(calcHeigth, 0)
-  const adjusHeight = count > height.value ? height.value - 340 : count + 80
+  const adjusHeight = count > height.value ? height.value - 60 : count + 80
 
   return adjusHeight
 })
