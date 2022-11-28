@@ -28,15 +28,17 @@ onUpdated(() => {
 
 <style>
 .login-layout .version {
-  position: fixed;
   bottom: 0;
+  position: fixed;
 }
+
 .login-layout {
   height: 100vh;
-  background-image: url('/assets/bg/askanna-bg-01.svg');
-  background-size: cover;
   overflow: hidden;
+  background-size: cover;
+  background-image: url('/assets/bg/askanna-bg-01.svg');
 }
+
 .login-layout--container {
   max-width: 100%;
   overflow-x: hidden;
@@ -55,12 +57,15 @@ onUpdated(() => {
   height: 74px;
   margin-bottom: 6px;
 }
+
 .login-expansion .v-expansion-panel {
   min-width: 360px;
 }
+
 .colored-border {
   border: 1px solid;
 }
+
 .no-bg {
   background: none;
 }

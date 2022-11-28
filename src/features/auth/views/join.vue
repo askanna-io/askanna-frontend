@@ -1,5 +1,5 @@
 <template>
-  <div class="join-wrapper">
+  <div class="login-layout">
     <AskAnnaRow justify="center">
       <AskAnnaCol cols="8" xl="3" md="6" sm="9" lg="4" class="rounded pb-0">
         <img alt="AskAnna logo" src="/assets/logo.svg" class="logo" />
@@ -18,8 +18,9 @@
 
 <script setup lang="ts">
 const authStore = useAuthStore()
-const { route, routerPush } = useRouterAskAnna()
 const peopleStore = usePeopleStore()
+const { route } = useRouterAskAnna()
+
 const { token, peopleId, workspaceId } = route.params
 
 const loading = ref(true)
@@ -31,7 +32,6 @@ const fetchData = async () => {
   loading.value = true
 
   await authStore.logout()
-  routerPush({ path: '/signin' })
   await peopleStore.getInvitetionInfo({
     token,
     peopleId,
@@ -43,21 +43,3 @@ const fetchData = async () => {
 
 onBeforeMount(() => fetchData())
 </script>
-<style scoped>
-.join-wrapper {
-  height: 100vh;
-  background-image: url('/assets/bg/askanna-bg-01.svg');
-  background-size: cover;
-}
-.logo {
-  height: 74px;
-  margin-bottom: 6px;
-}
-
-.colored-border {
-  border: 1px solid;
-}
-.no-bg {
-  background: none;
-}
-</style>

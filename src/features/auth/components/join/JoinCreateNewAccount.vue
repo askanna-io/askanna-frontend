@@ -6,14 +6,21 @@
     @submit="handleLogin"
     @keyup.native.enter="handleLogin"
   >
-    <AskAnnaTextField dense outlined label="Name" validate-on-blur v-model="name" :error-messages="error.name" />
+    <AskAnnaTextField
+      dense
+      outlined
+      label="Name"
+      validate-on-blur
+      v-model="formData.name"
+      :error-messages="error.name"
+    />
     <AskAnnaTextField
       v-model="formData.email"
       :rules="[RULES.required('The email is required'), RULES.email('The email you entered is not valid', 3)]"
       dense
       outlined
-      validate-on-blur
       label="Email"
+      validate-on-blur
       :error-messages="error.email"
     />
     <AskAnnaTextField
