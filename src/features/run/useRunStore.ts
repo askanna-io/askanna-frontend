@@ -299,7 +299,7 @@ export const useRunStore = defineStore('run', {
       return packageTarget.target || ''
     },
 
-    async deleteRunInfo({ suuid: uuid, name }) {
+    async deleteRunInfo({ name, suuid }) {
       const logger = useLogger()
 
       try {
