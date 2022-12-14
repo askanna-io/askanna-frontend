@@ -22,7 +22,12 @@ const nb = Nb()
 const notebookHtml = computed(() => {
   if (!props.fileSource) return
 
-  const notebook = nb.parse(props.fileSource)
+  let data = props.fileSource
+  if (data && typeof data === 'string') {
+    data = JSON.parse(data)
+  }
+
+  const notebook = nb.parse(data)
   const rendered = notebook.render()
 
   return rendered.outerHTML
