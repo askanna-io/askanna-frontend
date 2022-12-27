@@ -1,7 +1,7 @@
 <template>
   <VMenu top v-model="menu" :nudge-top="25" :close-on-content-click="false">
     <template v-slot:activator="{ on, attrs }">
-      <AskAnnaTooltip top>
+      <VTooltip top>
         <template v-slot:activator="{ on: onHover }">
           <span v-on="onHover">
             <AskAnnaButton
@@ -20,7 +20,7 @@
           </span>
         </template>
         <span>Highlight</span>
-      </AskAnnaTooltip>
+      </VTooltip>
     </template>
     <AskAnnaCard width="140px" flat class="px-2 pt-2">
       <AskAnnaRow no-gutters>

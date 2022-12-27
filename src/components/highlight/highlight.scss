@@ -41,9 +41,12 @@
 }
 .ask-anna-highlight .hljs,
 .ask-anna--editor .hljs,
-.ask-anna--editor code,
 .hljs code {
   display: block;
+}
+.ask-anna-highlight .hljs,
+.ask-anna--editor .hljs,
+.ask-anna--editor code {
   overflow-x: auto;
   padding: 0.5em;
   color: #fff !important;

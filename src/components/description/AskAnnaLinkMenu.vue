@@ -1,7 +1,7 @@
 <template>
-  <VMenu top v-model="editorStore.isMenuOpen" :nudge-top="25" :close-on-content-click="false">
+  <VMenu top eager v-model="editorStore.isMenuOpen" :nudge-top="25" :close-on-content-click="false">
     <template v-slot:activator="{ on, attrs }">
-      <AskAnnaTooltip top>
+      <VTooltip top>
         <template v-slot:activator="{ on: onHover }">
           <span v-on="onHover">
             <AskAnnaButton
@@ -21,14 +21,14 @@
           </span>
         </template>
         <span>Link</span>
-      </AskAnnaTooltip>
+      </VTooltip>
     </template>
     <AskAnnaCard width="340px" flat class="px-2 pt-2">
-      <div v-if="false" class="text-body-1 font-weight-bold">Set the link</div>
       <AskAnnaRow>
         <AskAnnaCol cols="12" class="color-picker-col">
           <AskAnnaTextField
             v-model="editorStore.url"
+            id="link-input"
             x-small
             dense
             autofocus
@@ -50,6 +50,8 @@
 </template>
 
 <script setup lang="ts">
+import { VTooltip } from 'vuetify/lib'
+
 defineProps({
   isActive: {
     type: Boolean,

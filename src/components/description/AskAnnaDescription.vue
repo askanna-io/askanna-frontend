@@ -34,9 +34,9 @@
         >
           <Component
             v-bind:is="$vuetify.breakpoint.xsOnly ? 'div' : 'v-toolbar'"
+            flat
             dense
             height="30px"
-            flat
             class="mx-1 mt-2"
           >
             <AskAnnaTooltip top>
@@ -331,7 +331,6 @@
               @onSetLink="handleSetLink"
               @onOpen="handleOpenSetLink"
             />
-
             <AskAnnaTooltip top>
               <template v-slot:activator="{ on }">
                 <AskAnnaButton
@@ -412,18 +411,31 @@
 </template>
 
 <script setup lang="ts">
-import lowlight from 'lowlight'
+import { lowlight } from 'lowlight'
 import Link from '@tiptap/extension-link'
-import { markInputRule } from '@tiptap/core'
 import Code from '@tiptap/extension-code'
-import StarterKit from '@tiptap/starter-kit'
+import Text from '@tiptap/extension-text'
+import Bold from '@tiptap/extension-bold'
+import { markInputRule } from '@tiptap/core'
+import Italic from '@tiptap/extension-italic'
+import Strike from '@tiptap/extension-strike'
+import Heading from '@tiptap/extension-heading'
+import History from '@tiptap/extension-history'
+import Document from '@tiptap/extension-document'
 import TaskList from '@tiptap/extension-task-list'
+import ListItem from '@tiptap/extension-list-item'
 import TaskItem from '@tiptap/extension-task-item'
+import Gapcursor from '@tiptap/extension-gapcursor'
+import Paragraph from '@tiptap/extension-paragraph'
+import Highlight from '@tiptap/extension-highlight'
 import Underline from '@tiptap/extension-underline'
 import HardBreak from '@tiptap/extension-hard-break'
-import Highlight from '@tiptap/extension-highlight'
-import CodeBlock from '@tiptap/extension-code-block'
+import Dropcursor from '@tiptap/extension-dropcursor'
 import Blockquote from '@tiptap/extension-blockquote'
+import BulletList from '@tiptap/extension-bullet-list'
+import Typography from '@tiptap/extension-typography'
+import OrderedList from '@tiptap/extension-ordered-list'
+import HorizontalRule from '@tiptap/extension-horizontal-rule'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 import { Editor, EditorContent, VueNodeViewRenderer } from '@tiptap/vue-2'
 import AskAnnaCodeBlock from '@/components/description/AskAnnaCodeBlock.vue'
@@ -467,6 +479,7 @@ const emit = defineEmits(['onChange', 'onSave', 'onChangeDescription'])
 
 const editorStore = useEditorStore()
 
+const editor = ref<Editor>()
 const editable = ref(true)
 const isFocused = ref(false)
 const isFullScreen = ref(false)
@@ -486,90 +499,187 @@ const scrollerStyles = computed(() => {
   return { 'max-height': `${maxHeight.value}px`, 'min-height': '120px', height: 'auto' }
 })
 
-const linkInputRegex = /^\[([\w\s\d]+)\]\((https?:\/\/[\w\d./?=#]+)\)$/
+const linkInputRegex = /^\[([\w\s\d]+)\]\((https?:\/\/[\w\d./?=#]+)\)$/g
 
-const editor = new Editor({
-  autofocus: false,
-  editable: true,
-  extensions: [
-    StarterKit,
-    Code.extend({
-      addKeyboardShortcuts() {
-        return {
-          Escape: () => {
-            editor.commands.unsetCode()
+const lazyLoadCodeBlock = ({ editor }: { editor: Editor }) => {
+  const json = editor.getJSON()
+  json.content?.forEach(async node => {
+    if (node.type !== 'codeBlock') {
+      return
+    }
+
+    const language = node.attrs?.language
+    if (!language) {
+      return
+    }
+
+    if (lowlight.registered(language)) {
+      return
+    }
+
+    try {
+      const hljs = await import(`../../../node_modules/highlight.js/es/languages/${language}.js`) // change me
+      lowlight.registerLanguage(language, hljs.default)
+    } catch (error) {
+      const logger = useLogger()
+
+      logger.error('error on load highlight module language style', error)
+    }
+  })
+}
+
+onBeforeMount(() => {
+  editor.value = new Editor({
+    autofocus: false,
+    editable: true,
+    extensions: [
+      Text,
+      Bold,
+      Italic,
+      Strike,
+      Heading,
+      History,
+      Document,
+      TaskList,
+      TaskItem,
+      ListItem,
+      HardBreak,
+      Underline,
+      Paragraph,
+      Dropcursor,
+      Gapcursor,
+      Typography,
+      BulletList,
+      OrderedList,
+      HorizontalRule,
+      Code,
+      Blockquote.extend({
+        addKeyboardShortcuts() {
+          return {
+            Escape: () => {
+              if (!editor.value.isActive('blockquote')) return
+
+              editor.value.commands.enter()
+              editor.value.commands.lift('blockquote')
+            }
           }
         }
-      }
-    }),
+      }),
+      Highlight.configure({ multicolor: true }),
 
-    CodeBlock.configure({
-      exitOnTripleEnter: true
-    }),
-    TaskList,
-    TaskItem,
-    HardBreak,
-    Underline,
-
-    Blockquote.extend({
-      addKeyboardShortcuts() {
-        return {
-          Escape: () => {
-            if (!editor.isActive('blockquote')) return
-
-            editor.commands.enter()
-            editor.commands.lift('blockquote')
+      CodeBlockLowlight.extend({
+        addNodeView() {
+          return VueNodeViewRenderer(AskAnnaCodeBlock)
+        },
+        addKeyboardShortcuts() {
+          return {
+            Escape: () => {
+              editor.value.isActive('codeBlock') && editor.value.commands.exitCode()
+            },
+            'Mod-Alt-c': () => this.editor.commands.toggleCodeBlock(),
+            // remove code block when at start of document or code block is empty
+            Backspace: () => {
+              const { empty, $anchor } = this.editor.state.selection
+              const isAtStart = $anchor.pos === 1
+              if (!empty || $anchor.parent.type.name !== this.name) {
+                return false
+              }
+              if (isAtStart || !$anchor.parent.textContent.length) {
+                return this.editor.commands.clearNodes()
+              }
+              return false
+            },
+            // exit node on triple enter
+            Enter: ({ editor }) => {
+              if (!this.options.exitOnTripleEnter) {
+                return false
+              }
+              const { state } = editor
+              const { selection } = state
+              const { $from, empty } = selection
+              if (!empty || $from.parent.type !== this.type) {
+                return false
+              }
+              const isAtEnd = $from.parentOffset === $from.parent.nodeSize - 2
+              const endsWithDoubleNewline = $from.parent.textContent.endsWith('\n\n')
+              if (!isAtEnd || !endsWithDoubleNewline) {
+                return false
+              }
+              return editor
+                .chain()
+                .command(({ tr }) => {
+                  tr.delete($from.pos - 2, $from.pos)
+                  return true
+                })
+                .exitCode()
+                .run()
+            },
+            // exit node on arrow down
+            ArrowDown: ({ editor }) => {
+              if (!this.options.exitOnArrowDown) {
+                return false
+              }
+              const { state } = editor
+              const { selection, doc } = state
+              const { $from, empty } = selection
+              if (!empty || $from.parent.type !== this.type) {
+                return false
+              }
+              const isAtEnd = $from.parentOffset === $from.parent.nodeSize - 2
+              if (!isAtEnd) {
+                return false
+              }
+              const after = $from.after()
+              if (after === undefined) {
+                return false
+              }
+              const nodeAfter = doc.nodeAt(after)
+              if (nodeAfter) {
+                return false
+              }
+              return editor.commands.exitCode()
+            }
           }
         }
-      }
-    }),
+      }).configure({ lowlight, exitOnTripleEnter: true }),
+      Link.extend({
+        addKeyboardShortcuts() {
+          return {
+            'Mod-k': () => {
+              handleOpenSetLink()
+              editorStore.isMenuOpen = true
+              setTimeout(() => {
+                const linkInput = window.document.getElementById('link-input')
+                linkInput?.setSelectionRange(0, 0)
+              }, 500)
+            },
+            Escape: () => {
+              if (!editor.value.isActive('link')) return
 
-    Highlight.configure({ multicolor: true }),
-
-    CodeBlockLowlight.extend({
-      addNodeView() {
-        return VueNodeViewRenderer(AskAnnaCodeBlock)
-      },
-      addKeyboardShortcuts() {
-        return {
-          Escape: () => {
-            editor.isActive('codeBlock') && editor.commands.exitCode()
+              editorStore.url = ''
+            }
           }
+        },
+        addInputRules() {
+          return [
+            markInputRule({
+              type: this.type,
+              find: linkInputRegex
+            })
+          ]
         }
-      }
-    }).configure({ lowlight, exitOnTripleEnter: true }),
+      }).configure({
+        autolink: false,
+        openOnClick: !editable.value,
+        protocols: ['http', 'https', 'ftp', 'mailto']
+      })
+    ],
 
-    Link.extend({
-      addKeyboardShortcuts() {
-        return {
-          'Mod-k': () => {
-            handleOpenSetLink()
-            editorStore.isMenuOpen = true
-          },
-          Escape: () => {
-            if (!editor.isActive('link')) return
-
-            editorStore.url = ''
-
-            editor.commands.insertContent(' ')
-          }
-        }
-      },
-      addInputRules() {
-        return [
-          markInputRule({
-            type: this.type,
-            find: linkInputRegex
-          })
-        ]
-      }
-    }).configure({
-      openOnClick: !editable.value
-    })
-  ],
-
-  content: props.description,
-  onUpdate: ({ editor }) => emit('onChange', editor.getHTML())
+    content: props.description,
+    onUpdate: ({ editor }) => emit('onChange', editor.getHTML())
+  })
+  editor.value.on('beforeCreate', lazyLoadCodeBlock)
+  editor.value.on('update', lazyLoadCodeBlock)
 })
 
 onMounted(() => {
@@ -582,80 +692,83 @@ onMounted(() => {
   }
 })
 
-watch(descriptionComputed, val => {
+watch(descriptionComputed, async val => {
   if (!isInitialValueSet.value) {
     isInitialValueSet.value = true
-    editor.commands.setContent(val)
+
+    await lazyLoadCodeBlock({ editor: editor.value })
+
+    editor.value.commands.setContent(val)
   }
 
   if (editable.value) {
-    currentDescriptionValue.value = editor.getHTML()
+    currentDescriptionValue.value = editor.value.getHTML()
   }
 
   if (!val && props.isClearContent) {
-    editor.commands.clearContent()
+    editor.value.commands.clearContent()
   }
 })
 
 watch(editable, val => {
   if (val) {
-    currentDescriptionValue.value = editor.getHTML()
+    currentDescriptionValue.value = editor.value.getHTML()
   }
-  editor.setOptions({
+  editor.value.setOptions({
     editable: val
   })
 })
 
-onBeforeUnmount(() => editor.destroy())
+onBeforeUnmount(() => editor.value.destroy())
 
 const handleOnClickWrapper = (event: MouseEvent) => {
   const element = event?.target as HTMLElement
 
   if (!isFocused.value && element.tagName === 'DIV') {
-    editor.commands.focus()
+    editor.value.commands.focus()
     isFocused.value = true
   }
 }
 
 const handleOnBlurWrapper = () => {
   isFocused.value = false
-  editor.commands.blur()
-  emit('onChangeDescription', editor.getHTML())
+  editor.value.commands.blur()
+  emit('onChangeDescription', editor.value.getHTML())
 }
 
 const handleOnChangeColor = (color: string) => {
-  editor.chain().focus().toggleHighlight({ color }).run()
+  editor.value.chain().focus().toggleHighlight({ color }).run()
 }
 
 const handleUnsetHighlight = () => {
-  editor.commands.unsetHighlight()
+  editor.value.chain().focus().unsetHighlight().run()
 }
 
 const handleOpenSetLink = () => {
-  editorStore.url = editor.getAttributes('link').href
+  editorStore.url = editor.value.getAttributes('link').href
 }
 
 const handleSetLink = () => {
   // unset link
   if (editorStore.url === null || editorStore.url === '') {
-    editor.chain().focus().extendMarkRange('link').unsetLink().run()
+    editor.value.chain().focus().extendMarkRange('link').unsetLink().run()
 
     return
   }
 
   // update link
-  editor.chain().focus().extendMarkRange('link').setLink({ href: editorStore.url }).run()
+  editor.value.chain().focus().extendMarkRange('link').setLink({ href: editorStore.url }).run()
   editorStore.url = ''
 }
 
 const handleFullScreen = () => {
   isFullScreen.value = !isFullScreen.value
-  editor.commands.focus()
+  editor.value.commands.focus()
 }
 
 const handleExitFullScreen = () => {
   isFullScreen.value = false
-  editor.commands.focus()
+  editor.value.commands.focus()
 }
 
 const handleOnSave = () => {
