@@ -39,6 +39,8 @@ declare global {
   const nextTick: typeof import('vue')['nextTick']
   const onActivated: typeof import('vue')['onActivated']
   const onBeforeMount: typeof import('vue')['onBeforeMount']
+  const onBeforeRouteLeave: typeof import('vue-router')['onBeforeRouteLeave']
+  const onBeforeRouteUpdate: typeof import('vue-router')['onBeforeRouteUpdate']
   const onBeforeUnmount: typeof import('vue')['onBeforeUnmount']
   const onBeforeUpdate: typeof import('vue')['onBeforeUpdate']
   const onDeactivated: typeof import('vue')['onDeactivated']
@@ -59,6 +61,7 @@ declare global {
   const readonly: typeof import('vue')['readonly']
   const ref: typeof import('vue')['ref']
   const resolveComponent: typeof import('vue')['resolveComponent']
+  const resolveDirective: typeof import('vue')['resolveDirective']
   const runRoutes: typeof import('./features/run/config')['runRoutes']
   const runsRoutes: typeof import('./features/runs/config')['runsRoutes']
   const shallowReactive: typeof import('vue')['shallowReactive']
@@ -93,6 +96,7 @@ declare global {
   const useJobsStore: typeof import('./features/jobs/useJobsStore')['useJobsStore']
   const useLineChart: typeof import('./features/charts/useLineChart')['default']
   const useLineNumber: typeof import('./components/highlight/useLineNumber')['default']
+  const useLink: typeof import('vue-router')['useLink']
   const useLogger: typeof import('./composables/useLogger')['useLogger']
   const useMapMetrics: typeof import('./features/compare-runs/useMapMetrics')['default']
   const useMetricStore: typeof import('./features/metric/useMetricStore')['useMetricStore']
@@ -145,7 +149,7 @@ declare global {
 }
 // for vue template auto import
 import { UnwrapRef } from 'vue'
-declare module '@vue/runtime-core' {
+declare module 'vue' {
   interface ComponentCustomProperties {
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
     readonly FINISHED_STATUSES: UnwrapRef<typeof import('./features/run/types')['FINISHED_STATUSES']>
@@ -185,6 +189,8 @@ declare module '@vue/runtime-core' {
     readonly nextTick: UnwrapRef<typeof import('vue')['nextTick']>
     readonly onActivated: UnwrapRef<typeof import('vue')['onActivated']>
     readonly onBeforeMount: UnwrapRef<typeof import('vue')['onBeforeMount']>
+    readonly onBeforeRouteLeave: UnwrapRef<typeof import('vue-router')['onBeforeRouteLeave']>
+    readonly onBeforeRouteUpdate: UnwrapRef<typeof import('vue-router')['onBeforeRouteUpdate']>
     readonly onBeforeUnmount: UnwrapRef<typeof import('vue')['onBeforeUnmount']>
     readonly onBeforeUpdate: UnwrapRef<typeof import('vue')['onBeforeUpdate']>
     readonly onDeactivated: UnwrapRef<typeof import('vue')['onDeactivated']>
@@ -205,6 +211,7 @@ declare module '@vue/runtime-core' {
     readonly readonly: UnwrapRef<typeof import('vue')['readonly']>
     readonly ref: UnwrapRef<typeof import('vue')['ref']>
     readonly resolveComponent: UnwrapRef<typeof import('vue')['resolveComponent']>
+    readonly resolveDirective: UnwrapRef<typeof import('vue')['resolveDirective']>
     readonly runRoutes: UnwrapRef<typeof import('./features/run/config')['runRoutes']>
     readonly runsRoutes: UnwrapRef<typeof import('./features/runs/config')['runsRoutes']>
     readonly shallowReactive: UnwrapRef<typeof import('vue')['shallowReactive']>
@@ -239,6 +246,7 @@ declare module '@vue/runtime-core' {
     readonly useJobsStore: UnwrapRef<typeof import('./features/jobs/useJobsStore')['useJobsStore']>
     readonly useLineChart: UnwrapRef<typeof import('./features/charts/useLineChart')['default']>
     readonly useLineNumber: UnwrapRef<typeof import('./components/highlight/useLineNumber')['default']>
+    readonly useLink: UnwrapRef<typeof import('vue-router')['useLink']>
     readonly useLogger: UnwrapRef<typeof import('./composables/useLogger')['useLogger']>
     readonly useMapMetrics: UnwrapRef<typeof import('./features/compare-runs/useMapMetrics')['default']>
     readonly useMetricStore: UnwrapRef<typeof import('./features/metric/useMetricStore')['useMetricStore']>
