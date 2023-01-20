@@ -6,9 +6,9 @@ import { apiStringify } from '@/services/api-settings'
 const ext = useFileExtension()
 const prettyJSON = usePrettyJSON()
 
-const blobExts = ext.xls
 const allowedImageExts = ext.images
 const noPreviewExts = ext.noPreview
+const blobExts = [...ext.xls, ...ext.pdf]
 
 export const useFileStore = defineStore('file', {
   state: () => {
@@ -34,12 +34,13 @@ export const useFileStore = defineStore('file', {
       isFileJSON: true,
       isFileHTML: false,
       isShowCopyBtn: true,
+      isEmbedPdfSuccess: true,
       isShowFilePreview: false,
       isFileBigForRawView: false
     }
   },
   getters: {
-    filePreview: state => (state.isFileJSON ? prettyJSON(state.fileSource, 2) : state.fileSource || state.fileBlob),
+    filePreview: (state) => (state.isFileJSON ? prettyJSON(state.fileSource, 2) : state.fileSource || state.fileBlob),
 
     filePreviewByView() {
       return (currentView: string) => {
@@ -152,7 +153,7 @@ export const useFileStore = defineStore('file', {
             serviceName,
             responseType: 'text',
             returnFullResponse: true,
-            transformResponse: [data => data]
+            transformResponse: [(data) => data]
           })
         } else {
           response = await apiService({
@@ -187,7 +188,7 @@ export const useFileStore = defineStore('file', {
               range: `bytes=0-${size}`
             },
             returnFullResponse: true,
-            transformResponse: [data => data]
+            transformResponse: [(data) => data]
           })
 
           this.fileSource = response.data
@@ -214,17 +215,7 @@ export const useFileStore = defineStore('file', {
       this.loading = false
     },
 
-    async getFullFile({
-      url,
-      suuid,
-      serviceName,
-      serviceAction
-    }: {
-      url?: string
-      suuid?: string
-      serviceName?: string
-      serviceAction?: string
-    }) {
+    async getFullFile({ url, suuid, serviceName, serviceAction }: { url?: string; suuid?: string; serviceName?: string; serviceAction?: string }) {
       let api,
         action = undefined
 
@@ -246,7 +237,7 @@ export const useFileStore = defineStore('file', {
           action,
           serviceName,
           responseType,
-          transformResponse: [data => data]
+          transformResponse: [(data) => data]
         })
         this.rawFile = result
         this.loadingFullData = false
