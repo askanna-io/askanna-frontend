@@ -185,7 +185,7 @@ const handleCreateVariable = async () => {
     name,
     value,
     is_masked,
-    project: props.projectId
+    project_suuid: props.projectId
   })
 }
 

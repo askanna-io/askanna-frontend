@@ -1,10 +1,7 @@
 import { set } from 'lodash'
-import router from '@/router'
-import VueRouter from 'vue-router'
 import { defineStore } from 'pinia'
 import apiService from '@/services/apiService'
 import { apiStringify } from '@/services/api-settings'
-const { isNavigationFailure, NavigationFailureType } = VueRouter
 import { PROJECT_STORE, ProjectModel, ProjectVisibility } from './types'
 
 const serviceName = PROJECT_STORE
@@ -14,28 +11,12 @@ export const useProjectStore = defineStore(PROJECT_STORE, {
   state: () => {
     return {
       project: new ProjectModel().state,
-      projects: {
-        count: 0,
-        next: '',
-        previous: '',
-        results: []
-      },
-      projectJobs: [],
-      query: {
-        limit: 1000,
-        offset: 0
-      },
-      jobsLoading: true,
-      lastPackage: {
-        suuid: ''
-      },
       menu: {
         sticked: false,
         isSticked: true,
         isShowProjectBar: false
       },
-      projectLoading: true,
-      projectsLoading: true
+      projectLoading: true
     }
   },
 
@@ -57,7 +38,7 @@ export const useProjectStore = defineStore(PROJECT_STORE, {
 
         project = new ProjectModel().state
 
-        this.$routerAskAnna.push({ name: 'project-does-not-exist' })
+        this.$routerAskAnna.routerPush({ name: 'project-does-not-exist' })
 
         return
       }
@@ -96,40 +77,9 @@ export const useProjectStore = defineStore(PROJECT_STORE, {
       this.projectJobs = []
     },
 
-    async getLastPackage(suuid) {
-      let packages
-      let packageData = { suuid: '' }
-
-      try {
-        packages = await apiService({
-          suuid,
-          serviceName,
-          params: {
-            limit: 1,
-            offset: 0
-          },
-          action: api.packages
-        })
-        packageData = packages && packages.results && packages.results ? packages.results[0] : null
-      } catch (e) {
-        const logger = useLogger()
-
-        logger.error('Error on load packageData in getLastPackage action.\nError: ', e)
-
-        return
-      }
-
-      this.lastPackage = packageData
-    },
-
-    async setMenu(data) {
-      const { name = 'menu.isShowProjectBar', value } = data
-      set(this, name, value)
-    },
-
-    async createProjectShortWay(workspace) {
+    async createProjectShortWay(workspace_suuid) {
       const data = {
-        workspace,
+        workspace_suuid,
         name: this.project.name,
         visibility: ProjectVisibility.PRIVATE
       }
@@ -137,10 +87,10 @@ export const useProjectStore = defineStore(PROJECT_STORE, {
       await this.createProject(data)
     },
 
-    async createProjectFullWay(workspace) {
+    async createProjectFullWay(workspace_suuid) {
       const data = {
         ...this.project,
-        workspace
+        workspace_suuid
       }
       const project = await this.createProject(data)
 
@@ -164,13 +114,6 @@ export const useProjectStore = defineStore(PROJECT_STORE, {
         return project
       }
 
-      this.projects = {
-        next: this.projects.next,
-        count: this.projects.count + 1,
-        previous: this.projects.previous,
-        results: this.projects.results.concat(project)
-      }
-
       const workspaceProjectsStore = useWorkspaceProjectsStore()
       await workspaceProjectsStore.setWorkspacePprojects({ results: [{ ...project, lastPackage: { suuid: '' } }] })
 
@@ -187,7 +130,7 @@ export const useProjectStore = defineStore(PROJECT_STORE, {
         project = await apiService({
           data,
           serviceName,
-          method: 'put',
+          method: 'PATCH',
           action: api.update,
           suuid: this.project.suuid
         })

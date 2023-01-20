@@ -45,7 +45,7 @@ export const useWorkspaceStore = defineStore(WORKSPACE_STORE, {
   },
 
   getters: {
-    isWorkspacePublic: state => state.workspace.visibility === 'PUBLIC'
+    isWorkspacePublic: (state) => state.workspace.visibility === 'PUBLIC'
   },
 
   actions: {
@@ -72,9 +72,9 @@ export const useWorkspaceStore = defineStore(WORKSPACE_STORE, {
       let workspace
       try {
         workspace = await apiService({
-          action: api.get,
+          suuid,
           serviceName,
-          suuid
+          action: api.get
         })
       } catch (error) {
         const logger = useLogger()
@@ -87,9 +87,11 @@ export const useWorkspaceStore = defineStore(WORKSPACE_STORE, {
       }
 
       this.workspace = workspace
-
       const generalStore = useGeneralStore()
       generalStore.setBreadcrumbParams({ workspaceId: workspace.name })
+
+      const peopleStore = usePeopleStore()
+      peopleStore.setCurretPeoplePermission(workspace.permission)
     },
 
     async updateWorkspace(data) {
@@ -100,7 +102,7 @@ export const useWorkspaceStore = defineStore(WORKSPACE_STORE, {
         workspace = await apiService({
           data,
           serviceName,
-          method: 'put',
+          method: 'PATCH',
           action: api.get,
           suuid: this.workspace.suuid
         })

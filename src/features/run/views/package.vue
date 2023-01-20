@@ -66,7 +66,6 @@ const { route } = useRouterAskAnna()
 const { height } = useWindowSize()
 const packageStore = usePackageStore()
 const projectStore = useProjectStore()
-const packagesStore = usePackagesStore()
 const forceFileDownload = useForceFileDownload()
 const breadcrumbs = usePackageBreadcrumbs({ start: 8, end: 9 })
 
@@ -101,12 +100,6 @@ const sticked = computed(() => !projectStore.menu.sticked)
 const fetchData = async () => {
   fileStore.$reset()
 
-  const { runId } = route.params
-
-  if (runStore.run.suuid !== runId) {
-    await runStore.resetStore()
-    await runStore.getRun(runId)
-  }
   const packageId = runStore.run.package.suuid
 
   if (packageId === '') {
@@ -196,7 +189,7 @@ const handleDownload = async () => {
   downloadPackage.value = true
 
   const packageData = packageStore.packageData
-  const source = await packagesStore.downloadPackage(packageData.suuid)
+  const source = await packageStore.downloadPackage(packageData.suuid)
   forceFileDownload.trigger({ source, name: `run_${runId}_code_${packageData.filename}` })
 
   downloadPackage.value = false
@@ -231,7 +224,7 @@ const handleCopy = async (view: string) => {
 watch(filePath, async filePath => {
   if (filePath === '') return
 
-  fileStore.$reset()
+  await fileStore.$reset()
 
   await fileStore.getFilePreview({
     size: currentPath.value.size,

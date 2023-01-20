@@ -4,9 +4,9 @@
 import Prism from 'prismjs'
 import './prism-tomorrow.css'
 import { marked } from 'marked'
-import { default as AnsiUp } from 'ansi_up'
 import * as DOMPurify from 'dompurify'
 import 'prismjs/components/prism-python'
+import { default as AnsiUp } from 'ansi_up'
 import renderMathInElement from 'https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/contrib/auto-render.mjs'
 
 const ansiUp = new AnsiUp()

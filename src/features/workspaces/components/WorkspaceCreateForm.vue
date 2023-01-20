@@ -72,7 +72,7 @@ const handlerCreate = async () => {
     name: workspaceStore.newWorkspace.name,
     visibility: WorkspaceVisibility.PRIVATE
   })
-  await workspacesStore.getAllWorkspaces()
+  await workspacesStore.getWorkspaces()
 
   snackBar.showSnackBar({
     timeout: 2500,

@@ -1,4 +1,4 @@
-export const FINISHED_STATUSES = ['failed', 'finished', 'completed']
+export const FINISHED_STATUSES = ['failed', 'finished']
 
 export interface LabelName {
   name: string
@@ -57,11 +57,11 @@ export interface Run {
     name: string
   }
   result: {
-    extension: string
-    lines: number
-    mimetype: string
-    name: string
     size: number
+    name: string
+    lines: number
+    extension: string
+    mime_type: string
   }
   environment: {
     description?: string
@@ -73,6 +73,12 @@ export interface Run {
     name: string
     label?: string
     timezone: string
+  }
+  metrics_meta: {
+    count: number
+    size: number
+    label_names: LabelName[]
+    metric_names: LabelName[]
   }
   variables_meta: {
     count: number

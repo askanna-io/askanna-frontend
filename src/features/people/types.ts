@@ -54,18 +54,18 @@ export interface Person {
     'askanna.me': boolean
     'askanna.admin': boolean
     'askanna.member': boolean
-    'askanna.workspace.create': boolean
+    'workspace.create': boolean
     'workspace.remove': boolean
     'workspace.info.view': boolean
     'workspace.info.edit': boolean
-    'workspace.project.list': boolean
-    'workspace.project.create': boolean
     'workspace.people.list': boolean
     'workspace.people.invite.create': boolean
     'workspace.people.invite.remove': boolean
     'workspace.people.invite.resend': boolean
     'workspace.people.edit': boolean
     'workspace.people.remove': boolean
+    'project.list': boolean
+    'project.create': boolean
     'project.info.view'?: boolean
     'project.info.edit'?: boolean
     'project.remove'?: boolean

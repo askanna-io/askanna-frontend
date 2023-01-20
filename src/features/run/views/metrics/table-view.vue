@@ -2,18 +2,17 @@
   <AskAnnaLoadingProgress classes="mx-4 mb-4" :loading="loading">
     <div>
       <MetricTableView
-        v-if="items.length || isSorted"
+        v-if="metrics.length || isSorted"
         :isSorted="isSorted"
         :labels="labels"
-        :sticked="sticked"
-        :metricData="items"
+        :metricData="metrics"
         :height="tableHeight"
+        :loading="sortFilterLoading"
         :itemPathName="'metric'"
-        :loading="loadingByParams"
         @onSort="handleOnSort"
         @onScroll="handleOnScroll"
       />
-      <AskAnnaAlert v-else class="ma-4 text-center" dense outlined
+      <AskAnnaAlert v-else-if="!loading" class="ma-4 text-center" dense outlined
         >There are no metrics available for this run.
       </AskAnnaAlert>
     </div>
@@ -25,18 +24,16 @@ import { throttle } from 'lodash'
 const { height } = useWindowSize()
 const metricStore = useMetricStore()
 const { route } = useRouterAskAnna()
-const projectStore = useProjectStore()
-
-const { runId: suuid } = route.params
 
 const isSorted = ref(false)
-const metricsQuery = ref({})
+const metricsQuery = ref({ ...route.query })
 
+const suuid = computed(() => route.params.runId)
 const next = computed(() => metricStore.metrics.next)
-const items = computed(() => metricStore.metrics.results)
-const loading = computed(() => metricStore.loading.metric)
-const sticked = computed(() => !projectStore.menu.sticked)
+const metrics = computed(() => metricStore.metrics.results)
+const previous = computed(() => metricStore.metrics.previous)
 const labels = computed(() => metricStore.metricMeta.label_names)
+const loading = computed(() => metricStore.loading.metricByParams)
 
 const queryParams = computed({
   get: () => metricsQuery.value,
@@ -46,7 +43,17 @@ const queryParams = computed({
   }
 })
 
-const loadingByParams = computed(() => metricStore.loading.metricByParams)
+const { sortFilterLoading, onScroll, resetParams } = useQuery({
+  next,
+  suuid,
+  previous,
+  queryParams,
+  page_size: 100,
+  loading: false,
+  immediate: true,
+  storeAction: metricStore.getMetricByParams,
+  defaultOptions: { page: 1, itemsPerPage: 100 }
+})
 
 const tableHeight = computed(() => {
   const calcHeigth = (acc: number, cr: any) => {
@@ -56,39 +63,24 @@ const tableHeight = computed(() => {
     return acc
   }
 
-  const count = items.value.reduce(calcHeigth, 0)
+  const count = metrics.value.reduce(calcHeigth, 0)
   const adjusHeight = count > height.value ? height.value - 60 : count + 80
 
   return adjusHeight
 })
 
-const query = useQuery({
-  next,
-  suuid,
-  limit: 10,
-  offset: 100,
-  queryParams,
-  storeAction: metricStore.getMetricByParams
-})
-
 const handleOnSort = async params => {
-  await metricStore.getMetricInitial({ suuid, params, loading: 'metricByParams' })
   metricStore.isFiltered = true
 
   const { limit, offset, ...rest } = params
   queryParams.value = rest
-  query.resetParams()
+  resetParams()
 }
 
-const throttled = throttle(query.onScroll, 350)
+const throttled = throttle(onScroll, 350)
 const handleOnScroll = e => throttled(e.target.scrollTop)
 
-const fetchData = async () => {
-  metricStore.isFiltered = false
-
-  await metricStore.getMetricMeta(suuid)
-  await metricStore.getMetricInitial({ suuid, params: { limit: 100, offset: 0 } })
-}
+const fetchData = () => (metricStore.isFiltered = false)
 
 onBeforeMount(() => fetchData())
 </script>

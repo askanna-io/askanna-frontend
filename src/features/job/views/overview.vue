@@ -13,7 +13,7 @@
       :schedules="schedules"
       :routeParams="routeParams"
       :to="'workspace-project-code'"
-      :lastPackage="projectStore.lastPackage"
+      :packageSuuid="projectStore.project.package.suuid"
       @handleGoToCode="handleGoToCode"
     />
     <AskAnnaDivider v-if="projectRunCreate" />
@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-const moment = useMoment()
+const moment = useDayjs()
 const jobStore = useJobStore()
 const cronstrue = useCronstrue()
 const permission = usePermission()
@@ -40,7 +40,7 @@ const nextRun = computed(
 const schedules = computed(() =>
   jobStore.job.schedules?.map(item => ({
     ...item,
-    next_run: moment.$moment.tz(item.next_run, item.cron_timezone).local().format(' Do MMMM YYYY, h:mm a'),
+    next_run: moment.dayjs.tz(item.next_run, item.cron_timezone).local().format(' Do MMMM YYYY, h:mm a'),
     humanizeFormat: cronstrue.humanizeCron(item.cron_definition),
     isDifferentTimeZone: moment.checkIfTimeZoneEq(item.cron_timezone)
   }))
@@ -49,16 +49,8 @@ const schedules = computed(() =>
 const handleGoToCode = () =>
   routerPush({
     name: 'workspace-project-code',
-    params: { projectId, workspaceId, packageId: projectStore.lastPackage.suuid }
+    params: { projectId, workspaceId, packageId: projectStore.project.package.suuid }
   })
 
-const routeParams = computed(() => ({ projectId, workspaceId, packageId: projectStore.lastPackage.suuid }))
-
-const fetchData = async () => {
-  await projectStore.getLastPackage(projectId)
-}
-
-onBeforeMount(() => {
-  fetchData()
-})
+const routeParams = computed(() => ({ projectId, workspaceId, packageId: projectStore.project.package.suuid }))
 </script>

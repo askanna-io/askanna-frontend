@@ -9,12 +9,7 @@
           <AskAnnaAvatar class="ma-2" rounded="35" :size="35" tile>
             <VImg
               class="img--rounded"
-              :src="
-                (workspaceProfile.membership &&
-                  workspaceProfile.membership.avatar &&
-                  workspaceProfile.membership.avatar.small) ||
-                userStore.globalProfile.avatar.small
-              "
+              :src="workspaceProfile?.avatar?.small || userStore.globalProfile?.avatar?.small"
             />
           </AskAnnaAvatar>
         </AskAnnaButton>
@@ -32,7 +27,6 @@
 </template>
 
 <script setup lang="ts">
-useTitle()
 const authStore = useAuthStore()
 const userStore = useUserStore()
 const peopleStore = usePeopleStore()
@@ -54,6 +48,6 @@ const profileRoute = computed(() => {
 
 const handleLogout = async () => {
   await authStore.logout()
-  routerPush({ path: '/signin' })
+  routerPush({ name: 'signin' })
 }
 </script>

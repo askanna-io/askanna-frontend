@@ -1,16 +1,20 @@
 <template>
-  <AskAnnaLoadingProgress :loading="packagesStore.loadingPackages">
+  <AskAnnaLoadingProgress :loading="packageStore.loadingPackages">
     <AskAnnaRow align="center" justify="center">
       <AskAnnaCol cols="12" class="pt-0">
         <VDataTable
-          v-scroll="throttle(onScroll, 1000)"
+          fixed-header
           disable-pagination
-          hide-default-footer
           :mobile-breakpoint="0"
+          :options.sync="options"
+          :page.sync="options.page"
           :headers="headersComputed"
-          :options="{ itemsPerPage: -1 }"
-          :items="packagesStore.projectPackages.results"
-          class="job-table askanna-table scrollbar cursor--pointer"
+          :server-items-length="count"
+          :loading="sortFilterLoading"
+          :items-per-page="options.itemsPerPage"
+          :items="packageStore.projectPackages.results"
+          :footer-props="{ itemsPerPageOptions: [10, 25, 50, 100] }"
+          class="job-table askanna-table scrollbar"
           @click:row="handleClickRow"
         >
           <template v-slot:top>
@@ -50,9 +54,9 @@
             </AskAnnaTooltip>
           </template>
           <template v-slot:item.created="{ item }">
-            <span class="text-no-wrap">{{ $moment(item.created).format(' Do MMMM YYYY, h:mm:ss a') }}</span>
+            <span class="text-no-wrap">{{ dayjs(item.created).format(' Do MMMM YYYY, h:mm:ss a') }}</span>
           </template>
-          <template v-slot:item.created_by="{ item }">
+          <template v-slot:item.created_by.name="{ item }">
             <AskAnnaTooltip top content-class="opacity-1">
               <template v-slot:activator="{ on }">
                 <div v-on="on">
@@ -82,11 +86,11 @@
               <template v-slot:activator="{ on }">
                 <div v-on="on">
                   <AskAnnaButton
-                    outlined
-                    label
                     small
-                    class="btn--hover"
+                    label
+                    outlined
                     color="secondary"
+                    class="btn--hover"
                     @click.stop="handleDownload(item)"
                   >
                     <AskAnnaIcon :left="$vuetify.breakpoint.name !== 'sm'">mdi-download</AskAnnaIcon>
@@ -105,55 +109,35 @@
 </template>
 
 <script setup lang="ts">
-import { throttle } from 'lodash'
-
 const copy = useCopy()
-const { $moment } = useMoment()
+const { dayjs } = useDayjs()
 const { width } = useWindowSize()
 const slicedText = useSlicedText()
 const context = getCurrentInstance()
 const projectStore = useProjectStore()
-const packagesStore = usePackagesStore()
-const { route, routerPush } = useRouterAskAnna()
+const packageStore = usePackageStore()
 const forceFileDownload = useForceFileDownload()
-
 const breadcrumbs = useBreadcrumbs({ start: 2 })
+const { route, routerPush } = useRouterAskAnna()
 
+const queryParams = computed(() => route.query)
+const projectId = computed(() => route.params.projectId)
 const sticked = computed(() => !projectStore.menu.sticked)
-const next = computed(() => packagesStore.projectPackages.next)
+const next = computed(() => packageStore.projectPackages.next)
+const count = computed(() => packageStore.projectPackages.count)
 const packageId = computed(() => projectStore.project.package.suuid)
+const previous = computed(() => packageStore.projectPackages.previous)
 
-const { projectId } = route.params
-
-const query = useQuery({
+const { options, sortFilterLoading } = useQuery({
   next,
-  limit: 18,
-  offset: 100,
+  previous,
+  queryParams,
+  page_size: 25,
+  loading: false,
   suuid: projectId,
-  storeAction: packagesStore.getProjectPackages
+  defaultOptions: { page: 1, itemsPerPage: 25 },
+  storeAction: packageStore.getProjectPackages
 })
-
-const onScroll = e => query.onScroll(e.target.documentElement.scrollTop)
-
-const fetchData = async () => {
-  await packagesStore.resetStore()
-  await packagesStore.getInitialProjectPackages({ params: { limit: 100, offset: 0 }, suuid: projectId })
-}
-
-onBeforeMount(() => fetchData())
-
-const sortBy = (a, b) => {
-  const nameA = a.name.toUpperCase()
-  const nameB = b.name.toUpperCase()
-  if (nameA < nameB) {
-    return -1
-  }
-  if (nameA > nameB) {
-    return 1
-  }
-
-  return 0
-}
 
 const headers = (isMobile: boolean = false) => [
   {
@@ -173,15 +157,15 @@ const headers = (isMobile: boolean = false) => [
   },
   {
     text: 'By',
-    value: 'created_by',
-    sort: sortBy,
     width: '10%',
-    class: 'w-min-110 text-left text-subtitle-2 font-weight-bold h-20',
-    isShowOnMobile: true
+    isShowOnMobile: true,
+    value: 'created_by.name',
+    class: 'w-min-110 text-left text-subtitle-2 font-weight-bold h-20'
   },
   {
     text: 'Description',
     align: 'left',
+    sortable: false,
     value: 'description',
     width: '60%',
     class: 'w-max-110 text-left text-subtitle-2 font-weight-bold h-20',
@@ -229,7 +213,7 @@ const handleClickRow = ({ suuid, versionId }) => {
 }
 
 const handleDownload = async packageData => {
-  const source = await packagesStore.downloadPackage(packageData.suuid)
+  const source = await packageStore.downloadPackage(packageData.suuid)
   forceFileDownload.trigger({ source, name: `code_${packageData.suuid}_${packageData.filename}` })
 }
 

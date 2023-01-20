@@ -1,105 +1,140 @@
 <template>
   <AskAnnaToolbar
-    color="grey lighten-4"
     flat
     dense
     class="br-r5"
     extension-height="50"
-    :extended="$vuetify.breakpoint.xsOnly"
-    :height="$vuetify.breakpoint.xsOnly ? '30px' : '48px'"
+    color="grey lighten-4"
+    :extended="$vuetify.breakpoint.xsOnly && isFilterOpen"
   >
-    <AskAnnaToolbarTitle> {{ title }} - People</AskAnnaToolbarTitle>
-    <template :slot="$vuetify.breakpoint.xsOnly ? 'extension' : 'default'">
-      <AskAnnaSpacer />
-      <AskAnnaSpacer />
-      <AskAnnaSpacer />
-      <VMenu
-        v-model="sortMenu"
-        class="workspace-menu"
-        data-test="workspace-menu"
-        transition="slide-y-transition"
-        bottom
-        :close-on-content-click="false"
-        :nudge-width="100"
-        nudge-bottom="10"
-        offset-y
+    <AskAnnaRow no-gutters>
+      <AskAnnaCol cols="8" sm="4" class="align-self-center">
+        <AskAnnaFlex class="d-flex">
+          <AskAnnaToolbarTitle> {{ title }} - People</AskAnnaToolbarTitle>
+        </AskAnnaFlex>
+      </AskAnnaCol>
+      <AskAnnaCol
+        v-if="!$vuetify.breakpoint.xsOnly"
+        cols="4"
+        class="align-self-center"
+        style="min-width: 100px; max-width: 100%"
       >
-        <template v-slot:activator="{ on }">
-          <AskAnnaButton v-on="on" small data-test="workspace-menu-activate-btn"
-            ><AskAnnaIcon>mdi-sort</AskAnnaIcon>Sort</AskAnnaButton
-          >
-        </template>
-        <VList>
-          <VListItemGroup v-model="activeSort" color="primary">
-            <VListItem v-for="(item, index) in sortItems" :key="index" @click="handleSort(item)">
-              <VListItemTitle>{{ item.title }}</VListItemTitle>
-            </VListItem>
-          </VListItemGroup>
-        </VList>
-      </VMenu>
-      <VMenu
-        v-model="filterMenu"
-        transition="slide-y-transition"
-        :close-on-content-click="false"
-        :nudge-width="200"
-        :nudge-height="300"
-        offset-y
-        nudge-bottom="10"
-      >
-        <template v-slot:activator="{ on }">
-          <AskAnnaButton
-            class="ml-1"
-            :class="{ 'mr-5': $vuetify.breakpoint.xsOnly }"
-            v-on="on"
+        <AskAnnaFlex class="d-flex">
+          <AskAnnaTextField
+            v-if="isFilterOpen"
+            v-model="search"
+            @input="debounceedSearch"
             small
-            data-test="workspace-menu-activate-btn"
+            dense
+            outlined
+            hide-details
+            :placeholder="$vuetify.breakpoint.xsOnly ? 'Search...' : 'Search people...'"
+        /></AskAnnaFlex>
+      </AskAnnaCol>
+      <AskAnnaCol cols="4" class="align-self-center" style="min-width: 100px">
+        <AskAnnaFlex class="d-flex justify-end">
+          <template v-if="workspacePeopleInviteCreate">
+            <AskAnnaSpacer />
+            <PeopleInvitePopup :workspaceName="title" :workspaceId="workspaceId" />
+          </template>
+          <AskAnnaButton @click="toggleFilter" small text icon
+            ><AskAnnaIcon :color="filterMenuStyle.color">{{ filterMenuStyle.icon }}</AskAnnaIcon></AskAnnaButton
           >
-            <AskAnnaIcon> mdi-filter-variant </AskAnnaIcon>Filters
-          </AskAnnaButton>
-        </template>
-        <AskAnnaRow class="pa-2 white">
-          <AskAnnaCol class="d-flex pt-1 pb-1" cols="12">
-            <AskAnnaCard flat width="284">
-              <AskAnnaCardSubTitle class="pa-0">
-                <h3>Account types</h3>
-              </AskAnnaCardSubTitle>
-              <AskAnnaSelect
-                v-model="activeRoleFilter"
-                hide-details
-                class="pt-0"
-                no-data-text=""
-                item-text="name"
-                item-value="value"
-                :items="roleFilters"
-              >
-              </AskAnnaSelect>
-            </AskAnnaCard>
-          </AskAnnaCol>
-        </AskAnnaRow>
-        <AskAnnaRow class="pa-2 white">
-          <AskAnnaCol class="d-flex pt-1 pb-1" cols="12">
-            <AskAnnaCard flat width="284">
-              <AskAnnaCardSubTitle class="pa-0">
-                <h3>Account status</h3>
-              </AskAnnaCardSubTitle>
-              <AskAnnaSelect
-                hide-details
-                v-model="activeStatusFilter"
-                :items="statusFilters"
-                item-text="name"
-                item-value="value"
-                no-data-text=""
-                class="pt-0"
-              >
-              </AskAnnaSelect>
-            </AskAnnaCard>
-          </AskAnnaCol>
-        </AskAnnaRow>
-      </VMenu>
-      <template v-if="workspacePeopleInviteCreate">
-        <AskAnnaSpacer />
-        <PeopleInvitePopup :workspaceName="title" />
-      </template>
+          <WorkspacesToolbarMenu />
+        </AskAnnaFlex>
+      </AskAnnaCol>
+    </AskAnnaRow>
+
+    <template v-if="isFilterOpen" v-slot:extension>
+      <AskAnnaRow no-gutters>
+        <AskAnnaCol cols="12" class="align-self-center">
+          <AskAnnaFlex class="d-flex" justify-center>
+            <AskAnnaTextField
+              v-if="isFilterOpen && $vuetify.breakpoint.xsOnly"
+              v-model="search"
+              @input="debounceedSearch"
+              small
+              dense
+              hide-details
+              class="mr-2"
+              :placeholder="$vuetify.breakpoint.xsOnly ? 'Search...' : 'Search people...'"
+            />
+            <VMenu
+              v-model="sortMenu"
+              bottom
+              offset-y
+              nudge-bottom="10"
+              :nudge-width="100"
+              class="workspace-menu"
+              data-test="workspace-menu"
+              transition="slide-y-transition"
+            >
+              <template v-slot:activator="{ on }">
+                <AskAnnaButton v-on="on" small data-test="workspace-menu-activate-btn"
+                  ><AskAnnaIcon :color="sortStyle.color">mdi-sort</AskAnnaIcon
+                  >{{ $vuetify.breakpoint.xsOnly ? '' : sortrTitle }}</AskAnnaButton
+                >
+              </template>
+              <VList>
+                <VListItemGroup v-model="activeSort" color="primary" @change="handleSort('workspace-people')">
+                  <VListItem v-for="(item, index) in sortItems" :key="index">
+                    <VListItemTitle>{{ item.title }}</VListItemTitle>
+                  </VListItem>
+                </VListItemGroup>
+              </VList>
+            </VMenu>
+            <VMenu
+              v-model="filterMenu"
+              offset-y
+              nudge-bottom="10"
+              :nudge-width="200"
+              :nudge-height="300"
+              transition="slide-y-transition"
+              :close-on-content-click="false"
+            >
+              <template v-slot:activator="{ on }">
+                <AskAnnaButton class="ml-1" v-on="on" small data-test="workspace-menu-activate-btn">
+                  <AskAnnaIcon :color="filterStyle.color">mdi-filter-variant</AskAnnaIcon
+                  >{{ $vuetify.breakpoint.xsOnly ? '' : 'Filters' }}
+                </AskAnnaButton>
+              </template>
+              <AskAnnaRow class="pa-2 white">
+                <AskAnnaCol class="d-flex pt-1 pb-1" cols="12">
+                  <AskAnnaCard flat width="284">
+                    <AskAnnaCardSubTitle class="pa-0">
+                      <h3>Account types</h3>
+                    </AskAnnaCardSubTitle>
+                    <AskAnnaSelect
+                      v-model="activeRoleFilter"
+                      hide-details
+                      class="pt-0"
+                      no-data-text=""
+                      item-text="name"
+                      item-value="value"
+                      :items="roleFilters"
+                    >
+                    </AskAnnaSelect>
+
+                    <AskAnnaCardSubTitle class="pa-0 pt-4">
+                      <h3>Account status</h3>
+                    </AskAnnaCardSubTitle>
+                    <AskAnnaSelect
+                      v-model="activeStatusFilter"
+                      hide-details
+                      class="pt-0"
+                      no-data-text=""
+                      item-text="name"
+                      item-value="value"
+                      :items="statusFilters"
+                    >
+                    </AskAnnaSelect>
+                  </AskAnnaCard>
+                </AskAnnaCol>
+              </AskAnnaRow>
+            </VMenu>
+          </AskAnnaFlex>
+        </AskAnnaCol>
+      </AskAnnaRow>
     </template>
   </AskAnnaToolbar>
 </template>
@@ -108,54 +143,35 @@ defineProps({
   title: {
     type: String,
     default: ''
+  },
+  workspaceId: {
+    type: String,
+    default: ''
   }
 })
+
+const {
+  search,
+  sortStyle,
+  sortMenu,
+  sortItems,
+  activeSort,
+  sortrTitle,
+  filterMenu,
+  filterStyle,
+  roleFilters,
+  isFilterOpen,
+  statusFilters,
+  filterMenuStyle,
+  activeRoleFilter,
+  activeStatusFilter,
+
+  handleSort,
+  toggleFilter,
+  debounceedSearch
+} = useSortFilterPeople('People', 'workspaces')
 
 const permission = usePermission()
-const peopleStore = usePeopleStore()
-
-const activeSort = ref('')
-const sortMenu = ref(false)
-const filterMenu = ref(false)
 
 const workspacePeopleInviteCreate = computed(() => permission.getFor(permission.labels.workspacePeopleInviteCreate))
-
-const sortItems = [
-  { title: 'A to Z', value: { sortBy: 'name', sort: 1 } },
-  { title: 'Z to A', value: { sortBy: 'name', sort: -1 } }
-]
-
-const roleFilters = [
-  { value: '', name: 'All types' },
-  { value: 'WA', name: 'Workspace admin' },
-  { value: 'WM', name: 'Workspace member' },
-  { value: 'WV', name: 'Workspace viewer' }
-]
-
-const statusFilters = [
-  { value: '', name: 'All' },
-  { value: 'invited', name: 'Invited' },
-  { value: 'accepted', name: 'Accepted' }
-]
-
-const activeRoleFilter = computed({
-  get: () => '',
-  set: async value => {
-    await peopleStore.setParams({ path: 'peopleParams.filter.role', value })
-  }
-})
-
-const activeStatusFilter = computed({
-  get: () => '',
-  set: async value => {
-    await peopleStore.setParams({ path: 'peopleParams.filter.status', value })
-  }
-})
-
-const handleSort = async ({ value }) => await peopleStore.setParams({ path: 'peopleParams.sorting', value })
 </script>
-<style scoped>
-.filter-label {
-  font-size: 16px;
-}
-</style>

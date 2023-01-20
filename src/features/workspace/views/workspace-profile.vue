@@ -137,7 +137,7 @@ const userStore = useUserStore()
 const peopleStore = usePeopleStore()
 const workSpaceStore = useWorkspaceStore()
 const imageUrlToBase64 = useImageUrlToBase64()
-const { router, routerPush } = useRouterAskAnna()
+const { route, router, routerPush } = useRouterAskAnna()
 
 const profileForm = ref(null)
 const currentTab = ref('workspace')
@@ -152,7 +152,6 @@ let errors = reactive({
   name: '',
   email: '',
   password: '',
-  username: '',
   old_password: ''
 })
 
@@ -222,7 +221,8 @@ const handleSave = async () => {
 
   if (state.isUseAskAnnaProfileChanged) {
     workspaceData = await peopleStore.updateWorkspaceProfile({
-      use_global_profile: useAskAnnaProfile.value
+      params: route.query,
+      data: { use_global_profile: useAskAnnaProfile.value }
     })
     if (!workspaceData || !workspaceData.suuid) {
       isSuccess = false
@@ -231,8 +231,11 @@ const handleSave = async () => {
 
   if (state.isWorkspaceDataChanged) {
     workspaceData = await peopleStore.updateWorkspaceProfile({
-      ...state.workspaceData,
-      use_global_profile: useAskAnnaProfile.value
+      params: route.query,
+      data: {
+        ...state.workspaceData,
+        use_global_profile: useAskAnnaProfile.value
+      }
     })
     if (!workspaceData || !workspaceData.suuid) {
       isSuccess = false
@@ -244,9 +247,7 @@ const handleSave = async () => {
       avatar: state.avatar
     })
 
-    if (!result || !result.suuid) {
-      isSuccess = false
-    }
+    isSuccess = result?.status == 204
   }
 
   if (state.isGlobalDataChanged) {
@@ -261,9 +262,7 @@ const handleSave = async () => {
       avatar: state.globalAvatar
     })
 
-    if (!result || !result.suuid) {
-      isSuccess = false
-    }
+    isSuccess = result?.status == 204
   }
 
   if (isSuccess) {
@@ -308,7 +307,7 @@ const handleOnUpdateGlobalProfile = data => {
   state.globalData = { ...state.globalData, ...data }
 }
 
-const resetError = () => Object.assign(errors, { name: '', email: '', username: '', password: '', old_password: '' })
+const resetError = () => Object.assign(errors, { name: '', email: '', password: '', old_password: '' })
 
 const handleOnChangeAvatar = data => {
   state.avatar = data

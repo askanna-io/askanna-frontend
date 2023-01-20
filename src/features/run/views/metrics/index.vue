@@ -113,7 +113,6 @@ const handleDownload = async () => {
 }
 
 const fetchData = async () => {
-  await metricStore.$reset()
   const view = route?.meta.tabValue
   if (view) {
     currentView.value = views.find(item => item.value === view)

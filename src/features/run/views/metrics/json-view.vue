@@ -12,16 +12,19 @@ const { height } = useWindowSize()
 const metricStore = useMetricStore()
 const { route } = useRouterAskAnna()
 
-const { runId: suuid } = route.params
+const queryParams = ref({})
+const suuid = computed(() => route.params.runId)
 const next = computed(() => metricStore.metricJSON.next)
 
-const query = useQuery({
-  suuid,
+const { onScroll } = useQuery({
   next,
-  limit: 10,
-  offset: 10,
-  loading: false,
-  storeAction: metricStore.getMetricJSON
+  suuid,
+  queryParams,
+  loading: true,
+  page_size: 100,
+  immediate: true,
+  storeAction: metricStore.getMetricJSON,
+  defaultOptions: { page: 1, itemsPerPage: 100 }
 })
 
 const loading = computed(() => metricStore.loading.metricJSON)
@@ -32,13 +35,10 @@ const scrollerStyles = computed(() => {
   return { 'max-height': `${maxHeight.value}px` }
 })
 
-const throttled = throttle(query.onScroll, 350)
+const throttled = throttle(onScroll, 350)
 
 const handleOnScroll = e => {
   window.scrollTo(0, window.pageYOffset + 10)
   throttled(e.target.scrollTop)
 }
-
-const fetchData = async () => await metricStore.getMetricJSON({ suuid, params: { limit: 10, offset: 0 } })
-onBeforeMount(() => fetchData())
 </script>

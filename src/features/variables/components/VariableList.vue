@@ -1,12 +1,18 @@
 <template>
   <VDataTable
-    class="variables-table ask-anna-table"
-    :items="items"
+    fixed-header
     :headers="headers"
-    hide-default-footer
     item-key="suuid"
     disable-pagination
     :mobile-breakpoint="0"
+    :options.sync="options"
+    :page.sync="options.page"
+    :loading="sortFilterLoading"
+    :server-items-length="count"
+    class="variables-table ask-anna-table"
+    :items-per-page="options.itemsPerPage"
+    :items="variablesStore.variables.results"
+    :footer-props="{ itemsPerPageOptions: [10, 25, 50, 100] }"
   >
     <template v-slot:top>
       <slot name="header" />
@@ -23,7 +29,7 @@
     </template>
     <template v-slot:item.actions="{ item }">
       <AskAnnaButton
-        v-if="projectVariableEdit"
+        v-if="variableEdit"
         class="my-2 btn--hover"
         small
         outlined
@@ -34,7 +40,7 @@
       </AskAnnaButton>
     </template>
     <template v-slot:no-data>
-      <template v-if="projectVariableEdit">
+      <template v-if="variableEdit">
         There are no variables available for this project. In case you need a variable, you can easily create one with
         the option "+ new variable" above this table.
       </template>
@@ -44,17 +50,30 @@
 </template>
 
 <script setup lang="ts">
-defineProps({
-  items: {
-    type: Array,
-    default: () => []
-  }
-})
-
 const emits = defineEmits('onEditItem')
 
 const permission = usePermission()
-const projectVariableEdit = computed(() => permission.getFor(permission.labels.projectVariableEdit))
+const { route } = useRouterAskAnna()
+const variablesStore = useVariablesStore()
+
+const queryParams = computed(() => route.query)
+const projectId = computed(() => route.params.projectId)
+const next = computed(() => variablesStore.variables.next)
+const count = computed(() => variablesStore.variables.count)
+const previous = computed(() => variablesStore.variables.previous)
+
+const { options, sortFilterLoading } = useQuery({
+  next,
+  previous,
+  queryParams,
+  page_size: 25,
+  loading: false,
+  suuid: projectId,
+  defaultOptions: { page: 1, itemsPerPage: 25 },
+  storeAction: variablesStore.getVariables
+})
+
+const variableEdit = computed(() => permission.getFor(permission.labels.variableEdit))
 
 const headers = ref([
   {
@@ -70,7 +89,7 @@ const headers = ref([
     text: 'Value',
     value: 'value',
     width: '45%',
-    sortable: true,
+    sortable: false,
     class: 'text-left text-subtitle-2 font-weight-bold h-20'
   },
   {

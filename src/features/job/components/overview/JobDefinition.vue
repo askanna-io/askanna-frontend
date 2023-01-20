@@ -15,7 +15,7 @@
                 text="Code: "
                 :to="to"
                 :routeParams="routeParams"
-                :value="lastPackage.suuid"
+                :value="packageSuuid"
                 @click="handleGoToCode"
               />
             </AskAnnaCol>
@@ -140,13 +140,9 @@ const props = defineProps({
       }
     }
   },
-  lastPackage: {
-    type: Object,
-    default: () => {
-      return {
-        suuid: ''
-      }
-    }
+  packageSuuid: {
+    type: String,
+    default: () => ''
   },
   to: {
     type: String,

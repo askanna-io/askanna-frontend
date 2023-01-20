@@ -69,7 +69,7 @@ export const useJobStore = defineStore(SERVICE_NAME, {
       try {
         updatedJob = await apiService({
           data,
-          method: 'put',
+          method: 'PATCH',
           action: api.update,
           serviceName: SERVICE_NAME,
           suuid: this.job.suuid

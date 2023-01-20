@@ -7,6 +7,15 @@ export const packageRoutes = {
   },
   children: [
     {
+      path: 'history',
+      component: () => import('./views/history.vue'),
+      name: 'workspace-project-code-package-history',
+      meta: {
+        breadcrumb: 'History',
+        hideAppBarIcon: true
+      }
+    },
+    {
       path: '',
       name: 'workspace-project-code',
       components: {
@@ -51,15 +60,6 @@ export const packageRoutes = {
           ]
         }
       ]
-    },
-    {
-      path: 'history',
-      component: () => import('./views/history.vue'),
-      name: 'workspace-project-code-package-history',
-      meta: {
-        breadcrumb: 'History',
-        hideAppBarIcon: true
-      }
     }
   ]
 }

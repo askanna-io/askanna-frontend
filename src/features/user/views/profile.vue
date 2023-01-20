@@ -46,7 +46,7 @@
         />
 
         <AskAnnaCardTitle class="text-subtitle-1 py-1">Profile image</AskAnnaCardTitle>
-        <user-workspace-profile-avatar
+        <UserWorkspaceProfileAvatar
           :editMode="true"
           :workspaceProfile="userStore.globalProfile"
           @onChangeAvatar="handleOnChangeGlobalAvatar"
@@ -87,7 +87,7 @@ const { router, routerPush } = useRouterAskAnna()
 
 const profileForm = ref(null)
 
-let errors = reactive({ name: '', email: '', password: '', username: '', old_password: '' })
+let errors = reactive({ name: '', email: '', password: '', old_password: '' })
 
 const state = reactive({
   avatar: '',
@@ -141,15 +141,12 @@ const handleSave = async () => {
       isSuccess = false
     }
   }
-
   if (state.isGlobalAvatarChanged) {
     const result = await userStore.updateGlobalAvatar({
       avatar: state.globalAvatar
     })
 
-    if (!result || !result.suuid) {
-      isSuccess = false
-    }
+    isSuccess = result?.status == 204
   }
 
   if (isSuccess) {
@@ -187,7 +184,7 @@ const handleOnUpdateGlobalProfile = data => {
   state.isGlobalDataChanged = true
 }
 
-const resetError = () => Object.assign(errors, { name: '', email: '', username: '', password: '', old_password: '' })
+const resetError = () => Object.assign(errors, { name: '', email: '', password: '', old_password: '' })
 
 const handleOnChangeGlobalAvatar = data => {
   state.globalAvatar = data

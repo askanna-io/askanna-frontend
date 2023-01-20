@@ -160,7 +160,12 @@ const handleSave = async () => {
       message: `The workspace ${workspace.name} was updated`
     })
     handleClose()
-    await workspacesStore.getAllWorkspaces() // call get all workspaces to updated them on menu
+    workspacesStore.menu.workspaces = {
+      count: 0,
+      next: '',
+      previous: '',
+      results: []
+    } // reset workspaces in menu to load them on menu open
   }
 }
 

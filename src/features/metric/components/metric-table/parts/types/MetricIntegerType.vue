@@ -1,9 +1,9 @@
 <template>
-  <div ref="divRef">
+  <div>
     <VMenu v-model="menu" :close-on-content-click="false" offset-y top>
       <template v-slot:activator="{ on }">
         <div v-on="on" class="list__item-content cursor--pointer">
-          <div class="list__item-value d-flex" :style="divStyles">
+          <div ref="divRef" class="list__item-value d-flex" :style="divStyles">
             <div v-if="isShowName">{{ metricRow.name }}:&nbsp;</div>
             {{ numeral.numberFormated(metricRow.value) }}
           </div>
@@ -49,17 +49,16 @@ const numeral = useNumeral()
 const menu = ref(false)
 const divRef = ref(null)
 const divStyles = ref({})
-
 const nudgeLeft = ref(0)
 
-watch(divRef, divRef => {
-  if (!divRef) return
+const calcStyles = () => {
+  if (!divRef.value) return
 
   let width =
-    divRef.clientWidth ||
-    divRef.scrollWidth ||
-    divRef.parentElement.clientWidth ||
-    divRef.parentElement.parentElement.clientWidth
+    divRef.value.clientWidth ||
+    divRef.value.scrollWidth ||
+    divRef.value.parentElement.clientWidth ||
+    divRef.value.parentElement.parentElement.clientWidth
 
   if (props.metricRow.value.length > 60) {
     nudgeLeft.value = width / 2 - 80
@@ -75,6 +74,12 @@ watch(divRef, divRef => {
   }
 
   divStyles.value = { maxWidth: `${width}px`, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }
+}
+
+watch(divRef, divRef => {
+  if (!divRef) return
+
+  setTimeout(() => calcStyles(), 3000)
 })
 
 const handleClose = () => (menu.value = false)

@@ -1,7 +1,13 @@
 <template>
   <div>
     <AskAnnaLoadingProgress :loading="loading">
-      <VDataIterator :items="workspaces" hide-default-footer :no-data-text="''" disable-pagination>
+      <VDataIterator
+        :items="workspaces"
+        hide-default-footer
+        :no-data-text="''"
+        disable-pagination
+        v-scroll="throttle(onScroll, 1000)"
+      >
         <template v-slot:header>
           <WorkspacesToolbar />
         </template>
@@ -42,8 +48,8 @@
               >There are no workspaces for this filter request.</template
             >
             <template v-else>There are no workspaces that you have access to.</template>
-          </AskAnnaAlert></template
-        >
+          </AskAnnaAlert>
+        </template>
       </VDataIterator>
     </AskAnnaLoadingProgress>
     <WorkspaceConfirmDeletePopup
@@ -55,17 +61,33 @@
   </div>
 </template>
 <script setup lang="ts">
+import { throttle } from 'lodash'
+
 const sanitizeHTML = useSanitizeHTML()
 const workspaceStore = useWorkspaceStore()
 const workspacesStore = useWorkspacesStore()
 const { route, routerPush } = useRouterAskAnna()
 
+const queryParams = computed(() => route.query)
+const next = computed(() => workspacesStore.workspaces.next)
+
+const query = useQuery({
+  next,
+  queryParams,
+  page_size: 25,
+  loading: false,
+  immediate: true,
+  store: workspacesStore,
+  storeAction: workspacesStore.getWorkspaces
+})
+
 const workspace = ref({})
 const deleteWorkspaceConfirmPopup = ref(false)
 
-const query = computed(() => route.query)
 const loading = computed(() => workspacesStore.loadingAll)
-const workspaces = computed(() => workspacesStore.getWorkspacesByParams(query.value))
+const workspaces = computed(() => workspacesStore.workspaces.results)
+
+const onScroll = e => query.onScroll(e.target.documentElement.scrollTop)
 
 const handleOpenWorkspace = workspace => {
   routerPush({
@@ -87,7 +109,7 @@ const handleDeleteConfirmWorkspace = async () => {
   await workspaceStore.deleteWorkspace(workspace.value)
   deleteWorkspaceConfirmPopup.value = false
 
-  await workspacesStore.getAllWorkspaces()
+  await workspacesStore.getWorkspaces({ ...queryParams, page_size: 25 })
 }
 </script>
 
@@ -95,7 +117,3 @@ const handleDeleteConfirmWorkspace = async () => {
 iframe {
   border: none;
 }
-.is-current-user {
-  border: 1px solid var(--v-primary-base);
-}
-</style>

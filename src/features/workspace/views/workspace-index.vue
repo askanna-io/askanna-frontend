@@ -25,9 +25,9 @@
       :isCurrentUserAdmin="isCurrentUserAdmin"
       @onOpenWorkspaceRemove="handleOpenWorkspaceRemove"
     />
-    <AskAnnaLoadingProgress :loading="loading" fullWidth>
-      <RouterView />
-    </AskAnnaLoadingProgress>
+
+    <RouterView />
+
     <WorkspaceConfirmDeletePopup
       :workspaceName="workspace.name"
       :value="deleteWorkspaceConfirmPopup"
@@ -40,15 +40,12 @@
 const peopleStore = usePeopleStore()
 const workspaceStore = useWorkspaceStore()
 const { route, routerPush } = useRouterAskAnna()
-const workspaceProjectsStore = useWorkspaceProjectsStore()
-
 const breadcrumbs = useBreadcrumbs({ start: 0, end: 2 })
 
 const deleteWorkspaceConfirmPopup = ref(false)
 const isWorkspacePublic = computed(() => workspaceStore.isWorkspacePublic)
 
 const workspace = computed(() => workspaceStore.workspace)
-const loading = computed(() => workspaceProjectsStore.loading)
 const isMember = computed(() => workspaceStore.workspace.is_member)
 
 const isEditWorkspaceView = computed(() => route.name === 'workspace-edit')

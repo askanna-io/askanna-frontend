@@ -13,7 +13,7 @@ const props = defineProps({
   }
 })
 
-const { durationHumanizeBySecond } = useMoment()
+const { durationHumanizeBySecond } = useDayjs()
 
 const calculateDuration = computed(() => {
   if (!props.value) return 'Not started'

@@ -15,10 +15,6 @@ const variablesStore = useVariablesStore()
 
 const { projectId } = route.params
 
-const fetchData = async () => await variablesStore.getVariables(projectId)
-
-onBeforeMount(() => fetchData())
-
 const variables = computed(() => variablesStore.variables)
 
 const handleOpenVariablePopup = () => (variablesStore.variablePopup = true)

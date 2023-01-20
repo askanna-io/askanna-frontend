@@ -12,14 +12,14 @@
         >Enter your email below and we will send you the password reset instructions.</AskAnnaSubHeader
       >
       <AskAnnaTextField
-        v-model="username"
+        v-model="email"
         dense
         outlined
         required
         label="Email"
         validate-on-blur
         autocomplete="off"
-        :error-messages="error.email || error.username"
+        :error-messages="error.email"
         :rules="[RULES.required('The email is required'), RULES.email('The email you entered is not valid', 3)]"
       />
 
@@ -52,12 +52,12 @@ const authStore = useAuthStore()
 const { routerPush } = useRouterAskAnna()
 const { RULES } = useValidationRules()
 
-const username = ref('')
+const email = ref('')
 const isSent = ref(false)
 const isFormValid = ref(false)
 const forgotPasswordSentFormRef = ref()
 
-let error = reactive({ email: '', username: '' })
+let error = reactive({ email: '', email: '' })
 
 const forgotPasswordSentForm = computed(() => forgotPasswordSentFormRef.value as VForm)
 
@@ -67,13 +67,11 @@ const handleSentEmail = async () => {
   }
 
   const response = await authStore.resetPassword({
-    email: username.value,
-    front_end_domain: window.location.origin
+    email: email.value
   })
 
   if (response && response.status === 400) {
-    error = { ...error, ...response.data }
-
+    Object.assign(error, response.data)
     return
   }
 
@@ -82,9 +80,9 @@ const handleSentEmail = async () => {
 
 const handleGoToLogin = () => routerPush({ name: 'signin' })
 
-const resetError = () => Object.assign(error, { email: '', username: '' })
+const resetError = () => Object.assign(error, { email: '' })
 
-watch(username, async () => {
+watch(email, async () => {
   // check if exist error from backend on typing fields, try resest validation
   if (Object.values(error).some(item => item.length)) {
     resetError()

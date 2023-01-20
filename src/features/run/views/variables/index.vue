@@ -88,7 +88,7 @@ const currentViewIndex = ref(0)
 const currentGroupBy = ref(defaultGroupByValues[0])
 
 const labels = computed(() => runVariablesStore.variablesLabels)
-const items = computed(() => runVariablesStore.variables.results)
+const items = computed(() => runVariablesStore.variables?.results)
 const variablesFullData = computed(() => runVariablesStore.variablesFullData)
 const variablesJSON = computed(() => JSON.stringify(runVariablesStore.variablesJSON.results, null, 2))
 
@@ -99,7 +99,7 @@ const groupByValues = computed(() =>
 
 const disabledTools = computed(
   () =>
-    (currentView.value.value === 'table' && !items.value.length) ||
+    (currentView.value.value === 'table' && !items.value?.length) ||
     (currentView.value.value === 'json' && !variablesJSON.value)
 )
 

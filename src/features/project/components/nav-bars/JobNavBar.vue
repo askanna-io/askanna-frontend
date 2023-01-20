@@ -39,28 +39,25 @@
       </AskAnnaCardTitle>
       <AskAnnaDivider v-if="!sticked" :class="{ 'py-1  ': $vuetify.breakpoint.xsOnly }" />
 
-      <AskAnnaRow>
-        <AskAnnaCol cols="12" v-if="!sticked" :class="{ 'py-0': $vuetify.breakpoint.xsOnly }">
-          <AskAnnaToolbar
-            dense
-            color="white"
-            flat
-            :class="{ 'br-r5 ma-3': !$vuetify.breakpoint.xsOnly, 'ma-0 mr-4 with-tabs': $vuetify.breakpoint.xsOnly }"
-          >
-            <JobToolBar
-              v-if="!sticked"
-              :showTitle="false"
-              :jobName="job.name"
-              :projectName="project.name"
-              :isEditJobView="isEditJobView"
-            />
+      <AskAnnaToolbar
+        v-if="!sticked"
+        dense
+        color="white"
+        flat
+        :class="{ 'br-r5 ma-3': !$vuetify.breakpoint.xsOnly, 'ma-0 with-tabs': $vuetify.breakpoint.xsOnly }"
+      >
+        <JobToolBar
+          v-if="!sticked"
+          :showTitle="false"
+          :jobName="job.name"
+          :projectName="project.name"
+          :isEditJobView="isEditJobView"
+        />
 
-            <AskAnnaSpacer />
+        <AskAnnaSpacer />
 
-            <JobMenuPopup v-if="!isEditJobView && projectJobEdit" :job="job" />
-          </AskAnnaToolbar>
-        </AskAnnaCol>
-      </AskAnnaRow>
+        <JobMenuPopup v-if="!isEditJobView && projectJobEdit" :job="job" />
+      </AskAnnaToolbar>
     </AskAnnaCard>
   </div>
 </template>

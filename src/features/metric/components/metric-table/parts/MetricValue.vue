@@ -59,16 +59,16 @@ const types = {
   string: MetricStringType,
   boolean: MetricBooleanType,
   list: MetricDictionaryType,
-  list_integer: MetricDictionaryType,
-  list_float: MetricDictionaryType,
-  list_boolean: MetricDictionaryType,
-  list_string: MetricDictionaryType,
-  list_time: MetricDictionaryType,
-  list_date: MetricDictionaryType,
-  list_datetime: MetricDictionaryType,
   integer: MetricIntegerType,
   datetime: MetricDateTimeType,
-  dictionary: MetricDictionaryType
+  list_time: MetricDictionaryType,
+  list_date: MetricDictionaryType,
+  list_float: MetricDictionaryType,
+  dictionary: MetricDictionaryType,
+  list_string: MetricDictionaryType,
+  list_boolean: MetricDictionaryType,
+  list_integer: MetricDictionaryType,
+  list_datetime: MetricDictionaryType
 }
 const TypeComponent = get(types, metricRow.type)
 </script>

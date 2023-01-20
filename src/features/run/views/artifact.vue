@@ -69,7 +69,6 @@ const { jobId, runId, projectId, workspaceId } = route.params
 const downloadArtifact = ref(false)
 
 const sticked = computed(() => !projectStore.menu.sticked)
-const runArtifactLoading = computed(() => runStore.runArtifactLoading)
 
 const cdnBaseUrl = computed(() => runStore.artifactData?.cdn_base_url)
 const images = computed(() => runStore.artifactData?.files.filter(item => ext.images.includes(item.ext)))
@@ -180,14 +179,9 @@ const handleCopy = async (view: string) => {
 }
 
 const fetchData = async () => {
-  fileStore.$reset()
+  await fileStore.$reset()
 
   const { runId } = route.params
-
-  if (runStore.run.suuid !== runId) {
-    await runStore.resetStore()
-    await runStore.getRun(runId)
-  }
 
   if (!runId || !artifactUuid.value) {
     fileStore.loading = false

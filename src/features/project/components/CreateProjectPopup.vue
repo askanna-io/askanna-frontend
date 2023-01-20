@@ -1,5 +1,5 @@
 <template>
-  <div class="text-center" v-if="workspaceProjectCreate">
+  <div class="text-center" v-if="projectCreate">
     <VMenu
       eager
       v-model="menu"
@@ -66,7 +66,7 @@ const isFormValid = ref(true)
 const newProjectFastForm = ref(null)
 const nameRules = ref([RULES.required('Project name is required')])
 
-const workspaceProjectCreate = computed(() => permission.getFor(permission.labels.workspaceProjectCreate))
+const projectCreate = computed(() => permission.getFor(permission.labels.projectCreate))
 
 projectStore.resetProjectData()
 
@@ -84,7 +84,13 @@ const handlerCreateProject = async () => {
   }
 
   await projectStore.createProjectShortWay(route.params.workspaceId)
-  await projectsStore.getProjects() // call get all project to updated them on menu
+
+  projectsStore.menu.projects = {
+    count: 0,
+    next: '',
+    previous: '',
+    results: []
+  } // reset projects  to updated them on menu click
 
   resetValidation()
   nameRules.value = []

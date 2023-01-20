@@ -10,8 +10,6 @@
 <script setup lang="ts">
 import ProjectsMenu from './ProjectsMenu.vue'
 import WorkspacesMenu from './WorkspacesMenu.vue'
-
-useTitle()
 </script>
 <style lang="scss">
 .askAnna-main-menu {

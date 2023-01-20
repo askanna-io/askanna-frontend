@@ -2,7 +2,7 @@
   <div :class="{ 'mb-3': sticked }">
     <div v-sticky="true" on-stick="onStick" :sticky-margin-width="0" sticky-offset="{top: 52, bottom: 10}">
       <AskAnnaToolbar v-if="sticked" dense color="white" class="br-r5 ma-3 askAnna-breadcrumbs" :flat="!sticked">
-        <div class="">
+        <div>
           <VBreadcrumbs :items="breadcrumbs" class="pl-0" :class="{ 'ma-0 pa-0': $vuetify.breakpoint.xsOnly }">
             <template v-slot:item="{ item }">
               <VBreadcrumbsItem :to="item.to" :exact="item.exact">
@@ -58,7 +58,12 @@
         flat
         dense
         color="white"
-        :class="{ 'br-r5 ma-3': !$vuetify.breakpoint.xsOnly, 'ma-0 with-tabs': $vuetify.breakpoint.xsOnly }"
+        class="run-toolbar"
+        :class="{
+          'ml-3': $vuetify.breakpoint.mdAndUp,
+          'my-3 mr-3': !$vuetify.breakpoint.xsOnly,
+          'ma-0 with-tabs': $vuetify.breakpoint.xsOnly
+        }"
       >
         <RunToolBar :showTitle="false" :jobrun="run" :projectRunEdit="projectRunEdit" :isEditRunView="isEditRunView" />
 
@@ -116,3 +121,13 @@ const isEditRunView = computed(() => route.name === 'workspace-project-jobs-job-
 
 const onStick = data => props.handleOnStick(data.sticked)
 </script>
+<style lang="scss">
+.desktop-view .run-toolbar {
+  .v-toolbar__content {
+    padding-left: 0;
+    .v-tabs-bar__content a:nth-of-type(1) {
+      padding-left: 0;
+    }
+  }
+}
+</style>

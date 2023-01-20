@@ -54,6 +54,4 @@ const handleOnBlur = () => (active.value = false)
 const handleOnHover = () => (active.value = true)
 
 const getColor = () => (isActiveMetricValue.value ? 'primary' : 'secondary')
-
-const handleApply = () => {}
 </script>

@@ -2,18 +2,18 @@
   <div>
     <VListGroup>
       <template v-slot:activator>
-        <VListItemTitle @click="handleClickItem">Workspaces</VListItemTitle>
+        <VListItemTitle @click="handleChangeMenu">Workspaces</VListItemTitle>
       </template>
       <template v-slot:appendIcon>
-        <AskAnnaIcon @click="handleClickItem">mdi-chevron-down</AskAnnaIcon>
+        <AskAnnaIcon @click="handleChangeMenu">mdi-chevron-down</AskAnnaIcon>
       </template>
 
       <AskAnnaCol cols="12" class="pa-0">
         <AskAnnaTextField
-          v-if="!loading && (workspaces.length > 0 || search)"
+          v-if="workspacesStore.menu.isShowSearch || workspacesStore.menu.query.search"
+          v-model="workspacesStore.menu.query.search"
           class="mx-1 mt-2"
-          v-model="search"
-          @input="handleOnSearch()"
+          @input="debounceedSearch"
           x-small
           dense
           outlined
@@ -23,7 +23,7 @@
           label="Search workspaces..."
         />
 
-        <v-skeleton-loader v-if="loading" class="mx-auto mt-3" type="heading, text@9"></v-skeleton-loader>
+        <VSkeletonLoader v-if="loading" class="mx-auto mt-3" type="heading, text@9" />
 
         <VList flat nav dense class="pt-0">
           <VListItem
@@ -48,7 +48,9 @@
           </VListItem>
         </VList>
 
-        <AskAnnaFlex v-if="search && !workspaces.length && !isSearchProcessing" class="px-2 pt-2 pl-4 text--secondary"
+        <AskAnnaFlex
+          v-if="workspacesStore.menu.query.search && !workspaces.length && !loading"
+          class="px-2 pt-2 pl-4 text--secondary"
           >No results</AskAnnaFlex
         >
         <AskAnnaCol class="pa-2">
@@ -72,6 +74,8 @@
 </template>
 
 <script setup lang="ts">
+import { debounce } from 'lodash'
+
 const emits = defineEmits('onClose')
 
 const workspacesStore = useWorkspacesStore()
@@ -85,33 +89,28 @@ const explorBtnOpts = [
   }
 ]
 
-const search = ref('')
+const loading = computed(() => workspacesStore.menu.loading)
+const workspaces = computed(() => workspacesStore.menu.workspaces.results)
 
-const isSearchProcessing = ref(false)
+const handleSearch = async () => {
+  await workspacesStore.getMenuWorkspaces({
+    loading: true,
+    params: { search: workspacesStore.menu.query.search }
+  })
+}
 
-const loading = computed(() => workspacesStore.loadingAll)
-const allWorkspacesState = computed(() => workspacesStore.allWorkspaces.results)
-
-const workspaces = computed(() => {
-  let results = allWorkspacesState.value.filter(item => item.is_member)
-
-  if (search.value) {
-    results = results.filter(item => item.name.toLowerCase().includes(search.value.toLowerCase()))
-    isSearchProcessing.value = false
-  }
-
-  return results
-})
+const debounceedSearch = debounce(handleSearch, 350)
 
 const handleClickOnMenuItem = () => {
-  search.value = ''
+  workspacesStore.menu.query.search = null
+
   emits('onClose')
 }
 
 const getIcon = workspace => (workspace.visibility === 'PUBLIC' ? 'mdi-package-variant' : 'mdi-package-variant-closed')
-const handleOnSearch = () => (isSearchProcessing.value = true)
 
-const handleClickItem = () => {
-  search.value = ''
+const handleChangeMenu = async () => {
+  workspacesStore.menu.query.search = null
+  await workspacesStore.getMenuWorkspaces({ params: { is_member: true }, loading: true })
 }
 </script>

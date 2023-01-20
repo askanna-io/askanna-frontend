@@ -25,7 +25,7 @@ const { token, peopleId, workspaceId } = route.params
 
 const loading = ref(true)
 const isInvitationValid = computed(
-  () => Boolean(peopleStore.invitation.email) && peopleStore.invitation.status !== 'accepted'
+  () => Boolean(peopleStore.invitation.email) && peopleStore.invitation.status !== 'active'
 )
 
 const fetchData = async () => {

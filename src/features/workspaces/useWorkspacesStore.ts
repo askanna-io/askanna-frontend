@@ -1,10 +1,10 @@
+import { get } from 'lodash'
 import { defineStore } from 'pinia'
 import apiService from '@/services/apiService'
 import { apiStringify } from '@/services/api-settings'
 
 const serviceName = 'workspace'
 const api = apiStringify(serviceName)
-const sortFilterHelper = useSortFilterHelper()
 
 export const useWorkspacesStore = defineStore('workspaces', {
   state: () => {
@@ -12,8 +12,7 @@ export const useWorkspacesStore = defineStore('workspaces', {
       loading: true,
       loadingAll: true,
       query: {
-        limit: 1000,
-        offset: 0
+        page_size: 25
       },
       workspaces: {
         count: 0,
@@ -21,55 +20,79 @@ export const useWorkspacesStore = defineStore('workspaces', {
         previous: '',
         results: []
       },
-      allWorkspaces: {
-        count: 0,
-        next: '',
-        previous: '',
-        results: []
-      }
+      menu: {
+        isOpen: false,
+        loading: true,
+        isShowSearch: false,
+        query: {
+          search: null,
+          page_size: 9
+        },
+        workspaces: {
+          count: 0,
+          next: '',
+          previous: '',
+          results: []
+        }
+      },
+      memberWorkspace: { suuid: '' }
     }
   },
   getters: {
-    getWorkspacesByParams: state => {
-      return ({ sort = 'desc', sortby = 'created', is_member, search, visibility }) => {
-        sortFilterHelper.results = [...state.allWorkspaces.results]
-
-        return sortFilterHelper
-          .filterByVisibility(visibility)
-          .filterByMember(is_member)
-          .filterBySearchtext(search)
-          .sorting({ sort, sortby })
-      }
-    }
+    getMemberWorkspaceSUUID: state => state.memberWorkspace.suuid
   },
 
   actions: {
-    async getMemberWorkspaces() {
-      this.loading = true
+    async getMemberWorkspace() {
       try {
-        this.workspaces = await apiService({
+        const data = await apiService({
           serviceName,
           action: api.list,
-          params: { ...this.query, membership: true }
+          params: { page_size: 1, is_member: true }
         })
-      } catch (error) {
-        return
-      }
 
-      this.loading = false
-      return this.workspaces
+        this.memberWorkspace = get(data, ['results', 0], { suuid: '' })
+      } catch (error) {
+        const logger = useLogger()
+
+        logger.error('Error on get workspaces in getMemberWorkspace action.\nError: ', error)
+      }
     },
 
-    async getAllWorkspaces() {
-      this.loadingAll = true
+    async getMenuWorkspaces({ params, loading } = { loading: true, params: {} }) {
+      this.menu.loading = loading
+
       try {
-        this.allWorkspaces = await apiService({
+        this.menu.workspaces = await apiService({
           serviceName,
           action: api.list,
-          params: this.query
+          params: { ...this.menu.query, ...params }
         })
+
+        if (!this.menu.isShowSearch) this.menu.isShowSearch = this.menu.workspaces.count > 9
       } catch (error) {
-        return
+        const logger = useLogger()
+
+        logger.error('Error on get workspaces in getMemberWorkspaces action.\nError: ', error)
+      }
+
+      this.menu.loading = false
+    },
+
+    async getWorkspaces({ loading, params, initial } = { loading: true, params: {}, initial: false }) {
+      if (loading) this.loadingAll = loading
+      try {
+        const data = await apiService({
+          params,
+          serviceName,
+          action: api.list
+        })
+
+        this.workspaces = initial ? data : { ...data, results: [...this.workspaces.results, ...data.results] }
+      } catch (error) {
+        const logger = useLogger()
+
+        logger.error('Error on get workspaces in getWorkspaces action.\nError: ', error)
       }
 
       this.loadingAll = false

@@ -8,12 +8,14 @@
 const token = window.localStorage.getItem('token')
 
 const userStore = useUserStore()
+const peopleStore = usePeopleStore()
+
 const { routerPush } = useRouterAskAnna()
 const prepareAccount = usePrepareAccount()
 
 const authData = computed(() => {
   return {
-    username: userStore.tempAuth.username,
+    email: userStore.tempAuth.email,
     password: userStore.tempAuth.password
   }
 })
@@ -27,10 +29,13 @@ const checkWorkspace = async () => {
 
   if (isReady.value) {
     clearInterval(polling.value)
-    userStore.tempAuth = { username: '', password: '' }
+    userStore.tempAuth = { email: '', password: '' }
 
     const backAfterUrl = window.localStorage.getItem('back_after_login')
     window.localStorage.setItem('back_after_login', '')
+
+    await peopleStore.$reset()
+    await peopleStore.getCurrentPeople({ workspaceId: prepareAccount.workspaceId.value })
 
     //check if user need redirect to last visited page
     if (backAfterUrl && backAfterUrl !== '/') {
@@ -64,20 +69,3 @@ onUnmounted(() => {
   clearInterval(polling.value)
 })
 </script>
-<style scoped>
-.join-wrapper {
-  height: 100vh;
-  background-image: url('/assets/bg/askanna-bg-01.svg');
-  background-size: cover;
-}
-.logo {
-  height: 74px;
-  margin-bottom: 6px;
-}
-.colored-border {
-  border: 1px solid;
-}
-.no-bg {
-  background: none;
-}
-</style>

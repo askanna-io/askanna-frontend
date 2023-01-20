@@ -47,7 +47,7 @@
       </thead>
     </template>
     <template v-slot:body="{ items }">
-      <tbody ref="tableRef" v-if="!loading">
+      <tbody ref="tableRef">
         <template v-for="(item, index) in items">
           <tr :key="index">
             <td>{{ item.metric[0].name }}</td>
@@ -74,12 +74,11 @@
 <script lang="ts">
 import MetricValue from './parts/MetricValue.vue'
 import MetricTableLabelTd from './parts/MetricTableLabelTd.vue'
-import useSortFilterTable from './parts/sort-filter/useSortFilterTable'
 import SortFilterByName from './parts/sort-filter/SortFilterByName.vue'
 import SortFilterByValue from './parts/sort-filter/SortFilterByValue.vue'
 
 export default defineComponent({
-  name: 'MetricTableView',
+  name: 'MetricTableCompareView',
 
   props: {
     count: {
@@ -106,7 +105,11 @@ export default defineComponent({
 
   setup(props, context) {
     const tableRef = ref(null)
-    const { lastScrollTop } = useSortFilterTable(context)
+    const { lastScrollTop } = useSortFilterTable({
+      context,
+      typeName: 'metric',
+      routeName: 'workspace-project-jobs-job-run-metrics'
+    })
 
     const handleOnScroll = data => {
       if (data.target.scrollTop > 0 && data.target.scrollTop !== lastScrollTop.value) {

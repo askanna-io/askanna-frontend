@@ -15,7 +15,7 @@
             <AskAnnaCol class="pt-0 pb-0" cols="12" align-self="start">
               <AskAnnaAvatar rounded="21" :size="people.avatar ? 150 : 150" tile>
                 <VImg v-if="people.avatar" class="img--rounded" :src="people.avatar.large" />
-                <VImg v-else class="img--rounded" src="@/assets/icons/ask-annna-default-gravatar.png" />
+                <VImg v-else class="img--rounded" src="/assets/icons/ask-annna-default-gravatar.png" />
               </AskAnnaAvatar>
             </AskAnnaCol>
             <AskAnnaCol :class="[people.avatar ? 'pt-1' : 'pt-0']">
@@ -93,7 +93,7 @@
         </AskAnnaCardActions>
         <AskAnnaCardActions
           v-if="!simple && (workspacePeopleEdit || workspacePeopleRemove) && currentUser.suuid !== people.suuid"
-          :class="{ 'pt-0': isCurrentUserAdmin && people.status !== 'accepted', 'px-0': $vuetify.breakpoint.xsOnly }"
+          :class="{ 'pt-0': isCurrentUserAdmin && people.status !== 'active', 'px-0': $vuetify.breakpoint.xsOnly }"
         >
           <AskAnnaRow dense class="mx-2" justify="space-between">
             <AskAnnaCol v-if="workspacePeopleEdit && buttonsVisible.WA" class="text-center" cols="12">
@@ -141,8 +141,8 @@
                 </AskAnnaButton>
               </div>
             </AskAnnaCol>
-            <AskAnnaCol class="text-center" cols="12" v-if="people.status === 'accepted' && workspacePeopleRemove">
-              <div :class="{ 'mt-2': people.status === 'accepted' }">
+            <AskAnnaCol class="text-center" cols="12" v-if="people.status === 'active' && workspacePeopleRemove">
+              <div :class="{ 'mt-2': people.status === 'active' }">
                 <AskAnnaButton
                   small
                   block

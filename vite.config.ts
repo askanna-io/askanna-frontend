@@ -12,10 +12,6 @@ import Components from 'unplugin-vue-components/vite'
 import { VuetifyResolver } from 'unplugin-vue-components/resolvers'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
-import rollupNodePolyFill from 'rollup-plugin-node-polyfills'
-import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill'
-import { NodeModulesPolyfillPlugin } from '@esbuild-plugins/node-modules-polyfill'
-
 function createAskAnnaConfig() {
   return <Plugin>{
     name: 'create-ask-anna-config',
@@ -72,15 +68,7 @@ export default ({ mode }) => {
         // Node.js global to browser globalThis
         define: {
           global: 'globalThis'
-        },
-        // Enable esbuild polyfill plugins
-        plugins: [
-          NodeGlobalsPolyfillPlugin({
-            process: true,
-            buffer: true
-          }),
-          NodeModulesPolyfillPlugin()
-        ]
+        }
       }
     },
     plugins: [
@@ -188,14 +176,10 @@ export default ({ mode }) => {
       createAskAnnaConfig()
     ],
     build: {
-      sourcemap: true,
-      rollupOptions: {
-        plugins: [
-          // Enable rollup polyfills plugin
-          // used during production bundling
-          rollupNodePolyFill()
-        ]
-      }
+      commonjsOptions: {
+        esmExternals: true
+      },
+      sourcemap: true
     }
   })
 }

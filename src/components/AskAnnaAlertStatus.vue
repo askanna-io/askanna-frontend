@@ -10,7 +10,7 @@
     class="mb-0 askanna-alert"
     :class="{ 'px-1': $vuetify.breakpoint.xsOnly }"
   >
-    {{ getText($vuetify.breakpoint.xsOnly) }}
+    {{ getText($vuetify.breakpoint.smAndDown) }}
   </AskAnnaAlert>
 </template>
 
@@ -32,44 +32,35 @@ const props = defineProps({
   }
 })
 
-const moment = useMoment()
+const moment = useDayjs()
 const capitalize = useCapitalize()
 
 const COLORS = {
-  NOT_RUNS: 'grey',
-  SUCCESS: 'success',
-  COMPLETED: 'success',
-  UNDEFINED: 'grey',
-  FAILURE: 'error',
-  FAILED: 'error',
-  IN_PROGRESS: 'blue lighten-3',
-  SUBMITTED: 'grey',
-  PENDING: 'grey'
+  queued: 'grey',
+  failed: 'error',
+  not_runs: 'grey',
+  undefined: 'grey',
+  finished: 'success',
+  running: 'blue lighten-3'
 }
 const ICONS = {
-  NOT_RUNS: 'mdi-do-not-disturb',
-  UNDEFINED: 'mdi-do-not-disturb',
-  FAILURE: 'mdi-alert-circle-outline',
-  FAILED: 'mdi-alert-circle-outline',
-  SUCCESS: 'mdi-checkbox-marked-circle',
-  COMPLETED: 'mdi-checkbox-marked-circle',
-  PENDING: 'mdi-progress-clock',
-  SUBMITTED: 'mdi-progress-check',
-  IN_PROGRESS: 'mdi-progress-clock'
+  not_runs: 'mdi-do-not-disturb',
+  undefined: 'mdi-do-not-disturb',
+  failed: 'mdi-alert-circle-outline',
+  running: 'mdi-progress-clock',
+  finished: 'mdi-checkbox-marked-circle',
+  queued: 'mdi-progress-clock'
 }
 const TEXTS = {
-  NOT_RUNS: 'No runs yet',
-  SUCCESS: 'Succeeded',
-  COMPLETED: 'Succeeded',
-  UNDEFINED: 'Undefined',
-  FAILURE: 'Failure',
-  FAILED: 'Failure',
-  PENDING: 'Pending',
-  SUBMITTED: 'Submitted',
-  IN_PROGRESS: 'In progress'
+  not_runs: 'No runs yet',
+  finished: 'Succeeded',
+  undefined: 'Undefined',
+  failed: 'Failure',
+  queued: 'Pending',
+  running: 'In progress'
 }
 
-const status = computed(() => (props.statusData.status ? props.statusData.status : 'UNDEFINED'))
+const status = computed(() => (props.statusData.status ? props.statusData.status : 'undefined'))
 
 const statusIcon = computed(() => get(ICONS, status.value))
 const statusColor = computed(() => get(COLORS, status.value))

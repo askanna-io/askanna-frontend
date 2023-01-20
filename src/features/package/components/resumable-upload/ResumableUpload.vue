@@ -66,7 +66,7 @@ defineProps({
     type: Object,
     default: function () {
       return {
-        status: 'UNDEFINED',
+        status: 'undefined',
         runtime: 0,
         memory: 0,
         return_payload: null,
@@ -162,11 +162,11 @@ watch(uploadContainer, async uploadContainer => {
 
     progress.value = prg
     uploadStatus.setUpload({
-      id: file.uniqueIdentifier,
-      name: file.fileName,
-      isComplete: file.isComplete(),
       progress: prg,
+      name: file.fileName,
+      id: file.uniqueIdentifier,
       projectId: projectShortUuid,
+      isComplete: file.isComplete(),
       packageId: currentPackageData.value.suuid
     })
   })
@@ -211,7 +211,7 @@ const handleRegisterPackage = async file => {
     size: file.size,
     filename: file.name,
     description: file.name,
-    project: projectShortUuid
+    project_suuid: projectShortUuid
   })
 
   return packageData

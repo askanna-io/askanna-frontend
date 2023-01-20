@@ -2,9 +2,7 @@
   <AskAnnaCard flat class="px-3 mt-2 br-none" outlined>
     <AskAnnaLoadingProgress :loading="jobsStore.loading">
       <AskAnnaRow align="center" justify="center">
-        <AskAnnaCol cols="12" class="pa-0">
-          <JobsList :jobList="jobsStore.jobs" />
-        </AskAnnaCol>
+        <AskAnnaCol cols="12" class="pa-0"><JobsList /></AskAnnaCol>
       </AskAnnaRow>
     </AskAnnaLoadingProgress>
   </AskAnnaCard>
@@ -14,16 +12,11 @@
 const runStore = useRunStore()
 const fileStore = useFileStore()
 const jobsStore = useJobsStore()
-const { route } = useRouterAskAnna()
-
-const { projectId } = route.params
 
 const fetchData = async () => {
-  fileStore.$reset()
-
-  await runStore.resetStore()
+  await fileStore.$reset()
+  await runStore.$reset()
   await jobsStore.$reset()
-  await jobsStore.getProjectJobs(projectId)
 }
 
 onBeforeMount(() => fetchData())

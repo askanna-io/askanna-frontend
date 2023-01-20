@@ -71,7 +71,7 @@ const handleResetPassword = async () => {
   })
 
   if (result && result.response && result.response.status === 400) {
-    error = { ...error, ...result.response.data }
+    Object.assign(error, result.response.data)
 
     return
   }

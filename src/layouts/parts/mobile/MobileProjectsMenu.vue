@@ -1,18 +1,18 @@
 <template>
   <div>
     <VListGroup>
-      <template v-slot:activator @click="handleClickItem">
+      <template v-slot:activator @click="handleOpenMenu">
         <VListItemTitle>Projects</VListItemTitle>
       </template>
       <template v-slot:appendIcon>
-        <AskAnnaIcon @click="handleClickItem">mdi-chevron-down</AskAnnaIcon>
+        <AskAnnaIcon @click="handleOpenMenu">mdi-chevron-down</AskAnnaIcon>
       </template>
       <AskAnnaCol cols="12" class="pa-0">
         <AskAnnaTextField
-          v-if="!loading && (projects.length > 0 || search)"
+          v-if="projectsStore.menu.isShowSearch || projectsStore.menu.query.search"
+          v-model="projectsStore.menu.query.search"
           class="mx-1 mt-2"
-          v-model="search"
-          @input="handleOnSearch()"
+          @input="debounceedSearch"
           x-small
           dense
           outlined
@@ -22,9 +22,9 @@
           label="Search projects..."
         />
 
-        <v-skeleton-loader v-if="loading" class="mx-auto mt-3" type="heading, text@9"></v-skeleton-loader>
+        <VSkeletonLoader v-if="loading" class="mx-auto mt-3" type="heading, text@9" />
 
-        <VList flat nav dense class="pt-0">
+        <VList v-else flat nav dense class="pt-0">
           <VListItem
             v-for="item in projects.slice(0, 5)"
             :key="item.suuid"
@@ -32,7 +32,7 @@
               name: 'workspace-project',
               params: {
                 projectId: item.suuid,
-                packageId: item.package.suuid,
+                packageId: item.package?.suuid,
                 workspaceId: item.workspace.suuid
               }
             }"
@@ -49,7 +49,9 @@
           </VListItem>
         </VList>
 
-        <AskAnnaFlex v-if="search && !projects.length && !isSearchProcessing" class="px-2 pt-2 pl-4 text--secondary"
+        <AskAnnaFlex
+          v-if="projectsStore.menu.query.search && !projects.length && !loading"
+          class="px-2 pt-2 pl-4 text--secondary"
           >No results</AskAnnaFlex
         >
         <AskAnnaCol class="pa-2">
@@ -73,6 +75,8 @@
 </template>
 
 <script setup lang="ts">
+import { debounce } from 'lodash'
+
 const emits = defineEmits('onClose')
 
 const projectsStore = useProjectsStore()
@@ -82,32 +86,27 @@ const explorBtnOpts = [
   { id: 1, to: { name: 'projects' }, title: 'Explore all projects' }
 ]
 
-const search = ref('')
-const isSearchProcessing = ref(false)
-
-const loading = computed(() => projectsStore.loading)
-const projectsState = computed(() => projectsStore.projects.results)
-
-const projects = computed(() => {
-  let results = projectsState.value.filter(item => item.is_member)
-
-  if (search.value) {
-    results = results.filter(item => item.name.toLowerCase().includes(search.value.toLowerCase()))
-
-    isSearchProcessing.value = false
-  }
-
-  return results
-})
+const loading = computed(() => projectsStore.menu.loading)
+const projects = computed(() => projectsStore.menu.projects.results)
 
 const handleClickOnMenuItem = () => {
-  search.value = ''
+  projectsStore.menu.query.search = null
+
   emits('onClose')
 }
 
-const handleClickItem = item => {
-  search.value = ''
+const handleSearch = async () => {
+  await projectsStore.getMenuProjects({
+    loading: true,
+    params: { search: projectsStore.menu.query.search }
+  })
 }
 
-const handleOnSearch = () => (isSearchProcessing.value = true)
+const debounceedSearch = debounce(handleSearch, 350)
+
+const handleOpenMenu = async () => {
+  if (projectsStore.menu.projects.results.length) return
+
+  await projectsStore.getMenuProjects({ params: { is_member: true }, loading: true })
+}
 </script>

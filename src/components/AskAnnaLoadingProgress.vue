@@ -12,14 +12,16 @@
         <VProgressLinear
           color="primary"
           class="mb-0"
-          :buffer-value="bufferValue"
           :value="loadingProgress"
           :reverse="indeterminate"
+          :buffer-value="bufferValue"
         />
       </AskAnnaCardText>
     </AskAnnaCard>
     <VExpandTransition>
-      <slot v-if="!isLoading && !loading" />
+      <div :class="{ 'd-none': isLoading || loading }">
+        <slot />
+      </div>
     </VExpandTransition>
   </div>
 </template>

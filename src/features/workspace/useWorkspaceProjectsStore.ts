@@ -2,15 +2,14 @@ import { defineStore } from 'pinia'
 import apiService from '@/services/apiService'
 import { apiStringify } from '@/services/api-settings'
 
-const serviceName = WORKSPACE_STORE
+const serviceName = PROJECT_STORE
 const api = apiStringify(WORKSPACE_STORE)
-const sortFilterHelper = useSortFilterHelper()
 
 export const useWorkspaceProjectsStore = defineStore('workspaceProjects', {
   state: () => {
     return {
       loading: true,
-      allWorkspaceProjects: {
+      projects: {
         count: 0,
         next: '',
         previous: '',
@@ -18,83 +17,44 @@ export const useWorkspaceProjectsStore = defineStore('workspaceProjects', {
       }
     }
   },
-  getters: {
-    getProjectsByParams: state => {
-      return ({ sort = 'desc', sortby = 'created', is_member, search, visibility }) => {
-        sortFilterHelper.results = [...state.allWorkspaceProjects.results]
-
-        return sortFilterHelper
-          .filterByVisibility(visibility)
-          .filterByMember(is_member)
-          .filterBySearchtext(search)
-          .sorting({ sort, sortby })
-      }
-    }
-  },
 
   actions: {
-    async getInitialWorkpaceProjects(data) {
-      this.loading = true
+    async getWorkpaceProjects(
+      { loading, params, initial, suuid: workspace_suuid } = { loading: true, params: {}, initial: false, suuid: '' }
+    ) {
+      if (loading) this.loading = true
 
-      await this.getWorkpaceProjects({ ...data, initial: true })
+      try {
+        const data = await apiService({
+          serviceName,
+          action: api.list,
+          params: { ...params, workspace_suuid }
+        })
+
+        this.projects = initial ? data : { ...data, results: [...this.projects.results, ...data.results] }
+      } catch (error) {
+        const logger = useLogger()
+
+        logger.error('Error on load projects in getWorkpaceProjects action.\nError: ', error)
+      }
 
       this.loading = false
     },
 
-    async getWorkpaceProjects({ workspaceId, params, initial }) {
-      const logger = useLogger()
-      const workspaceStore = useWorkspaceStore()
-
-      let projects
-      try {
-        projects = await apiService({
-          params,
-          serviceName,
-          action: api.projects,
-          suuid: workspaceStore.workspace.suuid || workspaceId
-        })
-      } catch (error) {
-        logger.error('Error on load projects in getWorkpaceProjects action.\nError: ', error)
-
-        return
-      }
-
-      // TODO check if it make sense
-      if (initial) {
-        const { count, results, next } = projects
-        this.allWorkspaceProjects = {
-          next,
-          count,
-          results: [...results]
-        }
-      } else {
-        const { count, results, next, previous } = projects
-        this.allWorkspaceProjects = {
-          next,
-          count,
-          previous,
-          results: [...this.allWorkspaceProjects.results, ...results]
-        }
-      }
-
-      // @TODO:1 refactore loading after create project
-      setTimeout(() => (this.loading = false), 1000)
-    },
-
     setWorkspacePprojects({ count, results, next }) {
-      this.allWorkspaceProjects = {
+      this.projects = {
         next,
         count,
-        results: [...this.allWorkspaceProjects.results, ...results]
+        results: [...this.projects.results, ...results]
       }
     },
 
     deleteWorkspaceProject(projectToDelete) {
-      const results = this.allWorkspaceProjects.results.filter(project => project.suuid !== projectToDelete.suuid)
-      this.allWorkspaceProjects = {
-        ...this.allWorkspaceProjects,
+      const results = this.projects.results.filter(project => project.suuid !== projectToDelete.suuid)
+      this.projects = {
+        ...this.projects,
         results,
-        count: this.allWorkspaceProjects.count - 1
+        count: this.projects.count - 1
       }
     }
   }

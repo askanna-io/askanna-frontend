@@ -1,78 +1,73 @@
 <template>
   <div>
     <PeopleNavbar />
-    <template v-if="isMember">
-      <PeopleList
-        :loading="loading"
-        :items="people"
-        :currentUser="currentUser"
-        :settings="workspaceSettings"
-        :workspaceUuid="workspace.suuid"
-        :workspaceName="workspace.name"
-        @onSelectPoeple="handleSelectPeople"
-      />
-      <PeoplePopup
-        v-if="peoplePopup"
-        :value="peoplePopup"
-        :people="selectedPeople"
-        :currentUser="currentUser"
-        :workspaceName="workspace.name"
-        :roleAction="roleAction"
-        :isPeopleAdmin="isPeopleAdmin"
-        @handleValue="handleValue"
-        @onChangeRole="handleChangeRole"
-        @onRemovePeople="handleOpenRemovePeople"
-        @onDeleteInivitationPopup="handleDeleteInivitationPopup(true)"
-        @onResendInivitationPopup="handleResendInivitationPopup(true)"
-      />
-      <PeopleConfirmDeletePopup
-        v-if="peopleConfirmDeletePopup"
-        :value="peopleConfirmDeletePopup"
-        :peopleName="selectedPeople.name || selectedPeople.email"
-        @onDeleteConfirm="handleDeleteItem"
-        @onCloseDeletePopup="handleCloseConfirmDeletePopup"
-      />
-      <PeopleConfirmDeleteInvitationPopup
-        v-if="deleteInvitationConfirmPopup"
-        :peopleName="selectedPeople.name || selectedPeople.email"
-        :value="deleteInvitationConfirmPopup"
-        @onDeleteConfirm="handleDeleteInvitation"
-        @onClose="handleDeleteInivitationPopup(false)"
-      />
-      <PeopleConfirmResendInvitationPopup
-        v-if="resendInvitationConfirmPopup"
-        :peopleName="selectedPeople.name || selectedPeople.email"
-        :value="resendInvitationConfirmPopup"
-        @onResendConfirm="handleResendItem"
-        @onClose="handleResendInivitationPopup(false)"
-      />
+    <AskAnnaLoadingProgress :loading="peopleStore.loading">
+      <template v-if="isMember">
+        <PeopleList
+          :currentUser="currentUser"
+          :settings="workspaceSettings"
+          :workspaceName="workspace.name"
+          @onSelectPoeple="handleSelectPeople"
+        />
+        <PeoplePopup
+          v-if="peoplePopup"
+          :value="peoplePopup"
+          :people="selectedPeople"
+          :currentUser="currentUser"
+          :workspaceName="workspace.name"
+          :roleAction="roleAction"
+          :isPeopleAdmin="isPeopleAdmin"
+          @handleValue="handleValue"
+          @onChangeRole="handleChangeRole"
+          @onRemovePeople="handleOpenRemovePeople"
+          @onDeleteInivitationPopup="handleDeleteInivitationPopup(true)"
+          @onResendInivitationPopup="handleResendInivitationPopup(true)"
+        />
+        <PeopleConfirmDeletePopup
+          v-if="peopleConfirmDeletePopup"
+          :value="peopleConfirmDeletePopup"
+          :peopleName="selectedPeople.name || selectedPeople.email"
+          @onDeleteConfirm="handleDeleteItem"
+          @onCloseDeletePopup="handleCloseConfirmDeletePopup"
+        />
+        <PeopleConfirmDeleteInvitationPopup
+          v-if="deleteInvitationConfirmPopup"
+          :value="deleteInvitationConfirmPopup"
+          :peopleName="selectedPeople.name || selectedPeople.email"
+          @onDeleteConfirm="handleDeleteInvitation"
+          @onClose="handleDeleteInivitationPopup(false)"
+        />
+        <PeopleConfirmResendInvitationPopup
+          v-if="resendInvitationConfirmPopup"
+          :peopleName="selectedPeople.name || selectedPeople.email"
+          :value="resendInvitationConfirmPopup"
+          @onResendConfirm="handleResendItem"
+          @onClose="handleResendInivitationPopup(false)"
+        />
 
-      <PeopleConfirmChangeRolePopup
-        v-if="changeRoleConfirmPopup"
-        :toRole="changeRoleTo"
-        :fromRole="selectedPeople.role.code"
-        :isPeopleAdmin="isPeopleAdmin"
-        :value="changeRoleConfirmPopup"
-        :peopleName="selectedPeople.name || selectedPeople.email"
-        @onChangeRoleConfirm="handleConfirmChangeRole"
-        @onClose="handleCloseChangeRolePopup(false)"
-      />
-    </template>
-    <AskAnnaAlert v-else class="text-center" dense outlined>
-      You are not allowed to see the peope list of this workspace. I can bring you back to the workspace
-      <RouterLink :to="{ name: 'workspace' }" class="ask-anna-link">{{ workspace.name }}</RouterLink
-      >.
-    </AskAnnaAlert>
+        <PeopleConfirmChangeRolePopup
+          v-if="changeRoleConfirmPopup"
+          :toRole="changeRoleTo"
+          :isPeopleAdmin="isPeopleAdmin"
+          :value="changeRoleConfirmPopup"
+          :fromRole="selectedPeople.role.code"
+          :peopleName="selectedPeople.name || selectedPeople.email"
+          @onChangeRoleConfirm="handleConfirmChangeRole"
+          @onClose="handleCloseChangeRolePopup(false)"
+        />
+      </template>
+      <AskAnnaAlert v-if="!isMember && !peopleStore.loading" class="text-center" dense outlined>
+        You are not allowed to see the peope list of this workspace. I can bring you back to the workspace
+        <RouterLink :to="{ name: 'workspace' }" class="ask-anna-link">{{ workspace.name }}</RouterLink
+        >.
+      </AskAnnaAlert>
+    </AskAnnaLoadingProgress>
   </div>
 </template>
 <script setup lang="ts">
-import { useRoute } from 'vue-router/composables'
-
-const route = useRoute()
 const peopleStore = usePeopleStore()
+const { route } = useRouterAskAnna()
 const workspaceStore = useWorkspaceStore()
-
-const { workspaceId } = route.params
 
 const changeRoleTo = ref('')
 const peoplePopup = ref(false)
@@ -91,41 +86,6 @@ const workspace = computed(() => workspaceStore.workspace)
 const currentUser = computed(() => peopleStore.currentPeople)
 const workspaceSettings = computed(() => workspaceStore.workspaceSettings)
 
-const people = computed(() => {
-  const {
-    filter: { role, status },
-    sorting: { sortBy, sort }
-  } = peopleStore.peopleParams
-
-  let people = [...peopleStore.people]
-
-  if (!people.length) return people
-
-  if (role) {
-    people = people.filter(item => item.role?.code === role)
-  }
-
-  if (status) {
-    people = people.filter(item => item.status === status)
-  }
-
-  if (sortBy && sort) {
-    people = people.sort((a, b) => {
-      const nameA = (a.name && a.name.toLowerCase()) || a.email?.toLowerCase()
-      const nameB = (b.name && b.name.toLowerCase()) || b.email?.toLowerCase()
-
-      if (nameA < nameB) return -sort
-      if (nameA > nameB) return sort
-
-      return 0
-    })
-  }
-
-  return people
-})
-
-const loading = computed(() => peopleStore.loading)
-
 const handleValue = value => (peoplePopup.value = value)
 
 const handleOpenRemovePeople = () => (peopleConfirmDeletePopup.value = true)
@@ -137,9 +97,10 @@ const handleChangeRole = async role => {
   changeRoleConfirmPopup.value = true
 }
 
-const handleConfirmChangeRole = async role => {
+const handleConfirmChangeRole = async role_code => {
   const people = await peopleStore.changeRole({
-    role,
+    role_code,
+    params: route.query,
     peopleId: selectedPeople.value.suuid,
     workspaceId: selectedPeople.value.workspace.suuid
   })
@@ -155,14 +116,15 @@ const handleSelectPeople = people => {
 }
 
 const handleDeleteItem = async () => {
-  await peopleStore.deletePeople(selectedPeople.value)
+  await peopleStore.deletePeople({ params: route.query, people: selectedPeople.value })
+
   peopleConfirmDeletePopup.value = false
   peoplePopup.value = false
   deleteInvitationConfirmPopup.value = false
 }
 
 const handleDeleteInvitation = async () => {
-  await peopleStore.deleteInvitation(selectedPeople.value)
+  await peopleStore.deleteInvitation({ params: route.query, people: selectedPeople.value })
 
   peopleConfirmDeletePopup.value = false
   peoplePopup.value = false
@@ -181,10 +143,4 @@ const handleResendItem = () => {
   resendInvitationConfirmPopup.value = false
   peoplePopup.value = false
 }
-
-const fetchData = async () => {
-  await peopleStore.getPeople({ workspaceId })
-}
-
-onBeforeMount(() => fetchData())
 </script>

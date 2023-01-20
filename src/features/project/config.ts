@@ -10,7 +10,7 @@ export const projectRoutes = [
     meta: {
       hideAppBarIcon: true,
       breadcrumb: 'New project - :workspaceId',
-      permission: PERMISSIONS_LABELS.workspaceProjectCreate
+      permission: PERMISSIONS_LABELS.projectCreate
     }
   },
   {

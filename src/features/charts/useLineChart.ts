@@ -1,7 +1,7 @@
 import * as d3 from 'd3'
 
 const numeral = useNumeral()
-const { $moment } = useMoment()
+const { dayjs } = useDayjs()
 
 export default function () {
   // Copyright 2021 Observable, Inc.
@@ -47,7 +47,7 @@ export default function () {
     const X = d3.map(data, x)
     const Y = d3.map(data, y)
     const Z = d3.map(data, z)
-    const O = d3.map(data, d => d)
+    const O = d3.map(data, (d) => d)
 
     // Compute which data points are considered defined.
     if (defined === undefined) defined = (d, i) => !isNaN(X[i]) && !isNaN(Y[i])
@@ -61,7 +61,7 @@ export default function () {
     zDomain = new d3.InternSet(zDomain)
 
     // Omit any data not present in the z-domain.
-    const I = d3.range(X.length).filter(i => zDomain.has(Z[i]))
+    const I = d3.range(X.length).filter((i) => zDomain.has(Z[i]))
 
     // Construct scales and axes.
     const xScale = xType(xDomain, xRange)
@@ -78,33 +78,35 @@ export default function () {
 
     // Compute titles.
     if (title === undefined) {
-      title = i => {
+      title = (i) => {
         let xVal = X[i]
-        let label = `${xTitle}: ${xVal}\n${yTitle}: ${numeral.numberFormated(Y[i])}`
+        let label = `${xTitle}: ${xVal}\n${yTitle}: ${numeral.numberFormated(
+          Y[i]
+        )}`
 
         if (xTitle.includes('time')) {
-          xVal = $moment(xVal).format('Do MMMM YYYY, h:mm:ss a')
+          xVal = dayjs(xVal).format('Do MMMM YYYY, h:mm:ss a')
           label = `${xVal}\n${yTitle}: ${numeral.numberFormated(Y[i])}`
         }
 
-        if (Z.filter(item => item).length) {
+        if (Z.filter((item) => item).length) {
           label = label + `\n${'Series'}: ${Z[i]}`
         }
         return label
       }
     } else {
-      const O = d3.map(data, d => d)
+      const O = d3.map(data, (d) => d)
       const T = title
-      title = i => T(O[i], i, data)
+      title = (i) => T(O[i], i, data)
     }
 
     // Construct a line generator.
     const line = d3
       .line()
-      .defined(i => D[i])
+      .defined((i) => D[i])
       .curve(curve)
-      .x(i => xScale(X[i]))
-      .y(i => yScale(Y[i]))
+      .x((i) => xScale(X[i]))
+      .y((i) => yScale(Y[i]))
 
     const svg = d3
       .select(`#${id}`)
@@ -112,7 +114,10 @@ export default function () {
       .attr('width', width)
       .attr('height', height)
       .attr('viewBox', [0, 0, width, height])
-      .attr('style', 'max-width: 100%; height: auto; height: intrinsic; padding: 0 4px;')
+      .attr(
+        'style',
+        'max-width: 100%; height: auto; height: intrinsic; padding: 0 12px;'
+      )
       .attr('font-family', 'sans-serif')
       .style('font-size', '14px')
       .style('-webkit-tap-highlight-color', 'transparent')
@@ -120,7 +125,7 @@ export default function () {
       .on('pointerenter', pointerentered)
       .on('pointermove', pointermoved)
       .on('pointerleave', pointerleft)
-      .on('touchstart', event => event.preventDefault())
+      .on('touchstart', (event) => event.preventDefault())
 
     // render x axis
     svg
@@ -134,8 +139,8 @@ export default function () {
       .style('font-size', '14px')
       .attr('transform', `translate(${marginLeft},0)`)
       .call(yAxis)
-      .call(g => g.select('.domain').remove())
-      .call(g =>
+      .call((g) => g.select('.domain').remove())
+      .call((g) =>
         g
           .selectAll('.tick line')
           .attr('fill', 'currentColor')
@@ -146,7 +151,7 @@ export default function () {
           .style('font-size', '14px')
           .attr('fill', 'currentColor')
       )
-      .call(g =>
+      .call((g) =>
         g
           .append('text')
           .attr('x', width - xLabel.length - 108)
@@ -156,7 +161,7 @@ export default function () {
           .text(xLabel)
           .style('font-size', '14px')
       )
-      .call(g =>
+      .call((g) =>
         g
           .append('text')
           .attr('x', -marginLeft)
@@ -168,9 +173,9 @@ export default function () {
       )
 
     // render data in line chart
-    const groupedData = d3.group(I, i => Z[i])
+    const groupedData = d3.group(I, (i) => Z[i])
     const groupedArray = Array.from(groupedData.values())
-    const strW = groupedArray.some(item => item.length > 5) ? strokeWidth : 5
+    const strW = groupedArray.some((item) => item.length > 5) ? strokeWidth : 5
     const path = svg
       .append('g')
       .attr('fill', 'none')
@@ -190,7 +195,9 @@ export default function () {
 
     function pointermoved(event) {
       const [xm, ym] = d3.pointer(event)
-      const i = d3.least(I, i => Math.hypot(xScale(X[i]) - xm, yScale(Y[i]) - ym)) // closest point
+      const i = d3.least(I, (i) =>
+        Math.hypot(xScale(X[i]) - xm, yScale(Y[i]) - ym)
+      ) // closest point
       tooltip.style('display', null)
       tooltip.attr('transform', `translate(${xScale(X[i])},${yScale(Y[i])})`)
 
@@ -199,13 +206,18 @@ export default function () {
         .filter(([z]) => Z[i] === z)
         .raise()
 
-      const tooltipPath = tooltip.selectAll('path').data([,]).join('path').attr('fill', 'white').attr('stroke', 'black')
+      const tooltipPath = tooltip
+        .selectAll('path')
+        .data([,])
+        .join('path')
+        .attr('fill', 'white')
+        .attr('stroke', 'black')
 
       const text = tooltip
         .selectAll('text')
         .data([,])
         .join('text')
-        .call(text =>
+        .call((text) =>
           text
             .selectAll('tspan')
             .data(`${title(i)}`.split(/\n/))
@@ -214,12 +226,15 @@ export default function () {
             .attr('y', (_, i) => `${i * 1.1}em`)
             // .attr('font-weight', (_, i) => (i ? null : 'bold'))
             .style('font-size', '14px')
-            .text(d => d)
+            .text((d) => d)
         )
 
       const { x, y, width: w, height: h } = text.node().getBBox()
       text.attr('transform', `translate(${-w / 2},${15 - y})`)
-      tooltipPath.attr('d', `M${-w / 2 - 10},5H-5l5,-5l5,5H${w / 2 + 10}v${h + 20}h-${w + 20}z`)
+      tooltipPath.attr(
+        'd',
+        `M${-w / 2 - 10},5H-5l5,-5l5,5H${w / 2 + 10}v${h + 20}h-${w + 20}z`
+      )
       svg.property('value', O[i]).dispatch('input', { bubbles: true })
     }
 
@@ -237,7 +252,7 @@ export default function () {
     return svg.node()
   }
 
-  const clean = id => d3.selectAll(`#${id} > *`).remove()
+  const clean = (id) => d3.selectAll(`#${id} > *`).remove()
 
   return { render, clean }
 }

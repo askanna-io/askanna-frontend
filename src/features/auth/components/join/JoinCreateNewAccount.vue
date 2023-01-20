@@ -13,6 +13,7 @@
       validate-on-blur
       v-model="formData.name"
       :error-messages="error.name"
+      :rules="[RULES.required('The name is required')]"
     />
     <AskAnnaTextField
       v-model="formData.email"
@@ -21,6 +22,7 @@
       outlined
       label="Email"
       validate-on-blur
+      @input="handleOnInputEmail"
       :error-messages="error.email"
     />
     <AskAnnaTextField
@@ -89,8 +91,7 @@ const loginFormRef = ref(null)
 const isShowPassword = ref(false)
 
 const formData = reactive({
-  name: '',
-  username: '',
+  name: peopleStore.invitation.email.substring(0, peopleStore.invitation.email.indexOf('@')) || '',
   password: '',
   terms_of_use: false,
   email: peopleStore.invitation.email || ''
@@ -99,11 +100,14 @@ const formData = reactive({
 let error = reactive({
   name: '',
   email: '',
-  username: '',
   password: '',
   terms_of_use: ''
 })
 const loadingText = computed(() => loadingTexts[step.value])
+
+const handleOnInputEmail = value => {
+  formData.name = formData.name ? formData.name : value.substring(0, value.indexOf('@'))
+}
 
 const handleLogin = async () => {
   step.value = 0
@@ -114,16 +118,16 @@ const handleLogin = async () => {
   loading.value = true
 
   const name = formData.name || undefined
-  const username = formData.email
+  const email = formData.email
   const account = await authStore.createAccount({
     ...formData,
     name,
-    username,
-    front_end_domain: window.location.origin
+    email,
+    front_end_url: window.location.origin
   })
 
   if (account && account.response && account.response.status === 400) {
-    error = { ...error, ...account.response.data }
+    Object.assign(error, account.response.data)
 
     loading.value = false
     step.value = 0
@@ -134,7 +138,7 @@ const handleLogin = async () => {
   step.value = 1
 
   const auth = await authStore.login({
-    username: username,
+    email: email,
     password: formData.password
   })
 
@@ -149,7 +153,7 @@ const handleLogin = async () => {
     })
   }
 
-  if (invatation && invatation.status === 'accepted') {
+  if (invatation && invatation.status == 204) {
     step.value = 3
 
     setTimeout(() => routerPush({ name: 'workspace', params: { workspaceId } }), 1000)
@@ -161,7 +165,7 @@ const handleLogin = async () => {
   step.value = 0
 }
 
-const resetError = () => Object.assign(error, { name: '', email: '', username: '', password: '', terms_of_use: '' })
+const resetError = () => Object.assign(error, { name: '', email: '', password: '', terms_of_use: '' })
 
 watch(formData, async () => {
   // check if exist error from backend on typing fields, try resest validation

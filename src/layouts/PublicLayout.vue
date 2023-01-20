@@ -1,8 +1,8 @@
 <template>
-  <v-app>
+  <VApp>
     <VAppBar app clipped-left dark color="primary" :dense="!$vuetify.breakpoint.xsOnly">
       <template v-if="!$vuetify.breakpoint.xsOnly">
-        <v-app-bar-nav-icon v-if="showAppBarIcon" @click.stop="handleChangeSticked" />
+        <VAppBarNavIcon v-if="showAppBarIcon" @click.stop="handleChangeSticked" />
       </template>
       <div v-else class="pl-9" />
 
@@ -44,11 +44,11 @@
         </div>
       </AskAnnaContainer>
       <template v-if="$vuetify.breakpoint.xsOnly">
-        <v-app-bar-nav-icon @click.stop="handleOpenMenu" />
+        <VAppBarNavIcon @click.stop="handleOpenMenu" />
       </template>
     </VAppBar>
 
-    <v-main class="scrollbar">
+    <VMain class="scrollbar">
       <AskAnnaContainer
         class="a-content"
         :class="{ 'px-0 mx-0 pt-1': $vuetify.breakpoint.xsOnly, 'a-content--full': mobileStore.isFullScreen }"
@@ -57,24 +57,23 @@
 
         <RouterView />
       </AskAnnaContainer>
-      <the-snack-bar />
+
+      <TheSnackBar />
       <TheUpdateApp />
-    </v-main>
-  </v-app>
+      <TheUploadStatus />
+    </VMain>
+  </VApp>
 </template>
 
 <script setup lang="ts">
 import MobilePublicMainMenu from './parts/mobile/MobilePublicMainMenu.vue'
 
-useTitle()
 const token = window.localStorage.getItem('token')
 
 const userStore = useUserStore()
 const mobileStore = useMobileStore()
 const { route } = useRouterAskAnna()
 const projectStore = useProjectStore()
-const projectsStore = useProjectsStore()
-const workspacesStore = useWorkspacesStore()
 
 const showAppBarIcon = computed(() => !route.meta?.hideAppBarIcon)
 
@@ -84,8 +83,6 @@ const fetchData = async () => {
   if (token) {
     await userStore.getUserProfile()
   }
-  await projectsStore.getProjects()
-  await workspacesStore.getAllWorkspaces()
 }
 
 const handleOnCloseMobileMenu = () => (mobileStore.isMenuOpen = false)

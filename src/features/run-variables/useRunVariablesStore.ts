@@ -13,6 +13,7 @@ export const useRunVariablesStore = defineStore(RUNIFO_VARIABLES_STORE, {
       variables: {
         count: 0,
         next: null,
+        previous: null,
         results: []
       },
       variablesFullData: '',
@@ -23,9 +24,9 @@ export const useRunVariablesStore = defineStore(RUNIFO_VARIABLES_STORE, {
         results: []
       },
       loading: {
-        variables: false,
+        variables: true,
         variablesJSON: false,
-        variablesByParams: false
+        variablesByParams: true
       }
     }
   },
@@ -52,15 +53,6 @@ export const useRunVariablesStore = defineStore(RUNIFO_VARIABLES_STORE, {
       return variables
     },
 
-    async getVariablesInitial({ suuid, params, loading = 'variables' }) {
-      this.loading = { ...this.loading, ...{ [loading]: true } }
-
-      const variables = await this.getVariables({ suuid, params })
-
-      this.variables = variables
-      this.loading = { ...this.loading, ...{ [loading]: false } }
-    },
-
     async getVariablesJSON({ suuid, params, loading = true }) {
       if (loading) this.loading.variablesJSON = true
 
@@ -82,18 +74,16 @@ export const useRunVariablesStore = defineStore(RUNIFO_VARIABLES_STORE, {
       this.variablesFullData = JSON.stringify(variables, null, 2)
     },
 
-    async getVariablesByParams({ suuid, params, loading = false }) {
+    async getVariablesByParams(
+      { loading, params, initial, suuid } = { loading: true, params: {}, initial: false, suuid: '' }
+    ) {
       if (loading) this.loading.variablesByParams = true
 
-      const variables = await dispatch(ac.getVariables, { suuid, params })
+      const data = await this.getVariables({ suuid, params })
 
-      const { count, results, next } = variables
-      this.variables = {
-        next,
-        count,
-        results: [...this.variables.results, ...results]
-      }
-      if (loading) this.loading.variablesByParams = false
+      this.variables = initial ? data : { ...data, results: [...this.variables.results, ...data.results] }
+
+      this.loading.variablesByParams = false
     },
 
     async setLoading(data) {

@@ -66,7 +66,7 @@
 import { set } from 'lodash'
 import { Run } from '@//features/run/types'
 
-const moment = useMoment()
+const moment = useDayjs()
 const runStore = useRunStore()
 const jobStore = useJobStore()
 const { route, routerPush } = useRouterAskAnna()

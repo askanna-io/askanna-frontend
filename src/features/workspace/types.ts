@@ -7,13 +7,12 @@ export const PERMISSIONS_LABELS: IPERMISSIONS_LABELS = {
   askannaMe: 'askanna.me',
   askannaAdmin: 'askanna.admin',
   askannaMember: 'askanna.member',
-  askannaWorkspaceAdd: 'askanna.workspace.create',
 
+  workspaceList: 'workspace.list',
+  workspaceCreate: 'workspace.create',
   workspaceRemove: 'workspace.remove',
   workspaceInfoView: 'workspace.info.view',
   workspaceInfoEdit: 'workspace.info.edit',
-  workspaceProjectList: 'workspace.project.list',
-  workspaceProjectCreate: 'workspace.project.create',
   workspacePeopleList: 'workspace.people.list',
   workspacePeopleInviteCreate: 'workspace.people.invite.create',
   workspacePeopleInviteRemove: 'workspace.people.invite.remove',
@@ -21,6 +20,8 @@ export const PERMISSIONS_LABELS: IPERMISSIONS_LABELS = {
   workspacePeopleEdit: 'workspace.people.edit',
   workspacePeopleRemove: 'workspace.people.remove',
 
+  projectList: 'project.list',
+  projectCreate: 'project.create',
   projectInfoView: 'project.info.view',
   projectInfoEdit: 'project.info.edit',
   projectRemove: 'project.remove',
@@ -30,12 +31,13 @@ export const PERMISSIONS_LABELS: IPERMISSIONS_LABELS = {
   projectJobCreate: 'project.job.create',
   projectJobEdit: 'project.job.edit',
   projectJobRemove: 'project.job.remove',
-  projectVariableList: 'project.variable.list',
-  projectVariableCreate: 'project.variable.create',
-  projectVariableEdit: 'project.variable.edit',
-  projectVariableRemove: 'project.variable.remove',
   projectRunList: 'project.run.list',
   projectRunCreate: 'project.run.create',
   projectRunEdit: 'project.run.edit',
-  projectRunRemove: 'project.run.remove'
+  projectRunRemove: 'project.run.remove',
+
+  variableList: 'variable.list',
+  variableCreate: 'variable.create',
+  variableEdit: 'variable.edit',
+  variableRemove: 'variable.remove',
 }

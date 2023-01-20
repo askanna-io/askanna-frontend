@@ -20,3 +20,13 @@ export interface Package {
   cdn_base_url: string
   storage_location: string
 }
+
+export interface PackageItem {
+  suuid: string
+  filename: string
+  storage_location: string
+  project_id: number
+  size: number
+  created_by: number
+  created_at: string
+}
