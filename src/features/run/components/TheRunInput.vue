@@ -63,6 +63,7 @@
           :isFileEmpty="fileStore.isFileEmpty"
           :fileExtension="fileStore.fileExtension"
           :loadingFullData="fileStore.loadingFullData"
+          :isEmbedPdfSuccess="fileStore.isEmbedPdfSuccess"
           :isShowFilePreview="fileStore.isShowFilePreview"
           :isFileBigForRawView="fileStore.isFileBigForRawView"
           :fileSource="fileStore.filePreviewByView(currentView.value)"

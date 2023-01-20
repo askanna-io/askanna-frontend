@@ -36,12 +36,12 @@
           ...TO SEE THE FULL CONTENT, PLEASE DOWNLOAD THE FILE.
         </AskAnnaButton>
       </AskAnnaFlex>
-      <AskAnnaFlex v-if="!loading && !isFileEmpty && !isShowFilePreview" class="my-2 mb-2 text-center">
-        <p v-if="$vuetify.breakpoint.xsOnly" class="px-2">
-          We cannot show a preview of this file. To download the file, open this page on a laptop or desktop.
-        </p>
+      <AskAnnaFlex
+        v-if="(!loading && !isFileEmpty && !isShowFilePreview) || !isEmbedPdfSuccess"
+        class="my-2 mb-2 text-center"
+      >
+        <p>We cannot show a preview of this file.</p>
         <AskAnnaButton
-          v-if="!$vuetify.breakpoint.xsOnly"
           text
           small
           outlined
@@ -55,7 +55,7 @@
             <span>Downloading...</span>
           </template>
           <AskAnnaIcon color="secondary" left>mdi-download</AskAnnaIcon>
-          We cannot show a preview of this file. Please download the file.
+          download pdf file
         </AskAnnaButton>
       </AskAnnaFlex>
 
@@ -105,6 +105,10 @@ defineProps({
     default: false
   },
   isFileBigForRawView: {
+    type: Boolean,
+    default: false
+  },
+  isEmbedPdfSuccess: {
     type: Boolean,
     default: false
   },

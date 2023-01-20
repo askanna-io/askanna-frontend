@@ -2,6 +2,7 @@
   <Component :is="TypeComponent" v-bind="props" />
 </template>
 <script setup lang="ts">
+import PreviewFileTypePDF from './PreviewFileTypePDF.vue'
 import PreviewFileTypeXLS from './PreviewFileTypeXLS.vue'
 import PreviewFileTypeCSV from './PreviewFileTypeCSV.vue'
 import PreviewFileTypeHTML from './PreviewFileTypeHTML.vue'
@@ -72,7 +73,10 @@ const types = [
     extensions: ['csv', 'tsv'],
     component: PreviewFileTypeCSV
   },
-
+  {
+    extensions: ['pdf'],
+    component: PreviewFileTypePDF
+  },
   {
     extensions: ext.code,
     component: PreviewFileTypeLanguage

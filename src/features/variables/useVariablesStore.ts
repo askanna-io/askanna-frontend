@@ -66,7 +66,7 @@ export const useVariablesStore = defineStore(VARIABLES_STORE, {
       await this.getVariables({ suuid: data.project_suuid, initial: true })
     },
 
-    async getVariable({ projectId: project_suuid, variableId: suuid }: { projectId:string, variableId:string }) {
+    async getVariable({ projectId: project_suuid, variableId: suuid }: { projectId: string, variableId: string }) {
       let variable
 
       try {
@@ -74,7 +74,7 @@ export const useVariablesStore = defineStore(VARIABLES_STORE, {
           suuid,
           serviceName,
           action: api.update,
-          params:{ project_suuid },
+          params: { project_suuid },
         })
       } catch (error) {
         const logger = useLogger()
