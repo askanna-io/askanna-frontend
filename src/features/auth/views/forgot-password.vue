@@ -20,13 +20,3 @@
     </AskAnnaCol>
   </AskAnnaRow>
 </template>
-
-<style>
-.logo {
-  height: 74px;
-  margin-bottom: 6px;
-}
-.colored-border {
-  border: 1px solid;
-}
-</style>

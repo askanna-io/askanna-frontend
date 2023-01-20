@@ -3,11 +3,11 @@
 </template>
 
 <script setup lang="ts">
-const jobStore = useJobStore()
 const runStore = useRunStore()
-const jobsStore = useJobsStore()
+const fileStore = useFileStore()
+const metricStore = useMetricStore()
 const { route } = useRouterAskAnna()
-
+const runVariablesStore = useRunVariablesStore()
 const { isSet, setIntervalFn, clearIntervalFn } = useInterval()
 
 const runStatus = computed(() => runStore.run.status)
@@ -27,21 +27,19 @@ const checkStatus = () => {
 }
 
 const fetchData = async () => {
-  const { jobId, projectId, runId } = route.params
+  await runStore.$reset()
+  await fileStore.$reset()
+  await metricStore.$reset()
+  await runVariablesStore.$reset()
 
-  if (jobStore.job.suuid !== jobId) {
-    await jobsStore.$reset()
-    await jobsStore.getProjectJobs(projectId)
+  const { runId } = route.params
 
-    await jobStore.getJob(jobId)
-  }
   await runStore.getRun(runId)
   await runStore.getRunStatus(runId)
+  await metricStore.getMetricMeta()
 }
 
-onBeforeMount(() => {
-  fetchData()
-})
+onBeforeMount(() => fetchData())
 
 watchEffect(() => {
   if (runStatus.value && !isFinished.value) {

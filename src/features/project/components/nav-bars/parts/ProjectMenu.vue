@@ -33,7 +33,7 @@ const projectStore = useProjectStore()
 
 const projectJobList = computed(() => permission.getFor(permission.labels.projectJobList))
 const projectCodeList = computed(() => permission.getFor(permission.labels.projectCodeList))
-const projectVariableList = computed(() => permission.getFor(permission.labels.projectVariableList))
+const variableList = computed(() => permission.getFor(permission.labels.variableList))
 
 const projectEditTabs = computed(() => [
   {
@@ -64,12 +64,12 @@ const projectTabs = computed(() => [
     id: 3,
     name: 'Variables',
     to: 'workspace-project-variables',
-    show: projectVariableList.value
+    show: variableList.value
   }
 ])
 
 const projectId = computed(() => projectStore.project.suuid)
-const packageId = computed(() => projectStore.project.package?.suuid)
+const packageId = computed(() => packageStore.packageData?.suuid)
 const routeParams = computed(() => ({
   ...route.params,
   projectId: projectId.value || route.params.projectId,
@@ -85,12 +85,6 @@ const handlers = {
   getProject: async () => {
     if (!projectId.value) return
     await projectStore.getProject(route.params.projectId)
-
-    if (!packageId.value) return
-    await packageStore.getPackage({
-      loading: true,
-      packageId: packageId.value
-    })
   }
 }
 

@@ -9,10 +9,6 @@
   </v-app>
 </template>
 <script setup lang="ts">
-useTitle()
-
-const version = '2'
-
 if (import.meta.env.VITE_APP_INTERCOM === 'on') {
   window.Intercom('boot', {
     app_id: 'c6wuieqm'
@@ -64,9 +60,5 @@ onUpdated(() => {
 
 .colored-border {
   border: 1px solid;
-}
-
-.no-bg {
-  background: none;
 }
 </style>

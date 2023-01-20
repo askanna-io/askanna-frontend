@@ -57,9 +57,8 @@ const menuItems = computed(() =>
       title: 'Create project',
       to: 'workspace-new-project',
       isVisible:
-        permission.getFor(
-          permission.labels.workspaceProjectCreate || props.permission[permission.labels.workspaceProjectCreate]
-        ) && context?.proxy.$root.$vuetify.breakpoint.xsOnly
+        permission.getFor(permission.labels.projectCreate || props.permission[permission.labels.projectCreate]) &&
+        context?.proxy.$root.$vuetify.breakpoint.xsOnly
     },
     {
       title: 'Edit workspace',

@@ -33,7 +33,6 @@ const permission = usePermission()
 const { route } = useRouterAskAnna()
 const packageStore = usePackageStore()
 const projectStore = useProjectStore()
-const packagesStore = usePackagesStore()
 const breadcrumbs = usePackageBreadcrumbs()
 
 const isRaplace = ref(false)
@@ -55,16 +54,6 @@ const handleCloseOutside = async () => {
   })
   isRaplace.value = false
 }
-
-const fetchData = async () => {
-  packagesStore.resetStore()
-  const suuid = route.params.projectId
-  packagesStore.getProjectPackages({ suuid, params: { limit: 1, offset: 0 } })
-}
-
-onBeforeMount(() => {
-  fetchData()
-})
 </script>
 <style>
 .replace-active {

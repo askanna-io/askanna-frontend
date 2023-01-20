@@ -16,7 +16,7 @@
         </p>
       </AskAnnaCardText>
     </AskAnnaCard>
-    <AskAnnaToolbar v-if="projectVariableCreate" color="grey lighten-4" flat dense>
+    <AskAnnaToolbar v-if="variableCreate" color="grey lighten-4" flat dense>
       <AskAnnaSpacer />
       <AskAnnaButton @click="handleOpenVariablePopup()" small rounded class="mr-3">
         <AskAnnaIcon color="primary" left>mdi-plus</AskAnnaIcon>
@@ -30,7 +30,7 @@
 const emits = defineEmits('openVariablePopup')
 
 const permission = usePermission()
-const projectVariableCreate = computed(() => permission.getFor(permission.labels.projectVariableCreate))
+const variableCreate = computed(() => permission.getFor(permission.labels.variableCreate))
 
 const handleOpenVariablePopup = () => emits('openVariablePopup')
 </script>

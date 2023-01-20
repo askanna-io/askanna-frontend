@@ -6,7 +6,7 @@ import { MetricItem, RowItem } from './useMapMetrics'
 import { apiStringify } from '@/services/api-settings'
 
 const logger = useLogger()
-const jobApi = apiStringify('job')
+const runApi = apiStringify('run')
 const metricApi = apiStringify('metric')
 const variableApi = apiStringify('variable')
 
@@ -28,15 +28,13 @@ export const useCompareRunsStore = defineStore('compare-runs', {
       runIdsLoading: true,
       runIds: [] as string[],
       metricParams: {
-        next: '',
-        offset: 0,
         maxCount: 0,
+        next: new Map(),
         loadMetrics: false
       },
       variableParams: {
-        next: '',
-        offset: 0,
         maxCount: 0,
+        next: new Map(),
         loadVariable: false
       }
     }
@@ -62,17 +60,26 @@ export const useCompareRunsStore = defineStore('compare-runs', {
       return metric
     },
 
-    async getMetrics({ offset }) {
+    async getMetrics() {
       return await Promise.all(
-        map(this.runIds, async suuid => {
+        map(this.runIds, async (suuid) => {
+          let cursor = null
+          const next = this.metricParams.next.get(suuid)
+
+          if (next) {
+            const url = new URL(next)
+            cursor = url.searchParams.get('cursor')
+          }
+
           const metric = await this.getMetric({
             suuid,
-            params: { limit: 25, offset, ordering: ['metric.name', 'created'] }
+            params: { cursor, page_size: 25, order_by: 'metric.name, created' }
           })
 
-          if (metric.results) {
-            return metric
-          }
+          if (!metric?.next) this.metricParams.next.delete(suuid)
+          if (metric?.next) this.metricParams.next.set(suuid, metric.next)
+
+          if (metric?.results) return metric
         })
       )
     },
@@ -96,17 +103,26 @@ export const useCompareRunsStore = defineStore('compare-runs', {
       return variable
     },
 
-    async getVariables({ offset }) {
+    async getVariables() {
       return await Promise.all(
-        map(this.runIds, async suuid => {
+        map(this.runIds, async (suuid) => {
+          let cursor = null
+          const next = this.variableParams.next.get(suuid)
+
+          if (next) {
+            const url = new URL(next)
+            cursor = url.searchParams.get('cursor')
+          }
+
           const metric = await this.getVariable({
             suuid,
-            params: { limit: 25, offset, ordering: ['variable.name', 'created'] }
+            params: { cursor, page_size: 25, order_by: 'variable.name, created' }
           })
 
-          if (metric.results) {
-            return metric
-          }
+          if (!metric?.next) this.variableParams.next.delete(suuid)
+          if (metric?.next) this.variableParams.next.set(suuid, metric.next)
+
+          if (metric.results) return metric
         })
       )
     },
@@ -114,14 +130,9 @@ export const useCompareRunsStore = defineStore('compare-runs', {
     mapMetrics(allResults, itemName = 'metric') {
       const params = `${itemName}Params`
 
-      set(
-        this,
-        [params, 'next'],
-        allResults.some(item => item?.next)
-      )
-      set(this, [params, 'maxCount'], Math.max(...allResults.map(item => item.results.length)))
+      set(this, [params, 'maxCount'], Math.max(...allResults.map((item) => item.results.length)))
 
-      const allMetrics = [...allResults.map(item => item.results)]
+      const allMetrics = [...allResults.map((item) => item.results)]
       const result = useMapMetrics({ count: this.count, allMetrics, itemName })
 
       return result
@@ -139,10 +150,9 @@ export const useCompareRunsStore = defineStore('compare-runs', {
 
       try {
         runs = await apiService({
-          suuid,
-          params,
-          serviceName: 'job',
-          action: jobApi.runs
+          serviceName: 'run',
+          action: runApi.list,
+          params: { ...params, job_suuid: suuid }
         })
       } catch (e) {
         const logger = useLogger()
@@ -156,22 +166,22 @@ export const useCompareRunsStore = defineStore('compare-runs', {
       this.runs = runs
       this.count = this.runs.results.length
 
-      this.isInputExist = this.runs.results.some(item => item.payload)
-      this.isMetricExist = this.runs.results.some(item => item.metrics_meta.count)
-      this.isResultExist = this.runs.results.some(item => item.result)
-      this.isArtifacExist = this.runs.results.some(item => item.artifact)
-      this.isVariableExist = this.runs.results.some(item => item.variables_meta.count)
+      this.isInputExist = this.runs.results.some((item) => item.payload)
+      this.isMetricExist = this.runs.results.some((item) => item.metrics_meta.count)
+      this.isResultExist = this.runs.results.some((item) => item.result)
+      this.isArtifacExist = this.runs.results.some((item) => item.artifact)
+      this.isVariableExist = this.runs.results.some((item) => item.variables_meta.count)
 
-      this.runIds = runs.results.map(item => item.suuid)
+      this.runIds = runs.results.map((item) => item.suuid)
 
       // get metrics
       if (this.isMetricExist) {
         // get all uniqe metric labels
-        const labels = this.runs.results.flatMap(cr => cr.metrics_meta.label_names)
+        const labels = this.runs.results.flatMap((cr) => cr.metrics_meta.label_names)
 
         this.labels = uniqBy(labels, 'name')
 
-        const allResults = await this.getMetrics({ offset: 0 })
+        const allResults = await this.getMetrics()
 
         const result = this.mapMetrics(allResults)
 
@@ -181,11 +191,11 @@ export const useCompareRunsStore = defineStore('compare-runs', {
       // get variable
       if (this.isVariableExist) {
         // get all uniqe variable labels
-        const variableLabels = this.runs.results.flatMap(cr => cr.variables_meta.label_names)
+        const variableLabels = this.runs.results.flatMap((cr) => cr.variables_meta.label_names)
 
         this.variableLabels = uniqBy(variableLabels, 'name')
 
-        const allVariableResults = await this.getVariables({ offset: 0 })
+        const allVariableResults = await this.getVariables()
 
         const resultVariable = this.mapMetrics(allVariableResults, 'variable')
 
@@ -197,9 +207,8 @@ export const useCompareRunsStore = defineStore('compare-runs', {
 
     async loadMoreMetrics() {
       this.metricParams.loadMetrics = true
-      this.metricParams.offset = this.metricParams.offset + 25
 
-      const allResults = await this.getMetrics({ offset: this.metricParams.offset })
+      const allResults = await this.getMetrics()
       const result = this.mapMetrics(allResults)
 
       this.metrics = [...this.metrics, ...result]
@@ -209,9 +218,8 @@ export const useCompareRunsStore = defineStore('compare-runs', {
 
     async loadMoreVariables() {
       this.variableParams.loadVariable = true
-      this.variableParams.offset = this.variableParams.offset + 25
 
-      const allResults = await this.getVariables({ offset: this.variableParams.offset })
+      const allResults = await this.getVariables()
       const result = this.mapMetrics(allResults, 'variable')
 
       this.variables = [...this.variables, ...result]

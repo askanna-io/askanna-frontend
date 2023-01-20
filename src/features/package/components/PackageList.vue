@@ -21,7 +21,7 @@
     </template>
 
     <template v-slot:item.created="{ item }">
-      {{ $moment(item.created).format(' Do MMMM YYYY, h:mm:ss a') }}
+      {{ dayjs(item.created).format(' Do MMMM YYYY, h:mm:ss a') }}
     </template>
 
     <template v-slot:item.menu="{ item }">
@@ -72,7 +72,7 @@ defineProps({
 
 const emit = defineEmits(['handleClickRow', 'handleDownload', 'handleHistory'])
 
-const { $moment } = useMoment()
+const { dayjs } = useDayjs()
 
 const headers = [
   {

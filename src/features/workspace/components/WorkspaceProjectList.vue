@@ -12,10 +12,10 @@
           :class="{ 'pb-0': $vuetify.breakpoint.xsOnly }"
         >
           <VHover v-slot:default="{ hover }" open-delay="200">
-            <workspace-project-card-item
+            <WorkspaceProjectCardItem
+              :hover="hover"
               :project="item"
               :workspaceName="workspaceName"
-              :hover="hover"
               :description="sanitizeHTML(item.description)"
             />
           </VHover>
@@ -23,7 +23,7 @@
       </AskAnnaRow>
       <div v-if="settings.projectView">
         <div v-for="item in props.items" :key="item.name + item.suuid">
-          <workspace-project-list-item :project="item" :workspaceName="workspaceName" cols="12" />
+          <WorkspaceProjectListItem :project="item" :workspaceName="workspaceName" cols="12" />
           <AskAnnaDivider />
         </div>
       </div>
@@ -31,9 +31,9 @@
     <template v-slot:no-data
       ><AskAnnaAlert
         v-if="!loading"
-        class="mt-2 text-center"
         dense
         outlined
+        class="mt-2 text-center"
         :class="{ 'ma-2': $vuetify.breakpoint.xsOnly }"
       >
         <template v-if="isWorkspaceViewer || !isSignIn">
@@ -76,7 +76,7 @@ defineProps({
     default: () => ({
       search: '',
       sort: '',
-      sortby: '',
+      order_by: '',
       visibility: '',
       is_member: ''
     })

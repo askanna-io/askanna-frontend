@@ -9,7 +9,7 @@
       @keyup.native.enter="handleLogin"
     >
       <AskAnnaTextField
-        v-model="username"
+        v-model="email"
         :error-messages="error.email"
         :rules="[RULES.required('The email is required'), RULES.email('The email you entered is not valid', 3)]"
         dense
@@ -65,7 +65,7 @@ const { token, peopleId, workspaceId, workspaceName } = route.params
 const loadingTexts = ['Login on AskAnna', 'Accept invitataion', 'Join to workspace']
 
 const step = ref(0)
-const username = ref('')
+const email = ref('')
 const password = ref('')
 const loading = ref(false)
 
@@ -74,7 +74,6 @@ const loadingText = computed(() => loadingTexts[step.value])
 let error = reactive({
   name: '',
   email: '',
-  username: '',
   password: ''
 })
 
@@ -99,7 +98,7 @@ const handleLogin = async () => {
   loading.value = true
 
   const auth = await authStore.login({
-    username: username.value,
+    email: email.value,
     password: password.value
   })
 
@@ -114,15 +113,14 @@ const handleLogin = async () => {
   }
 
   if (result && auth.response && auth.response.status === 400) {
-    loading.value = false
-
-    error = { ...error, ...auth.response.data }
+    Object.assign(error, auth.response.data)
 
     return
   }
 
-  if (result && result.status === 'accepted') {
+  if (result && result.status == 204) {
     joinToWorkpase()
+
     return
   }
 
@@ -131,6 +129,7 @@ const handleLogin = async () => {
       joinExistDialog.value = true
     }
   }
+
   loading.value = false
 }
 

@@ -1,4 +1,15 @@
-import moment from 'moment-timezone'
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+import duration from 'dayjs/plugin/duration'
+import timezone from 'dayjs/plugin/timezone'
+import relativeTime from 'dayjs/plugin/relativeTime'
+import advancedFormat from 'dayjs/plugin/advancedFormat'
+
+dayjs.extend(utc)
+dayjs.extend(duration)
+dayjs.extend(timezone)
+dayjs.extend(relativeTime)
+dayjs.extend(advancedFormat)
 
 interface MillisecondsToStrParams {
   showSeconds: boolean
@@ -8,16 +19,8 @@ interface MillisecondsToStrParams {
 }
 
 export default function () {
-  const runTimeHours = function (startTime: string, endTime: string) {
-    return moment.duration(moment(endTime).diff(moment(startTime))).asSeconds()
-  }
-
   const ago = function (time: string) {
-    return moment(time).fromNow()
-  }
-
-  const seconds = function (seconds: string) {
-    return moment.utc(moment.duration(seconds, 'seconds').asMilliseconds()).format('HH:mm:s')
+    return dayjs(time).fromNow()
   }
 
   const durationHumanize = function (
@@ -30,7 +33,9 @@ export default function () {
       secondSeparation: ' and '
     }
   ) {
-    const d = moment.duration(moment(endTime).diff(moment(startTime))).asMilliseconds()
+    const d = dayjs
+      .duration(dayjs(endTime).diff(dayjs(startTime)))
+      .asMilliseconds()
 
     return millisecondsToStr(d, params)
   }
@@ -44,13 +49,21 @@ export default function () {
       secondSeparation: ' and '
     }
   ) {
-    const d = moment.duration(seconds, 'seconds').asMilliseconds()
+    const d = dayjs.duration(seconds, 'seconds').asMilliseconds()
 
     return millisecondsToStr(d, params)
   }
 
-  const millisecondsToStr = function (milliseconds: number, params: MillisecondsToStrParams) {
-    const { showSeconds = true, showLessMinuteText = true, minuteSeparation = ' and ', secondSeparation = '' } = params
+  const millisecondsToStr = function (
+    milliseconds: number,
+    params: MillisecondsToStrParams
+  ) {
+    const {
+      showSeconds = true,
+      showLessMinuteText = true,
+      minuteSeparation = ' and ',
+      secondSeparation = ''
+    } = params
 
     if (!milliseconds || milliseconds <= 0) return 'less than a second'
 
@@ -93,40 +106,41 @@ export default function () {
   const nextClosestData = (dates: string[]) => {
     const next = dates
       .map(function (s) {
-        return moment.utc(s)
+        return dayjs.utc(s)
       })
       .sort(function (m) {
         return m.valueOf()
       })
       .find(function (m) {
-        return m.isAfter()
+        return m.isAfter(dayjs())
       })
 
     if (next) {
       return {
         datatime: next.local().format(' Do MMMM YYYY, h:mm:ss a'),
-        fromNow: millisecondsToStr(moment.duration(moment(next).diff(moment())).asMilliseconds(), {
-          showSeconds: false,
-          showLessMinuteText: true,
-          minuteSeparation: ' and ',
-          secondSeparation: ' '
-        })
+        fromNow: millisecondsToStr(
+          dayjs.duration(dayjs(next).diff(dayjs())).asMilliseconds(),
+          {
+            showSeconds: false,
+            showLessMinuteText: true,
+            minuteSeparation: ' and ',
+            secondSeparation: ' '
+          }
+        )
       }
     } else {
       return { nextDatatime: null, fromNow: null }
     }
   }
 
-  const checkIfTimeZoneEq = (timezone: string) => timezone !== moment.tz.guess()
+  const checkIfTimeZoneEq = (timezone: string) => timezone !== dayjs.tz.guess()
 
   return {
-    runTimeHours,
     ago,
-    seconds,
-    $moment: moment,
-    durationHumanize,
-    durationHumanizeBySecond,
+    dayjs,
     nextClosestData,
-    checkIfTimeZoneEq
+    durationHumanize,
+    checkIfTimeZoneEq,
+    durationHumanizeBySecond
   }
 }

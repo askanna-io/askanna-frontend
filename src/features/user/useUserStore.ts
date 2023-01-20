@@ -21,13 +21,11 @@ export const useUserStore = defineStore('user', {
         suuid: '',
         name: '',
         email: '',
-        suuid: '',
         job_title: '',
         role: {
           name: '',
           code: ''
         },
-        membership: null,
         avatar: {
           icon: '',
           small: '',
@@ -37,15 +35,15 @@ export const useUserStore = defineStore('user', {
         permission: undefined
       },
       tempAuth: {
-        username: '',
+        email: '',
         password: ''
       }
     }
   },
 
   getters: {
-    isLoggedIn: state => !!state.globalProfile.suuid,
-    globalPermission: state => state.globalProfile.permission
+    isLoggedIn: (state) => !!state.globalProfile.suuid,
+    globalPermission: (state) => state.globalProfile.permission
   },
 
   actions: {
@@ -167,7 +165,8 @@ export const useUserStore = defineStore('user', {
         result = await apiService({
           data,
           serviceName,
-          method: 'PATCH',
+          method: 'PUT',
+          returnFullResponse: true,
           action: apiActions.globalProfileAvatar
         })
       } catch (e) {

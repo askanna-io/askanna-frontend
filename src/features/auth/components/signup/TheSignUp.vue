@@ -14,6 +14,7 @@
       :value="formData.name"
       @blur="handleOnBlurName"
       :error-messages="error.name"
+      :rules="[RULES.required('The name is required')]"
     />
     <AskAnnaTextField
       dense
@@ -21,7 +22,8 @@
       label="Email"
       v-model="formData.email"
       validate-on-blur
-      :error-messages="error.email || error.username"
+      @input="handleOnInputEmail"
+      :error-messages="error.email"
       :rules="[RULES.required('The email is required'), RULES.email('The email you entered is not valid', 3)]"
     />
     <AskAnnaTextField
@@ -43,9 +45,9 @@
       dense
       outlined
       validate-on-blur
-      v-model="formData.workspace"
+      v-model="formData.workspace_name"
       label="Workspace name"
-      :error-messages="error.workspace"
+      :error-messages="error.workspace_name"
       :rules="[RULES.required('The workspace name is required')]"
     />
 
@@ -73,7 +75,7 @@
       Create your account
       <template v-slot:loader>
         <span>{{ loadingText }}...</span>
-        <AskAnnaIcon class="ask-anna-btn-loader" dark> mdi-loading </AskAnnaIcon>
+        <AskAnnaIcon class="ask-anna-btn-loader" dark>mdi-loading</AskAnnaIcon>
       </template>
     </AskAnnaButton>
   </VForm>
@@ -91,21 +93,26 @@ const isShowPassword = ref(false)
 const formData = reactive({
   name: '',
   email: '',
-  username: '',
   password: '',
-  workspace: '',
+  workspace_name: '',
   terms_of_use: false
 })
 
 const loadingTexts = ['Creating accout', 'Creating workspace']
 const loadingText = computed(() => loadingTexts[authStore.signUpStep])
-const error = reactive({ name: '', email: '', username: '', password: '', workspace: '', terms_of_use: '' })
+const error = reactive({ name: '', email: '', password: '', workspace_name: '', terms_of_use: '' })
 
 const handleOnBlurName = $e => {
-  if (formData.workspace === '' || formData.workspace === formData.name) {
-    formData.workspace = $e?.target?.value
+  if (formData.workspace_name === '' || formData.workspace_name === formData.name) {
+    formData.workspace_name = $e?.target?.value
   }
   formData.name = $e?.target?.value
+}
+
+const handleOnInputEmail = value => {
+  const proposalName = value.substring(0, value.indexOf('@'))
+  formData.name = formData.name ? formData.name : proposalName
+  formData.workspace_name = formData.workspace_name ? formData.workspace_name : proposalName
 }
 
 const handleLogin = async () => {
@@ -116,15 +123,16 @@ const handleLogin = async () => {
   }
   loading.value = true
 
-  const username = formData.email
-  const name = formData.name || undefined
-  const workspace = formData.workspace || formData.name
+  const name = formData.name
+  const email = formData.email
+  const workspace_name = formData.workspace_name || formData.name
+
   const account = await authStore.createAccount({
     ...formData,
     name,
-    username,
-    workspace,
-    front_end_domain: window.location.origin
+    email,
+    workspace_name,
+    front_end_url: window.location.origin
   })
 
   if (account && account.response && account.response.status === 400) {
@@ -135,12 +143,12 @@ const handleLogin = async () => {
     return
   }
 
-  authStore.authData = { username, password: formData.password }
+  authStore.authData = { email, password: formData.password }
   authStore.signUpStep = 1
 }
 
 const resetError = () =>
-  Object.assign(error, { name: '', email: '', username: '', password: '', workspace: '', terms_of_use: '' })
+  Object.assign(error, { name: '', email: '', password: '', workspace_name: '', terms_of_use: '' })
 
 watch(formData, _ => {
   if (Object.values(error).some(item => item.length)) {

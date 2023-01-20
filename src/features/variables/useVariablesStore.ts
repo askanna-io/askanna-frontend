@@ -11,7 +11,12 @@ export const useVariablesStore = defineStore(VARIABLES_STORE, {
   state: () => {
     return {
       variable: {} as Variable,
-      variables: [],
+      variables: {
+        count: 0,
+        next: null,
+        previous: null,
+        results: [] as Variable[]
+      },
       variablePopup: false,
       variablesLoading: true,
       variableConfirmDeletePopup: false
@@ -19,26 +24,23 @@ export const useVariablesStore = defineStore(VARIABLES_STORE, {
   },
 
   actions: {
-    async getVariables(suuid) {
-      this.variablesLoading = true
+    async getVariables({ loading, params, initial, suuid: project_suuid } = { loading: true, params: {}, initial: false, suuid: '' }) {
+      if (loading) this.variablesLoading = true
 
-      let variables
       try {
-        variables = await apiService({
-          suuid,
+        const data = await apiService({
           serviceName,
-          action: api.list
+          action: api.list,
+          params: { ...params, project_suuid },
         })
+
+        this.variables = initial ? data : { ...data, results: data.results }
       } catch (error) {
         const logger = useLogger()
 
         logger.error('Error on load variables in getVariables action.\nError: ', error)
-        this.variablesLoading = false
-
-        return
       }
 
-      this.variables = variables
       this.variablesLoading = false
     },
 
@@ -52,7 +54,6 @@ export const useVariablesStore = defineStore(VARIABLES_STORE, {
           serviceName,
           method: 'post',
           action: api.list,
-          suuid: data.project
         })
       } catch (error) {
         logger.error('Error on create variable in createVariable action.\nError: ', error)
@@ -62,16 +63,18 @@ export const useVariablesStore = defineStore(VARIABLES_STORE, {
 
       logger.success(`The variable ${variable.name} is created`)
 
-      await this.getVariables(data.project)
+      await this.getVariables({ suuid: data.project_suuid, initial: true })
     },
 
-    async getVariable(suuid) {
+    async getVariable({ projectId: project_suuid, variableId: suuid }: { projectId:string, variableId:string }) {
       let variable
+
       try {
         variable = await apiService({
           suuid,
           serviceName,
-          action: api.update
+          action: api.update,
+          params:{ project_suuid },
         })
       } catch (error) {
         const logger = useLogger()
@@ -83,16 +86,17 @@ export const useVariablesStore = defineStore(VARIABLES_STORE, {
       this.variable = variable
     },
 
-    async updateVariable({ projectId, variableId, ...data }) {
+    async updateVariable({ projectId: project_suuid, variableId: suuid, ...data }) {
       const logger = useLogger()
 
       try {
         await apiService({
           data,
+          suuid,
           serviceName,
           method: 'PATCH',
           action: api.update,
-          suuid: { projectId, variableId }
+          params: { project_suuid },
         })
       } catch (error) {
         logger.error('Error on update variable in updateVariable action.\nError: ', error)
@@ -102,18 +106,19 @@ export const useVariablesStore = defineStore(VARIABLES_STORE, {
 
       logger.success(`The variable ${name} is updated`)
 
-      await this.getVariables(projectId)
+      await this.getVariables({ suuid: project_suuid })
     },
 
-    async deleteVariable({ name, projectId, variableId }) {
+    async deleteVariable({ name, projectId: project_suuid, variableId: suuid }) {
       const logger = useLogger()
 
       try {
         await apiService({
+          suuid,
           serviceName,
           method: 'delete',
           action: api.update,
-          suuid: { projectId, variableId }
+          params: { project_suuid },
         })
       } catch (error) {
         logger.error('Error on delete variable in deleteVariable action.\nError: ', error)
@@ -123,7 +128,7 @@ export const useVariablesStore = defineStore(VARIABLES_STORE, {
 
       logger.success(`The variable ${name} is deleted`)
 
-      await this.getVariables(projectId)
+      await this.getVariables({ suuid: project_suuid })
     },
 
     setVariable({ path, value }) {

@@ -56,7 +56,7 @@ const props = defineProps({
   }
 })
 
-const moment = useMoment()
+const moment = useDayjs()
 const groupArray = useGroupArray()
 const context = getCurrentInstance()
 
@@ -77,7 +77,7 @@ const triggers = {
 }
 
 const calculateDuration = computed(() => {
-  const status = props.runIdStatus.status.toLowerCase()
+  const status = props.runIdStatus?.status?.toLowerCase()
   if (status === 'queued' || status === 'pending') return 'Not started'
   return moment.durationHumanizeBySecond(props.run.duration?.toString())
 })
@@ -125,7 +125,7 @@ const variables = computed(() => {
     },
     {
       text: 'Start date',
-      value: moment.$moment(props.run.created).format('Do MMMM YYYY, h:mm:ss a'),
+      value: moment.dayjs(props.run.created).format('Do MMMM YYYY, h:mm:ss a'),
       component: RunInfoText,
       visibility: true
     },
@@ -138,7 +138,7 @@ const variables = computed(() => {
     {
       text: 'Code: ',
       to: 'workspace-project-code',
-      value: props.run.package.suuid,
+      value: props.run?.package?.suuid,
       component: AskAnnaLinkCopy,
       visibility: true
     },

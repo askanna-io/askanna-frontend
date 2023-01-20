@@ -4,7 +4,7 @@
       <span class="title font-weight-light">Run: #{{ runId }}</span>
     </AskAnnaCardTitle>
 
-    <VTabs v-model="currentRunTab" class="pb-3">
+    <VTabs :show-arrows="!$vuetify.breakpoint.xsOnly" v-model="currentRunTab">
       <VTab v-for="tab of tabs" ripple :key="tab.id" :to="{ name: tab.to, params: { ...params, folderName: '' } }">
         {{ tab.name }}
       </VTab>

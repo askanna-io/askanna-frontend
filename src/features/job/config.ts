@@ -26,6 +26,7 @@ export const jobRoutes = [
         component: () => import('./views/overview.vue'),
         name: 'workspace-project-job-overiew',
         meta: {
+          title: 'Overview',
           breadcrumb: 'Overview'
         }
       },

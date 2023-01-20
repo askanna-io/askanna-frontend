@@ -2,16 +2,23 @@
   <VDataTable
     fixed-header
     single-expand
-    :items="jobList"
+    :items="jobs"
     item-key="suuid"
+    disable-pagination
     :mobile-breakpoint="0"
+    :options.sync="options"
+    :page.sync="options.page"
     :expanded.sync="expanded"
-    :hide-default-footer="!jobList.length"
+    :loading="sortFilterLoading"
+    :server-items-length="count"
+    :hide-default-footer="!jobs.length"
+    :items-per-page="options.itemsPerPage"
     :show-expand="!$vuetify.breakpoint.xsOnly"
     :headers="getHeaders($vuetify.breakpoint.xsOnly)"
+    :footer-props="{ itemsPerPageOptions: [10, 25, 50, 100] }"
     class="job-table scrollbar ask-anna-table ask-anna-table--with-links jobs"
-    @item-expanded="handleExpand"
     @click:row="handleJobClick"
+    @item-expanded="handleExpand"
   >
     <template v-slot:top v-if="!$vuetify.breakpoint.xsOnly">
       <AskAnnaCard flat>
@@ -31,15 +38,8 @@
     </template>
     <template v-slot:expanded-item="{ item }">
       <td :colspan="8" class="pa-0">
-        <AskAnnaLoadingProgress v-if="item.runs.count" :loading="loading">
-          <Runs
-            :items="runs"
-            :count="count"
-            :height="calcSubHeight"
-            :loading="runsLoading"
-            :tableClass="'job-sub-table'"
-            @onChangeParams="params => handleChangeParams({ suuid: item.suuid, params })"
-          />
+        <AskAnnaLoadingProgress v-if="item.runs.count" :loading="runsStore.runsLoading">
+          <Runs asSubChild calcHeight :suuid="item.suuid" :tableClass="'job-sub-table'" />
         </AskAnnaLoadingProgress>
 
         <div v-else class="ma-2 text-center">No runs yet</div>
@@ -60,7 +60,7 @@
 
     <template v-slot:item.status="{ item }">
       <RouterLink class="table-link table-link--unformated alert" :to="routeLinkParams(item)">
-        <ask-anna-alert-status :statusData="item.runs.status" />
+        <AskAnnaAlertStatus :statusData="item.runs.status" />
       </RouterLink>
     </template>
 
@@ -73,32 +73,30 @@
 </template>
 
 <script setup lang="ts">
+import { get } from 'lodash'
 import { JobsListHeaders } from '../helper'
 
-defineProps({
-  jobList: {
-    type: Array,
-    default: () => []
-  }
-})
-
+const jobsStore = useJobsStore()
 const runsStore = useRunsStore()
 const { route, routerPush } = useRouterAskAnna()
 
 const expanded = ref([])
-const loading = ref(true)
-const currentJob = ref(true)
 
-const count = computed(() => runsStore.runs.count)
-const runs = computed(() => runsStore.runs.results)
-const runsLoading = computed(() => runsStore.runsLoading)
+const queryParams = computed(() => route.query)
+const next = computed(() => jobsStore.jobs.next)
+const count = computed(() => jobsStore.jobs.count)
+const jobs = computed(() => jobsStore.jobs.results)
+const suuid = computed(() => route.params.projectId)
+const previous = computed(() => jobsStore.jobs.previous)
 
-const calcSubHeight = computed(() => {
-  const rowHeight = 64
-  const countItems = count.value
-  const subRowHeiht = countItems >= 5 ? 280 : countItems * rowHeight + 70
-
-  return subRowHeiht
+const { options, sortFilterLoading } = useQuery({
+  next,
+  suuid,
+  previous,
+  queryParams,
+  loading: false,
+  storeAction: jobsStore.getProjectJobs,
+  defaultOptions: { page: 1, itemsPerPage: 25 }
 })
 
 const getHeaders = (isMobile: boolean) =>
@@ -111,13 +109,15 @@ const handleJobClick = item => {
   })
 }
 
-const handleExpand = async ({ item }) => {
-  loading.value = true
+const handleExpand = async ({ item, value }) => {
+  if (!value) return
+  runsStore.$reset()
 
-  currentJob.value = item
-  await runsStore.getRuns({ suuid: item.suuid, params: { offset: 0, limit: 5 } })
+  const suuid = get(expanded.value, '0.suuid', '')
 
-  loading.value = false
+  if (suuid && suuid !== item.suuid) {
+    await runsStore.getRuns({ suuid: item.suuid, loading: true, params: { page_size: 10 }, initial: true })
+  }
 }
 
 const routeLinkParams = item => {
@@ -129,17 +129,10 @@ const routeLinkParams = item => {
     }
   }
 }
-
-const handleChangeParams = async ({ suuid, params }) => {
-  await runsStore.getRuns({
-    suuid,
-    params
-  })
-}
 </script>
 
 <style lang="scss">
-.job-table tr {
+.job-table tbody tr {
   cursor: pointer;
 }
 .job-table .v-data-table__empty-wrapper {

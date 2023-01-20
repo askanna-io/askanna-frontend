@@ -26,7 +26,10 @@ const getPackage = async (loading = false) => {
   })
 }
 
-onBeforeMount(() => fileStore.$reset())
+onBeforeMount(() => {
+  fileStore.$reset()
+  packageStore.$reset()
+})
 onBeforeUnmount(() => {
   fileStore.$reset()
   packageStore.$reset()

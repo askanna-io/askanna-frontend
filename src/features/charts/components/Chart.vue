@@ -1,7 +1,7 @@
 <template>
   <div>
     <div id="chart" class="text-center"></div>
-    <div id="chart-legend" v-html="chartLegendRef" class="text-center"></div>
+    <div id="chart-legend" v-html="chartLegendRef" class="text-center px-3"></div>
   </div>
 </template>
 

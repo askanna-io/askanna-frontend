@@ -44,7 +44,7 @@ const isInvitationValid = ref(false)
 const fetchData = async () => {
   loading.value = true
 
-  const tokenStatus = await authStore.validateResetToken({
+  const tokenStatus = await authStore.resetTokenStatus({
     uid,
     token
   })
@@ -58,15 +58,3 @@ const fetchData = async () => {
 
 onBeforeMount(() => fetchData())
 </script>
-<style scoped>
-.logo {
-  height: 74px;
-}
-
-.colored-border {
-  border: 1px solid;
-}
-.no-bg {
-  background: none;
-}
-</style>

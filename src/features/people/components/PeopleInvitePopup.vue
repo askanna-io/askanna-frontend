@@ -39,9 +39,9 @@
                 <template v-slot:selection="{ attrs, item, select, selected }">
                   <AskAnnaChip
                     v-bind="attrs"
+                    close
                     :input-value="selected"
                     :class="getStyle(item).color"
-                    close
                     @click="select"
                     @click:close="handleRemove(item)"
                   >
@@ -99,12 +99,12 @@
             class="ml-0 btn--hover"
             @click="handleSentInvitation"
           >
-            <AskAnnaIcon left> mdi-mail </AskAnnaIcon>
+            <AskAnnaIcon left>mdi-mail</AskAnnaIcon>
             {{ invitationBtnText }}
             <template v-slot:loader>
-              <AskAnnaIcon left> mdi-mail </AskAnnaIcon>
+              <AskAnnaIcon left>mdi-mail</AskAnnaIcon>
               <span>{{ loadingText }}...</span>
-              <AskAnnaIcon class="ask-anna-btn-loader"> mdi-loading </AskAnnaIcon>
+              <AskAnnaIcon class="ask-anna-btn-loader">mdi-loading</AskAnnaIcon>
             </template>
           </AskAnnaButton>
         </AskAnnaCardActions>
@@ -118,17 +118,25 @@ const props = defineProps({
   workspaceName: {
     type: String,
     default: ''
+  },
+  workspaceId: {
+    type: String,
+    default: ''
   }
 })
 
 const slicedText = useSlicedText()
 const peopleStore = usePeopleStore()
+const { route } = useRouterAskAnna()
 const { isValidEmail } = useValidationRules()
 
 const currentRole = computed(() => peopleStore.currentPeople.role.code)
 
 const menu = ref(false)
 const loading = ref(false)
+const invitedEmails = ref([])
+const invitationItems = ref([])
+const loadingText = ref('Sending...')
 const selectedAccess = ref({ code: 'WM', name: 'member' }) //default member access
 
 const listAccess = computed(() => {
@@ -142,16 +150,15 @@ const listAccess = computed(() => {
   return list
 })
 
-const invitationItems = ref([])
-const loadingText = ref('Sending...')
-
 const title = computed(() => slicedText(props.workspaceName, 27))
 
 const invitationBtnText = computed(() => (invitationItems.value.length > 1 ? 'Send invitations' : 'Send invitation'))
 const inValidEmails = computed(() => invitationItems.value.filter(email => !isValidEmail(email)))
-const invitedEmails = computed(() =>
-  invitationItems.value.filter(email => peopleStore.people.some(item => item.email === email) && email)
-)
+
+watch(invitationItems, async emails => {
+  if (!emails.length) return
+  invitedEmails.value = await peopleStore.checkPeopleByEmails({ suuid: props.workspaceId, emails })
+})
 
 const handleCancel = () => {
   menu.value = false
@@ -161,7 +168,7 @@ const handleCancel = () => {
 const handleSentInvitation = async () => {
   loading.value = true
   const reducer = (acc, email) => {
-    const isExist = peopleStore.people.find(item => item.email === email)
+    const isExist = peopleStore.people.results.find(item => item.email === email)
 
     if (!isExist) {
       acc.push(email)
@@ -171,7 +178,7 @@ const handleSentInvitation = async () => {
 
   const emails = invitationItems.value.reduce(reducer, [])
   if (emails.length) {
-    await peopleStore.sendInvitations({ emails, role: selectedAccess.value.code })
+    await peopleStore.sendInvitations({ emails, params: route.query, role_code: selectedAccess.value.code })
   }
 
   menu.value = false
@@ -179,7 +186,10 @@ const handleSentInvitation = async () => {
   invitationItems.value = []
 }
 
-const handleRemove = item => invitationItems.value.splice(invitationItems.value.indexOf(item), 1)
+const handleRemove = item => {
+  invitationItems.value.splice(invitationItems.value.indexOf(item), 1)
+  invitedEmails.value.splice(invitedEmails.value.indexOf(item), 1)
+}
 
 const handleRemoveInValidEmails = () => {
   invitationItems.value = invitationItems.value.filter(email => isValidEmail(email))
@@ -187,17 +197,18 @@ const handleRemoveInValidEmails = () => {
 
 const handleRemoveInvitedEmails = () => {
   invitationItems.value = invitationItems.value.filter(email => !invitedEmails.value.includes(email))
+  invitedEmails.value = []
 }
 
 const getStyle = email => {
   const isEmailValid = !isValidEmail(email)
-  const isExist = peopleStore.people.find(item => item.email === email)
+  const isExist = peopleStore.people.results.find(item => item.email === email)
   const isInvited = isExist && isExist.status === 'invited'
-  const isAccepted = isExist && isExist.status === 'accepted'
+  const isActive = isExist && isExist.status === 'active'
   const icons = {
     error: 'mdi-email-off-outline',
     invited: 'mdi-email-send-outline',
-    accepted: 'mdi-email-check-outline'
+    active: 'mdi-email-check-outline'
   }
 
   const icon = (isExist && icons[isExist.status]) || (isEmailValid && icons.error) || ''
@@ -205,7 +216,7 @@ const getStyle = email => {
   return {
     color: {
       error: isEmailValid,
-      primary: isAccepted,
+      primary: isActive,
       'blue lighten-3': isInvited
     },
     icon

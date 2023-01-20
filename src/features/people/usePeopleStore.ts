@@ -10,25 +10,19 @@ const api = apiStringify(WORKSPACE_STORE)
 export const usePeopleStore = defineStore(PEOPLE_STORE, {
   state: () => {
     return {
-      loading: false,
-      people: [],
-      peopleParams: {
-        search: '',
-        sorting: {
-          sortBy: 'name',
-          sort: 1
-        },
-        filter: {
-          role: '',
-          status: ''
-        }
+      loading: true,
+      people: {
+        count: 0,
+        next: '',
+        previous: '',
+        results: []
       },
       currentPeople: new PersonModel().state,
       invitation: new InvitationModel().state
     }
   },
   getters: {
-    currentPeoplePermission: state => state.currentPeople.permission
+    currentPeoplePermission: (state) => state.currentPeople.permission
   },
 
   actions: {
@@ -36,39 +30,54 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
       set(this, path, value)
     },
 
-    async getPeople({ workspaceId }) {
-      this.loading = true
+    async getPeople({ loading, params, initial, suuid } = { loading: true, params: {}, initial: false, suuid: '' }) {
+      if (loading) this.loading = true
 
-      let people = []
       try {
-        people = await apiService({
+        const data = await apiService({
+          params,
+          suuid,
           serviceName,
-          suuid: workspaceId,
           action: api.getPeople
         })
+        this.people = initial ? data : { ...data, results: [...this.people.results, ...data.results] }
       } catch (error) {
         const logger = useLogger()
 
         logger.error('Error on load people in getPeople action.\nError: ', error)
-
-        return
       }
 
-      this.people = people
       this.loading = false
     },
 
-    async sendInvitations({ emails, role }) {
+    async checkPeopleByEmails({ suuid, emails } = { suuid: '', emails: [] as string[] }) {
+      try {
+        const data = await apiService({
+          suuid,
+          serviceName,
+          action: api.checkPeopleByEmails,
+          params: { email: emails.join(',') }
+        })
+
+        return data?.email_exist || []
+      } catch (error) {
+        const logger = useLogger()
+
+        logger.error('Error on check people by emails in checkPeopleByEmails action.\nError: ', error)
+      }
+    },
+
+    async sendInvitations({ emails, role_code, params }) {
       const logger = useLogger()
       const workspaceStore = useWorkspaceStore()
 
       const result = await Promise.all(
-        map(emails, async email => {
+        map(emails, async (email) => {
           const people = await this.sendInviteEmail({
-            role,
             email,
+            role_code,
             front_end_url: window.location.origin,
-            object_uuid: workspaceStore.workspace.suuid
+            workspace: workspaceStore.workspace.suuid
           })
           if (people.suuid && people) {
             return people
@@ -77,13 +86,13 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
           return { email: '', name: '' }
         })
       )
-      const people = result.filter(item => item.email !== '')
+      const people = result.filter((item) => item.email !== '')
 
       if (people.length) {
-        this.people = [...this.people, ...people]
+        await this.getPeople({ params, initial: true, suuid: workspaceStore.workspace.suuid })
 
         logger.success(
-          `You have successfully invited ${people.map(item => item.email).join(', ')} to join the workspace
+          `You have successfully invited ${people.map((item) => item.email).join(', ')} to join the workspace
         ${workspaceStore.workspace.name}`
         )
       }
@@ -103,8 +112,8 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
           data,
           suuid,
           serviceName,
-          method: 'PATCH',
-          action: api.acceptInvitetion
+          method: 'POST',
+          action: api.resendInvitetion
         })
       } catch (e) {
         logger.error('Error on resent invatation in resendInvitation action.\nError: ', e)
@@ -120,13 +129,14 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
       }
     },
 
-    async deleteInvitation(people) {
+    async deleteInvitation({ people, params }) {
       const logger = useLogger()
+      const workspaceStore = useWorkspaceStore()
 
       try {
         await apiService({
-          action: api.acceptInvitetion,
           method: 'DELETE',
+          action: api.updatePeople,
           suuid: {
             peopleId: people.suuid,
             workspaceId: people.workspace.suuid
@@ -138,7 +148,8 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
 
         return e
       }
-      this.people.splice(this.people.indexOf(people), 1)
+
+      await this.getPeople({ params, initial: true, suuid: workspaceStore.workspace.suuid })
 
       logger.success(
         `You have successfully deleted the invitation for ${people.name} on the workspace
@@ -155,7 +166,7 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
         response = await apiService({
           data,
           serviceName,
-          method: 'post',
+          method: 'POST',
           action: api.invitePeople,
           suuid: workspaceStore.workspace.suuid
         })
@@ -172,14 +183,14 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
       let response
 
       const data = {
-        status: 'accepted',
         token
       }
       try {
         response = await apiService({
           data,
           serviceName,
-          method: 'PATCH',
+          method: 'post',
+          returnFullResponse: true,
           action: api.acceptInvitetion,
           suuid: { workspaceId, peopleId }
         })
@@ -190,20 +201,20 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
       return response
     },
 
-    async changeRole({ role, peopleId, workspaceId }) {
+    async changeRole({ role_code, params, peopleId, workspaceId }) {
       const logger = useLogger()
 
       let people
 
       const data = {
-        role
+        role_code
       }
       try {
         people = await apiService({
           data,
           serviceName,
           method: 'PATCH',
-          action: api.acceptInvitetion,
+          action: api.updatePeople,
           suuid: { workspaceId, peopleId }
         })
       } catch (e) {
@@ -211,16 +222,14 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
 
         return e
       }
-      logger.success(
-        `You have successfully changed the role of ${people.name} for the workspace ${people.workspace.name}.`
-      )
+      logger.success(`You have successfully changed the role of ${people.name} for the workspace ${people.workspace.name}.`)
 
-      this.people.splice(this.people.map(item => item.suuid).indexOf(people.suuid), 1, people)
+      await this.getPeople({ params, initial: true, suuid: workspaceId })
 
-      return people
+      return people?.suuid
     },
 
-    async updateWorkspaceProfile(data) {
+    async updateWorkspaceProfile({ data, params }) {
       let people
       const workspaceStore = useWorkspaceStore()
 
@@ -249,7 +258,7 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
         }
       }
 
-      this.people.splice(this.people.map(people => people.suuid).indexOf(people.suuid), 1, people)
+      await this.getPeople({ params, initial: true, suuid: workspaceStore.workspace.suuid })
 
       return people
     },
@@ -261,7 +270,7 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
         response = await apiService({
           serviceName,
           params: { token },
-          action: api.acceptInvitetion,
+          action: api.getInvitetionInfo,
           suuid: { workspaceId, peopleId }
         })
       } catch (e) {
@@ -278,14 +287,14 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
       this.invitation = response
     },
 
-    async deletePeople(people) {
+    async deletePeople({ people, params }) {
       const logger = useLogger()
 
       try {
         await apiService({
           serviceName,
           method: 'DELETE',
-          action: api.acceptInvitetion,
+          action: api.updatePeople,
           suuid: { workspaceId: people.workspace.suuid, peopleId: people.suuid }
         })
       } catch (e) {
@@ -294,8 +303,7 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
         return e
       }
 
-      // @TODO check this logic
-      this.people.splice(this.people.indexOf(people), 1)
+      await this.getPeople({ params, initial: true, suuid: people.workspace.suuid })
 
       logger.success(
         `You have successfully deleted ${people.name} from the workspace
@@ -310,6 +318,16 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
         permission: {
           ...this.currentPeople.permission,
           ...data.permission
+        }
+      }
+    },
+
+    async setCurretPeoplePermission(permission) {
+      this.currentPeople = {
+        ...this.currentPeople,
+        permission: {
+          ...this.currentPeople.permission,
+          ...permission
         }
       }
     },
@@ -343,7 +361,7 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
       }
       const userStore = useUserStore()
 
-      const name = people.name || people.membership.name || userStore.globalProfile.name
+      const name = people.name || userStore.globalProfile.name
 
       if (people && import.meta.env.VITE_APP_INTERCOM === 'on') {
         window.Intercom('boot', {
@@ -365,7 +383,8 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
         result = await apiService({
           data,
           serviceName,
-          method: 'PATCH',
+          method: 'PUT',
+          returnFullResponse: true,
           action: api.profileAvatar,
           suuid: workspaceStore.workspace.suuid
         })

@@ -5,7 +5,6 @@ declare global {
   const FINISHED_STATUSES: typeof import('./features/run/types')['FINISHED_STATUSES']
   const InvitationModel: typeof import('./features/people/types')['InvitationModel']
   const JobsListHeaders: typeof import('./features/jobs/helper')['JobsListHeaders']
-  const PACKAGES_STORE: typeof import('./features/packages/types')['PACKAGES_STORE']
   const PEOPLE_STORE: typeof import('./features/people/types')['PEOPLE_STORE']
   const PERMISSIONS_LABELS: typeof import('./features/workspace/types')['PERMISSIONS_LABELS']
   const PROJECT_STORE: typeof import('./features/project/types')['PROJECT_STORE']
@@ -84,6 +83,7 @@ declare global {
   const useCronstrue: typeof import('./composables/useCronstrue')['default']
   const useCssModule: typeof import('vue')['useCssModule']
   const useCssVars: typeof import('vue')['useCssVars']
+  const useDayjs: typeof import('./composables/useDayjs')['default']
   const useEditorStore: typeof import('./composables/store/useEditorStore')['useEditorStore']
   const useFileExtension: typeof import('./composables/useFileExtension')['default']
   const useFileStore: typeof import('./features/file/useFileStore')['useFileStore']
@@ -101,11 +101,9 @@ declare global {
   const useMapMetrics: typeof import('./features/compare-runs/useMapMetrics')['default']
   const useMetricStore: typeof import('./features/metric/useMetricStore')['useMetricStore']
   const useMobileStore: typeof import('./composables/store/useMobileStore')['useMobileStore']
-  const useMoment: typeof import('./composables/useMoment')['default']
   const useNumeral: typeof import('./composables/useNumeral')['default']
   const usePackageBreadcrumbs: typeof import('./composables/usePackageBreadcrumbs')['default']
   const usePackageStore: typeof import('./features/package/usePackageStore')['usePackageStore']
-  const usePackagesStore: typeof import('./features/packages/usePackagesStore')['usePackagesStore']
   const usePeopleStore: typeof import('./features/people/usePeopleStore')['usePeopleStore']
   const usePermission: typeof import('./composables/usePermission')['default']
   const usePrepareAccount: typeof import('./features/auth/usePrepareAccount')['default']
@@ -114,6 +112,7 @@ declare global {
   const useProjectStore: typeof import('./features/project/useProjectStore')['useProjectStore']
   const useProjectsStore: typeof import('./features/projects/useProjectsStore')['useProjectsStore']
   const useQuery: typeof import('./composables/useQuery')['default']
+  const useQueryLog: typeof import('./composables/useQueryLog')['default']
   const useResumable: typeof import('./composables/resumable/useResumable.js')['default']
   const useRoute: typeof import('vue-router')['useRoute']
   const useRouter: typeof import('vue-router')['useRouter']
@@ -127,7 +126,8 @@ declare global {
   const useSlots: typeof import('vue')['useSlots']
   const useSnackBar: typeof import('./components/snackBar/useSnackBar')['useSnackBar']
   const useSortFilter: typeof import('./composables/useSortFilter')['default']
-  const useSortFilterHelper: typeof import('./composables/useSortFilterHelper')['default']
+  const useSortFilterPeople: typeof import('./composables/useSortFilterPeople')['default']
+  const useSortFilterTable: typeof import('./features/metric/useSortFilterTable')['default']
   const useStartSlicedText: typeof import('./composables/useStartSlicedText')['default']
   const useTitle: typeof import('./composables/useTitle')['default']
   const useTriggerFileDownload: typeof import('./composables/useTriggerFileDownload')['default']
@@ -155,7 +155,6 @@ declare module 'vue' {
     readonly FINISHED_STATUSES: UnwrapRef<typeof import('./features/run/types')['FINISHED_STATUSES']>
     readonly InvitationModel: UnwrapRef<typeof import('./features/people/types')['InvitationModel']>
     readonly JobsListHeaders: UnwrapRef<typeof import('./features/jobs/helper')['JobsListHeaders']>
-    readonly PACKAGES_STORE: UnwrapRef<typeof import('./features/packages/types')['PACKAGES_STORE']>
     readonly PEOPLE_STORE: UnwrapRef<typeof import('./features/people/types')['PEOPLE_STORE']>
     readonly PERMISSIONS_LABELS: UnwrapRef<typeof import('./features/workspace/types')['PERMISSIONS_LABELS']>
     readonly PROJECT_STORE: UnwrapRef<typeof import('./features/project/types')['PROJECT_STORE']>
@@ -234,6 +233,7 @@ declare module 'vue' {
     readonly useCronstrue: UnwrapRef<typeof import('./composables/useCronstrue')['default']>
     readonly useCssModule: UnwrapRef<typeof import('vue')['useCssModule']>
     readonly useCssVars: UnwrapRef<typeof import('vue')['useCssVars']>
+    readonly useDayjs: UnwrapRef<typeof import('./composables/useDayjs')['default']>
     readonly useEditorStore: UnwrapRef<typeof import('./composables/store/useEditorStore')['useEditorStore']>
     readonly useFileExtension: UnwrapRef<typeof import('./composables/useFileExtension')['default']>
     readonly useFileStore: UnwrapRef<typeof import('./features/file/useFileStore')['useFileStore']>
@@ -251,11 +251,9 @@ declare module 'vue' {
     readonly useMapMetrics: UnwrapRef<typeof import('./features/compare-runs/useMapMetrics')['default']>
     readonly useMetricStore: UnwrapRef<typeof import('./features/metric/useMetricStore')['useMetricStore']>
     readonly useMobileStore: UnwrapRef<typeof import('./composables/store/useMobileStore')['useMobileStore']>
-    readonly useMoment: UnwrapRef<typeof import('./composables/useMoment')['default']>
     readonly useNumeral: UnwrapRef<typeof import('./composables/useNumeral')['default']>
     readonly usePackageBreadcrumbs: UnwrapRef<typeof import('./composables/usePackageBreadcrumbs')['default']>
     readonly usePackageStore: UnwrapRef<typeof import('./features/package/usePackageStore')['usePackageStore']>
-    readonly usePackagesStore: UnwrapRef<typeof import('./features/packages/usePackagesStore')['usePackagesStore']>
     readonly usePeopleStore: UnwrapRef<typeof import('./features/people/usePeopleStore')['usePeopleStore']>
     readonly usePermission: UnwrapRef<typeof import('./composables/usePermission')['default']>
     readonly usePrepareAccount: UnwrapRef<typeof import('./features/auth/usePrepareAccount')['default']>
@@ -264,6 +262,7 @@ declare module 'vue' {
     readonly useProjectStore: UnwrapRef<typeof import('./features/project/useProjectStore')['useProjectStore']>
     readonly useProjectsStore: UnwrapRef<typeof import('./features/projects/useProjectsStore')['useProjectsStore']>
     readonly useQuery: UnwrapRef<typeof import('./composables/useQuery')['default']>
+    readonly useQueryLog: UnwrapRef<typeof import('./composables/useQueryLog')['default']>
     readonly useResumable: UnwrapRef<typeof import('./composables/resumable/useResumable.js')['default']>
     readonly useRoute: UnwrapRef<typeof import('vue-router')['useRoute']>
     readonly useRouter: UnwrapRef<typeof import('vue-router')['useRouter']>
@@ -277,7 +276,8 @@ declare module 'vue' {
     readonly useSlots: UnwrapRef<typeof import('vue')['useSlots']>
     readonly useSnackBar: UnwrapRef<typeof import('./components/snackBar/useSnackBar')['useSnackBar']>
     readonly useSortFilter: UnwrapRef<typeof import('./composables/useSortFilter')['default']>
-    readonly useSortFilterHelper: UnwrapRef<typeof import('./composables/useSortFilterHelper')['default']>
+    readonly useSortFilterPeople: UnwrapRef<typeof import('./composables/useSortFilterPeople')['default']>
+    readonly useSortFilterTable: UnwrapRef<typeof import('./features/metric/useSortFilterTable')['default']>
     readonly useStartSlicedText: UnwrapRef<typeof import('./composables/useStartSlicedText')['default']>
     readonly useTitle: UnwrapRef<typeof import('./composables/useTitle')['default']>
     readonly useTriggerFileDownload: UnwrapRef<typeof import('./composables/useTriggerFileDownload')['default']>

@@ -21,13 +21,13 @@ const props = defineProps({
   }
 })
 
-const { $moment } = useMoment()
+const { dayjs } = useDayjs()
 
 // format date to next format
 // 11th February 2021
 const dateFormated = computed(() => {
-  const dateUtc = $moment.utc(props.metricRow.value)
-  const localDate = $moment(dateUtc).local()
+  const dateUtc = dayjs.utc(props.metricRow.value)
+  const localDate = dayjs(dateUtc).local()
 
   return localDate.format('Do MMMM YYYY')
 })

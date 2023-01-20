@@ -117,7 +117,7 @@ const scrolllWrapperRef = ref(null)
 const runResult = computed(() => runStore.run.result)
 
 const fetchData = async () => {
-  fileStore.$reset()
+  await fileStore.$reset()
   if (view) {
     currentView.value = views.find(el => el.value === view) || views[0]
   }

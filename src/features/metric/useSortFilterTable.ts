@@ -1,22 +1,24 @@
 import { set } from 'lodash'
 interface MetricNameParams {
-  ordering?: string
+  order_by?: string
   metric_name?: string
   metric_type?: string
   metric_value?: string
 }
 
-export default function (context) {
+export default function ({ context, routeName, typeName }) {
   const lastScrollTop = ref(0)
   const { route, replace } = useRouterAskAnna()
 
   const state = reactive({
-    ordering: '',
-    label_name: '',
-    label_value: '',
-    metric_value: '',
-    metric_name: '',
-    variables_type: ''
+    order_by: null,
+    label_name: null,
+    label_value: null,
+    metric_value: null,
+    metric_name: null,
+    variable_type: null,
+    variable_name: null,
+    variable_value: null
   })
 
   const changeState = ({ path, value }: { path: string; value: string }) => {
@@ -26,7 +28,7 @@ export default function (context) {
 
     //change query in params
     replace({
-      name: 'workspace-project-jobs-job-run-metrics',
+      name: routeName,
       query: { ...route.query, [path]: value }
     })
 
@@ -35,9 +37,9 @@ export default function (context) {
     emitSortFilter(state)
   }
 
-  const metricNameParams = ['metric_name']
+  const metricNameParams = [`${typeName}_name`]
   const labalParams = ['label_name', 'label_value']
-  const metricValueParams = ['metric_type', 'metric_value']
+  const metricValueParams = [`${typeName}_type`, `${typeName}_value`]
 
   const isActiveLabelFilter = computed(() =>
     Object.entries(state)
@@ -49,23 +51,30 @@ export default function (context) {
       Object.entries(state)
         .filter(([key, _]) => metricNameParams.includes(key))
         .some(([_, value]) => value) ||
-      (state.ordering && state.ordering.includes('name'))
+      (state.order_by && state.order_by.includes('name'))
   )
   const isActiveMetricValue = computed(
     () =>
       Object.entries(state)
         .filter(([key, _]) => metricValueParams.includes(key))
         .some(([_, value]) => value) ||
-      (state.ordering && state.ordering.includes('value'))
+      (state.order_by && state.order_by.includes('value'))
   )
 
   const emitSortFilter = (data: MetricNameParams) => {
     context.emit('onSort', {
       ...data,
-      limit: 100,
-      offset: 0
+      page_size: 100
     })
   }
+
+  const initState = () => {
+    const { order_by = '', metric_name, metric_value, metric_type, variable_name, variable_value, variable_type, label_name, label_value } = route.query
+    Object.assign(state, { order_by, metric_name, metric_value, metric_type, variable_name, variable_value, variable_type, label_name, label_value })
+  }
+
+  // init state from route.query
+  initState()
 
   provide('state', readonly(state))
   provide('changeState', changeState)
@@ -73,18 +82,6 @@ export default function (context) {
   provide('isActiveMetricName', readonly(isActiveMetricName))
   provide('isActiveMetricValue', readonly(isActiveMetricValue))
   provide('isActiveLabelFilter', readonly(isActiveLabelFilter))
-
-  const initState = () => {
-    const { ordering = '', metric_name, metric_value, metric_type, label_name, label_value } = route.query
-    Object.assign(state, { ordering, metric_name, metric_value, metric_type, label_name, label_value })
-
-    // emit event to parent component
-    // the parent is where useSortFilterTable initialized
-    emitSortFilter(state)
-  }
-
-  // init state from route.query
-  initState()
 
   return { state, lastScrollTop }
 }

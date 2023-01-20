@@ -12,11 +12,32 @@ import { get } from 'lodash'
 import Layout from './layouts/Layout.vue'
 import { routerConfig } from './router/routerConfig'
 
+useTitle()
 const userStore = useUserStore()
 const mobileStore = useMobileStore()
-const { route, router } = useRouterAskAnna()
+const projectsStore = useProjectsStore()
+const { isAllowedToView } = usePermission()
+const workspacesStore = useWorkspacesStore()
+const { route, router, routerPush } = useRouterAskAnna()
 
-router.afterEach(() => (mobileStore.isMenuOpen = false))
+// check people permission if they has permission to view route
+watch(isAllowedToView, isAllowedToViewRoute => {
+  if (isAllowedToViewRoute === false) {
+    routerPush({ path: '/workspaces' })
+  }
+})
+
+// reset menu state
+router.afterEach(() => {
+  mobileStore.isMenuOpen = false
+  workspacesStore.menu.isOpen = false
+  workspacesStore.menu.query.search = null
+  workspacesStore.menu.workspaces.results = []
+
+  projectsStore.menu.isOpen = false
+  projectsStore.menu.query.search = null
+  projectsStore.menu.projects.results = []
+})
 
 const layout = computed(() => {
   const name = route.name || 'signin'

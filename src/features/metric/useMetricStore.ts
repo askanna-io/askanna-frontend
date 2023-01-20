@@ -1,4 +1,3 @@
-import { set } from 'lodash'
 import { defineStore } from 'pinia'
 import apiService from '@/services/apiService'
 import { apiStringify } from '@/services/api-settings'
@@ -12,7 +11,6 @@ export const useMetricStore = defineStore('metric', {
   state: () => {
     return {
       metricMeta: {
-        suuid: '',
         size: 0,
         count: 0,
         label_names: [],
@@ -23,7 +21,8 @@ export const useMetricStore = defineStore('metric', {
       metrics: {
         count: 0,
         next: null,
-        results: []
+        results: [],
+        previous: null
       },
       metricFullData: '',
       metricLabels: [],
@@ -36,7 +35,7 @@ export const useMetricStore = defineStore('metric', {
       loading: {
         metric: false,
         metricJSON: false,
-        metricByParams: false
+        metricByParams: true
       }
     }
   },
@@ -66,14 +65,6 @@ export const useMetricStore = defineStore('metric', {
       return metric
     },
 
-    async getMetricInitial({ suuid, params, loading = 'metric' }) {
-      set(this, loading, true)
-
-      this.metrics = await this.getMetric({ suuid, params })
-
-      set(this, loading, false)
-    },
-
     async getMetricJSON({ suuid, params, loading = true }) {
       if (loading) this.loading.metricJSON = true
 
@@ -94,35 +85,21 @@ export const useMetricStore = defineStore('metric', {
       this.metricFullData = JSON.stringify(metric, null, 2)
     },
 
-    async getMetricByParams({ suuid, params, loading = false }) {
+    async getMetricByParams({ loading, params, initial, suuid } = { loading: true, params: {}, initial: false, suuid: '' }) {
       if (loading) this.loading.metricByParams = true
 
-      const metric = await this.getMetric({ suuid, params })
+      const data = await this.getMetric({ suuid, params })
 
-      this.metrics = {
-        next: metric.next,
-        count: metric.count,
-        results: [...this.metrics.results, ...metric.results]
-      }
+      this.metrics = initial ? data : { ...data, results: [...this.metrics.results, ...data.results] }
 
-      if (loading) this.loading.metricByParams = false
+      this.loading.metricByParams = false
     },
 
-    async getMetricMeta(suuid) {
+    getMetricMeta() {
       this.loadingMeta = true
-      let runInfo
+      const runStore = useRunStore()
 
-      try {
-        runInfo = await apiService({
-          suuid,
-          serviceName,
-          action: apiActions.getMetricMeta
-        })
-      } catch (e) {
-        logger.error('Error on get metric in getMetric action.\nError: ', e)
-        return
-      }
-      this.metricMeta = runInfo.metrics_meta
+      this.metricMeta = runStore.run.metrics_meta
       this.loadingMeta = false
     },
 
@@ -130,10 +107,11 @@ export const useMetricStore = defineStore('metric', {
       if (this.isMetricBig) return
 
       const params = {
-        limit: 0
+        paga_size: 10000
       }
 
-      this.metricData = await this.getMetric({ suuid, params })
+      const data = await this.getMetric({ suuid, params })
+      this.metricData = data?.results
     }
   }
 })

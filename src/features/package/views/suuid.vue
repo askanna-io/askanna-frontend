@@ -2,12 +2,7 @@
   <AskAnnaLoadingProgress :loading="loading">
     <AskAnnaRow align="center" justify="center">
       <AskAnnaCol cols="12" class="pt-0 pb-0">
-        <PackageToolbar
-          v-sticky="sticked"
-          :sticky-z-index="1"
-          :breadcrumbs="breadcrumbsComputed"
-          sticky-offset="{top: 52, bottom: 10}"
-        >
+        <PackageToolbar :breadcrumbs="breadcrumbsComputed" sticky-offset="{top: 52, bottom: 10}">
           <template v-slot:rigth>
             <AskAnnaSlideYTransition>
               <div v-if="!filePath" class="d-flex">
@@ -115,16 +110,15 @@
 
 <script setup lang="ts">
 const copy = useCopy()
-const moment = useMoment()
+const moment = useDayjs()
 const ext = useFileExtension()
 const fileStore = useFileStore()
 const permission = usePermission()
 const { height } = useWindowSize()
 const packageStore = usePackageStore()
 const projectStore = useProjectStore()
-const { route, routerPush } = useRouterAskAnna()
-const packagesStore = usePackagesStore()
 const breadcrumbs = usePackageBreadcrumbs()
+const { route, routerPush } = useRouterAskAnna()
 const forceFileDownload = useForceFileDownload()
 
 const { useProjectPackageId = false } = route.meta
@@ -134,22 +128,19 @@ const polling = ref(null)
 const isRaplace = ref(false)
 
 const params = computed(() => route.params)
-
+const sticked = computed(() => !projectStore.menu.sticked)
+const packageIdCd = computed(() => projectStore.project.package.suuid)
 const projectCodeCreate = computed(() => permission.getFor(permission.labels.projectCodeCreate))
 
-const sticked = computed(() => !projectStore.menu.sticked)
-
-const projectIdCd = computed(() => projectStore.project.suuid)
-const packageIdCd = computed(() => projectStore.project.package.suuid)
-const createdDate = computed(() => moment.$moment(packageStore.packageData.created).format(' Do MMMM YYYY, h:mm:ss a'))
+const cdnBaseUrl = computed(() => packageStore.packageData.cdn_base_url)
 const isLastPackage = computed(() => packageIdCd.value === packageStore.packageData.suuid)
 const packageId = computed(() => (useProjectPackageId ? packageIdCd.value : params.value.packageId))
-const cdnBaseUrl = computed(() => packageStore.packageData.cdn_base_url)
 const images = computed(() => packageStore.packageData.files.filter(item => ext.images.includes(item.ext)))
+const createdDate = computed(() => moment.dayjs(packageStore.packageData.created).format('Do MMMM YYYY, h:mm:ss a'))
 
 const breadcrumbsComputed = computed(() => {
   const first = {
-    title: `Package: #${packageId.value.slice(0, 4)}${isLastPackage.value ? '(latest)   ' : ''}`,
+    title: `Package: #${packageId.value?.slice(0, 4)}${isLastPackage.value ? '(latest)   ' : ''}`,
     to: {
       name: 'workspace-project-code',
       params: { workspaceId: params.value.workspaceId, projectId: params.value.projectId, packageId: packageId.value }
@@ -250,7 +241,7 @@ const handleDownload = async () => {
   downloadPackage.value = true
 
   const packageData = packageStore.packageData
-  const source = await packagesStore.downloadPackage(packageData.suuid)
+  const source = await packageStore.downloadPackage(packageData.suuid)
   forceFileDownload.trigger({ source, name: `code_${packageData.suuid}_${packageData.filename}` })
 
   downloadPackage.value = false
@@ -301,7 +292,7 @@ const handleCopy = async (view: string) => {
 }
 
 const fetchData = async () => {
-  fileStore.$reset()
+  await fileStore.$reset()
 
   await getPackage()
   if (isProcessing.value) {
@@ -310,7 +301,6 @@ const fetchData = async () => {
 }
 
 onBeforeMount(() => fetchData())
-//watch(projectIdCd, async () => !loading.value && (await getPackage()))
 
 onUnmounted(() => {
   clearInterval(polling.value)
@@ -318,7 +308,7 @@ onUnmounted(() => {
 
 watch(currentPath, async currentPath => {
   if (!filePath.value) return
-  fileStore.$reset()
+  await fileStore.$reset()
 
   await fileStore.getFilePreview({
     size: currentPath.size,

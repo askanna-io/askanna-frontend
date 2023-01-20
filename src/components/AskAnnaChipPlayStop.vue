@@ -22,15 +22,15 @@ const props = defineProps({
 const emit = defineEmits(['onClick'])
 
 const ICONS = {
-  PAUSED: 'mdi-play',
-  RUNNING: 'mdi-pause'
+  paused: 'mdi-play',
+  running: 'mdi-pause'
 }
 const TEXTS = {
-  SUCCESS: 'Succeeded',
-  RUNNING: 'Pause auto-update log',
-  PAUSED: 'Continue auto-update log'
+  finished: 'Succeeded',
+  running: 'Pause auto-update log',
+  paused: 'Continue auto-update log'
 }
-const status = computed(() => (props.value ? 'RUNNING' : 'PAUSED'))
+const status = computed(() => (props.value ? 'running' : 'paused'))
 
 const statusIcon = computed(() => ICONS[status.value])
 const statusValue = computed(() => TEXTS[status.value])

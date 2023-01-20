@@ -50,8 +50,6 @@
 </template>
 
 <script setup lang="ts">
-import { VTooltip } from 'vuetify/lib'
-
 defineProps({
   isActive: {
     type: Boolean,

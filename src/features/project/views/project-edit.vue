@@ -52,13 +52,16 @@ const handleOnInput = ({ path, value }) => {
 const handleUpdate = async () => {
   const project = await projectStore.updateProject(projectState.value)
 
-  if (routeBackTo === 'workspace') {
-    await workspaceProjectsStore.getInitialWorkpaceProjects({ params: { limit: 99, offset: 0 } })
-  }
-
   if (project?.suuid) {
     snackBar.showSnackBar({ message: `The project ${project.name} was updated`, color: 'success', timeout: 2500 })
-    await projectsStore.getProjects() // call get all project to updated them on menu
+
+    projectsStore.menu.projects = {
+      count: 0,
+      next: '',
+      previous: '',
+      results: []
+    } // reset projects  to updated them on menu click
+
     handleCancel()
   }
 }

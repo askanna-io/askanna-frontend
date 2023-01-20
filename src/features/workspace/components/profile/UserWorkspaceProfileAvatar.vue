@@ -9,7 +9,7 @@
             :src="imageUrl || workspaceProfile.avatar.large"
           />
 
-          <VImg v-else class="img--rounded" src="@/assets/icons/ask-annna-default-gravatar.png" />
+          <VImg v-else class="img--rounded" src="/assets/icons/ask-annna-default-gravatar.png" />
         </AskAnnaAvatar>
       </AskAnnaCol>
       <AskAnnaCol xs="12" sm="2" lg="2" xl="2">

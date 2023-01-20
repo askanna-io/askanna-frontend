@@ -25,7 +25,7 @@
     <AskAnnaDivider />
 
     <Project
-      v-if="workspaceProjectCreate"
+      v-if="projectCreate"
       :projectData="projectData"
       :workspaceProjectVisibility="workspaceProjectVisibility"
       @handleCreate="handleCreate"
@@ -49,7 +49,7 @@ const { route, routerPush } = useRouterAskAnna()
 
 const workspaceName = computed(() => workSpaceStore.workspace.name)
 const workspaceProjectVisibility = computed(() => workSpaceStore.workspace.visibility)
-const workspaceProjectCreate = computed(() => permission.getFor(permission.labels.workspaceProjectCreate))
+const projectCreate = computed(() => permission.getFor(permission.labels.projectCreate))
 
 const projectData = computed(() => projectStore.project)
 
@@ -71,7 +71,12 @@ const handleOnInput = data => projectStore.setProject(data)
 const handleCreate = async () => {
   const project = await projectStore.createProjectFullWay(route.params.workspaceId)
   if (project && project.suuid) {
-    await projectsStore.getProjects() // call get all project to updated them on menu
+    projectsStore.menu.projects = {
+      count: 0,
+      next: '',
+      previous: '',
+      results: []
+    } // reset projects  to updated them on menu click
 
     routerPush({
       name: 'workspace-project-code',

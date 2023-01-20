@@ -11,23 +11,22 @@ const api = apiStringify(SERVICE_NAME)
 export const useRunsStore = defineStore('runs', {
   state: () => {
     return {
-      runs: { next: '', count: 0, results: [] },
+      runs: { next: '', previous: '', count: 0, results: [] },
       runsLoading: true
     }
   },
 
   actions: {
-    async getRuns({ suuid, params }) {
-      this.runsLoading = true
+    async getRuns({ loading, params, initial, suuid } = { loading: true, params: {}, initial: false, suuid: '' }) {
+      if (loading) this.runsLoading = true
 
       let runs: Run[]
 
       try {
         runs = await apiService({
-          suuid,
-          params,
-          action: api.runs,
-          serviceName: SERVICE_NAME
+          action: api.list,
+          serviceName: SERVICE_NAME,
+          params: { ...params, job_suuid: suuid }
         })
       } catch (e) {
         const logger = useLogger()
@@ -49,7 +48,7 @@ export const useRunsStore = defineStore('runs', {
         return
       }
 
-      this.runs = runs
+      this.runs = initial ? runs : { ...runs, results: [...this.runs.results, ...runs.results] }
     }
   }
 })

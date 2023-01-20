@@ -1,19 +1,36 @@
 <template>
   <VDataTable
     fixed-header
-    :items="items"
-    :page.sync="page"
-    :loading="loading"
-    :headers="getHeaders($vuetify.breakpoint.xsOnly)"
-    :mobile-breakpoint="-1"
+    :items="runs"
+    disable-pagination
     :class="tableClass"
+    :mobile-breakpoint="-1"
     :options.sync="options"
+    :page.sync="options.page"
+    :loading="sortFilterLoading"
     :server-items-length="count"
     :items-per-page="itemsPerPage"
-    @page-count="pageCount = $event"
-    :footer-props="{ itemsPerPageOptions: [5, 10, 15, 25, -1] }"
+    :headers="getHeaders($vuetify.breakpoint.xsOnly)"
+    :footer-props="{ itemsPerPageOptions: [10, 25, 50, 100] }"
     class="job-runs-table ask-anna-table ask-anna-table--with-links"
   >
+    <template v-slot:top>
+      <AskAnnaContainer v-if="!asSubChild" fluid class="py-0">
+        <AskAnnaRow justify="end">
+          <AskAnnaCol class="d-flex" cols="12" sm="3"> </AskAnnaCol>
+
+          <AskAnnaCol v-if="!$vuetify.breakpoint.xsOnly" class="d-flex" cols="12" sm="5" md="4" lg="3">
+            <AskAnnaTextField
+              dense
+              hide-details
+              label="Search"
+              @input="debounceedSearch"
+              append-icon="mdi-magnify"
+            ></AskAnnaTextField>
+          </AskAnnaCol>
+        </AskAnnaRow>
+      </AskAnnaContainer>
+    </template>
     <template v-slot:item="{ item }">
       <tr>
         <td class="text-start">
@@ -48,12 +65,12 @@
         </td>
         <td class="text-start">
           <RouterLink class="table-link table-link--unformated" :to="routeLinkParams({ item })">
-            <ask-anna-chip-status :status="item.status" />
+            <AskAnnaChipStatus :status="item.status" />
           </RouterLink>
         </td>
         <td class="text-start">
           <RouterLink class="table-link table-link--unformated" :to="routeLinkParams({ item })">
-            <b>Started:</b> &nbsp;{{ $moment(item.created).format(' Do MMMM YYYY, h:mm:ss a') }}
+            <b>Started:</b> &nbsp;{{ dayjs(item.created).format(' Do MMMM YYYY, h:mm:ss a') }}
             <br />
             <b>Duration:</b>&nbsp;{{ calculateDuration(item) }}<br />
           </RouterLink>
@@ -81,52 +98,60 @@
         </td>
       </tr>
     </template>
+    <template v-slot:foot>
+      <tr class="v-data-table__progress">
+        <th colspan="7" class="column">
+          <VProgressLinear :active="sortFilterLoading" indeterminate />
+        </th></tr
+    ></template>
   </VDataTable>
 </template>
 
 <script setup lang="ts">
 const props = defineProps({
-  count: {
-    type: Number,
-    default: () => 0
+  suuid: {
+    type: String,
+    default: () => ''
   },
-  items: {
-    type: Array,
-    default: () => []
-  },
-  height: {
-    type: Number,
-    default: () => 300
-  },
-
   tableClass: {
     type: String,
     default: () => ''
   },
-  routeName: {
-    type: String,
-    default: () => ''
-  },
-  loading: {
-    type: Boolean,
-    default: () => false
-  },
   itemsPerPage: {
     type: Number,
-    default: () => 5
+    default: () => 10
+  },
+  asSubChild: {
+    type: Boolean,
+    default: () => false
   }
 })
 
-const emit = defineEmits(['onChangeParams'])
-
 const copy = useCopy()
 const numeral = useNumeral()
+const runsStore = useRunsStore()
 const { route } = useRouterAskAnna()
-const { $moment, durationHumanizeBySecond } = useMoment()
+const { dayjs, durationHumanizeBySecond } = useDayjs()
 
-const page = ref(0)
-const pageCount = ref(0)
-const options = ref({ itemsPerPage: props.itemsPerPage, page: 1 })
+const queryParamsInternal = ref({})
+
+const queryParams = computed(() => route.query)
+const next = computed(() => runsStore.runs.next)
+const count = computed(() => runsStore.runs.count)
+const runs = computed(() => runsStore.runs.results)
+const previous = computed(() => runsStore.runs.previous)
+
+const { options, debounceedSearch, sortFilterLoading } = useQuery({
+  next,
+  previous,
+  loading: false,
+  asSubChild: props.asSubChild,
+  suuid: toRef(props, 'suuid'),
+  page_size: props.itemsPerPage,
+  storeAction: runsStore.getRuns,
+  defaultOptions: { page: 1, itemsPerPage: props.itemsPerPage },
+  queryParams: props.asSubChild ? queryParamsInternal : queryParams
+})
 
 const getHeaders = isMobile => [
   {
@@ -138,15 +163,15 @@ const getHeaders = isMobile => [
   },
   {
     text: 'Name',
-    width: isMobile ? '170px' : '30%',
-    sortable: false,
+    width: '170px',
+    sortable: true,
     value: 'name',
     class: 'text-left text-subtitle-2 font-weight-bold h-20'
   },
   {
     text: 'Status',
     width: '160px',
-    sortable: false,
+    sortable: true,
     value: 'status',
     class: 'text-left text-subtitle-2 font-weight-bold h-20'
   },
@@ -159,9 +184,9 @@ const getHeaders = isMobile => [
   },
   {
     text: 'By',
-    value: 'by',
+    value: 'created_by.name',
     width: '150px',
-    sortable: false,
+    sortable: true,
     class: 'text-left text-subtitle-2 font-weight-bold h-20'
   },
   {
@@ -215,20 +240,6 @@ const getMetricTitle = count => {
   }
   return title
 }
-
-watch(options, async (options, currentOptions) => {
-  const { itemsPerPage: limit = 5, page = 1 } = options
-  const { itemsPerPage: currentLimit = 5, page: currentPage = 1 } = currentOptions
-
-  if (limit === currentLimit && page === currentPage) return
-
-  const params = {
-    limit,
-    offset: (page - 1) * limit
-  }
-
-  emit('onChangeParams', params)
-})
 </script>
 <style scoped>
 .h-100 {

@@ -6,26 +6,21 @@ export default function () {
   const workspaceId = ref('')
   const IsAccountReady = ref(false)
 
-  const loginUser = async ({ username = '', password = '' }) => {
-    return await authStore.login({ username, password })
+  const loginUser = async ({ email = '', password = '' }) => await authStore.login({ email, password })
+
+  const checkMemberWorkspace = async () => {
+    await workspacesStore.getMemberWorkspace()
+
+    workspaceId.value = workspacesStore.getMemberWorkspaceSUUID
+
+    return !!workspaceId.value
   }
 
-  const getWorkspace = async () => {
-    const workspaces = await workspacesStore.getMemberWorkspaces()
-    if (workspaces && workspaces.count && workspaces.count > 0) {
-      workspaceId.value = workspaces.results[0].suuid
-
-      return true
-    }
-
-    return false
-  }
-
-  const checkIfWorkspaceIsReady = async ({ username = '', password = '' }) => {
+  const checkIfWorkspaceIsReady = async ({ email = '', password = '' }) => {
     IsAccountReady.value = false
-    // first, try to log in the user by token, if not present use username and password
-    if (username && password) {
-      const user = await loginUser({ username, password })
+    // first, try to log in the user by token, if not present use email and password
+    if (email && password) {
+      const user = await loginUser({ email, password })
       if (!user || !user.key) {
         return
       }
@@ -36,7 +31,8 @@ export default function () {
 
       return
     }
-    IsAccountReady.value = await getWorkspace()
+
+    IsAccountReady.value = await checkMemberWorkspace()
   }
 
   return { IsAccountReady, workspaceId, checkIfWorkspaceIsReady }

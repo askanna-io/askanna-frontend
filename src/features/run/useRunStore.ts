@@ -35,10 +35,6 @@ export const useRunStore = defineStore('run', {
   },
 
   actions: {
-    async resetStore() {
-      this.$reset()
-    },
-
     showRunResult() {
       this.openRunResult = true
     },
@@ -79,7 +75,7 @@ export const useRunStore = defineStore('run', {
       try {
         status = await apiService({
           serviceName,
-          action: api.jobrunStatus,
+          action: api.status,
           suuid: runIdShortUuid || this.run.suuid
         })
       } catch (e) {
@@ -208,16 +204,13 @@ export const useRunStore = defineStore('run', {
     },
 
     async getFullVersionRunLog(suuid) {
-      let runLog = {
-        next: 0,
-        count: 0,
-        results: []
-      }
+      let runLog
       try {
         runLog = await apiService({
-          action: api.getRunLog,
+          suuid,
           serviceName,
-          suuid
+          params: { limit: -1 },
+          action: api.getRunLog
         })
       } catch (e) {
         const logger = useLogger()
@@ -227,7 +220,7 @@ export const useRunStore = defineStore('run', {
         return
       }
 
-      this.runLogFullVersion = runLog
+      this.runLogFullVersion = runLog?.results
     },
 
     async resetRunLog() {

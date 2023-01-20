@@ -36,7 +36,7 @@ export const headers = [
   {
     text: 'Name',
     align: 'left',
-    sortable: false,
+    sortable: true,
     value: 'name',
     isShowOnMobile: true,
 
@@ -46,6 +46,7 @@ export const headers = [
   {
     text: 'Modified',
     value: 'last_modified',
+    sortable: true,
     width: '30%',
     isShowOnMobile: true,
     class: 'text-left text-subtitle-2 font-weight-bold h-20'

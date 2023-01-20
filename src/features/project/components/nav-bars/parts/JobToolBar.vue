@@ -10,9 +10,12 @@
         <VTab
           v-if="tab.show"
           :key="tab.id"
-          exact
           ripple
-          :to="{ name: tab.to, params: { ...params, title: `${tab.name} - ${projectName}` } }"
+          :to="{
+            name: tab.to,
+            query: tab?.query,
+            params: { ...params, title: `${tab.name} - ${projectName}` }
+          }"
         >
           {{ tab.name }}
         </VTab>
@@ -65,6 +68,7 @@ const jobTools = [
     id: 1,
     name: 'Runs',
     show: true,
+    query: { page_size: 25 },
     to: 'workspace-project-jobs-job-runs-table'
   }
 ]

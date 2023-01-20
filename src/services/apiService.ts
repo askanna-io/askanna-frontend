@@ -57,6 +57,7 @@ const apiService = async ({
       if (returnFullResponse) {
         return result
       }
+
       return result.data
     } else {
       throw result

@@ -113,8 +113,8 @@ const props = defineProps({
     type: Object,
     default: () => ({
       name: '',
-      workspace: '',
       suuid: '',
+      workspace_suuid: '',
       visibility: 'PRIVATE'
     })
   },

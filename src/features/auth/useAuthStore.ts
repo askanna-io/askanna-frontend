@@ -12,7 +12,7 @@ export const useAuthStore = defineStore('auth', {
   state: () => {
     return {
       signUpStep: 0,
-      authData: { username: '', password: '' },
+      authData: { email: '', password: '' },
       userId: '',
       userRole: '',
       refreshToken: '',
@@ -26,13 +26,13 @@ export const useAuthStore = defineStore('auth', {
   },
 
   actions: {
-    async login({ username, password }: { username: string; password: string }) {
+    async login({ email, password }: { email: string; password: string }) {
       try {
         const result = await apiService({
           serviceName,
           method: 'post',
           action: api.login,
-          data: { username, password }
+          data: { email, password }
         })
 
         this.userId = result.userId
@@ -40,7 +40,7 @@ export const useAuthStore = defineStore('auth', {
         localStorage.setItem('token', result.key)
 
         const userStore = useUserStore()
-        userStore.tempAuth = { username, password }
+        userStore.tempAuth = { email, password }
 
         return result
       } catch (error: any) {
@@ -74,6 +74,7 @@ export const useAuthStore = defineStore('auth', {
       this.refreshToken = ''
       this.tokenExpires = ''
       localStorage.setItem('token', '')
+      localStorage.setItem('back_after_login', '')
 
       if (import.meta.env.VITE_APP_SENTRY_URL) {
         Sentry.configureScope(scope => scope.setUser(null))
@@ -140,19 +141,19 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    async validateResetToken(params) {
+    async resetTokenStatus(params) {
       let result
 
       try {
         result = await apiService({
           params,
           serviceName,
-          action: api.validateResetToken
+          action: api.resetTokenStatus
         })
       } catch (error: any) {
         const logger = useLogger()
 
-        logger.error('Error on validateResetToken action.\nError: ', error)
+        logger.error('Error on resetTokenStatus action.\nError: ', error)
 
         return error
       }

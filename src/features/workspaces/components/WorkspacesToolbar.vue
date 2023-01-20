@@ -157,8 +157,3 @@ const {
   debounceedSearch
 } = useSortFilter('Workspace', 'workspaces')
 </script>
-<style scoped>
-.filter-label {
-  font-size: 16px;
-}
-</style>

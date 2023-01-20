@@ -1,5 +1,5 @@
 <template>
-  <RunInput />
+  <TheRunInput />
 </template>
 
 <script setup lang="ts">

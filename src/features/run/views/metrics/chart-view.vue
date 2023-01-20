@@ -1,61 +1,71 @@
 <template>
   <div>
-    <AskAnnaContainer v-if="chart.isEditMode" fluid class="py-0">
-      <AskAnnaRow class="l-chart" justify="center">
-        <AskAnnaCol class="d-flex" cols="12" sm="3">
+    <AskAnnaContainer v-if="chart.isEditMode" fluid class="py-0" :style="{ maxWidth: '900px' }">
+      <AskAnnaRow class="l-chart mx-0" justify="space-between">
+        <AskAnnaCol class="d-flex" cols="12" sm="4">
           <AskAnnaSelect
-            label="Y-axis"
             dense
-            v-model="activeY"
-            hide-details
-            return-object
             clearable
+            hide-details
+            width="200px"
+            return-object
+            label="Y-axis"
             no-data-text=""
+            v-model="activeY"
             item-text="name"
             item-value="value"
             :items="yAxisList"
-            :loading="metricStore.loadingMeta"
-            width="100px"
           >
           </AskAnnaSelect>
         </AskAnnaCol>
-        <AskAnnaCol class="d-flex" cols="12" sm="3">
+        <AskAnnaCol class="d-flex" cols="12" sm="4">
           <AskAnnaSelect
-            label="X-axis"
             dense
             clearable
-            v-model="activeX"
             hide-details
+            label="X-axis"
             return-object
+            width="200px"
             no-data-text=""
+            v-model="activeX"
             item-text="title"
             item-value="value"
             :items="xAxisList"
             @click:clear.stop="hadnleResetX"
-            :loading="metricStore.loadingMeta"
-            width="100px"
           >
           </AskAnnaSelect>
         </AskAnnaCol>
-        <AskAnnaCol class="d-flex" cols="12" sm="3" :class="{ 'last-item': !$vuetify.breakpoint.xsOnly }">
+        <AskAnnaCol class="d-flex" cols="12" sm="4" :class="{ 'last-item': !$vuetify.breakpoint.xsOnly }">
           <AskAnnaSelect
-            label="Series"
             dense
-            v-model="activeS"
-            hide-details
             clearable
+            hide-details
+            label="Series"
+            width="200px"
             return-object
             no-data-text=""
+            v-model="activeS"
             item-text="title"
             item-value="value"
             :items="seriesList"
             :disabled="!seriesList.length"
-            width="100px"
           >
           </AskAnnaSelect>
         </AskAnnaCol>
       </AskAnnaRow>
+
       <Chart :data="data" :height="chartHeight" :xAxis="activeX" :yAxis="activeY" />
+
+      <AskAnnaRow justify="center" class="px-2">
+        <AskAnnaAlert
+          v-if="chart.activeX && count > 10000"
+          class="ma-4 text-center"
+          dense
+          outlined
+          style="max-width: 900px; width: 100%"
+          >The chart only shows the first 10 000 values.</AskAnnaAlert
+        >
+      </AskAnnaRow>
     </AskAnnaContainer>
   </div>
 </template>
@@ -91,6 +101,7 @@ const activeY = ref()
 const activeS = ref()
 const activeX = ref(xAxisListPredefined[0])
 
+const count = computed(() => metricStore.metricMeta.count)
 const isListTypeSelected = computed(() => activeX.value?.type.includes('list') || activeY.value?.type.includes('list'))
 
 const yAxisList = computed(() => {
@@ -202,8 +213,6 @@ const data = computed(() => {
   }
 })
 
-const loading = computed(() => metricStore.loading.metric)
-
 const chartHeight = computed(() => {
   const h = height.value - 480
   return h > 425 ? 425 : h
@@ -214,7 +223,6 @@ const hadnleResetX = () => {
 }
 
 const fetchData = async () => {
-  await metricStore.getMetricMeta(suuid)
   await metricStore.getMetricData(suuid)
 }
 
@@ -226,9 +234,5 @@ onBeforeMount(() => fetchData())
 }
 .v-application--is-ltr .l-chart .v-input__append-inner {
   padding-left: 0;
-}
-
-.l-chart .last-item {
-  padding-right: 44px;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <VList>
-    <VListItemGroup :value="state.ordering" @change="handleChange" color="primary">
+    <VListItemGroup :value="state.order_by" @change="handleChange" color="primary">
       <VListItem dense v-for="(item, i) in items" :key="i" :value="item.sort">
         <VListItemIcon>
           <AskAnnaIcon>{{ item.icon }}</AskAnnaIcon>
@@ -46,5 +46,5 @@ const items = [
 const state = inject('state')
 const changeState = inject('changeState')
 
-const handleChange = value => changeState({ path: 'ordering', value })
+const handleChange = value => changeState({ path: 'order_by', value })
 </script>

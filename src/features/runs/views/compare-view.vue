@@ -109,13 +109,13 @@
           </template>
 
           <AskAnnaButton
-            v-if="compareRunsStore.metricParams.next && !compareRunsStore.metricParams.loadMetrics"
+            v-if="compareRunsStore.metricParams.next.size && !compareRunsStore.metricParams.loadMetrics"
             small
             outlined
             color="secondary"
             class="ml-15 btn--hover"
             @click="handleShowMoreMetrics"
-            :disabled="!compareRunsStore.metricParams.next"
+            :disabled="!compareRunsStore.metricParams.next.size"
           >
             <AskAnnaIcon color="secondary" left>mdi-chevron-down</AskAnnaIcon>Show more metrics
           </AskAnnaButton>
@@ -157,13 +157,13 @@
           </template>
 
           <AskAnnaButton
-            v-if="compareRunsStore.variableParams.next && !compareRunsStore.variableParams.loadVariable"
+            v-if="compareRunsStore.variableParams.next.size && !compareRunsStore.variableParams.loadVariable"
             small
             outlined
             color="secondary"
             class="ml-15 btn--hover"
             @click="handleShowMoreMetrics"
-            :disabled="!compareRunsStore.variableParams.next"
+            :disabled="!compareRunsStore.variableParams.next.size"
           >
             <AskAnnaIcon color="secondary" left>mdi-chevron-down</AskAnnaIcon>Show more variables
           </AskAnnaButton>
@@ -219,8 +219,7 @@ const fetchData = async () => {
   await compareRunsStore.getRunsJob({
     suuid,
     params: {
-      limit: compareRunsStore.selectedCount,
-      offset: 0
+      page_size: compareRunsStore.selectedCount
     }
   })
 

@@ -158,8 +158,3 @@ const {
   debounceedSearch
 } = useSortFilter('Project', 'projects')
 </script>
-<style scoped>
-.filter-label {
-  font-size: 16px;
-}
-</style>

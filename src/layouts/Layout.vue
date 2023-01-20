@@ -1,5 +1,5 @@
 <template>
-  <Component :is="Layout" />
+  <Component :is="layoutComponent" />
 </template>
 
 <script setup ref lang="ts">
@@ -21,7 +21,7 @@ const props = defineProps({
 
 const authStore = useAuthStore()
 
-const Layout = computed(() => {
+const layoutComponent = computed(() => {
   const layout = props.layout
 
   switch (true) {

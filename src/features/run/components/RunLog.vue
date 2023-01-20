@@ -91,7 +91,7 @@ const runStatus = computed(() => runStore.run.status)
 const isFinished = computed(() => FINISHED_STATUSES.includes(runStatus.value?.toLowerCase()))
 const isLoadingLogs = computed(() => !isFinished.value && runStatus.value && isAutoUpdateLog.value)
 
-const query = useQuery({
+const query = useQueryLog({
   next,
   limit: 100,
   offset: 200,
@@ -134,12 +134,13 @@ const handleAutoUpdate = () => {
 }
 
 const handleCopy = async () => {
-  await getFullRun()
+  await runStore.getFullVersionRunLog(runId.value)
+
   copy.handleCopyText(fullLog.value)
 }
 
 const handleDownload = async () => {
-  await getFullRun()
+  await runStore.getFullVersionRunLog(runId.value)
 
   forceFileDownload.trigger({ source: fullLog.value, name: `run_${runStore.run.suuid}_log.txt` })
 }
@@ -154,10 +155,6 @@ const onScroll = e => {
   if (isFinished.value && countLogs.value === runStore.runLog.results.length) {
     isThreeDotsLoading.value = false
   }
-}
-
-const getFullRun = async () => {
-  await runStore.getFullVersionRunLog(runId.value)
 }
 
 const checkLogs = () => {

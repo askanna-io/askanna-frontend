@@ -22,12 +22,12 @@ const props = defineProps({
   }
 })
 
-const moment = useMoment()
+const moment = useDayjs()
 // format datetime to next format
 // 11th February 2021, 7:20:45 am
 const datetimeFormated = computed(() => {
-  const dateUtc = moment.$moment.utc(props.metricRow.value)
-  const localDate = moment.$moment(dateUtc).local()
+  const dateUtc = moment.dayjs.utc(props.metricRow.value)
+  const localDate = moment.dayjs(dateUtc).local()
 
   return localDate.format('Do MMMM YYYY, h:mm:ss a')
 })

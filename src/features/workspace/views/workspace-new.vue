@@ -159,7 +159,12 @@ const handleSave = async () => {
     handleClose()
     workspaceStore.newWorkspace = { ...defaultWorkspace }
 
-    await workspacesStore.getAllWorkspaces() // call get all workspaces to updated them on menu
+    workspacesStore.menu.workspaces = {
+      count: 0,
+      next: '',
+      previous: '',
+      results: []
+    } // reset workspaces  to updated them on menu click
   }
 }
 

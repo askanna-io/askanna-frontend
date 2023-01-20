@@ -51,8 +51,6 @@ const mobileStore = useMobileStore()
 const { route } = useRouterAskAnna()
 const compareRunsStore = useCompareRunsStore()
 
-compareRunsStore.$reset()
-
 const tabValue = computed(() => route?.meta?.tabValue)
 
 const views = [
@@ -68,6 +66,8 @@ const handleFullScreen = () => {
 }
 
 const init = async () => {
+  await compareRunsStore.$reset()
+
   if (tabValue.value) {
     currentViewIndex.value = views.findIndex(el => el.value === tabValue.value) || 0
   }

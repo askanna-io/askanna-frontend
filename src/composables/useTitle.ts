@@ -6,9 +6,10 @@ export default function () {
 
   const defaultTitle = 'AskAnna - Running Data Science Projects'
 
-  const getTitle = function () {
+  const updateTitle = function () {
     const title = computed(() => {
       let pageTitle = route.meta?.title || route.params.title || ''
+
       // replace suuid to name
       Object.entries(route.params).forEach(([key, value]) => {
         const name = get(generalStore.breadcrumbParams, key)
@@ -21,11 +22,20 @@ export default function () {
     document.title = title.value ? `${title.value} | ${defaultTitle}` : defaultTitle
   }
 
-  // init
-  getTitle()
+  // update title based on route params or route meta title
+  watch(
+    () => generalStore.breadcrumbParams,
+    () => {
+      updateTitle()
+    },
+    { immediate: true }
+  )
 
-  // update title based on route params or route meta
-  watchEffect(() => {
-    getTitle()
-  })
+  watch(
+    () => route.name,
+    () => {
+      updateTitle()
+    },
+    { immediate: true }
+  )
 }

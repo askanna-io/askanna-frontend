@@ -40,7 +40,7 @@ export const runRoutes = [
       },
       {
         path: 'input/:view?',
-        component: () => import('./views/input.vue'),
+        component: () => import('./views/run-input.vue'),
         name: 'workspace-project-jobs-job-run-input',
         meta: {
           title: 'Run: runId'

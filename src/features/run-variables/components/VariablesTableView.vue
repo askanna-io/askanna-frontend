@@ -1,11 +1,10 @@
 <template>
   <VDataTable
     class="pt-2"
-    fixed-header
     :height="height"
     disable-pagination
-    hide-default-footer
     :items="metricData"
+    hide-default-footer
     :mobile-breakpoint="-1"
   >
     <template v-slot:header>
@@ -47,8 +46,9 @@
         </tr>
       </thead>
     </template>
+
     <template v-slot:body="{ items }">
-      <tbody ref="tableRef" v-if="!loading">
+      <tbody ref="tableRef">
         <template v-for="(item, index) in items">
           <tr :key="index">
             <td>{{ item.variable.name }}</td>
@@ -72,7 +72,6 @@
   </VDataTable>
 </template>
 <script lang="ts">
-import useSortFilterTable from './useSortFilterTable'
 import MetricValue from '@/features/metric/components/metric-table/parts/MetricValue.vue'
 import MetricTableLabelTd from '@/features/metric/components/metric-table/parts/MetricTableLabelTd.vue'
 import SortFilterByName from '@/features/metric/components/metric-table/parts/sort-filter/SortFilterByName.vue'
@@ -85,7 +84,6 @@ export default defineComponent({
     labels: Array,
     height: Number,
     loading: Boolean,
-    sticked: Boolean,
     metricData: Array,
     isSorted: Boolean
   },
@@ -99,7 +97,11 @@ export default defineComponent({
 
   setup(props, context) {
     const tableRef = ref(null)
-    const { lastScrollTop } = useSortFilterTable(context)
+    const { lastScrollTop } = useSortFilterTable({
+      context,
+      typeName: 'variable',
+      routeName: 'workspace-project-jobs-job-run-variables'
+    })
 
     const handleOnScroll = data => {
       if (data.target.scrollTop > 0 && data.target.scrollTop !== lastScrollTop.value) {
