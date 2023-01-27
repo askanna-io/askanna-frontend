@@ -89,7 +89,7 @@ export default ({ mode }) => {
       VitePWA({
         includeAssets: ['favicon.ico', 'apple-touch-icon.png'],
         manifest: {
-          name: 'AskAnna - Kickstart your Data Science project!',
+          name: 'AskAnna',
           short_name: 'AskAnna',
           description:
             'Kickstart your next Data Science project with AskAnna. We make complex matters simple and intuitive to use. AskAnna empowers you to be in control of your data science project. Time is valuable. With our platform you can use more to tune your data and models.',
