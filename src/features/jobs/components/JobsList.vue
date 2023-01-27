@@ -5,13 +5,13 @@
     :items="jobs"
     item-key="suuid"
     disable-pagination
+    hide-default-footer
     :mobile-breakpoint="0"
     :options.sync="options"
     :page.sync="options.page"
     :expanded.sync="expanded"
     :loading="sortFilterLoading"
     :server-items-length="count"
-    :hide-default-footer="!jobs.length"
     :items-per-page="options.itemsPerPage"
     :show-expand="!$vuetify.breakpoint.xsOnly"
     :headers="getHeaders($vuetify.breakpoint.xsOnly)"
@@ -69,6 +69,20 @@
       <a class="ask-anna-link" href="https://docs.askanna.io/jobs/create-job/" target="_blank">the documentation</a>
       on how you can create a job.
     </template>
+
+    <template v-slot:footer>
+      <AskAnnaTablePagination
+        v-if="jobs.length"
+        :next="next"
+        :count="count"
+        :previous="previous"
+        :page="options.page"
+        :loading="sortFilterLoading"
+        :pageItemsCount="jobs.length"
+        :itemsPerPage="options.itemsPerPage"
+        @onUpdateOptions="handleUpdateOptions"
+      />
+    </template>
   </VDataTable>
 </template>
 
@@ -89,7 +103,7 @@ const jobs = computed(() => jobsStore.jobs.results)
 const suuid = computed(() => route.params.projectId)
 const previous = computed(() => jobsStore.jobs.previous)
 
-const { options, sortFilterLoading } = useQuery({
+const { options, handleUpdateOptions, sortFilterLoading } = useQuery({
   next,
   suuid,
   previous,

@@ -5,6 +5,7 @@
         <VDataTable
           fixed-header
           disable-pagination
+          hide-default-footer
           :mobile-breakpoint="0"
           :options.sync="options"
           :page.sync="options.page"
@@ -102,6 +103,19 @@
               <span>Download</span>
             </AskAnnaTooltip>
           </template>
+          <template v-slot:footer>
+            <AskAnnaTablePagination
+              v-if="packageStore.projectPackages.results.length"
+              :next="next"
+              :count="count"
+              :previous="previous"
+              :page="options.page"
+              :loading="sortFilterLoading"
+              :pageItemsCount="packageStore.projectPackages.results.length"
+              :itemsPerPage="options.itemsPerPage"
+              @onUpdateOptions="handleUpdateOptions"
+            />
+          </template>
         </VDataTable>
       </AskAnnaCol>
     </AskAnnaRow>
@@ -128,7 +142,7 @@ const count = computed(() => packageStore.projectPackages.count)
 const packageId = computed(() => projectStore.project.package.suuid)
 const previous = computed(() => packageStore.projectPackages.previous)
 
-const { options, sortFilterLoading } = useQuery({
+const { options, sortFilterLoading, handleUpdateOptions } = useQuery({
   next,
   previous,
   queryParams,

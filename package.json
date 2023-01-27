@@ -6,8 +6,8 @@
     "preview": "cross-env DEBUG=unplugin-vue-components:* vite preview"
   },
   "dependencies": {
-    "@sentry/tracing": "7.31.1",
-    "@sentry/vue": "7.31.1",
+    "@sentry/tracing": "7.33.0",
+    "@sentry/vue": "7.33.0",
     "@tiptap/extension-blockquote": "2.0.0-beta.209",
     "@tiptap/extension-bold": "2.0.0-beta.209",
     "@tiptap/extension-bullet-list": "2.0.0-beta.209",

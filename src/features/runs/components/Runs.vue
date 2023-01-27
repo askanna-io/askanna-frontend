@@ -3,6 +3,7 @@
     fixed-header
     :items="runs"
     disable-pagination
+    hide-default-footer
     :class="tableClass"
     :mobile-breakpoint="-1"
     :options.sync="options"
@@ -98,12 +99,21 @@
         </td>
       </tr>
     </template>
-    <template v-slot:foot>
-      <tr class="v-data-table__progress">
-        <th colspan="7" class="column">
-          <VProgressLinear :active="sortFilterLoading" indeterminate />
-        </th></tr
-    ></template>
+
+    <template v-slot:footer>
+      <VProgressLinear :color="sortFilterLoading ? 'primary' : 'white'" active indeterminate />
+      <AskAnnaTablePagination
+        v-if="runs.length"
+        :next="next"
+        :count="count"
+        :previous="previous"
+        :page="options.page"
+        :loading="sortFilterLoading"
+        :pageItemsCount="runs.length"
+        :itemsPerPage="options.itemsPerPage"
+        @onUpdateOptions="handleUpdateOptions"
+      />
+    </template>
   </VDataTable>
 </template>
 
@@ -141,7 +151,7 @@ const count = computed(() => runsStore.runs.count)
 const runs = computed(() => runsStore.runs.results)
 const previous = computed(() => runsStore.runs.previous)
 
-const { options, debounceedSearch, sortFilterLoading } = useQuery({
+const { options, debounceedSearch, handleUpdateOptions, sortFilterLoading } = useQuery({
   next,
   previous,
   loading: false,

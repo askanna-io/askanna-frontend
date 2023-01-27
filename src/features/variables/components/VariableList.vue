@@ -4,6 +4,7 @@
     :headers="headers"
     item-key="suuid"
     disable-pagination
+    hide-default-footer
     :mobile-breakpoint="0"
     :options.sync="options"
     :page.sync="options.page"
@@ -46,6 +47,19 @@
       </template>
       <template v-else> There are no variables available for this project. </template>
     </template>
+    <template v-slot:footer>
+      <AskAnnaTablePagination
+        v-if="variablesStore.variables.results.length"
+        :next="next"
+        :count="count"
+        :previous="previous"
+        :page="options.page"
+        :loading="sortFilterLoading"
+        :pageItemsCount="variablesStore.variables.results.length"
+        :itemsPerPage="options.itemsPerPage"
+        @onUpdateOptions="handleUpdateOptions"
+      />
+    </template>
   </VDataTable>
 </template>
 
@@ -62,7 +76,7 @@ const next = computed(() => variablesStore.variables.next)
 const count = computed(() => variablesStore.variables.count)
 const previous = computed(() => variablesStore.variables.previous)
 
-const { options, sortFilterLoading } = useQuery({
+const { options, sortFilterLoading, handleUpdateOptions } = useQuery({
   next,
   previous,
   queryParams,

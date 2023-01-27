@@ -1,5 +1,4 @@
-import { get } from 'lodash'
-import { debounce } from 'lodash'
+import { get, debounce } from 'lodash'
 
 export default function ({
   next,
@@ -11,7 +10,7 @@ export default function ({
   queryParams = {},
   immediate = false,
   asSubChild = false,
-  defaultOptions = { page: 1, itemsPerPage: 10 }
+  defaultOptions = { page: 1, itemsPerPage: 10, isGoForward: true }
 }: any) {
   const { route, routerPush } = useRouterAskAnna()
 
@@ -53,14 +52,19 @@ export default function ({
     currentScrollTop.value = 0
   }
 
-  watch(options, async (options, previousOptions) => {
-    const { page: previousPage = 1 } = previousOptions
+  const handleUpdateOptions = (newValues) => {
+    if (sortFilterLoading.value) return
+    sortFilterLoading.value = true
+
+    Object.assign(options.value, newValues)
+  }
+
+  watch(options, async (options) => {
     const { itemsPerPage: page_size = 10, page = 1, sortBy, sortDesc } = options
 
     let cursor = undefined
-
-    if (page !== 1 && page !== previousPage && (next.value?.includes('http') || previous.value?.includes('http'))) {
-      const nextPageUrl = page > previousPage ? next.value : previous.value
+    if (page !== 1 && (next.value?.includes('http') || previous.value?.includes('http'))) {
+      const nextPageUrl = options.isGoForward ? next.value : previous.value
 
       try {
         const url = new URL(nextPageUrl || '')
@@ -112,10 +116,10 @@ export default function ({
           params: { page_size, ...queryParams }
         })
         sortFilterLoading.value = false
-      } catch {}
+      } catch { }
     },
     { immediate: immediate }
   )
 
-  return { options, resetParams, sortFilterLoading, onScroll, debounceedSearch }
+  return { options, resetParams, handleUpdateOptions, sortFilterLoading, onScroll, debounceedSearch }
 }
