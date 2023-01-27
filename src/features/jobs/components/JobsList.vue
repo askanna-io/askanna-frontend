@@ -27,7 +27,7 @@
           prediction, train a model, et cetera.
           <a
             class="app-link text-decoration-none primary--text font-weight-medium d-inline-block"
-            href="https://docs.askanna.io/jobs/"
+            href="https://docs.askanna.io/job/"
             target="_blank"
           >
             Read the documentation</a
@@ -66,7 +66,7 @@
 
     <template v-slot:no-data>
       For this project, there are no jobs configured. Check
-      <a class="ask-anna-link" href="https://docs.askanna.io/jobs/create-job/" target="_blank">the documentation</a>
+      <a class="ask-anna-link" href="https://docs.askanna.io/job/create-job/" target="_blank">the documentation</a>
       on how you can create a job.
     </template>
   </VDataTable>
