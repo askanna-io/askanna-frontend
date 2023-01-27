@@ -7,7 +7,7 @@
           settings, passwords, tokens, etcetera. Masked variables can be used for sensitive information.
           <a
             class="app-link text-decoration-none primary--text font-weight-medium d-inline-block"
-            href="https://docs.askanna.io/variables/"
+            href="https://docs.askanna.io/variable/"
             target="_blank"
           >
             Read the documentation</a
