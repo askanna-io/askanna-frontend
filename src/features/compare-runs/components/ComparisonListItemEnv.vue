@@ -74,5 +74,5 @@ const imageComputed = computed(() => ({
 const envNameComputed = computed(() => props.value.name)
 const envNameSliced = computed(() => slicedStartText(props.value.name, 27))
 
-const isSliced = computed(() => envNameComputed.value.length > 28)
+const isSliced = computed(() => envNameComputed.value?.length > 28)
 </script>

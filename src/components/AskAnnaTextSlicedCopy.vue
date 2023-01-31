@@ -86,6 +86,6 @@ const valueSliced = computed(() =>
 )
 
 const isSliced = computed(
-  () => props.value.length > (props.params.slicedFromStart ? props.maxLengthStart : props.maxLength)
+  () => props.value?.length > (props.params.slicedFromStart ? props.maxLengthStart : props.maxLength)
 )
 </script>
