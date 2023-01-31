@@ -110,7 +110,8 @@ const { options, handleUpdateOptions, sortFilterLoading } = useQuery({
   queryParams,
   loading: false,
   storeAction: jobsStore.getProjectJobs,
-  defaultOptions: { page: 1, itemsPerPage: 25 }
+  page_size: +queryParams.value?.page_size || 25,
+  defaultOptions: { page: 1, itemsPerPage: +queryParams.value?.page_size || 25 }
 })
 
 const getHeaders = (isMobile: boolean) =>

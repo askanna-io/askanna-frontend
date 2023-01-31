@@ -48,11 +48,11 @@ const { sortFilterLoading, onScroll, resetParams } = useQuery({
   suuid,
   previous,
   queryParams,
-  page_size: 100,
   loading: false,
   immediate: true,
   storeAction: metricStore.getMetricByParams,
-  defaultOptions: { page: 1, itemsPerPage: 100 }
+  page_size: +queryParams.value?.page_size || 100,
+  defaultOptions: { page: 1, itemsPerPage: +queryParams.value?.page_size || 100 }
 })
 
 const tableHeight = computed(() => {

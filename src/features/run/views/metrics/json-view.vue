@@ -12,7 +12,7 @@ const { height } = useWindowSize()
 const metricStore = useMetricStore()
 const { route } = useRouterAskAnna()
 
-const queryParams = ref({})
+const queryParams = computed(() => route.query)
 const suuid = computed(() => route.params.runId)
 const next = computed(() => metricStore.metricJSON.next)
 
@@ -21,10 +21,10 @@ const { onScroll } = useQuery({
   suuid,
   queryParams,
   loading: true,
-  page_size: 100,
   immediate: true,
   storeAction: metricStore.getMetricJSON,
-  defaultOptions: { page: 1, itemsPerPage: 100 }
+  page_size: +queryParams.value?.page_size || 100,
+  defaultOptions: { page: 1, itemsPerPage: +queryParams.value?.page_size || 100 }
 })
 
 const loading = computed(() => metricStore.loading.metricJSON)
