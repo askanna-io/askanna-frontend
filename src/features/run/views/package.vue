@@ -100,9 +100,7 @@ const sticked = computed(() => !projectStore.menu.sticked)
 const fetchData = async () => {
   fileStore.$reset()
 
-  const packageId = runStore.run.package.suuid
-
-  if (packageId === '') {
+  if (!packageId.value) {
     return
   }
 
@@ -111,8 +109,6 @@ const fetchData = async () => {
     pollData()
   }
 }
-
-onBeforeMount(() => fetchData())
 
 onUnmounted(() => {
   clearInterval(polling.value)
@@ -220,6 +216,14 @@ const handleCopy = async (view: string) => {
 
   copy.handleCopyText(fileStore.fileSourceForCopy(view))
 }
+
+watch(
+  packageId,
+  async () => {
+    await fetchData()
+  },
+  { immediate: true }
+)
 
 watch(filePath, async filePath => {
   if (filePath === '') return
