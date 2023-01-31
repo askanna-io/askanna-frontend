@@ -47,7 +47,7 @@
           </AskAnnaButton>
         </div>
 
-        <VBtnToggle v-model="currentViewIndex" mandatory class="mr-1">
+        <VBtnToggle :value="currentViewIndex" mandatory class="mr-1">
           <AskAnnaTooltip v-for="(view, index) in views" top :key="index">
             <template v-slot:activator="{ on }">
               <AskAnnaButton
@@ -86,14 +86,14 @@ const views = [
   { name: 'JSON', value: 'json', icon: 'mdi-code-json' }
 ]
 
-const currentView = ref(views[0])
-const currentViewIndex = ref(0)
-
 const items = computed(() => metricStore.metrics.results)
 const isFiltered = computed(() => metricStore.isFiltered)
 
-const metricJSON = computed(() => JSON.stringify(metricStore.metricJSON.results, null, 2))
+const currentView = computed(() => views.find(item => item.value === route.meta.tabValue))
+const currentViewIndex = computed(() => views.findIndex(item => item.value === route.meta.tabValue))
+
 const isChartView = computed(() => currentView.value.value === 'chart')
+const metricJSON = computed(() => JSON.stringify(metricStore.metricJSON.results, null, 2))
 const disabledTools = computed(
   () =>
     (currentView.value.value === 'table' && !items.value.length) ||
@@ -112,19 +112,12 @@ const handleDownload = async () => {
   forceFileDownload.trigger({ source: metricStore.metricFullData, name: `run_${suuid}_metrics.json` })
 }
 
-const fetchData = async () => {
-  const view = route?.meta.tabValue
-  if (view) {
-    currentView.value = views.find(item => item.value === view)
-    currentViewIndex.value = views.findIndex(item => item.value === view)
-  }
-}
-
-const handleChangeView = (index: number) => {
+const handleChangeView = async (index: number) => {
   const view = views[index]
-  currentViewIndex.value = index
   if (view.value === currentView.value.value) return
-  currentView.value = view
+
+  if (view.value === 'chart') await chart.$reset()
+
   routerPush({ name: `workspace-project-jobs-job-run-metrics-${view.value}` })
 }
 
@@ -132,8 +125,6 @@ const handleDownloadPNG = () => {
   const activeS = chart.activeS ? '_' + chart.activeS : ''
   chartDownload.save(chart.svgData, `run_${suuid}_metrics_${chart.activeY}_${chart.activeX}${activeS}.png`)
 }
-
-onBeforeMount(() => fetchData())
 </script>
 <style scoped>
 .h-20 {
