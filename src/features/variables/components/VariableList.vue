@@ -80,10 +80,10 @@ const { options, sortFilterLoading, handleUpdateOptions } = useQuery({
   next,
   previous,
   queryParams,
-  page_size: 25,
   loading: false,
   suuid: projectId,
-  defaultOptions: { page: 1, itemsPerPage: 25 },
+  page_size: +queryParams.value?.page_size || 25,
+  defaultOptions: { page: 1, itemsPerPage: +queryParams.value?.page_size || 25 },
   storeAction: variablesStore.getVariables
 })
 
