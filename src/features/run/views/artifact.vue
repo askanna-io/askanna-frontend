@@ -73,6 +73,7 @@ const sticked = computed(() => !projectStore.menu.sticked)
 const cdnBaseUrl = computed(() => runStore.artifactData?.cdn_base_url)
 const images = computed(() => runStore.artifactData?.files.filter(item => ext.images.includes(item.ext)))
 
+const run = computed(() => runStore.run)
 const calcHeight = computed(() => height.value - 370)
 const path = computed(() => route.params.folderName || '/')
 const artifactUuid = computed(() => runStore.run?.artifact?.suuid)
@@ -185,6 +186,7 @@ const fetchData = async () => {
 
   if (!runId || !artifactUuid.value) {
     fileStore.loading = false
+    runStore.runArtifactLoading = false
 
     return
   }
@@ -197,7 +199,14 @@ const fetchData = async () => {
   })
 }
 
-fetchData()
+watch(
+  run,
+  async run => {
+    if (!run.suuid) return
+    await fetchData()
+  },
+  { immediate: true }
+)
 
 watch(filePath, async filePath => {
   if (!currentPath.value || (currentPath.value && currentPath.value.type === 'directory')) fileStore.$reset()

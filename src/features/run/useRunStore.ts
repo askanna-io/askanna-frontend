@@ -22,7 +22,7 @@ export const useRunStore = defineStore('run', {
       runStatusLoading: true,
       runsLoading: false,
       runlogLoading: true,
-      runArtifactLoading: false,
+      runArtifactLoading: true,
       runLog: {
         count: 0,
         next: null,
