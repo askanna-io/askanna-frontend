@@ -54,9 +54,9 @@
         :count="count"
         :previous="previous"
         :page="options.page"
-        :loading="sortFilterLoading"
-        :pageItemsCount="variablesStore.variables.results.length"
         :itemsPerPage="options.itemsPerPage"
+        :pageItemsCount="variablesStore.variables.results.length"
+        :loading="variablesStore.variablesLoading || sortFilterLoading"
         @onUpdateOptions="handleUpdateOptions"
       />
     </template>

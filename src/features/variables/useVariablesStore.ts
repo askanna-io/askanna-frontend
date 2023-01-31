@@ -63,7 +63,7 @@ export const useVariablesStore = defineStore(VARIABLES_STORE, {
 
       logger.success(`The variable ${variable.name} is created`)
 
-      await this.getVariables({ suuid: data.project_suuid, initial: true })
+      await this.getVariables({ suuid: data.project_suuid, initial: true, loading: true })
     },
 
     async getVariable({ projectId: project_suuid, variableId: suuid }: { projectId: string, variableId: string }) {
@@ -106,7 +106,7 @@ export const useVariablesStore = defineStore(VARIABLES_STORE, {
 
       logger.success(`The variable ${name} is updated`)
 
-      await this.getVariables({ suuid: project_suuid })
+      await this.getVariables({ suuid: project_suuid, loading: true })
     },
 
     async deleteVariable({ name, projectId: project_suuid, variableId: suuid }) {
@@ -128,7 +128,7 @@ export const useVariablesStore = defineStore(VARIABLES_STORE, {
 
       logger.success(`The variable ${name} is deleted`)
 
-      await this.getVariables({ suuid: project_suuid })
+      await this.getVariables({ suuid: project_suuid, loading: true })
     },
 
     setVariable({ path, value }) {
