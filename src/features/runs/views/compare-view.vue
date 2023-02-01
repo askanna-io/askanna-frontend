@@ -162,7 +162,7 @@
             outlined
             color="secondary"
             class="ml-15 btn--hover"
-            @click="handleShowMoreMetrics"
+            @click="handleShowMoreVariables"
             :disabled="!compareRunsStore.variableParams.next.size"
           >
             <AskAnnaIcon color="secondary" left>mdi-chevron-down</AskAnnaIcon>Show more variables
@@ -211,6 +211,10 @@ const isVariableLabels = computed(() => Boolean(compareRunsStore.variableLabels.
 
 const handleShowMoreMetrics = () => {
   compareRunsStore.loadMoreMetrics()
+}
+
+const handleShowMoreVariables = () => {
+  compareRunsStore.loadMoreVariables()
 }
 
 const fetchData = async () => {
