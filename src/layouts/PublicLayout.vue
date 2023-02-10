@@ -96,7 +96,7 @@ const handleChangeSticked = () => (projectStore.menu.sticked = !projectStore.men
 onBeforeMount(() => fetchData())
 
 onUpdated(() => {
-  if (import.meta.env.VITE_APP_INTERCOM === 'on') {
+  if (import.meta.env.VITE_APP_INTERCOM_ID) {
     window.Intercom('update')
   }
 })

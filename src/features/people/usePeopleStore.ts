@@ -363,9 +363,9 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
 
       const name = people.name || userStore.globalProfile.name
 
-      if (people && import.meta.env.VITE_APP_INTERCOM === 'on') {
+      if (people && import.meta.env.VITE_APP_INTERCOM_ID) {
         window.Intercom('boot', {
-          app_id: 'c6wuieqm',
+          app_id: import.meta.env.VITE_APP_INTERCOM_ID,
           name: name,
           email: people.email,
           user_id: people.membership?.user?.suuid,

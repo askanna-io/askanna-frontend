@@ -1,6 +1,5 @@
 import path from 'path'
 const fs = require('fs')
-import Robots from './robots'
 const yaml = require('js-yaml')
 import type { Plugin } from 'vite'
 import Vue from '@vitejs/plugin-vue2'
@@ -37,9 +36,17 @@ function createAskAnnaConfig() {
       }
 
       try {
-        const robotstxtOpt = process.env.VITE_APP_IS_BETA === 'on' ? Robots.beta : Robots.default
+        const host = process.env.VITE_APP_URL
 
-        fs.writeFileSync('./dist/robots.txt', robotstxtOpt, 'utf8')
+        let robotsContent = `User-agent: *\n`
+        if (process.env.VITE_APP_ALLOW_ROBOTS === 'on') {
+          robotsContent += `Allow: /\n`
+        } else {
+          robotsContent += `Disallow: /\n`
+        }
+        robotsContent += `Host: ${host}\n`
+
+        fs.writeFileSync('./dist/robots.txt', robotsContent, 'utf8')
 
         // eslint-disable-next-line no-console
         console.log('finish create robots.txt')

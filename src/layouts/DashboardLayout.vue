@@ -84,7 +84,7 @@ const handleOpenMenu = () => {
 onBeforeMount(() => fetchData())
 
 onUpdated(() => {
-  if (import.meta.env.VITE_APP_INTERCOM === 'on') {
+  if (import.meta.env.VITE_APP_INTERCOM_ID) {
     window.Intercom('update')
   }
 })

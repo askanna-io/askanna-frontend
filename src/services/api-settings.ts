@@ -49,7 +49,7 @@ export const api: ApiSettings = {
       list: () => `job/`,
       get: (id) => `job/${id}/`,
       update: (id) => `job/${id}/`,
-      delete: (id) => `job/${id}/`,
+      delete: (id) => `job/${id}/`
     },
     run: {
       list: () => 'run/',

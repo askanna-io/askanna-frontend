@@ -3,7 +3,8 @@
   "scripts": {
     "build": "cross-env DEBUG=unplugin-vue-components:* vite build",
     "dev": "cross-env DEBUG=unplugin-vue-components:* vite",
-    "preview": "cross-env DEBUG=unplugin-vue-components:* vite preview"
+    "preview": "cross-env DEBUG=unplugin-vue-components:* vite preview",
+    "lint": "eslint . --ext .js --ext .ts --ext .vue"
   },
   "dependencies": {
     "@sentry/tracing": "7.33.0",

@@ -1,1 +1,43 @@
-mainConfiguration: https://gitlab.askanna.io/askanna/askanna-backend/
+tasks:
+  - name: Vite Frontend Dev
+    init: |
+      mkdir .vscode && ln -n .gitpod-vscode-settings.json .vscode/settings.json
+      cp .env.development .env.development.local
+      npm install
+    command: |
+      sed -i "s~VITE_APP_URL=.*~VITE_APP_URL=$(gp url 5173)~g" .env.development.local
+      npm run dev
+  - name: CLI
+    command: |
+      [[ -n $GPG_KEY ]] && [[ -n $GPG_SIGNING_KEY ]] \
+        && echo 'pinentry-mode loopback' >> ~/.gnupg/gpg.conf \
+        && gpg --verbose --batch --import <(echo $GPG_KEY|base64 -d) \
+        && git config --global user.signingkey $GPG_SIGNING_KEY \
+        && git config --global commit.gpgsign true \
+        && echo '>> Commits will be signed with a GPG key'
+
+ports:
+  - name: Frontend Dev
+    description: The AskAnna Frontend application in development mode
+    port: 5173
+    visibility: private
+  - name: Frontend Preview
+    description: The AskAnna Frontend application in review mode
+    port: 4173
+    visibility: private
+
+vscode:
+  extensions:
+    - EditorConfig.EditorConfig
+    - eamodio.gitlens
+    - GitLab.gitlab-workflow
+    - DavidAnson.vscode-markdownlint
+    - yzhang.markdown-all-in-one
+    - TakumiI.markdowntable
+    - ms-azuretools.vscode-docker
+    - jeff-hykin.better-dockerfile-syntax
+    - timonwong.shellcheck
+    - ZainChen.json
+    - esbenp.prettier-vscode
+    - dbaeumer.vscode-eslint
+    - octref.vetur
