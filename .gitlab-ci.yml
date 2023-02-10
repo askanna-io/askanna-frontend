@@ -209,7 +209,7 @@ publish_to_public_repos:
     - git config --global user.email "hello@askanna.io"
     - git config --global user.name "AskAnna Robot"
   script:
-    - git remote add gitlab git@gitlab.com:askanna/askanna-python.git
-    - git remote add github git@github.com:askanna-io/askanna-python.git
+    - git remote add gitlab git@gitlab.com:askanna/askanna-frontend.git
+    - git remote add github git@github.com:askanna-io/askanna-frontend.git
     - git push gitlab $TARGET
     - git push github $TARGET
