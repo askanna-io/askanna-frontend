@@ -39,5 +39,5 @@ export const PERMISSIONS_LABELS: IPERMISSIONS_LABELS = {
   variableList: 'variable.list',
   variableCreate: 'variable.create',
   variableEdit: 'variable.edit',
-  variableRemove: 'variable.remove',
+  variableRemove: 'variable.remove'
 }

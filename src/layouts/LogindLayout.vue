@@ -9,14 +9,14 @@
   </v-app>
 </template>
 <script setup lang="ts">
-if (import.meta.env.VITE_APP_INTERCOM === 'on') {
+if (import.meta.env.VITE_APP_INTERCOM_ID) {
   window.Intercom('boot', {
-    app_id: 'c6wuieqm'
+    app_id: import.meta.env.VITE_APP_INTERCOM_ID
   })
 }
 
 onUpdated(() => {
-  if (import.meta.env.VITE_APP_INTERCOM === 'on') {
+  if (import.meta.env.VITE_APP_INTERCOM_ID) {
     window.Intercom('update')
   }
 })

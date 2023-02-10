@@ -2,12 +2,15 @@ version: "3"
 
 services:
   frontend:
-    build:
-      context: .
-      target: dev-stage  # Use `preview-stage` as target to get a preview of the build solution without auto-reload
-      dockerfile: ./compose/Dockerfile.local
+    image: node:lts-alpine
+    working_dir: /app
+    command:
+      - sh
+      - -c
+      - |
+        npm install
+        npx cross-env DEBUG=unplugin-vue-components:* vite --host
     volumes:
       - .:/app
     ports:
-      - "4173:4173"  # For preview web server
-      - "5173:5173"  # For development web server
+      - 5173:5173

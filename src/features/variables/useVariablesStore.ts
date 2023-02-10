@@ -31,7 +31,7 @@ export const useVariablesStore = defineStore(VARIABLES_STORE, {
         const data = await apiService({
           serviceName,
           action: api.list,
-          params: { ...params, project_suuid },
+          params: { ...params, project_suuid }
         })
 
         this.variables = initial ? data : { ...data, results: data.results }
@@ -53,7 +53,7 @@ export const useVariablesStore = defineStore(VARIABLES_STORE, {
           data,
           serviceName,
           method: 'post',
-          action: api.list,
+          action: api.list
         })
       } catch (error) {
         logger.error('Error on create variable in createVariable action.\nError: ', error)
@@ -74,7 +74,7 @@ export const useVariablesStore = defineStore(VARIABLES_STORE, {
           suuid,
           serviceName,
           action: api.update,
-          params: { project_suuid },
+          params: { project_suuid }
         })
       } catch (error) {
         const logger = useLogger()
@@ -96,7 +96,7 @@ export const useVariablesStore = defineStore(VARIABLES_STORE, {
           serviceName,
           method: 'PATCH',
           action: api.update,
-          params: { project_suuid },
+          params: { project_suuid }
         })
       } catch (error) {
         logger.error('Error on update variable in updateVariable action.\nError: ', error)
@@ -118,7 +118,7 @@ export const useVariablesStore = defineStore(VARIABLES_STORE, {
           serviceName,
           method: 'delete',
           action: api.update,
-          params: { project_suuid },
+          params: { project_suuid }
         })
       } catch (error) {
         logger.error('Error on delete variable in deleteVariable action.\nError: ', error)
