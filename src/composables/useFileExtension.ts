@@ -3,7 +3,7 @@ export default () => {
     pdf: ['pdf'],
     xls: ['xls', 'xlsx'],
     csv: ['csv', 'tsv'],
-    noPreview: ['pkl', 'parquet'],
+    noPreview: ['h5', 'pkl', 'parquet'],
     images: ['jpg', 'png', 'gif', 'jpeg'],
     notShowCopyBtn: ['pdf', 'pkl', 'parquet', 'xls', 'xlsx'],
     isRendered: ['html', 'json', 'md', 'markdown', 'csv', 'tsv'],

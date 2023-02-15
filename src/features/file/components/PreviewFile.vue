@@ -55,7 +55,7 @@
             <span>Downloading...</span>
           </template>
           <AskAnnaIcon color="secondary" left>mdi-download</AskAnnaIcon>
-          download pdf file
+          download file
         </AskAnnaButton>
       </AskAnnaFlex>
 
