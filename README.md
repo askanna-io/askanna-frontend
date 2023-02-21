@@ -1,7 +1,19 @@
 # AskAnna Frontend
 
-This repository holds code for the AskAnna Frontend. Code is written in [TypeScript](https://www.typescriptlang.org/)
-and build upon the material design framework [Vuetify](https://vuetifyjs.com) for [Vue.js](https://vuejs.org/).
+This repository holds code for the AskAnna Frontend. Our frontend stack primarily uses [Vue.js](https://vuejs.org/)
+and leverages the Composition API for over 90% of the components. We use [Pinia](https://pinia.vuejs.org/) for store
+management. Pinia is a modern and intuitive state management system for Vue.
+
+We utilize [Vuetify](https://vuetifyjs.com), a popular UI component library for Vue, to provide a polished and
+streamlined user interface. This library offers various customizable and reusable components, allowing us to rapidly
+build and maintain a consistent design system.
+
+To streamline development and building processes, we use [Vite](https://vitejs.dev/). Vite is a fast, modern,
+lightweight build tool that provides instant hot module replacement, lightning-fast bundling and a seamless
+development experience.
+
+By utilizing this frontend stack, we have aimed to deliver a performant and reliable user experience that is both
+developer-friendly and scalable.
 
 More information about AskAnna can be found on [the company site](https://askanna.io). In
 [the documentation](https://docs.askanna.io) you can read more about how to use AskAnna.
