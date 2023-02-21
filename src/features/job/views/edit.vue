@@ -13,8 +13,7 @@
                 :value="jobState.name"
                 label="Job name"
                 :rules="[RULE.required('Job name is required')]"
-                @input="handleOnInput($event, 'name')"
-              />
+                @input="handleOnInput($event, 'name')" />
             </AskAnnaCol>
           </AskAnnaRow>
           <AskAnnaRow>
@@ -27,8 +26,7 @@
                 :title="'Job description (optional)'"
                 @onChange="handleOnChange"
                 @onSave="handleSaveDescription"
-                @onChangeDescription="handleOnInput($event, 'description')"
-              />
+                @onChangeDescription="handleOnInput($event, 'description')" />
             </AskAnnaCol>
           </AskAnnaRow>
           <AskAnnaRow>
@@ -41,8 +39,7 @@
                   color="secondary"
                   class="mr-1 btn--hover"
                   :disabled="isStateNotChanged"
-                  @click="handleShowConfirmationPopup"
-                >
+                  @click="handleShowConfirmationPopup">
                   Save my changes
                 </AskAnnaButton>
                 <AskAnnaButton @click="handleClose" small outlined text color="secondary" class="btn--hover">
@@ -56,14 +53,12 @@
           :jobName="job.name"
           :value="showConfirmPopup"
           @onClose="handleClosePopup"
-          @onConfirmChangeName="handleSave"
-        />
+          @onConfirmChangeName="handleSave" />
       </AskAnnaCard>
     </AskAnnaLoadingProgress>
     <AskAnnaAlert v-else class="mx-4 text-center" dense outlined>
       You are not allowed to edit this job. I can bring you back to the job
-      <RouterLink :to="{ name: 'workspace-project-job-overiew' }" class="ask-anna-link">{{ job.name }}</RouterLink
-      >.
+      <RouterLink :to="{ name: 'workspace-project-job-overiew' }" class="ask-anna-link">{{ job.name }}</RouterLink>.
     </AskAnnaAlert>
   </div>
 </template>
@@ -74,32 +69,22 @@ import { set } from 'lodash'
 const jobStore = useJobStore()
 const snackBar = useSnackBar()
 const permission = usePermission()
+const { routerPush } = useRouterAskAnna()
 const validationRules = useValidationRules()
-const { route, routerPush } = useRouterAskAnna()
-
-const { jobId } = route.params
 
 const isNameChanged = ref(false)
 const showConfirmPopup = ref(false)
 
-const RULE = computed(() => validationRules.RULES)
-const projectJobEdit = computed(() => permission.getFor(permission.labels.projectJobEdit))
-
-const fetchData = async () => {
-  await jobStore.$reset()
-  await jobStore.getJob(jobId)
-}
-
-onBeforeMount(() => fetchData())
-
 const job = computed(() => jobStore.job)
 const loading = computed(() => jobStore.loading)
-
 const isStateNotChanged = ref(true)
 const jobState = ref({
   name: job.value.name,
   description: job.value.description
 })
+
+const RULE = computed(() => validationRules.RULES)
+const projectJobEdit = computed(() => permission.getFor(permission.labels.projectJobEdit))
 
 const handleOnInput = (value, path) => {
   isStateNotChanged.value = false
