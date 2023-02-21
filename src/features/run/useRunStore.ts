@@ -52,6 +52,7 @@ export const useRunStore = defineStore('run', {
           serviceName,
           action: api.getRun
         })
+
       } catch (e) {
         const logger = useLogger()
 
@@ -89,7 +90,9 @@ export const useRunStore = defineStore('run', {
       if (isNewRun) {
         this.newRun = { ...this.newRun, ...status }
       } else {
-        this.run = { ...this.run, ...status }
+        this.run = {
+          ...this.run, ...status, created_by: this.run.created_by
+        }
       }
 
       this.runStatusLoading = false

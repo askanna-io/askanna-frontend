@@ -10,8 +10,7 @@
             :text="item.text"
             :value="item.value"
             :is="item.component"
-            :loading="loadingStatus"
-          />
+            :loading="loadingStatus" />
         </AskAnnaCol>
       </AskAnnaRow>
     </AskAnnaCard>
@@ -36,7 +35,7 @@ const props = defineProps({
   },
   run: {
     type: Object as () => Run,
-    default: () => {}
+    default: () => ({})
   },
   jobName: {
     type: String,

@@ -5,6 +5,24 @@ export interface LabelName {
   type: string
 }
 
+export interface CreatedBy {
+    name: string
+    avatar: {
+      icon: string
+      large: string
+      medium: string
+      small:string
+    }
+    job_title: string
+    relation: string
+    role: {
+      code: string
+      name:string
+    }
+    status: string
+    suuid:string
+  }
+
 export interface Package {
   suuid: string
   cdn_base_url: string
@@ -50,9 +68,7 @@ export interface Run {
     name: string
     suuid: string
   }
-  created_by: {
-    name: string
-  }
+  created_by: CreatedBy
   trigger: {
     name: string
   }
