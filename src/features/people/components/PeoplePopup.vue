@@ -41,8 +41,7 @@
         <AskAnnaDivider />
         <AskAnnaCardActions
           v-if="people.status === 'invited' && (workspacePeopleInviteResend || workspacePeopleInviteRemove)"
-          :class="{ 'pb-0': isCurrentUserAdmin, 'px-0': $vuetify.breakpoint.xsOnly }"
-        >
+          :class="{ 'pb-0': isCurrentUserAdmin, 'px-0': $vuetify.breakpoint.xsOnly }">
           <AskAnnaRow dense class="mx-2" justify="space-between">
             <AskAnnaCol cols="6">
               <AskAnnaButton
@@ -53,8 +52,7 @@
                 text
                 color="error"
                 class="btn--hover"
-                @click="handleDeleteInivitationPopup"
-              >
+                @click="handleDeleteInivitationPopup">
                 Delete invitation
               </AskAnnaButton>
             </AskAnnaCol>
@@ -67,8 +65,7 @@
                 text
                 color="secondary"
                 class="btn--hover"
-                @click="handleResendInivitationPopup"
-              >
+                @click="handleResendInivitationPopup">
                 Resend invitation
               </AskAnnaButton>
             </AskAnnaCol>
@@ -84,8 +81,7 @@
                 text
                 color="secondary"
                 class="btn--hover"
-                :to="{ name: 'workspace-profile' }"
-              >
+                :to="{ name: 'workspace-profile' }">
                 Edit my profile
               </AskAnnaButton>
             </AskAnnaCol>
@@ -93,8 +89,7 @@
         </AskAnnaCardActions>
         <AskAnnaCardActions
           v-if="!simple && (workspacePeopleEdit || workspacePeopleRemove) && currentUser.suuid !== people.suuid"
-          :class="{ 'pt-0': isCurrentUserAdmin && people.status !== 'active', 'px-0': $vuetify.breakpoint.xsOnly }"
-        >
+          :class="{ 'pt-0': isCurrentUserAdmin && people.status !== 'active', 'px-0': $vuetify.breakpoint.xsOnly }">
           <AskAnnaRow dense class="mx-2" justify="space-between">
             <AskAnnaCol v-if="workspacePeopleEdit && buttonsVisible.WA" class="text-center" cols="12">
               <div>
@@ -105,8 +100,7 @@
                   text
                   color="secondary"
                   class="btn--hover"
-                  @click="handleChangeRole('WA')"
-                >
+                  @click="handleChangeRole('WA')">
                   MAKE {{ people.name }} A WORKSPACE ADMIN
                 </AskAnnaButton>
               </div>
@@ -120,8 +114,7 @@
                   text
                   color="secondary"
                   class="btn--hover"
-                  @click="handleChangeRole('WM')"
-                >
+                  @click="handleChangeRole('WM')">
                   MAKE {{ people.name }} A WORKSPACE MEMBER
                 </AskAnnaButton>
               </div>
@@ -135,8 +128,7 @@
                   text
                   color="secondary"
                   class="btn--hover"
-                  @click="handleChangeRole('WV')"
-                >
+                  @click="handleChangeRole('WV')">
                   MAKE {{ people.name }} A WORKSPACE VIEWER
                 </AskAnnaButton>
               </div>
@@ -151,8 +143,7 @@
                   color="error"
                   class="btn--hover"
                   max-width="340"
-                  @click="handleRemove"
-                >
+                  @click="handleRemove">
                   Remove&nbsp;{{ name }}
                 </AskAnnaButton>
               </div>
@@ -244,7 +235,7 @@ const roleFilters = {
 }
 
 const roleName = computed(() => {
-  const val = props.people.role.code
+  const val = props.people.role?.code
   return roleFilters[val]
 })
 
