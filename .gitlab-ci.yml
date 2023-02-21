@@ -9,6 +9,7 @@ stages:
   - build
   - test
   - deploy
+  - release
   - publish
   - cleanup
 
@@ -48,7 +49,7 @@ build_production:
   variables:
     KUBERNETES_MEMORY_REQUEST: 6Gi
   rules:
-    - if: ($CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "main")
+    - if: $CI_COMMIT_BRANCH == "main"
       variables:
         ENV_CONTENT: $ENV_STAGING
         DOCKER_DESTINATION: $DOCKER_PRODUCTION
@@ -74,7 +75,7 @@ code_quality:
   rules:
     - if: $CODE_QUALITY_DISABLED
       when: never
-    - if: ($CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "beta" || $CI_COMMIT_TAG)
+    - if: ($CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "beta" || $CI_COMMIT_TAG)
       when: never
     - if: $CI_COMMIT_BRANCH
 
@@ -99,13 +100,13 @@ deploy_production:
     ASKANNA_DEPLOY_BRANCH: main
     ASKANNA_DEPLOY_PRODUCT: askanna-frontend
   rules:
-    - if: ($CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "main")
+    - if: $CI_COMMIT_BRANCH == "main"
       when: manual
       variables:
         ENV_HOST: $DOMAIN_STAGING
         ENV_NAME: master
         DOCKER_IMAGE: $DOCKER_PRODUCTION
-    - if: $CI_COMMIT_BRANCH == "beta"
+    - if: ($CI_COMMIT_BRANCH == "beta" || $CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+$/)
       when: manual
       variables:
         ENV_HOST: $DOMAIN_BETA
@@ -126,7 +127,7 @@ deploy_review:
     - job: build_production
     - job: test_package_lock
   rules:
-    - if: ($CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "beta" || $CI_COMMIT_TAG)
+    - if: ($CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "beta" || $CI_COMMIT_TAG)
       when: never
     - if: $CI_COMMIT_BRANCH
   environment:
@@ -153,7 +154,7 @@ stop_review:
   needs:
     - job: deploy_review
   rules:
-    - if: ($CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "beta" || $CI_COMMIT_TAG)
+    - if: ($CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "beta" || $CI_COMMIT_TAG)
       when: never
     - if: $CI_COMMIT_BRANCH
       when: manual
@@ -179,11 +180,24 @@ stop_review:
 before_script:
   - *functions
 
-publish_to_public_repos:
+release:
+  stage: release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  rules:
+    - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+$/'
+  script:
+    - echo "Creating a new release..."
+  release:
+    tag_name: $CI_COMMIT_TAG
+    description: $CI_COMMIT_TAG_MESSAGE
+
+publish_to_gitlab:
   stage: publish
   needs:
     - job: build_production
     - job: deploy_production
+      optional: true
+    - job: release
       optional: true
   tags:
     - kubernetes
@@ -200,16 +214,89 @@ publish_to_public_repos:
     - apt-get update -y && apt-get install openssh-client git curl -y
     - eval $(ssh-agent -s)
     - echo "${SSH_PRIVATE_KEY_GITLAB_COM}" | tr -d '\r' | ssh-add - > /dev/null
-    - echo "${SSH_PRIVATE_KEY_GITHUB_COM}" | tr -d '\r' | ssh-add - > /dev/null
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
-    - ssh-keyscan github.com >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
     - git config --global user.email "hello@askanna.io"
     - git config --global user.name "AskAnna Robot"
   script:
     - git remote add gitlab git@gitlab.com:askanna/askanna-frontend.git
-    - git remote add github git@github.com:askanna-io/askanna-frontend.git
     - git push gitlab $TARGET
+
+publish_release_to_gitlab:
+  stage: publish
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  needs:
+    - job: build_production
+    - job: deploy_production
+      optional: true
+    - job: release
+    - job: publish_to_gitlab
+  tags:
+    - kubernetes
+  allow_failure: true
+  rules:
+    - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+$/'
+  variables:
+    GITLAB_PRIVATE_TOKEN: $GITLAB_COM_API_TOKEN
+  script:
+    - release-cli --server-url https://gitlab.com --project-id 43372103 create --tag-name $CI_COMMIT_TAG --description $CI_COMMIT_TAG_MESSAGE
+
+publish_to_github:
+  stage: publish
+  needs:
+    - job: build_production
+    - job: deploy_production
+      optional: true
+    - job: release
+      optional: true
+  tags:
+    - kubernetes
+  allow_failure: true
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: manual
+      variables:
+        TARGET: HEAD:main
+    - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+$/'
+      variables:
+        TARGET: refs/tags/$CI_COMMIT_TAG
+  before_script:
+    - apt-get update -y && apt-get install openssh-client git curl -y
+    - eval $(ssh-agent -s)
+    - echo "${SSH_PRIVATE_KEY_GITHUB_COM}" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan github.com >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+    - git config --global user.email "hello@askanna.io"
+    - git config --global user.name "AskAnna Robot"
+  script:
+    - git remote add github git@github.com:askanna-io/askanna-frontend.git
     - git push github $TARGET
+
+publish_release_to_github:
+  stage: publish
+  needs:
+    - job: build_production
+    - job: deploy_production
+      optional: true
+    - job: release
+    - job: publish_to_github
+  tags:
+    - kubernetes
+  allow_failure: true
+  rules:
+    - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+$/'
+  variables:
+    GH_TOKEN: $GITHUB_COM_API_TOKEN
+  before_script:
+    - apt-get update -y && apt-get install curl -y
+    - curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+    - chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
+    - echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+    - apt-get update -y && apt install gh -y
+  script:
+    - gh auth login --hostname github.com
+    - gh release create $CI_COMMIT_TAG --notes $CI_COMMIT_TAG_MESSAGE --repo askanna-io/askanna-frontend
