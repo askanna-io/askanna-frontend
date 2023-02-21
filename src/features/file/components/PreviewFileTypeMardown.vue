@@ -6,13 +6,11 @@
         :source="fileSource"
         :cdnBaseUrl="cdnBaseUrl"
         html
-        breaks
         langPrefix
         linkify
         quotes
         typographer
-        xhtmlOut
-      />
+        xhtmlOut />
     </VFadeTransition>
   </AskAnnaFlex>
 </template>
