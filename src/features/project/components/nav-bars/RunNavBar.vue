@@ -25,7 +25,10 @@
       </AskAnnaSlideYTransition>
     </div>
     <div class="askAnna-breadcrumbs" :class="{ 'mb-2 mt-0': $vuetify.breakpoint.xsOnly }">
-      <VBreadcrumbs v-if="!sticked" :items="breadcrumbs" :class="{ 'py-0 mt-0 pl-3': $vuetify.breakpoint.xsOnly }">
+      <VBreadcrumbs v-if="!sticked"
+        :items="breadcrumbs"
+        class="pl-4"
+        :class="{ 'py-0 mt-0 pl-3': $vuetify.breakpoint.xsOnly }">
         <template v-slot:item="{ item }">
           <VBreadcrumbsItem :to="item.to" :exact="item.exact">
             {{ item.title }}
@@ -38,14 +41,12 @@
 
     <AskAnnaCard flat>
       <AskAnnaCardTitle v-if="!sticked" :class="{ 'py-1 pl-3 ': $vuetify.breakpoint.xsOnly }">
-        <span class="title font-weight-light"
-          >Run{{ runName }}
+        <span class="title font-weight-light">Run{{ runName }}
           <AskAnnaCopyText
             v-if="!run.name"
             :text="run.suuid"
             :buttonType="{ text: true }"
-            :styleClasses="'px-0 white title font-weight-light primary--black '"
-          />
+            :styleClasses="'px-0 white title font-weight-light primary--black '" />
         </span>
         <AskAnnaSpacer />
         <RunInfoStatus class="title font-weight-light" text="" :value="runIdStatus" />
@@ -60,11 +61,10 @@
         color="white"
         class="run-toolbar"
         :class="{
-          'ml-3': $vuetify.breakpoint.mdAndUp,
+          'ml-4': $vuetify.breakpoint.mdAndUp,
           'my-3 mr-3': !$vuetify.breakpoint.xsOnly,
           'ma-0 with-tabs': $vuetify.breakpoint.xsOnly
-        }"
-      >
+        }">
         <RunToolBar :showTitle="false" :jobrun="run" :projectRunEdit="projectRunEdit" :isEditRunView="isEditRunView" />
 
         <AskAnnaSpacer />
@@ -99,7 +99,7 @@ const props = defineProps({
 
   handleOnStick: {
     type: Function,
-    default: () => {}
+    default: () => { }
   }
 })
 
@@ -122,12 +122,19 @@ const isEditRunView = computed(() => route.name === 'workspace-project-jobs-job-
 const onStick = data => props.handleOnStick(data.sticked)
 </script>
 <style lang="scss">
-.desktop-view .run-toolbar {
+.desktop-view .run-toolbar,
+.desktop-view .job-toolbar {
+
   .v-toolbar__content {
-    padding-left: 0;
-    .v-tabs-bar__content a:nth-of-type(1) {
-      padding-left: 0;
+    padding-left: 0px;
+
+    .v-tabs .v-slide-group .v-slide-group__prev {
+      min-width: unset;
     }
+  }
+
+  &:not(:has(div.v-slide-group--is-overflowing)) {
+    margin-left: 16px;
   }
 }
 </style>

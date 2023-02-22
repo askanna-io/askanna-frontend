@@ -1,5 +1,5 @@
 <template>
-  <div class="pb-5" :class="{ 'px-0 ': $vuetify.breakpoint.xsOnly, 'px-4': !$vuetify.breakpoint.xsOnly }">
+  <div class="pb-5" :class="{ 'px-0 ': $vuetify.breakpoint.xsOnly }">
     <AskAnnaLoadingProgress :loading="loading" fullWidth>
       <AskAnnaCard flat>
         <AskAnnaCardTitle :class="{ 'pt-0': $vuetify.breakpoint.xsOnly }">Information:</AskAnnaCardTitle>
@@ -8,12 +8,11 @@
           :run="run"
           :jobName="jobName"
           :runIdStatus="runIdStatus"
-          :loadingStatus="loadingStatus"
-        />
+          :loadingStatus="loadingStatus" />
         <template v-if="isDescriptionNotEmpty">
           <AskAnnaCardTitle class="mt-3">Description:</AskAnnaCardTitle>
 
-          <AskAnnaDescription class="px-2" preview readonly :description="description" />
+          <AskAnnaDescription preview readonly :description="description" />
         </template>
       </AskAnnaCard>
     </AskAnnaLoadingProgress>

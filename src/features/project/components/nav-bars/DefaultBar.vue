@@ -24,9 +24,9 @@
     <div class="askAnna-breadcrumbs" :class="{ 'mb-2': $vuetify.breakpoint.xsOnly }">
       <VBreadcrumbs
         v-if="!sticked"
+        class="pl-4"
         :items="projectBreadcrumbs"
-        :class="{ 'py-0 mt-0 pl-3': $vuetify.breakpoint.xsOnly }"
-      >
+        :class="{ 'py-0 mt-0 pl-3': $vuetify.breakpoint.xsOnly }">
         <template v-slot:item="{ item }">
           <VBreadcrumbsItem :to="item.to" :exact="item.exact">
             {{ item.title }}
@@ -44,8 +44,7 @@
       v-if="!isEditProjectView && project.description !== '<p></p>'"
       readonly
       :description="project.description"
-      :class="{ 'py-0 pl-2 ': $vuetify.breakpoint.xsOnly }"
-    />
+      :class="{ 'py-0 pl-2 ': $vuetify.breakpoint.xsOnly }" />
     <AskAnnaDivider v-if="!sticked && !$vuetify.breakpoint.xsOnly" />
     <AskAnnaCard :flat="!sticked" :class="{ 'ma-3': sticked }">
       <AskAnnaSlideYTransition>
@@ -54,16 +53,15 @@
             dense
             flat
             color="white"
-            :class="{ 'br-r5 ma-3': !$vuetify.breakpoint.xsOnly, 'ma-0 with-tabs': $vuetify.breakpoint.xsOnly }"
-          >
+            class="ml-4"
+            :class="{ 'br-r5 ma-3': !$vuetify.breakpoint.xsOnly, 'ma-0 with-tabs': $vuetify.breakpoint.xsOnly }">
             <ProjectMenu :projectName="project.name" :isEditProjectView="isEditProjectView" />
             <AskAnnaSpacer />
             <ProjectMenuPopup
               v-if="!isEditProjectView && (projectRemove || projectInfoEdit)"
               :project="project"
               :routeToRedirect="'workspace'"
-              :routeBackTo="'workspace-project'"
-            />
+              :routeBackTo="'workspace-project'" />
           </AskAnnaToolbar>
         </div>
       </AskAnnaSlideYTransition>
@@ -96,7 +94,7 @@ const props = defineProps({
   },
   handleOnStick: {
     type: Function,
-    default: () => {}
+    default: () => { }
   }
 })
 
@@ -121,9 +119,11 @@ const isEditProjectView = computed(() => route.name === 'workspace-project-edit'
     overflow: hidden;
     -ms-overflow-style: none;
     scrollbar-width: none;
+
     &::-webkit-scrollbar {
       display: none;
     }
+
     .v-breadcrumbs {
       display: block;
       overflow-x: auto;
@@ -133,6 +133,7 @@ const isEditProjectView = computed(() => route.name === 'workspace-project-edit'
       margin-bottom: 15px;
       -ms-overflow-style: none;
       scrollbar-width: none;
+
       &::-webkit-scrollbar {
         display: none;
       }
