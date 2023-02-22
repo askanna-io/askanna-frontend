@@ -4,8 +4,7 @@
       @focusout="handleOnBlurWrapper"
       @focusin="handleOnClickWrapper"
       @click="handleOnClickWrapper"
-      :class="{ 'mt-5 pt-6': isFullScreen }"
-    >
+      :class="{ 'mt-5 pt-6': isFullScreen }">
       <AskAnnaCard
         class="ask-anna--editor"
         flat
@@ -17,28 +16,23 @@
           'border--primary ':
             (isFocused && outlined && !$vuetify.breakpoint.xsOnly) ||
             (isFocused && outlined && $vuetify.breakpoint.xsOnly && !isFullScreen)
-        }"
-      >
+        }">
         <label
           v-if="title && !isFullScreen"
           class="ask-anna-description--title v-label theme--light px-1"
-          :class="{ 'v-label--active': isFocused }"
-          >{{ title }}</label
-        >
+          :class="{ 'v-label--active': isFocused }">{{ title }}</label>
         <div
           v-if="editor && editable"
           :class="{
             'toolbar-full-screen': isFullScreen,
             'is-active': isFocused && !$vuetify.breakpoint.xsOnly && isFullScreen
-          }"
-        >
+          }">
           <Component
             v-bind:is="$vuetify.breakpoint.xsOnly ? 'div' : 'v-toolbar'"
             flat
             dense
             height="30px"
-            class="mx-1 mt-2"
-          >
+            class="mx-1 mt-2">
             <AskAnnaTooltip top>
               <template v-slot:activator="{ on }">
                 <AskAnnaButton
@@ -50,8 +44,7 @@
                   class="btn--hover btn--without-text mr-1"
                   :class="{ 'is-active': editor.isActive('bold') }"
                   @click="editor.chain().focus().toggleBold().run()"
-                  :color="editor.isActive('bold') ? 'primary' : 'secondary'"
-                >
+                  :color="editor.isActive('bold') ? 'primary' : 'secondary'">
                   <AskAnnaIcon>mdi-format-bold</AskAnnaIcon>
                 </AskAnnaButton>
               </template>
@@ -69,8 +62,7 @@
                   class="btn--hover btn--without-text mr-1"
                   :class="{ 'is-active': editor.isActive('italic') }"
                   @click="editor.chain().focus().toggleItalic().run()"
-                  :color="editor.isActive('italic') ? 'primary' : 'secondary'"
-                >
+                  :color="editor.isActive('italic') ? 'primary' : 'secondary'">
                   <AskAnnaIcon>mdi-format-italic</AskAnnaIcon>
                 </AskAnnaButton>
               </template>
@@ -88,8 +80,7 @@
                   class="btn--hover btn--without-text mr-1"
                   :class="{ 'is-active': editor.isActive('underline') }"
                   @click="editor.chain().focus().toggleUnderline().run()"
-                  :color="editor.isActive('underline') ? 'primary' : 'secondary'"
-                >
+                  :color="editor.isActive('underline') ? 'primary' : 'secondary'">
                   <AskAnnaIcon>mdi-format-underline</AskAnnaIcon>
                 </AskAnnaButton>
               </template>
@@ -107,8 +98,7 @@
                   :text="!editor.isActive('strike')"
                   :class="{ 'is-active': editor.isActive('strike') }"
                   @click="editor.chain().focus().toggleStrike().run()"
-                  :color="editor.isActive('strike') ? 'primary' : 'secondary'"
-                >
+                  :color="editor.isActive('strike') ? 'primary' : 'secondary'">
                   <AskAnnaIcon>mdi-format-strikethrough</AskAnnaIcon>
                 </AskAnnaButton>
               </template>
@@ -128,8 +118,7 @@
                   class="btn--hover btn--without-text mr-1"
                   @click="editor.chain().focus().setParagraph().run()"
                   :class="{ 'is-active': editor.isActive('paragraph') }"
-                  :color="editor.isActive('paragraph') ? 'primary' : 'secondary'"
-                >
+                  :color="editor.isActive('paragraph') ? 'primary' : 'secondary'">
                   <AskAnnaIcon>mdi-format-paragraph</AskAnnaIcon>
                 </AskAnnaButton>
               </template>
@@ -147,8 +136,7 @@
                   :text="!editor.isActive('heading', { level: 1 })"
                   :class="{ 'is-active': editor.isActive('heading', { level: 1 }) }"
                   @click="editor.chain().focus().toggleHeading({ level: 1 }).run()"
-                  :color="editor.isActive('heading', { level: 1 }) ? 'primary' : 'secondary'"
-                >
+                  :color="editor.isActive('heading', { level: 1 }) ? 'primary' : 'secondary'">
                   <AskAnnaIcon>mdi-format-header-1</AskAnnaIcon>
                 </AskAnnaButton>
               </template>
@@ -166,8 +154,7 @@
                   :text="!editor.isActive('heading', { level: 2 })"
                   :class="{ 'is-active': editor.isActive('heading', { level: 2 }) }"
                   @click="editor.chain().focus().toggleHeading({ level: 2 }).run()"
-                  :color="editor.isActive('heading', { level: 2 }) ? 'primary' : 'secondary'"
-                >
+                  :color="editor.isActive('heading', { level: 2 }) ? 'primary' : 'secondary'">
                   <AskAnnaIcon>mdi-format-header-2</AskAnnaIcon>
                 </AskAnnaButton>
               </template>
@@ -185,8 +172,7 @@
                   :text="!editor.isActive('heading', { level: 3 })"
                   :class="{ 'is-active': editor.isActive('heading', { level: 3 }) }"
                   @click="editor.chain().focus().toggleHeading({ level: 3 }).run()"
-                  :color="editor.isActive('heading', { level: 3 }) ? 'primary' : 'secondary'"
-                >
+                  :color="editor.isActive('heading', { level: 3 }) ? 'primary' : 'secondary'">
                   <AskAnnaIcon>mdi-format-header-3</AskAnnaIcon>
                 </AskAnnaButton>
               </template>
@@ -204,8 +190,7 @@
                   class="btn--hover btn--without-text mr-1"
                   :class="{ 'is-active': editor.isActive('bulletList') }"
                   @click="editor.chain().focus().toggleBulletList().run()"
-                  :color="editor.isActive('bulletList') ? 'primary' : 'secondary'"
-                >
+                  :color="editor.isActive('bulletList') ? 'primary' : 'secondary'">
                   <AskAnnaIcon>mdi-format-list-bulleted</AskAnnaIcon>
                 </AskAnnaButton>
               </template>
@@ -223,8 +208,7 @@
                   class="btn--hover btn--without-text mr-1"
                   :class="{ 'is-active': editor.isActive('orderedList') }"
                   @click="editor.chain().focus().toggleOrderedList().run()"
-                  :color="editor.isActive('orderedList') ? 'primary' : 'secondary'"
-                >
+                  :color="editor.isActive('orderedList') ? 'primary' : 'secondary'">
                   <AskAnnaIcon>mdi-format-list-numbered</AskAnnaIcon>
                 </AskAnnaButton>
               </template>
@@ -242,8 +226,7 @@
                   class="btn--hover btn--without-text mr-1"
                   :class="{ 'is-active': editor.isActive('taskList') }"
                   @click="editor.chain().focus().toggleTaskList().run()"
-                  :color="editor.isActive('taskList') ? 'primary' : 'secondary'"
-                >
+                  :color="editor.isActive('taskList') ? 'primary' : 'secondary'">
                   <AskAnnaIcon>mdi-format-list-checks</AskAnnaIcon>
                 </AskAnnaButton>
               </template>
@@ -260,8 +243,7 @@
                   x-small
                   color="secondary"
                   class="btn--hover btn--without-text mr-3"
-                  @click="editor.chain().focus().setHorizontalRule().run()"
-                >
+                  @click="editor.chain().focus().setHorizontalRule().run()">
                   <AskAnnaIcon>mdi-minus</AskAnnaIcon>
                 </AskAnnaButton>
               </template>
@@ -279,8 +261,7 @@
                   class="btn--hover btn--without-text mr-1"
                   :class="{ 'is-active': editor.isActive('blockquote') }"
                   @click="editor.chain().focus().toggleBlockquote().run()"
-                  :color="editor.isActive('blockquote') ? 'primary' : 'secondary'"
-                >
+                  :color="editor.isActive('blockquote') ? 'primary' : 'secondary'">
                   <AskAnnaIcon>mdi-format-quote-close</AskAnnaIcon>
                 </AskAnnaButton>
               </template>
@@ -298,8 +279,7 @@
                   class="btn--hover btn--without-text mr-1"
                   :class="{ 'is-active': editor.isActive('code') }"
                   @click="editor.chain().focus().toggleCode().run()"
-                  :color="editor.isActive('code') ? 'primary' : 'secondary'"
-                >
+                  :color="editor.isActive('code') ? 'primary' : 'secondary'">
                   <AskAnnaIcon>mdi-code-tags</AskAnnaIcon>
                 </AskAnnaButton>
               </template>
@@ -317,8 +297,7 @@
                   class="btn--hover btn--without-text mr-1"
                   :class="{ 'is-active': editor.isActive('codeBlock') }"
                   @click="editor.chain().focus().toggleCodeBlock().run()"
-                  :color="editor.isActive('codeBlock') ? 'primary' : 'secondary'"
-                >
+                  :color="editor.isActive('codeBlock') ? 'primary' : 'secondary'">
                   <AskAnnaIcon>mdi-code-braces</AskAnnaIcon>
                 </AskAnnaButton>
               </template>
@@ -329,8 +308,7 @@
               :open="isSetLinkOpen"
               :isActive="editor.isActive('link')"
               @onSetLink="handleSetLink"
-              @onOpen="handleOpenSetLink"
-            />
+              @onOpen="handleOpenSetLink" />
             <AskAnnaTooltip top>
               <template v-slot:activator="{ on }">
                 <AskAnnaButton
@@ -341,8 +319,7 @@
                   x-small
                   color="secondary"
                   class="btn--hover btn--without-text mr-1"
-                  @click="editor.chain().focus().undo().run()"
-                >
+                  @click="editor.chain().focus().undo().run()">
                   <AskAnnaIcon>mdi-undo</AskAnnaIcon>
                 </AskAnnaButton>
               </template>
@@ -359,8 +336,7 @@
                   x-small
                   color="secondary"
                   class="btn--hover btn--without-text mr-3"
-                  @click="editor.chain().focus().redo().run()"
-                >
+                  @click="editor.chain().focus().redo().run()">
                   <AskAnnaIcon>mdi-redo</AskAnnaIcon>
                 </AskAnnaButton>
               </template>
@@ -372,8 +348,7 @@
               class="ask-anna-link body-2"
               target="_blank"
               href="https://docs.askanna.io/shortcuts-editor/"
-              @click.stop
-            >
+              @click.stop>
               Markdown supported
             </a>
             <AskAnnaTooltip top>
@@ -386,8 +361,7 @@
                   x-small
                   color="secondary"
                   class="btn--hover btn--without-text ml-2"
-                  @click="handleFullScreen"
-                >
+                  @click="handleFullScreen">
                   <AskAnnaIcon>{{ isFullScreen ? 'mdi-fullscreen-exit' : 'mdi-fullscreen' }}</AskAnnaIcon>
                 </AskAnnaButton>
               </template>
@@ -400,11 +374,15 @@
         <editor-content
           :editor="editor"
           :style="scrollerStyles"
-          :class="{ 'editable-mode': editable, 'full-screen': isFullScreen }"
+          class="my-2 overflow-y-auto"
+          :class="{
+            'editable-mode': editable,
+            'full-screen': isFullScreen,
+            'mx-2': $vuetify.breakpoint.xsOnly,
+            'mx-4 ': !$vuetify.breakpoint.xsOnly
+          }"
           @click="handleOnClickWrapper"
-          spellcheck="false"
-          class="ma-2 overflow-y-auto"
-        />
+          spellcheck="false" />
       </AskAnnaCard>
     </form>
   </FullScreen>
@@ -781,12 +759,14 @@ const handleOnSave = () => {
   .toolbar-full-screen {
     width: auto;
   }
+
   .editable-mode {
     &.full-screen {
       padding-top: 55px !important;
     }
   }
 }
+
 .toolbar-full-screen {
   position: fixed;
   width: 900px;
@@ -801,14 +781,17 @@ const handleOnSave = () => {
 
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
   border-color: rgba(0, 0, 0, 0.12);
+
   &.is-active {
     border-top: 1px solid #5d3eb2;
     border-right: 1px solid #5d3eb2;
     border-left: 1px solid #5d3eb2;
   }
 }
+
 .v-application .ask-anna--editor p {
   margin-bottom: 0px;
+
   code {
     color: white;
     background-color: var(--v-primary-base) !important;
@@ -840,7 +823,7 @@ ul[data-type='taskList'] {
     display: flex;
     align-items: center;
 
-    > label {
+    >label {
       flex: 0 0 auto;
       margin-right: 0.5rem;
 
@@ -849,7 +832,7 @@ ul[data-type='taskList'] {
       }
     }
 
-    > div {
+    >div {
       flex: 1 1 auto;
     }
   }
@@ -858,6 +841,7 @@ ul[data-type='taskList'] {
 .ask-anna--editor:focus {
   outline: none;
 }
+
 .ask-anna--editor .v-btn.is-active {
   opacity: 0.9;
 }
@@ -904,14 +888,17 @@ ul[data-type='taskList'] {
     margin: 0 auto;
     border-radius: 2px !important;
   }
+
   .editable-mode {
     &.full-screen {
       padding-top: 40px;
     }
+
     a {
       cursor: text;
     }
   }
+
   .ProseMirror:focus {
     outline: none;
   }
@@ -923,6 +910,7 @@ ul[data-type='taskList'] {
   padding-left: 0.8rem;
   font-style: italic;
 }
+
 .v-application .ask-anna--editor {
   pre {
     &::before {
@@ -933,11 +921,14 @@ ul[data-type='taskList'] {
       font-weight: bold;
       font-size: 0.6rem;
     }
+
     code {
       font-size: 14px;
+
       .hljs-emphasis {
         font-style: italic;
       }
+
       .hljs-strong {
         font-weight: 700;
       }

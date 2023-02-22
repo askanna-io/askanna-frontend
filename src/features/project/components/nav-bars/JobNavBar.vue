@@ -24,7 +24,8 @@
       </AskAnnaCard>
     </div>
     <div class="askAnna-breadcrumbs" :class="{ 'mb-2': $vuetify.breakpoint.xsOnly }">
-      <VBreadcrumbs v-if="!sticked" :items="breadcrumbs" :class="{ 'py-0 mt-0 pl-3': $vuetify.breakpoint.xsOnly }">
+      <VBreadcrumbs v-if="!sticked" :items="breadcrumbs" class="pl-4"
+        :class="{ 'py-0 mt-0 pl-3': $vuetify.breakpoint.xsOnly }">
         <template v-slot:item="{ item }">
           <VBreadcrumbsItem :to="item.to" :exact="item.exact">
             {{ item.title }}
@@ -41,18 +42,21 @@
 
       <AskAnnaToolbar
         v-if="!sticked"
+        flat
         dense
         color="white"
-        flat
-        :class="{ 'br-r5 ma-3': !$vuetify.breakpoint.xsOnly, 'ma-0 with-tabs': $vuetify.breakpoint.xsOnly }"
-      >
+        class="run-toolbar"
+        :class="{
+          'ml-4': $vuetify.breakpoint.mdAndUp,
+          'br-r5 ma-3': !$vuetify.breakpoint.xsOnly,
+          'ma-0 with-tabs': $vuetify.breakpoint.xsOnly
+        }">
         <JobToolBar
           v-if="!sticked"
           :showTitle="false"
           :jobName="job.name"
           :projectName="project.name"
-          :isEditJobView="isEditJobView"
-        />
+          :isEditJobView="isEditJobView" />
 
         <AskAnnaSpacer />
 
@@ -86,7 +90,7 @@ const props = defineProps({
 
   handleOnStick: {
     type: Function,
-    default: () => {}
+    default: () => { }
   }
 })
 

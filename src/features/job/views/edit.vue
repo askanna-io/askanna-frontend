@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ 'pt-4': projectJobEdit }">
+  <div :class="{ 'pt-4': projectJobEdit, 'mx-2': loading }">
     <AskAnnaLoadingProgress v-if="projectJobEdit" :loading="loading" fullWidth>
       <AskAnnaCard flat>
         <AskAnnaContainer class="ma-0 pt-0" fluid>

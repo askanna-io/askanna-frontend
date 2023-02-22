@@ -8,10 +8,8 @@
       of the box, you can productize your data solution, without the support of additional DevOps.
       <p class="mt-3">
         <AskAnnaButton small color="primary" href="https://docs.askanna.io" target="_blank">
-          <span class="text-truncate" :class="style"
-            >Check the AskAnna documentation to get to know more</span
-          ></AskAnnaButton
-        >
+          <span class="text-truncate" :class="style">Check the AskAnna documentation to get to know more</span>
+        </AskAnnaButton>
       </p>
     </AskAnnaCardText>
   </AskAnnaCard>
@@ -20,7 +18,10 @@
 <script setup lang="ts">
 const context = getCurrentInstance()
 
-const style = computed(() => ({ 'is-sm': context?.proxy.$root.$vuetify.breakpoint.xs }))
+const style = computed(() => ({
+  'is-sm': context?.proxy.$root.$vuetify.breakpoint.xs
+    || context?.proxy.$root.$vuetify.breakpoint.width <= 616
+}))
 </script>
 <style scoped>
 .is-sm {

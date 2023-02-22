@@ -1,8 +1,7 @@
 <template>
   <div
     :class="{ 'mobile-view': $vuetify.breakpoint.xsOnly, 'desktop-view': !$vuetify.breakpoint.xsOnly }"
-    v-scroll="handleOnScroll"
-  >
+    v-scroll="handleOnScroll">
     <Layout :layout="layout" :isLoggedIn="userStore.isLoggedIn" />
   </div>
 </template>
@@ -50,49 +49,61 @@ const handleOnScroll = () => (mobileStore.isMenuSticked = window.pageYOffset > 1
 </script>
 <style lang="scss">
 @import '@/components/highlight/highlight.scss';
+
 #app .row {
   margin-top: 0;
   margin-bottom: 0;
 }
+
 .overflow-x-overlay {
   overflow-x: overlay;
 }
-.theme--light.v-card > .v-card__subtitle,
-.theme--light.v-card > .v-card__text .v-window {
+
+.theme--light.v-card>.v-card__subtitle,
+.theme--light.v-card>.v-card__text .v-window {
   color: rgba(0, 0, 0, 0.87) !important;
 }
+
 .ask-anna-btn-loader {
   animation: loader 1s infinite;
   display: flex;
 }
+
 @-moz-keyframes loader {
   from {
     transform: rotate(0);
   }
+
   to {
     transform: rotate(360deg);
   }
 }
+
 @-webkit-keyframes loader {
   from {
     transform: rotate(0);
   }
+
   to {
     transform: rotate(360deg);
   }
 }
+
 @-o-keyframes loader {
   from {
     transform: rotate(0);
   }
+
   to {
     transform: rotate(360deg);
   }
 }
+
 @keyframes loader {
   from {
     transform: rotate(0);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -105,9 +116,15 @@ const handleOnScroll = () => (mobileStore.isMenuSticked = window.pageYOffset > 1
 .v-application--is-ltr .v-data-table--fixed-header.askanna-table .v-data-footer {
   margin-right: 0 !important;
 }
+
 .w-100p {
   width: 100%;
 }
+
+.ml-4-1 {
+  margin-left: 18px;
+}
+
 .w-min-110 {
   min-width: 110px !important;
 }
@@ -115,22 +132,28 @@ const handleOnScroll = () => (mobileStore.isMenuSticked = window.pageYOffset > 1
 .w-min-210 {
   min-width: 210px !important;
 }
+
 .askanna-breadcrumbs a {
   font-size: 14px;
 }
+
 .br-a {
   border: 1px solid;
 }
+
 .br-t-b {
   border-top: 1px solid;
   border-bottom: 1px solid;
 }
+
 .br-color-grey {
   border-color: #e0e0e0 !important;
 }
+
 .br-r5 {
   border-radius: 5px !important;
 }
+
 .br-r4 {
   border-radius: 4px !important;
 }
@@ -165,9 +188,11 @@ const handleOnScroll = () => (mobileStore.isMenuSticked = window.pageYOffset > 1
   background-color: #5d3eb2 !important;
   border: 2px solid #555555 !important;
 }
+
 .cursor--pointer {
   cursor: pointer;
 }
+
 .hover-text:hover {
   color: #5d3eb2 !important;
 }
@@ -199,12 +224,14 @@ const handleOnScroll = () => (mobileStore.isMenuSticked = window.pageYOffset > 1
   color: #5d3eb2 !important;
   border: none !important;
 }
+
 .v-chip.v-chip--clickable.btn--hover:hover,
 .v-btn.btn--hover:hover {
   color: #5d3eb2 !important;
   border: 1px solid #5d3eb2 !important;
   border-color: #5d3eb2 !important;
 }
+
 .btn--hover:hover .v-avatar .v-avatar--left,
 .v-btn.btn--hover:hover i::before {
   color: #5d3eb2 !important;
@@ -222,6 +249,7 @@ const handleOnScroll = () => (mobileStore.isMenuSticked = window.pageYOffset > 1
 .v-application .ask-anna--editor code {
   padding-left: 0;
 }
+
 .v-application code.language-js,
 .v-application code.shell,
 code.lang-shell {
@@ -262,6 +290,7 @@ code.lang-shell {
     }
   }
 }
+
 .AskAnna-app-bar {
   .v-toolbar__content {
     padding-left: 0px;
@@ -278,6 +307,7 @@ code.lang-shell {
 }
 
 .AskAnna-text {
+
   &--initial,
   &--initial .v-btn__content {
     text-transform: initial;
@@ -291,9 +321,11 @@ code.lang-shell {
 .text-transform--initial {
   text-transform: initial !important;
 }
+
 .v-input--is-label-active .v-input--selection-controls__ripple:before {
   opacity: 0.12 !important;
 }
+
 .v-input--selection-controls__ripple:before {
   opacity: 0.04 !important;
 }
@@ -347,6 +379,7 @@ code.lang-shell {
     overflow: hidden;
     -ms-overflow-style: none;
     scrollbar-width: none;
+
     &::-webkit-scrollbar {
       display: none;
     }
@@ -364,6 +397,7 @@ code.lang-shell {
       margin-bottom: 15px;
       -ms-overflow-style: none;
       scrollbar-width: none;
+
       &::-webkit-scrollbar {
         display: none;
       }
@@ -376,12 +410,15 @@ code.lang-shell {
 
   .v-data-table.ask-anna-table .v-data-footer {
     margin-right: 0;
+
     .v-data-footer__select {
       margin-left: 0;
+
       .v-select {
         margin: 13px 0 13px 20px;
       }
     }
+
     .v-data-footer__pagination {
       margin: 0 16px 0 16px;
     }
@@ -398,22 +435,27 @@ code.lang-shell {
   .askAnna-main-menu {
     width: 580px;
     font-size: 16px !important;
+
     .table-link,
     .v-list-item__title,
     .v-text-field__slot .v-label,
     .v-text-field__slot input {
       font-size: 16px !important;
     }
+
     .v-data-table__wrapper td {
       padding-left: 12px !important;
     }
+
     .v-alert__border {
       border-width: 2px !important;
     }
+
     .v-skeleton-loader__heading {
       width: 100%;
       margin-bottom: 10px;
     }
+
     .v-btn--plain.v-btn--active:not(.v-btn--loading):not(:focus):not(:hover) .v-btn__content {
       opacity: 0.62;
     }
@@ -423,6 +465,7 @@ code.lang-shell {
 .v-application .theme--light.v-btn-toggle:not(.v-btn-toggle--group) .v-btn.v-btn {
   border-color: #515151 !important;
 }
+
 .v-item-group.v-btn-toggle .btn--hover:not(:first-child):hover {
   border-left: none !important;
 }

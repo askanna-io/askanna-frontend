@@ -3,7 +3,7 @@
     <AskAnnaCardTitle>Description</AskAnnaCardTitle>
     <AskAnnaDivider />
 
-    <AskAnnaDescription class="mx-2" preview readonly :description="job.description" />
+    <AskAnnaDescription preview readonly :description="job.description" />
 
     <AskAnnaDivider />
     <JobDefinition
@@ -14,8 +14,7 @@
       :routeParams="routeParams"
       :to="'workspace-project-code'"
       :packageSuuid="projectStore.project.package.suuid"
-      @handleGoToCode="handleGoToCode"
-    />
+      @handleGoToCode="handleGoToCode" />
     <AskAnnaDivider v-if="projectRunCreate" />
     <JobRunning v-if="projectRunCreate" />
   </AskAnnaCard>
