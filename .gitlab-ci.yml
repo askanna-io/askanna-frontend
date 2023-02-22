@@ -242,7 +242,7 @@ publish_release_to_gitlab:
   variables:
     GITLAB_PRIVATE_TOKEN: $GITLAB_COM_API_TOKEN
   script:
-    - release-cli --server-url https://gitlab.com --project-id 43372103 create --tag-name $CI_COMMIT_TAG --description $CI_COMMIT_TAG_MESSAGE
+    - release-cli --server-url https://gitlab.com --project-id 43372103 create --tag-name $CI_COMMIT_TAG --description "$CI_COMMIT_TAG_MESSAGE"
 
 publish_to_github:
   stage: publish
@@ -278,6 +278,7 @@ publish_to_github:
     - git push github $TARGET
 
 publish_release_to_github:
+  image: ubuntu:22.04
   stage: publish
   needs:
     - job: build_production
@@ -297,7 +298,7 @@ publish_release_to_github:
     - curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
     - chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
     - echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-    - apt-get update -y && apt install gh -y
+    - apt-get update -y && apt-get install gh -y
   script:
     - gh auth login --hostname github.com
-    - gh release create $CI_COMMIT_TAG --notes $CI_COMMIT_TAG_MESSAGE --repo askanna-io/askanna-frontend
+    - gh release create $CI_COMMIT_TAG --verify-tag --title $CI_COMMIT_TAG --notes "$CI_COMMIT_TAG_MESSAGE" --repo askanna-io/askanna-frontend
