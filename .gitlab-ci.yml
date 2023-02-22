@@ -61,7 +61,8 @@ build_production:
       variables:
         ENV_CONTENT: $ENV_REVIEW
         DOCKER_DESTINATION: $DOCKER_PRODUCTION
-    - if: ($CI_COMMIT_BRANCH || $CI_COMMIT_TAG)
+        DOCKER_BASE_IMAGE: $CI_REGISTRY_IMAGE/base:main
+    - if: $CI_COMMIT_BRANCH
       variables:
         ENV_CONTENT: $ENV_REVIEW
         DOCKER_DESTINATION: $DOCKER_REVIEW
