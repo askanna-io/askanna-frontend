@@ -1,14 +1,11 @@
 <template>
   <pre
     ref="codeWrapper"
-    class="ask-anna-highlight"
-  ><code class="lang-shell hljs" :class="{ 'loading': loading }" v-html="highlighted"/></pre>
+    class="ask-anna-highlight"><code class="lang-shell hljs" :class="{ 'loading': loading }" v-html="highlighted"/></pre>
 </template>
 
 <script setup lang="ts">
 import hljs from 'highlight.js'
-
-window.hljs = hljs
 
 const props = defineProps({
   singleLine: {
@@ -34,11 +31,11 @@ const props = defineProps({
 })
 
 const codeWrapper = ref(null)
-const lineNumber = useLineNumber()
+const hljsWithLineNumber = useLineNumber(hljs)
 
 const highlighted = computed(() => {
-  let result = hljs.highlight(props.value, { language: props.languageName, ignoreIllegals: true }).value
-  result = lineNumber.lineNumbersValue(result, { maxRowToShow: props.maxRowToShow, singleLine: props.singleLine })
+  let result = hljsWithLineNumber.highlight(props.value, { language: props.languageName, ignoreIllegals: true }).value
+  result = hljsWithLineNumber.lineNumbersValue(result, { maxRowToShow: props.maxRowToShow, singleLine: props.singleLine })
 
   return result
 })

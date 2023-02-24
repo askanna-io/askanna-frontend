@@ -1,9 +1,8 @@
 .hljs-ln td {
-  padding: 0;
+  padding-left: 8px;
 }
 .hljs-ln {
   border-collapse: collapse;
-  line-height: 8px;
 }
 .hljs-ln-n:before {
   content: attr(data-line-number);
@@ -21,7 +20,7 @@
   color: #999;
   vertical-align: top;
   padding-left: 5px !important;
-  padding-right: 5px !important;
+  padding-right: 8px !important;
 }
 /* for block of code */
 .hljs-ln-code {
