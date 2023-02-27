@@ -1,9 +1,23 @@
 <template>
   <div>
     <AskAnnaRow justify="center">
-      <AskAnnaCol cols="8" xl="3" md="6" sm="9" lg="4" class="rounded">
-        <img alt="AskAnna logo" src="/assets/logo.svg" class="logo" />
-        <VExpansionPanels class="login-expansion" v-model="panel">
+      <AskAnnaCol
+        cols="8"
+        xl="3"
+        md="6"
+        sm="9"
+        lg="4"
+        class="rounded"
+      >
+        <img
+          alt="AskAnna logo"
+          src="/assets/logo.svg"
+          class="logo"
+        />
+        <VExpansionPanels
+          class="login-expansion"
+          v-model="panel"
+        >
           <SignIn v-if="!authStore.signUpStep" />
           <template v-if="!authStore.signUpStep">
             <SignUp />
@@ -17,17 +31,30 @@
         <SignInThankYou v-if="authStore.signUpStep === 2" />
       </AskAnnaCol>
     </AskAnnaRow>
-    <AskAnnaRow v-if="panel" align="center" justify="center">
-      <AskAnnaCol cols="8" xl="3" md="6" sm="9" lg="4" class="rounded">
-        <VExpansionPanels class="login-expansion" v-model="panel">
-          <VExpandTransition>
-            <AskAnnaReadMore />
-          </VExpandTransition>
-        </VExpansionPanels>
-      </AskAnnaCol>
-    </AskAnnaRow>
-  </div>
-</template>
+    <AskAnnaRow
+      v-if="panel"
+      align="center"
+      justify="center"
+    >
+      <AskAnnaCol
+        cols="8"
+        xl="3"
+        md="6"
+        sm="9"
+        lg="4"
+        class="rounded"
+    >
+      <VExpansionPanels
+        class="login-expansion"
+        v-model="panel"
+      >
+        <VExpandTransition>
+          <AskAnnaReadMore />
+        </VExpandTransition>
+      </VExpansionPanels>
+    </AskAnnaCol>
+  </AskAnnaRow>
+</div></template>
 
 <script setup lang="ts">
 import SignIn from './sign-in.vue'
