@@ -73,7 +73,7 @@ export const useCompareRunsStore = defineStore('compare-runs', {
 
           const metric = await this.getMetric({
             suuid,
-            params: { cursor, page_size: 25, order_by: 'metric.name, created' }
+            params: { cursor, page_size: 25, order_by: 'metric.name, created_at' }
           })
 
           if (!metric?.next) this.metricParams.next.delete(suuid)
@@ -116,7 +116,7 @@ export const useCompareRunsStore = defineStore('compare-runs', {
 
           const metric = await this.getVariable({
             suuid,
-            params: { cursor, page_size: 25, order_by: 'variable.name, created' }
+            params: { cursor, page_size: 25, order_by: 'variable.name, created_at' }
           })
 
           if (!metric?.next) this.variableParams.next.delete(suuid)

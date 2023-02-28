@@ -13,7 +13,7 @@ export const usePackageStore = defineStore('package', {
       processingList: [],
       packageData: {
         size: 0,
-        created: '',
+        created_at: '',
         filename: '',
         project: '',
         suuid: '',

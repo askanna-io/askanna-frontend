@@ -6,8 +6,7 @@
     :hide-default-header="!items.length"
     :hide-default-footer="!items.length"
     @click:row="handleClickRow"
-    fixed-header
-  >
+    fixed-header>
     <template v-slot:top>
       <AskAnnaSubHeader>Packages</AskAnnaSubHeader>
       <AskAnnaDivider />
@@ -15,13 +14,14 @@
 
     <template v-slot:item.suuid="{ item }">
       <AskAnnaChip outlined label color="primary" @click.stop="handleDownload(item)">
-        <AskAnnaAvatar left><AskAnnaIcon>mdi-cloud-download</AskAnnaIcon></AskAnnaAvatar
-        >Download</AskAnnaChip
-      >
+        <AskAnnaAvatar left>
+          <AskAnnaIcon>mdi-cloud-download</AskAnnaIcon>
+        </AskAnnaAvatar>Download
+      </AskAnnaChip>
     </template>
 
-    <template v-slot:item.created="{ item }">
-      {{ dayjs(item.created).format(' Do MMMM YYYY, h:mm:ss a') }}
+    <template v-slot:item.created_at="{ item }">
+      {{ dayjs(item.created_at).format(' Do MMMM YYYY, h:mm:ss a') }}
     </template>
 
     <template v-slot:item.menu="{ item }">
@@ -81,7 +81,7 @@ const headers = [
     value: 'filename',
     class: 'text-left text-subtitle-2 font-weight-bold h-20'
   },
-  { text: 'Created', value: 'created', class: 'text-left text-subtitle-2 font-weight-bold h-20' },
+  { text: 'Created', value: 'created_at', class: 'text-left text-subtitle-2 font-weight-bold h-20' },
   { text: '', value: 'suuid', sortable: false, class: 'text-left text-subtitle-2 font-weight-bold h-20' },
   { text: '', value: 'menu', class: 'text-left text-subtitle-2 font-weight-bold h-20' }
 ]

@@ -49,7 +49,7 @@ const props = defineProps({
     type: Object,
     default: () => ({
       status: '',
-      updated: '',
+      modified_at: '',
       duration: ''
     })
   }
@@ -124,7 +124,7 @@ const variables = computed(() => {
     },
     {
       text: 'Start date',
-      value: moment.dayjs(props.run.created).format('Do MMMM YYYY, h:mm:ss a'),
+      value: moment.dayjs(props.run.created_at).format('Do MMMM YYYY, h:mm:ss a'),
       component: RunInfoText,
       visibility: true
     },

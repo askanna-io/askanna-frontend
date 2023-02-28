@@ -14,8 +14,7 @@
             v-model="activeY"
             item-text="name"
             item-value="value"
-            :items="yAxisList"
-          >
+            :items="yAxisList">
           </AskAnnaSelect>
         </AskAnnaCol>
         <AskAnnaCol class="d-flex" cols="12" sm="4">
@@ -31,8 +30,7 @@
             item-text="title"
             item-value="value"
             :items="xAxisList"
-            @click:clear.stop="hadnleResetX"
-          >
+            @click:clear.stop="hadnleResetX">
           </AskAnnaSelect>
         </AskAnnaCol>
         <AskAnnaCol class="d-flex" cols="12" sm="4" :class="{ 'last-item': !$vuetify.breakpoint.xsOnly }">
@@ -48,8 +46,7 @@
             item-text="title"
             item-value="value"
             :items="seriesList"
-            :disabled="!seriesList.length"
-          >
+            :disabled="!seriesList.length">
           </AskAnnaSelect>
         </AskAnnaCol>
       </AskAnnaRow>
@@ -62,9 +59,7 @@
           class="ma-4 text-center"
           dense
           outlined
-          style="max-width: 900px; width: 100%"
-          >The chart only shows the first 10 000 values.</AskAnnaAlert
-        >
+          style="max-width: 900px; width: 100%">The chart only shows the first 10 000 values.</AskAnnaAlert>
       </AskAnnaRow>
     </AskAnnaContainer>
   </div>
@@ -172,7 +167,7 @@ const data = computed(() => {
         let x = index
 
         if (activeX.value.value === 2) {
-          x = new Date(cr.created)
+          x = new Date(cr.created_at)
         }
 
         if (activeX.value.value >= 3) {
@@ -190,13 +185,13 @@ const data = computed(() => {
 
     return result.reduce(reducer, [])
   } else {
-    return result.map(({ label, metric, created }, index) => {
+    return result.map(({ label, metric, created_at }, index) => {
       let x = index
       let y = metric.value
       let z = undefined
 
       if (activeX.value.value === 2) {
-        x = new Date(created)
+        x = new Date(created_at)
       }
 
       if (activeX.value.value >= 3) {
@@ -232,6 +227,7 @@ onBeforeMount(() => fetchData())
 .l-chart .v-select__slot .v-input__icon--clear .v-icon {
   font-size: 18px;
 }
+
 .v-application--is-ltr .l-chart .v-input__append-inner {
   padding-left: 0;
 }

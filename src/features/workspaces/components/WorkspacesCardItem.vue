@@ -8,13 +8,11 @@
         workspaceId: workspace.suuid,
         title: `${workspace.name}}`
       }
-    }"
-  >
+    }">
     <AskAnnaToolbar flat dense white--text color="white" class="AskAnna-app-bar">
       <AskAnnaToolbarTitle
         class="title font-weight-light"
-        :class="{ 'px-0 pt-2': $vuetify.breakpoint.xsOnly, 'pl-4 pt-5': !$vuetify.breakpoint.xsOnly }"
-      >
+        :class="{ 'px-0 pt-2': $vuetify.breakpoint.xsOnly, 'pl-4 pt-5': !$vuetify.breakpoint.xsOnly }">
         <AskAnnaIcon large>
           {{ icon }}
         </AskAnnaIcon>
@@ -29,8 +27,7 @@
           :isMember="workspace.is_member"
           :permission="workspace.permission"
           :workspaceUuid="workspace.suuid"
-          @onOpenWorkspaceRemove="handleOpenConfirmRemoveWorkspace"
-        />
+          @onOpenWorkspaceRemove="handleOpenConfirmRemoveWorkspace" />
       </div>
     </AskAnnaToolbar>
 
@@ -50,10 +47,10 @@ const props = defineProps({
     type: Object,
     default: function () {
       return {
-        created: '',
+        created_at: '',
         description: '',
         is_member: true,
-        modified: '',
+        modified_at: '',
         name: '',
         suuid: '',
 
@@ -80,6 +77,7 @@ const icon = computed(() =>
 .h-100 {
   height: 100%;
 }
+
 .project--description {
   min-height: 82px;
   max-height: 86px;

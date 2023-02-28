@@ -11,7 +11,7 @@ export interface File {
 export interface Package {
   files: File[]
   size: number
-  created: string
+  created_at: string
   filename: string
   project: string
   suuid: string

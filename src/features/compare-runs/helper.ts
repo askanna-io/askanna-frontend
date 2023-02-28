@@ -23,7 +23,7 @@ export const compareItems = {
       },
       {
         title: 'Start date',
-        field: 'created',
+        field: 'created_at',
         type: 'date',
         getRouteParams: () => ({})
       },

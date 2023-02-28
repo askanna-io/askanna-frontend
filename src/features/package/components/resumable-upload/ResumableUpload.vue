@@ -13,8 +13,7 @@
                 :isUploadStart="isFileAdded"
                 :resumableFile="resumableFile"
                 :key="index + getIndex()"
-                @deleteFile="handleDeleteFile"
-              />
+                @deleteFile="handleDeleteFile" />
             </div>
           </div>
         </div>
@@ -31,8 +30,7 @@
           small
           outlined
           @click="handleConfirmUpload"
-          color="secondary"
-        >
+          color="secondary">
           <AskAnnaIcon color="secondary" left>mdi-upload</AskAnnaIcon>Upload
         </AskAnnaButton>
       </span>
@@ -43,8 +41,7 @@
         v-if="showConfirmation"
         :isReplace="isReplace"
         @uploadStarted="handleStartUpload"
-        @cancelUploadStarted="handleCancelUploadStarted"
-      />
+        @cancelUploadStarted="handleCancelUploadStarted" />
       <UploadProcessDialog
         v-if="isUploadStart"
         :progress="progress"
@@ -52,8 +49,7 @@
         :packageId="packageShortUuid"
         :isUploadFinish="isUploadFinish"
         @onCloseOutside="handleCloseOutside"
-        @confirmationClosed="handleConfirmationClosed"
-      />
+        @confirmationClosed="handleConfirmationClosed" />
     </AskAnnaCol>
   </AskAnnaRow>
 </template>
@@ -71,8 +67,8 @@ defineProps({
         memory: 0,
         return_payload: null,
         stdout: null,
-        created: '',
-        finished: ''
+        created_at: '',
+        finished_at: ''
       }
     }
   },

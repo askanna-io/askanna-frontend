@@ -10,8 +10,7 @@
           :value="run.name"
           label="Run name (optional)"
           :autofocus="!$vuetify.breakpoint.xsOnly"
-          @input="handleOnInput($event, 'name')"
-        />
+          @input="handleOnInput($event, 'name')" />
       </AskAnnaCol>
     </AskAnnaRow>
     <AskAnnaRow v-if="!$vuetify.breakpoint.xsOnly" class="pt-3">
@@ -25,8 +24,7 @@
           :headerHeight="440"
           :description="run.description"
           :title="'Run description (optional)'"
-          @onChangeDescription="handleOnInput($event, 'description')"
-        />
+          @onChangeDescription="handleOnInput($event, 'description')" />
       </AskAnnaCol>
     </AskAnnaRow>
     <AskAnnaRow>
@@ -36,8 +34,7 @@
           titleWidth="117px"
           :title="'JSON data (optional)'"
           @validete="handleValidate"
-          @onInput="handleOnInput($event, 'code')"
-        />
+          @onInput="handleOnInput($event, 'code')" />
       </AskAnnaCol>
     </AskAnnaRow>
     <AskAnnaRow>
@@ -131,7 +128,7 @@ const calculateDuration = computed(() => {
   if (isFinished.value) {
     return moment.durationHumanizeBySecond(runStore.newRun.duration)
   }
-  return moment.durationHumanize(runStore.newRun.created, startTime.value)
+  return moment.durationHumanize(runStore.newRun.created_at, startTime.value)
 })
 
 const checkStatus = () => {

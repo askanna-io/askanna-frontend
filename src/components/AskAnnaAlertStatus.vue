@@ -8,8 +8,7 @@
     :icon="statusIcon"
     :color="statusColor"
     class="mb-0 askanna-alert"
-    :class="{ 'px-1': $vuetify.breakpoint.xsOnly }"
-  >
+    :class="{ 'px-1': $vuetify.breakpoint.xsOnly }">
     {{ getText($vuetify.breakpoint.smAndDown) }}
   </AskAnnaAlert>
 </template>
@@ -23,10 +22,10 @@ const props = defineProps({
     default: function () {
       return {
         status: 'UNDIFENED',
-        created: '',
-        finished: '',
-        started: '',
-        updated: ''
+        created_at: '',
+        finished_at: '',
+        started_at: '',
+        updated_at: ''
       }
     }
   }
@@ -67,7 +66,7 @@ const statusColor = computed(() => get(COLORS, status.value))
 const statusValue = computed(() => get(TEXTS, status.value))
 
 const getText = (isMobile: boolean) => {
-  const lastStatus = props.statusData.finished || props.statusData.started || props.statusData.created
+  const lastStatus = props.statusData.finished_at || props.statusData.started_at || props.statusData.created_at
   const lastStatusMoment = lastStatus && `(${moment.ago(lastStatus)})`
   const desktopStatus = `Last status: ${statusValue.value} ${lastStatusMoment}`
   const mobileStatus = !lastStatus ? capitalize(statusValue.value) : capitalize(moment.ago(lastStatus))
@@ -80,18 +79,22 @@ const getText = (isMobile: boolean) => {
   max-width: 360px;
   font-size: 14px;
 }
+
 .askanna-alert.v-alert.v-alert--dense {
   padding-top: 3px;
 }
+
 .askanna-alert.v-alert--text:before {
   background-color: initial;
 }
+
 .mobile-view {
   .askanna-alert {
     .v-alert__content {
       white-space: nowrap;
     }
   }
+
   .askanna-alert.v-alert .v-icon {
     margin-right: 5px;
   }
