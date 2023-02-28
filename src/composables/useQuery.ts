@@ -47,6 +47,23 @@ export default function ({
     }
   }
 
+  const onLoadMore = () => {
+    if (next.value && next.value.includes('http')) {
+      const url = new URL(next.value)
+      const cursor = url.searchParams.get('cursor')
+
+      if (cursor === currentCursor.value) return
+
+      currentCursor.value = cursor
+
+      storeAction({
+        loading,
+        suuid: suuid?.value,
+        params: { page_size, ...queryParams.value, cursor }
+      })
+    }
+  }
+
   const resetParams = () => {
     currentCursor.value = ''
     currentScrollTop.value = 0
@@ -121,5 +138,5 @@ export default function ({
     { immediate: immediate }
   )
 
-  return { options, resetParams, handleUpdateOptions, sortFilterLoading, onScroll, debounceedSearch }
+  return { options, resetParams, handleUpdateOptions, sortFilterLoading, onScroll, onLoadMore, debounceedSearch }
 }
