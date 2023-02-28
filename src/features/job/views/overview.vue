@@ -34,12 +34,12 @@ const projectRunCreate = computed(() => permission.getFor(permission.labels.proj
 
 const job = computed(() => jobStore.job)
 const nextRun = computed(
-  () => jobStore.job.schedules && moment.nextClosestData(jobStore.job.schedules?.map(s => s.next_run))
+  () => jobStore.job.schedules && moment.nextClosestData(jobStore.job.schedules?.map(s => s.next_run_at))
 )
 const schedules = computed(() =>
   jobStore.job.schedules?.map(item => ({
     ...item,
-    next_run: moment.dayjs.tz(item.next_run, item.cron_timezone).local().format(' Do MMMM YYYY, h:mm a'),
+    next_run_at: moment.dayjs.tz(item.next_run_at, item.cron_timezone).local().format(' Do MMMM YYYY, h:mm a'),
     humanizeFormat: cronstrue.humanizeCron(item.cron_definition),
     isDifferentTimeZone: moment.checkIfTimeZoneEq(item.cron_timezone)
   }))

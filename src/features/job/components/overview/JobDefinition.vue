@@ -6,35 +6,33 @@
         <AskAnnaCol
           :cols="$vuetify.breakpoint.xsOnly ? 12 : 2"
           :sm="job.schedules?.length ? 4 : 5"
-          :class="{ 'py-0': $vuetify.breakpoint.xsOnly }"
-        >
+          :class="{ 'py-0': $vuetify.breakpoint.xsOnly }">
           <AskAnnaRow>
-            <AskAnnaCol cols="12"><RunInfoCopyText text="SUUID" :value="job.suuid" /></AskAnnaCol>
+            <AskAnnaCol cols="12">
+              <RunInfoCopyText text="SUUID" :value="job.suuid" />
+            </AskAnnaCol>
             <AskAnnaCol cols="12">
               <AskAnnaLinkCopy
                 text="Code: "
                 :to="to"
                 :routeParams="routeParams"
                 :value="packageSuuid"
-                @click="handleGoToCode"
-              />
+                @click="handleGoToCode" />
             </AskAnnaCol>
-            <AskAnnaCol cols="12"
-              ><RunInfoEnv
+            <AskAnnaCol cols="12">
+              <RunInfoEnv
                 text="Environment"
                 :fullMode="false"
                 :value="environment"
                 :nudgeLeft="nudgeLeft"
-                :fullValue="!job.schedules?.length"
-              />
+                :fullValue="!job.schedules?.length" />
             </AskAnnaCol>
           </AskAnnaRow>
         </AskAnnaCol>
         <AskAnnaCol
           :cols="$vuetify.breakpoint.xsOnly ? 12 : 2"
           :sm="job.schedules?.length ? 4 : 5"
-          v-if="job.schedules?.length || nextRun?.datatime"
-        >
+          v-if="job.schedules?.length || nextRun?.datatime">
           <AskAnnaRow>
             <AskAnnaCol v-if="nextRun?.datatime" cols="12">
               <AskAnnaTooltip top left content-class="opacity-1">
@@ -52,9 +50,8 @@
                     <AskAnnaTooltip top left content-class="opacity-1">
                       <template v-slot:activator="{ on, value }">
                         <span class="hover-text" v-on="on">
-                          <template v-if="isMultipleSchedules"
-                            >{{ i + 1 }}. {{ item.humanizeFormat.value | capitalize }}</template
-                          >
+                          <template v-if="isMultipleSchedules">{{ i + 1 }}. {{ item.humanizeFormat.value | capitalize
+                          }}</template>
                           <template v-else>
                             {{ item.humanizeFormat.value | lowercase }}
                           </template>
@@ -65,19 +62,15 @@
                             dark
                             class="ma-0"
                             :color="getColor(value)"
-                            :class="{ 'pl-1': isMultipleSchedules }"
-                            >mdi-map-clock-outline</AskAnnaIcon
-                          >
+                            :class="{ 'pl-1': isMultipleSchedules }">mdi-map-clock-outline</AskAnnaIcon>
                         </span>
                       </template>
                       <div>
-                        <span>Definition: {{ item.raw_definition }}</span
-                        ><br />
+                        <span>Definition: {{ item.raw_definition }}</span><br />
                         <template>
-                          <span>Time zone: {{ item.cron_timezone }}</span
-                          ><br />
+                          <span>Time zone: {{ item.cron_timezone }}</span><br />
                         </template>
-                        <span>Next:{{ item.next_run }}</span>
+                        <span>Next:{{ item.next_run_at }}</span>
                       </div>
                     </AskAnnaTooltip>
                   </li>
@@ -89,17 +82,15 @@
         <AskAnnaCol
           :class="{ 'pt-0': $vuetify.breakpoint.xsOnly }"
           :cols="$vuetify.breakpoint.xsOnly ? 12 : 2"
-          :sm="job.schedules?.length ? 4 : 5"
-        >
+          :sm="job.schedules?.length ? 4 : 5">
           <AskAnnaRow>
-            <AskAnnaCol cols="12"
-              ><NotificationsEmail
+            <AskAnnaCol cols="12">
+              <NotificationsEmail
                 title="Notification"
                 :fullMode="false"
                 :nudgeLeft="nudgeLeft"
                 :notifications="job.notifications"
-                :fullValue="!job.schedules?.length"
-              />
+                :fullValue="!job.schedules?.length" />
             </AskAnnaCol>
           </AskAnnaRow>
         </AskAnnaCol>
@@ -150,7 +141,7 @@ const props = defineProps({
   },
   routeParams: {
     type: Object,
-    default: () => {}
+    default: () => { }
   }
 })
 
@@ -170,6 +161,7 @@ const handleGoToCode = () => emits('handleGoToCode')
   list-style-type: none;
   padding-left: 3px;
 }
+
 .code-wrapper {
   display: flex;
   align-items: baseline;

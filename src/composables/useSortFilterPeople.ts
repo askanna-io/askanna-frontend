@@ -28,8 +28,8 @@ export default function sortFilter(sortItem: string, sortItemPlural: string) {
   const { order_by = '', search: searchText } = query.value
 
   const sortItems = [
-    { title: 'Created (New to Old)', value: { order_by: '-created' } },
-    { title: 'Created (Old to New)', value: { order_by: 'created' } },
+    { title: 'Created (New to Old)', value: { order_by: '-created_at' } },
+    { title: 'Created (Old to New)', value: { order_by: 'created_at' } },
 
     { title: `${sortItem} name (A to Z)`, value: { order_by: 'name' } },
     { title: `${sortItem} name (Z to A)`, value: { order_by: '-name' } }
@@ -102,11 +102,11 @@ export default function sortFilter(sortItem: string, sortItemPlural: string) {
     handleChangeQuery({ ...query.value, ...params, routeName })
   }
 
-  const handleChangeQuery = ({ order_by = 'created', status, search, role_code, routeName }) => {
+  const handleChangeQuery = ({ order_by = 'created_at', status, search, role_code, routeName }) => {
     // we don't show the default value of sorting and filtering in URL params
     const query = {
       search: search || undefined,
-      order_by: order_by === '-created' ? undefined : order_by,
+      order_by: order_by === '-created_at' ? undefined : order_by,
       status: typeof status === 'undefined' || status === '' ? undefined : status,
       role_code: typeof role_code === 'undefined' || role_code === '' ? undefined : role_code.toLowerCase()
     }

@@ -43,15 +43,15 @@ export const useJobsStore = defineStore('jobs', {
             params: { job_suuid: job.suuid, page_size: 1 }
           })
 
-          const run = runs && runs.results.length ? runs.results[0] : { status: 'not_runs', created: '', started: '', finished: '', updated: '' }
+          const run = runs && runs.results.length ? runs.results[0] : { status: 'not_runs', created_at: '', started_at: '', finished_at: '', modified_at: '' }
           job.runs = {
             count: runs.count,
             status: {
               status: run.status,
-              created: run.created,
-              started: run.started,
-              finished: run.finished,
-              updated: run.modified
+              created_at: run.created_at,
+              started_at: run.started_at,
+              finished_at: run.finished_at,
+              modified_at: run.modified_at
             }
           }
 

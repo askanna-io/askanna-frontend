@@ -16,15 +16,13 @@
           :items="packageStore.projectPackages.results"
           :footer-props="{ itemsPerPageOptions: [10, 25, 50, 100] }"
           class="job-table askanna-table scrollbar"
-          @click:row="handleClickRow"
-        >
+          @click:row="handleClickRow">
           <template v-slot:top>
             <PackageToolbar
               v-sticky="sticked"
               :sticky-z-index="1"
               sticky-offset="{top: 52, bottom: 10}"
-              :breadcrumbs="breadcrumbsComputed"
-            />
+              :breadcrumbs="breadcrumbsComputed" />
           </template>
           <template v-slot:item.filename="{ item }">
             <AskAnnaTooltip top content-class="opacity-1">
@@ -43,9 +41,9 @@
                   <AskAnnaButton class="px-0" text small>#{{ item.suuid.slice(0, 4) }}</AskAnnaButton>
                   <AskAnnaTooltip v-if="!$vuetify.breakpoint.xsOnly" right content-class="opacity-1">
                     <template v-slot:activator="{ on }">
-                      <AskAnnaButton icon text x-small v-on="on" v-show="value" @click.stop="handleCopy(item.suuid)"
-                        ><AskAnnaIcon>mdi-content-copy</AskAnnaIcon></AskAnnaButton
-                      >
+                      <AskAnnaButton icon text x-small v-on="on" v-show="value" @click.stop="handleCopy(item.suuid)">
+                        <AskAnnaIcon>mdi-content-copy</AskAnnaIcon>
+                      </AskAnnaButton>
                     </template>
                     <span>Copy package SUUID</span>
                   </AskAnnaTooltip>
@@ -54,8 +52,8 @@
               <span>{{ item.suuid }}</span>
             </AskAnnaTooltip>
           </template>
-          <template v-slot:item.created="{ item }">
-            <span class="text-no-wrap">{{ dayjs(item.created).format(' Do MMMM YYYY, h:mm:ss a') }}</span>
+          <template v-slot:item.created_at="{ item }">
+            <span class="text-no-wrap">{{ dayjs(item.created_at).format(' Do MMMM YYYY, h:mm:ss a') }}</span>
           </template>
           <template v-slot:item.created_by.name="{ item }">
             <AskAnnaTooltip top content-class="opacity-1">
@@ -82,7 +80,7 @@
               <span>{{ item.description }}</span>
             </AskAnnaTooltip>
           </template>
-          <template v-slot:item.modified="{ item }">
+          <template v-slot:item.modified_at="{ item }">
             <AskAnnaTooltip top content-class="opacity-1">
               <template v-slot:activator="{ on }">
                 <div v-on="on">
@@ -92,8 +90,7 @@
                     outlined
                     color="secondary"
                     class="btn--hover"
-                    @click.stop="handleDownload(item)"
-                  >
+                    @click.stop="handleDownload(item)">
                     <AskAnnaIcon :left="$vuetify.breakpoint.name !== 'sm'">mdi-download</AskAnnaIcon>
 
                     <span class="hidden-sm-only">Download</span>
@@ -113,8 +110,7 @@
               :loading="sortFilterLoading"
               :pageItemsCount="packageStore.projectPackages.results.length"
               :itemsPerPage="options.itemsPerPage"
-              @onUpdateOptions="handleUpdateOptions"
-            />
+              @onUpdateOptions="handleUpdateOptions" />
           </template>
         </VDataTable>
       </AskAnnaCol>
@@ -164,7 +160,7 @@ const headers = (isMobile: boolean = false) => [
   },
   {
     text: 'Date created',
-    value: 'created',
+    value: 'created_at',
     width: isMobile ? '15%' : '10%',
     class: 'w-min-210 text-left text-subtitle-2 font-weight-bold h-20',
     isShowOnMobile: true
@@ -187,7 +183,7 @@ const headers = (isMobile: boolean = false) => [
   },
   {
     text: '',
-    value: 'modified',
+    value: 'modified_at',
     sortable: false,
     width: '10%',
     class: 'w-min-110 text-left text-subtitle-2 font-weight-bold h-20',
@@ -249,6 +245,7 @@ const maxLength = computed(() => {
 .job-sub-table .v-data-table__wrapper tr th {
   z-index: 1;
 }
+
 .v-data-table__expanded.v-data-table__expanded__content {
   box-shadow: none !important;
 }

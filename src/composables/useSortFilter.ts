@@ -19,8 +19,8 @@ export default function sortFilter(sortItem: string, sortItemPlural: string) {
   const { order_by = '', search: searchText } = query.value
 
   const sortItems = [
-    { title: 'Created (New to Old)', value: { order_by: '-created' } },
-    { title: 'Created (Old to New)', value: { order_by: 'created' } },
+    { title: 'Created (New to Old)', value: { order_by: '-created_at' } },
+    { title: 'Created (Old to New)', value: { order_by: 'created_at' } },
 
     { title: `${sortItem} name (A to Z)`, value: { order_by: 'name' } },
     { title: `${sortItem} name (Z to A)`, value: { order_by: '-name' } }
@@ -105,11 +105,11 @@ export default function sortFilter(sortItem: string, sortItemPlural: string) {
     handleChangeQuery({ ...query.value, ...params, routeName })
   }
 
-  const handleChangeQuery = ({ order_by = 'created', is_member, search, visibility, routeName }) => {
+  const handleChangeQuery = ({ order_by = 'created_at', is_member, search, visibility, routeName }) => {
     // we don't show the default value of sorting and filtering in URL params
     const query = {
       search: search || undefined,
-      order_by: order_by === '-created' ? undefined : order_by,
+      order_by: order_by === '-created_at' ? undefined : order_by,
       visibility: !visibility ? undefined : visibility.toLowerCase(),
       is_member: typeof is_member === 'undefined' || is_member === '' ? undefined : is_member
     }

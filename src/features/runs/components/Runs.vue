@@ -13,8 +13,7 @@
     :items-per-page="itemsPerPage"
     :headers="getHeaders($vuetify.breakpoint.xsOnly)"
     :footer-props="{ itemsPerPageOptions: [10, 25, 50, 100] }"
-    class="job-runs-table ask-anna-table ask-anna-table--with-links"
-  >
+    class="job-runs-table ask-anna-table ask-anna-table--with-links">
     <template v-slot:top>
       <AskAnnaContainer v-if="!asSubChild" fluid class="py-0">
         <AskAnnaRow justify="end">
@@ -26,8 +25,7 @@
               hide-details
               label="Search"
               @input="debounceedSearch"
-              append-icon="mdi-magnify"
-            ></AskAnnaTextField>
+              append-icon="mdi-magnify"></AskAnnaTextField>
           </AskAnnaCol>
         </AskAnnaRow>
       </AskAnnaContainer>
@@ -42,9 +40,9 @@
                   <AskAnnaButton class="px-0" text small>#{{ item.suuid.slice(0, 4) }}</AskAnnaButton>
                   <AskAnnaTooltip right content-class="opacity-1">
                     <template v-slot:activator="{ on }">
-                      <AskAnnaButton icon text x-small v-on="on" v-show="value" @click.prevent="handleCopy(item.suuid)"
-                        ><AskAnnaIcon>mdi-content-copy</AskAnnaIcon></AskAnnaButton
-                      >
+                      <AskAnnaButton icon text x-small v-on="on" v-show="value" @click.prevent="handleCopy(item.suuid)">
+                        <AskAnnaIcon>mdi-content-copy</AskAnnaIcon>
+                      </AskAnnaButton>
                     </template>
                     <span>Copy run SUUID</span>
                   </AskAnnaTooltip>
@@ -59,8 +57,7 @@
           <RouterLink
             :class="{ 'h-100': !item.name }"
             :to="routeLinkParams({ item })"
-            class="table-link table-link--unformated"
-          >
+            class="table-link table-link--unformated">
             {{ item.name }}
           </RouterLink>
         </td>
@@ -71,7 +68,7 @@
         </td>
         <td class="text-start">
           <RouterLink class="table-link table-link--unformated" :to="routeLinkParams({ item })">
-            <b>Started:</b> &nbsp;{{ dayjs(item.created).format(' Do MMMM YYYY, h:mm:ss a') }}
+            <b>Started:</b> &nbsp;{{ dayjs(item.created_at).format(' Do MMMM YYYY, h:mm:ss a') }}
             <br />
             <b>Duration:</b>&nbsp;{{ calculateDuration(item) }}<br />
           </RouterLink>
@@ -84,16 +81,14 @@
         <td class="text-start">
           <RouterLink
             class="table-link table-link--unformated"
-            :to="routeLinkParams({ item, name: 'workspace-project-jobs-job-run-input' })"
-          >
+            :to="routeLinkParams({ item, name: 'workspace-project-jobs-job-run-input' })">
             {{ getPayloadTitle(item.payload) }}
           </RouterLink>
         </td>
         <td class="text-start">
           <RouterLink
             class="table-link table-link--unformated"
-            :to="routeLinkParams({ item, name: 'workspace-project-jobs-job-run-metrics' })"
-          >
+            :to="routeLinkParams({ item, name: 'workspace-project-jobs-job-run-metrics' })">
             {{ getMetricTitle(item.metrics_meta.count) }}
           </RouterLink>
         </td>
@@ -111,8 +106,7 @@
         :loading="sortFilterLoading"
         :pageItemsCount="runs.length"
         :itemsPerPage="options.itemsPerPage"
-        @onUpdateOptions="handleUpdateOptions"
-      />
+        @onUpdateOptions="handleUpdateOptions" />
     </template>
   </VDataTable>
 </template>

@@ -10,13 +10,11 @@
         workspaceId: project.workspace.suuid,
         packageId: (project.package && project.package.suuid) || ''
       }
-    }"
-  >
+    }">
     <AskAnnaToolbar flat dense white--text color="white" class="AskAnna-app-bar">
       <AskAnnaToolbarTitle
         class="title font-weight-light"
-        :class="{ 'px-0 pt-2 pr-0': $vuetify.breakpoint.xsOnly, 'pl-4 pt-5': !$vuetify.breakpoint.xsOnly }"
-      >
+        :class="{ 'px-0 pt-2 pr-0': $vuetify.breakpoint.xsOnly, 'pl-4 pt-5': !$vuetify.breakpoint.xsOnly }">
         <AskAnnaIcon large> mdi-semantic-web </AskAnnaIcon>
         {{ project.name }}
       </AskAnnaToolbarTitle>
@@ -42,9 +40,9 @@ const props = defineProps({
         description: '',
         permission: {},
         runtime: 0,
-        created: '',
+        created_at: '',
         stdout: null,
-        finished: '',
+        finished_at: '',
         status: 'UNDIFENED',
         return_payload: null
       }
@@ -77,6 +75,7 @@ const projectInfoEdit = computed(
 .h-100 {
   height: 100%;
 }
+
 .project--description {
   min-height: 82px;
   max-height: 86px;

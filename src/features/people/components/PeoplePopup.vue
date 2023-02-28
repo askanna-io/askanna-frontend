@@ -168,8 +168,8 @@ const props = defineProps({
         },
         status: '',
         avatar: '',
-        created: '',
-        modified: '',
+        created_at: '',
+        modified_at: '',
         job_title: '',
         suuid: '',
         last_active: ''

@@ -3,17 +3,17 @@ import apiService from '@/services/apiService'
 import { apiStringify } from '@/services/api-settings'
 
 interface Schedule {
-  last_run: string
-  next_run: string
+  last_run_at: string
+  next_run_at: string
   raw_definition: string
 }
 interface Job {
   name: string
   title: string
   status: string
-  created: string
+  created_at: string
   timezone: string
-  modified: string
+  modified_at: string
   suuid: string
   environment: string
   description: string

@@ -27,8 +27,7 @@
                 outlined
                 color="secondary"
                 class="btn--hover"
-                @click="handleOpenConfirmEditProject"
-              >
+                @click="handleOpenConfirmEditProject">
                 Edit this project
               </AskAnnaButton>
             </AskAnnaCol>
@@ -40,8 +39,7 @@
                 text
                 color="error"
                 class="btn--hover"
-                @click="handleOpenConfirmDeleteProject"
-              >
+                @click="handleOpenConfirmDeleteProject">
                 Remove this project
               </AskAnnaButton>
             </AskAnnaCol>
@@ -53,8 +51,7 @@
       :projectName="project.name"
       :value="deleteProjectConfirmPopup"
       @onClose="handlCloseConfirmDeletePopup"
-      @onDeleteConfirm="handleDeleteConfirmPorject"
-    />
+      @onDeleteConfirm="handleDeleteConfirmPorject" />
   </div>
 </template>
 
@@ -67,9 +64,9 @@ const props = defineProps({
         name: '',
         runtime: 0,
         memory: 0,
-        created: '',
+        created_at: '',
         stdout: null,
-        finished: '',
+        finished_at: '',
         permission: {},
         return_payload: null
       }

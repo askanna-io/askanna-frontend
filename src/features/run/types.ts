@@ -6,22 +6,22 @@ export interface LabelName {
 }
 
 export interface CreatedBy {
-    name: string
-    avatar: {
-      icon: string
-      large: string
-      medium: string
-      small:string
-    }
-    job_title: string
-    relation: string
-    role: {
-      code: string
-      name:string
-    }
-    status: string
-    suuid:string
+  name: string
+  avatar: {
+    icon: string
+    large: string
+    medium: string
+    small: string
   }
+  job_title: string
+  relation: string
+  role: {
+    code: string
+    name: string
+  }
+  status: string
+  suuid: string
+}
 
 export interface Package {
   suuid: string
@@ -50,8 +50,8 @@ export interface Run {
   memory: number
   return_payload: string
   stdout: any[]
-  created: string
-  finished: string
+  created_at: string
+  finished_at: string
   version: {
     name: string
     suuid: string

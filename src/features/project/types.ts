@@ -6,8 +6,8 @@ export const enum ProjectVisibility {
 interface Project {
   name: string
   flows: any[]
-  created: string
-  modified: string
+  created_at: string
+  modified_at: string
   template: string
   suuid: string
   description: string
@@ -35,8 +35,8 @@ export class ProjectModel {
     return {
       name: '',
       flows: [],
-      created: '',
-      modified: '',
+      created_at: '',
+      modified_at: '',
       template: '',
       permission: {},
       suuid: '',

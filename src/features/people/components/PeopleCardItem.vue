@@ -31,8 +31,8 @@ defineProps({
         suuid: '',
         name: '',
         role: '',
-        created: '',
-        modified: '',
+        created_at: '',
+        modified_at: '',
         job_title: '',
         suuid: '',
         last_active: ''
@@ -61,11 +61,13 @@ defineProps({
 .h-100 {
   height: 100%;
 }
+
 .project--description {
   min-height: 82px;
   max-height: 86px;
   overflow: hidden;
 }
+
 .people-title {
   font-weight: 300px;
 }
