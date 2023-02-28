@@ -5,7 +5,7 @@
       hide-default-footer
       :no-data-text="''"
       disable-pagination
-      v-scroll="throttle(onScroll, 700)"
+      v-scroll="throttle(handleOnScroll, 700)"
     >
       <template v-slot:header>
         <PublicProjectsToolbar />
@@ -22,7 +22,10 @@
             lg="4"
             :class="{ 'pb-0': $vuetify.breakpoint.xsOnly }"
           >
-            <VHover v-slot:default="{ hover }" open-delay="200">
+            <VHover
+              v-slot:default="{ hover }"
+              open-delay="200"
+            >
               <WorkspaceProjectCardItem
                 :project="item"
                 :hover="hover"
@@ -34,27 +37,51 @@
           </AskAnnaCol>
         </AskAnnaRow>
       </template>
-      <template v-slot:no-data
-        ><AskAnnaAlert
+      <template v-slot:no-data>
+        <AskAnnaAlert
           v-if="!loading"
           dense
           outlined
           class="mt-2 text-center"
           :class="{ 'ma-2': $vuetify.breakpoint.xsOnly }"
         >
-          <template v-if="query.search">There are no projects for this search request.</template>
-          <template v-else-if="query.visibility || query.is_member"
-            >There are no projects for this filter request.</template
-          >
+          <template v-if="queryParams.search">There are no projects for this search request.</template>
+          <template v-else-if="queryParams.visibility || queryParams.is_member">There are no projects for this filter
+            request.</template>
           <template v-else>There are no projects that you have access to.</template>
-        </AskAnnaAlert></template
-      >
+        </AskAnnaAlert>
+      </template>
+      <template v-slot:footer>
+        <AskAnnaRow
+          class="mt-2"
+          align="center"
+          justify="center"
+        >
+          <AskAnnaButton
+            v-if="isLargeScreen && projects.length && next"
+            small
+            outlined
+            color="secondary"
+            :loading="loading"
+            :disabled="loading"
+            class="ml-3 btn--hover"
+            @click="handleLoadMoreProjects"
+          >
+            <AskAnnaIcon
+              color="secondary"
+              left
+            >mdi-chevron-down</AskAnnaIcon>Show more projects
+          </AskAnnaButton>
+          <AskAnnaSpacer />
+        </AskAnnaRow>
+      </template>
     </VDataIterator>
   </AskAnnaLoadingProgress>
 </template>
 <script setup lang="ts">
 import { throttle } from 'lodash'
 
+const context = getCurrentInstance()
 const sanitizeHTML = useSanitizeHTML()
 const projectsStore = useProjectsStore()
 const { route, routerPush } = useRouterAskAnna()
@@ -63,18 +90,21 @@ const queryParams = computed(() => route.query)
 const loading = computed(() => projectsStore.loading)
 const next = computed(() => projectsStore.projects.next)
 const projects = computed(() => projectsStore.projects.results)
+const isLargeScreen = computed(() => (
+  context?.proxy.$root.$vuetify.breakpoint.height >= 1500
+))
 
-const query = useQuery({
+const { onLoadMore, onScroll } = useQuery({
   next,
   queryParams,
-  page_size: 25,
+  page_size: 27,
   loading: false,
   immediate: true,
   store: projectsStore,
   storeAction: projectsStore.getProjects
 })
 
-const onScroll = e => query.onScroll(e.target.documentElement.scrollTop)
+const handleOnScroll = e => onScroll(e.target.documentElement.scrollTop)
 
 const handleOpenProject = project => {
   routerPush({
@@ -87,4 +117,6 @@ const handleOpenProject = project => {
     }
   })
 }
+
+const handleLoadMoreProjects = () => onLoadMore()
 </script>
