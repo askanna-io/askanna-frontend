@@ -134,7 +134,7 @@ deploy_review:
     - if: $CI_COMMIT_BRANCH
   environment:
     name: review/$CI_COMMIT_REF_NAME
-    url: https://$CI_ENVIRONMENT_SLUG.$DOMAIN_REVIEW
+    url: https://$CI_PROJECT_NAME-$CI_ENVIRONMENT_SLUG.$DOMAIN_REVIEW
     on_stop: stop_review
     auto_stop_in: 2 weeks
   tags:
@@ -143,8 +143,9 @@ deploy_review:
     - init_k8s
     - helm upgrade
       --install
+      --namespace gitlab-managed-apps
       --set app.image="$DOCKER_REVIEW"
-      --set app.host="$CI_ENVIRONMENT_SLUG.$DOMAIN_REVIEW"
+      --set app.host="$CI_PROJECT_NAME-$CI_ENVIRONMENT_SLUG.$DOMAIN_REVIEW"
       --set deployment.minReplicas=1
       --wait
       $CI_PROJECT_NAME-$CI_ENVIRONMENT_SLUG

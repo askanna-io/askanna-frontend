@@ -5,7 +5,8 @@ metadata:
   labels:
     app: {{ .Release.Name }}
   annotations:
-    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls.certresolver: le
 spec:
   rules:
     - host: {{ .Values.app.host }}
