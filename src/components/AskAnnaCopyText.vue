@@ -1,7 +1,14 @@
 <template>
   <span class="ask-anna-copy-text">
-    <code v-if="showText" :class="styleClasses">{{ text }}</code>
-    <AskAnnaTooltip v-if="showTooltip" top content-class="opacity-1">
+    <code
+      v-if="showText"
+      :class="styleClasses"
+    >{{ text }}</code>
+    <AskAnnaTooltip
+      v-if="showTooltip"
+      top
+      content-class="opacity-1"
+    >
       <template v-slot:activator="{ on }">
         <AskAnnaButton
           v-on="on"
@@ -14,7 +21,10 @@
           @click.prevent="handleCopy"
           :outlined="buttonType.outlined"
         >
-          <AskAnnaIcon small :color="iconColor">mdi-content-copy</AskAnnaIcon>
+          <AskAnnaIcon
+            small
+            :color="iconColor"
+          >mdi-content-copy</AskAnnaIcon>
         </AskAnnaButton>
       </template>
       <span>Copy</span>
@@ -69,12 +79,10 @@ const copy = useCopy()
 
 const handleCopy = () => copy.handleCopyText(props.text)
 </script>
-<style scoped>
-.ask-anna-copy-text code {
+<style scoped>.ask-anna-copy-text code {
   color: white;
 }
 
 .primary--black {
   color: #000000de !important;
-}
-</style>
+}</style>

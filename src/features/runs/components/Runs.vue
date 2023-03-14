@@ -13,19 +13,38 @@
     :items-per-page="itemsPerPage"
     :headers="getHeaders($vuetify.breakpoint.xsOnly)"
     :footer-props="{ itemsPerPageOptions: [10, 25, 50, 100] }"
-    class="job-runs-table ask-anna-table ask-anna-table--with-links">
+    class="job-runs-table ask-anna-table ask-anna-table--with-links"
+  >
     <template v-slot:top>
-      <AskAnnaContainer v-if="!asSubChild" fluid class="py-0">
+      <AskAnnaContainer
+        v-if="!asSubChild"
+        fluid
+        class="py-0"
+      >
         <AskAnnaRow justify="end">
-          <AskAnnaCol class="d-flex" cols="12" sm="3"> </AskAnnaCol>
+          <AskAnnaCol
+            class="d-flex"
+            cols="12"
+            sm="3"
+          > </AskAnnaCol>
 
-          <AskAnnaCol v-if="!$vuetify.breakpoint.xsOnly" class="d-flex" cols="12" sm="5" md="4" lg="3">
+          <AskAnnaCol
+            v-if="!$vuetify.breakpoint.xsOnly"
+            class="d-flex"
+            cols="12"
+            sm="5"
+            md="4"
+            lg="3"
+          >
             <AskAnnaTextField
               dense
               hide-details
+              clearable
               label="Search"
               @input="debounceedSearch"
-              append-icon="mdi-magnify"></AskAnnaTextField>
+              :value="queryParams.search"
+              append-icon="mdi-magnify"
+            />
           </AskAnnaCol>
         </AskAnnaRow>
       </AskAnnaContainer>
@@ -33,62 +52,92 @@
     <template v-slot:item="{ item }">
       <tr>
         <td class="text-start">
-          <RouterLink class="table-link table-link--unformated" :to="routeLinkParams({ item })">
-            <AskAnnaTooltip v-if="!$vuetify.breakpoint.xsOnly" top content-class="opacity-1">
-              <template v-slot:activator="{ on, value }">
-                <div v-on="on">
-                  <AskAnnaButton class="px-0" text small>#{{ item.suuid.slice(0, 4) }}</AskAnnaButton>
-                  <AskAnnaTooltip right content-class="opacity-1">
-                    <template v-slot:activator="{ on }">
-                      <AskAnnaButton icon text x-small v-on="on" v-show="value" @click.prevent="handleCopy(item.suuid)">
-                        <AskAnnaIcon>mdi-content-copy</AskAnnaIcon>
-                      </AskAnnaButton>
-                    </template>
-                    <span>Copy run SUUID</span>
-                  </AskAnnaTooltip>
-                </div>
-              </template>
-              <span>{{ item.suuid }}</span>
-            </AskAnnaTooltip>
-            <template v-else> #{{ item.suuid.slice(0, 4) }} </template>
+          <RouterLink
+            class="table-link table-link--unformated"
+            :to="routeLinkParams({ item })"
+          >
+            <RunsLinkItemWithCopy
+              prefix="#"
+              :sliceBy="4"
+              :value="item.suuid"
+              copyTitle="Copy run SUUID"
+            />
+          </RouterLink>
+        </td>
+        <td
+          v-if="isProjectRuns"
+          class="text-start"
+        >
+          <RouterLink
+            :class="{ 'h-100': !item.job.name }"
+            :to="routeLinkParams({ item, name: 'workspace-project-job-overiew' })"
+            class="table-link table-link--unformated"
+          >
+            <ProjectRunsJobInfo
+              :text="item.job.name"
+              :value="item.job.suuid"
+            />
           </RouterLink>
         </td>
         <td class="text-start">
           <RouterLink
             :class="{ 'h-100': !item.name }"
             :to="routeLinkParams({ item })"
-            class="table-link table-link--unformated">
-            {{ item.name }}
+            class="table-link table-link--unformated whitespace-nowrap"
+          >
+            <RunsLinkItemWithCopy
+              v-if="item.name"
+              :value="item.name"
+              copyTitle="Copy run name"
+            />
           </RouterLink>
         </td>
+
         <td class="text-start">
-          <RouterLink class="table-link table-link--unformated" :to="routeLinkParams({ item })">
+          <RouterLink
+            class="table-link table-link--unformated"
+            :to="routeLinkParams({ item })"
+          >
             <AskAnnaChipStatus :status="item.status" />
-          </RouterLink>
-        </td>
-        <td class="text-start">
-          <RouterLink class="table-link table-link--unformated" :to="routeLinkParams({ item })">
-            <b>Started:</b> &nbsp;{{ dayjs(item.created_at).format(' Do MMMM YYYY, h:mm:ss a') }}
-            <br />
-            <b>Duration:</b>&nbsp;{{ calculateDuration(item) }}<br />
-          </RouterLink>
-        </td>
-        <td class="text-start">
-          <RouterLink class="table-link table-link--unformated" :to="routeLinkParams({ item })">
-            <AskAnnaCopy :text="item.created_by.name" smartSlice :showCopyButton="false" :width="12" />
           </RouterLink>
         </td>
         <td class="text-start">
           <RouterLink
             class="table-link table-link--unformated"
-            :to="routeLinkParams({ item, name: 'workspace-project-jobs-job-run-input' })">
+            :to="routeLinkParams({ item })"
+          >
+            <div class="d-flex flex-column">
+              <div><b>Started:</b>{{ dayjs(item.created_at).format(' Do MMMM YYYY, h:mm:ss a') }}</div>
+              <div><b>Duration:</b>{{ calculateDuration(item) }}<br /></div>
+            </div>
+          </RouterLink>
+        </td>
+        <td class="text-start">
+          <RouterLink
+            class="table-link table-link--unformated"
+            :to="routeLinkParams({ item })"
+          >
+            <AskAnnaCopy
+              :text="item.created_by.name"
+              smartSlice
+              :showCopyButton="false"
+              :width="12"
+            />
+          </RouterLink>
+        </td>
+        <td class="text-start">
+          <RouterLink
+            class="table-link table-link--unformated"
+            :to="routeLinkParams({ item, name: 'workspace-project-jobs-job-run-input' })"
+          >
             {{ getPayloadTitle(item.payload) }}
           </RouterLink>
         </td>
         <td class="text-start">
           <RouterLink
             class="table-link table-link--unformated"
-            :to="routeLinkParams({ item, name: 'workspace-project-jobs-job-run-metrics' })">
+            :to="routeLinkParams({ item, name: 'workspace-project-jobs-job-run-metrics' })"
+          >
             {{ getMetricTitle(item.metrics_meta.count) }}
           </RouterLink>
         </td>
@@ -96,7 +145,11 @@
     </template>
 
     <template v-slot:footer>
-      <VProgressLinear :color="sortFilterLoading ? 'primary' : 'white'" active indeterminate />
+      <VProgressLinear
+        :color="sortFilterLoading ? 'primary' : 'white'"
+        active
+        indeterminate
+      />
       <AskAnnaTablePagination
         v-if="runs.length"
         :next="next"
@@ -106,7 +159,8 @@
         :loading="sortFilterLoading"
         :pageItemsCount="runs.length"
         :itemsPerPage="options.itemsPerPage"
-        @onUpdateOptions="handleUpdateOptions" />
+        @onUpdateOptions="handleUpdateOptions"
+      />
     </template>
   </VDataTable>
 </template>
@@ -116,6 +170,10 @@ const props = defineProps({
   suuid: {
     type: String,
     default: () => ''
+  },
+  suuidKey: {
+    type: String,
+    default: () => 'job_suuid'
   },
   tableClass: {
     type: String,
@@ -128,10 +186,13 @@ const props = defineProps({
   asSubChild: {
     type: Boolean,
     default: () => false
+  },
+  isProjectRuns: {
+    type: Boolean,
+    default: () => false
   }
 })
 
-const copy = useCopy()
 const numeral = useNumeral()
 const runsStore = useRunsStore()
 const { route } = useRouterAskAnna()
@@ -149,6 +210,7 @@ const { options, debounceedSearch, handleUpdateOptions, sortFilterLoading } = us
   next,
   previous,
   loading: false,
+  suuidKey: props.suuidKey,
   asSubChild: props.asSubChild,
   suuid: toRef(props, 'suuid'),
   page_size: props.itemsPerPage,
@@ -162,54 +224,67 @@ const getHeaders = isMobile => [
     text: 'SUUID',
     sortable: false,
     value: 'info',
-    width: isMobile ? '50px' : '110px',
-    class: 'text-left text-subtitle-2 font-weight-bold h-20'
+    width: '50px',
+    class: 'text-left text-subtitle-2 font-weight-bold h-20',
+    show: true
+  },
+  {
+    text: 'Job',
+    width: '170px',
+    sortable: true,
+    value: 'job.name',
+    class: 'text-left text-subtitle-2 font-weight-bold h-20',
+    show: props.isProjectRuns
   },
   {
     text: 'Name',
     width: '170px',
     sortable: true,
     value: 'name',
-    class: 'text-left text-subtitle-2 font-weight-bold h-20'
+    class: 'text-left text-subtitle-2 font-weight-bold h-20 w-min-110',
+    show: true
   },
   {
     text: 'Status',
     width: '160px',
     sortable: true,
     value: 'status',
-    class: 'text-left text-subtitle-2 font-weight-bold h-20'
+    class: 'text-left text-subtitle-2 font-weight-bold h-20',
+    show: true
   },
   {
     text: 'Timing',
-    width: '350px',
+    width: '310px',
     sortable: false,
     value: 'runtime',
-    class: 'text-left text-subtitle-2 font-weight-bold h-20'
+    class: 'text-left text-subtitle-2 font-weight-bold h-20',
+    show: true
   },
   {
     text: 'By',
     value: 'created_by.name',
-    width: '150px',
+    width: 'auto',
     sortable: true,
-    class: 'text-left text-subtitle-2 font-weight-bold h-20'
+    class: 'text-left text-subtitle-2 font-weight-bold h-20',
+    show: true
   },
   {
     text: 'Input',
     width: '100px',
     sortable: false,
     value: 'payload',
-    class: 'text-left text-subtitle-2 font-weight-bold h-20'
+    class: 'text-left text-subtitle-2 font-weight-bold h-20',
+    show: true
   },
   {
     width: '120px',
     text: 'Metrics',
     sortable: false,
     value: 'metrics_meta',
-    class: 'text-left text-subtitle-2 font-weight-bold h-20'
+    class: 'text-left text-subtitle-2 font-weight-bold h-20',
+    show: true
   }
-]
-
-const handleCopy = id => copy.handleCopyText(id)
+].filter(item => item.show)
 
 const calculateDuration = item => {
   const status = item.status.toLowerCase()
@@ -245,8 +320,13 @@ const getMetricTitle = count => {
   return title
 }
 </script>
-<style scoped>
+<style>
 .h-100 {
   height: 100%;
+}
+
+.job-runs-table tr td:not(:first-child),
+.job-runs-table tr th:not(:first-child) {
+  padding-left: 0 !important;
 }
 </style>

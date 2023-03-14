@@ -2,16 +2,31 @@
   <div class="ask-anna-pagination v-data-footer">
     <div class="v-data-footer__select">
       Rows per page:
-      <AskAnnaSelect flat hidden hide-details :value="itemsPerPage" @input="updateValue" :items="[10, 25, 50, 100]" />
+      <AskAnnaSelect
+        flat
+        hidden
+        hide-details
+        :value="itemsPerPage"
+        @input="updateValue"
+        :items="[10, 25, 50, 100]"
+      />
     </div>
     <div class="v-data-footer__pagination">{{ pageInfo }}</div>
     <div class="v-data-footer__icons-before">
-      <AskAnnaButton icon :disabled="!previous || loading" @click.stop="handleUpdatePage(false)">
+      <AskAnnaButton
+        icon
+        :disabled="!previous || loading"
+        @click.stop="handleUpdatePage(false)"
+      >
         <AskAnnaIcon>mdi-chevron-left</AskAnnaIcon>
       </AskAnnaButton>
     </div>
     <div class="v-data-footer__icons-after">
-      <AskAnnaButton icon :disabled="!next || loading" @click.stop="handleUpdatePage(true)">
+      <AskAnnaButton
+        icon
+        :disabled="!next || loading"
+        @click.stop="handleUpdatePage(true)"
+      >
         <AskAnnaIcon>mdi-chevron-right</AskAnnaIcon>
       </AskAnnaButton>
     </div>
@@ -64,7 +79,7 @@ const pageStop = computed(() => {
 })
 
 const updateValue = value => {
-  emit('onUpdateOptions', { itemsPerPage: value })
+  emit('onUpdateOptions', { itemsPerPage: value, page: 1 })
 }
 
 const calcPageInfo = () => `${pageStart.value}-${pageStop.value} of ${props.count}`
@@ -84,8 +99,6 @@ watch(
   }
 )
 </script>
-<style>
-.v-application--is-ltr .ask-anna-pagination .v-data-footer__select .v-select {
+<style>.v-application--is-ltr .ask-anna-pagination .v-data-footer__select .v-select {
   margin: 13px 0 13px 8px;
-}
-</style>
+}</style>

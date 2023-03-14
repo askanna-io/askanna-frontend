@@ -4,6 +4,7 @@ export default function ({
   next,
   suuid,
   loading,
+  suuidKey,
   previous,
   page_size,
   storeAction,
@@ -42,6 +43,7 @@ export default function ({
       storeAction({
         loading,
         suuid: suuid?.value,
+        suuidKey: suuidKey,
         params: { page_size, ...queryParams.value, cursor }
       })
     }
@@ -105,6 +107,7 @@ export default function ({
         loading,
         initial: true,
         suuid: suuid?.value,
+        suuidKey: suuidKey,
         params: { cursor, order_by, page_size }
       })
 
@@ -130,6 +133,7 @@ export default function ({
           loading,
           initial: true,
           suuid: suuid?.value,
+          suuidKey: suuidKey,
           params: { page_size, ...queryParams }
         })
         sortFilterLoading.value = false
