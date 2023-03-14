@@ -17,7 +17,7 @@ export const useRunsStore = defineStore('runs', {
   },
 
   actions: {
-    async getRuns({ loading, params, initial, suuid } = { loading: true, params: {}, initial: false, suuid: '' }) {
+    async getRuns({ loading, params, initial, suuid, suuidKey = 'job_suuid' } = { loading: true, params: {}, initial: false, suuid: '', suuidKey: 'job_suuid' }) {
       if (loading) this.runsLoading = true
 
       let runs: Run[]
@@ -26,7 +26,7 @@ export const useRunsStore = defineStore('runs', {
         runs = await apiService({
           action: api.list,
           serviceName: SERVICE_NAME,
-          params: { ...params, job_suuid: suuid }
+          params: { ...params, [suuidKey]: suuid }
         })
       } catch (e) {
         const logger = useLogger()

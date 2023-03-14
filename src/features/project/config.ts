@@ -42,6 +42,15 @@ export const projectRoutes = [
           hideAppBarIcon: true
         }
       },
+      {
+        path: 'runs',
+        name: 'workspace-project-runs',
+        component: () => import('./views/runs.vue'),
+        meta: {
+          hideAppBarIcon: true,
+          breadcrumb: 'Runs'
+        }
+      },
       jobsRoutes,
       {
         path: 'variables',

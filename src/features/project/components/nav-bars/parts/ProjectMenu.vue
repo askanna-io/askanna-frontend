@@ -1,5 +1,8 @@
 <template>
-  <VTabs class="pb-3" :class="{ 'pl-4': $vuetify.breakpoint.xsOnly }">
+  <VTabs
+    class="pb-3"
+    :show-arrows="!$vuetify.breakpoint.xsOnly"
+  >
     <template v-for="tab of tabs">
       <VTab
         v-if="tab.show"
@@ -31,9 +34,11 @@ const { route } = useRouterAskAnna()
 const packageStore = usePackageStore()
 const projectStore = useProjectStore()
 
+const variableList = computed(() => permission.getFor(permission.labels.variableList))
 const projectJobList = computed(() => permission.getFor(permission.labels.projectJobList))
 const projectCodeList = computed(() => permission.getFor(permission.labels.projectCodeList))
-const variableList = computed(() => permission.getFor(permission.labels.variableList))
+const projectRunList = computed(() => permission.getFor(permission.labels.projectRunList))
+
 
 const projectEditTabs = computed(() => [
   {
@@ -55,13 +60,18 @@ const projectTabs = computed(() => [
   },
   {
     id: 2,
+    name: 'Runs',
+    to: 'workspace-project-runs',
+    show: projectRunList.value
+  },
+  {
+    id: 3,
     name: 'Jobs',
     to: 'workspace-project-jobs',
     show: projectJobList.value
   },
-
   {
-    id: 3,
+    id: 4,
     name: 'Variables',
     to: 'workspace-project-variables',
     show: variableList.value

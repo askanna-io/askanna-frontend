@@ -1,8 +1,12 @@
 <template>
   <div
     :class="{ 'mobile-view': $vuetify.breakpoint.xsOnly, 'desktop-view': !$vuetify.breakpoint.xsOnly }"
-    v-scroll="handleOnScroll">
-    <Layout :layout="layout" :isLoggedIn="userStore.isLoggedIn" />
+    v-scroll="handleOnScroll"
+  >
+    <Layout
+      :layout="layout"
+      :isLoggedIn="userStore.isLoggedIn"
+    />
   </div>
 </template>
 
@@ -314,8 +318,13 @@ code.lang-shell {
   }
 }
 
-.opacity-1 {
+.opacity-1,
+.opacity-1 .v-btn__content {
   opacity: 1 !important;
+}
+
+.tracking-normal {
+  letter-spacing: normal !important;
 }
 
 .text-transform--initial {
@@ -475,5 +484,10 @@ code.lang-shell {
   font-weight: 400;
   line-height: 1.25rem;
   letter-spacing: 0.0178571429em !important;
+}
+
+.whitespace-nowrap {
+  white-space: nowrap;
+
 }
 </style>
