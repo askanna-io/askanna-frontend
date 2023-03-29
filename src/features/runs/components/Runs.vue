@@ -21,32 +21,7 @@
         fluid
         class="py-0"
       >
-        <AskAnnaRow justify="end">
-          <AskAnnaCol
-            class="d-flex"
-            cols="12"
-            sm="3"
-          > </AskAnnaCol>
-
-          <AskAnnaCol
-            v-if="!$vuetify.breakpoint.xsOnly"
-            class="d-flex"
-            cols="12"
-            sm="5"
-            md="4"
-            lg="3"
-          >
-            <AskAnnaTextField
-              dense
-              hide-details
-              clearable
-              label="Search"
-              @input="debounceedSearch"
-              :value="queryParams.search"
-              append-icon="mdi-magnify"
-            />
-          </AskAnnaCol>
-        </AskAnnaRow>
+        <AskAnnaRunFilterBar />
       </AskAnnaContainer>
     </template>
     <template v-slot:item="{ item }">
@@ -206,7 +181,7 @@ const count = computed(() => runsStore.runs.count)
 const runs = computed(() => runsStore.runs.results)
 const previous = computed(() => runsStore.runs.previous)
 
-const { options, debounceedSearch, handleUpdateOptions, sortFilterLoading } = useQuery({
+const { options, handleUpdateOptions, sortFilterLoading } = useQuery({
   next,
   previous,
   loading: false,
@@ -225,7 +200,7 @@ const getHeaders = isMobile => [
     sortable: false,
     value: 'info',
     width: '50px',
-    class: 'text-left text-subtitle-2 font-weight-bold h-20',
+    class: 'text-left text-subtitle-2 font-weight-bold',
     show: true
   },
   {
@@ -233,7 +208,7 @@ const getHeaders = isMobile => [
     width: '170px',
     sortable: true,
     value: 'job.name',
-    class: 'text-left text-subtitle-2 font-weight-bold h-20',
+    class: 'text-left text-subtitle-2 font-weight-bold',
     show: props.isProjectRuns
   },
   {
@@ -241,7 +216,7 @@ const getHeaders = isMobile => [
     width: '170px',
     sortable: true,
     value: 'name',
-    class: 'text-left text-subtitle-2 font-weight-bold h-20 w-min-110',
+    class: 'text-left text-subtitle-2 font-weight-bold w-min-110',
     show: true
   },
   {
@@ -249,7 +224,7 @@ const getHeaders = isMobile => [
     width: '160px',
     sortable: true,
     value: 'status',
-    class: 'text-left text-subtitle-2 font-weight-bold h-20',
+    class: 'text-left text-subtitle-2 font-weight-bold',
     show: true
   },
   {
@@ -257,7 +232,7 @@ const getHeaders = isMobile => [
     width: '310px',
     sortable: false,
     value: 'runtime',
-    class: 'text-left text-subtitle-2 font-weight-bold h-20',
+    class: 'text-left text-subtitle-2 font-weight-bold',
     show: true
   },
   {
@@ -265,7 +240,7 @@ const getHeaders = isMobile => [
     value: 'created_by.name',
     width: 'auto',
     sortable: true,
-    class: 'text-left text-subtitle-2 font-weight-bold h-20',
+    class: 'text-left text-subtitle-2 font-weight-bold',
     show: true
   },
   {
@@ -273,7 +248,7 @@ const getHeaders = isMobile => [
     width: '100px',
     sortable: false,
     value: 'payload',
-    class: 'text-left text-subtitle-2 font-weight-bold h-20',
+    class: 'text-left text-subtitle-2 font-weight-bold',
     show: true
   },
   {
@@ -281,7 +256,7 @@ const getHeaders = isMobile => [
     text: 'Metrics',
     sortable: false,
     value: 'metrics_meta',
-    class: 'text-left text-subtitle-2 font-weight-bold h-20',
+    class: 'text-left text-subtitle-2 font-weight-bold',
     show: true
   }
 ].filter(item => item.show)

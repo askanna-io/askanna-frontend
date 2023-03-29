@@ -1,13 +1,16 @@
 <template>
-  <AskAnnaFlex
+  <div
     class="fill-height"
-    fluid
     :class="{ 'px-0': $vuetify.breakpoint.xsOnly, 'px-5': !$vuetify.breakpoint.xsOnly }"
   >
     <VFadeTransition mode="out-in">
-      <AskAnnaCSV :data="tableData.data" :headers="tableData.headers" :cdnBaseUrl="cdnBaseUrl" />
+      <AskAnnaCSV
+        :data="tableData.data"
+        :headers="tableData.headers"
+        :cdnBaseUrl="cdnBaseUrl"
+      />
     </VFadeTransition>
-  </AskAnnaFlex>
+  </div>
 </template>
 
 <script setup lang="ts">

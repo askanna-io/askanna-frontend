@@ -1,15 +1,25 @@
 <template>
-  <AskAnnaFlex
+  <div
     class="fill-height pb-3 br-4 pt-0"
-    fluid
     :class="{ 'px-0': $vuetify.breakpoint.xsOnly, 'px-5 pa-2': !$vuetify.breakpoint.xsOnly }"
   >
-    <VTabs v-model="currentSheet" left show-arrows center-active>
-      <VTab v-for="(tab, index) of data" :key="index">Sheet: {{ tab.name }}</VTab>
+    <VTabs
+      v-model="currentSheet"
+      left
+      show-arrows
+      center-active
+    >
+      <VTab
+        v-for="(tab, index) of data"
+        :key="index"
+      >Sheet: {{ tab.name }}</VTab>
     </VTabs>
     <VTabsItems v-model="currentSheet">
       <template v-for="(tab, index) in data">
-        <VTabItem :key="index" :value="index">
+        <VTabItem
+          :key="index"
+          :value="index"
+        >
           <VDataTable
             :fixed-header="!!tab.headers.length"
             class="xls-table"
@@ -23,9 +33,17 @@
             :group-by.sync="activeGroup"
           >
             <template v-slot:top>
-              <AskAnnaContainer v-if="tab.headers.length" fluid class="py-0">
+              <AskAnnaContainer
+                v-if="tab.headers.length"
+                fluid
+                class="py-0"
+              >
                 <AskAnnaRow justify="end">
-                  <AskAnnaCol class="d-flex" cols="12" sm="3">
+                  <AskAnnaCol
+                    class="d-flex"
+                    cols="12"
+                    sm="3"
+                  >
                     <AskAnnaSelect
                       label="Group by"
                       dense
@@ -40,8 +58,19 @@
                     </AskAnnaSelect>
                   </AskAnnaCol>
 
-                  <AskAnnaCol v-if="!$vuetify.breakpoint.xsOnly" class="d-flex" cols="12" sm="3">
-                    <AskAnnaTextField dense v-model="search" hide-details label="Search" append-icon="mdi-magnify" />
+                  <AskAnnaCol
+                    v-if="!$vuetify.breakpoint.xsOnly"
+                    class="d-flex"
+                    cols="12"
+                    sm="3"
+                  >
+                    <AskAnnaTextField
+                      dense
+                      v-model="search"
+                      hide-details
+                      label="Search"
+                      append-icon="mdi-magnify"
+                    />
                   </AskAnnaCol>
                 </AskAnnaRow>
               </AskAnnaContainer>
@@ -55,11 +84,18 @@
                 :groupBy="options.groupBy"
                 :headersLength="tab.headers.length"
               />
-              <tbody v-else-if="items.length" ref="tableRefs" :id="index">
+              <tbody
+                v-else-if="items.length"
+                ref="tableRefs"
+                :id="index"
+              >
                 <template v-for="(item, index) in items">
                   <tr :key="index">
                     <template v-for="(value, index2) in item">
-                      <td v-if="index2" :key="index2">{{ value }}</td>
+                      <td
+                        v-if="index2"
+                        :key="index2"
+                      >{{ value }}</td>
                     </template>
                   </tr>
                 </template>
@@ -67,12 +103,19 @@
               <template v-else>
                 <tr>
                   <td :colspan="tab.headers.length">
-                    <AskAnnaAlert class="my-4 text-center v-flex" dense outlined>
+                    <AskAnnaAlert
+                      class="my-4 text-center v-flex"
+                      dense
+                      outlined
+                    >
                       <template v-if="search"> There is no data available for this search. </template>
                       <template v-else>
                         This sheet doesn't seem to contain data, or we don't support viewing this type of data.<br />
                         In case you have a question about this, or you need support, send us a message:
-                        <a href="mailto:support@askanna.io" target="_blank">support@askanna.io</a>
+                        <a
+                          href="mailto:support@askanna.io"
+                          target="_blank"
+                        >support@askanna.io</a>
                       </template>
                     </AskAnnaAlert>
                   </td>
@@ -83,7 +126,7 @@
         </VTabItem>
       </template>
     </VTabsItems>
-  </AskAnnaFlex>
+  </div>
 </template>
 
 <script setup lang="ts">

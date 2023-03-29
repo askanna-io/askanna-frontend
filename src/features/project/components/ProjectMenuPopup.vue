@@ -1,25 +1,54 @@
 <template>
-  <div class="text-center">
-    <VMenu v-model="menu" rounded :close-on-content-click="false" left>
+  <div class="text-center z-40">
+    <VMenu
+      v-model="menu"
+      left
+      rounded
+      :close-on-content-click="false"
+    >
       <template v-slot:activator="{ on, attrs }">
-        <AskAnnaButton icon v-bind="attrs" @click.stop.prevent="on.click" small>
+        <AskAnnaButton
+          icon
+          small
+          v-bind="attrs"
+          @click.stop.prevent="on.click"
+        >
           <AskAnnaIcon>mdi-dots-vertical</AskAnnaIcon>
         </AskAnnaButton>
       </template>
-      <AskAnnaCard flat elevation="24" width="300">
-        <AskAnnaToolbar flat height="40" class="secondary--text" color="white">
+      <AskAnnaCard
+        flat
+        elevation="24"
+        width="300"
+      >
+        <AskAnnaToolbar
+          flat
+          height="40"
+          color="white"
+          class="secondary--text"
+        >
           <AskAnnaToolbarTitle class="pl-0">
             <span class="title font-weight-light">{{ project.name }}</span>
           </AskAnnaToolbarTitle>
           <AskAnnaSpacer />
 
-          <AskAnnaButton icon @click.stop.prevent="handleClose" small>
+          <AskAnnaButton
+            icon
+            small
+            @click.stop.prevent="handleClose"
+          >
             <AskAnnaIcon>mdi-close</AskAnnaIcon>
           </AskAnnaButton>
         </AskAnnaToolbar>
         <AskAnnaCardActions>
-          <AskAnnaRow dense class="mx-2">
-            <AskAnnaCol cols="12" v-if="projectInfoEdit">
+          <AskAnnaRow
+            dense
+            class="mx-2"
+          >
+            <AskAnnaCol
+              cols="12"
+              v-if="projectInfoEdit"
+            >
               <AskAnnaButton
                 text
                 block
@@ -27,19 +56,24 @@
                 outlined
                 color="secondary"
                 class="btn--hover"
-                @click="handleOpenConfirmEditProject">
+                @click="handleOpenConfirmEditProject"
+              >
                 Edit this project
               </AskAnnaButton>
             </AskAnnaCol>
-            <AskAnnaCol cols="12" v-if="projectRemove">
+            <AskAnnaCol
+              cols="12"
+              v-if="projectRemove"
+            >
               <AskAnnaButton
+                text
                 block
                 small
                 outlined
-                text
                 color="error"
                 class="btn--hover"
-                @click="handleOpenConfirmDeleteProject">
+                @click="handleOpenConfirmDeleteProject"
+              >
                 Remove this project
               </AskAnnaButton>
             </AskAnnaCol>
@@ -51,7 +85,8 @@
       :projectName="project.name"
       :value="deleteProjectConfirmPopup"
       @onClose="handlCloseConfirmDeletePopup"
-      @onDeleteConfirm="handleDeleteConfirmPorject" />
+      @onDeleteConfirm="handleDeleteConfirmPorject"
+    />
   </div>
 </template>
 

@@ -6,14 +6,20 @@
     :hide-default-header="!items.length"
     :hide-default-footer="!items.length"
     @click:row="handleClickRow"
-    fixed-header>
+    fixed-header
+  >
     <template v-slot:top>
       <AskAnnaSubHeader>Packages</AskAnnaSubHeader>
       <AskAnnaDivider />
     </template>
 
     <template v-slot:item.suuid="{ item }">
-      <AskAnnaChip outlined label color="primary" @click.stop="handleDownload(item)">
+      <AskAnnaChip
+        outlined
+        label
+        color="primary"
+        @click.stop="handleDownload(item)"
+      >
         <AskAnnaAvatar left>
           <AskAnnaIcon>mdi-cloud-download</AskAnnaIcon>
         </AskAnnaAvatar>Download
@@ -25,9 +31,20 @@
     </template>
 
     <template v-slot:item.menu="{ item }">
-      <VMenu bottom color="primary" :close-on-content-click="false" :nudge-width="200" offset-x :key="item.name">
+      <VMenu
+        bottom
+        color="primary"
+        :close-on-content-click="false"
+        :nudge-width="200"
+        offset-x
+        :key="item.name"
+      >
         <template v-slot:activator="{ on }">
-          <AskAnnaButton icon v-on="on" color="primary">
+          <AskAnnaButton
+            icon
+            v-on="on"
+            color="primary"
+          >
             <AskAnnaIcon>mdi-dots-horizontal</AskAnnaIcon>
           </AskAnnaButton>
         </template>
@@ -40,7 +57,10 @@
       </VMenu>
     </template>
     <template v-slot:no-data>
-      <AskAnnaIcon :size="25" left> mdi-package-down </AskAnnaIcon>
+      <AskAnnaIcon
+        :size="25"
+        left
+      > mdi-package-down </AskAnnaIcon>
       You don't have packages yet.
     </template>
   </VDataTable>
@@ -79,11 +99,11 @@ const headers = [
     text: 'Name',
     align: 'left',
     value: 'filename',
-    class: 'text-left text-subtitle-2 font-weight-bold h-20'
+    class: 'text-left text-subtitle-2 font-weight-bold'
   },
-  { text: 'Created', value: 'created_at', class: 'text-left text-subtitle-2 font-weight-bold h-20' },
-  { text: '', value: 'suuid', sortable: false, class: 'text-left text-subtitle-2 font-weight-bold h-20' },
-  { text: '', value: 'menu', class: 'text-left text-subtitle-2 font-weight-bold h-20' }
+  { text: 'Created', value: 'created_at', class: 'text-left text-subtitle-2 font-weight-bold' },
+  { text: '', value: 'suuid', sortable: false, class: 'text-left text-subtitle-2 font-weight-bold' },
+  { text: '', value: 'menu', class: 'text-left text-subtitle-2 font-weight-bold' }
 ]
 
 const handleClickRow = ({ suuid }) => emit('handleClickRow', suuid)

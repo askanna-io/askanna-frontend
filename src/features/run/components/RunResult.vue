@@ -1,12 +1,18 @@
 <template>
   <div>
-    <AskAnnaToolbar v-if="!fileStore.loading && !fileStore.isFileEmpty" dense flat color="grey lighten-4">
+    <AskAnnaToolbar
+      v-if="!fileStore.loading && !fileStore.isFileEmpty"
+      dense
+      flat
+      color="grey lighten-4"
+    >
       <AskAnnaFlex class="d-flex">
         <div class="cut-text d-flex align-center">
           {{ run.result.name
-          }}<span v-if="!$vuetify.breakpoint.xsOnly" class="pl-3"
-            >({{ `${humanize.humanizeSize(fileStore.size)}` }}{{ metaInfo }})</span
-          >
+          }}<span
+            v-if="!$vuetify.breakpoint.xsOnly"
+            class="pl-3"
+          >({{ `${humanize.humanizeSize(fileStore.size)}` }}{{ metaInfo }})</span>
         </div>
         <div class="mr-auto d-flex align-center"></div>
         <VBtnToggle
@@ -15,7 +21,11 @@
           class="mr-1"
           :value="currentView.value"
         >
-          <AskAnnaTooltip v-for="(view, index) in views" top :key="index">
+          <AskAnnaTooltip
+            v-for="(view, index) in views"
+            top
+            :key="index"
+          >
             <template v-slot:activator="{ on }">
               <AskAnnaButton
                 v-on="on"
@@ -45,7 +55,10 @@
             <template v-slot:loader>
               <span>Downloading...</span>
             </template>
-            <AskAnnaIcon color="secondary" left>mdi-download</AskAnnaIcon>Download file
+            <AskAnnaIcon
+              color="secondary"
+              left
+            >mdi-download</AskAnnaIcon>Download file
           </AskAnnaButton>
           <AskAnnaButton
             v-if="fileStore.isFileJSON || fileStore.isFileImg"
@@ -56,12 +69,20 @@
             :disabled="fileStore.loading || fileStore.isFileEmpty || fileStore.loadingFullData"
             @click="handleCopy()"
           >
-            <AskAnnaIcon left color="secondary">mdi-content-copy</AskAnnaIcon>Copy
+            <AskAnnaIcon
+              left
+              color="secondary"
+            >mdi-content-copy</AskAnnaIcon>Copy
           </AskAnnaButton>
         </div>
       </AskAnnaFlex>
     </AskAnnaToolbar>
-    <AskAnnaFlex id="scroll-target" class="overflow-y-auto" ref="scrolllWrapperRef" :style="scrollerStyles">
+    <AskAnnaFlex
+      id="scroll-target"
+      class="overflow-y-auto"
+      ref="scrolllWrapperRef"
+      :style="scrollerStyles"
+    >
       <AskAnnaLoadingProgress
         :loading="fileStore.loading"
         fullWidth
@@ -92,7 +113,7 @@
 defineProps({
   run: {
     type: Object,
-    default: () => {}
+    default: () => { }
   }
 })
 
@@ -142,9 +163,8 @@ const scrollerStyles = computed(() => ({ 'max-height': `${maxHeight.value}px` })
 
 const metaInfo = computed(() =>
   ['csv', 'tsv'].includes(fileStore.fileExtension)
-    ? `, ${numeral.numberFormated(fileStore.metaInfo.columns)} columns, ${
-        fileStore.isFileBig ? 'preview ' : ''
-      } ${numeral.numberFormated(fileStore.metaInfo.rows)} rows`
+    ? `, ${numeral.numberFormated(fileStore.metaInfo.columns)} columns, ${fileStore.isFileBig ? 'preview ' : ''
+    } ${numeral.numberFormated(fileStore.metaInfo.rows)} rows`
     : ''
 )
 

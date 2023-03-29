@@ -1,11 +1,13 @@
 <template>
-  <AskAnnaFlex
-    fluid
+  <div
     class="fill-height"
     :class="{ 'px-0': $vuetify.breakpoint.xsOnly, 'px-5': !$vuetify.breakpoint.xsOnly }"
   >
-    <div v-if="fileStore.isEmbedPdfSuccess" id="pdf"></div>
-  </AskAnnaFlex>
+    <div
+      v-if="fileStore.isEmbedPdfSuccess"
+      id="pdf"
+    ></div>
+  </div>
 </template>
 
 <script setup lang="ts">
