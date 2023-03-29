@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="w-full">
     <AskAnnaCard
       v-if="isLoading"
       outlined
@@ -117,7 +117,12 @@ onBeforeMount(() => {
 .fade-leave-active {
   transition: opacity 0.5s;
 }
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+
+.fade-enter,
+.fade-leave-to
+
+/* .fade-leave-active below version 2.1.8 */
+  {
   opacity: 0;
 }
 </style>

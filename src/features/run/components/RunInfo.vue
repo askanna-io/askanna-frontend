@@ -1,8 +1,21 @@
 <template>
-  <AskAnnaCard class="d-flex justify-space-between ml-4" flat>
-    <AskAnnaCard v-for="(group, index) in variables" :key="index" flat :width="viewConfig.width">
+  <AskAnnaCard
+    class="d-flex justify-space-between ml-4"
+    flat
+  >
+    <AskAnnaCard
+      v-for="(group, index) in variables"
+      :key="index"
+      flat
+      :width="viewConfig.width"
+    >
       <AskAnnaRow no-gutters>
-        <AskAnnaCol class="mb-4" v-for="(item, index2) in group" :key="`${index}-${index2}`" cols="12">
+        <AskAnnaCol
+          class="mb-4"
+          v-for="(item, index2) in group"
+          :key="`${index}-${index2}`"
+          cols="12"
+        >
           <Component
             link
             :to="item.to"
@@ -10,7 +23,8 @@
             :text="item.text"
             :value="item.value"
             :is="item.component"
-            :loading="loadingStatus" />
+            :loading="loadingStatus"
+          />
         </AskAnnaCol>
       </AskAnnaRow>
     </AskAnnaCard>
@@ -55,7 +69,7 @@ const props = defineProps({
   }
 })
 
-const moment = useDayjs()
+const dayjs = useDayjs()
 const groupArray = useGroupArray()
 const context = getCurrentInstance()
 
@@ -78,7 +92,7 @@ const triggers = {
 const calculateDuration = computed(() => {
   const status = props.runIdStatus?.status?.toLowerCase()
   if (status === 'queued' || status === 'pending') return 'Not started'
-  return moment.durationHumanizeBySecond(props.run.duration?.toString())
+  return dayjs.durationHumanizeBySecond(props.run.duration?.toString())
 })
 
 const viewConfig = computed(() => {
@@ -124,7 +138,7 @@ const variables = computed(() => {
     },
     {
       text: 'Start date',
-      value: moment.dayjs(props.run.created_at).format('Do MMMM YYYY, h:mm:ss a'),
+      value: dayjs.dayjs(props.run.created_at).format('Do MMMM YYYY, h:mm:ss a'),
       component: RunInfoText,
       visibility: true
     },

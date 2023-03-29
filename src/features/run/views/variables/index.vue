@@ -1,6 +1,12 @@
 <template>
   <div>
-    <AskAnnaToolbar v-if="!disabledTools" flat dense color="grey lighten-4" sticky-offset="{top: 48, bottom: 10}">
+    <AskAnnaToolbar
+      v-if="!disabledTools"
+      flat
+      dense
+      color="grey lighten-4"
+      sticky-offset="{top: 48, bottom: 10}"
+    >
       <AskAnnaFlex class="d-flex">
         <div class="mr-auto d-flex align-center"></div>
 
@@ -14,7 +20,10 @@
             @click="handleDownload"
             :disabled="disabledTools"
           >
-            <AskAnnaIcon color="secondary" left>mdi-download</AskAnnaIcon>Download JSON
+            <AskAnnaIcon
+              color="secondary"
+              left
+            >mdi-download</AskAnnaIcon>Download JSON
           </AskAnnaButton>
           <AskAnnaButton
             small
@@ -24,11 +33,20 @@
             class="mr-1 btn--hover"
             :disabled="disabledTools"
           >
-            <AskAnnaIcon color="secondary" left>mdi-content-copy</AskAnnaIcon>Copy JSON
+            <AskAnnaIcon
+              color="secondary"
+              left
+            >mdi-content-copy</AskAnnaIcon>Copy JSON
           </AskAnnaButton>
         </div>
 
-        <AskAnnaCard class="ml-4" flat width="175" color="grey lighten-4" v-if="false">
+        <AskAnnaCard
+          class="ml-4"
+          flat
+          width="175"
+          color="grey lighten-4"
+          v-if="false"
+        >
           <AskAnnaSelect
             dense
             hide-details
@@ -45,8 +63,16 @@
           </AskAnnaSelect>
         </AskAnnaCard>
 
-        <VBtnToggle v-model="currentViewIndex" mandatory class="mr-1">
-          <AskAnnaTooltip v-for="(view, index) in views" top :key="index">
+        <VBtnToggle
+          v-model="currentViewIndex"
+          mandatory
+          class="mr-1"
+        >
+          <AskAnnaTooltip
+            v-for="(view, index) in views"
+            top
+            :key="index"
+          >
             <template v-slot:activator="{ on }">
               <AskAnnaButton
                 v-on="on"
@@ -130,8 +156,3 @@ onBeforeMount(() => {
   }
 })
 </script>
-<style scoped>
-.h-20 {
-  height: 20px !important;
-}
-</style>

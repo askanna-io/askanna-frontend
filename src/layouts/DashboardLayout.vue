@@ -1,13 +1,29 @@
 <template>
   <VApp>
-    <VAppBar app clipped-left dark color="primary" :dense="!$vuetify.breakpoint.xsOnly">
+    <VAppBar
+      class="z-20"
+      app
+      clipped-left
+      dark
+      color="primary"
+      :dense="!$vuetify.breakpoint.xsOnly"
+    >
       <template v-if="!$vuetify.breakpoint.xsOnly">
-        <VAppBarNavIcon v-if="showAppBarIcon" @click.stop="handleChangeSticked" />
+        <VAppBarNavIcon
+          v-if="showAppBarIcon"
+          @click.stop="handleChangeSticked"
+        />
       </template>
 
-      <div v-else class="pl-9" />
+      <div
+        v-else
+        class="pl-9"
+      />
 
-      <AskAnnaContainer fluid class="pl-1">
+      <AskAnnaContainer
+        fluid
+        class="pl-1"
+      >
         <div
           class="d-flex align-center"
           align="center"
@@ -17,14 +33,22 @@
           }"
           no-gutters
         >
-          <div md="auto" sm="12" text-sm-left>
+          <div
+            md="auto"
+            sm="12"
+            text-sm-left
+          >
             <AskAnnaButton
               text
               class="pa-0 mt-1"
               color="transparent"
               :to="{ name: 'workspace', params: { ...$route.params } }"
             >
-              <img alt="AskAnna logo" src="/assets/logo.svg" class="logo" />
+              <img
+                alt="AskAnna logo"
+                src="/assets/logo.svg"
+                class="logo"
+              />
             </AskAnnaButton>
           </div>
           <MainMenu />
@@ -41,7 +65,10 @@
         class="a-content"
         :class="{ 'px-0 mx-0 pt-1': $vuetify.breakpoint.xsOnly, 'a-content--full': mobileStore.isFullScreen }"
       >
-        <MobileMainMenu v-if="mobileStore.isMenuOpen" @onClose="handleOnCloseMobileMenu" />
+        <MobileMainMenu
+          v-if="mobileStore.isMenuOpen"
+          @onClose="handleOnCloseMobileMenu"
+        />
         <RouterView />
       </AskAnnaContainer>
 
@@ -89,14 +116,14 @@ onUpdated(() => {
   }
 })
 </script>
-<style scoped lang="scss">
-.logo {
+<style scoped lang="scss">.logo {
   height: 30px;
 }
+
 .logo.--mobile {
   height: 67px;
 }
+
 .colored-border {
   border: 1px solid;
-}
-</style>
+}</style>

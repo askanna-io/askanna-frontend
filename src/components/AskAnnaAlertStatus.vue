@@ -8,7 +8,8 @@
     :icon="statusIcon"
     :color="statusColor"
     class="mb-0 askanna-alert"
-    :class="{ 'px-1': $vuetify.breakpoint.xsOnly }">
+    :class="{ 'px-1': $vuetify.breakpoint.xsOnly }"
+  >
     {{ getText($vuetify.breakpoint.smAndDown) }}
   </AskAnnaAlert>
 </template>
@@ -31,7 +32,7 @@ const props = defineProps({
   }
 })
 
-const moment = useDayjs()
+const dayjs = useDayjs()
 const capitalize = useCapitalize()
 
 const COLORS = {
@@ -67,9 +68,9 @@ const statusValue = computed(() => get(TEXTS, status.value))
 
 const getText = (isMobile: boolean) => {
   const lastStatus = props.statusData.finished_at || props.statusData.started_at || props.statusData.created_at
-  const lastStatusMoment = lastStatus && `(${moment.ago(lastStatus)})`
-  const desktopStatus = `Last status: ${statusValue.value} ${lastStatusMoment}`
-  const mobileStatus = !lastStatus ? capitalize(statusValue.value) : capitalize(moment.ago(lastStatus))
+  const lastStatusDayJS = lastStatus && `(${dayjs.ago(lastStatus)})`
+  const desktopStatus = `Last status: ${statusValue.value} ${lastStatusDayJS}`
+  const mobileStatus = !lastStatus ? capitalize(statusValue.value) : capitalize(dayjs.ago(lastStatus))
 
   return isMobile ? mobileStatus : desktopStatus
 }

@@ -3,7 +3,7 @@ export const FileIcons = {
   js: 'mdi-nodejs',
   xml: 'mdi-xml',
   json: 'mdi-code-json',
-  pdf: 'mdi-file-pdf',
+  pdf: 'mdi-file-pdf-box',
   png: 'mdi-file-image',
   jpg: 'mdi-file-image',
   jpeg: 'mdi-file-image',
@@ -31,7 +31,7 @@ export const headers = [
     value: 'type',
     width: 10,
     isShowOnMobile: true,
-    class: 'text-left text-subtitle-2 font-weight-bold h-20'
+    class: 'text-left text-subtitle-2 font-weight-bold'
   },
   {
     text: 'Name',
@@ -40,15 +40,15 @@ export const headers = [
     value: 'name',
     isShowOnMobile: true,
 
-    class: 'text-left text-subtitle-2 font-weight-bold h-20'
+    class: 'text-left text-subtitle-2 font-weight-bold'
   },
-  { text: 'Size', value: 'size', isShowOnMobile: false, class: 'text-left text-subtitle-2 font-weight-bold h-20' },
+  { text: 'Size', value: 'size', isShowOnMobile: false, class: 'text-left text-subtitle-2 font-weight-bold' },
   {
     text: 'Modified',
     value: 'last_modified',
     sortable: true,
     width: '30%',
     isShowOnMobile: true,
-    class: 'text-left text-subtitle-2 font-weight-bold h-20'
+    class: 'text-left text-subtitle-2 font-weight-bold'
   }
 ]

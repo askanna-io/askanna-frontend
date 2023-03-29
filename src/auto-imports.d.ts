@@ -87,8 +87,10 @@ declare global {
   const useCssVars: typeof import('vue')['useCssVars']
   const useDayjs: typeof import('./composables/useDayjs')['default']
   const useEditorStore: typeof import('./composables/store/useEditorStore')['useEditorStore']
+  const useFetch: typeof import('./composables/useFetch')['default']
   const useFileExtension: typeof import('./composables/useFileExtension')['default']
   const useFileStore: typeof import('./features/file/useFileStore')['useFileStore']
+  const useFiltersBarStore: typeof import('./features/project/useFiltersBarStore')['useFiltersBarStore']
   const useForceFileDownload: typeof import('./composables/useForceFileDownload')['default']
   const useGeneralStore: typeof import('./composables/store/useGeneralStore')['useGeneralStore']
   const useGroupArray: typeof import('./composables/useGroupArray')['default']
@@ -241,8 +243,10 @@ declare module 'vue' {
     readonly useCssVars: UnwrapRef<typeof import('vue')['useCssVars']>
     readonly useDayjs: UnwrapRef<typeof import('./composables/useDayjs')['default']>
     readonly useEditorStore: UnwrapRef<typeof import('./composables/store/useEditorStore')['useEditorStore']>
+    readonly useFetch: UnwrapRef<typeof import('./composables/useFetch')['default']>
     readonly useFileExtension: UnwrapRef<typeof import('./composables/useFileExtension')['default']>
     readonly useFileStore: UnwrapRef<typeof import('./features/file/useFileStore')['useFileStore']>
+    readonly useFiltersBarStore: UnwrapRef<typeof import('./features/project/useFiltersBarStore')['useFiltersBarStore']>
     readonly useForceFileDownload: UnwrapRef<typeof import('./composables/useForceFileDownload')['default']>
     readonly useGeneralStore: UnwrapRef<typeof import('./composables/store/useGeneralStore')['useGeneralStore']>
     readonly useGroupArray: UnwrapRef<typeof import('./composables/useGroupArray')['default']>

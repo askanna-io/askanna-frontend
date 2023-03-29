@@ -11,11 +11,14 @@
         :maxHeight="`${maxHeight}px`"
         :fileExtension="fileExtension"
       />
-      <AskAnnaFlex
+      <div
         v-if="!isFileEmpty && (isFileBig || (isFileBigForRawView && currentView === 'raw')) && isShowFilePreview"
         class="my-2 mb-2 text-center"
       >
-        <p v-if="$vuetify.breakpoint.xsOnly" class="px-2">
+        <p
+          v-if="$vuetify.breakpoint.xsOnly"
+          class="px-2"
+        >
           ...this is a preview of the file. To download the file, open this page on a laptop or desktop.
         </p>
         <AskAnnaButton
@@ -32,13 +35,16 @@
           <template v-slot:loader>
             <span>Downloading...</span>
           </template>
-          <AskAnnaIcon color="secondary" left>mdi-download</AskAnnaIcon>
+          <AskAnnaIcon
+            color="secondary"
+            left
+          >mdi-download</AskAnnaIcon>
           ...TO SEE THE FULL CONTENT, PLEASE DOWNLOAD THE FILE.
         </AskAnnaButton>
-      </AskAnnaFlex>
+      </div>
       <AskAnnaFlex
         v-if="(!loading && !isFileEmpty && !isShowFilePreview) || !isEmbedPdfSuccess"
-        class="my-2 mb-2 text-center"
+        class="my-2 mb-2 text-center flex-col items-center"
       >
         <p>We cannot show a preview of this file.</p>
         <AskAnnaButton
@@ -54,12 +60,20 @@
           <template v-slot:loader>
             <span>Downloading...</span>
           </template>
-          <AskAnnaIcon color="secondary" left>mdi-download</AskAnnaIcon>
+          <AskAnnaIcon
+            color="secondary"
+            left
+          >mdi-download</AskAnnaIcon>
           download file
         </AskAnnaButton>
       </AskAnnaFlex>
 
-      <AskAnnaAlert v-if="isFileEmpty" class="ma-4 text-center" dense outlined>{{ textNoData }}</AskAnnaAlert>
+      <AskAnnaAlert
+        v-if="isFileEmpty"
+        class="ma-4 text-center"
+        dense
+        outlined
+      >{{ textNoData }}</AskAnnaAlert>
     </div>
   </AskAnnaLoadingProgress>
 </template>

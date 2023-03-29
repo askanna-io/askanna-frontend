@@ -1,25 +1,51 @@
 <template>
-  <div class="text-center">
-    <VMenu v-model="menu" rounded :close-on-content-click="false" left>
+  <div class="text-center z-40">
+    <VMenu
+      v-model="menu"
+      rounded
+      :close-on-content-click="false"
+      left
+    >
       <template v-slot:activator="{ on, attrs }">
-        <AskAnnaButton icon v-bind="attrs" @click.stop.prevent="on.click" small>
+        <AskAnnaButton
+          icon
+          v-bind="attrs"
+          @click.stop.prevent="on.click"
+          small
+        >
           <AskAnnaIcon>mdi-dots-vertical</AskAnnaIcon>
         </AskAnnaButton>
       </template>
-      <AskAnnaCard flat elevation="24" width="300">
-        <AskAnnaToolbar flat height="40" class="secondary--text" color="white">
+      <AskAnnaCard
+        flat
+        elevation="24"
+        width="300"
+      >
+        <AskAnnaToolbar
+          flat
+          height="40"
+          class="secondary--text"
+          color="white"
+        >
           <AskAnnaToolbarTitle class="pl-0">
             <span class="title font-weight-light">{{ run.name || 'Run: ' + run.suuid }}</span>
           </AskAnnaToolbarTitle>
           <AskAnnaSpacer />
 
-          <AskAnnaButton icon @click.stop.prevent="handleClose" small>
+          <AskAnnaButton
+            icon
+            @click.stop.prevent="handleClose"
+            small
+          >
             <AskAnnaIcon>mdi-close</AskAnnaIcon>
           </AskAnnaButton>
         </AskAnnaToolbar>
 
         <AskAnnaCardActions>
-          <AskAnnaRow dense class="mx-2">
+          <AskAnnaRow
+            dense
+            class="mx-2"
+          >
             <AskAnnaCol cols="12">
               <AskAnnaButton
                 text
@@ -42,7 +68,7 @@
                 color="error"
                 class="btn--hover"
                 @click="handleOpenConfirmDeleteRun"
-                >Remove this run
+              >Remove this run
               </AskAnnaButton>
             </AskAnnaCol>
           </AskAnnaRow>

@@ -20,7 +20,10 @@
             :disabled="!chart.svgData || disabledTools"
             @click="handleDownloadPNG"
           >
-            <AskAnnaIcon color="secondary" left>mdi-download</AskAnnaIcon>Download PNG
+            <AskAnnaIcon
+              color="secondary"
+              left
+            >mdi-download</AskAnnaIcon>Download PNG
           </AskAnnaButton>
 
           <AskAnnaButton
@@ -32,7 +35,10 @@
             @click="handleDownload"
             :disabled="disabledTools"
           >
-            <AskAnnaIcon color="secondary" left>mdi-download</AskAnnaIcon>Download JSON
+            <AskAnnaIcon
+              color="secondary"
+              left
+            >mdi-download</AskAnnaIcon>Download JSON
           </AskAnnaButton>
           <AskAnnaButton
             v-if="!isChartView"
@@ -43,12 +49,23 @@
             class="mr-1 btn--hover"
             :disabled="disabledTools"
           >
-            <AskAnnaIcon color="secondary" left>mdi-content-copy</AskAnnaIcon>Copy JSON
+            <AskAnnaIcon
+              color="secondary"
+              left
+            >mdi-content-copy</AskAnnaIcon>Copy JSON
           </AskAnnaButton>
         </div>
 
-        <VBtnToggle :value="currentViewIndex" mandatory class="mr-1">
-          <AskAnnaTooltip v-for="(view, index) in views" top :key="index">
+        <VBtnToggle
+          :value="currentViewIndex"
+          mandatory
+          class="mr-1"
+        >
+          <AskAnnaTooltip
+            v-for="(view, index) in views"
+            top
+            :key="index"
+          >
             <template v-slot:activator="{ on }">
               <AskAnnaButton
                 v-on="on"
@@ -126,8 +143,3 @@ const handleDownloadPNG = () => {
   chartDownload.save(chart.svgData, `run_${suuid}_metrics_${chart.activeY}_${chart.activeX}${activeS}.png`)
 }
 </script>
-<style scoped>
-.h-20 {
-  height: 20px !important;
-}
-</style>

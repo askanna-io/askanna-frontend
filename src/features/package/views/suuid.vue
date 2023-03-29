@@ -1,11 +1,23 @@
 <template>
   <AskAnnaLoadingProgress :loading="loading">
-    <AskAnnaRow align="center" justify="center">
-      <AskAnnaCol cols="12" class="pt-0 pb-0">
-        <PackageToolbar :breadcrumbs="breadcrumbsComputed" sticky-offset="{top: 52, bottom: 10}">
+    <AskAnnaRow
+      align="center"
+      justify="center"
+    >
+      <AskAnnaCol
+        cols="12"
+        class="pt-0 pb-0"
+      >
+        <PackageToolbar
+          :breadcrumbs="breadcrumbsComputed"
+          sticky-offset="{top: 52, bottom: 10}"
+        >
           <template v-slot:rigth>
             <AskAnnaSlideYTransition>
-              <div v-if="!filePath" class="d-flex">
+              <div
+                v-if="!filePath"
+                class="d-flex"
+              >
                 <AskAnnaButton
                   v-if="!$vuetify.breakpoint.xsOnly"
                   small
@@ -13,8 +25,12 @@
                   color="secondary"
                   class="mr-1 btn--hover"
                   :loading="downloadPackage"
-                  @click="handleDownload()">
-                  <AskAnnaIcon color="secondary" left>mdi-download</AskAnnaIcon>Download
+                  @click="handleDownload()"
+                >
+                  <AskAnnaIcon
+                    color="secondary"
+                    left
+                  >mdi-download</AskAnnaIcon>Download
                   <template v-slot:loader>
                     <span>Downloading...</span>
                   </template>
@@ -26,8 +42,12 @@
                   :class="{ 'replace-active': isRaplace }"
                   color="secondary"
                   class="mr-1 btn--hover"
-                  @click="handleReplace()">
-                  <AskAnnaIcon color="secondary" left>mdi-folder-move</AskAnnaIcon>Replace
+                  @click="handleReplace()"
+                >
+                  <AskAnnaIcon
+                    color="secondary"
+                    left
+                  >mdi-folder-move</AskAnnaIcon>Replace
                 </AskAnnaButton>
 
                 <AskAnnaButton
@@ -36,8 +56,12 @@
                   outlined
                   color="secondary"
                   class="btn--hover"
-                  @click="handleHistory()">
-                  <AskAnnaIcon color="secondary" left>mdi-history</AskAnnaIcon>History
+                  @click="handleHistory()"
+                >
+                  <AskAnnaIcon
+                    color="secondary"
+                    left
+                  >mdi-history</AskAnnaIcon>History
                 </AskAnnaButton>
                 <VMenu
                   v-if="$vuetify.breakpoint.xsOnly"
@@ -47,14 +71,23 @@
                   rounded
                   :close-on-content-click="false"
                   bottom
-                  left>
+                  left
+                >
                   <template v-slot:activator="{ on, attrs }">
-                    <AskAnnaButton icon v-bind="attrs" @click.stop.prevent="on.click" small>
+                    <AskAnnaButton
+                      icon
+                      v-bind="attrs"
+                      @click.stop.prevent="on.click"
+                      small
+                    >
                       <AskAnnaIcon>mdi-dots-vertical</AskAnnaIcon>
                     </AskAnnaButton>
                   </template>
                   <VList dense>
-                    <VListItem dense @click="handleHistory()">
+                    <VListItem
+                      dense
+                      @click="handleHistory()"
+                    >
                       <VListItemTitle>History</VListItemTitle>
                     </VListItem>
                   </VList>
@@ -70,7 +103,8 @@
             @cancelUpload="handleReplace"
             @onCloseOutside="handleCloseOutside"
             class="py-2 px-4"
-            :id="packageId" />
+            :id="packageId"
+          />
         </VExpandTransition>
         <template v-if="isProcessing && !isRaplace">
           <PackageProcessing />
@@ -86,14 +120,16 @@
             :loading="fileStore.loading"
             :fileSource="fileStore.fileSource"
             @onCopy="handleCopy"
-            @onDownload="handleDownloadFile" />
+            @onDownload="handleDownloadFile"
+          />
           <template v-else>
             <PackageTree
               v-if="!isProcessing"
               :items="treeView"
               :height="calcHeight"
               :getRoutePath="getRoutePath"
-              noDataAvailable="This file or directory does not exist" />
+              noDataAvailable="This file or directory does not exist"
+            />
           </template>
         </template>
       </AskAnnaCol>
@@ -103,7 +139,7 @@
 
 <script setup lang="ts">
 const copy = useCopy()
-const moment = useDayjs()
+const dayjs = useDayjs()
 const ext = useFileExtension()
 const fileStore = useFileStore()
 const permission = usePermission()
@@ -129,7 +165,7 @@ const cdnBaseUrl = computed(() => packageStore.packageData.cdn_base_url)
 const isLastPackage = computed(() => packageIdCd.value === packageStore.packageData.suuid)
 const packageId = computed(() => (useProjectPackageId ? packageIdCd.value : params.value.packageId))
 const images = computed(() => packageStore.packageData.files.filter(item => ext.images.includes(item.ext)))
-const createdDate = computed(() => moment.dayjs(packageStore.packageData.created_at).format('Do MMMM YYYY, h:mm:ss a'))
+const createdDate = computed(() => dayjs.dayjs(packageStore.packageData.created_at).format('Do MMMM YYYY, h:mm:ss a'))
 
 const breadcrumbsComputed = computed(() => {
   const first = {

@@ -11,7 +11,10 @@
     class="job-table scrollbar ask-anna-table ask-anna-table--with-links file-list"
   >
     <template v-slot:item.type="{ item }">
-      <RouterLink class="table-link table-link--unformated" :to="getRoutePath(item)">
+      <RouterLink
+        class="table-link table-link--unformated"
+        :to="getRoutePath(item)"
+      >
         <AskAnnaIcon v-if="item.type === 'directory'">mdi-folder</AskAnnaIcon>
         <AskAnnaIcon v-else>
           {{ getIcons(item.ext) }}
@@ -19,22 +22,35 @@
       </RouterLink>
     </template>
     <template v-slot:item.name="{ item }">
-      <RouterLink class="table-link table-link--unformated" :to="getRoutePath(item)">
+      <RouterLink
+        class="table-link table-link--unformated"
+        :to="getRoutePath(item)"
+      >
         {{ item.name }}
       </RouterLink>
     </template>
     <template v-slot:item.last_modified="{ item }">
-      <RouterLink class="table-link table-link--unformated" :to="getRoutePath(item)">
+      <RouterLink
+        class="table-link table-link--unformated"
+        :to="getRoutePath(item)"
+      >
         {{ item.last_modified ? getUpdateDate($vuetify.breakpoint.xsOnly, item.last_modified) : '' }}
       </RouterLink>
     </template>
     <template v-slot:item.size="{ item }">
-      <RouterLink class="table-link table-link--unformated" :to="getRoutePath(item)">
+      <RouterLink
+        class="table-link table-link--unformated"
+        :to="getRoutePath(item)"
+      >
         {{ sizeHumanize.humanizeSize(item.size) }}
       </RouterLink>
     </template>
     <template v-slot:no-data>
-      <AskAnnaAlert class="ma-4 text-center" dense outlined>
+      <AskAnnaAlert
+        class="ma-4 text-center"
+        dense
+        outlined
+      >
         {{ noDataAvailable }}
       </AskAnnaAlert>
     </template>
@@ -64,7 +80,7 @@ defineProps({
   }
 })
 
-const moment = useDayjs()
+const dayjs = useDayjs()
 const sizeHumanize = useSizeHumanize()
 
 // we need custom sort to always have: [back parent folder] item in top of list
@@ -110,14 +126,15 @@ const getIcons = (ext: string) => get(FileIcons, ext) || (ext !== 'parent' ? 'md
 const getHeaders = (isMobile: boolean) => (isMobile ? headers.filter(el => el.isShowOnMobile) : headers)
 
 const getUpdateDate = (isMobile: boolean, lastModified: string) =>
-  isMobile ? moment.ago(lastModified) : moment.dayjs(lastModified).format(' Do MMMM YYYY, h:mm:ss a')
+  isMobile ? dayjs.ago(lastModified) : dayjs.dayjs(lastModified).format(' Do MMMM YYYY, h:mm:ss a')
 </script>
 
 <style lang="scss">
 .mobile-view {
   .file-list {
-    table > thead > tr > th,
-    table tr > td {
+
+    table>thead>tr>th,
+    table tr>td {
       padding: 0 8px !important;
     }
   }

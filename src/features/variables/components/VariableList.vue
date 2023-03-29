@@ -20,13 +20,27 @@
     </template>
 
     <template v-slot:item.suuid="{ item }">
-      <AskAnnaCopy :text="item.suuid" prefix="#" :show="4" />
+      <AskAnnaCopy
+        :text="item.suuid"
+        prefix="#"
+        :show="4"
+      />
     </template>
     <template v-slot:item.name="{ item }">
-      <AskAnnaCopy :text="item.name" smartSlice :width="35" />
+      <AskAnnaCopy
+        :text="item.name"
+        smartSlice
+        :width="35"
+      />
     </template>
     <template v-slot:item.value="{ item }">
-      <AskAnnaCopy :text="item.value" smartSlice :width="35" :masked="item.is_masked" expanded />
+      <AskAnnaCopy
+        :text="item.value"
+        smartSlice
+        :width="35"
+        :masked="item.is_masked"
+        expanded
+      />
     </template>
     <template v-slot:item.actions="{ item }">
       <AskAnnaButton
@@ -37,7 +51,12 @@
         color="secondary"
         @click="handleEditItem(item)"
       >
-        <AskAnnaIcon color="secondary" left small class="mr-2">mdi-pencil</AskAnnaIcon>Edit
+        <AskAnnaIcon
+          color="secondary"
+          left
+          small
+          class="mr-2"
+        >mdi-pencil</AskAnnaIcon>Edit
       </AskAnnaButton>
     </template>
     <template v-slot:no-data>
@@ -96,22 +115,22 @@ const headers = ref([
     sortable: false,
     value: 'suuid',
     width: '10%',
-    class: 'text-left text-subtitle-2 font-weight-bold h-20'
+    class: 'text-left text-subtitle-2 font-weight-bold'
   },
-  { text: 'Name', value: 'name', width: '35%', class: 'text-left text-subtitle-2 font-weight-bold h-20 text-no-wrap' },
+  { text: 'Name', value: 'name', width: '35%', class: 'text-left text-subtitle-2 font-weight-bold text-no-wrap' },
   {
     text: 'Value',
     value: 'value',
     width: '45%',
     sortable: false,
-    class: 'text-left text-subtitle-2 font-weight-bold h-20'
+    class: 'text-left text-subtitle-2 font-weight-bold'
   },
   {
     text: '',
     value: 'actions',
     width: '10%',
     sortable: false,
-    class: 'text-left text-subtitle-2 font-weight-bold h-20'
+    class: 'text-left text-subtitle-2 font-weight-bold'
   }
 ])
 

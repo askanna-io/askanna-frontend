@@ -1,7 +1,10 @@
 <template>
   <div
-    :class="{ 'mobile-view': $vuetify.breakpoint.xsOnly, 'desktop-view': !$vuetify.breakpoint.xsOnly }"
     v-scroll="handleOnScroll"
+    :class="{
+      'mobile-view': $vuetify.breakpoint.xsOnly,
+      'desktop-view': !$vuetify.breakpoint.xsOnly
+    }"
   >
     <Layout
       :layout="layout"

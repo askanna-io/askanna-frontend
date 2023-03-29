@@ -11,6 +11,7 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
   state: () => {
     return {
       loading: true,
+      isPermissionSet: false,
       people: {
         count: 0,
         next: '',
@@ -320,6 +321,7 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
           ...data.permission
         }
       }
+      this.isPermissionSet = true
     },
 
     async setCurretPeoplePermission(permission) {

@@ -13,27 +13,30 @@
           <th
             :style="{ width: '20%', minWidth: '110px' }"
             :class="{ 'AskAnna-box-shadow--none': isLabels }"
-            class="text-left text-subtitle-2 font-weight-bold h-20"
+            class="text-left text-subtitle-2 font-weight-bold"
           >
             <SortFilterByName typeName="variable" />
           </th>
           <th
             :style="rowValueStyle"
             :class="{ 'AskAnna-box-shadow--none': isLabels }"
-            class="text-left text-subtitle-2 font-weight-bold h-20"
+            class="text-left text-subtitle-2 font-weight-bold"
           >
             <SortFilterByValue typeName="variable" />
           </th>
           <th
             v-if="isLabels"
             :colspan="labels?.length"
-            class="text-left text-subtitle-2 font-weight-bold h-20 AskAnna-box-shadow--none"
+            class="text-left text-subtitle-2 font-weight-bold AskAnna-box-shadow--none"
           >
             Labels
           </th>
         </tr>
         <tr v-if="isLabels">
-          <th colspan="2" class="h-30 text-left" />
+          <th
+            colspan="2"
+            class="h-30 text-left"
+          />
           <template>
             <th
               class="h-30 text-left text-subtitle-2 font-weight-bold"
@@ -53,7 +56,11 @@
           <tr :key="index">
             <td>{{ item.variable.name }}</td>
             <td class="text-left">
-              <MetricValue :metricRow="item.variable" :fullText="true" :isLabels="isLabels" />
+              <MetricValue
+                :metricRow="item.variable"
+                :fullText="true"
+                :isLabels="isLabels"
+              />
             </td>
             <template v-if="labels?.length">
               <MetricTableLabelTd
@@ -140,8 +147,6 @@ export default defineComponent({
   }
 })
 </script>
-<style scoped>
-.h-30 {
+<style scoped>.h-30 {
   height: 30px !important;
-}
-</style>
+}</style>

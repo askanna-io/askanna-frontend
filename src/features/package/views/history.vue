@@ -1,7 +1,13 @@
 <template>
   <AskAnnaLoadingProgress :loading="packageStore.loadingPackages">
-    <AskAnnaRow align="center" justify="center">
-      <AskAnnaCol cols="12" class="pt-0">
+    <AskAnnaRow
+      align="center"
+      justify="center"
+    >
+      <AskAnnaCol
+        cols="12"
+        class="pt-0"
+      >
         <VDataTable
           fixed-header
           disable-pagination
@@ -16,16 +22,21 @@
           :items="packageStore.projectPackages.results"
           :footer-props="{ itemsPerPageOptions: [10, 25, 50, 100] }"
           class="job-table askanna-table scrollbar"
-          @click:row="handleClickRow">
+          @click:row="handleClickRow"
+        >
           <template v-slot:top>
             <PackageToolbar
               v-sticky="sticked"
               :sticky-z-index="1"
               sticky-offset="{top: 52, bottom: 10}"
-              :breadcrumbs="breadcrumbsComputed" />
+              :breadcrumbs="breadcrumbsComputed"
+            />
           </template>
           <template v-slot:item.filename="{ item }">
-            <AskAnnaTooltip top content-class="opacity-1">
+            <AskAnnaTooltip
+              top
+              content-class="opacity-1"
+            >
               <template v-slot:activator="{ on }">
                 <div v-on="on">
                   {{ slicedText(item.filename, maxLength) }}
@@ -35,13 +46,31 @@
             </AskAnnaTooltip>
           </template>
           <template v-slot:item.suuid="{ item }">
-            <AskAnnaTooltip top content-class="opacity-1">
+            <AskAnnaTooltip
+              top
+              content-class="opacity-1"
+            >
               <template v-slot:activator="{ on, value }">
                 <div v-on="on">
-                  <AskAnnaButton class="px-0" text small>#{{ item.suuid.slice(0, 4) }}</AskAnnaButton>
-                  <AskAnnaTooltip v-if="!$vuetify.breakpoint.xsOnly" right content-class="opacity-1">
+                  <AskAnnaButton
+                    class="px-0"
+                    text
+                    small
+                  >#{{ item.suuid.slice(0, 4) }}</AskAnnaButton>
+                  <AskAnnaTooltip
+                    v-if="!$vuetify.breakpoint.xsOnly"
+                    right
+                    content-class="opacity-1"
+                  >
                     <template v-slot:activator="{ on }">
-                      <AskAnnaButton icon text x-small v-on="on" v-show="value" @click.stop="handleCopy(item.suuid)">
+                      <AskAnnaButton
+                        icon
+                        text
+                        x-small
+                        v-on="on"
+                        v-show="value"
+                        @click.stop="handleCopy(item.suuid)"
+                      >
                         <AskAnnaIcon>mdi-content-copy</AskAnnaIcon>
                       </AskAnnaButton>
                     </template>
@@ -56,7 +85,10 @@
             <span class="text-no-wrap">{{ dayjs(item.created_at).format(' Do MMMM YYYY, h:mm:ss a') }}</span>
           </template>
           <template v-slot:item.created_by.name="{ item }">
-            <AskAnnaTooltip top content-class="opacity-1">
+            <AskAnnaTooltip
+              top
+              content-class="opacity-1"
+            >
               <template v-slot:activator="{ on }">
                 <div v-on="on">
                   {{ slicedText(item.created_by.name, maxLength) }}
@@ -66,13 +98,25 @@
             </AskAnnaTooltip>
           </template>
           <template v-slot:item.description="{ item }">
-            <AskAnnaTooltip top content-class="opacity-1">
+            <AskAnnaTooltip
+              top
+              content-class="opacity-1"
+            >
               <template v-slot:activator="{ on, value }">
                 <div v-on="on">
                   {{ slicedText(item.description, maxLength) }}
-                  <AskAnnaTooltip right content-class="opacity-1">
+                  <AskAnnaTooltip
+                    right
+                    content-class="opacity-1"
+                  >
                     <template v-slot:activator="{ on }">
-                      <AskAnnaButton icon text x-small v-on="on" v-show="value"></AskAnnaButton>
+                      <AskAnnaButton
+                        icon
+                        text
+                        x-small
+                        v-on="on"
+                        v-show="value"
+                      ></AskAnnaButton>
                     </template>
                   </AskAnnaTooltip>
                 </div>
@@ -81,7 +125,10 @@
             </AskAnnaTooltip>
           </template>
           <template v-slot:item.modified_at="{ item }">
-            <AskAnnaTooltip top content-class="opacity-1">
+            <AskAnnaTooltip
+              top
+              content-class="opacity-1"
+            >
               <template v-slot:activator="{ on }">
                 <div v-on="on">
                   <AskAnnaButton
@@ -90,7 +137,8 @@
                     outlined
                     color="secondary"
                     class="btn--hover"
-                    @click.stop="handleDownload(item)">
+                    @click.stop="handleDownload(item)"
+                  >
                     <AskAnnaIcon :left="$vuetify.breakpoint.name !== 'sm'">mdi-download</AskAnnaIcon>
 
                     <span class="hidden-sm-only">Download</span>
@@ -110,7 +158,8 @@
               :loading="sortFilterLoading"
               :pageItemsCount="packageStore.projectPackages.results.length"
               :itemsPerPage="options.itemsPerPage"
-              @onUpdateOptions="handleUpdateOptions" />
+              @onUpdateOptions="handleUpdateOptions"
+            />
           </template>
         </VDataTable>
       </AskAnnaCol>
@@ -155,14 +204,14 @@ const headers = (isMobile: boolean = false) => [
     value: 'suuid',
     sortable: false,
     width: isMobile ? '1%' : '10%',
-    class: 'text-left text-subtitle-2 font-weight-bold h-20' + (isMobile ? '' : ' w-min-110'),
+    class: 'text-left text-subtitle-2 font-weight-bold' + (isMobile ? '' : ' w-min-110'),
     isShowOnMobile: true
   },
   {
     text: 'Date created',
     value: 'created_at',
     width: isMobile ? '15%' : '10%',
-    class: 'w-min-210 text-left text-subtitle-2 font-weight-bold h-20',
+    class: 'w-min-210 text-left text-subtitle-2 font-weight-bold',
     isShowOnMobile: true
   },
   {
@@ -170,7 +219,7 @@ const headers = (isMobile: boolean = false) => [
     width: '10%',
     isShowOnMobile: true,
     value: 'created_by.name',
-    class: 'w-min-110 text-left text-subtitle-2 font-weight-bold h-20'
+    class: 'w-min-110 text-left text-subtitle-2 font-weight-bold'
   },
   {
     text: 'Description',
@@ -178,7 +227,7 @@ const headers = (isMobile: boolean = false) => [
     sortable: false,
     value: 'description',
     width: '60%',
-    class: 'w-max-110 text-left text-subtitle-2 font-weight-bold h-20',
+    class: 'w-max-110 text-left text-subtitle-2 font-weight-bold',
     isShowOnMobile: true
   },
   {
@@ -186,7 +235,7 @@ const headers = (isMobile: boolean = false) => [
     value: 'modified_at',
     sortable: false,
     width: '10%',
-    class: 'w-min-110 text-left text-subtitle-2 font-weight-bold h-20',
+    class: 'w-min-110 text-left text-subtitle-2 font-weight-bold',
     isShowOnMobile: false
   }
 ]
@@ -241,12 +290,10 @@ const maxLength = computed(() => {
 })
 </script>
 
-<style>
-.job-sub-table .v-data-table__wrapper tr th {
+<style>.job-sub-table .v-data-table__wrapper tr th {
   z-index: 1;
 }
 
 .v-data-table__expanded.v-data-table__expanded__content {
   box-shadow: none !important;
-}
-</style>
+}</style>

@@ -1,5 +1,8 @@
 <template>
-  <AskAnnaContainer class="ma-0 ml-1 pt-0" fluid>
+  <AskAnnaContainer
+    class="ma-0 ml-1 pt-0"
+    fluid
+  >
     <AskAnnaRow>
       <AskAnnaCol :cols="$vuetify.breakpoint.xsOnly ? 12 : 5">
         <AskAnnaTextField
@@ -10,10 +13,14 @@
           :value="run.name"
           label="Run name (optional)"
           :autofocus="!$vuetify.breakpoint.xsOnly"
-          @input="handleOnInput($event, 'name')" />
+          @input="handleOnInput($event, 'name')"
+        />
       </AskAnnaCol>
     </AskAnnaRow>
-    <AskAnnaRow v-if="!$vuetify.breakpoint.xsOnly" class="pt-3">
+    <AskAnnaRow
+      v-if="!$vuetify.breakpoint.xsOnly"
+      class="pt-3"
+    >
       <AskAnnaCol cols="12">
         <AskAnnaDescription
           cleared
@@ -24,35 +31,61 @@
           :headerHeight="440"
           :description="run.description"
           :title="'Run description (optional)'"
-          @onChangeDescription="handleOnInput($event, 'description')" />
+          @onChangeDescription="handleOnInput($event, 'description')"
+        />
       </AskAnnaCol>
     </AskAnnaRow>
     <AskAnnaRow>
-      <AskAnnaCol cols="12" class="pt-6">
+      <AskAnnaCol
+        cols="12"
+        class="pt-6"
+      >
         <ask-anna-code
           :code="run.code"
           titleWidth="117px"
           :title="'JSON data (optional)'"
           @validete="handleValidate"
-          @onInput="handleOnInput($event, 'code')" />
+          @onInput="handleOnInput($event, 'code')"
+        />
       </AskAnnaCol>
     </AskAnnaRow>
     <AskAnnaRow>
       <AskAnnaCol class="pt-0">
-        <AskAnnaButton small outlined color="secondary" class="mr-1 btn--hover" @click="handleRunJob">
-          <AskAnnaIcon color="secondary" left>mdi-play</AskAnnaIcon>Run this job
+        <AskAnnaButton
+          small
+          outlined
+          color="secondary"
+          class="mr-1 btn--hover"
+          @click="handleRunJob"
+        >
+          <AskAnnaIcon
+            color="secondary"
+            left
+          >mdi-play</AskAnnaIcon>Run this job
         </AskAnnaButton>
       </AskAnnaCol>
     </AskAnnaRow>
     <AskAnnaRow v-if="runStatus">
-      <AskAnnaCol cols="12" sm="12">
+      <AskAnnaCol
+        cols="12"
+        sm="12"
+      >
         <p>
           You have successfully started the run{{ runName }}. The current status is:
           <ask-anna-chip-status :status="runStatus" /><br />{{ startedTtext }}
         </p>
 
-        <AskAnnaButton small outlined color="secondary" class="mr-1 btn--hover" @click="hadnleOpenRun">
-          <AskAnnaIcon color="secondary" left>mdi-link</AskAnnaIcon>Open the run
+        <AskAnnaButton
+          small
+          outlined
+          color="secondary"
+          class="mr-1 btn--hover"
+          @click="hadnleOpenRun"
+        >
+          <AskAnnaIcon
+            color="secondary"
+            left
+          >mdi-link</AskAnnaIcon>Open the run
         </AskAnnaButton>
       </AskAnnaCol>
     </AskAnnaRow>
@@ -63,7 +96,7 @@
 import { set } from 'lodash'
 import { Run } from '@//features/run/types'
 
-const moment = useDayjs()
+const dayjs = useDayjs()
 const runStore = useRunStore()
 const jobStore = useJobStore()
 const { route, routerPush } = useRouterAskAnna()
@@ -126,9 +159,9 @@ const hadnleOpenRun = () => {
 
 const calculateDuration = computed(() => {
   if (isFinished.value) {
-    return moment.durationHumanizeBySecond(runStore.newRun.duration)
+    return dayjs.durationHumanizeBySecond(runStore.newRun.duration)
   }
-  return moment.durationHumanize(runStore.newRun.created_at, startTime.value)
+  return dayjs.durationHumanize(runStore.newRun.created_at, startTime.value)
 })
 
 const checkStatus = () => {

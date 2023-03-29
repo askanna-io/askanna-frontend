@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="z-30">
     <AskAnnaTooltip
       v-if="!$vuetify.breakpoint.xsOnly"
       top

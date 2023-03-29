@@ -1,8 +1,16 @@
 <template>
   <div>
-    <AskAnnaToolbar v-if="!fileStore.isFileEmpty" dense flat color="grey lighten-4">
+    <AskAnnaToolbar
+      v-if="!fileStore.isFileEmpty"
+      dense
+      flat
+      color="grey lighten-4"
+    >
       <AskAnnaFlex class="d-flex">
-        <div class="mr-auto d-flex align-center" :class="{ 'pr-1': $vuetify.breakpoint.xsOnly }">Payload</div>
+        <div
+          class="mr-auto d-flex align-center"
+          :class="{ 'pr-1': $vuetify.breakpoint.xsOnly }"
+        >Payload</div>
 
         <VBtnToggle
           v-if="fileStore.isRenderedExt || fileStore.isValidJSON"
@@ -10,7 +18,11 @@
           class="mr-1"
           :value="currentView.value"
         >
-          <AskAnnaTooltip v-for="(view, index) in views" top :key="index">
+          <AskAnnaTooltip
+            v-for="(view, index) in views"
+            top
+            :key="index"
+          >
             <template v-slot:activator="{ on }">
               <AskAnnaButton
                 v-on="on"
@@ -37,7 +49,10 @@
             class="mr-1 btn--hover"
             @click="handleDownload()"
           >
-            <AskAnnaIcon color="secondary" left>mdi-download</AskAnnaIcon>Download file
+            <AskAnnaIcon
+              color="secondary"
+              left
+            >mdi-download</AskAnnaIcon>Download file
           </AskAnnaButton>
 
           <AskAnnaButton
@@ -48,13 +63,20 @@
             @click="handleCopy()"
             class="mr-1 btn--hover"
           >
-            <AskAnnaIcon left color="secondary">mdi-content-copy</AskAnnaIcon>Copy
+            <AskAnnaIcon
+              left
+              color="secondary"
+            >mdi-content-copy</AskAnnaIcon>Copy
           </AskAnnaButton>
         </div>
       </AskAnnaFlex>
     </AskAnnaToolbar>
     <AskAnnaFlex>
-      <AskAnnaLoadingProgress classes="mx-4 mb-4" :loading="fileStore.loading" fullWidth>
+      <AskAnnaLoadingProgress
+        classes="mx-4 mb-4"
+        :loading="fileStore.loading"
+        fullWidth
+      >
         <PreviewFile
           :maxHeight="`${maxHeight}px`"
           :fileBlob="fileStore.fileBlob"

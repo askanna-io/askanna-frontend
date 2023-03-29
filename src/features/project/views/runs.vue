@@ -1,6 +1,6 @@
 <template>
     <AskAnnaCard
-        class="mx-auto"
+        class="mx-auto border-none"
         flat
     >
         <AskAnnaLoadingProgress :loading="runsStore.runsLoading">
