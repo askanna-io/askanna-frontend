@@ -1,7 +1,8 @@
 <template>
   <pre
     ref="codeWrapper"
-    class="ask-anna-highlight"><code class="lang-shell hljs" :class="{ 'loading': loading }" v-html="highlighted"/></pre>
+    class="ask-anna-highlight w-full"
+  ><code class="lang-shell hljs" :class="{ 'loading': loading }" v-html="highlighted"/></pre>
 </template>
 
 <script setup lang="ts">
@@ -35,7 +36,10 @@ const hljsWithLineNumber = useLineNumber(hljs)
 
 const highlighted = computed(() => {
   let result = hljsWithLineNumber.highlight(props.value, { language: props.languageName, ignoreIllegals: true }).value
-  result = hljsWithLineNumber.lineNumbersValue(result, { maxRowToShow: props.maxRowToShow, singleLine: props.singleLine })
+  result = hljsWithLineNumber.lineNumbersValue(result, {
+    maxRowToShow: props.maxRowToShow,
+    singleLine: props.singleLine
+  })
 
   return result
 })

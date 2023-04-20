@@ -1,6 +1,9 @@
 <template>
   <div class="ask-anna-highlight markdown-body">
-    <div ref="markdownRef" v-html="md"></div>
+    <div
+      ref="markdownRef"
+      v-html="md"
+    ></div>
   </div>
 </template>
 <script setup lang="ts">
@@ -100,11 +103,11 @@ const renderMarkdown = () => {
           return (
             `<div class="flex code-wrapper"><span class="code-lang-absolute">${lang}</span><button type="button" data-clipboard-text="${escape(
               str
-            )}" class="markdown-copy-btn white-text--hover btn--without-text v-btn v-btn--icon v-btn--round v-btn--text theme--dark v-size--x-small secondary--text"><span class="v-btn__content"><i  aria-hidden="true" class="v-icon notranslate mdi mdi-content-copy theme--dark"></i></span></button><pre class="hljs as"><code>` +
+            )}" class="markdown-copy-btn white-text--hover btn--without-text v-btn v-btn--icon v-btn--round v-btn--text theme--dark v-size--x-small secondary--text"><span class="v-btn__content"><i  aria-hidden="true" class="v-icon notranslate mdi mdi-content-copy theme--dark"></i></span></button><pre class="hljs w-full"><code>` +
             hljs.highlight(str, { language: lang, ignoreIllegals: true }).value +
             '</code></pre></div>'
           )
-        } catch (__) {}
+        } catch (__) { }
       }
 
       return '<pre class="hljs"><code>' + markdown.utils.escapeHtml(str) + '</code></pre>'
@@ -193,7 +196,7 @@ const scrollToEl = (hash: string) => {
       behavior: 'smooth',
       top: h.offsetParent.offsetTop + h.offsetTop - correction
     })
-  } catch {}
+  } catch { }
 }
 
 const copyBtns = () => {
@@ -234,6 +237,7 @@ watch(markdownRef, () => {
 </script>
 <style lang="scss">
 @import './mardown.scss';
+
 .code-lang-absolute {
   position: absolute;
   text-align: right;
@@ -244,13 +248,14 @@ watch(markdownRef, () => {
   font-weight: normal;
   font-size: 16px;
 }
+
 .code-wrapper {
   position: relative;
   font-family: Roboto, sans-serif !important;
 }
+
 .markdown-copy-btn {
   position: absolute !important;
   top: 0.5rem;
   right: 0.5rem;
-}
-</style>
+}</style>
