@@ -84,17 +84,17 @@
           <template v-slot:item.created_at="{ item }">
             <span class="text-no-wrap">{{ dayjs(item.created_at).format(' Do MMMM YYYY, h:mm:ss a') }}</span>
           </template>
-          <template v-slot:item.created_by.name="{ item }">
+          <template v-slot:item.created_by?.name="{ item }">
             <AskAnnaTooltip
               top
               content-class="opacity-1"
             >
               <template v-slot:activator="{ on }">
                 <div v-on="on">
-                  {{ slicedText(item.created_by.name, maxLength) }}
+                  {{ slicedText(item.created_by?.name, maxLength) }}
                 </div>
               </template>
-              <span>{{ item.created_by.name }}</span>
+              <span>{{ item.created_by?.name }}</span>
             </AskAnnaTooltip>
           </template>
           <template v-slot:item.description="{ item }">
