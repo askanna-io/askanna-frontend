@@ -1,5 +1,5 @@
 <template>
-  <AskAnnaContainer class="pa-0 fill-height justify-center" fluid>
+  <div class="flex fill-height justify-center">
     <VFadeTransition mode="out-in">
       <VLazy
         :options="{
@@ -7,10 +7,13 @@
         }"
         transition="fade-transition"
       >
-        <img class="code-img" :src="imgSrc" />
+        <img
+          class="code-img"
+          :src="imgSrc"
+        />
       </VLazy>
     </VFadeTransition>
-  </AskAnnaContainer>
+  </div>
 </template>
 
 <script setup lang="ts">

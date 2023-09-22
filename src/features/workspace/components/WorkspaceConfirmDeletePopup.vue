@@ -1,53 +1,62 @@
 <template>
-  <VDialog v-model="valueModel" max-width="650px" @click:outside="closeDelete">
-    <AskAnnaCard class="AskAnna-card AskAnna-card--in-dialog" :class="{ 'pt-2': $vuetify.breakpoint.xsOnly }">
-      <AskAnnaToolbar
-        flat
-        white--text
-        color="white"
-        :dense="!$vuetify.breakpoint.xsOnly"
-        :class="{ 'mb-2': $vuetify.breakpoint.xsOnly }"
-      >
-        <AskAnnaToolbarTitle v-if="!$vuetify.breakpoint.xsOnly" class="px-0"
-          >Do you want to remove the <span class="primary--text">{{ title }}</span> workspace?</AskAnnaToolbarTitle
-        >
-        <div v-else class="text-body-1 font-weight-bold">
-          Do you want to remove the <span class="primary--text">{{ title }}</span> workspace?
+  <VDialog
+    max-width="650px"
+    v-model="valueModel"
+    @click:outside="closeDelete"
+  >
+    <AskAnnaCard :class="{ 'pt-2': $vuetify.display.xs }">
+      <AskAnnaCardTitle class="pl-6">
+        <div class="flex items-center justify-between">
+          <p class="whitespace-pre-wrap sm:truncate">
+            Do you want to remove the <span class="text-primary">{{
+              workspaceName }}</span>
+            workspace
+            <span class="sm:hidden">?</span>
+          </p>
+          <span class="grow hidden sm:flex">?</span>
+          <AskAnnaButton
+            variant="text"
+            class="ml-4"
+            icon="mdi-close"
+            @click="closeDelete"
+          />
         </div>
-        <AskAnnaSpacer />
-
-        <AskAnnaButton icon @click="closeDelete">
-          <AskAnnaIcon>mdi-close</AskAnnaIcon>
-        </AskAnnaButton>
-      </AskAnnaToolbar>
-      <AskAnnaCardText>
+      </AskAnnaCardTitle>
+      <AskAnnaCardText class="prose pt-0 max-w-full pr-7">
         You are about to remove the <b>{{ workspaceName }}</b> workspace. Here's what will happen when you remove the
         <b>{{ workspaceName }}</b> workspace:
-        <br />
-        <br />
         <ul>
           <li>
-            All data related to the <b>{{ workspaceName }}</b> workspace will be removed
+            All data related to the <b>{{ workspaceName }}</b> workspace will be removed.
           </li>
           <li>
             If other workspaces in AskAnna or external systems use projects, jobs, files or other parts of the
-            {{ workspaceName }} workspace, they are not able to use it anymore
+            {{ workspaceName }} workspace, they are not able to use it anymore.
           </li>
         </ul>
-        <br />
         After 30 days, the system will entirely delete the workspace from the backend. Within 30 days, you can
-        <a href="mailto:support@askanna.io" target="_blank">contact us</a>
+        <a
+          href="mailto:support@askanna.io"
+          target="_blank"
+        >contact us</a>
         if you want to undo the removal.
-        <br />
-        <br />
-        Please confirm that you want to remove the <b>{{ workspaceName }}</b> workspace.
+
+        <p>Please confirm that you want to remove the <b>{{ workspaceName }}</b> workspace.</p>
       </AskAnnaCardText>
-      <AskAnnaCardActions :class="{ 'px-3': $vuetify.breakpoint.xsOnly }">
-        <AskAnnaButton small outlined text color="secondary" class="mr-1 btn--hover" @click="closeDelete"
-          >Cancel</AskAnnaButton
-        >
-        <AskAnnaButton small outlined text color="error" class="mr-1 btn--hover" @click="deleteItemConfirm"
-          >Remove workspace{{ $vuetify.breakpoint.xsOnly ? '' : `: ${name}` }}
+      <AskAnnaCardActions
+        class="pl-6"
+        :class="{ 'pl-3': $vuetify.display.xs }"
+      >
+        <AskAnnaButton
+          class="mr-1"
+          @click="closeDelete"
+        >Cancel</AskAnnaButton>
+        <AskAnnaButton
+          class="mr-1"
+          color="error"
+          variant="outlined"
+          @click="deleteItemConfirm"
+        >Remove workspace{{ $vuetify.display.xs ? '' : `: ${name}` }}
         </AskAnnaButton>
       </AskAnnaCardActions>
     </AskAnnaCard>
@@ -70,7 +79,6 @@ const emit = defineEmits(['onClose', 'onDeleteConfirm'])
 const slicedText = useSlicedText()
 
 const name = computed(() => slicedText(props.workspaceName, 17))
-const title = computed(() => slicedText(props.workspaceName, 27))
 
 const valueModel = computed({
   get: () => props.value,
@@ -80,11 +88,3 @@ const valueModel = computed({
 const closeDelete = () => emit('onClose')
 const deleteItemConfirm = () => emit('onDeleteConfirm')
 </script>
-<style scoped>
-.break {
-  white-space: break-spaces;
-}
-.mark {
-  color: rgba(0, 0, 0, 0.87);
-}
-</style>

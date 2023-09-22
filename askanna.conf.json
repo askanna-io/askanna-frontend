@@ -1,0 +1,17 @@
+{
+  "theme": {
+    "colors": {
+      "primary": "#5D3EB2",
+      "secondary": "#515151",
+      "third": "#e0e0e0",
+      "accent": "#82B1FF",
+      "error": "#FF7872",
+      "info": "#FAED7A",
+      "success": "#49B0AD",
+      "warning": "#FFC107",
+      "failed": "#FF6F00",
+      "on-surface": "#281b4d",
+      "main": "#281b4d"
+    }
+  }
+}

@@ -1,6 +1,12 @@
 <template>
-  <div class="col-3 dot-flashing-wrapper" :class="wrapperClasses">
-    <div class="snippet" data-title=".dot-flashing">
+  <div
+    :class="wrapperClasses"
+    class="col-3 dot-flashing-wrapper"
+  >
+    <div
+      class="snippet"
+      data-title="dot-flashing"
+    >
       <div class="stage">
         <div class="dot-flashing"></div>
       </div>
@@ -9,45 +15,42 @@
 </template>
 
 <script setup lang="ts">
+import { theme } from '/askanna.conf.json'
+
 const props = defineProps({
   inline: {
     type: Boolean,
     default: false
   }
 })
+
+const primaryColor = ref(theme.colors.primary)
 const wrapperClasses = {
-  absolute: !props.inline,
-  'd-inline-flex': props.inline
+  'absolute bot': !props.inline,
+  'inline-flex': props.inline
 }
 </script>
 <style scoped lang="scss">
-.dot-flashing-wrapper {
-  bottom: 5px;
-
-  &.absolute {
-    padding-left: 32px;
-    position: absolute;
-  }
-
-  &.d-inline-flex {
-    padding: 0;
-    padding-left: 20px;
-  }
+.dot-flashing-wrapper.absolute {
+  left: 33px;
+  bottom: 15px;
 }
+
 .dot-flashing {
   position: relative;
   width: 10px;
   height: 10px;
   border-radius: 5px;
-  background-color: var(--v-primary-base);
-  color: var(--v-primary-base);
-  animation: dotFlashing 1s infinite linear alternate;
+  background-color: v-bind(primaryColor);
+  color: v-bind(primaryColor);
+  animation: dot-flashing 1s infinite linear alternate;
   animation-delay: 0.5s;
+
 }
 
 .dot-flashing::before,
 .dot-flashing::after {
-  content: '';
+  content: "";
   display: inline-block;
   position: absolute;
   top: 0;
@@ -58,9 +61,9 @@ const wrapperClasses = {
   width: 10px;
   height: 10px;
   border-radius: 5px;
-  background-color: var(--v-primary-base);
-  color: var(--v-primary-base);
-  animation: dotFlashing 1s infinite alternate;
+  background-color: v-bind(primaryColor);
+  color: v-bind(primaryColor);
+  animation: dot-flashing 1s infinite alternate;
   animation-delay: 0s;
 }
 
@@ -69,16 +72,17 @@ const wrapperClasses = {
   width: 10px;
   height: 10px;
   border-radius: 5px;
-  background-color: var(--v-primary-base);
-  color: var(--v-primary-base);
-  animation: dotFlashing 1s infinite alternate;
+  background-color: v-bind(primaryColor);
+  color: v-bind(primaryColor);
+  animation: dot-flashing 1s infinite alternate;
   animation-delay: 1s;
 }
 
-@keyframes dotFlashing {
+@keyframes dot-flashing {
   0% {
-    background-color: var(--v-primary-base);
+    background-color: v-bind(primaryColor);
   }
+
   50%,
   100% {
     background-color: #f5f5f5;

@@ -17,7 +17,8 @@ export interface GeneralState {
     projectId: string
     workspaceId: string
   }
-  interval: any
+  interval: any,
+  routeNotExist: boolean
 }
 
 const GENERAL_STORE = 'general'
@@ -32,11 +33,17 @@ export const useGeneralStore = defineStore(GENERAL_STORE, {
         projectId: '',
         workspaceId: ''
       },
-      interval: new Map()
+      interval: new Map(),
+      routeNotExist: false
     }
   },
 
   actions: {
+    async setRouteNotExist() {
+      if (!this.routeNotExist) {
+        this.routeNotExist = true
+      }
+    },
     async setBreadcrumbParams(data: BreadcrumbParams) {
       this.breadcrumbParams = { ...this.breadcrumbParams, ...data }
     },

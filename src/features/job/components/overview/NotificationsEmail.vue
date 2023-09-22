@@ -1,19 +1,17 @@
 <template>
-  <div class="notification">
-    <AskAnnaTooltip top left nudge-right="40" content-class="opacity-1">
-      <template v-slot:activator="{ on }">
-        <div v-on="on">
-          <div class="code-wrapper">
-            <span class="font-weight-bold">{{ title }}:</span>
-            <template v-if="isSetNotifications">
-              <NotificationsEmailPopup :notifications="notifications" />
-            </template>
-            <template v-else>
-              <span class="pl-1 primary--hover"> No </span>
-            </template>
-          </div>
-        </div>
-      </template>
+  <div class="flex h-8 items-center">
+    <div>
+      <div class="flex">
+        <span class="font-bold">{{ title }}:</span>
+        <template v-if="isSetNotifications">
+          <NotificationsEmailPopup :notifications="notifications" />
+        </template>
+        <template v-else>
+          <span class="pl-1 hover:text-primary"> No </span>
+        </template>
+      </div>
+    </div>
+    <AskAnnaTooltip>
       <template v-if="isSetNotifications">Click to see details </template>
       <template v-else> For this job, notifications are not configured </template>
     </AskAnnaTooltip>
@@ -35,13 +33,5 @@ const props = defineProps({
   }
 })
 
-const isSetNotifications = computed(() => Object.entries(props.notifications).some(([_, item]) => item.email.length))
+const isSetNotifications = computed(() => Object.entries(props.notifications || {}).some(([_, item]) => item.email.length))
 </script>
-<style scoped>
-.notification {
-  max-width: 150px;
-}
-.code-wrapper {
-  display: flex;
-}
-</style>

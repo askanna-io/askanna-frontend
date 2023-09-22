@@ -1,34 +1,37 @@
 <template>
-  <VForm ref="newWorkspaceFastForm" @submit.prevent="handlerCreateProject">
-    <AskAnnaCol cols="12" class="pb-0">
-      <AskAnnaTextField
-        v-model="workspaceStore.newWorkspace.name"
-        @input="handleOnInput"
-        small
-        dense
-        outlined
-        autofocus
-        label="Workspace name"
-        :rules="nameRules"
-        :hide-details="isFormValid"
-      />
-    </AskAnnaCol>
-    <AskAnnaCardActions>
+  <VForm
+    ref="newWorkspaceFastForm"
+    @keyup.enter="handlerCreate"
+    @submit.prevent="handlerCreate"
+  >
+    <AskAnnaTextField
+      v-model="workspaceStore.newWorkspace.name"
+      autofocus
+      :rules="nameRules"
+      label="Workspace name"
+      :hide-details="isFormValid"
+      @update:modelValue="handleOnInput"
+    />
+    <AskAnnaCardActions class="pl-0">
       <AskAnnaButton
-        text
-        small
-        outlined
-        color="secondary"
-        class="mr-1 btn--hover"
-        :disabled="!workspaceStore.newWorkspace.name"
+        class="mr-1"
         @click="handlerCreate"
+        :disabled="!workspaceStore.newWorkspace.name || loading"
       >
         Create
       </AskAnnaButton>
-      <AskAnnaButton small outlined text color="secondary" class="mr-1 btn--hover" @click="handleMoreOptions">
+      <AskAnnaButton
+        class="mr-1"
+        @click="handleMoreOptions"
+      >
         More options
       </AskAnnaButton>
-      <AskAnnaButton v-if="showCancel" small outlined text class="mr-1" @click="handleCancel">Cancel</AskAnnaButton>
+      <AskAnnaButton
+        v-if="showCancel"
+        class="mr-1"
+        :disabled="loading"
+        @click="handleCancel"
+      >Cancel</AskAnnaButton>
     </AskAnnaCardActions>
   </VForm>
 </template>
@@ -47,9 +50,9 @@ const snackBar = useSnackBar()
 const { RULES } = useValidationRules()
 const { routerPush } = useRouterAskAnna()
 const workspaceStore = useWorkspaceStore()
-const workspacesStore = useWorkspacesStore()
 
 const formRef = ref(null)
+const loading = ref(false)
 const isFormValid = ref(true)
 const newWorkspaceFastForm = ref(null)
 const nameRules = ref([RULES.required('Workspace name is required')])
@@ -62,28 +65,35 @@ const handleMoreOptions = () => {
 }
 
 const handlerCreate = async () => {
-  if (!formRef.value.validate()) {
+  if (loading.value) return
+  loading.value = true
+
+  const { valid } = await formRef.value.validate()
+  if (!valid) {
+    loading.value = false
     isFormValid.value = false
 
     return
   }
 
-  await workspaceStore.createWorkspace({
+  const workspace = await workspaceStore.createWorkspace({
     name: workspaceStore.newWorkspace.name,
     visibility: WorkspaceVisibility.PRIVATE
   })
-  await workspacesStore.getWorkspaces()
-
   snackBar.showSnackBar({
     timeout: 2500,
     color: 'success',
     message: `The workspace ${workspaceStore.newWorkspace.name} was created`
   })
 
+  handleCancel()
   resetValidation()
-  nameRules.value = []
-  isFormValid.value = true
-  workspaceStore.newWorkspace = { ...defaultWorkspace }
+  loading.value = false
+
+  routerPush({
+    name: 'workspace',
+    params: { workspaceId: workspace?.suuid }
+  })
 }
 
 const handleOnInput = val => {

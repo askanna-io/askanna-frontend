@@ -1,11 +1,5 @@
 <template>
-  <VToolbarTitle v-bind="$attrs" v-on="$listeners">
+  <VToolbarTitle v-bind="$attrs">
     <slot />
   </VToolbarTitle>
 </template>
-
-<script>
-export default {
-  inheritAttrs: false
-}
-</script>

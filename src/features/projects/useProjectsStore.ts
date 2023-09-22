@@ -32,7 +32,6 @@ export const useProjectsStore = defineStore('projects', {
       }
     }
   },
-  getters: {},
   actions: {
     async getMenuProjects({ params, loading } = { loading: true, params: {} }) {
       this.menu.loading = loading

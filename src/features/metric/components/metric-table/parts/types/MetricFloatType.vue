@@ -1,26 +1,58 @@
 <template>
   <div>
-    <VMenu v-model="menu" :close-on-content-click="false" offset-y top>
-      <template v-slot:activator="{ on }">
-        <div v-on="on" class="list__item-content cursor--pointer">
-          <div ref="divRef" class="list__item-value d-flex" :style="divStyles">
+    <VMenu
+      v-model="menu"
+      :close-on-content-click="false"
+    >
+      <template v-slot:activator="{ props }">
+        <div
+          v-bind="props"
+          class="list__item-content cursor-pointer"
+        >
+          <div
+            ref="divRef"
+            class="list__item-value flex"
+            :style="divStyles"
+          >
             <div v-if="isShowName">{{ metricRow.name }}:&nbsp;</div>
             {{ slicedNumber }}
           </div>
         </div>
       </template>
-      <AskAnnaCard>
-        <VAppBar dense height="40" flat>
-          Name: {{ metricRow.name }}
-          <AskAnnaSpacer />
-          <AskAnnaButton small outlined color="secondary" @click="handleCopy" class="mx-2 btn--hover">
-            <AskAnnaIcon color="secondary" left>mdi-content-copy</AskAnnaIcon>Copy
-          </AskAnnaButton>
-          <AskAnnaButton small icon @click="handleClose">
-            <AskAnnaIcon>mdi-close</AskAnnaIcon>
-          </AskAnnaButton>
-        </VAppBar>
-        <TheHighlight :value="slicedNumber" languageName="text" />
+      <AskAnnaCard class="w-full min-w-72">
+        <AskAnnaToolbar>
+          <div class="flex w-full justify-between pl-4">
+            Name: {{ metricRow.name }}
+            <div class="flex gap-1 pr-2">
+              <span class="flex">
+                <AskAnnaIcon
+                  size="small"
+                  @click="handleCopy"
+                  icon="mdi-content-copy"
+                  class="pointer hover:text-primary"
+                />
+                <AskAnnaTooltip>
+                  Copy value
+                </AskAnnaTooltip>
+              </span>
+              <span class="flex mt-0.5">
+                <AskAnnaIcon
+                  size="small"
+                  icon="mdi-close"
+                  @click="handleClose"
+                  class="pointer hover:text-primary"
+                />
+                <AskAnnaTooltip>
+                  Close
+                </AskAnnaTooltip>
+              </span>
+            </div>
+          </div>
+        </AskAnnaToolbar>
+        <TheHighlight
+          languageName="text"
+          :value="slicedNumber"
+        />
       </AskAnnaCard>
     </VMenu>
   </div>

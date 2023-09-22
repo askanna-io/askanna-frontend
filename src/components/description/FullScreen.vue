@@ -2,20 +2,34 @@
   <div>
     <VDialog
       v-if="dialog"
-      content-class="editor--dialog"
       v-model="dialog"
       fullscreen
       persistent
       no-click-animation
+      content-class="editor--dialog"
       transition="dialog-bottom-transition"
     >
-      <AskAnnaCard flat>
-        <AskAnnaToolbar extension-height="10" dense flat tile dark color="primary" class="fullscreen--toplbar">
+      <AskAnnaCard>
+        <AskAnnaToolbar
+          color="primary"
+          density="compact"
+          extension-height="10"
+          class="fullscreen--toplbar"
+        >
           <AskAnnaToolbarTitle>{{ title }}</AskAnnaToolbarTitle>
           <AskAnnaSpacer />
-          <AskAnnaButton class="mr-3" dark text small outlined @click="handleSave">Save my changes</AskAnnaButton>
+          <AskAnnaButton
+            class="mr-3"
+            color="white"
+            variant="text"
+            @click="handleSave"
+          >Save my changes</AskAnnaButton>
 
-          <AskAnnaButton dark text small outlined @click="handleExitFullScreen">Exit full screen</AskAnnaButton>
+          <AskAnnaButton
+            color="white"
+            variant="text"
+            @click="handleExitFullScreen"
+          >Exit full screen</AskAnnaButton>
           <template v-slot:extension></template>
         </AskAnnaToolbar>
 
@@ -57,6 +71,7 @@ const handleExitFullScreen = () => emit('onExitFullScreen')
   left: 0;
   width: 100%;
   z-index: 10;
+
   .v-toolbar__extension {
     padding: 0;
     background-color: white;

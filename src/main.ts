@@ -1,13 +1,15 @@
 import './style.css'
-import Vue from 'vue'
+import './main.scss'
 import App from './App.vue'
-import { markRaw } from 'vue'
+import { createApp } from 'vue'
 import router from './router/index'
+import { createPinia } from 'pinia'
 import * as Sentry from '@sentry/vue'
 import vuetify from './plugins/vuetify'
-import Sticky from 'vue-sticky-directive'
-import { BrowserTracing } from '@sentry/tracing'
-import { createPinia, PiniaVuePlugin } from 'pinia'
+import { BrowserTracing } from '@sentry/browser'
+import { useRegisterSW } from 'virtual:pwa-register/vue'
+
+const app = createApp(App)
 
 if (import.meta.env.VITE_APP_SENTRY_URL) {
   const rate: number = parseFloat(
@@ -15,7 +17,7 @@ if (import.meta.env.VITE_APP_SENTRY_URL) {
   )
 
   Sentry.init({
-    Vue,
+    app,
     ignoreErrors: [
       'Non-Error exception captured',
       'Non-Error promise rejection captured'
@@ -31,29 +33,10 @@ if (import.meta.env.VITE_APP_SENTRY_URL) {
   })
 }
 
-// global filter
-Vue.filter('capitalize', function (value: string) {
-  if (!value) return ''
-  value = value.toString()
-  return value.charAt(0).toUpperCase() + value.slice(1)
-})
-Vue.filter('lowercase', function (value: string) {
-  if (!value) return ''
-  value = value.toString()
-  return value.charAt(0).toLowerCase() + value.slice(1)
-})
-
-Vue.use(Sticky)
-Vue.use(PiniaVuePlugin)
-
 const pinia = createPinia()
 
-pinia.use(({ store }) => {
-  store.$routerAskAnna = markRaw(useRouterAskAnna())
-})
-
 //check if the current user is authenticated
-const notAllowedRouteWithToken = ['signin', 'signup']
+const notAllowedRouteWithToken = ['signin', 'signup', 'join', 'account/reset-password', 'forgot-password']
 
 router.beforeEach((to, previous, next) => {
   if (
@@ -73,8 +56,9 @@ router.beforeEach((to, previous, next) => {
   )
 
   if (isRouteRequiresAuth && !token && !isRouteNotAllowedWithToken) {
+    const name = previous.name === 'workspaces' ? 'workspaces' : 'projects'
     next({
-      name: 'projects'
+      name
     })
   } else if (token && isRouteNotAllowedWithToken) {
     next('/')
@@ -85,19 +69,42 @@ router.beforeEach((to, previous, next) => {
 
 router.afterEach((to) => {
   const token = window.localStorage.getItem('token')
-  const isErrorPage = to.name?.includes('does-not-exist')
   const isNotAllowedToBack = notAllowedRouteWithToken.some(
     (route) => route === to?.name
   )
 
-  if (!token && !isNotAllowedToBack && !isErrorPage) {
+  if (!token && !isNotAllowedToBack) {
     window.localStorage.setItem('back_after_login', window.location.pathname)
   }
 })
 
-new Vue({
-  router,
-  pinia,
-  vuetify,
-  render: (h) => h(App)
-}).$mount('#app')
+const intervalMS = 60 * 3 * 1000
+
+useRegisterSW({
+  onRegisteredSW(swUrl, r) {
+    r && setInterval(async () => {
+      if (!(!r.installing && navigator))
+        return
+
+      if (('connection' in navigator) && !navigator.onLine)
+        return
+
+      const resp = await fetch(swUrl, {
+        cache: 'no-store',
+        headers: {
+          'cache': 'no-store',
+          'cache-control': 'no-cache',
+        },
+      })
+
+      if (resp?.status === 200)
+        await r.update()
+    }, intervalMS)
+  }
+})
+
+app.use(pinia)
+app.use(router)
+app.use(vuetify)
+
+app.mount('#app')

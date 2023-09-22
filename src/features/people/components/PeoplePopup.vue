@@ -1,158 +1,128 @@
 <template>
-  <AskAnnaRow justify="center">
-    <VDialog v-model="openVmodel" max-width="400px" origin content-class="overflow-x-hidden">
-      <AskAnnaCard class="text-center position">
-        <VAppBar flat dense white--text color="white">
+  <VDialog
+    max-width="400px"
+    v-model="openVmodel"
+  >
+    <AskAnnaCard>
+      <AskAnnaCardTitle>
+        <div class="flex items-start justify-between sm:items-center">
           <AskAnnaSpacer />
 
-          <AskAnnaButton icon @click="openVmodel = false">
-            <AskAnnaIcon>mdi-close</AskAnnaIcon>
-          </AskAnnaButton>
-        </VAppBar>
+          <AskAnnaButton
+            class="ml-4"
+            variant="text"
+            icon="mdi-close"
+            @click="openVmodel = false"
+          />
+        </div>
+      </AskAnnaCardTitle>
 
-        <AskAnnaContainer pa-0 class="avatar--wrapper">
-          <AskAnnaRow>
-            <AskAnnaCol class="pt-0 pb-0" cols="12" align-self="start">
-              <AskAnnaAvatar rounded="21" :size="people.avatar ? 150 : 150" tile>
-                <VImg v-if="people.avatar" class="img--rounded" :src="people.avatar.large" />
-                <VImg v-else class="img--rounded" src="/assets/icons/ask-annna-default-gravatar.png" />
-              </AskAnnaAvatar>
-            </AskAnnaCol>
-            <AskAnnaCol :class="[people.avatar ? 'pt-1' : 'pt-0']">
-              <AskAnnaChip class="role" color="primary"> {{ roleName }} </AskAnnaChip>
-            </AskAnnaCol>
-          </AskAnnaRow>
-        </AskAnnaContainer>
-        <AskAnnaCardText>
-          <AskAnnaContainer pa-0>
-            <AskAnnaRow>
-              <AskAnnaCol class="pt-0" cols="12" align-self="start">
-                <VListItem>
-                  <VListItemContent>
-                    <VListItemTitle class="title">{{ people.name || people.email }}</VListItemTitle>
-                    <VListItemSubtitle class="text-subtitle-2">{{ people.job_title }}</VListItemSubtitle>
-                  </VListItemContent>
-                </VListItem>
-              </AskAnnaCol>
-            </AskAnnaRow>
-          </AskAnnaContainer>
-        </AskAnnaCardText>
+      <div class="flex items-center justify-center">
+        <div>
+          <div>
+            <AskAnnaAvatar
+              rounded="21"
+              :size="people.avatar ? 150 : 150"
+            >
+              <VImg
+                v-if="people.avatar"
+                :src="people.avatar.large"
+              />
+              <VImg
+                v-else
+                src="/assets/icons/askanna-default-gravatar.png"
+              />
+            </AskAnnaAvatar>
+          </div>
+          <div
+            class="flex justify-center"
+            :class="[people.avatar ? 'pt-1' : 'pt-0']"
+          >
+            <AskAnnaChip color="primary">
+              {{ roleName }}
+            </AskAnnaChip>
+          </div>
+        </div>
+      </div>
+      <AskAnnaCardText class="text-center pt-0">
+        <AskAnnaCardTitle class="pb-0">{{ people.name || people.email }}</AskAnnaCardTitle>
+        <AskAnnaCardSubTitle>{{ people.job_title }}</AskAnnaCardSubTitle>
+      </AskAnnaCardText>
 
-        <AskAnnaDivider />
-        <AskAnnaCardActions
-          v-if="people.status === 'invited' && (workspacePeopleInviteResend || workspacePeopleInviteRemove)"
-          :class="{ 'pb-0': isCurrentUserAdmin, 'px-0': $vuetify.breakpoint.xsOnly }">
-          <AskAnnaRow dense class="mx-2" justify="space-between">
-            <AskAnnaCol cols="6">
-              <AskAnnaButton
-                v-if="workspacePeopleInviteRemove"
-                small
-                block
-                outlined
-                text
-                color="error"
-                class="btn--hover"
-                @click="handleDeleteInivitationPopup">
-                Delete invitation
-              </AskAnnaButton>
-            </AskAnnaCol>
-            <AskAnnaCol cols="6">
-              <AskAnnaButton
-                v-if="workspacePeopleInviteResend"
-                small
-                block
-                outlined
-                text
-                color="secondary"
-                class="btn--hover"
-                @click="handleResendInivitationPopup">
-                Resend invitation
-              </AskAnnaButton>
-            </AskAnnaCol>
-          </AskAnnaRow>
-        </AskAnnaCardActions>
-        <AskAnnaCardActions v-if="currentUser.suuid === people.suuid" :class="{ 'px-0': $vuetify.breakpoint.xsOnly }">
-          <AskAnnaRow dense class="mx-2" justify="space-between">
-            <AskAnnaCol class="text-center" cols="12">
-              <AskAnnaButton
-                small
-                block
-                outlined
-                text
-                color="secondary"
-                class="btn--hover"
-                :to="{ name: 'workspace-profile' }">
-                Edit my profile
-              </AskAnnaButton>
-            </AskAnnaCol>
-          </AskAnnaRow>
-        </AskAnnaCardActions>
-        <AskAnnaCardActions
-          v-if="!simple && (workspacePeopleEdit || workspacePeopleRemove) && currentUser.suuid !== people.suuid"
-          :class="{ 'pt-0': isCurrentUserAdmin && people.status !== 'active', 'px-0': $vuetify.breakpoint.xsOnly }">
-          <AskAnnaRow dense class="mx-2" justify="space-between">
-            <AskAnnaCol v-if="workspacePeopleEdit && buttonsVisible.WA" class="text-center" cols="12">
-              <div>
-                <AskAnnaButton
-                  small
-                  block
-                  outlined
-                  text
-                  color="secondary"
-                  class="btn--hover"
-                  @click="handleChangeRole('WA')">
-                  MAKE {{ people.name }} A WORKSPACE ADMIN
-                </AskAnnaButton>
-              </div>
-            </AskAnnaCol>
-            <AskAnnaCol v-if="workspacePeopleEdit && buttonsVisible.WM" class="text-center" cols="12">
-              <div>
-                <AskAnnaButton
-                  small
-                  block
-                  outlined
-                  text
-                  color="secondary"
-                  class="btn--hover"
-                  @click="handleChangeRole('WM')">
-                  MAKE {{ people.name }} A WORKSPACE MEMBER
-                </AskAnnaButton>
-              </div>
-            </AskAnnaCol>
-            <AskAnnaCol v-if="workspacePeopleEdit && buttonsVisible.WV" class="text-center" cols="12">
-              <div>
-                <AskAnnaButton
-                  small
-                  block
-                  outlined
-                  text
-                  color="secondary"
-                  class="btn--hover"
-                  @click="handleChangeRole('WV')">
-                  MAKE {{ people.name }} A WORKSPACE VIEWER
-                </AskAnnaButton>
-              </div>
-            </AskAnnaCol>
-            <AskAnnaCol class="text-center" cols="12" v-if="people.status === 'active' && workspacePeopleRemove">
-              <div :class="{ 'mt-2': people.status === 'active' }">
-                <AskAnnaButton
-                  small
-                  block
-                  outlined
-                  text
-                  color="error"
-                  class="btn--hover"
-                  max-width="340"
-                  @click="handleRemove">
-                  Remove&nbsp;{{ name }}
-                </AskAnnaButton>
-              </div>
-            </AskAnnaCol>
-          </AskAnnaRow>
-        </AskAnnaCardActions>
-      </AskAnnaCard>
-    </VDialog>
-  </AskAnnaRow>
+      <AskAnnaDivider />
+
+      <AskAnnaCardActions
+        v-if="people.status === 'invited' && (workspacePeopleInviteResend || workspacePeopleInviteRemove)"
+        class="flex gap-2 px-2 sm:px-6"
+        :class="{ 'pb-0': isCurrentUserAdmin }"
+      >
+        <AskAnnaButton
+          v-if="workspacePeopleInviteRemove"
+          block
+          color="error"
+          @click="handleDeleteInivitationPopup"
+        >
+          Delete invitation
+        </AskAnnaButton>
+        <AskAnnaButton
+          v-if="workspacePeopleInviteResend"
+          block
+          @click="handleResendInivitationPopup"
+        >
+          Resend invitation
+        </AskAnnaButton>
+      </AskAnnaCardActions>
+      <AskAnnaCardActions
+        v-if="currentUser.suuid === people.suuid"
+        class="px-2 sm:px-6"
+      >
+        <AskAnnaButton
+          block
+          :to="{ name: 'workspace-profile', params: { workspaceId } }"
+        >
+          Edit my profile
+        </AskAnnaButton>
+      </AskAnnaCardActions>
+      <div
+        v-if="!simple && (workspacePeopleEdit || workspacePeopleRemove) && currentUser.suuid !== people.suuid"
+        class="flex flex-col w-full px-2 sm:px-6 py-3 gap-2"
+      >
+        <AskAnnaButton
+          v-if="workspacePeopleEdit && buttonsVisible.WA"
+          block
+          @click="handleChangeRole('WA')"
+        >
+          MAKE {{ people.name }} A WORKSPACE ADMIN
+        </AskAnnaButton>
+
+        <AskAnnaButton
+          v-if="workspacePeopleEdit && buttonsVisible.WM"
+          block
+          @click="handleChangeRole('WM')"
+        >
+          MAKE {{ people.name }} A WORKSPACE MEMBER
+        </AskAnnaButton>
+
+        <AskAnnaButton
+          v-if="workspacePeopleEdit && buttonsVisible.WV"
+          block
+          @click="handleChangeRole('WV')"
+        >
+          MAKE {{ people.name }} A WORKSPACE VIEWER
+        </AskAnnaButton>
+
+        <AskAnnaButton
+          v-if="people.status === 'active' && workspacePeopleRemove"
+          block
+          class="mt-3"
+          color="error"
+          @click="handleRemove"
+        >
+          Remove&nbsp;{{ name }}
+        </AskAnnaButton>
+      </div>
+    </AskAnnaCard>
+  </VDialog>
 </template>
 <script setup lang="ts">
 const props = defineProps({
@@ -171,10 +141,13 @@ const props = defineProps({
         created_at: '',
         modified_at: '',
         job_title: '',
-        suuid: '',
         last_active: ''
       }
     }
+  },
+  workspaceId: {
+    type: String,
+    default: () => ''
   },
   workspaceName: {
     type: String,
@@ -221,7 +194,7 @@ const emits = defineEmits([
 ])
 
 const slicedText = useSlicedText()
-const permission = usePermission()
+const permission = useAskAnnaPermission()
 
 const openVmodel = computed({
   get: () => props.value,
@@ -258,9 +231,3 @@ const handleChangeRole = value => emits('onChangeRole', value)
 const handleDeleteInivitationPopup = () => emits('onDeleteInivitationPopup')
 const handleResendInivitationPopup = () => emits('onResendInivitationPopup')
 </script>
-<style scoped>
-.role {
-  white-space: nowrap;
-  display: inline-block;
-}
-</style>

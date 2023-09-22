@@ -1,95 +1,61 @@
 <template>
-  <AskAnnaContainer
-    class="ma-0 ml-1 pt-0"
-    fluid
-  >
-    <AskAnnaRow>
-      <AskAnnaCol :cols="$vuetify.breakpoint.xsOnly ? 12 : 5">
-        <AskAnnaTextField
-          dense
-          outlined
-          required
-          hide-details
-          :value="run.name"
-          label="Run name (optional)"
-          :autofocus="!$vuetify.breakpoint.xsOnly"
-          @input="handleOnInput($event, 'name')"
-        />
-      </AskAnnaCol>
-    </AskAnnaRow>
-    <AskAnnaRow
-      v-if="!$vuetify.breakpoint.xsOnly"
-      class="pt-3"
+  <div class="px-4 mb-4">
+    <div class="sm:w-1/3 w-full pt-2">
+      <AskAnnaTextField
+        required
+        hide-details
+        :model-value="run.name"
+        label="Run name (optional)"
+        :autofocus="!$vuetify.display.xs"
+        @update:modelValue="handleOnInput($event, 'name')"
+      />
+    </div>
+    <div class="pt-6">
+      <AskAnnaDescription
+        cleared
+        outlined
+        ref="Editor"
+        hide-details
+        isClearContent
+        :headerHeight="440"
+        :description="run.description"
+        :title="'Run description (optional)'"
+        @onChangeDescription="handleOnInput($event, 'description')"
+      />
+    </div>
+    <div class="pt-6">
+      <AskAnnaCode
+        :code="run.code"
+        titleWidth="117px"
+        :title="'JSON data (optional)'"
+        @validete="handleValidate"
+        @onInput="handleOnInput($event, 'code')"
+      />
+    </div>
+    <AskAnnaButton
+      prependIcon="mdi-play"
+      @click="handleRunJob"
     >
-      <AskAnnaCol cols="12">
-        <AskAnnaDescription
-          cleared
-          outlined
-          ref="Editor"
-          hide-details
-          isClearContent
-          :headerHeight="440"
-          :description="run.description"
-          :title="'Run description (optional)'"
-          @onChangeDescription="handleOnInput($event, 'description')"
-        />
-      </AskAnnaCol>
-    </AskAnnaRow>
-    <AskAnnaRow>
-      <AskAnnaCol
-        cols="12"
-        class="pt-6"
-      >
-        <ask-anna-code
-          :code="run.code"
-          titleWidth="117px"
-          :title="'JSON data (optional)'"
-          @validete="handleValidate"
-          @onInput="handleOnInput($event, 'code')"
-        />
-      </AskAnnaCol>
-    </AskAnnaRow>
-    <AskAnnaRow>
-      <AskAnnaCol class="pt-0">
-        <AskAnnaButton
-          small
-          outlined
-          color="secondary"
-          class="mr-1 btn--hover"
-          @click="handleRunJob"
-        >
-          <AskAnnaIcon
-            color="secondary"
-            left
-          >mdi-play</AskAnnaIcon>Run this job
-        </AskAnnaButton>
-      </AskAnnaCol>
-    </AskAnnaRow>
-    <AskAnnaRow v-if="runStatus">
-      <AskAnnaCol
-        cols="12"
-        sm="12"
-      >
-        <p>
-          You have successfully started the run{{ runName }}. The current status is:
-          <ask-anna-chip-status :status="runStatus" /><br />{{ startedTtext }}
-        </p>
+      Run this job
+    </AskAnnaButton>
 
-        <AskAnnaButton
-          small
-          outlined
-          color="secondary"
-          class="mr-1 btn--hover"
-          @click="hadnleOpenRun"
-        >
-          <AskAnnaIcon
-            color="secondary"
-            left
-          >mdi-link</AskAnnaIcon>Open the run
-        </AskAnnaButton>
-      </AskAnnaCol>
-    </AskAnnaRow>
-  </AskAnnaContainer>
+    <div
+      v-if="runStatus"
+      class="pt-2"
+    >
+      <p class="mb-2">
+        You have successfully started the run{{ runName }}. The current status is:
+        <AskAnnaChipStatus :status="runStatus" /><br />{{ startedTtext }}
+      </p>
+
+      <AskAnnaButton
+        prependIcon="mdi-link"
+        @click="hadnleOpenRun"
+      >
+        Open the run
+      </AskAnnaButton>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">

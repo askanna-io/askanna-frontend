@@ -16,7 +16,7 @@ export default function ({ start = 0, end = undefined }) {
         if (isReachCurrent) return
         isReachCurrent = crcRoute.name === route.name
 
-        let path = route.path
+        let path = route.path.replace('?', '')
         let title = route.meta.breadcrumb
         Object.entries(crcRoute.params).forEach(([key, value]) => {
           path = path.replace(`:${key}`, value)
@@ -25,9 +25,8 @@ export default function ({ start = 0, end = undefined }) {
         })
 
         return {
-          title: decodeURI(title),
           to: path,
-          exact: true,
+          title: decodeURI(title),
           disabled: isReachCurrent
         }
       })

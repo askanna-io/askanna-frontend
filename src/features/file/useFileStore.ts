@@ -13,6 +13,7 @@ const blobExts = [...ext.xls, ...ext.pdf]
 export const useFileStore = defineStore('file', {
   state: () => {
     return {
+      cdnUrl: '',
       loading: true,
       loadingFullData: false,
 
@@ -122,8 +123,11 @@ export const useFileStore = defineStore('file', {
       let isFileBig = Number(size) >= maxLength
       const isFileBigForRawView = Number(size) >= 10000
 
+      if (extension === 'pdf') {
+        this.cdnUrl = url || ''
+      }
       // get images
-      if (allowedImageExts.includes(extension) || blobExts.includes(extension)) {
+      else if (allowedImageExts.includes(extension) || blobExts.includes(extension)) {
         response = await apiService({
           url,
           suuid,
@@ -243,7 +247,7 @@ export const useFileStore = defineStore('file', {
         this.loadingFullData = false
 
         return result
-      } catch (e) {}
+      } catch (e) { }
 
       this.loadingFullData = false
     }

@@ -4,18 +4,19 @@ import { PERMISSIONS_LABELS } from '@/features/workspace/types'
 export const jobRoutes = [
   {
     path: 'job-does-not-exist',
-    component: () => import('./views/job-does-not-exist.vue'),
+    component: () => import('./views/JobDoesNotExist.vue'),
     name: 'workspace-project-job-does-not-exist',
     meta: {
       title: 'Oops...we cannot find this job',
-      breadcrumb: 'Job does not exist'
+      breadcrumb: 'Job does not exist',
+      breadcrumbLevel: 3
     }
   },
   {
     path: ':jobId',
     redirect: { name: 'workspace-project-job-overiew' },
 
-    component: () => import('./views/index.vue'),
+    component: () => import('./views/JobIndex.vue'),
     meta: {
       breadcrumb: 'Job - :jobId'
     },
@@ -23,16 +24,17 @@ export const jobRoutes = [
       runsRoutes,
       {
         path: 'overview',
-        component: () => import('./views/overview.vue'),
+        component: () => import('./views/JobOverview.vue'),
         name: 'workspace-project-job-overiew',
         meta: {
           title: 'Overview',
-          breadcrumb: 'Overview'
+          breadcrumbLevel: 6,
+          breadcrumb: 'Overview',
         }
       },
       {
         path: 'edit',
-        component: () => import('./views/edit.vue'),
+        component: () => import('./views/JobEdit.vue'),
         name: 'workspace-project-job-edit',
         meta: {
           breadcrumb: 'Edit',

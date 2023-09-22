@@ -1,15 +1,18 @@
 <template>
   <tbody>
-    <template v-for="(item, index) in items">
-      <tr :key="index + group" class="v-row-group__header">
-        <td :colspan="headersLength - 1" class="text-start">
+    <template
+      v-for="(item, index) in items"
+      :key="index + group"
+    >
+      <tr class="v-row-group__header">
+        <td
+          :colspan="headersLength - 1"
+          class="text-start"
+        >
           <AskAnnaButton
-            dark
-            icon
-            x-small
-            color="secondary"
+            :icon="getIcons(index)"
             @click="hadleTogle(index)"
-            class="btn--hover btn--without-text mr-3 link-btn"
+            class=" mr-3 link-btn"
           >
             <AskAnnaIcon>{{ getIcons(index) }}</AskAnnaIcon>
           </AskAnnaButton>
@@ -17,10 +20,17 @@
         </td>
       </tr>
       <template v-if="isExpanded(index)">
-        <template v-for="(subItem, index2) in item.items">
-          <tr :key="index + index2 + item.name">
+        <template
+          v-for="(subItem, index2) in item.items"
+          :key="index + index2 + item.name"
+        >
+          <tr>
             <template v-for="(value, index3) in subItem">
-              <td v-if="index3 && group !== index3" class="text-start" :key="index3">{{ value }}</td>
+              <td
+                v-if="index3 && group !== index3"
+                class="text-start"
+                :key="index3"
+              >{{ value }}</td>
             </template>
           </tr>
         </template>

@@ -1,35 +1,28 @@
 <template>
-  <div :class="{ 'pt-2': $vuetify.breakpoint.xsOnly }">
-    <AskAnnaCard flat v-if="!$vuetify.breakpoint.xsOnly">
-      <AskAnnaCardText>
-        <p>
-          Project variables are applied to every run environment within this project. You can use variables for
-          settings, passwords, tokens, etcetera. Masked variables can be used for sensitive information.
-          <a
-            class="app-link text-decoration-none primary--text font-weight-medium d-inline-block"
-            href="https://docs.askanna.io/variable/"
-            target="_blank"
-          >
-            Read the documentation</a
-          >
-          for more information about how you can use variables in the job definition and project code.
-        </p>
-      </AskAnnaCardText>
-    </AskAnnaCard>
-    <AskAnnaToolbar v-if="variableCreate" color="grey lighten-4" flat dense>
-      <AskAnnaSpacer />
-      <AskAnnaButton @click="handleOpenVariablePopup()" small rounded class="mr-3">
-        <AskAnnaIcon color="primary" left>mdi-plus</AskAnnaIcon>
-        New variable
-      </AskAnnaButton>
-    </AskAnnaToolbar>
-  </div>
+  <AskAnnaToolbar
+    v-if="variableCreate"
+    density="compact"
+  >
+    <div class="flex w-full items-center justify-between">
+      <div class="sm:w-9/12 md:w-6/12 xl:w-4/12">
+      </div>
+      <div class="flex items-center justify-end sm:w-9/12 md:w-6/12 xl:w-4/12 text-end">
+        <AskAnnaButton
+          @click="handleOpenVariablePopup()"
+          variant="elevated"
+          colorIcon="primary"
+          prependIcon="mdi-plus"
+          class="mr-3 rounded-full"
+        >New variable</AskAnnaButton>
+      </div>
+    </div>
+  </AskAnnaToolbar>
 </template>
 
 <script setup lang="ts">
-const emits = defineEmits('openVariablePopup')
+const emits = defineEmits(['openVariablePopup'])
 
-const permission = usePermission()
+const permission = useAskAnnaPermission()
 const variableCreate = computed(() => permission.getFor(permission.labels.variableCreate))
 
 const handleOpenVariablePopup = () => emits('openVariablePopup')

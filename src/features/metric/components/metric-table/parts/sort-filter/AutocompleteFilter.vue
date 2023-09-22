@@ -1,14 +1,15 @@
 <template>
   <VAutocomplete
-    dense
-    outlined
     clearable
     hide-details
-    class="py-2 px-3 autocomplete-filter"
     :label="label"
     :items="items"
-    :value="computedValue"
-    @change="handleChange"
+    density="compact"
+    variant="outlined"
+    clear-icon="mdi-close"
+    :model-value="computedValue"
+    class="py-2 px-3 autocomplete-filter"
+    @update:modelValue="handleChange"
   />
 </template>
 
@@ -36,7 +37,11 @@ const computedValue = computed(() => state[props.filterName])
 const handleChange = value => changeState({ path: props.filterName, value })
 </script>
 <style>
-.autocomplete-filter .v-input__append-inner .v-input__icon.v-input__icon--append {
-  cursor: pointer;
+.v-autocomplete .v-field__append-inner .v-autocomplete__menu-icon {
+  margin-left: 0px;
+}
+
+.v-autocomplete .v-field__clearable {
+  margin-right: 0px !important;
 }
 </style>

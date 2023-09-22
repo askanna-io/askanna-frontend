@@ -1,18 +1,13 @@
 <template>
-  <AskAnnaFlex class="fill-height px-5" fluid>
+  <div class="flex fill-height px-4">
     <VFadeTransition mode="out-in">
-      <Markdown
+      <Marked
         :images="images"
         :source="fileSource"
         :cdnBaseUrl="cdnBaseUrl"
-        html
-        langPrefix
-        linkify
-        quotes
-        typographer
-        xhtmlOut />
+      />
     </VFadeTransition>
-  </AskAnnaFlex>
+  </div>
 </template>
 
 <script setup lang="ts">

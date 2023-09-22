@@ -1,16 +1,24 @@
 <template>
-  <VList>
-    <VListItemGroup :value="state.order_by" @change="handleChange" color="primary">
-      <VListItem dense v-for="(item, i) in items" :key="i" :value="item.sort">
-        <VListItemIcon>
-          <AskAnnaIcon>{{ item.icon }}</AskAnnaIcon>
-        </VListItemIcon>
-
-        <VListItemContent>
-          <VListItemTitle v-text="item.text" />
-        </VListItemContent>
-      </VListItem>
-    </VListItemGroup>
+  <VList
+    base-color="main"
+    density="compact"
+    :model-value="state.order_by"
+    @click:select="handleChange"
+  >
+    <VListItem
+      v-for="(item, i) in items"
+      density="compact"
+      :key="item.sort"
+      :value="item.sort"
+      :active="item.sort === state.order_by"
+    >
+      <template v-slot:prepend>
+        <v-icon :icon="item.icon"></v-icon>
+      </template>
+      <div class="VListItemContent">
+        <VListItemTitle v-text="item.text" />
+      </div>
+    </VListItem>
   </VList>
 </template>
 
@@ -46,5 +54,8 @@ const items = [
 const state = inject('state')
 const changeState = inject('changeState')
 
-const handleChange = value => changeState({ path: 'order_by', value })
+const handleChange = item => {
+  const value = item.value ? item.id : undefined
+  changeState({ path: 'order_by', value })
+}
 </script>

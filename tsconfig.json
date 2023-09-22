@@ -12,16 +12,11 @@
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "baseUrl": ".",
-    "types": [
-      "vite-plugin-vue-layouts/client",
-      "vite-plugin-pages/client",
-      "vite/client",
-      "unplugin-vue2-script-setup/types"
-    ],
     "paths": {
       "@/*": ["./src*"]
     },
-    "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
+    "types": ["vite-plugin-pwa/vue"],
+    "lib": ["esnext", "dom", "dom.iterable", "scripthost"],
   },
   "include": ["**/*.ts", "**/*.tsx", "**/*.vue", "tests/**/*.ts", "tests/**/*.tsx", "src/components.d.ts"],
   "exclude": ["node_modules", "mock", "build", "dist"]

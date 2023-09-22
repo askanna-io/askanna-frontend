@@ -1,41 +1,48 @@
 <template>
-  <VMenu :close-on-content-click="false" v-model="menu" :nudge-width="200" nudge-right="60">
-    <template v-slot:activator="{ on, attrs }">
-      <span v-on="on" class="pr-5 cursor--pointer" @mouseover="handleOnHover" @mouseleave="handleOnBlur">
+  <VMenu
+    v-model="menu"
+    location="end"
+    :close-on-content-click="false"
+  >
+    <template v-slot:activator="{ props }">
+      <span
+        v-bind="props"
+        class="pr-5 cursor-pointer"
+        @mouseover="handleOnHover"
+        @mouseleave="handleOnBlur"
+      >
         Name
-        <span class="mr-5" style="position: relative">
+        <span
+          class="mr-5"
+          style="position: relative"
+        >
           <AskAnnaIcon
-            v-bind="attrs"
             v-show="isActive"
-            text
-            small
             filter
-            outlined
-            :color="getColor()"
+            size="small"
+            variant="outlined"
             text-color="white"
+            :color="getColor()"
+            icon="mdi-filter-variant"
             style="left: 3px; top: 1px; right: auto; position: absolute"
-          >
-            mdi-filter-variant
-          </AskAnnaIcon>
+          />
         </span>
       </span>
     </template>
 
-    <AskAnnaCard>
-      <SortByType title="Name" :sortBy="`${typeName}.name`" />
+    <AskAnnaCard min-width="300">
+      <SortByType
+        title="Name"
+        :sortBy="`${typeName}.name`"
+      />
 
       <AskAnnaDivider />
 
-      <FilterByType class="mt-2" :filterName="`${typeName}_name`" :label="`Filter by ${typeName} name`" />
-
-      <AskAnnaCardActions v-if="false">
-        <AskAnnaSpacer />
-
-        <AskAnnaButton small outlined text class="btn--hover" @click="menu = false">Cancel</AskAnnaButton>
-        <AskAnnaButton small outlined color="secondary" text class="btn--hover" @click="handleApply">
-          Apply
-        </AskAnnaButton>
-      </AskAnnaCardActions>
+      <FilterByType
+        class="mt-2"
+        :filterName="`${typeName}_name`"
+        :label="`Filter by ${typeName} name`"
+      />
     </AskAnnaCard>
   </VMenu>
 </template>
@@ -59,6 +66,4 @@ const handleOnBlur = () => (active.value = false)
 const handleOnHover = () => (active.value = true)
 
 const getColor = () => (isActiveMetricName.value ? 'primary' : 'secondary')
-
-const handleApply = () => {}
 </script>

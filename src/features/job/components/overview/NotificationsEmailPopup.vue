@@ -1,56 +1,76 @@
 <template>
-  <VDialog v-model="dialog" max-width="500px" persistent @click:outside="handleClose" @keydown.esc="handleClose">
-    <template v-slot:activator="{ on, attrs }">
-      <span v-on="on" v-bind="attrs" color="primary" class="pl-1 primary--hover primary--text"> Email</span>
+  <AskAnnaDialog
+    v-model="dialog"
+    persistent
+    max-width="500px"
+    titleClass="pb-0"
+    @onClose="handleClose"
+    @keydown.esc="handleClose"
+    @click:outside="handleClose"
+  >
+    <template v-slot:activator>
+      <span
+        color="primary"
+        @click="dialog = true"
+        class="pl-1 cursor-pointer text-primary"
+      >Email</span>
     </template>
-    <AskAnnaCard class="AskAnna-card AskAnna-card--in-dialog">
-      <AskAnnaToolbar flat dense white--text color="white">
-        <AskAnnaToolbarTitle class="px-0">Notifications</AskAnnaToolbarTitle>
-        <AskAnnaSpacer />
+    <template v-slot:title>
+      Notifications
+    </template>
+    <template v-slot:body>
+      <VTabs
+        v-model="currentTab"
+        left
+        align-with-title
+      >
+        <template v-for="tab of tabs">
+          <VTab
+            v-if="tab.show"
+            ripple
+            :key="tab.id"
+          >
+            {{ tab.name }}
+          </VTab>
+        </template>
+      </VTabs>
 
-        <AskAnnaButton icon @click="handleClose">
-          <AskAnnaIcon>mdi-close</AskAnnaIcon>
-        </AskAnnaButton>
-      </AskAnnaToolbar>
-      <AskAnnaCardText>
-        <VTabs v-model="currentTab" left align-with-title>
-          <VTabsSlider color="primary" />
-          <template v-for="tab of tabs">
-            <VTab v-if="tab.show" ripple :key="tab.id">
-              {{ tab.name }}
-            </VTab>
-          </template>
-        </VTabs>
-
-        <VTabsItems v-model="currentTab">
-          <template v-for="tab in tabs">
-            <VTabItem :key="tab.name" v-if="tab.show" class="pt-2">
-              <div>
-                <h4 class="pl-2 pt-2 pb-2">Email:</h4>
-                <ol>
-                  <li v-for="(item, i) in notifications[tab.name].email" :key="i" height="20">
-                    <VHover v-slot="{ hover }">
-                      <div>
-                        {{ item }}
-                        <AskAnnaCopyText
-                          v-if="hover"
-                          :text="item"
-                          :showText="false"
-                          :iconColor="'grey lighten-2'"
-                          :buttonType="{ text: true }"
-                          :styleClasses="'px-0 white font-weight-regular text--regular body-1'"
-                        />
-                      </div>
-                    </VHover>
-                  </li>
-                </ol>
-              </div>
-            </VTabItem>
-          </template>
-        </VTabsItems>
-      </AskAnnaCardText>
-    </AskAnnaCard>
-  </VDialog>
+      <VWindow v-model="currentTab">
+        <template v-for="tab in tabs">
+          <VWindowItem
+            v-if="tab.show"
+            :key="tab.name"
+          >
+            <div>
+              <h4 class="pl-2 mt-3">Email:</h4>
+              <ol role="list">
+                <li
+                  v-for="(item, i) in notifications[tab.name].email"
+                  :key="i"
+                >
+                  <VHover v-slot:default="{ props, isHovering }">
+                    <div
+                      v-bind="props"
+                      class="group flex h-6 items-center"
+                    >
+                      {{ item }}
+                      <AskAnnaCopyText
+                        v-if="isHovering"
+                        :text="item"
+                        :showText="false"
+                        :iconColor="'main'"
+                        :buttonType="{ text: true }"
+                      />
+                    </div>
+                  </VHover>
+                </li>
+              </ol>
+            </div>
+          </VWindowItem>
+        </template>
+      </VWindow>
+    </template>
+  </AskAnnaDialog>
 </template>
 <script setup lang="ts">
 const props = defineProps({

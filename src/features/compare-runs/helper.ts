@@ -137,8 +137,9 @@ export const compareItems = {
       {
         title: 'File name',
         field: 'result.name',
-        type: 'text-slice',
-        getRouteParams: () => ({})
+        to: 'workspace-project-jobs-job-run-result',
+        getRouteParams: params => ({ runId: params.runId }),
+        type: 'run-suuid',
       },
       {
         title: 'Size',
@@ -168,6 +169,13 @@ export const compareItems = {
   artifact: {
     title: 'Artifact',
     items: [
+      {
+        title: 'SUUID',
+        field: 'artifact.suuid',
+        type: 'run-suuid',
+        to: 'workspace-project-jobs-job-run-artifact',
+        getRouteParams: params => ({ runId: params.runId })
+      },
       {
         title: 'No. of files',
         field: 'artifact.count_files',

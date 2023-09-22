@@ -55,10 +55,11 @@ export const useRunStore = defineStore('run', {
 
       } catch (e) {
         const logger = useLogger()
+        const generalStore = useGeneralStore()
 
         logger.error('Error on run job in getRun action.\nError: ', e)
 
-        this.$routerAskAnna.routerPush({ name: 'workspace-project-job-run-does-not-exist' })
+        await generalStore.setRouteNotExist()
 
         return
       }

@@ -1,7 +1,6 @@
 <template>
-  <div>
-    <span class="font-weight-bold">{{ text }}:</span>
-    &nbsp;{{ value }}
+  <div class="group flex items-center">
+    <span class="font-bold">{{ text }}:&nbsp;</span>{{ value }}
   </div>
 </template>
 <script setup lang="ts">
@@ -15,7 +14,7 @@ defineProps({
     default: true
   },
   value: {
-    type: String | Number,
+    type: String || Number,
     default: ''
   }
 })

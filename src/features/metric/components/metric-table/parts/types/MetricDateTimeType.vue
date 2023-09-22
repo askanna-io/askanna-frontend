@@ -1,5 +1,5 @@
 <template>
-  <span>
+  <span class="whitespace-nowrap">
     <span v-if="isShowName">{{ metricRow.name }}:&nbsp;</span>
     {{ datetimeFormated }}</span>
 </template>

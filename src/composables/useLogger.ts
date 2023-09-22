@@ -8,7 +8,7 @@ export const useLogger = () => {
 
   return {
     success: (message: string) => {
-      const timeout = 2000
+      const timeout = 3000
       snackBar.showSnackBar({
         message,
         timeout,

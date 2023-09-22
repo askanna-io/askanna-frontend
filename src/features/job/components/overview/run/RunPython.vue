@@ -1,78 +1,78 @@
 <template>
-  <div>
-    <div :class="{ 'px-4': !$vuetify.breakpoint.xsOnly, 'px-0': $vuetify.breakpoint.xsOnly }">
-      <AskAnnaToolbar dense flat color="grey lighten-4" class="br-r4">
-        <AskAnnaFlex class="d-flex">
-          <div class="mr-auto d-flex align-center">
-            Python: example with&nbsp;
-            <a class="ask-anna-link" href="https://docs.askanna.io/python-sdk/" target="_blank">the AskAnna SDK</a>
-          </div>
-          <AskAnnaTooltip top content-class="opacity-1">
-            <template v-slot:activator="{ on }">
-              <AskAnnaButton
-                class="mr-1 btn--hover"
-                small
-                v-on="on"
-                outlined
-                color="secondary"
-                @click="handleCopy(pythonCode)"
-              >
-                <AskAnnaIcon left color="secondary">mdi-content-copy</AskAnnaIcon>Copy
-              </AskAnnaButton>
-            </template>
-            <span>Copy</span>
-          </AskAnnaTooltip>
-        </AskAnnaFlex>
-      </AskAnnaToolbar>
-      <AskAnnaFlex class="mb-4">
-        <TheHighlight class="curl-code" :value="pythonCode" languageName="python" />
-      </AskAnnaFlex>
-    </div>
-    <div :class="{ 'px-4': !$vuetify.breakpoint.xsOnly, 'px-0': $vuetify.breakpoint.xsOnly }">
-      <AskAnnaToolbar dense flat color="grey lighten-4" class="br-r4">
-        <AskAnnaFlex class="d-flex">
-          <div class="mr-auto d-flex align-center">
-            Python: example with&nbsp;
-            <a class="ask-anna-link" href="https://requests.readthedocs.io" target="_blank">the Requests package</a>
-          </div>
-          <AskAnnaTooltip top content-class="opacity-1">
-            <template v-slot:activator="{ on }">
-              <AskAnnaButton
-                small
-                v-on="on"
-                outlined
-                class="mr-1 btn--hover"
-                :color="hideToken ? 'secondary' : 'primary'"
-                @click="() => (hideToken = !hideToken)"
-              >
-                <AskAnnaIcon left small color="secondary">{{ 'far fa-eye' }}</AskAnnaIcon
-                >{{ hideToken ? 'Show token' : 'Hide token' }}
-              </AskAnnaButton>
-            </template>
-            <span>{{ hideToken ? 'Show token' : 'Hide token' }}</span>
-          </AskAnnaTooltip>
-          <AskAnnaTooltip top content-class="opacity-1">
-            <template v-slot:activator="{ on }">
-              <AskAnnaButton
-                class="mr-1 btn--hover"
-                small
-                v-on="on"
-                outlined
-                color="secondary"
-                @click="handleCopy(getPythonCode2)"
-              >
-                <AskAnnaIcon left color="secondary">mdi-content-copy</AskAnnaIcon>Copy
-              </AskAnnaButton>
-            </template>
-            <span>Copy</span>
-          </AskAnnaTooltip>
-        </AskAnnaFlex>
-      </AskAnnaToolbar>
-      <AskAnnaFlex class="mb-4">
-        <TheHighlight class="curl-code" :value="getPythonCode2" languageName="python" />
-      </AskAnnaFlex>
-    </div>
-  </div>
+  <VSheet
+    rounded
+    class="m-4 "
+  >
+    <AskAnnaToolbar
+      flat
+      class="rounded-t px-4"
+    >
+      <div class="flex w-full items-center justify-between">
+        <div class="cursor-text">
+          Python: example with
+          <a
+            target="_blank"
+            class="no-underline"
+            href="https://docs.askanna.io/python-sdk/"
+          >the AskAnna SDK</a>
+        </div>
+        <AskAnnaButton
+          prependIcon="mdi-content-copy"
+          @click="handleCopy(pythonCode)"
+        >
+          Copy
+        </AskAnnaButton>
+      </div>
+    </AskAnnaToolbar>
+    <TheHighlight
+      roundedBottom
+      class="curl-code"
+      :value="pythonCode"
+      languageName="python"
+    />
+  </VSheet>
+
+  <VSheet
+    rounded
+    class="m-4 mt-6"
+  >
+    <AskAnnaToolbar
+      flat
+      class="rounded-t px-4"
+    >
+      <div class="flex w-full items-center justify-between">
+        <div class="cursor-text">
+          Python: example with
+          <a
+            target="_blank"
+            class="no-underline"
+            href="https://requests.readthedocs.io"
+          >the Requests package</a>
+        </div>
+        <div class="flex gap-2">
+          <AskAnnaButton
+            prependIcon="mdi-eye"
+            :color="hideToken ? 'secondary' : 'primary'"
+            @click="() => (hideToken = !hideToken)"
+          >
+            {{ hideToken ? 'Show token' : 'Hide token' }}
+          </AskAnnaButton>
+          <AskAnnaButton
+            prependIcon="mdi-content-copy"
+            @click="handleCopy(getPythonCode2)"
+          >
+            Copy
+          </AskAnnaButton>
+        </div>
+      </div>
+    </AskAnnaToolbar>
+    <TheHighlight
+      roundedBottom
+      class="curl-code"
+      languageName="python"
+      :value="getPythonCode2"
+    />
+  </VSheet>
 </template>
 
 <script setup lang="ts">

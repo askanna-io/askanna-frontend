@@ -1,19 +1,24 @@
+import fs from 'fs'
 import path from 'path'
-const fs = require('fs')
-const yaml = require('js-yaml')
+import yaml from 'js-yaml'
+
 import type { Plugin } from 'vite'
-import Vue from '@vitejs/plugin-vue2'
+import Vue from '@vitejs/plugin-vue'
+import Pages from 'vite-plugin-pages'
+import Vuetify from 'vite-plugin-vuetify'
 import { VitePWA } from 'vite-plugin-pwa'
 import { defineConfig, loadEnv } from 'vite'
-import htmlPlugin from 'vite-plugin-html-config'
+import Markdown from 'vite-plugin-vue-markdown'
+import HtmlPlugin from 'vite-plugin-html-config'
+import { Examples } from './build/example-plugins'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { VuetifyResolver } from 'unplugin-vue-components/resolvers'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
-function createAskAnnaConfig() {
+function CreateAskAnnaConfig() {
   return <Plugin>{
-    name: 'create-ask-anna-config',
+    name: 'create-askanna-config',
     apply: 'build',
 
     async closeBundle() {
@@ -60,8 +65,12 @@ function createAskAnnaConfig() {
 
 export default ({ mode }) => {
   process.env = { ...process.env, ...loadEnv(mode, process.cwd()) }
+  const isShowStyleGuide = process.env?.VITE_APP_SHOW_STYLE_GUIDE == 'true'
+  const styleGuideDir = isShowStyleGuide ? { dir: 'src/features/style-guide/views', baseRoute: 'style-guide' } : ''
 
   return defineConfig({
+    base: '/',
+    esbuild: {},
     resolve: {
       // https://vitejs.dev/config/shared-options.html#resolve-alias
       alias: {
@@ -79,7 +88,13 @@ export default ({ mode }) => {
       }
     },
     plugins: [
-      htmlPlugin({
+      Pages({
+        extensions: ['vue', 'ts', 'js', 'md'],
+        dirs: [
+          styleGuideDir,
+        ],
+      }),
+      HtmlPlugin({
         metas: [
           {
             property: 'og:url',
@@ -93,7 +108,51 @@ export default ({ mode }) => {
           }
         ]
       }),
+
+      Vue({
+        include: [/\.vue$/, /\.md$/],
+      }),
+      Markdown({ wrapperClasses: '' }),
+      Vuetify({ autoImport: true }),
+      AutoImport({
+        vueTemplate: true,
+        dirs: [
+          'src/composables',
+          'src/composables/store',
+          'src/components/snackBar',
+          'src/components/highlight',
+          'src/composables/resumable',
+          'src/components/uploadStatus',
+          'src/features/**',
+        ],
+        dts: 'src/auto-imports.d.ts',
+        resolvers: [ElementPlusResolver()],
+        imports: ['vue', 'vue-router', '@vueuse/core', { 'vuetify': ['useDisplay'] }],
+        eslintrc: {
+          enabled: true, // Default `false`
+          filepath: './.eslintrc-auto-import.json', // Default `./.eslintrc-auto-import.json`
+          globalsPropValue: true // Default `true`, (true | false | 'readonly' | 'readable' | 'writable' | 'writeable')
+        }
+      }),
+      Components({
+        transformer: 'vue3',
+        dts: 'src/components.d.ts',
+        resolvers: [
+          // Vuetify
+          VuetifyResolver()
+        ],
+        dirs: [
+          'src/layouts',
+          'src/components',
+          'src/features/**/components',
+        ]
+      }),
       VitePWA({
+        workbox: {
+          skipWaiting: true,
+          cleanupOutdatedCaches: true,
+        },
+        registerType: 'autoUpdate',
         includeAssets: ['favicon.ico', 'apple-touch-icon.png'],
         manifest: {
           name: 'AskAnna',
@@ -115,76 +174,17 @@ export default ({ mode }) => {
           ]
         }
       }),
-      Vue(),
-      AutoImport({
-        vueTemplate: true,
-        dirs: [
-          'src/composables',
-          'src/composables/store',
-          'src/components/snackBar',
-          'src/components/highlight',
-          'src/composables/resumable',
-          'src/components/uploadStatus',
-
-          'src/features/job',
-          'src/features/run',
-          'src/features/runs',
-          'src/features/jobs',
-          'src/features/auth',
-          'src/features/file',
-          'src/features/user',
-          'src/features/charts',
-          'src/features/metric',
-          'src/features/people',
-          'src/features/project',
-          'src/features/package',
-          'src/features/packages',
-          'src/features/projects',
-          'src/features/variables',
-          'src/features/workspace',
-          'src/features/workspaces',
-          'src/features/compare-runs',
-          'src/features/run-variables'
-        ],
-        dts: 'src/auto-imports.d.ts',
-        resolvers: [ElementPlusResolver()],
-        imports: ['vue', 'vue-router']
-      }),
-      Components({
-        transformer: 'vue2',
-        dts: 'src/components.d.ts',
-        resolvers: [
-          // Vuetify
-          VuetifyResolver()
-        ],
-        dirs: [
-          'src/components',
-          'src/features/job/components',
-          'src/features/run/components',
-          'src/features/runs/components',
-          'src/features/jobs/components',
-          'src/features/auth/components',
-          'src/features/file/components',
-          'src/features/user/components',
-          'src/features/charts/components',
-          'src/features/metric/components',
-          'src/features/people/components',
-          'src/features/package/components',
-          'src/features/project/components',
-          'src/features/packages/components',
-          'src/features/projects/components',
-          'src/features/variables/components',
-          'src/features/workspace/components',
-          'src/features/workspaces/components',
-          'src/features/compare-runs/components',
-          'src/features/run-variables/components'
-        ]
-      }),
-      createAskAnnaConfig()
+      Examples(),
+      CreateAskAnnaConfig()
     ],
     build: {
       commonjsOptions: {
-        esmExternals: true
+        esmExternals: true,
+      },
+      rollupOptions: {
+        output: {
+          inlineDynamicImports: true,
+        },
       },
       sourcemap: true
     }

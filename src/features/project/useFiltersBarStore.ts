@@ -69,8 +69,8 @@ export const useFiltersBarStore = defineStore('PROJECT_RUN_FILTER_BAR_STORE', {
 
   actions: {
     async init(filters, query) {
-      this.search = query.search
       this.filters = filters
+      this.search = query.search
 
       this.currentFilterItems = {
         data: filters,
@@ -78,6 +78,8 @@ export const useFiltersBarStore = defineStore('PROJECT_RUN_FILTER_BAR_STORE', {
       }
 
       const params = Object.keys(query).map((key) => ({ filter: key, value: query[key] }))
+
+      this.isInit = true
 
       if (!params.length) return
 

@@ -44,7 +44,7 @@ instant updates when you save a change.
 ### Removing docker-compose setup
 
 In case you don't want to run the AskAnna Frontend container anymore, or something happened which corrupted your
-installation. You can execute the following to remove Askanna Frontend container from your system:
+installation. You can execute the following to remove AskAnna Frontend container from your system:
 
 ```shell
 docker compose rm --stop -v -f

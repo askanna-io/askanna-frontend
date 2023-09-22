@@ -1,11 +1,8 @@
 <template>
-  <VCardSubtitle v-bind="$attrs" v-on="$listeners">
+  <div
+    v-bind="$attrs"
+    class="font-medium"
+  >
     <slot />
-  </VCardSubtitle>
+  </div>
 </template>
-
-<script>
-export default {
-  inheritAttrs: false
-}
-</script>

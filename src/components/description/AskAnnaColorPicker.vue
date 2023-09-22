@@ -1,48 +1,46 @@
 <template>
-  <VMenu top v-model="menu" :nudge-top="25" :close-on-content-click="false">
-    <template v-slot:activator="{ on, attrs }">
-      <VTooltip top>
-        <template v-slot:activator="{ on: onHover }">
-          <span v-on="onHover">
-            <AskAnnaButton
-              v-bind="attrs"
-              v-on="on"
-              dark
-              icon
-              x-small
-              text
-              color="secondary"
-              class="btn--hover btn--without-text mr-3"
-              :class="{ 'pt-1': $vuetify.breakpoint.xsOnly }"
-            >
-              <AskAnnaIcon>mdi-format-color-fill</AskAnnaIcon>
-            </AskAnnaButton>
-          </span>
-        </template>
-        <span>Highlight</span>
-      </VTooltip>
+  <VMenu
+    location="top"
+    v-model="menu"
+    :close-on-content-click="false"
+  >
+    <template v-slot:activator="{ props }">
+      <AskAnnaButton
+        v-bind="props"
+        variant="plain"
+        density="compact"
+        class="mr-4 opacity-100 z-10"
+        icon="mdi-format-color-fill"
+      >
+        <AskAnnaTooltip>Highlight</AskAnnaTooltip>
+      </AskAnnaButton>
     </template>
-    <AskAnnaCard width="140px" flat class="px-2 pt-2">
-      <AskAnnaRow no-gutters>
-        <AskAnnaCol cols="12" class="color-picker-col">
-          <template v-for="item in swatches">
+
+    <AskAnnaCard width="140px">
+      <div class="p-2">
+        <div class="flex justify-between">
+          <template
+            v-for="item in swatches"
+            :key="item"
+          >
             <AskAnnaButton
-              :key="item"
-              x-small
-              depressed
+              class="w-5"
+              size="x-small"
               :color="item"
-              class="btn--hover btn--without-text color--accent-2"
+              variant="flat"
               @click="handleOnIputColor(item)"
             >
             </AskAnnaButton>
           </template>
-        </AskAnnaCol>
-        <AskAnnaCol cols="12" class="py-2">
-          <AskAnnaButton block x-small depressed outlined text class="btn--hover" @click="handleClose">
-            No highlight
-          </AskAnnaButton>
-        </AskAnnaCol>
-      </AskAnnaRow>
+        </div>
+        <AskAnnaButton
+          size="x-small"
+          class="w-full mt-1"
+          @click="handleClose"
+        >
+          No highlight
+        </AskAnnaButton>
+      </div>
     </AskAnnaCard>
   </VMenu>
 </template>
@@ -71,15 +69,3 @@ watch(menu, menu => {
   if (!menu) selectedColor.value = '#ffffff'
 })
 </script>
-
-<style lang="scss">
-.color-picker-col {
-  display: flex;
-  justify-content: space-around;
-
-  .v-btn:not(.v-btn--round).v-size--x-small {
-    min-width: 20px;
-    width: 20px;
-  }
-}
-</style>

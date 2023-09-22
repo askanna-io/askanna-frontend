@@ -6,6 +6,7 @@ interface UploadParams {
   message?: string
   progress: number
   projectId: string
+  workspaceId: string
   packageId: string
   isComplete: Boolean
 }
@@ -114,7 +115,11 @@ export const useUploadStatus = defineStore('upload-status', {
     },
     clearSnackBar() {
       this.uploads = []
+      this.snackbar.open = false
       this.snackbar.message = "You don't have tasks yet."
-    }
+    },
+    deleteLastUpload() {
+      this.uploads.pop()
+    },
   }
 })

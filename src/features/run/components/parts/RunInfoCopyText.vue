@@ -1,23 +1,23 @@
 <template>
-  <div>
-    <span class="font-weight-bold">{{ text }}:&nbsp;</span>
+  <div class="group flex items-center">
+    <span class="font-bold mr-1">{{ title }}:</span>
     <AskAnnaCopyText
       :text="value"
+      class="flex items-center"
+      :copyTitle="copyTitle"
       :iconColor="'grey lighten-2'"
       :buttonType="{ text: true }"
-      :styleClasses="'px-0 white primary--black font-weight-regular  body-1'"
+      :styleClasses="'px-0 text-main font-normal'"
     />
   </div>
 </template>
 <script setup lang="ts">
 defineProps({
-  text: {
+  title: String,
+  value: String,
+  copyTitle: {
     type: String,
-    default: ''
-  },
-  value: {
-    type: String | Number,
-    default: ''
+    default: 'Copy'
   }
 })
 </script>

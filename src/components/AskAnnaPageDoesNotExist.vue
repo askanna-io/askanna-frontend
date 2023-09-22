@@ -1,38 +1,51 @@
 <template>
-  <AskAnnaCard class="mx-auto" :outlined="outlined" flat>
+  <div :class="{ 'mt-4': !isUserLoggedIn }">
     <slot name="header" />
-    <template v-if="isUserLoggedIn">
-      <AskAnnaDivider />
 
-      <AskAnnaCardTitle>
-        <span class="title font-weight-light">Oops...we cannot find this {{ pageTitle }}</span>
-      </AskAnnaCardTitle>
+    <AskAnnaCard
+      :variant="variant"
+      class="text-main"
+      :class="{ 'mx-4': isMainPage }"
+    >
+      <template v-if="isUserLoggedIn">
 
-      <AskAnnaCardText>
-        <p>
-          We cannot find the {{ pageTitle }} you just tried to open. Maybe the {{ pageTitle }} is removed, or you don't
-          have access to open the {{ pageTitle }} (anymore). For support you can always check with your team, or reach
-          out to us on <a href="mailto:support@askanna.io" target="_blank">support@askanna.io</a>.
-        </p>
-      </AskAnnaCardText>
-    </template>
-    <template v-else>
-      <AskAnnaCardTitle>
-        <span class="title font-weight-light">Oops...no access, or the {{ pageTitle }} does not exist</span>
-      </AskAnnaCardTitle>
+        <AskAnnaCardTitle>
+          Oops...we cannot find this {{ pageTitle }}
+        </AskAnnaCardTitle>
 
-      <AskAnnaCardText>
-        <p>
-          You cannot open the {{ pageTitle }}. This can mean you don't have access, or that the {{ pageTitle }} does not
-          exist. You can try to sign in.
-        </p>
-      </AskAnnaCardText>
-      <AskAnnaCard flat max-width="400" class="px-3 pb-3">
-        <AskAnnaCardTitle class="pa-1">Sign in</AskAnnaCardTitle>
-        <TheSignIn />
-      </AskAnnaCard>
-    </template>
-  </AskAnnaCard>
+        <AskAnnaCardText>
+          <p>
+            We cannot find the {{ pageTitle }} you just tried to open. Maybe the {{ pageTitle }} is removed, or you don't
+            have access to open the {{ pageTitle }} (anymore). For support you can always check with your team, or reach
+            out to us on <a
+              href="mailto:support@askanna.io"
+              target="_blank"
+            >support@askanna.io</a>.
+          </p>
+        </AskAnnaCardText>
+      </template>
+      <template v-else>
+        <AskAnnaCardTitle>
+          Oops...no access, or the {{ pageTitle }} does not exist
+        </AskAnnaCardTitle>
+
+        <AskAnnaCardText>
+          <p>
+            You cannot open the {{ pageTitle }}. This can mean you don't have access, or that the {{ pageTitle }} does not
+            exist. You can try to sign in.
+          </p>
+        </AskAnnaCardText>
+        <AskAnnaCard
+          max-width="400"
+          variant="flat"
+          class="px-3 pb-3"
+        >
+          <AskAnnaCardTitle class="p-1">Sign in</AskAnnaCardTitle>
+          <TheSignInForm />
+        </AskAnnaCard>
+      </template>
+    </AskAnnaCard>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -41,12 +54,16 @@ defineProps({
     type: String,
     default: ''
   },
-  outlined: {
+  isMainPage: {
     type: Boolean,
-    default: false
+    default: true
+  },
+  variant: {
+    type: String,
+    default: () => 'flat'
   }
 })
 
-const permission = usePermission()
+const permission = useAskAnnaPermission()
 const isUserLoggedIn = computed(() => permission.isUserLoggedIn)
 </script>

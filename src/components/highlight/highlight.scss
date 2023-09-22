@@ -1,12 +1,15 @@
 .hljs-ln td {
   padding-left: 8px;
 }
+
 .hljs-ln {
   border-collapse: collapse;
 }
+
 .hljs-ln-n:before {
   content: attr(data-line-number);
 }
+
 /* for block of numbers */
 .hljs-ln-numbers {
   font-size: 14px;
@@ -19,35 +22,39 @@
   text-align: right;
   color: #999;
   vertical-align: top;
-  padding-left: 5px !important;
+  padding-left: 0px !important;
   padding-right: 8px !important;
 }
+
 /* for block of code */
 .hljs-ln-code {
   white-space: pre-wrap;
   font-size: 14px;
 }
-.ask-anna-highlight td.hljs-ln-code {
+
+.askanna-highlight td.hljs-ln-code {
   white-space: pre;
 }
 
-.ask-anna-highlight code {
+.askanna-highlight code {
   white-space: pre-wrap;
   overflow: auto;
+
   &.loading {
     padding-bottom: 35px !important;
   }
 }
-.ask-anna-highlight .hljs,
-.ask-anna--editor .hljs,
+
+.askanna-highlight .hljs,
+.askanna--editor .hljs,
 .hljs code {
   display: block;
 }
-.ask-anna-highlight .hljs,
-.ask-anna--editor .hljs,
-.ask-anna--editor code {
+
+.askanna-highlight .hljs,
+.askanna--editor .hljs,
+.askanna--editor code {
   overflow-x: auto;
-  padding: 0.5em;
   color: #fff !important;
   background-color: #282c34 !important;
 }

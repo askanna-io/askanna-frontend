@@ -23,33 +23,6 @@ export interface Person {
     name: string
     code: string
   }
-  membership: {
-    name: string
-    status: string
-    email: string
-    suuid: string
-    object_uuid: string
-    object_type: string
-    workspace: {
-      relation: string
-      name: string
-      suuid: string
-    }
-    role: string
-    job_title: string
-    user: {
-      relation: string
-      name: string
-      suuid: string
-    }
-    avatar: {
-      icon: string
-      small: string
-      medium: string
-      large: string
-    }
-    front_end_url: string
-  }
   permission?: {
     'askanna.me': boolean
     'askanna.admin': boolean
@@ -140,33 +113,6 @@ export class PersonModel {
       role: {
         name: '',
         code: ''
-      },
-      membership: {
-        name: '',
-        status: '',
-        email: '',
-        suuid: '',
-        object_uuid: '',
-        object_type: '',
-        workspace: {
-          relation: '',
-          name: '',
-          suuid: ''
-        },
-        role: '',
-        job_title: '',
-        user: {
-          relation: '',
-          name: '',
-          suuid: ''
-        },
-        avatar: {
-          icon: '',
-          small: '',
-          medium: '',
-          large: ''
-        },
-        front_end_url: ''
       },
       permission: undefined,
       avatar: {

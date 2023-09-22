@@ -32,15 +32,11 @@ export const useWorkspaceStore = defineStore(WORKSPACE_STORE, {
       workspace: {
         name: '',
         suuid: '',
-        suuid: '',
         description: '',
         is_member: false,
         visibility: WorkspaceVisibility.PRIVATE
       },
-      newWorkspace: { ...defaultWorkspace },
-      workspaceSettings: {
-        projectView: 0
-      }
+      newWorkspace: { ...defaultWorkspace }
     }
   },
 
@@ -78,10 +74,11 @@ export const useWorkspaceStore = defineStore(WORKSPACE_STORE, {
         })
       } catch (error) {
         const logger = useLogger()
+        const generalStore = useGeneralStore()
 
         logger.error('Error on load workspace in getWorkspace action.\nError: ', error)
 
-        this.$routerAskAnna.routerPush({ name: 'workspace-does-not-exist' })
+        await generalStore.setRouteNotExist()
 
         return
       }

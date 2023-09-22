@@ -53,7 +53,7 @@ const apiService = async ({
       })
     }
 
-    if (result.status === 200 || result.status === 201 || result.status === 204 || result.status === 206) {
+    if (result?.status === 200 || result?.status === 201 || result?.status === 204 || result?.status === 206) {
       if (returnFullResponse) {
         return result
       }
@@ -63,8 +63,8 @@ const apiService = async ({
       throw result
     }
   } catch (error) {
-    if (error.response && error.response.status === 400 && error.response.data.reasons) {
-      throw error.response.data.reasons
+    if (error?.response && error?.response.status === 400 && error?.response.data.reasons) {
+      throw error?.response.data.reasons
     } else {
       throw error
     }

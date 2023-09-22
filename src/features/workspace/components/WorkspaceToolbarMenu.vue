@@ -1,27 +1,8 @@
 <template>
-  <VMenu
-    v-if="menuItems.length"
-    bottom
-    offset-y
-    v-model="menu"
-    class="workspace-menu"
-    data-test="workspace-menu"
-    :close-on-content-click="false"
-  >
-    <template v-slot:activator="{ on, attrs }">
-      <AskAnnaButton icon v-bind="attrs" @click.stop.prevent="on.click" small class="">
-        <AskAnnaIcon>mdi-dots-vertical</AskAnnaIcon>
-      </AskAnnaButton>
-    </template>
-
-    <VList>
-      <template v-for="(item, index) in menuItems">
-        <VListItem v-if="item.isVisible" @click="handleMenuClick(item)" :key="index">
-          <VListItemTitle :class="[item.color]">{{ item.title }}</VListItemTitle>
-        </VListItem>
-      </template>
-    </VList>
-  </VMenu>
+  <AskAnnaToolbarMenu
+    :items="menuItems"
+    @onClick="handleMenuClick"
+  />
 </template>
 <script setup lang="ts">
 const props = defineProps({
@@ -43,13 +24,11 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits('onOpenWorkspaceRemove')
+const emit = defineEmits(['onOpenWorkspaceRemove'])
 
-const permission = usePermission()
-const context = getCurrentInstance()
+const display = useDisplay()
+const permission = useAskAnnaPermission()
 const { routerPush } = useRouterAskAnna()
-
-const menu = ref(false)
 
 const menuItems = computed(() =>
   [
@@ -58,7 +37,7 @@ const menuItems = computed(() =>
       to: 'workspace-new-project',
       isVisible:
         permission.getFor(permission.labels.projectCreate || props.permission[permission.labels.projectCreate]) &&
-        context?.proxy.$root.$vuetify.breakpoint.xsOnly
+        display.xs.value
     },
     {
       title: 'Edit workspace',
@@ -69,7 +48,7 @@ const menuItems = computed(() =>
     {
       title: 'Remove workspace',
       onClick: 'onOpenWorkspaceRemove',
-      color: 'error--text',
+      color: 'text-error',
       isVisible:
         permission.getFor(permission.labels.workspaceRemove) || props.permission[permission.labels.workspaceRemove]
     },
@@ -78,8 +57,6 @@ const menuItems = computed(() =>
 )
 
 const handleMenuClick = item => {
-  menu.value = false
-
   if (item.onClick) {
     emit(item.onClick)
     return

@@ -1,11 +1,5 @@
 <template>
-  <VSubheader v-bind="$attrs" v-on="$listeners">
+  <VListSubheader v-bind="$attrs">
     <slot />
-  </VSubheader>
+  </VListSubheader>
 </template>
-
-<script>
-export default {
-  inheritAttrs: false
-}
-</script>

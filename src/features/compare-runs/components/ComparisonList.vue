@@ -1,5 +1,8 @@
 <template>
-  <div class="list" :class="cssClasses">
+  <div
+    class="list"
+    :class="cssClasses"
+  >
     <slot name="title" />
     <ul class="list__items">
       <slot />
@@ -58,5 +61,4 @@ const cssClasses = computed(() => ({
     left: 60px;
     position: sticky;
   }
-}
-</style>
+}</style>

@@ -6,7 +6,7 @@ export const workspace = {
   paths: [
     {
       path: '/workspace-new',
-      component: () => import('./views/workspace-new.vue'),
+      component: () => import('./views/WorkspaceNew.vue'),
       name: 'workspace-new',
       meta: {
         hideAppBarIcon: true,
@@ -15,7 +15,7 @@ export const workspace = {
     },
     {
       path: '/workspace-does-not-exist',
-      component: () => import('./views/workspace-does-not-exist.vue'),
+      component: () => import('./views/WorkspaceDoesNotExist.vue'),
       name: 'workspace-does-not-exist',
       meta: {
         hideAppBarIcon: true,
@@ -24,9 +24,9 @@ export const workspace = {
       }
     },
     {
-      path: '/:workspaceId',
+      path: '/:workspaceId?',
       caseSensitive: true,
-      component: () => import('./views/index.vue'),
+      component: () => import('./views/Workspace.vue'),
       meta: {
         hideAppBarIcon: true,
         title: 'Workspace: workspaceId',
@@ -36,14 +36,14 @@ export const workspace = {
       children: [
         {
           path: '',
-          component: () => import('./views/workspace-index.vue'),
+          component: () => import('./views/WorkspaceIndex.vue'),
           meta: {
             hideAppBarIcon: true
           },
           children: [
             {
               path: '',
-              component: () => import('./views/workspace-projects.vue'),
+              component: () => import('./views/WorkspaceProjects.vue'),
               name: 'workspace',
               meta: {
                 requiresAuth: false,
@@ -54,7 +54,7 @@ export const workspace = {
             },
             {
               path: 'edit',
-              component: () => import('./views/workspace-edit.vue'),
+              component: () => import('./views/WorkspaceEdit.vue'),
               name: 'workspace-edit',
               meta: {
                 breadcrumb: 'Edit',
@@ -68,7 +68,7 @@ export const workspace = {
         ...projectRoutes,
         {
           path: 'profile',
-          component: () => import('./views/workspace-profile.vue'),
+          component: () => import('./views/WorkspaceProfile.vue'),
           name: 'workspace-profile',
           meta: {
             requiresAuth: true,

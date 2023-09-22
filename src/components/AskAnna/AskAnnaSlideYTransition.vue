@@ -1,5 +1,5 @@
 <template>
-  <VSlideYTransition v-bind="$attrs" v-on="$listeners">
+  <VSlideYTransition v-bind="$attrs">
     <slot />
   </VSlideYTransition>
 </template>

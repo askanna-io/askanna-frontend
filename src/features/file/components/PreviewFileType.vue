@@ -1,5 +1,8 @@
 <template>
-  <Component :is="TypeComponent" v-bind="props" />
+  <Component
+    :is="TypeComponent"
+    v-bind="props"
+  />
 </template>
 <script setup lang="ts">
 import PreviewFileTypePDF from './PreviewFileTypePDF.vue'
@@ -27,10 +30,6 @@ const props = defineProps({
   fileExtension: {
     type: String,
     default: () => ''
-  },
-  maxHeight: {
-    type: String,
-    default: () => '100vh'
   },
   images: {
     type: Array,

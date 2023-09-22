@@ -1,12 +1,12 @@
 import { jobsRoutes } from '@/features/jobs/config'
-import { packageRoutes } from '@/features/package/config'
+import { codeRoutes } from '@/features/code/config'
 import { PERMISSIONS_LABELS } from '@/features/workspace/types'
 
 export const projectRoutes = [
   {
     path: 'new-project',
-    component: () => import('./views/new-project.vue'),
     name: 'workspace-new-project',
+    component: () => import('./views/ProjectNew.vue'),
     meta: {
       hideAppBarIcon: true,
       breadcrumb: 'New project - :workspaceId',
@@ -15,22 +15,22 @@ export const projectRoutes = [
   },
   {
     path: 'project-does-not-exist',
-    component: () => import('./views/project-does-not-exist.vue'),
     name: 'project-does-not-exist',
+    component: () => import('./views/ProjectDoesNotExist.vue'),
     meta: {
       requiresAuth: false,
       hideAppBarIcon: true,
-      title: 'Oops...we cannot find this project',
-      breadcrumb: 'Project does not exist'
+      breadcrumb: 'Project does not exist',
+      title: 'Oops...we cannot find this project'
     }
   },
   {
     path: 'project/:projectId',
-    component: () => import('./views/index.vue'),
+    component: () => import('./views/ProjectIndex.vue'),
     meta: {
       hideAppBarIcon: true,
-      breadcrumb: 'Project - :projectId',
-      title: 'Project: projectId'
+      title: 'Project: projectId',
+      breadcrumb: 'Project - :projectId'
     },
 
     children: [
@@ -45,7 +45,7 @@ export const projectRoutes = [
       {
         path: 'runs',
         name: 'workspace-project-runs',
-        component: () => import('./views/runs.vue'),
+        component: () => import('./views/ProjectRuns.vue'),
         meta: {
           hideAppBarIcon: true,
           breadcrumb: 'Runs'
@@ -55,27 +55,27 @@ export const projectRoutes = [
       {
         path: 'variables',
         name: 'workspace-project-variables',
-        component: () => import('./views/variables.vue'),
+        component: () => import('./views/ProjectVariables.vue'),
         meta: {
           hideAppBarIcon: true,
           breadcrumb: 'Variables'
         }
       },
-      packageRoutes,
+      codeRoutes,
       {
         path: 'code-does-not-exist',
-        component: () => import('./views/code-does-not-exist.vue'),
         name: 'workspace-project-code-does-not-exist',
+        component: () => import('./views/ProjectCodeDoesNotExist.vue'),
         meta: {
           hideAppBarIcon: true,
-          title: 'Oops...we cannot find this package',
-          breadcrumb: 'Package does not exist'
+          breadcrumb: 'Package does not exist',
+          title: 'Oops...we cannot find this package'
         }
       },
       {
         path: 'edit',
         name: 'workspace-project-edit',
-        component: () => import('./views/project-edit.vue'),
+        component: () => import('./views/ProjectEdit.vue'),
         meta: {
           breadcrumb: 'Edit',
           hideAppBarIcon: true,

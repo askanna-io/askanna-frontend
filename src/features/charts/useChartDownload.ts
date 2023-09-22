@@ -2,11 +2,11 @@ import { saveAs } from 'file-saver'
 
 export default function () {
   const margin = {
-      top: 30,
-      right: 20,
-      bottom: 30,
-      left: 50
-    },
+    top: 30,
+    right: 20,
+    bottom: 30,
+    left: 50
+  },
     width = 900,
     height = 425
 
@@ -43,7 +43,7 @@ export default function () {
       }
 
       // Extract CSS Rules
-      const extractedCSSText = ''
+      let extractedCSSText = ''
       for (let i = 0; i < document.styleSheets.length; i++) {
         const s = document.styleSheets[i]
 

@@ -1,0 +1,11 @@
+plugins:
+  eslint:
+    enabled: true
+    channel: 'eslint-8'
+    config:
+      config: .eslintrc.сjs
+      extensions:
+        - .es6
+        - .js
+        - .ts
+        - .vue

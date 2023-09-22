@@ -1,36 +1,48 @@
 <template>
   <NodeViewWrapper class="code-block">
-    <AskAnnaFlex>
+    <div class="flex">
       <select
+        v-if="isEditable"
         ref="languageSelect"
         contenteditable="false"
         :disabled="!isEditable"
         v-model="selectedLanguage"
-        class="secondary--text white-text--hover"
+        class="text-secondary hover:text-white"
       >
         <option :value="null">auto</option>
         <option disabled>—</option>
-        <option v-for="(language, index) in languages" :value="language" :key="index">
+        <option
+          v-for="(language, index) in languages"
+          :key="index"
+          :value="language"
+        >
           {{ language }}
         </option>
       </select>
-      <AskAnnaButton
-        dark
-        icon
-        text
-        x-small
-        color="secondary"
-        class="copy-button white-text--hover btn--without-text"
-        @click="handleCopy"
-        ><AskAnnaIcon>mdi-content-copy</AskAnnaIcon></AskAnnaButton
-      >
-    </AskAnnaFlex>
+      <VHover>
+        <template v-slot:default="{ isHovering }">
+          <AskAnnaButton
+            variant="text"
+            size="x-small"
+            class="copy-button"
+            @click="handleCopy"
+            icon="mdi-content-copy"
+            classIcon="group-hover/button:text-white group/button:text-secondary"
+          >
+            <AskAnnaTooltip>
+              Copy code
+            </AskAnnaTooltip>
+          </AskAnnaButton>
+        </template>
+
+      </VHover>
+    </div>
     <pre><NodeViewContent as="code"  /></pre>
   </NodeViewWrapper>
 </template>
 
 <script lang="ts">
-import { NodeViewWrapper, NodeViewContent, nodeViewProps } from '@tiptap/vue-2'
+import { NodeViewWrapper, NodeViewContent, nodeViewProps } from '@tiptap/vue-3'
 
 export default defineComponent({
   name: 'AskAnnaCodeBlock',
@@ -79,7 +91,7 @@ export default defineComponent({
 
   methods: {
     handleCopy() {
-      this.handleCopyText(this.node.content.content[0].text)
+      this.handleCopyText(this.node.content.content[0]?.text || '')
     }
   }
 })
@@ -91,7 +103,7 @@ export default defineComponent({
 
   .copy-button {
     position: absolute;
-    top: 0.5rem;
+    top: 0.3rem;
     right: 0.5rem;
   }
 
@@ -102,6 +114,12 @@ export default defineComponent({
     padding-right: 5px;
     top: 0.5rem;
     right: 2.2rem;
+
+    background-position: calc(100% - 0.75rem) center !important;
+    -moz-appearance: none !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    padding-right: 2rem !important;
 
     &:not([disabled]) {
       cursor: pointer;

@@ -1,34 +1,28 @@
 <template>
-  <span class="ask-anna-copy-text">
-    <code
+  <span class="askanna-copy-text not-prose">
+    <span
       v-if="showText"
       :class="styleClasses"
-    >{{ text }}</code>
-    <AskAnnaTooltip
-      v-if="showTooltip"
-      top
-      content-class="opacity-1"
+    >{{ text }}</span>
+
+    <AskAnnaButtonIcon
+      v-show="show"
+      variant="text"
+      size="x-small"
+      class="invisible group-hover:visible group-focus:visible z-50"
+      @click.prevent="handleCopy"
     >
-      <template v-slot:activator="{ on }">
-        <AskAnnaButton
-          v-on="on"
-          v-show="show"
-          :icon="icon"
-          x-small
-          color="secondary"
-          :class="buttonClasses"
-          :text="buttonType.text"
-          @click.prevent="handleCopy"
-          :outlined="buttonType.outlined"
-        >
-          <AskAnnaIcon
-            small
-            :color="iconColor"
-          >mdi-content-copy</AskAnnaIcon>
-        </AskAnnaButton>
-      </template>
-      <span>Copy</span>
-    </AskAnnaTooltip>
+      <AskAnnaIcon
+        :color="iconColor"
+        icon="mdi-content-copy"
+      />
+      <AskAnnaTooltip
+        v-if="showTooltip"
+        :location="tooltipLocation"
+      >
+        <span>{{ copyTitle }}</span>
+      </AskAnnaTooltip>
+    </AskAnnaButtonIcon>
   </span>
 </template>
 
@@ -42,6 +36,10 @@ const props = defineProps({
     type: Boolean,
     default: () => true
   },
+  tooltipLocation: {
+    type: String,
+    default: () => 'top'
+  },
   text: {
     type: String,
     default: () => ''
@@ -54,12 +52,12 @@ const props = defineProps({
     type: Object,
     default: () => ({
       text: false,
-      outlined: true
+      variant: "outlined"
     })
   },
   styleClasses: {
     type: String,
-    default: () => 'px-2 mr-2 py-0 primary text--white'
+    default: () => 'px-2 py-0 bg-primary text-white rounded font-semibold'
   },
   showText: {
     type: Boolean,
@@ -72,6 +70,10 @@ const props = defineProps({
   iconColor: {
     type: String,
     default: () => 'secondary'
+  },
+  copyTitle: {
+    type: String,
+    default: 'Copy'
   }
 })
 
@@ -79,10 +81,8 @@ const copy = useCopy()
 
 const handleCopy = () => copy.handleCopyText(props.text)
 </script>
-<style scoped>.ask-anna-copy-text code {
+<style scoped>
+.askanna-copy-text code {
   color: white;
 }
-
-.primary--black {
-  color: #000000de !important;
-}</style>
+</style>

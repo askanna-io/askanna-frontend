@@ -1,7 +1,7 @@
 <template>
-  <div class="d-flex align-baseline">
+  <div class="flex align-baseline">
     <div class="text-body-1">
-      <span class="font-weight-bold">{{ text }}:</span>
+      <span class="font-bold">{{ text }}:</span>
     </div>
     <AskAnnaButton
       color="primary"
@@ -13,8 +13,7 @@
         params: { ...$route.params }
       }"
     >
-      {{ value }}</AskAnnaButton
-    >
+      {{ value }}</AskAnnaButton>
   </div>
 </template>
 <script setup lang="ts">

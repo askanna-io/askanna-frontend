@@ -1,20 +1,21 @@
 import { debounce } from 'lodash'
 
 export default function sortFilter(sortItem: string, sortItemPlural: string) {
+  const { roles } = useAskAnnaConsts()
   const { route, replace } = useRouterAskAnna()
 
   const ROLE_FILTERS = {
     all: '',
-    wa: 'WA',
-    wm: 'WM',
-    wv: 'WV'
+    wa: roles.admin.code,
+    wm: roles.member.code,
+    wv: roles.viewer.code
   }
 
   const roleFilters = [
     { value: '', name: 'All types' },
-    { value: 'WA', name: 'Workspace admin' },
-    { value: 'WM', name: 'Workspace member' },
-    { value: 'WV', name: 'Workspace viewer' }
+    { value: roles.admin.code, name: roles.admin.title },
+    { value: roles.member.code, name: roles.member.title },
+    { value: roles.viewer.code, name: roles.viewer.title }
   ]
 
   const statusFilters = [
@@ -76,7 +77,7 @@ export default function sortFilter(sortItem: string, sortItemPlural: string) {
   const filterMenuStyle = computed(() => {
     return {
       color: state.isFilterOpen ? 'primary' : 'secondary',
-      icon: Object.values(query.value).filter((value) => value).length ? 'mdi-filter' : 'mdi-filter-outline'
+      icon: Object.entries(query.value).filter(([key, value]) => key !== 'order_by' && value).length ? 'mdi-filter' : 'mdi-filter-outline'
     }
   })
 
@@ -97,8 +98,13 @@ export default function sortFilter(sortItem: string, sortItemPlural: string) {
   const handleSearch = () => handleChangeQuery({ ...query.value, search: state.search })
   const debounceedSearch = debounce(handleSearch, 350)
 
-  const handleSort = (routeName: string) => {
-    const params = typeof state.activeSort !== 'undefined' && sortItems[state.activeSort].value
+  const handleSort = (route: string, id: number) => {
+    state.activeSort = id === state.activeSort ? -1 : id
+    const sortIndex = state.activeSort === -1 ? 0 : state.activeSort
+
+    const params = typeof state.activeSort !== 'undefined' && sortItems[sortIndex].value
+    const routeName = route === 'workspace-people' ? undefined : route
+
     handleChangeQuery({ ...query.value, ...params, routeName })
   }
 
@@ -132,6 +138,7 @@ export default function sortFilter(sortItem: string, sortItemPlural: string) {
     activeStatusFilter,
 
     handleSort,
+    handleSearch,
     toggleFilter,
     debounceedSearch
   }

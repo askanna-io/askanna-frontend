@@ -1,5 +1,3 @@
-import { useRouter } from 'vue-router/composables'
-
 export default (params: { start: number; end: number } = { start: 0, end: 6 }) => {
   const { end } = params
   const { route } = useRouterAskAnna()
@@ -22,7 +20,6 @@ export default (params: { start: number; end: number } = { start: 0, end: 6 }) =
             path: currentPath,
             params: { workspaceId, projectId, packageId, folderName: currentPath }
           },
-          exact: true,
           disabled: index === arr.length - 1
         }
       })

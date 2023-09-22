@@ -2,7 +2,7 @@ export const user = {
   paths: [
     {
       path: '/profile',
-      component: () => import('./views/profile.vue'),
+      component: () => import('./views/Profile.vue'),
       name: 'profile',
       meta: {
         requiresAuth: true,

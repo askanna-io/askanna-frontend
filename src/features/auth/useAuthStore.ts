@@ -12,11 +12,11 @@ export const useAuthStore = defineStore('auth', {
   state: () => {
     return {
       signUpStep: 0,
-      authData: { email: '', password: '' },
       userId: '',
       userRole: '',
       refreshToken: '',
       tokenExpires: '',
+      authData: { email: '', password: '' },
       authToken: window.localStorage.getItem('token')
     }
   },

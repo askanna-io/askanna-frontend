@@ -1,7 +1,7 @@
 <template>
   <div
     class="fill-height pb-3 br-4 pt-0"
-    :class="{ 'px-0': $vuetify.breakpoint.xsOnly, 'px-5 pa-2': !$vuetify.breakpoint.xsOnly }"
+    :class="{ 'px-4 p-2': !$vuetify.display.xs }"
   >
     <VTabs
       v-model="currentSheet"
@@ -14,123 +14,119 @@
         :key="index"
       >Sheet: {{ tab.name }}</VTab>
     </VTabs>
-    <VTabsItems v-model="currentSheet">
-      <template v-for="(tab, index) in data">
-        <VTabItem
-          :key="index"
-          :value="index"
-        >
-          <VDataTable
-            :fixed-header="!!tab.headers.length"
-            class="xls-table"
-            :search="search"
-            :items="tab.data"
-            hide-default-footer
-            :items-per-page="-1"
-            :height="tableHeight"
-            :headers="tab.headers"
-            :mobile-breakpoint="-1"
-            :group-by.sync="activeGroup"
-          >
-            <template v-slot:top>
-              <AskAnnaContainer
-                v-if="tab.headers.length"
-                fluid
-                class="py-0"
+
+    <VWindow v-model="currentSheet">
+      <template
+        v-for="(tab, index) in data"
+        :key="index"
+      >
+        <VWindowItem :value="index">
+          <KeepAlive>
+            <Suspense>
+              <VDataTable
+                class="askanna-table askanna-table--no-wrap"
+                :search="search"
+                :items="tab.items"
+                :row-height="40"
+                hide-default-footer
+                :items-per-page="-1"
+                :mobile-breakpoint="0"
+                :headers="tab.headers"
+                :group-by="activeGroup?.value || []"
               >
-                <AskAnnaRow justify="end">
-                  <AskAnnaCol
-                    class="d-flex"
-                    cols="12"
-                    sm="3"
+                <template
+                  v-slot:headers
+                  v-if="tab.isNoHeaderPresent"
+                >
+                </template>
+                <template v-slot:top>
+                  <div
+                    v-if="tab.headers.length && !tab.isNoHeaderPresent"
+                    class="flex justify-end mt-4 gap-x-4"
                   >
-                    <AskAnnaSelect
-                      label="Group by"
-                      dense
-                      v-model="activeGroup"
-                      hide-details
-                      no-data-text=""
-                      item-text="text"
-                      item-value="value"
-                      :items="groupItems(tab.headers)"
-                      width="100px"
+                    <div class="flex w-full px-4 sm:px-0 sm:w-52">
+                      <AskAnnaSelect
+                        width="100px"
+                        label="Group by"
+                        return-object
+                        v-model="activeGroup"
+                        :items="groupItems(tab.headers)"
+                      />
+                    </div>
+                    <div
+                      v-if="!$vuetify.display.xs"
+                      class="flex flex-grow-0 w-56"
                     >
-                    </AskAnnaSelect>
-                  </AskAnnaCol>
-
-                  <AskAnnaCol
-                    v-if="!$vuetify.breakpoint.xsOnly"
-                    class="d-flex"
-                    cols="12"
-                    sm="3"
+                      <AskAnnaTextField
+                        single-line
+                        hide-details
+                        label="Search"
+                        v-model="search"
+                        variant="underlined"
+                        append-inner-icon="mdi-magnify"
+                      />
+                    </div>
+                  </div>
+                </template>
+                <template
+                  v-slot:body="{ items, columns }"
+                  v-if="tab.isNoHeaderPresent"
+                >
+                  <template
+                    v-for="(item, index) in items"
+                    :key="index"
                   >
-                    <AskAnnaTextField
-                      dense
-                      v-model="search"
-                      hide-details
-                      label="Search"
-                      append-icon="mdi-magnify"
-                    />
-                  </AskAnnaCol>
-                </AskAnnaRow>
-              </AskAnnaContainer>
-            </template>
-
-            <template v-slot:body="{ items, options, groupedItems }">
-              <TableGroupedTable
-                v-if="options.groupBy.length"
-                :key="index"
-                :items="groupedItems"
-                :groupBy="options.groupBy"
-                :headersLength="tab.headers.length"
-              />
-              <tbody
-                v-else-if="items.length"
-                ref="tableRefs"
-                :id="index"
-              >
-                <template v-for="(item, index) in items">
-                  <tr :key="index">
-                    <template v-for="(value, index2) in item">
-                      <td
-                        v-if="index2"
-                        :key="index2"
-                      >{{ value }}</td>
-                    </template>
+                    <tr class="pointer hover:bg-third max-w-max">
+                      <template v-for="(val) in Object.values(item.raw)">
+                        <AskAnnaTableItem class="whitespace-nowrap">{{ val }}</AskAnnaTableItem>
+                      </template>
+                    </tr>
+                  </template>
+                </template>
+                <template v-slot:group-header="{ item, columns, toggleGroup, isGroupOpen }">
+                  <tr>
+                    <td :colspan="columns.length">
+                      <AskAnnaButton
+                        variant="text"
+                        @click="toggleGroup(item)"
+                        :icon="isGroupOpen(item) ? 'mdi-minus' : 'mdi-plus'"
+                      />
+                      {{ item.key }}: {{ item.value }}
+                    </td>
                   </tr>
                 </template>
-              </tbody>
-              <template v-else>
-                <tr>
-                  <td :colspan="tab.headers.length">
-                    <AskAnnaAlert
-                      class="my-4 text-center v-flex"
-                      dense
-                      outlined
-                    >
-                      <template v-if="search"> There is no data available for this search. </template>
-                      <template v-else>
-                        This sheet doesn't seem to contain data, or we don't support viewing this type of data.<br />
-                        In case you have a question about this, or you need support, send us a message:
-                        <a
-                          href="mailto:support@askanna.io"
-                          target="_blank"
-                        >support@askanna.io</a>
-                      </template>
-                    </AskAnnaAlert>
-                  </td>
-                </tr>
-              </template>
-            </template>
-          </VDataTable>
-        </VTabItem>
+                <template v-slot:bottom>
+                </template>
+
+                <template v-slot:no-data>
+                  <AskAnnaAlert
+                    dense
+                    outlined
+                    class="my-4 text-center v-flex"
+                  >
+                    <template v-if="search">There is no data available for this search. </template>
+                    <template v-else>
+                      This sheet doesn't seem to contain data, or we don't support viewing this type of data.<br />
+                      In case you have a question about this, or you need support, send us a message:
+                      <a
+                        href="mailto:support@askanna.io"
+                        target="_blank"
+                      >support@askanna.io</a>
+                    </template>
+                  </AskAnnaAlert>
+                </template>
+              </VDataTable>
+            </Suspense>
+          </KeepAlive>
+        </VWindowItem>
       </template>
-    </VTabsItems>
+    </VWindow>
   </div>
 </template>
 
 <script setup lang="ts">
 import { utils, read } from 'xlsx'
+import { VDataTable } from 'vuetify/labs/VDataTable'
 
 const props = defineProps({
   fileSource: {
@@ -150,26 +146,25 @@ const props = defineProps({
   }
 })
 
-const { height } = useWindowSize()
-
 const search = ref()
 const activeGroup = ref()
-const tableRefs = ref([])
-const tableHeight = ref('')
+const defaultGroupValue = { name: 'No group by', value: [{ key: '', order: '' }] }
+
+
 const currentSheet = ref('sheet')
 
 const data = ref([
   {
     name: '',
-    data: [],
+    items: [],
     headers: []
   }
 ])
 
 const groupItems = headers => {
-  const items = headers.map(el => ({ text: el.text, value: el.value })).filter(el => el.text)
+  const items = headers.map(el => ({ name: el.title, value: [{ key: el.key, order: 'asc' }] }))
 
-  return [{ text: 'No group by', value: [] }, ...items]
+  return [defaultGroupValue, ...items]
 }
 
 const getData = () => {
@@ -184,43 +179,51 @@ const getData = () => {
     })
 
     data.value = workbook.SheetNames.map(name => {
-      let data = utils.sheet_to_json(workbook.Sheets[name])
+      let items = utils.sheet_to_json(workbook.Sheets[name])
 
-      if (!data || !data.length) {
+      if (!items || !items.length) {
         return {
           name: 'Empty',
-          data: [],
+          items: [],
           headers: []
         }
       }
 
-      const isNoHeaderPresent = [0, 1, '0', '1'].includes(Object.keys(data[0])[0])
+      const isNoHeaderPresent = [0, 1, '0', '1'].includes(Object.keys(items[0])[0])
       const header = isNoHeaderPresent ? 1 : 0
 
       if (isNoHeaderPresent) {
-        data = utils.sheet_to_json(workbook.Sheets[name], { header })
+        items = utils.sheet_to_json(workbook.Sheets[name], { header })
 
-        return { name, data: data.map(el => ({ ...el })), headers: [] }
+        const headers = Object.keys(items[0])
+          .filter(key => key)
+          .map(key => ({
+            key,
+            title: '',
+            width: 'auto',
+            sortable: false,
+          }))
+
+
+        return { name, items: items.map(el => ({ ...el })), headers, isNoHeaderPresent }
       }
 
-      const headers = Object.keys(data[0]).map(el => ({
-        text: el === '__EMPTY' ? '' : el,
-        sortable: true,
-        width: '110px',
-        value: el
-      }))
+      const headers = Object.keys(items[0])
+        .map((key) => ({
+          key,
+          title: key === '__EMPTY' ? '' : key,
+          sortable: true,
+          width: '110px',
+        }))
 
       return {
         name,
-        data,
-        headers
+        items,
+        headers,
+        isNoHeaderPresent
       }
     })
   }
-}
-
-const handleOnScroll = () => {
-  window.scrollTo(0, window.pageYOffset + 10)
 }
 
 watchEffect(() => {
@@ -228,28 +231,4 @@ watchEffect(() => {
 
   getData()
 })
-
-watch(tableRefs, tableRefs => {
-  if (!tableRefs.length) return
-
-  const tableRef = tableRefs.find(el => el.id == currentSheet.value)
-
-  if (!tableRef || !tableRef.parentElement) return
-
-  tableHeight.value = height.value - tableRef.offsetTop - 70
-
-  tableRef.parentElement.parentElement.onscroll = () => handleOnScroll()
-})
 </script>
-<style lang="scss">
-.xls-table {
-  td {
-    white-space: nowrap;
-  }
-
-  th {
-    white-space: pre;
-    font-size: 0.875rem !important;
-  }
-}
-</style>

@@ -86,8 +86,7 @@ test_package_lock:
   image: node:lts-alpine
   needs: []
   script:
-    - npm i -g package-lock-check
-    - npx package-lock-check
+    - npm ci
 
 deploy_production:
   stage: deploy

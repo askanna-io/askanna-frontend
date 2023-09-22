@@ -1,13 +1,14 @@
 <template>
   <div
     class="fill-height"
-    :class="{ 'px-0': $vuetify.breakpoint.xsOnly, 'px-5': !$vuetify.breakpoint.xsOnly }"
+    :class="{ 'px-4': !$vuetify.display.xs }"
   >
     <VFadeTransition mode="out-in">
       <AskAnnaCSV
         :data="tableData.data"
-        :headers="tableData.headers"
         :cdnBaseUrl="cdnBaseUrl"
+        :headers="tableData.headers"
+        :isNoHeaderPresent="tableData.isNoHeaderPresent"
       />
     </VFadeTransition>
   </div>
@@ -42,21 +43,31 @@ const tableData = computed(() => {
     fileStore.metaInfo.columns = Object.keys(data[0]).length
     fileStore.metaInfo.rows = data.length
 
-    return { data, headers: [] }
+
+    const headers = Object.keys(data[0])
+      .filter(key => key)
+      .map(key => ({
+        key,
+        title: '',
+        width: 'auto',
+        sortable: false,
+      }))
+
+    return { data, headers, isNoHeaderPresent: true }
   }
 
   const headers = parsedData.meta.fields
-    .filter(el => el)
-    .map(el => ({
-      text: el,
-      value: el,
+    .filter(key => key)
+    .map(key => ({
+      key,
+      title: key,
       width: 'auto',
-      sortable: true
+      sortable: true,
     }))
 
   fileStore.metaInfo.columns = headers.length
   fileStore.metaInfo.rows = parsedData.data.length
 
-  return { data: parsedData.data, headers }
+  return { data: parsedData.data, headers, isNoHeaderPresent: false }
 })
 </script>

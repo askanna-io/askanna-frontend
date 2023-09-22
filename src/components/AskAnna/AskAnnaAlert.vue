@@ -1,11 +1,10 @@
 <template>
-  <VAlert v-bind="$attrs" v-on="$listeners">
+  <VAlert
+    v-bind="$attrs"
+    density="compact"
+    variant="outlined"
+    class="text-center"
+  >
     <slot />
   </VAlert>
 </template>
-
-<script>
-export default {
-  inheritAttrs: false
-}
-</script>
