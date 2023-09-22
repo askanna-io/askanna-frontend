@@ -1,32 +1,48 @@
 <template>
-  <VMenu :close-on-content-click="false" v-model="menu" :nudge-width="200" nudge-right="60">
-    <template v-slot:activator="{ on, attrs }">
-      <span v-on="on" class="pr-5 cursor--pointer" @mouseover="handleOnHover" @mouseleave="handleOnBlur">
+  <VMenu
+    v-model="menu"
+    location="end"
+    :close-on-content-click="false"
+  >
+    <template v-slot:activator="{ props }">
+      <span
+        v-bind="props"
+        class="pr-5 cursor-pointer"
+        @mouseover="handleOnHover"
+        @mouseleave="handleOnBlur"
+      >
         Value
-        <span class="mr-5" style="position: relative">
+        <span
+          class="mr-5"
+          style="position: relative"
+        >
           <AskAnnaIcon
             style="left: 3px; top: 1px; right: auto; position: absolute"
-            v-show="isActive"
-            v-bind="attrs"
-            text
-            outlined
-            small
-            :color="getColor()"
-            text-color="white"
             filter
-          >
-            mdi-filter-variant
-          </AskAnnaIcon>
+            size="small"
+            v-show="isActive"
+            variant="outlined"
+            text-color="white"
+            :color="getColor()"
+            icon="mdi-filter-variant"
+          />
         </span>
       </span>
     </template>
 
-    <AskAnnaCard>
-      <SortByType title="Value" :sortBy="`${typeName}.value`" />
+    <AskAnnaCard min-width="300">
+      <SortByType
+        title="Value"
+        :sortBy="`${typeName}.value`"
+      />
 
       <AskAnnaDivider />
 
-      <AutocompleteFilter label="Filter by data type" :items="typeValues" :filterName="`${typeName}_type`" />
+      <AutocompleteFilter
+        :items="typeValues"
+        label="Filter by data type"
+        :filterName="`${typeName}_type`"
+      />
 
       <AskAnnaDivider />
     </AskAnnaCard>

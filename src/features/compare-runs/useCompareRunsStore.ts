@@ -167,9 +167,9 @@ export const useCompareRunsStore = defineStore('compare-runs', {
       this.count = this.runs.results.length
 
       this.isInputExist = this.runs.results.some((item) => item.payload)
-      this.isMetricExist = this.runs.results.some((item) => item.metrics_meta.count)
       this.isResultExist = this.runs.results.some((item) => item.result)
       this.isArtifacExist = this.runs.results.some((item) => item.artifact)
+      this.isMetricExist = this.runs.results.some((item) => item.metrics_meta.count)
       this.isVariableExist = this.runs.results.some((item) => item.variables_meta.count)
 
       this.runIds = runs.results.map((item) => item.suuid)

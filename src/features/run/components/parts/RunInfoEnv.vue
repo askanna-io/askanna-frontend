@@ -1,31 +1,30 @@
 <template>
-  <AskAnnaTooltip top :nudge-left="nudgeLeft" content-class="opacity-1">
-    <template v-slot:activator="{ on }">
-      <div v-on="on">
-        <span
-          ><span v-if="text" class="font-weight-bold">{{ text }}: </span
-          >{{ fullValue ? value.name : envNameSliced }}</span
-        >
-        <AskAnnaCopyText
-          :showText="false"
-          :text="envNameComputed"
-          :iconColor="'grey lighten-2'"
-          :buttonType="{ text: true }"
-          :styleClasses="'px-0 white font-weight-regular text--regular body-1'"
-        />
-      </div>
-    </template>
-    <template v-if="fullMode">
-      <div>Image name: {{ imageComputed.name }}</div>
-      <div>Image tag: {{ imageComputed.tag || 'not provided' }}</div>
-      <div>Image digest: {{ imageComputed.digest }}</div>
-      <div>Time zone: {{ value.timezone }}</div>
-    </template>
-    <template v-else>
-      <div>Image name: {{ value.name }}</div>
-      <div>Time zone: {{ value.timezone }}</div>
-    </template>
-  </AskAnnaTooltip>
+  <div class="w-full group flex items-center whitespace-pre">
+    <span
+      v-if="text"
+      class="font-bold"
+    >{{ text }}:&nbsp;</span>{{ envNameSliced }}
+    <AskAnnaCopyText
+      :showText="false"
+      tooltipLocation="end"
+      :copyTitle="copyTitle"
+      :text="envNameComputed"
+      :iconColor="'grey lighten-2'"
+      :buttonType="{ text: true }"
+    />
+    <AskAnnaTooltip>
+      <template v-if="fullMode">
+        <div>Image name: {{ imageComputed.name }}</div>
+        <div>Image tag: {{ imageComputed.tag || 'not provided' }}</div>
+        <div>Image digest: {{ imageComputed.digest }}</div>
+        <div>Time zone: {{ value.timezone }}</div>
+      </template>
+      <template v-else>
+        <div>Image name: {{ value.name }}</div>
+        <div>Time zone: {{ value.timezone }}</div>
+      </template>
+    </AskAnnaTooltip>
+  </div>
 </template>
 <script setup lang="ts">
 const props = defineProps({
@@ -45,6 +44,14 @@ const props = defineProps({
     type: Number,
     default: () => 0
   },
+  isJobSection: {
+    type: Boolean,
+    default: false
+  },
+  copyTitle: {
+    type: String,
+    default: 'Copy'
+  },
   value: {
     type: Object,
     default: () => ({
@@ -57,6 +64,8 @@ const props = defineProps({
   }
 })
 
+const display = useDisplay()
+const { width } = useWindowSize()
 const slicedStartText = useStartSlicedText()
 
 const envName = computed(() =>
@@ -69,7 +78,34 @@ const imageComputed = computed(() => ({
   digest: props.value.image?.digest || ''
 }))
 
-const envNameSliced = computed(() => slicedStartText(envName.value || props.value.name || props.value.image?.name, 35))
+const widthCalc = computed(() => ({
+  job: {
+    xs: (width.value - 170) / 7.5,
+    sm: width.value / 20,
+    md: width.value / 20,
+    lg: width.value / 20,
+    default: width.value / 10
+
+  },
+  run: {
+    xs: (width.value - 170) / 7.5,
+    sm: width.value / 27,
+    md: (width.value - 170) / 38.5,
+    lg: width.value / 50,
+    default: width.value / 40
+  }
+}))
+
+const maxLength = computed(() => {
+  const widthValues = props.isJobSection ? widthCalc.value.job : widthCalc.value.run
+  const displayName = toValue(display.name)
+
+  return widthValues[displayName] || widthValues.default
+
+})
+const envNameSliced = computed(() => {
+  return slicedStartText(envName.value || props.value.name || props.value.image?.name, maxLength.value)
+})
 
 const envNameComputed = computed(() => envName.value || props.value.name || props.value.image?.name)
 </script>

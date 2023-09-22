@@ -8,7 +8,7 @@ export default () => {
     reader.readAsDataURL(fileObject)
   }
 
-  const convertUrlToBase64 = async (avatar: string, callback: any, name: 'ask-annna-default-gravatar.png') => {
+  const convertUrlToBase64 = async (avatar: string, callback: any, name: 'askanna-default-gravatar.png') => {
     const base64Response = await fetch(avatar)
 
     const blob = await base64Response.blob()

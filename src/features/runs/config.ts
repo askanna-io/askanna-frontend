@@ -2,21 +2,21 @@ import { runRoutes } from '@/features/run/config'
 
 export const runsRoutes = {
   path: 'runs',
-  component: () => import('./views/index.vue'),
+  component: () => import('./views/JobRunsIndex.vue'),
   meta: {
     breadcrumb: 'Runs'
   },
   children: [
     {
       path: '',
-      component: () => import('./views/runs.vue'),
+      component: () => import('./views/JobRunsList.vue'),
       name: 'workspace-project-job-runs',
       redirect: { name: 'workspace-project-jobs-job-runs-table' },
 
       children: [
         {
           path: 'table',
-          component: () => import('./views/table-view.vue'),
+          component: () => import('./views/JobRunsTableView.vue'),
           name: 'workspace-project-jobs-job-runs-table',
           meta: {
             tabValue: 'table'
@@ -24,7 +24,7 @@ export const runsRoutes = {
         },
         {
           path: 'compare',
-          component: () => import('./views/compare-view.vue'),
+          component: () => import('./views/JobRunsCompareView.vue'),
           name: 'workspace-project-jobs-job-runs-compare',
           meta: {
             tabValue: 'compare'

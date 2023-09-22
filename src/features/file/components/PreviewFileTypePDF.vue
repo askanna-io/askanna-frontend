@@ -1,7 +1,7 @@
 <template>
   <div
     class="fill-height"
-    :class="{ 'px-0': $vuetify.breakpoint.xsOnly, 'px-5': !$vuetify.breakpoint.xsOnly }"
+    :class="{ 'px-4': !$vuetify.display.xs }"
   >
     <div
       v-if="fileStore.isEmbedPdfSuccess"
@@ -23,15 +23,12 @@ watch(loading, value => {
     height: '100vh',
     pdfOpenParams: {
       navpanes: 0,
-      toolbar: 0,
+      toolbar: 1,
       statusbar: 0,
-      view: 'FitV'
+      view: "FitV"
     }
   }
 
-  const file = new Blob([fileStore.fileBlob], { type: 'application/pdf' })
-  const fileURL = URL.createObjectURL(file)
-
-  fileStore.isEmbedPdfSuccess = !!pdfobject.embed(fileURL + '#toolbar=0', '#pdf', options)
+  fileStore.isEmbedPdfSuccess = !!pdfobject.embed(fileStore.cdnUrl, '#pdf', options)
 })
 </script>

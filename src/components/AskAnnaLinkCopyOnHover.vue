@@ -1,29 +1,23 @@
 <template>
-  <RouterLink class="ask-anna-link" :to="routeLinkParams()" @click="handleOnClick">
-    <template v-if="!$vuetify.breakpoint.xsOnly">
-      <VHover v-slot="{ hover }" open-delay="200">
-        <div>
-          {{ value }}
-          <AskAnnaTooltip right content-class="opacity-1">
-            <template v-slot:activator="{ on }">
-              <AskAnnaCopyText
-                v-on="on"
-                v-show="hover"
-                icon
-                :text="value"
-                :showText="false"
-                :iconColor="'grey lighten-2'"
-                :buttonType="{ text: true }"
-                :styleClasses="'px-0 white font-weight-regular text--regular body-1'"
-              />
-            </template>
-            <span>Copy</span>
-          </AskAnnaTooltip>
-        </div>
-      </VHover>
+  <RouterLink
+    class="no-underline group flex items-center "
+    :to="routeLinkParams()"
+    @click="handleOnClick"
+  >
+    <template v-if="!$vuetify.display.xs">
+      {{ value }}
+      <div>
+        <AskAnnaCopyText
+          icon
+          :text="value"
+          :showText="false"
+          :iconColor="'secondary'"
+          :buttonType="{ text: true }"
+          :class="'invisible group-hover:visible'"
+        />
+      </div>
     </template>
-
-    <template v-else> #{{ value }} </template>
+    <template v-else>#{{ value }}</template>
   </RouterLink>
 </template>
 
@@ -41,7 +35,7 @@ const props = defineProps({
   },
   routeParams: {
     type: Object,
-    default: () => {}
+    default: () => { }
   },
   to: {
     type: String,

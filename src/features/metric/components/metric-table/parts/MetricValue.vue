@@ -1,5 +1,8 @@
 <template>
-  <Component :is="TypeComponent" v-bind="props" />
+  <Component
+    v-bind="props"
+    :is="TypeComponent"
+  />
 </template>
 <script setup lang="ts">
 import { get } from 'lodash'
@@ -37,6 +40,10 @@ const props = defineProps({
   maxStringLength: {
     type: Number,
     default: () => 20
+  },
+  labelsCount: {
+    type: Number,
+    default: () => 1
   },
   metricRow: {
     type: Object,

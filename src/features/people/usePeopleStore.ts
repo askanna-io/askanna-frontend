@@ -153,7 +153,7 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
       await this.getPeople({ params, initial: true, suuid: workspaceStore.workspace.suuid })
 
       logger.success(
-        `You have successfully deleted the invitation for ${people.name} on the workspace
+        `You have successfully deleted the invitation for ${people.name || 'the invited member'} on the workspace
         ${people.workspace.name}`
       )
     },
@@ -370,7 +370,7 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
           app_id: import.meta.env.VITE_APP_INTERCOM_ID,
           name: name,
           email: people.email,
-          user_id: people.membership?.user?.suuid,
+          user_id: people.suuid,
           created_at: userStore.userProfile?.date_joined
         })
       }

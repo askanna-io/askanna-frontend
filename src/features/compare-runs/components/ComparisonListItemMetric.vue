@@ -1,5 +1,9 @@
 <template>
-  <MetricValue :metricRow="value.metric" :fullText="true" :isLabels="value.isLabels" />
+  <MetricValue
+    :fullText="true"
+    :metricRow="value.metric"
+    :isLabels="value.isLabels"
+  />
 </template>
 <script setup lang="ts">
 defineProps({

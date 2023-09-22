@@ -1,9 +1,11 @@
 <template>
   <VTextField
     v-bind="$attrs"
-    v-on="$listeners"
-    :value="value"
-    @input="update"
+    color="primary"
+    density="compact"
+    variant="outlined"
+    clear-icon="mdi-close"
+    class="[&>div:nth-child(2)]:-mt-1 [&>div>div>input]:bg-none"
   >
     <template
       v-for="(_, slot) in $slots"
@@ -14,24 +16,20 @@
         v-bind="scope"
       />
     </template>
-
-    <template
-      v-for="(_, slot) in $slots"
-      #[slot]
-    >
-      <slot :name="slot" />
-    </template>
   </VTextField>
 </template>
-
-<script>
-export default {
-  inheritAttrs: false,
-  props: ['value'],
-  methods: {
-    update(newValue) {
-      this.$emit('input', newValue)
-    }
+<style lang="scss">
+.clearable {
+  .v-field--appended {
+    padding-right: 0px;
   }
 }
-</script>
+
+.v-field--variant-outlined {
+  background-color: white;
+
+  input {
+    background: none;
+  }
+}
+</style>

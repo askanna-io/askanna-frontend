@@ -2,24 +2,23 @@
   <div class="w-full">
     <AskAnnaCard
       v-if="isLoading"
-      outlined
-      class="pb-2"
-      :class="[{ 'ma-0 my-2': fullWidth, 'ma-2 my-4': !fullWidth }, classes]"
+      variant="outlined"
+      class="pb-2 bg-white mx-3"
+      :class="[{ 'm-0 my-2': fullWidth, 'm-2 my-4': !fullWidth }, classes]"
     >
       <AskAnnaCardText class="text-center">
-        <p class="mb-1">{{ loadingTitle }}</p>
-
+        {{ loadingTitle }}
         <VProgressLinear
+          class="mb-0 mt-1"
           color="primary"
-          class="mb-0"
-          :value="loadingProgress"
           :reverse="indeterminate"
           :buffer-value="bufferValue"
+          :model-value="loadingProgress"
         />
       </AskAnnaCardText>
     </AskAnnaCard>
     <VExpandTransition>
-      <div :class="{ 'd-none': isLoading || loading }">
+      <div :class="{ 'hidden': isLoading || loading }">
         <slot />
       </div>
     </VExpandTransition>

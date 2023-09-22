@@ -1,5 +1,5 @@
 <template>
-  <VCardActions v-bind="$attrs" v-on="$listeners">
+  <VCardActions v-bind="$attrs">
     <slot />
   </VCardActions>
 </template>

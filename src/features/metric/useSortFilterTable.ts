@@ -6,7 +6,8 @@ interface MetricNameParams {
   metric_value?: string
 }
 
-export default function ({ context, routeName, typeName }) {
+export default function ({ emit, routeName, typeName }) {
+
   const lastScrollTop = ref(0)
   const { route, replace } = useRouterAskAnna()
 
@@ -29,6 +30,7 @@ export default function ({ context, routeName, typeName }) {
     //change query in params
     replace({
       name: routeName,
+      params: route.params,
       query: { ...route.query, [path]: value }
     })
 
@@ -62,7 +64,7 @@ export default function ({ context, routeName, typeName }) {
   )
 
   const emitSortFilter = (data: MetricNameParams) => {
-    context.emit('onSort', {
+    emit('onSort', {
       ...data,
       page_size: 100
     })

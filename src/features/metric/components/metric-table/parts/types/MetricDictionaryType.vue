@@ -1,46 +1,76 @@
 <template>
-  <VMenu v-model="menu" :close-on-content-click="false" offset-y top>
-    <template v-slot:activator="{ on }">
-      <div v-on="on" class="cursor--pointer">
-        <AskAnnaTooltip v-if="!$vuetify.breakpoint.xsOnly" top left :nudge-left="100" content-class="opacity-1">
-          <template v-slot:activator="{ on }">
-            <div v-on="on" class="d-flex">
-              <div v-if="isShowName">{{ metricRow.name }}:&nbsp;</div>
-              <textarea
-                readonly
-                :cols="cols"
-                :rows="calcRows"
-                v-model="previewJson"
-                class="noselect cursor--pointer"
-                :style="{ resize: 'none' }"
-              />
-            </div>
-          </template>
-          <span>Click to see the value</span>
-        </AskAnnaTooltip>
+  <VMenu
+    v-model="menu"
+    :close-on-content-click="false"
+  >
+    <template v-slot:activator="{ props }">
+      <div
+        v-bind="props"
+        class="cursor-pointer"
+      >
+        <div
+          v-bind="props"
+          class="flex"
+          v-if="!$vuetify.display.xs"
+        >
+          <div v-if="isShowName">{{ metricRow.name }}:&nbsp;</div>
+          <textarea
+            readonly
+            :cols="cols"
+            :rows="calcRows"
+            v-model="previewJson"
+            class="noselect cursor-pointer"
+            :style="{ resize: 'none' }"
+          />
+          <AskAnnaTooltip>
+            <span>Click to see the value</span>
+          </AskAnnaTooltip>
+        </div>
         <textarea
           v-else
           readonly
           cols="80"
           :rows="calcRows"
           v-model="previewJson"
-          class="noselect cursor--pointer"
+          class="noselect cursor-pointer"
           :style="{ resize: 'none' }"
         />
       </div>
     </template>
-    <AskAnnaCard>
-      <VAppBar dense height="40" flat>
-        Name: {{ metricRow.name }}
-        <AskAnnaSpacer />
-        <AskAnnaButton small outlined color="secondary" @click="handleCopy" class="mx-2 btn--hover">
-          <AskAnnaIcon color="secondary" left>mdi-content-copy</AskAnnaIcon>Copy
-        </AskAnnaButton>
-        <AskAnnaButton small icon @click="handleClose">
-          <AskAnnaIcon>mdi-close</AskAnnaIcon>
-        </AskAnnaButton>
-      </VAppBar>
-      <TheHighlight :value="jsonString" languageName="json" />
+    <AskAnnaCard class="w-full min-w-72">
+      <AskAnnaToolbar>
+        <div class="flex w-full items-center justify-between pl-4">
+          Name: {{ metricRow.name }}
+          <div class="flex gap-1 pr-2">
+            <span class="flex">
+              <AskAnnaIcon
+                size="small"
+                @click="handleCopy"
+                icon="mdi-content-copy"
+                class="pointer hover:text-primary"
+              />
+              <AskAnnaTooltip>
+                Copy value
+              </AskAnnaTooltip>
+            </span>
+            <span class="flex mt-0.5">
+              <AskAnnaIcon
+                size="small"
+                icon="mdi-close"
+                @click="handleClose"
+                class="pointer hover:text-primary"
+              />
+              <AskAnnaTooltip>
+                Close
+              </AskAnnaTooltip>
+            </span>
+          </div>
+        </div>
+      </AskAnnaToolbar>
+      <TheHighlight
+        :value="jsonString"
+        languageName="json"
+      />
     </AskAnnaCard>
   </VMenu>
 </template>
@@ -53,6 +83,10 @@ const props = defineProps({
   maxStringLength: {
     type: Number,
     default: () => 20
+  },
+  labelsCount: {
+    type: Number,
+    default: () => 1
   },
   preview: {
     type: Boolean,
@@ -84,7 +118,7 @@ const getLines = text => {
   return text?.split(BREAK_LINE_REGEXP)
 }
 
-const cols = computed(() => (props.preview ? 80 : 1))
+const cols = computed(() => (props.preview && props.labelsCount === 1 ? 80 : 0))
 
 const jsonString = computed(() => {
   let result = ''
@@ -126,6 +160,7 @@ const handleCopy = () => copy.handleCopyText(jsonString.value)
 .dictionary-type {
   opacity: 1 !important;
 }
+
 .noselect {
   -webkit-user-select: none;
   -webkit-touch-callout: none;

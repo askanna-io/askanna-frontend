@@ -1,32 +1,27 @@
 <template>
-  <VCheckbox v-bind="$attrs" v-on="$listeners" :value="value" @change="update" v-model="vModelValue">
-    <template v-for="(_, slot) in $slots" #[slot]="scope">
-      <slot :name="slot" v-bind="scope" />
-    </template>
-
-    <template v-for="(_, slot) in $slots" #[slot]>
+  <VCheckbox
+    class="h-18"
+    v-bind="$attrs"
+    color="primary"
+    density="compact"
+  >
+    <template
+      v-for="(_, slot) in $slots"
+      #[slot]
+    >
       <slot :name="slot" />
     </template>
   </VCheckbox>
 </template>
-
-<script>
-export default {
-  inheritAttrs: false,
-  props: ['value'],
-
-  data() {
-    return {
-      vModelValue: this.value
-    }
-  },
-
-  methods: {
-    update(newValue) {
-      this.$emit('input', newValue)
-    }
-  }
+<style>
+.v-checkbox .v-input__details {
+  padding-top: 0;
+  padding-left: 16px;
+  min-height: auto;
 }
-</script>
 
->
+.v-checkbox label {
+  opacity: 1;
+
+}
+</style>

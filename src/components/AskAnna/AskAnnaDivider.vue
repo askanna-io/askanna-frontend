@@ -1,5 +1,5 @@
 <template>
-  <VDivider v-bind="$attrs" v-on="$listeners">
+  <VDivider v-bind="$attrs">
     <slot />
   </VDivider>
 </template>

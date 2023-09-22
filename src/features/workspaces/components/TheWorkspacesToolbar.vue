@@ -1,0 +1,145 @@
+<template>
+  <AskAnnaToolbar
+    density="compact"
+    extension-height="50"
+    class="rounded [&>div:nth-child(2)]:px-2 [&>div]:pr-1"
+    :class="{ 'pb-2': $vuetify.display.xs && isFilterOpen }"
+  >
+    <div class="flex w-full items-center justify-between">
+      <div class="sm:w-9/12 md:w-6/12 xl:w-4/12">
+        <AskAnnaListTitle>
+          Explore workspaces
+        </AskAnnaListTitle>
+      </div>
+
+      <div class="w-8/12 sm:w-9/12 md:w-6/12 xl:w-4/12">
+        <AskAnnaTextField
+          v-if="isFilterOpen && !$vuetify.display.xs"
+          clearable
+          hide-details
+          v-model="search"
+          class="clearable"
+          @input="debounceedSearch"
+          @click:clear="handleSearch"
+          :placeholder="$vuetify.display.xs ? 'Search...' : 'Search workspaces...'"
+        />
+      </div>
+      <div class="flex items-center justify-end sm:w-9/12 md:w-6/12 xl:w-4/12 text-end">
+        <TheWorkspaceCreatePopup v-if="permission.isUserLoggedIn && !$vuetify.display.xs" />
+
+        <AskAnnaButton
+          size="default"
+          variant="text"
+          @click="toggleFilter"
+          :icon="filterMenuStyle.icon"
+          :color="filterMenuStyle.color"
+          :colorIcon="filterMenuStyle.color"
+        />
+
+        <TheWorkspacesToolbarMenu v-if="$vuetify.display.xs" />
+      </div>
+    </div>
+
+    <template
+      v-if="isFilterOpen"
+      v-slot:extension
+    >
+      <div class="flex items-center w-full justify-center">
+        <AskAnnaTextField
+          v-if="isFilterOpen && $vuetify.display.xs"
+          clearable
+          hide-details
+          v-model="search"
+          class="mr-2 clearable"
+          @input="debounceedSearch"
+          @click:clear="handleSearch"
+          :placeholder="$vuetify.display.xs ? 'Search...' : 'Search workspaces...'"
+        />
+        <VMenu transition="slide-y-transition">
+          <template v-slot:activator="{ props }">
+            <AskAnnaButtonActivator
+              v-bind="props"
+              nameIcon="mdi-sort"
+              :colorIcon="sortStyle.color"
+            >
+              {{ $vuetify.display.xs ? '' : sortrTitle }}
+            </AskAnnaButtonActivator>
+          </template>
+          <VList
+            color="primary"
+            class="p-0 mt-2"
+            v-model="activeSort"
+            select-strategy="classic"
+            @click:select="handleSort('workspaces', $event.id)"
+          >
+            <VListItem
+              v-for="(item, i) in sortItems"
+              :key="i"
+              :value="i"
+              :title="item.title"
+              class="rounded-none"
+              :active="activeSort === i"
+            />
+          </VList>
+        </VMenu>
+        <VMenu
+          v-model="filterMenu"
+          transition="slide-y-transition"
+          :close-on-content-click="false"
+        >
+          <template v-slot:activator="{ props }">
+            <AskAnnaButtonActivator
+              class="ml-1"
+              v-bind="props"
+              nameIcon="mdi-filter-variant"
+              :colorIcon="filterStyle.color"
+            >
+              {{ $vuetify.display.xs ? '' : 'Filters' }}
+            </AskAnnaButtonActivator>
+          </template>
+
+          <AskAnnaCard class="p-2 mt-2 w-72">
+            <AskAnnaCardSubTitle>
+              Workspace visibility
+            </AskAnnaCardSubTitle>
+            <AskAnnaSelect
+              v-model="activeRoleFilter"
+              :items="visibilityFilters"
+            />
+
+            <AskAnnaCardSubTitle class="pt-4">
+              Workspace membership
+            </AskAnnaCardSubTitle>
+            <AskAnnaSelect
+              v-model="activeMemberFilter"
+              :items="isMemberFilters"
+            />
+          </AskAnnaCard>
+        </VMenu>
+      </div>
+    </template>
+  </AskAnnaToolbar>
+</template>
+<script setup lang="ts">
+const permission = useAskAnnaPermission()
+const {
+  search,
+  sortStyle,
+  sortItems,
+  activeSort,
+  sortrTitle,
+  filterMenu,
+  filterStyle,
+  isFilterOpen,
+  filterMenuStyle,
+  isMemberFilters,
+  activeRoleFilter,
+  visibilityFilters,
+  activeMemberFilter,
+
+  handleSort,
+  handleSearch,
+  toggleFilter,
+  debounceedSearch
+} = useSortFilter('Workspace', 'workspaces')
+</script>

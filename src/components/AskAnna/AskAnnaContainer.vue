@@ -1,5 +1,5 @@
 <template>
-  <VContainer v-bind="$attrs" v-on="$listeners">
+  <VContainer v-bind="$attrs">
     <slot />
   </VContainer>
 </template>

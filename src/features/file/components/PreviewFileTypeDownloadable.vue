@@ -1,18 +1,24 @@
 <template>
-  <AskAnnaContainer class="pt-0 pb-0 fill-height" fluid>
+  <div class="fill-height">
     <VFadeTransition mode="out-in">
-      <AskAnnaRow key="0">
-        <AskAnnaCol cols="12" class="pt-0 pb-0">
-          <AskAnnaCard class="text-center file-csv" flat>
+      <div
+        key="0"
+        class="flex"
+      >
+        <div class="w-full">
+          <AskAnnaCard
+            class="text-center file-csv"
+            flat
+          >
             <AskAnnaCardText class="pb-1">{{ title }}</AskAnnaCardText>
             <AskAnnaIcon size="60">
               {{ icon }}
             </AskAnnaIcon>
           </AskAnnaCard>
-        </AskAnnaCol>
-      </AskAnnaRow>
+        </div>
+      </div>
     </VFadeTransition>
-  </AskAnnaContainer>
+  </div>
 </template>
 <script setup lang="ts">
 import { get } from 'lodash'

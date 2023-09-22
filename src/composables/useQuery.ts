@@ -11,15 +11,22 @@ export default function ({
   queryParams = {},
   immediate = false,
   asSubChild = false,
+  setPageSizeInRoute = true,
   defaultOptions = { page: 1, itemsPerPage: 10, isGoForward: true }
 }: any) {
-  const { route, routerPush } = useRouterAskAnna()
+  const { route, replace, routerPush } = useRouterAskAnna()
 
   const search = ref('')
   const currentCursor = ref('')
   const currentScrollTop = ref(0)
-  const sortFilterLoading = ref(false)
   const options = ref(defaultOptions)
+  const sortFilterLoading = ref(false)
+
+  if (queryParams.value?.cursor) {
+    const { cursor, ...query } = toValue(queryParams.value)
+
+    replace({ query })
+  }
 
   const handleSearch = (value) => {
     search.value = value
@@ -49,7 +56,7 @@ export default function ({
     }
   }
 
-  const onLoadMore = () => {
+  const onLoadMore = async ({ done }) => {
     if (next.value && next.value.includes('http')) {
       const url = new URL(next.value)
       const cursor = url.searchParams.get('cursor')
@@ -58,11 +65,14 @@ export default function ({
 
       currentCursor.value = cursor
 
-      storeAction({
+      await storeAction({
         loading,
         suuid: suuid?.value,
         params: { page_size, ...queryParams.value, cursor }
       })
+      done('ok')
+    } else {
+      done('empty')
     }
   }
 
@@ -75,11 +85,12 @@ export default function ({
     if (sortFilterLoading.value) return
     sortFilterLoading.value = true
 
-    Object.assign(options.value, newValues)
+
+    options.value = { ...options.value, ...newValues }
   }
 
   watch(options, async (options) => {
-    const { itemsPerPage: page_size = 10, page = 1, sortBy, sortDesc } = options
+    const { itemsPerPage: page_size = 10, page = 1, sortBy } = options
 
     let cursor = undefined
     if (page !== 1 && (next.value?.includes('http') || previous.value?.includes('http'))) {
@@ -95,10 +106,10 @@ export default function ({
       }
     }
 
-    let order_by = get(sortBy, '[0]', '')
-    const sort_desc = get(sortDesc, '[0]', '')
+    let order_by = get(sortBy, '[0].key', '')
+    const sort_desc = get(sortBy, '[0].order', '')
 
-    order_by = order_by && sort_desc ? order_by : order_by ? `-${order_by}` : undefined
+    order_by = order_by && sort_desc === 'asc' ? order_by : order_by ? `-${order_by}` : undefined
 
     if (asSubChild) {
       sortFilterLoading.value = true
@@ -118,7 +129,8 @@ export default function ({
 
     routerPush({
       name: route.name,
-      query: { ...route.query, order_by, cursor, page_size }
+      params: route.params,
+      query: { ...route.query, order_by, cursor, page_size: setPageSizeInRoute ? page_size : undefined }
     })
   })
 
@@ -139,7 +151,7 @@ export default function ({
         sortFilterLoading.value = false
       } catch { }
     },
-    { immediate: immediate }
+    { immediate: immediate, deep: true }
   )
 
   return { options, resetParams, handleUpdateOptions, sortFilterLoading, onScroll, onLoadMore, debounceedSearch }

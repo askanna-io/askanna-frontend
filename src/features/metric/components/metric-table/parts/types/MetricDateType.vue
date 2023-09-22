@@ -1,7 +1,6 @@
 <template>
   <span>
-    <span v-if="isShowName">{{ metricRow.name }}:&nbsp;</span>{{ dateFormated }}</span
-  >
+    <span v-if="isShowName">{{ metricRow.name }}:&nbsp;</span>{{ dateFormated }}</span>
 </template>
 <script setup lang="ts">
 const props = defineProps({

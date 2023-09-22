@@ -1,6 +1,13 @@
 <template>
-  <li class="list__item" :class="cssClasses" :style="listItemStyles">
-    <Component :is="componentName" v-bind="props" />
+  <li
+    class="list__item"
+    :class="cssClasses"
+    :style="listItemStyles"
+  >
+    <Component
+      v-bind="props"
+      :is="componentName"
+    />
   </li>
 </template>
 <script setup lang="ts">
@@ -33,11 +40,11 @@ const props = defineProps({
   },
   params: {
     type: Object,
-    default: () => {}
+    default: () => { }
   },
   routeParams: {
     type: Object,
-    default: () => {}
+    default: () => { }
   },
   dashed: {
     type: Boolean,
@@ -116,10 +123,10 @@ const components = [
   }
 ]
 
-const { width } = useWindowSize()
+const { width } = useAskAnnaWindowSize()
 
 const cssClasses = computed(() => ({
-  'font-weight-bold': props.bold,
+  'font-bold': props.bold,
   'list__item--sticky': props.sticky,
   'list__item--width-full': props.fullWidth,
   'list__item--border-dashed': props.dashed
@@ -141,10 +148,10 @@ const listItemStyles = computed(() => {
 <style scoped lang="scss">
 .list {
   &__item {
-    width: 230px;
+    width: 243px;
     overflow: hidden;
-    min-width: 230px;
-    max-width: 230px;
+    min-width: 243px;
+    max-width: 243px;
   }
 
   &__item--position-left {

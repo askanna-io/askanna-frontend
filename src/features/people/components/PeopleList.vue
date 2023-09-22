@@ -1,77 +1,55 @@
 <template>
-  <VDataIterator
-    :items="people"
-    hide-default-footer
-    :no-data-text="''"
-    disable-pagination
-    v-scroll="throttle(handleOnScroll, 1000)"
-  >
-    <template v-slot:header>
-      <PeopleToolbar
-        :title="workspaceName"
-        :workspaceId="workspaceId"
-      />
-    </template>
-    <template v-slot:default="props">
-      <AskAnnaRow
-        v-if="!settings.projectView"
-        :class="{ 'px-2': $vuetify.breakpoint.xsOnly }"
+  <AskAnnaLoadingProgress :loading="loading">
+    <AskAnnaInfiniteScroll @load="onLoadMore">
+      <template v-slot:empty>
+        <div class="h-2 w-2"></div>
+      </template>
+      <div class="pb-3 px-3 -mt-0 sm:-mt-3">
+        <PeopleListToolbar />
+      </div>
+
+      <ul
+        role="list"
+        :class="{ 'px-2': $vuetify.display.xs }"
+        class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 list list-none px-3"
       >
-        <AskAnnaCol
-          v-for="item in props.items"
+        <li
+          v-for="item in people"
+          :key="item.suuid"
           @click="handleSelectPeople(item)"
-          :key="item.name + item.suuid + item.role"
-          cols="12"
-          sm="6"
-          md="4"
-          lg="3"
-          xl="3"
-          :class="{ 'pb-0': $vuetify.breakpoint.xsOnly }"
         >
           <VHover
-            v-slot:default="{ hover }"
-            open-delay="200"
+            v-slot:default="{ props, isHovering }"
+            open-delay="150"
+            close-delay="150"
           >
-            <PeopleCardItem
+            <PeopleListItem
+              v-bind="props"
               :people="item"
-              :hover="hover"
+              :hover="isHovering"
               :workspaceName="workspaceName"
-              :statusColor="getStatus(item.status)"
-              :description="sanitizeHTML(item.description)"
             />
           </VHover>
-        </AskAnnaCol>
-      </AskAnnaRow>
-    </template>
-    <template v-slot:footer>
-      <AskAnnaRow
-        class="mt-2"
-        align="center"
-        justify="center"
+        </li>
+      </ul>
+
+      <AskAnnaAlert
+        v-if="!loading && !people.length"
+        class="mx-3"
       >
-        <AskAnnaButton
-          v-if="isLargeScreen && people.length && next"
-          small
-          outlined
-          color="secondary"
-          :loading="loading"
-          :disabled="loading"
-          class="ml-3 btn--hover"
-          @click="handleLoadMoreProjects"
-        >
-          <AskAnnaIcon
-            left
-            color="secondary"
-          >mdi-chevron-down</AskAnnaIcon>Show more people
-        </AskAnnaButton>
-        <AskAnnaSpacer />
-      </AskAnnaRow>
-    </template>
-  </VDataIterator>
+        <template v-if="queryParams.search">There are no people for this search request.</template>
+        <template v-else-if="queryParams.visibility || queryParams.is_member">There are no people for this filter
+          request.</template>
+        <template v-else-if="!isMember && !peopleStore.loading">You are not allowed to see the peope list of this
+          workspace. I can bring you back to the
+          workspace
+          <RouterLink :to="{ name: 'workspace' }">{{ workspace.name }}</RouterLink>..
+        </template>
+      </AskAnnaAlert>
+    </AskAnnaInfiniteScroll>
+  </AskAnnaLoadingProgress>
 </template>
 <script setup lang="ts">
-import { throttle } from 'lodash'
-
 defineProps({
   workspaceName: {
     type: String,
@@ -99,7 +77,7 @@ defineProps({
 
 const emits = defineEmits('onSelectPoeple')
 
-const context = getCurrentInstance()
+const display = useDisplay()
 const peopleStore = usePeopleStore()
 const { route } = useRouterAskAnna()
 
@@ -108,11 +86,8 @@ const next = computed(() => peopleStore.people.next)
 const loading = computed(() => peopleStore.loading)
 const people = computed(() => peopleStore.people.results)
 const workspaceId = computed(() => route.params.workspaceId)
-const isLargeScreen = computed(() => (
-  context?.proxy.$root.$vuetify.breakpoint.height >= 1500
-))
 
-const { onLoadMore, onScroll } = useQuery({
+const { onLoadMore } = useQuery({
   next,
   queryParams,
   page_size: 28,
@@ -121,14 +96,6 @@ const { onLoadMore, onScroll } = useQuery({
   suuid: workspaceId,
   storeAction: peopleStore.getPeople
 })
-
-const handleLoadMoreProjects = () => onLoadMore()
-
-const handleOnScroll = e => onScroll(e.target.documentElement.scrollTop)
-
-const sanitizeHTML = useSanitizeHTML()
-
-const getStatus = status => status === 'invited' && 'blue lighten-3'
 
 const handleSelectPeople = people => emits('onSelectPoeple', people)
 </script>

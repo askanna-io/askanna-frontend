@@ -1,21 +1,29 @@
 <template>
   <div class="pt-2 px-1">
     <template v-if="view === 'pretty'">
-      <AskAnnaAlert :value="alert" type="error" dense class="ma-1 pa-0">
+      <AskAnnaAlert
+        class="m-1"
+        type="error"
+        density="compact"
+        :modelValue="alert"
+      >
         <template slot="prepend">
           <AskAnnaIcon class="pl-2">mdi-alert</AskAnnaIcon>
         </template>
-        <AskAnnaRow align="center" class="ma-0 pa-0">
-          <AskAnnaCol class="grow">
+        <div class="flex items-center">
+          <div class="flex grow">
             By default, we block JavaScript for security reasons. To continue to run JavaScript at your own risk, please
             press the allow button.
-          </AskAnnaCol>
-          <AskAnnaCol class="shrink">
-            <AskAnnaButton @click="handleAllow" outlined small>Allow JavaScript</AskAnnaButton>
-          </AskAnnaCol>
-        </AskAnnaRow>
+          </div>
+          <div class="shrink">
+            <AskAnnaButton @click="handleAllow">Allow JavaScript</AskAnnaButton>
+          </div>
+        </div>
       </AskAnnaAlert>
-      <div ref="iframeRef" />
+      <div
+        class="h-screen"
+        ref="iframeRef"
+      />
     </template>
     <TheHighlight
       v-else
@@ -40,7 +48,7 @@ const props = defineProps({
   },
   maxHeight: {
     type: String,
-    default: () => '100vh'
+    default: () => '100%'
   }
 })
 
@@ -85,7 +93,7 @@ const initIframe = () => {
   const iframeEl = document.createElement('iframe')
   iframeEl.setAttribute('height', props.maxHeight)
 
-  iframeEl.setAttribute('class', 'AskAnna-iframe')
+  iframeEl.setAttribute('class', 'askanna-iframe')
   iframeEl.setAttribute('srcdoc', props.fileSource)
   iframeEl.setAttribute('sandbox', sandbox)
 
@@ -101,11 +109,12 @@ watch([iframeRef, source], async iframeRef => {
   if (!source.value || !iframeRef) return
 
   alert.value = NOT_ALLOWED_TAGS.some(item => props.fileSource.includes(item))
+
   initIframe()
 })
 </script>
 <style>
-.AskAnna-iframe {
+.askanna-iframe {
   border: none;
   width: 100%;
 }

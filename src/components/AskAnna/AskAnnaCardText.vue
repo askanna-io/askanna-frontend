@@ -1,11 +1,8 @@
 <template>
-  <VCardText v-bind="$attrs" v-on="$listeners">
+  <VCardText
+    v-bind="$attrs"
+    class="text-base"
+  >
     <slot />
   </VCardText>
 </template>
-
-<script>
-export default {
-  inheritAttrs: false
-}
-</script>

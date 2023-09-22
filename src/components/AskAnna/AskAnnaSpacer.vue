@@ -1,11 +1,5 @@
 <template>
-  <VSpacer v-bind="$attrs" v-on="$listeners">
+  <VSpacer v-bind="$attrs">
     <slot />
   </VSpacer>
 </template>
-
-<script>
-export default {
-  inheritAttrs: false
-}
-</script>

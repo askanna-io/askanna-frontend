@@ -3,19 +3,72 @@
 @tailwind utilities;
 
 @layer base {
-    [type='text'], [type='email'], [type='url'], [type='password'], [type='number'], [type='date'], [type='datetime-local'], [type='month'], [type='search'], [type='tel'], [type='time'], [type='week'], [multiple], textarea, select {
-        border: none;
-        padding: 0;
-    }
 
-   [type='text']:focus, [type='email']:focus, [type='url']:focus, [type='password']:focus, [type='number']:focus, [type='date']:focus, [type='datetime-local']:focus, [type='month']:focus, [type='search']:focus, [type='tel']:focus, [type='time']:focus, [type='week']:focus, [multiple]:focus, textarea:focus, select:focus {
-        @apply shadow-none border-none ring-0
-    }
+  [type='text'],
+  [type='email'],
+  [type='url'],
+  [type='password'],
+  [type='number'],
+  [type='date'],
+  [type='datetime-local'],
+  [type='month'],
+  [type='search'],
+  [type='tel'],
+  [type='time'],
+  [type='week'],
+  [multiple],
+  textarea,
+  select {
+    border: none;
+    padding: 0;
+  }
 
-   .ask-anna--editor ol, .ask-anna--editor ul, .ask-anna--editor menu {
-        list-style: disc;
-    }
-    label {
-        z-index: 1;
-    }
+  [type='text']:focus,
+  [type='email']:focus,
+  [type='url']:focus,
+  [type='password']:focus,
+  [type='number']:focus,
+  [type='date']:focus,
+  [type='datetime-local']:focus,
+  [type='month']:focus,
+  [type='search']:focus,
+  [type='tel']:focus,
+  [type='time']:focus,
+  [type='week']:focus,
+  [multiple]:focus,
+  textarea:focus,
+  select:focus {
+    @apply shadow-none border-none ring-0
+  }
+
+  .askanna--editor ul,
+  .askanna--editor menu {
+    list-style: disc;
+    padding-left: 16px;
+  }
+
+  .askanna--editor ol {
+    list-style: decimal;
+    padding-left: 16px;
+  }
+
+  label {
+    z-index: 1;
+  }
+
+  a {
+    @apply text-primary
+  }
+
+  p {
+    @apply text-main;
+  }
+
+  code {
+    @apply font-bold;
+  }
+
+  .askanna-link {
+    @apply no-underline
+  }
 }

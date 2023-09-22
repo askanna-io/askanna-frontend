@@ -1,17 +1,16 @@
 <template>
-  <AskAnnaAlert
-    :width="'auto'"
-    text
-    dense
-    outlined
-    :height="32"
-    :icon="statusIcon"
-    :color="statusColor"
-    class="mb-0 askanna-alert"
-    :class="{ 'px-1': $vuetify.breakpoint.xsOnly }"
+  <div
+    :class="['outline-' + statusColor]"
+    class="flex gap-2 rounded grow outline outline-1 p-1 max-w-sm w-full mr-4 items-center"
   >
-    {{ getText($vuetify.breakpoint.smAndDown) }}
-  </AskAnnaAlert>
+    <div>
+      <AskAnnaIcon
+        :icon="statusIcon"
+        :color="statusColor"
+      />
+    </div>
+    <div :class="['text-' + statusColor]">{{ getText($vuetify.display.smAndDown) }}</div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -41,7 +40,7 @@ const COLORS = {
   not_runs: 'grey',
   undefined: 'grey',
   finished: 'success',
-  running: 'blue lighten-3'
+  running: 'accent'
 }
 const ICONS = {
   not_runs: 'mdi-do-not-disturb',
@@ -81,7 +80,7 @@ const getText = (isMobile: boolean) => {
   font-size: 14px;
 }
 
-.askanna-alert.v-alert.v-alert--dense {
+.askanna-alert.v-alert.v-alert--density {
   padding-top: 3px;
 }
 

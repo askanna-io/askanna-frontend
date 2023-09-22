@@ -1,29 +1,41 @@
 <template>
-  <details class="collapsible-section" :open="isOpen" @toggle="handleToggle">
-    <summary class="collapsible-section__summary px-0" :class="{ 'cursor--pointer': !disabled }">
+  <details
+    :open="isOpen"
+    class="collapsible-section"
+    @toggle="handleToggle"
+  >
+    <summary
+      class="collapsible-section__summary px-0"
+      :class="{ 'cursor-pointer': !disabled }"
+    >
       <div class="collapsible-section__title">
-        <h4 :class="{ 'primary--text': isOpen, 'secondary--text': disabled || !isOpen, 'ml-10': disabled }">
+        <h4 :class="{ 'secondary-text': disabled || !isOpen, 'ml-10': disabled }">
           {{ title }}{{ disabled ? ': ' : '' }}
         </h4>
 
-        <AskAnnaButton
+        <AskAnnaButtonIcon
           v-if="!readonly && !disabled"
-          class="collapsible-section__icon mr-1"
-          text
-          icon
-          :color="isOpen ? 'primary' : 'secondary'"
+          size="small"
+          color="main"
+          variant="text"
+          class="collapsible-section__icon"
           @click="handleIconClick"
         >
-          <AskAnnaIcon>{{ icon }}</AskAnnaIcon>
-        </AskAnnaButton>
-        <div v-if="disabled" class="ml-1 collapsible-section__no-data">
+          <AskAnnaIcon :icon="icon" />
+        </AskAnnaButtonIcon>
+        <div
+          v-if="disabled"
+          class="ml-1 collapsible-section__no-data"
+        >
           <h4 class="secondary--text">{{ noDataText }}</h4>
         </div>
       </div>
     </summary>
     <VExpandTransition>
-      <div v-if="isOpen && !disabled"><slot /></div
-    ></VExpandTransition>
+      <div v-if="isOpen && !disabled">
+        <slot />
+      </div>
+    </VExpandTransition>
   </details>
 </template>
 
@@ -55,14 +67,22 @@ const isOpen = ref(props.open)
 
 const icon = computed(() => (isOpen.value ? 'mdi-chevron-up' : 'mdi-chevron-down'))
 
-const handleToggle = e => (isOpen.value = e.target.open)
+const handleToggle = e => {
+  if (props.disabled) return
+  isOpen.value = e.target.open
+}
 
-const handleIconClick = () => (isOpen.value = !isOpen.value)
+const handleIconClick = () => {
+  if (props.disabled) return
+
+  isOpen.value = !isOpen.value
+}
 </script>
 
 <style lang="scss">
 .collapsible-section {
   width: 10000px;
+
   &__summary {
     display: flex;
     list-style: none;

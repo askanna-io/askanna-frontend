@@ -1,20 +1,18 @@
 export const JobsListHeaders = (isMobile: boolean) => [
   {
-    text: 'Name',
+    title: 'Name',
     align: 'left',
     sortable: true,
-    value: 'name',
+    key: 'name',
     isShowOnMobile: true,
-    class: 'text-left text-subtitle-2 font-weight-bold'
   },
 
-  { text: 'Runs', sortable: false, value: 'suuid', isShowOnMobile: false, class: 'text-left text-subtitle-2 font-weight-bold' },
+  { title: 'Runs', sortable: false, key: 'suuid', isShowOnMobile: false },
   {
-    text: 'Status',
-    value: 'status',
+    title: 'Status',
+    key: 'status',
     sortable: false,
     isShowOnMobile: true,
-    class: 'text-left text-subtitle-2 font-weight-bold',
-    width: isMobile ? '35%' : ''
+    width: isMobile ? '65%' : ''
   }
 ]

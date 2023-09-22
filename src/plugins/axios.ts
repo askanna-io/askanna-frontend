@@ -1,6 +1,5 @@
 import axios from 'axios'
-import VueRouter from 'vue-router'
-const { isNavigationFailure, NavigationFailureType } = VueRouter
+import { isNavigationFailure, NavigationFailureType } from 'vue-router'
 // create axios instance and set csrftoken for Django
 const $axios = axios
 $axios.defaults.xsrfCookieName = 'csrftoken'

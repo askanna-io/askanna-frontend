@@ -4,16 +4,17 @@
         ref="filterBar"
         aria-modal="true"
         :class="{ 'ring-primary': isOpen, 'ring-gray-200 ': !isOpen }"
-        class="select-text relative z-10 transform divide-gray-100 rounded-sm bg-white ring-1 transition-all py-1 mt-2 sm:py-0 sm:mt-0"
+        class="select-text relative z-10 transform divide-gray-100 rounded-sm bg-white ring-1 transition-all py-1 mt-2 "
     >
-        <div class="flex">
+        <div class="flex gap-1 grow shrink basis-auto max-w-full ">
             <div class="flex items-center flex-initial">
                 <AskAnnaIcon
+                    icon="mdi-magnify"
                     class="pl-1 text-gray-400"
                     :class="{ 'text-secondary': isOpen }"
-                >mdi-magnify</AskAnnaIcon>
+                />
             </div>
-            <ul class="flex list-none align-center gap-1 pl-0 flex-wrap">
+            <ul class="flex grow shrink basis-auto list-none items-center gap-1 pl-0 flex-wrap">
                 <li
                     v-for="(item, index) in selectedFilters"
                     class="flex-none"
@@ -139,9 +140,10 @@
                     class="rounded-full text-gray-800  p-1 text-sm font-medium hover:text-primary hover:bg-gray-100"
                 >
                     <AskAnnaIcon
+                        icon="mdi-close"
                         class="text-gray-400"
                         :class="{ 'text-secondary hover:text-primary ': isOpen }"
-                    >mdi-close</AskAnnaIcon>
+                    />
                 </button>
             </div>
         </div>
@@ -161,10 +163,10 @@ interface Params {
     [key: string]: string
 }
 
-const fetchValues = useFetch()
-const permission = usePermission()
+const display = useDisplay()
 const peopleStore = usePeopleStore()
-const context = getCurrentInstance()
+const fetchValues = useAskAnnnaFetch()
+const permission = useAskAnnaPermission()
 const filtersBarStore = useFiltersBarStore()
 const { route, routerPush } = useRouterAskAnna()
 
@@ -173,8 +175,8 @@ const searchFilterInputRef = ref()
 
 const { isOpen, search, selectedFilters } = storeToRefs(filtersBarStore)
 
+const isMobile = computed(() => toValue(display.xs))
 const isPermissionSet = computed(() => peopleStore.isPermissionSet)
-const isMobile = computed(() => context?.proxy.$root.$vuetify.breakpoint.xsOnly)
 const projectJobList = computed(() => permission.getFor(permission.labels.projectJobList))
 const workspacePeopleList = computed(() => permission.getFor(permission.labels.workspacePeopleList))
 
@@ -221,7 +223,6 @@ const placeholder = computed(() => {
 
 })
 
-
 watchArray(filtersBarStore.selectedFilters, (newList) => {
     if (!filtersBarStore.isInit) return
 
@@ -241,6 +242,10 @@ watchArray(filtersBarStore.selectedFilters, (newList) => {
 
     routerPush({
         name: route.name || 'workspace-project-runs',
+        params: {
+            projectId: route.params.projectId,
+            workspaceId: route.params.workspaceId,
+        },
         query: { search, order_by, page_size, ...list }
     })
 }, { deep: true })
@@ -265,7 +270,7 @@ onUnmounted(() => {
 
 const init = async () => {
     await until(isPermissionSet).toBe(true)
-    filtersBarStore.init(filters.value, route.query)
+    await filtersBarStore.init(filters.value, route.query)
 }
 
 init()
@@ -322,10 +327,14 @@ const handleEsc = () => {
 }
 
 const hadnleSetSearchParam = (search = undefined) => {
-    const params = search ? { ...route.query, search: search } : { ...route.query, search }
+    const query = search ? { ...route.query, search: search } : { ...route.query, search }
     routerPush({
+        query,
+        params: {
+            projectId: route.params.projectId,
+            workspaceId: route.params.workspaceId,
+        },
         name: route.name || 'workspace-project-runs',
-        query: params
     })
 }
 

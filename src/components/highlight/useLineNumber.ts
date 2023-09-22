@@ -1,10 +1,12 @@
+import hljs from 'highlight.js'
 // jshint multistr:true
 interface Options {
   maxRowToShow?: false | number
   singleLine?: boolean
 }
 
-export default (hljs) => {
+
+export default () => {
   var TABLE_NAME = 'hljs-ln',
     LINE_NAME = 'hljs-ln-line',
     CODE_BLOCK_NAME = 'hljs-ln-code',

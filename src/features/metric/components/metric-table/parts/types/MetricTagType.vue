@@ -1,7 +1,10 @@
 <template>
-  <div class="d-flex">
+  <div class="flex">
     <div v-if="isShowName">{{ metricRow.name }}: &nbsp;</div>
-    <AskAnnaIcon small>mdi-record</AskAnnaIcon>
+    <AskAnnaIcon
+      size="small"
+      icon="mdi-record"
+    />
   </div>
 </template>
 <script setup lang="ts">

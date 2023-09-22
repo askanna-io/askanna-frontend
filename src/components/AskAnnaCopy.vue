@@ -1,33 +1,47 @@
 <template>
   <div>
-    <AskAnnaTooltip top left v-if="!masked" content-class="AskAnna-copy-tooltip opacity-1">
-      <template v-slot:activator="{ on, value }">
-        <div v-on="on">
-          <span class="text-no-wrap">{{ prefix }} {{ sliceText }}</span>
-          <AskAnnaButton
-            v-if="(expanded && isSliced) || (expanded && isSliced && !masked)"
-            text
-            icon
-            class="px-0 ask-anna-copy"
-            @click="expand = !expand"
-          >
-            <AskAnnaIcon>mdi-chevron-{{ expand ? 'up' : 'down' }}</AskAnnaIcon>
-          </AskAnnaButton>
-          <AskAnnaTooltip v-if="showCopyButton" right content-class="opacity-1">
-            <template v-slot:activator="{ on }">
-              <AskAnnaButton icon text x-small v-on="on" v-show="value" @click.stop="handleCopyText(text)"
-                ><AskAnnaIcon>mdi-content-copy</AskAnnaIcon></AskAnnaButton
-              >
-            </template>
-            <span>Copy</span>
-          </AskAnnaTooltip>
-        </div>
-      </template>
-
-      <span class="hover-content" v-html="text" />
-    </AskAnnaTooltip>
+    <div v-if="!masked">
+      <span class="text-no-wrap">{{ prefix }} {{ sliceText }}</span>
+      <AskAnnaButtonIcon
+        v-if="(expanded && isSliced) || (expanded && isSliced && !masked)"
+        class="px-0"
+        variant="text"
+        size="small"
+        @click="expand = !expand"
+      >
+        <AskAnnaIcon :icon="expand ? 'mdi-chevron-up' : 'mdi-chevron-down'" />
+      </AskAnnaButtonIcon>
+      <AskAnnaButtonIcon
+        v-if="text"
+        variant="text"
+        size="x-small"
+        class="invisible group-hover:visible group-focus:visible z-50"
+        @click.prevent="handleCopyText(text)"
+      >
+        <AskAnnaIcon icon="mdi-content-copy" />
+        <AskAnnaTooltip location="end">
+          {{ copyTitle }}
+        </AskAnnaTooltip>
+      </AskAnnaButtonIcon>
+      <AskAnnaTooltip
+        top
+        left
+        v-if="!masked && isSliced"
+        content-class="AskAnna-copy-tooltip opacity-1"
+      >
+        <span
+          class="hover-content"
+          v-html="text"
+        />
+      </AskAnnaTooltip>
+    </div>
     <VExpandTransition>
-      <AskAnnaCard flat v-show="expand" class="transparent"><div class="expanded" v-html="restOftext" /> </AskAnnaCard>
+      <div v-show="expand">
+        <div
+          class="expanded"
+          v-html="restOftext"
+        />
+      </div>
     </VExpandTransition>
     <span v-if="masked">
       {{ text }}
@@ -65,16 +79,16 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  showCopyButton: {
-    type: Boolean,
-    default: true
+  copyTitle: {
+    type: String,
+    default: 'Copy'
   }
 })
 
-const { width } = useWindowSize()
+const display = useDisplay()
 const slicedText = useSlicedText()
 const { handleCopyText } = useCopy()
-const context = getCurrentInstance()
+const { width } = useAskAnnaWindowSize()
 
 const expand = ref(false)
 
@@ -82,7 +96,7 @@ const delta = computed(() => {
   const [parentContainer] = document.getElementsByClassName('variables-table')
   const containerWidth = (parentContainer && parentContainer.offsetWidth) || 1000
 
-  switch (context?.proxy.$root.$vuetify.breakpoint.name) {
+  switch (toValue(display.name)) {
     case 'xs':
       return containerWidth + width.value - width.value + (props.expanded ? 500 : 500)
 
@@ -112,6 +126,7 @@ const restOftext = computed(() => (isSliced.value ? props.text.slice(sliceText.v
 .AskAnna-copy-tooltip .hover-content {
   white-space: break-spaces;
 }
+
 .expanded {
   white-space: break-spaces;
 }

@@ -11,12 +11,16 @@ export const useProjectStore = defineStore(PROJECT_STORE, {
   state: () => {
     return {
       project: new ProjectModel().state,
+      form: {
+        name: '',
+        description: '',
+        visibility: ProjectVisibility.PRIVATE
+      },
       menu: {
         sticked: false,
         isSticked: true,
-        isShowProjectBar: false
       },
-      projectLoading: true
+      projectLoading: true,
     }
   },
 
@@ -33,17 +37,24 @@ export const useProjectStore = defineStore(PROJECT_STORE, {
         })
       } catch (error) {
         const logger = useLogger()
+        const generalStore = useGeneralStore()
 
         logger.error('Error on load project in getProject action.\nError: ', error)
 
         project = new ProjectModel().state
 
-        this.$routerAskAnna.routerPush({ name: 'project-does-not-exist' })
+        await generalStore.setRouteNotExist()
 
         return
       }
 
       this.project = project
+
+      this.form = {
+        name: project.name,
+        visibility: project.visibility,
+        description: project.description
+      }
 
       const generalStore = useGeneralStore()
       generalStore.setBreadcrumbParams({ projectId: project.name, workspaceId: project.workspace.name })
@@ -64,7 +75,7 @@ export const useProjectStore = defineStore(PROJECT_STORE, {
       } catch (error) {
         const logger = useLogger()
 
-        logger.error('Error on load projects in getProjects action.\nError: ', error)
+        logger.error('Error on load projectMe in getProjectMe action.\nError: ', error)
 
         return
       }
@@ -84,7 +95,7 @@ export const useProjectStore = defineStore(PROJECT_STORE, {
         visibility: ProjectVisibility.PRIVATE
       }
 
-      await this.createProject(data)
+      return await this.createProject(data)
     },
 
     async createProjectFullWay(workspace_suuid) {
@@ -178,6 +189,14 @@ export const useProjectStore = defineStore(PROJECT_STORE, {
       workspaceProjectsStore.deleteWorkspaceProject(project)
 
       logger.success(`You have successfully deleted the project ${project.name}`)
+    },
+
+    async resetForm() {
+      this.form = {
+        name: this.project.name,
+        visibility: this.project.visibility,
+        description: this.project.description
+      }
     }
   }
 })

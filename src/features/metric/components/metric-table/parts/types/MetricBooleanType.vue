@@ -1,8 +1,11 @@
 <template>
   <span>
     <span v-if="isShowName">{{ metricRow.name }}:&nbsp;</span>
-    <AskAnnaIcon>{{ icon }}</AskAnnaIcon></span
-  >
+    <AskAnnaIcon
+      :icon="icon"
+      size="small"
+    />
+  </span>
 </template>
 <script setup lang="ts">
 const props = defineProps({

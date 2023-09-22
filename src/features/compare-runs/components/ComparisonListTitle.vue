@@ -1,6 +1,13 @@
 <template>
-  <div class="list__title" :class="{ 'font-weight-bold': bold, 'align-center': alignCenter }">
-    {{ isSubItem ? '&nbsp;&nbsp;&nbsp;&nbsp;' : '' }}<AskAnnaTextSliced :value="value" :maxLength="18" />
+  <div
+    class="list__title"
+    :class="{ 'font-bold': bold, 'items-center': alignCenter }"
+  >
+    {{ isSubItem ? '&nbsp;&nbsp;&nbsp;&nbsp;' : '' }}
+    <AskAnnaTextSliced
+      :value="value"
+      :maxLength="18"
+    />
   </div>
 </template>
 <script setup lang="ts">

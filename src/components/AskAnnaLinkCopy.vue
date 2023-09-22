@@ -1,12 +1,20 @@
 <template>
-  <div class="code-wrapper as">
-    <span v-if="text" class="font-weight-bold mr-1">{{ text }}</span>
-    <RouterLink class="ask-anna-link" @click.native="handleOnClick" :to="routeLinkParams()">
-      {{ value }}
+  <div class="group flex items-center">
+    <span
+      v-if="text"
+      class="font-bold mr-1"
+    >{{ text }}</span>
+    <RouterLink
+      :to="routeLinkParams()"
+      class="no-underline whitespace-pre"
+      @click.native="handleOnClick"
+    >
+      {{ slicedValue }}
     </RouterLink>
     <AskAnnaCopyText
       :text="value"
       :showText="false"
+      :copyTitle="copyTitle"
       :iconColor="'grey lighten-2'"
       :buttonType="{ text: true }"
       :styleClasses="'px-0 white font-weight-regular text--regular body-1'"
@@ -28,7 +36,7 @@ const props = defineProps({
   },
   routeParams: {
     type: Object,
-    default: () => {}
+    default: () => { }
   },
   to: {
     type: String,
@@ -37,11 +45,17 @@ const props = defineProps({
   onClick: {
     type: Function,
     default: null
+  },
+  copyTitle: {
+    type: String,
+    default: 'Copy'
   }
 })
 
+const slicedText = useSlicedText()
 const { route } = useRouterAskAnna()
 
+const slicedValue = computed(() => slicedText(props.value, 100))
 const handleOnClick = event => emits('click', event)
 
 const routeLinkParams = () => {
@@ -54,9 +68,3 @@ const routeLinkParams = () => {
   }
 }
 </script>
-<style scoped>
-.code-wrapper {
-  display: flex;
-  align-items: baseline;
-}
-</style>

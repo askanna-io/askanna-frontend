@@ -5,45 +5,60 @@ export const auth = {
       name: 'check-access',
       meta: {
         requiresAuth: true,
-        hideAppBarIcon: true
+        hideAppBarIcon: true,
+        layout: 'ThePublicLayout'
       },
-      component: () => import('./views/check-access.vue')
+      component: () => import('./views/CheckAccess.vue')
     },
     {
-      meta: {
-        title: 'Log in to AskAnna'
-      },
       path: '/signin',
-      component: () => import('./views/signin/index.vue'),
-      name: 'signin'
+      name: 'signin',
+      meta: {
+        title: 'Log in to AskAnna',
+        layout: 'TheLoginLayout'
+      },
+      component: () => import('./views/Signin.vue'),
     },
     {
-      meta: {
-        title: 'Sign up AskAnna'
-      },
       path: '/signup',
-      component: () => import('./views/signin/index.vue'),
-      name: 'signup'
+      name: 'signup',
+      meta: {
+        title: 'Sign up AskAnna',
+        layout: 'TheLoginLayout'
+      },
+      component: () => import('./views/Signin.vue'),
     },
     {
       path: '/logout',
-      name: 'logout',
-      component: () => import('./views/logout.vue')
+      name: 'Logout',
+      component: () => import('./views/Logout.vue')
     },
     {
       path: '/join/:token/workspace/:workspaceId/people/:peopleId',
       name: 'join',
-      component: () => import('./views/join.vue')
+      meta: {
+        title: 'Join in to AskAnna',
+        layout: 'TheLoginLayout'
+      },
+      component: () => import('./views/JoinIn.vue')
     },
     {
       path: '/forgot-password',
       name: 'forgot-password',
-      component: () => import('./views/forgot-password.vue')
+      meta: {
+        title: 'Forgot password',
+        layout: 'TheLoginLayout'
+      },
+      component: () => import('./views/ForgotPassword.vue')
     },
     {
       path: '/account/reset-password',
       name: 'account-reset-password',
-      component: () => import('./views/reset-password.vue')
+      meta: {
+        title: 'Reset password',
+        layout: 'TheLoginLayout'
+      },
+      component: () => import('./views/AccountResetPassword.vue')
     }
   ]
 }

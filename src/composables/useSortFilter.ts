@@ -79,7 +79,7 @@ export default function sortFilter(sortItem: string, sortItemPlural: string) {
   const filterMenuStyle = computed(() => {
     return {
       color: state.isFilterOpen ? 'primary' : 'secondary',
-      icon: Object.values(query.value).filter(value => value).length ? 'mdi-filter' : 'mdi-filter-outline'
+      icon: Object.entries(query.value).filter(([key, value]) => key !== 'order_by' && value).length ? 'mdi-filter' : 'mdi-filter-outline'
     }
   })
 
@@ -100,8 +100,12 @@ export default function sortFilter(sortItem: string, sortItemPlural: string) {
   const handleSearch = () => handleChangeQuery({ ...query.value, search: state.search })
   const debounceedSearch = debounce(handleSearch, 350)
 
-  const handleSort = (routeName: string) => {
-    const params = typeof state.activeSort !== 'undefined' && sortItems[state.activeSort].value
+  const handleSort = (route: string, id: number) => {
+    state.activeSort = id === state.activeSort ? -1 : id
+    const sortIndex = state.activeSort === -1 ? 0 : state.activeSort
+
+    const params = typeof state.activeSort !== 'undefined' && sortItems[sortIndex].value
+    const routeName = route === 'workspace' ? undefined : route
     handleChangeQuery({ ...query.value, ...params, routeName })
   }
 
@@ -136,6 +140,7 @@ export default function sortFilter(sortItem: string, sortItemPlural: string) {
 
     handleSort,
     toggleFilter,
+    handleSearch,
     debounceedSearch
   }
 }

@@ -10,6 +10,7 @@ const api = apiStringify(serviceName)
 export const useVariablesStore = defineStore(VARIABLES_STORE, {
   state: () => {
     return {
+      variableName: '',
       variable: {} as Variable,
       variables: {
         count: 0,
@@ -84,6 +85,7 @@ export const useVariablesStore = defineStore(VARIABLES_STORE, {
         return
       }
       this.variable = variable
+      this.variableName = variable.name
     },
 
     async updateVariable({ projectId: project_suuid, variableId: suuid, ...data }) {

@@ -1,14 +1,12 @@
 <template>
   <AskAnnaTextField
-    dense
-    outlined
     required
     clearable
-    class="px-3 pb-2"
     hide-details
     :label="label"
-    @input="handleChange"
-    :value="computedValue"
+    class="px-3 pb-2"
+    :model-value="computedValue"
+    @update:modelValue="handleChange"
   />
 </template>
 

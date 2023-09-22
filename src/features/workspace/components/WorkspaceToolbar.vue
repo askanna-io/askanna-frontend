@@ -1,140 +1,136 @@
 <template>
   <AskAnnaToolbar
-    flat
-    dense
-    color="grey lighten-4"
-    class="br-r5 workspace-toolbar"
-    :extended="$vuetify.breakpoint.xsOnly && isFilterOpen"
+    extension-height="50"
+    :extended="$vuetify.display.xs && isFilterOpen"
+    class="rounded [&>div:nth-child(2)]:px-2 [&>div]:pr-1"
+    :class="{ 'pb-2': $vuetify.display.xs && isFilterOpen }"
   >
-    <AskAnnaRow no-gutters>
-      <AskAnnaCol cols="8" sm="4" class="align-self-center">
-        <AskAnnaFlex class="d-flex">
-          <AskAnnaToolbarTitle v-if="isSignIn">
-            {{ title }}{{ isEditWorkspaceView ? ' - Edit mode' : '' }}</AskAnnaToolbarTitle
-          >
-          <AskAnnaToolbarTitle v-else-if="isWorkspacePublic && !isEditWorkspaceView"> {{ title }}</AskAnnaToolbarTitle>
-          <AskAnnaToolbarTitle v-else>Not allowed</AskAnnaToolbarTitle>
-        </AskAnnaFlex>
-      </AskAnnaCol>
-      <AskAnnaCol
-        v-if="!$vuetify.breakpoint.xsOnly"
-        cols="4"
-        class="align-self-center"
-        style="min-width: 100px; max-width: 100%"
+    <div class="flex w-full items-center mt-2 sm:mt-0 justify-between">
+      <div
+        class="w-9/12"
+        :class="{
+          'sm:w-4/12': isFilterOpen && isSignIn,
+          'md:w-4/12': isFilterOpen && !isSignIn,
+          'md:w-8/12 xl:w-9/12': !isFilterOpen && isSignIn,
+          'md:w-11/12 xl:w-11/12': !isFilterOpen && !isSignIn
+        }"
       >
-        <AskAnnaFlex class="d-flex">
-          <AskAnnaFlex class="pr-2 block" :class="{ 'w-100p': $vuetify.breakpoint.xsOnly }">
-            <AskAnnaTextField
-              v-if="isFilterOpen"
-              v-model="search"
-              small
-              dense
-              outlined
-              hide-details
-              @input="debounceedSearch"
-              :placeholder="$vuetify.breakpoint.xsOnly ? 'Search...' : 'Search projects...'"
-            />
-          </AskAnnaFlex>
-        </AskAnnaFlex>
-      </AskAnnaCol>
-      <AskAnnaCol cols="4" class="align-self-center" style="min-width: 100px">
-        <AskAnnaFlex class="d-flex justify-end">
-          <CreateProjectPopup v-if="!isEditWorkspaceView && !$vuetify.breakpoint.xsOnly" />
-          <AskAnnaButton @click="toggleFilter" small text icon
-            ><AskAnnaIcon :color="filterMenuStyle.color">{{ filterMenuStyle.icon }}</AskAnnaIcon></AskAnnaButton
-          >
-          <WorkspaceToolbarMenu
-            :isMember="isMember"
-            :workspaceUuid="workspaceUuid"
-            @onOpenWorkspaceRemove="handleOpenConfirmRemoveWorkspace"
-          />
-        </AskAnnaFlex>
-      </AskAnnaCol>
-    </AskAnnaRow>
+        <AskAnnaListTitle
+          v-if="isSignIn"
+          class="whitespace-pre-wrap truncate"
+        >{{ title }}</AskAnnaListTitle>
+        <AskAnnaListTitle v-else-if="isWorkspacePublic">{{ title }}</AskAnnaListTitle>
+        <AskAnnaListTitle v-else>Not allowed</AskAnnaListTitle>
+      </div>
 
-    <template v-if="isFilterOpen" v-slot:extension>
-      <AskAnnaRow no-gutters>
-        <AskAnnaCol cols="12" class="align-self-center">
-          <AskAnnaFlex class="d-flex" justify-center>
-            <AskAnnaTextField
-              v-if="isFilterOpen && $vuetify.breakpoint.xsOnly"
-              v-model="search"
-              small
-              dense
-              class="mr-2"
-              hide-details
-              @input="debounceedSearch"
-              :placeholder="$vuetify.breakpoint.xsOnly ? 'Search...' : 'Search projects...'"
+      <div class="w-8/12 sm:w-9/12 md:w-4/12 xl:w-4/12">
+        <AskAnnaTextField
+          v-if="isFilterOpen && !$vuetify.display.xs"
+          clearable
+          hide-details
+          v-model="search"
+          class="clearable"
+          @input="debounceedSearch"
+          @click:clear="handleSearch"
+          :placeholder="$vuetify.display.xs ? 'Search...' : 'Search projects...'"
+        />
+      </div>
+      <div class="flex items-center justify-end sm:w-9/12 md:w-4/12 xl:w-4/12 text-end">
+        <ProjectPopupCreate v-if="!$vuetify.display.xs" />
+
+        <AskAnnaButton
+          size="default"
+          variant="text"
+          @click="toggleFilter"
+          :icon="filterMenuStyle.icon"
+          :color="filterMenuStyle.color"
+          :colorIcon="filterMenuStyle.color"
+        />
+
+        <WorkspaceToolbarMenu
+          :isMember="isMember"
+          :workspaceUuid="workspaceUuid"
+          @onOpenWorkspaceRemove="handleOpenConfirmRemoveWorkspace"
+        />
+      </div>
+    </div>
+
+    <template
+      v-if="isFilterOpen"
+      v-slot:extension
+    >
+      <div class="flex items-center w-full justify-center">
+        <AskAnnaTextField
+          v-if="isFilterOpen && $vuetify.display.xs"
+          clearable
+          hide-details
+          v-model="search"
+          class="mr-2 clearable"
+          @input="debounceedSearch"
+          @click:clear="handleSearch"
+          :placeholder="$vuetify.display.xs ? 'Search...' : 'Search projects...'"
+        />
+        <VMenu
+          v-model="sortMenu"
+          transition="slide-y-transition"
+        >
+          <template v-slot:activator="{ props }">
+            <AskAnnaButtonActivator
+              v-bind="props"
+              nameIcon="mdi-sort"
+              :colorIcon="sortStyle.color"
+            >
+              {{ $vuetify.display.xs ? '' : sortrTitle }}
+            </AskAnnaButtonActivator>
+          </template>
+          <VList
+            color="primary"
+            class="p-0 mt-2"
+            v-model="activeSort"
+            select-strategy="classic"
+            @click:select="handleSort('workspace', $event.id)"
+          >
+            <VListItem
+              v-for="(item, i) in sortItems"
+              :key="i"
+              :value="i"
+              :title="item.title"
+              class="rounded-none"
+              :active="activeSort === i"
             />
-            <VMenu
-              v-model="sortMenu"
-              bottom
-              offset-y
-              nudge-bottom="10"
-              :nudge-width="100"
-              class="workspace-menu"
-              data-test="workspace-menu"
-              transition="slide-y-transition"
+          </VList>
+        </VMenu>
+        <VMenu
+          v-if="isSignIn"
+          v-model="filterMenu"
+          transition="slide-y-transition"
+          :close-on-content-click="false"
+        >
+          <template v-slot:activator="{ props }">
+            <AskAnnaButtonActivator
+              class="ml-1"
+              v-bind="props"
+              nameIcon="mdi-filter-variant"
+              :colorIcon="filterStyle.color"
             >
-              <template v-slot:activator="{ on }">
-                <AskAnnaButton v-on="on" small data-test="workspace-menu-activate-btn"
-                  ><AskAnnaIcon :color="sortStyle.color">mdi-sort</AskAnnaIcon
-                  >{{ $vuetify.breakpoint.xsOnly ? '' : sortrTitle }}</AskAnnaButton
-                >
-              </template>
-              <VList>
-                <VListItemGroup v-model="activeSort" color="primary" @change="handleSort('workspace')">
-                  <VListItem v-for="(item, index) in sortItems" :key="index">
-                    <VListItemTitle>{{ item.title }}</VListItemTitle>
-                  </VListItem>
-                </VListItemGroup>
-              </VList>
-            </VMenu>
-            <VMenu
-              v-if="isSignIn"
-              v-model="filterMenu"
-              transition="slide-y-transition"
-              :close-on-content-click="false"
-              :nudge-width="200"
-              :nudge-height="300"
-              offset-y
-              nudge-bottom="10"
-            >
-              <template v-slot:activator="{ on }">
-                <AskAnnaButton class="ml-1" v-on="on" small data-test="workspace-menu-activate-btn">
-                  <AskAnnaIcon :color="filterStyle.color">mdi-filter-variant</AskAnnaIcon
-                  >{{ $vuetify.breakpoint.xsOnly ? '' : filterTitle }}
-                </AskAnnaButton>
-              </template>
-              <AskAnnaRow class="pa-2 white">
-                <AskAnnaCol class="d-flex pt-1 pb-1" cols="12">
-                  <AskAnnaCard flat width="284">
-                    <AskAnnaCardSubTitle class="pa-0">
-                      <h3>Project visibility</h3>
-                    </AskAnnaCardSubTitle>
-                    <AskAnnaSelect
-                      v-model="activeRoleFilter"
-                      hide-details
-                      class="pt-0"
-                      no-data-text=""
-                      item-text="name"
-                      item-value="value"
-                      :items="visibilityFilters"
-                    >
-                    </AskAnnaSelect>
-                  </AskAnnaCard>
-                </AskAnnaCol>
-              </AskAnnaRow>
-            </VMenu>
-          </AskAnnaFlex>
-        </AskAnnaCol>
-      </AskAnnaRow>
+              {{ $vuetify.display.xs ? '' : filterTitle }}
+            </AskAnnaButtonActivator>
+          </template>
+          <AskAnnaCard class="p-2 mt-2 w-72">
+            <AskAnnaCardSubTitle>
+              Project visibility
+            </AskAnnaCardSubTitle>
+            <AskAnnaSelect
+              v-model="activeRoleFilter"
+              :items="visibilityFilters"
+            />
+          </AskAnnaCard>
+        </VMenu>
+      </div>
     </template>
   </AskAnnaToolbar>
 </template>
 <script setup lang="ts">
-import { useRoute } from 'vue-router/composables'
-
 defineProps({
   isMember: {
     type: Boolean,
@@ -151,10 +147,6 @@ defineProps({
   workspaceUuid: {
     type: String,
     default: ''
-  },
-  isCurrentUserAdmin: {
-    type: Boolean,
-    default: () => false
   }
 })
 
@@ -177,29 +169,14 @@ const {
   visibilityFilters,
 
   handleSort,
+  handleSearch,
   toggleFilter,
   debounceedSearch
 } = useSortFilter('Project', 'projects')
 
-const route = useRoute()
-const permission = usePermission()
+const permission = useAskAnnaPermission()
 
 const isSignIn = computed(() => permission.token.value)
-const isEditWorkspaceView = computed(() => route.name === 'workspace-edit')
 
 const handleOpenConfirmRemoveWorkspace = () => emit('onOpenWorkspaceRemove')
 </script>
-<style lang="scss">
-.mobile-view {
-  .workspace-toolbar {
-    .v-toolbar__content {
-      padding-right: 8px;
-    }
-  }
-}
-.workspace-toolbar {
-  .v-toolbar__content {
-    padding-right: 2px;
-  }
-}
-</style>

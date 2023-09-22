@@ -2,7 +2,7 @@ import { jobRoutes } from '@/features/job/config'
 
 export const jobsRoutes = {
   path: 'jobs',
-  component: () => import('./views/index.vue'),
+  component: () => import('./views/ProjectJobsIndex.vue'),
   meta: {
     breadcrumb: 'Jobs',
     hideAppBarIcon: true
@@ -10,10 +10,10 @@ export const jobsRoutes = {
   children: [
     {
       path: '',
-      component: () => import('./views/jobs.vue'),
+      component: () => import('./views/ProjectJobs.vue'),
       name: 'workspace-project-jobs',
       meta: {
-        breadcrumb: 'Packages',
+        breadcrumbLevel: 3,
         hideAppBarIcon: true
       }
     },

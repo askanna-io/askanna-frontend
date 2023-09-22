@@ -8,7 +8,6 @@
         :fileBlob="fileBlob"
         :cdnBaseUrl="cdnBaseUrl"
         :fileSource="fileSource"
-        :maxHeight="`${maxHeight}px`"
         :fileExtension="fileExtension"
       />
       <div
@@ -16,63 +15,49 @@
         class="my-2 mb-2 text-center"
       >
         <p
-          v-if="$vuetify.breakpoint.xsOnly"
+          v-if="$vuetify.display.xs"
           class="px-2"
         >
           ...this is a preview of the file. To download the file, open this page on a laptop or desktop.
         </p>
         <AskAnnaButton
-          v-if="!$vuetify.breakpoint.xsOnly"
-          text
-          small
-          outlined
-          color="secondary"
-          class="mr-1 btn--hover"
+          v-if="!$vuetify.display.xs"
+          class="mr-1"
           @click="handleDownload"
+          prependIcon="mdi-download"
           :loading="loadingFullData"
           :disabled="loading || isFileEmpty"
         >
           <template v-slot:loader>
             <span>Downloading...</span>
           </template>
-          <AskAnnaIcon
-            color="secondary"
-            left
-          >mdi-download</AskAnnaIcon>
           ...TO SEE THE FULL CONTENT, PLEASE DOWNLOAD THE FILE.
         </AskAnnaButton>
       </div>
-      <AskAnnaFlex
+      <div
         v-if="(!loading && !isFileEmpty && !isShowFilePreview) || !isEmbedPdfSuccess"
-        class="my-2 mb-2 text-center flex-col items-center"
+        class="flex my-2 mb-2 text-center flex-col items-center"
       >
         <p>We cannot show a preview of this file.</p>
         <AskAnnaButton
-          text
-          small
-          outlined
-          color="secondary"
-          class="mr-1 btn--hover"
+          class="mr-1"
           @click="handleDownload"
+          prependIcon="mdi-download"
           :loading="loadingFullData"
           :disabled="loading || isFileEmpty"
         >
           <template v-slot:loader>
             <span>Downloading...</span>
           </template>
-          <AskAnnaIcon
-            color="secondary"
-            left
-          >mdi-download</AskAnnaIcon>
           download file
         </AskAnnaButton>
-      </AskAnnaFlex>
+      </div>
 
       <AskAnnaAlert
         v-if="isFileEmpty"
-        class="ma-4 text-center"
-        dense
-        outlined
+        class="m-4 text-center"
+        density="compact"
+        variant="outlined"
       >{{ textNoData }}</AskAnnaAlert>
     </div>
   </AskAnnaLoadingProgress>

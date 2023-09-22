@@ -111,7 +111,6 @@
   line-height: inherit;
 }
 .markdown-body a {
-  color: #0366d6;
   text-decoration: none;
 }
 .markdown-body a:hover {
@@ -591,6 +590,17 @@
   margin: 0;
   background-color: rgba(27, 31, 35, 0.05);
   border-radius: 3px;
+}
+.markdown-body p code {
+  color: white;
+  background-color: theme('colors.primary') !important;
+  border-color: theme('colors.primary') !important;
+  padding: 0 3px 2px 3px;
+
+  border-radius: 5px;
+  font-family: Roboto, sans-serif !important;
+  font-weight: normal !important;
+  font-size: 16px !important;
 }
 .markdown-body pre {
   word-wrap: normal;

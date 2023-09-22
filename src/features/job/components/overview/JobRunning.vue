@@ -1,29 +1,44 @@
 <template>
-  <AskAnnaCard class="mx-auto" flat>
-    <AskAnnaCardTitle :class="{ 'pb-0': $vuetify.breakpoint.xsOnly }">Running the job</AskAnnaCardTitle>
-    <AskAnnaRow>
-      <AskAnnaCol cols="12" :class="{ 'pt-0': $vuetify.breakpoint.xsOnly }">
-        <AskAnnaToolbar dense color="white" class="br-r5" flat transition="slide-y-transition">
-          <VTabs v-model="currentTab" left :align-with-title="!$vuetify.breakpoint.xsOnly">
-            <VTabsSlider color="primary" />
-            <template v-for="tab of tabs">
-              <VTab ripple :key="tab.id">
-                {{ tab.name }}
-              </VTab>
-            </template>
-          </VTabs>
-        </AskAnnaToolbar>
-      </AskAnnaCol>
-      <AskAnnaCol cols="12" :class="{ 'pt-0': $vuetify.breakpoint.xsOnly }">
-        <VTabsItems v-model="currentTab">
-          <template v-for="tab in tabs">
-            <VTabItem :key="tab.id">
-              <Component :is="tab.component" />
-            </VTabItem>
-          </template>
-        </VTabsItems>
-      </AskAnnaCol>
-    </AskAnnaRow>
+  <AskAnnaCard
+    flat
+    class="mx-auto"
+  >
+    <AskAnnaCardTitle
+      class="pb-1"
+      :class="{ 'pb-0': $vuetify.display.xs }"
+    >Running the job</AskAnnaCardTitle>
+    <AskAnnaToolbar
+      flat
+      color="white"
+      class="mb-3 px-4"
+      transition="slide-y-transition"
+    >
+      <VTabs
+        left
+        v-model="currentTab"
+        :align-with-title="!$vuetify.display.xs"
+      >
+        <VTab
+          v-for="tab of tabs"
+          ripple
+          :key="tab.id"
+        >
+          {{ tab.name }}
+        </VTab>
+      </VTabs>
+    </AskAnnaToolbar>
+    <VWindow v-model="currentTab">
+      <VWindowItem
+        v-for="tab in tabs"
+        :key="tab.id"
+      >
+        <KeepAlive>
+          <Suspense>
+            <Component :is="tab.component" />
+          </Suspense>
+        </KeepAlive>
+      </VWindowItem>
+    </VWindow>
   </AskAnnaCard>
 </template>
 

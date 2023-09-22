@@ -1,12 +1,13 @@
 <template>
   <pre
     ref="codeWrapper"
-    class="ask-anna-highlight w-full"
-  ><code class="lang-shell hljs" :class="{ 'loading': loading }" v-html="highlighted"/></pre>
+    class="askanna-highlight whitespace-normal w-full"
+  >
+      <code class="lang-shell hljs p-3" :class="{ 'loading': loading, 'rounded-b': roundedBottom }" v-html="highlighted"></code>
+    </pre>
 </template>
 
 <script setup lang="ts">
-import hljs from 'highlight.js'
 
 const props = defineProps({
   singleLine: {
@@ -28,18 +29,18 @@ const props = defineProps({
   maxRowToShow: {
     type: Number || null,
     default: null
-  }
+  },
+  roundedBottom: {
+    type: Boolean,
+    default: false
+  },
 })
 
-const codeWrapper = ref(null)
-const hljsWithLineNumber = useLineNumber(hljs)
+const hljsWithLineNumber = useLineNumber()
 
 const highlighted = computed(() => {
   let result = hljsWithLineNumber.highlight(props.value, { language: props.languageName, ignoreIllegals: true }).value
-  result = hljsWithLineNumber.lineNumbersValue(result, {
-    maxRowToShow: props.maxRowToShow,
-    singleLine: props.singleLine
-  })
+  result = hljsWithLineNumber.lineNumbersValue(result, { maxRowToShow: props.maxRowToShow, singleLine: props.singleLine })
 
   return result
 })

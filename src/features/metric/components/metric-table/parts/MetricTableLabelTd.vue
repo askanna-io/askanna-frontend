@@ -1,6 +1,15 @@
 <template>
-  <Component :is="tag" class="text-left" :key="label" :style="labelStyles">
-    <MetricValue :metricRow="labelValue" :isLabels="isLabels" :isLabel="isLabel" />
+  <Component
+    :is="tag"
+    :key="label"
+    :style="labelStyles"
+    class="text-left bg-transparent h-10 "
+  >
+    <MetricValue
+      :isLabel="isLabel"
+      :isLabels="isLabels"
+      :metricRow="labelValue"
+    />
   </Component>
 </template>
 <script setup lang="ts">

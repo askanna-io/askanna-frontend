@@ -1,39 +1,32 @@
 <template>
-  <AskAnnaCard
-    class="d-flex justify-space-between ml-4"
-    flat
-  >
-    <AskAnnaCard
+  <div class="flex flex-col sm:flex-row items-start px-4">
+    <div
+      class="basis-2/4"
       v-for="(group, index) in variables"
       :key="index"
-      flat
       :width="viewConfig.width"
     >
-      <AskAnnaRow no-gutters>
-        <AskAnnaCol
-          class="mb-4"
-          v-for="(item, index2) in group"
-          :key="`${index}-${index2}`"
-          cols="12"
-        >
-          <Component
-            link
-            :to="item.to"
-            :key="index2"
-            :text="item.text"
-            :value="item.value"
-            :is="item.component"
-            :loading="loadingStatus"
-          />
-        </AskAnnaCol>
-      </AskAnnaRow>
-    </AskAnnaCard>
-  </AskAnnaCard>
+      <template
+        v-for="(item, index2) in group"
+        :key="`${index}-${index2}`"
+      >
+        <Component
+          link
+          class="h-8"
+          :to="item.to"
+          :text="item?.text"
+          :value="item.value"
+          :is="item.component"
+          :title="item?.title"
+          :copyTitle="item?.copyTitle"
+        />
+      </template>
+    </div>
+  </div>
 </template>
 <script setup lang="ts">
 import { get } from 'lodash'
 import RunInfoEnv from './parts/RunInfoEnv.vue'
-import RunInfoJob from './parts/RunInfoJob.vue'
 import RunInfoText from './parts/RunInfoText.vue'
 import RunInfoStatus from './parts/RunInfoStatus.vue'
 import RunInfoAvatar from './parts/RunInfoAvatar.vue'
@@ -68,10 +61,9 @@ const props = defineProps({
     })
   }
 })
-
 const dayjs = useDayjs()
+const display = useDisplay()
 const groupArray = useGroupArray()
-const context = getCurrentInstance()
 
 const timer: any = ref(null)
 const startTime: any = ref(null)
@@ -107,12 +99,11 @@ const viewConfig = computed(() => {
     },
     default: {
       groupBy: 3,
-
       width: '33.3%'
     }
   }
 
-  return groups[context?.proxy.$root.$vuetify.breakpoint.name] || groups.default
+  return groups[toValue(display.name)] || groups.default
 })
 
 const variables = computed(() => {
@@ -124,21 +115,24 @@ const variables = computed(() => {
       visibility: true
     },
     {
-      text: 'SUUID',
+      title: 'SUUID',
       value: props.run.suuid,
       component: RunInfoCopyText,
-      visibility: true
+      visibility: true,
+      copyTitle: 'Copy SUUID'
     },
 
     {
-      text: 'Job',
-      value: props.jobName,
-      component: RunInfoJob,
-      visibility: true
+      text: 'Job: ',
+      value: props.jobName || props.jobId,
+      to: 'workspace-project-job-overiew',
+      component: AskAnnaLinkCopy,
+      visibility: true,
+      copyTitle: 'Copy job name'
     },
     {
       text: 'Start date',
-      value: dayjs.dayjs(props.run.created_at).format('Do MMMM YYYY, h:mm:ss a'),
+      value: ` ${dayjs.dayjs(props.run.created_at).format('Do MMMM YYYY, h:mm:ss a')}`,
       component: RunInfoText,
       visibility: true
     },
@@ -150,10 +144,11 @@ const variables = computed(() => {
     },
     {
       text: 'Code: ',
-      to: 'workspace-project-code',
+      to: 'workspace-project-jobs-job-run-code',
       value: props.run?.package?.suuid,
       component: AskAnnaLinkCopy,
-      visibility: true
+      visibility: true,
+      copyTitle: 'Copy code SUUID'
     },
     {
       text: 'By',
@@ -163,7 +158,7 @@ const variables = computed(() => {
     },
     {
       text: 'Trigger',
-      value: get(triggers, `${props.run.trigger}`) || props.run.trigger,
+      value: ' ' + get(triggers, `${props.run.trigger}`) || props.run.trigger,
       component: RunInfoText,
       visibility: true
     },
@@ -171,7 +166,8 @@ const variables = computed(() => {
       text: 'Environment',
       value: props.runIdStatus.environment,
       component: RunInfoEnv,
-      visibility: true
+      visibility: true,
+      copyTitle: 'Copy image name'
     }
   ]
 
@@ -182,8 +178,3 @@ onUnmounted(() => {
   clearInterval(timer.value)
 })
 </script>
-<style>
-.variables--wrapper {
-  max-height: 150px;
-}
-</style>

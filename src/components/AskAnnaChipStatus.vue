@@ -1,8 +1,17 @@
 <template>
-  <AskAnnaChip class="askaanna-chip-status" small label outlined :color="statusColor">
-    <AskAnnaAvatar left>
-      <AskAnnaIcon small>{{ statusIcon }}</AskAnnaIcon>
-    </AskAnnaAvatar>
+  <AskAnnaChip
+    label
+    size="small"
+    class="w-28"
+    :class="{ 'cursor-pointer': link }"
+    variant="outlined"
+    :color="statusColor"
+  >
+    <AskAnnaIcon
+      start
+      size="small"
+      :icon="statusIcon"
+    />
     {{ statusValue }}
   </AskAnnaChip>
 </template>
@@ -12,7 +21,11 @@ import { get } from 'lodash'
 
 const props = defineProps({
   status: String,
-  value: String
+  value: String,
+  link: {
+    type: Boolean,
+    default: false
+  }
 })
 
 const COLORS = {
@@ -20,7 +33,7 @@ const COLORS = {
   failed: 'error',
   undefined: 'grey',
   finished: 'success',
-  running: 'blue lighten-3'
+  running: 'accent'
 }
 const ICONS = {
   queued: 'mdi-progress-clock',
@@ -44,11 +57,3 @@ const statusIcon = computed(() => get(ICONS, status.value))
 const statusColor = computed(() => get(COLORS, status.value))
 const statusValue = computed(() => get(TEXTS, status.value))
 </script>
-<style>
-.askaanna-chip-status {
-  width: 110px;
-}
-.askaanna-chip-status.v-chip:before {
-  background-color: initial;
-}
-</style>

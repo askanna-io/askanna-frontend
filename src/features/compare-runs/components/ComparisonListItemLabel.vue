@@ -1,7 +1,21 @@
 <template>
-  <VChipGroup active-class="primary--text" column>
-    <AskAnnaChip v-for="label in value.labels" :key="label.name" small pill>
-      <MetricValue :metricRow="label" isShowName isLabels isLabel :preview="false" />
+  <VChipGroup
+    column
+    selected-class="text-primary"
+  >
+    <AskAnnaChip
+      v-for="label in value.labels"
+      pill
+      size="small"
+      :key="label.name"
+    >
+      <MetricValue
+        isLabel
+        isLabels
+        :isShowName="true"
+        :preview="false"
+        :metricRow="label"
+      />
     </AskAnnaChip>
   </VChipGroup>
 </template>

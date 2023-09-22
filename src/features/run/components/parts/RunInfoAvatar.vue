@@ -1,16 +1,21 @@
 <template>
-  <div class="d-flex align-baseline">
-    <div v-if="text" class="text-body-1">
-      <span class="font-weight-bold">{{ text }}:&nbsp;</span>
+  <div class="flex align-baseline items-center">
+    <div v-if="text">
+      <span class="font-bold">{{ text }}:&nbsp;</span>
     </div>
-    <span @click="handleOpenPeoplePopUp" class="primary--text ask-anna-link"> {{ value.name }}</span>
+    <span
+      @click="handleOpenPeoplePopUp"
+      class="text-primary  cursor-pointer"
+    > {{ value.name }}</span>
     <PeoplePopup
       simple
       :people="value"
       :value="peoplePopup"
       :currentUser="currentUser"
+      :workspaceId="workspace.suuid"
       :workspaceName="workspace.name"
-      @handleValue="handleValue" />
+      @handleValue="handleValue"
+    />
   </div>
 </template>
 <script setup lang="ts">

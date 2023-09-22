@@ -1,52 +1,16 @@
 <template>
-  <div>
-    <AskAnnaTooltip v-if="isSliced" top content-class="opacity-1">
-      <template v-slot:activator="{ on, value: show }">
-        <div v-on="on">
-          <span>{{ valueSliced }}</span>
-
-          <AskAnnaTooltip right content-class="opacity-1">
-            <template v-slot:activator="{ on }">
-              <AskAnnaCopyText
-                v-on="on"
-                v-show="show"
-                icon
-                :text="value"
-                :showText="false"
-                :iconColor="'grey lighten-2'"
-                :buttonType="{ text: true }"
-                :styleClasses="'px-0 white font-weight-regular text--regular body-1'"
-              />
-            </template>
-            <span>Copy</span>
-          </AskAnnaTooltip>
-        </div>
-      </template>
-      <div>{{ value }}</div>
+  <div class="group">
+    {{ valueSliced }}
+    <AskAnnaTooltip v-if="isSliced">
+      {{ value }}
     </AskAnnaTooltip>
-
-    <div v-else>
-      <VHover v-slot="{ hover }" open-delay="200">
-        <div>
-          {{ valueSliced }}
-          <AskAnnaTooltip right content-class="opacity-1">
-            <template v-slot:activator="{ on }">
-              <AskAnnaCopyText
-                v-on="on"
-                v-show="hover"
-                icon
-                :text="value"
-                :showText="false"
-                :iconColor="'grey lighten-2'"
-                :buttonType="{ text: true }"
-                :styleClasses="'px-0 white font-weight-regular text--regular body-1'"
-              />
-            </template>
-            <span>Copy</span>
-          </AskAnnaTooltip>
-        </div>
-      </VHover>
-    </div>
+    <AskAnnaCopyText
+      icon
+      :text="value"
+      :showText="false"
+      :buttonType="{ text: true }"
+      :class="'invisible group-hover:visible px-0 '"
+    />
   </div>
 </template>
 <script setup lang="ts">

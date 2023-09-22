@@ -1,95 +1,86 @@
 <template>
-  <VDialog
+  <AskAnnaDialog
     v-model="variablesStore.variablePopup"
-    max-width="500px"
     persistent
-    @click:outside="handleClose"
-    @keydown.esc="handleClose"
+    max-width="500px"
+    @onClose="handleClose"
   >
-    <AskAnnaCard min-width="310px" max-width="500px">
-      <VAppBar dense color="white" flat>
-        <span class="title font-weight-light">{{ formTitle }}</span>
-        <AskAnnaSpacer />
+    <template v-slot:title>
+      <p
+        v-if="isEdit"
+        class="whitespace-pre-wrap sm:truncate"
+      >
+        Edit <span class="text-primary">{{ variableName }}</span>
+      </p>
+      <p
+        v-else
+        class="whitespace-pre-wrap sm:truncate"
+      >
+        Add a variable
+      </p>
+    </template>
 
-        <AskAnnaButton icon @click="handleClose">
-          <AskAnnaIcon>mdi-close</AskAnnaIcon>
-        </AskAnnaButton>
-      </VAppBar>
-      <AskAnnaCardText class="pa-0">
-        <VForm ref="variableFormRef" v-model="isFormValid" @submit="handleSave">
-          <AskAnnaContainer class="pb-0 pt-0">
-            <AskAnnaRow>
-              <AskAnnaCol cols="12" sm="12" md="12" class="pb-0">
-                <AskAnnaTextField
-                  id="edited-item-name"
-                  dense
-                  small
-                  outlined
-                  autofocus
-                  label="Name"
-                  validate-on-blur
-                  :value="variable.name"
-                  :error-messages="errorData.error.name"
-                  :rules="[
-                    RULE.required('The name is required'),
-                    RULE.max('The maximum length of the variable name is 128 characters', 128)
-                  ]"
-                  @input="handleSetName({ path: 'name', value: $event })"
-                />
-              </AskAnnaCol>
-            </AskAnnaRow>
-            <AskAnnaRow>
-              <AskAnnaCol cols="12" sm="12" md="12" class="pb-0">
-                <v-textarea
-                  outlined
-                  no-resize
-                  label="Value"
-                  name="input-7-4"
-                  validate-on-blur
-                  :value="variable.value"
-                  :error-messages="errorData.error.value"
-                  :rules="[
-                    RULE.required('The value is required'),
-                    RULE.max('The maximum length of the variable value is 10,000 characters', 10000)
-                  ]"
-                  @input="handleSetVariable({ path: 'value', value: $event })"
-                />
-              </AskAnnaCol>
-            </AskAnnaRow>
-            <AskAnnaRow>
-              <AskAnnaCol class="pt-0" cols="2">
-                <AskAnnaCheckbox
-                  v-model="maskedModel"
-                  hide-details
-                  label="Masked"
-                  class="mt-0 pt-0"
-                  :disabled="isEdit && variable.is_masked && state.isSaved"
-                />
-              </AskAnnaCol>
-            </AskAnnaRow>
-          </AskAnnaContainer>
-        </VForm>
-      </AskAnnaCardText>
-
-      <AskAnnaCardActions class="pl-3 pr-2">
-        <AskAnnaButton @click="handleClose" small outlined text color="secondary" class="mr-1 btn--hover">
-          Cancel
-        </AskAnnaButton>
-        <AskAnnaButton v-if="isEdit" small outlined text color="error" class="mr-1 btn--hover" @click="deleteItem">
-          Delete
-        </AskAnnaButton>
-        <AskAnnaButton text small outlined color="secondary" class="mr-1 btn--hover" @click="handleSave">
-          Save
-        </AskAnnaButton>
-      </AskAnnaCardActions>
-    </AskAnnaCard>
-    <variable-confirm-delete-popup
-      :value="state.dialogDelete"
-      :variableName="variable.name"
-      @onDelete="handleConfirmDeleteItem"
-      @onCloseDeletePopup="handleCloseDelete"
-    />
-  </VDialog>
+    <template v-slot:body>
+      <VForm
+        ref="variableFormRef"
+        v-model="isFormValid"
+        @submit="handleSave"
+      >
+        <div class="pb-3">
+          <AskAnnaTextField
+            autofocus
+            label="Name"
+            validate-on="blur"
+            :model-value="variable.name"
+            :error-messages="errorData.error.name"
+            :rules="[
+              RULE.required('The name is required'),
+              RULE.max('The maximum length of the variable name is 128 characters', 128)
+            ]"
+            @update:modelValue="handleSetName({ path: 'name', value: $event })"
+          />
+        </div>
+        <div>
+          <AskAnnaTextArea
+            no-resize
+            label="Value"
+            validate-on="blur"
+            :model-value="variable.value"
+            :error-messages="errorData.error.value"
+            :rules="[
+              RULE.required('The value is required'),
+              RULE.max('The maximum length of the variable value is 10,000 characters', 10000)
+            ]"
+            @update:modelValue="handleSetVariable({ path: 'value', value: $event })"
+          />
+        </div>
+        <div>
+          <AskAnnaCheckbox
+            v-model="maskedModel"
+            hide-details
+            label="Masked"
+            class="mt-0 pt-0"
+            :disabled="isEdit && variable.is_masked && state.isSaved"
+          />
+        </div>
+      </VForm>
+    </template>
+    <template v-slot:actions>
+      <AskAnnaButton @click="handleSave"> {{ isEdit ? 'Save my changes' : 'Create variable' }} </AskAnnaButton>
+      <AskAnnaButton
+        v-if="isEdit"
+        color="error"
+        @click="deleteItem"
+      > Delete variable </AskAnnaButton>
+      <AskAnnaButton @click="handleClose">Cancel </AskAnnaButton>
+    </template>
+  </AskAnnaDialog>
+  <VariablePopupConfirmDelete
+    :value="state.dialogDelete"
+    :variableName="variableName"
+    @onClose="handleCloseDelete"
+    @onDelete="handleConfirmDeleteItem"
+  />
 </template>
 <script setup lang="ts">
 const props = defineProps({
@@ -114,6 +105,7 @@ const resetValidation = () => variableFormRef.value.resetValidation()
 const { setVariable, resetVariable, createVariable, updateVariable, deleteVariable } = variablesStore
 
 const variable = computed(() => variablesStore.variable)
+const variableName = computed(() => variablesStore.variableName)
 
 const state = reactive({
   dialog: false,
@@ -123,7 +115,6 @@ const state = reactive({
 })
 
 const isEdit = computed(() => Boolean(variable.value.suuid))
-const formTitle = computed(() => (variable.value.suuid ? 'Edit a variable' : 'Add a variable'))
 const maskedModel = computed({
   get: () => variable.value.is_masked,
   set: value => {
