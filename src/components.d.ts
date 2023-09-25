@@ -34,8 +34,6 @@ declare module 'vue' {
     AskAnnaDescription: typeof import('./components/description/AskAnnaDescription.vue')['default']
     AskAnnaDialog: typeof import('./components/AskAnna/AskAnnaDialog.vue')['default']
     AskAnnaDivider: typeof import('./components/AskAnna/AskAnnaDivider.vue')['default']
-    AskAnnaExample: typeof import('./features/style-guide/components/AskAnnaExample.vue')['default']
-    AskAnnaExampleMissing: typeof import('./features/style-guide/components/AskAnnaExampleMissing.vue')['default']
     AskAnnaExpansionPanels: typeof import('./components/AskAnna/AskAnnaExpansionPanels.vue')['default']
     AskAnnaForbiddenPage: typeof import('./components/AskAnnaForbiddenPage.vue')['default']
     AskAnnaIcon: typeof import('./components/AskAnna/AskAnnaIcon.vue')['default']

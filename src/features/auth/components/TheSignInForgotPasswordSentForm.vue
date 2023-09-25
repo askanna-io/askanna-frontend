@@ -63,7 +63,7 @@ const isSent = ref(false)
 const isFormValid = ref(true)
 const forgotPasswordSentFormRef = ref()
 
-let error = reactive({ email: '', email: '' })
+let error = reactive({ email: '' })
 
 const forgotPasswordSentForm = computed(() => forgotPasswordSentFormRef.value as VForm)
 
