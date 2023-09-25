@@ -19,9 +19,6 @@ const layouts = {
   ),
   TheLoginLayout: defineAsyncComponent(() =>
     import('./TheLoginLayout.vue')
-  ),
-  TheStyleGuideLayout: defineAsyncComponent(() =>
-    import('./TheStyleGuideLayout.vue')
   )
 }
 const layout = shallowRef()

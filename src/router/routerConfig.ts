@@ -14,9 +14,6 @@ const routerConfig: RouterConfig = {
   ['forgot-password']: {
     layout: 'login'
   },
-  StyleGuideIndex: {
-    layout: 'style-guide'
-  }
 }
 
 interface RouterConfig {

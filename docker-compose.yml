@@ -9,7 +9,7 @@ services:
       - -c
       - |
         npm install
-        npx cross-env DEBUG=unplugin-vue-components:* vite --host
+        npm run dev-with-host
     volumes:
       - .:/app
     ports:
