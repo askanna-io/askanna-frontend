@@ -1,5 +1,5 @@
 <template>
-    <td class="p-0 bg-transparent h-10">
+    <td class="p-0 bg-transparent h-10 border-b border-third">
         <RouterLink
             v-if="to"
             :to="to || {}"
