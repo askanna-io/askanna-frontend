@@ -60,7 +60,9 @@ const vuetify = createVuetify({
       class: '[&>label]:opacity-100 opacity-100',
     },
     AskAnnaBtnToggle: {
+      divided: true,
       mandatory: true,
+      color: "primary",
       variant: "outlined",
       class: 'border-main',
     },

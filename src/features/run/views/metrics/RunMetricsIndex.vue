@@ -8,13 +8,7 @@
       <div class="cut-text flex items-center"></div>
       <div class="mr-auto flex items-center"></div>
       <div class="flex gap-2">
-        <AskAnnaButton
-          v-if="!$vuetify.display.xs"
-          @click="handleScrollToTop()"
-          prependIcon="mdi-arrow-up-bold"
-        >
-          Scroll to top
-        </AskAnnaButton>
+        <AskAnnaButtonScrollToTop />
         <AskAnnaButton
           v-if="isChartView"
           prependIcon="mdi-download"
@@ -42,9 +36,7 @@
       </div>
 
       <AskAnnaBtnToggle
-        divided
         class="h-7 mr-2"
-        color="primary"
         :model-value="currentViewIndex"
       >
         <AskAnnaButtonIcon
@@ -105,14 +97,6 @@ const handleDownload = async () => {
   if (!metricStore.metricFullData) await metricStore.getMetricFullData({ suuid })
 
   forceFileDownload.trigger({ source: metricStore.metricFullData, name: `run_${suuid}_metrics.json` })
-}
-
-const handleScrollToTop = () => {
-  window.scrollTo({
-    top: 0,
-    left: 0,
-    behavior: "smooth"
-  })
 }
 
 const handleChangeView = async (index: number) => {

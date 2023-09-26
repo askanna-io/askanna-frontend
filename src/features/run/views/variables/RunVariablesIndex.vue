@@ -9,13 +9,7 @@
       <div class="mr-auto flex items-center"></div>
 
       <div class="flex gap-2">
-        <AskAnnaButton
-          v-if="!$vuetify.display.xs"
-          @click="handleScrollToTop()"
-          prependIcon="mdi-arrow-up-bold"
-        >
-          Scroll to top
-        </AskAnnaButton>
+        <AskAnnaButtonScrollToTop />
         <AskAnnaButton
           v-if="!$vuetify.display.xs"
           :disabled="disabledTools"
@@ -34,9 +28,6 @@
       </div>
 
       <AskAnnaBtnToggle
-        divided
-        mandatory
-        color="primary"
         class="h-7 mr-2"
         :model-value="currentViewIndex"
       >
@@ -93,14 +84,6 @@ const handleDownload = async () => {
   if (!variablesFullData.value) await runVariablesStore.getVariablesFullData({ suuid })
 
   forceFileDownload.trigger({ source: variablesFullData.value, name: `run_${suuid}_variables.json` })
-}
-
-const handleScrollToTop = () => {
-  window.scrollTo({
-    top: 0,
-    left: 0,
-    behavior: "smooth"
-  })
 }
 
 const handleChangeView = (index: number) => {

@@ -11,6 +11,7 @@
         </div>
       </div>
       <div>
+        <AskAnnaButtonScrollToTop class="mr-1" />
         <AskAnnaBtnToggle
           v-if="fileStore.isRenderedExt || fileStore.isValidJSON"
           class="mr-1 h-7"
@@ -30,14 +31,7 @@
             </AskAnnaTooltip>
           </AskAnnaButtonIcon>
         </AskAnnaBtnToggle>
-        <AskAnnaButton
-          v-if="!$vuetify.display.xs"
-          class="mr-2"
-          @click="handleScrollToTop()"
-          prependIcon="mdi-arrow-up-bold"
-        >
-          Scroll to top
-        </AskAnnaButton>
+
         <AskAnnaButton
           v-if="!$vuetify.display.xs"
           class="mr-1"
@@ -156,14 +150,6 @@ const handleBack = () => {
 const handleCopy = () => emit('onCopy', currentView.value.value)
 
 const handleDownload = () => emit('onDownload')
-
-const handleScrollToTop = () => {
-  window.scrollTo({
-    top: 0,
-    left: 0,
-    behavior: "smooth"
-  })
-}
 
 const handleChangeView = (currentViewIndex: number) => (currentView.value = views[currentViewIndex])
 </script>

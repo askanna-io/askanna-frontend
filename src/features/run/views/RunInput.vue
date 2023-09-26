@@ -10,12 +10,9 @@
         :class="{ 'pr-1': $vuetify.display.xs }"
       >Payload</div>
 
-      <VBtnToggle
+      <AskAnnaButtonScrollToTop class="mr-2" />
+      <AskAnnaBtnToggle
         v-if="fileStore.isRenderedExt || fileStore.isValidJSON"
-        divided
-        mandatory
-        color="primary"
-        variant="outlined"
         class="mr-2 h-7 cursor-pointer"
         :model-value="currentViewIndex"
       >
@@ -23,6 +20,7 @@
           v-for="(view, index) in views"
           :tag="'a'"
           :key="index"
+          class="border-main"
           @click="handleChangeView(index)"
         >
           <AskAnnaIcon :icon="view.icon" />
@@ -30,15 +28,7 @@
             {{ view.name }}
           </AskAnnaTooltip>
         </AskAnnaButtonIcon>
-      </VBtnToggle>
-      <AskAnnaButton
-        v-if="!$vuetify.display.xs"
-        class="mr-2"
-        @click="handleScrollToTop()"
-        prependIcon="mdi-arrow-up-bold"
-      >
-        Scroll to top
-      </AskAnnaButton>
+      </AskAnnaBtnToggle>
       <div class="flex gap-2">
         <AskAnnaButton
           v-if="!$vuetify.display.xs"

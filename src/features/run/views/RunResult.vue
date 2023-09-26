@@ -14,10 +14,10 @@
       </div>
       <div class="mr-auto flex items-center"></div>
 
+      <AskAnnaButtonScrollToTop class="mr-2" />
+
       <AskAnnaBtnToggle
         v-if="fileStore.isRenderedExt || fileStore.isValidJSON"
-        divided
-        color="primary"
         class="h-7 mr-2 cursor-pointer"
         :model-value="currentViewIndex"
       >
@@ -34,14 +34,6 @@
           </AskAnnaTooltip>
         </AskAnnaButtonIcon>
       </AskAnnaBtnToggle>
-      <AskAnnaButton
-        v-if="!$vuetify.display.xs"
-        class="mr-2"
-        @click="handleScrollToTop()"
-        prependIcon="mdi-arrow-up-bold"
-      >
-        Scroll to top
-      </AskAnnaButton>
       <div class="flex gap-2">
         <AskAnnaButton
           v-if="!$vuetify.display.xs"
@@ -147,14 +139,6 @@ const handleDownload = async () => {
   forceFileDownload.trigger({
     source: fileStore.rawFile,
     name: `run_${runStore.run.suuid}_result_${runStore.run.result.name}`
-  })
-}
-
-const handleScrollToTop = () => {
-  window.scrollTo({
-    top: 0,
-    left: 0,
-    behavior: "smooth"
   })
 }
 
