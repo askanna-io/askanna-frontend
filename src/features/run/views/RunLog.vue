@@ -12,12 +12,8 @@
       />
       <div class="mr-auto flex items-center"></div>
       <div class="flex gap-2 items-center">
-        <AskAnnaButton
-          @click="handleScrollToTop()"
-          prependIcon="mdi-arrow-up-bold"
-        >
-          Scroll to top
-        </AskAnnaButton>
+        <AskAnnaButtonScrollToTop />
+
         <AskAnnaButton
           @click="handleDownload()"
           prependIcon="mdi-download"
@@ -174,13 +170,6 @@ const checkLogs = () => {
       isAutoUpdateLog.value = false
     }
   }, 5000)
-}
-const handleScrollToTop = () => {
-  window.scrollTo({
-    top: 0,
-    left: 0,
-    behavior: "smooth"
-  })
 }
 
 const fetchData = async () => {

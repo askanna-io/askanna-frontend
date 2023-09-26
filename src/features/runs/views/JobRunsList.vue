@@ -20,11 +20,7 @@
             </AskAnnaTooltip>
           </AskAnnaButtonIcon>
 
-          <VBtnToggle
-            divided
-            mandatory
-            color="primary"
-            variant="outlined"
+          <AskAnnaBtnToggle
             class="p-2 h-11 cursor-pointer"
             :model-value="currentViewIndex"
           >
@@ -32,6 +28,7 @@
               v-for="(view, index) in views"
               :tag="'a'"
               :key="index"
+              class="border-main"
               :to="{ name: `workspace-project-jobs-job-runs-${view.value}`, params: route.params }"
             >
               <AskAnnaIcon :icon="view.icon" />
@@ -39,7 +36,7 @@
                 {{ view.name }}
               </AskAnnaTooltip>
             </AskAnnaButtonIcon>
-          </VBtnToggle>
+          </AskAnnaBtnToggle>
         </div>
       </div>
     </AskAnnaToolbar>
