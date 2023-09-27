@@ -23,10 +23,11 @@
                             v-if="!isExactActive"
                             :href="href"
                             @click="navigate"
+                            :title="item.title"
                             :class="{ 'text-primary': !item.disabled, 'text-main': item.disabled }"
                             class="inline-flex whitespace-nowrap no-underline text-sm font-normal hover:underline"
                         >
-                            {{ item.title }}
+                            {{ slicedText(item.title, 47) }}
                             <AskAnnaTooltip v-if="item.showTooltip">
                                 <span v-html="item.tooltip" />
                             </AskAnnaTooltip>
@@ -35,7 +36,7 @@
                             v-else
                             class="inline-flex whitespace-nowrap no-underline text-sm font-normal text-main cursor-default"
                         >
-                            {{ item.title }}
+                            {{ slicedText(item.title, 47) }}
                         </span>
                     </RouterLink>
 
@@ -74,4 +75,7 @@ withDefaults(defineProps<Props>(), {
     listClass: 'pt-2',
     contentClass: 'pl-4 sm:pl-6',
 })
+
+const slicedText = useSlicedText()
+
 </script>
