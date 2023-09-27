@@ -378,6 +378,9 @@
     "workspaces": true,
     "toValue": true,
     "WritableComputedRef": true,
-    "useAskAnnaConsts": true
+    "useAskAnnaConsts": true,
+    "ExtractDefaultPropTypes": true,
+    "ExtractPropTypes": true,
+    "ExtractPublicPropTypes": true
   }
 }

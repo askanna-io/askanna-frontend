@@ -6,12 +6,11 @@ import type { Plugin } from 'vite'
 import Vue from '@vitejs/plugin-vue'
 import Vuetify from 'vite-plugin-vuetify'
 import { VitePWA } from 'vite-plugin-pwa'
-import { defineConfig, loadEnv } from 'vite'
-import Markdown from 'vite-plugin-vue-markdown'
 import HtmlPlugin from 'vite-plugin-html-config'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { VuetifyResolver } from 'unplugin-vue-components/resolvers'
+import { loadEnv, defineConfig, splitVendorChunkPlugin } from 'vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 function CreateAskAnnaConfig() {
@@ -84,6 +83,7 @@ export default ({ mode }) => {
       }
     },
     plugins: [
+      splitVendorChunkPlugin(),
       HtmlPlugin({
         metas: [
           {
@@ -102,7 +102,6 @@ export default ({ mode }) => {
       Vue({
         include: [/\.vue$/, /\.md$/],
       }),
-      Markdown({ wrapperClasses: '' }),
       Vuetify({ autoImport: true }),
       AutoImport({
         vueTemplate: true,
@@ -169,11 +168,6 @@ export default ({ mode }) => {
     build: {
       commonjsOptions: {
         esmExternals: true,
-      },
-      rollupOptions: {
-        output: {
-          inlineDynamicImports: true,
-        },
       },
       sourcemap: true
     }
