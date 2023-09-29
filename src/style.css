@@ -20,7 +20,6 @@
   textarea,
   select {
     border: none;
-    padding: 0;
   }
 
   [type='text']:focus,
