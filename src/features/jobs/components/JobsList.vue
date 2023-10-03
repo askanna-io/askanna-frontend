@@ -12,25 +12,25 @@
     v-model:items-per-page="options.itemsPerPage"
     @update:options="loadItems"
   >
-    <template v-slot:item="{ item }">
+    <template v-slot:item="{ internalItem }">
       <tr class="pointer hover:bg-third askanna-table--row">
-        <AskAnnaTableItem :to="routeLinkParams(item.raw)">
+        <AskAnnaTableItem :to="routeLinkParams(internalItem.raw)">
           <AskAnnaTableItemTextWithCopy
             :maxLength="maxLength"
-            :value="item.raw?.name"
+            :value="internalItem.raw?.name"
             copyTitle="Copy job name"
           />
         </AskAnnaTableItem>
 
         <AskAnnaTableItem
           v-if="!$vuetify.display.xs"
-          :to="routeLinkParams(item.raw)"
+          :to="routeLinkParams(internalItem.raw)"
         >
-          {{ item.raw.runs.count }}
+          {{ internalItem.raw.runs.count }}
         </AskAnnaTableItem>
 
-        <AskAnnaTableItem :to="routeLinkRunParams(item.raw)">
-          <AskAnnaAlertStatus :statusData="item.raw.runs.status" />
+        <AskAnnaTableItem :to="routeLinkRunParams(internalItem.raw)">
+          <AskAnnaAlertStatus :statusData="internalItem.raw.runs.status" />
         </AskAnnaTableItem>
       </tr>
     </template>

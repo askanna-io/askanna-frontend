@@ -16,21 +16,21 @@
       <slot name="header" />
     </template>
 
-    <template v-slot:item="{ item }">
+    <template v-slot:item="{ internalItem }">
       <tr class="pointer askanna-table--row hover:bg-third">
         <AskAnnaTableItem>
           <AskAnnaTableItemTextWithCopy
             prefix="#"
             suffix=""
             :maxLength="4"
-            :value="item.raw.suuid"
+            :value="internalItem.raw.suuid"
             copyTitle="Copy variable SUUID"
           />
         </AskAnnaTableItem>
         <AskAnnaTableItem>
           <AskAnnaTableItemTextWithCopy
             :maxLength="maxLength"
-            :value="item.raw.name"
+            :value="internalItem.raw.name"
             copyTitle="Copy variable name"
           />
         </AskAnnaTableItem>
@@ -39,8 +39,8 @@
             expanded
             smartSlice
             :width="35"
-            :text="item.raw.value"
-            :masked="item.raw.is_masked"
+            :text="internalItem.raw.value"
+            :masked="internalItem.raw.is_masked"
             copyTitle="Copy variable value"
           />
         </AskAnnaTableItem>
@@ -49,7 +49,7 @@
             v-if="variableEdit"
             class="my-2"
             prependIcon="mdi-pencil"
-            @click="handleEditItem(item.raw)"
+            @click="handleEditItem(internalItem.raw)"
           >
             Edit
           </AskAnnaButton>

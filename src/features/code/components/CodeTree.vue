@@ -11,31 +11,31 @@
     :hide-default-header="!items.length"
     :headers="getHeaders($vuetify.display.xs)"
   >
-    <template v-slot:item="{ item }">
+    <template v-slot:item="{ internalItem }">
       <tr class="pointer hover:bg-third">
-        <AskAnnaTableItem :to="getRoutePath(item.raw)">
+        <AskAnnaTableItem :to="getRoutePath(internalItem.raw)">
           <AskAnnaIcon
-            v-if="item.raw.type === 'directory'"
+            v-if="internalItem.raw.type === 'directory'"
             icon="mdi-folder"
             color="secondary"
           />
           <AskAnnaIcon
             v-else
             color="secondary"
-            :icon="getIcons(item.raw.ext)"
+            :icon="getIcons(internalItem.raw.ext)"
           />
         </AskAnnaTableItem>
-        <AskAnnaTableItem :to="getRoutePath(item.raw)">
-          {{ item.raw.name }}
+        <AskAnnaTableItem :to="getRoutePath(internalItem.raw)">
+          {{ internalItem.raw.name }}
         </AskAnnaTableItem>
         <AskAnnaTableItem
           v-if="!$vuetify.display.xs"
-          :to="getRoutePath(item.raw)"
+          :to="getRoutePath(internalItem.raw)"
         >
-          {{ sizeHumanize.humanizeSize(item.raw.size) }}
+          {{ sizeHumanize.humanizeSize(internalItem.raw.size) }}
         </AskAnnaTableItem>
-        <AskAnnaTableItem :to="getRoutePath(item.raw)">
-          {{ item.raw.last_modified ? getUpdateDate($vuetify.display.xs, item.raw.last_modified) : '' }}
+        <AskAnnaTableItem :to="getRoutePath(internalItem.raw)">
+          {{ internalItem.raw.last_modified ? getUpdateDate($vuetify.display.xs, internalItem.raw.last_modified) : '' }}
         </AskAnnaTableItem>
       </tr>
     </template>

@@ -15,17 +15,17 @@
       :items="packageStore.projectPackages.results"
       @update:options="loadItems"
     >
-      <template v-slot:item="{ item }">
+      <template v-slot:item="{ internalItem }">
         <tr class="pointer hover:bg-third askanna-table--row">
           <AskAnnaTableItem :to="{
             name: 'workspace-project-code-package-folder',
-            params: { workspaceId: route.params.workspaceId, projectId: route.params.projectId, packageId: item.raw.suuid }
+            params: { workspaceId: route.params.workspaceId, projectId: route.params.projectId, packageId: internalItem.raw.suuid }
           }">
             <AskAnnaTableItemTextWithCopy
               prefix="#"
               suffix=""
               :maxLength="4"
-              :value="item.raw.suuid"
+              :value="internalItem.raw.suuid"
               copyTitle="Copy SUUID"
             />
           </AskAnnaTableItem>
@@ -34,37 +34,38 @@
             linkClass="pl-4 pr-8"
             :to="{
               name: 'workspace-project-code-package',
-              params: { workspaceId: route.params.workspaceId, projectId: route.params.projectId, packageId: item.raw.suuid }
+              params: { workspaceId: route.params.workspaceId, projectId: route.params.projectId, packageId: internalItem.raw.suuid }
             }"
           >
-            <span class="whitespace-nowrap">{{ dayjs(item.raw.created_at).format(' Do MMMM YYYY, h:mm:ss a') }}</span>
+            <span class="whitespace-nowrap">{{ dayjs(internalItem.raw.created_at).format(' Do MMMM YYYY, h:mm:ss a')
+            }}</span>
           </AskAnnaTableItem>
 
           <AskAnnaTableItem :to="{
-            name: 'workspace-project-code-package',
-            params: { workspaceId: route.params.workspaceId, projectId: route.params.projectId, packageId: item.raw.suuid }
-          }">
+              name: 'workspace-project-code-package',
+              params: { workspaceId: route.params.workspaceId, projectId: route.params.projectId, packageId: internalItem.raw.suuid }
+            }">
             <AskAnnaTableItemTextWithCopy
               :copyBtn="false"
               copyTitle="Copy"
               :maxLength="maxLength"
-              :value="item.raw.created_by?.name"
+              :value="internalItem.raw.created_by?.name"
             />
           </AskAnnaTableItem>
 
           <AskAnnaTableItem :to="{
             name: 'workspace-project-code-package',
-            params: { workspaceId: route.params.workspaceId, projectId: route.params.projectId, packageId: item.raw.suuid }
+            params: { workspaceId: route.params.workspaceId, projectId: route.params.projectId, packageId: internalItem.raw.suuid }
           }">
             <AskAnnaTableItemTextWithCopy
               :copyBtn="false"
               :maxLength="maxLength"
-              :value="item.raw.description"
+              :value="internalItem.raw.description"
             />
           </AskAnnaTableItem>
 
           <AskAnnaTableItem v-if="!$vuetify.display.xs">
-            <AskAnnaButton @click.stop="handleDownload(item.raw)">
+            <AskAnnaButton @click.stop="handleDownload(internalItem.raw)">
               <AskAnnaIcon
                 :left="$vuetify.display.name !== 'sm'"
                 icon="mdi-download"
