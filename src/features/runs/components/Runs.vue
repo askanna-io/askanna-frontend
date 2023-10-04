@@ -22,67 +22,69 @@
         <AskAnnaRunFilterBar />
       </div>
     </template>
-    <template v-slot:item="{ item }">
+    <template v-slot:item="{ internalItem }">
       <tr class="pointer hover:bg-third">
-        <AskAnnaTableItem :to="routeLinkParams({ item: item.raw })">
+        <AskAnnaTableItem :to="routeLinkParams({ item: internalItem.raw })">
           <AskAnnaTableItemTextWithCopy
             prefix="#"
             suffix=""
             :maxLength="4"
-            :value="item.raw.suuid"
+            :value="internalItem.raw.suuid"
             copyTitle="Copy run SUUID"
           />
         </AskAnnaTableItem>
 
         <AskAnnaTableItem
           v-if="isProjectRuns"
-          :to="routeLinkParams({ item: item.raw, name: 'workspace-project-job-overiew' })"
+          :to="routeLinkParams({ item: internalItem.raw, name: 'workspace-project-job-overiew' })"
         >
           <AskAnnaTableItemTextWithCopy
             :maxLength="maxLength"
-            :value="item.raw.job.name"
+            :value="internalItem.raw.job.name"
             copyTitle="Copy job name"
           />
         </AskAnnaTableItem>
 
-        <AskAnnaTableItem :to="routeLinkParams({ item: item.raw })">
+        <AskAnnaTableItem :to="routeLinkParams({ item: internalItem.raw })">
           <AskAnnaTableItemTextWithCopy
-            v-if="item.raw.name"
-            :value="item.raw.name"
+            v-if="internalItem.raw.name"
+            :value="internalItem.raw.name"
             :maxLength="maxLength"
             copyTitle="Copy run name"
           />
         </AskAnnaTableItem>
 
-        <AskAnnaTableItem :to="routeLinkParams({ item: item.raw })">
+        <AskAnnaTableItem :to="routeLinkParams({ item: internalItem.raw })">
           <AskAnnaChipStatus
             link
-            :status="item.raw.status"
+            :status="internalItem.raw.status"
           />
         </AskAnnaTableItem>
 
-        <AskAnnaTableItem :to="routeLinkParams({ item: item.raw })">
+        <AskAnnaTableItem :to="routeLinkParams({ item: internalItem.raw })">
           <div class="flex flex-col">
-            <div><b>Started:</b>{{ dayjs(item.raw.created_at).format(' Do MMMM YYYY, h:mm:ss a') }}</div>
-            <div><b>Duration:</b>{{ calculateDuration(item.raw) }}<br /></div>
+            <div><b>Started:</b>{{ dayjs(internalItem.raw.created_at).format(' Do MMMM YYYY, h:mm:ss a') }}</div>
+            <div><b>Duration:</b>{{ calculateDuration(internalItem.raw) }}<br /></div>
           </div>
         </AskAnnaTableItem>
 
-        <AskAnnaTableItem :to="routeLinkParams({ item: item.raw })">
+        <AskAnnaTableItem :to="routeLinkParams({ item: internalItem.raw })">
           <AskAnnaTableItemTextWithCopy
             :copyBtn="false"
             copyTitle="Copy"
             :maxLength="maxLength"
-            :value="item.raw.created_by?.name"
+            :value="internalItem.raw.created_by?.name"
           />
         </AskAnnaTableItem>
 
-        <AskAnnaTableItem :to="routeLinkParams({ item: item.raw, name: 'workspace-project-jobs-job-run-input' })">
-          {{ getPayloadTitle(item.raw.payload) }}
+        <AskAnnaTableItem :to="routeLinkParams({ item: internalItem.raw, name: 'workspace-project-jobs-job-run-input' })">
+          {{ getPayloadTitle(internalItem.raw.payload) }}
         </AskAnnaTableItem>
 
-        <AskAnnaTableItem :to="routeLinkParams({ item: item.raw, name: 'workspace-project-jobs-job-run-metrics' })">
-          {{ getMetricTitle(item.raw.metrics_meta.count) }}
+        <AskAnnaTableItem
+          :to="routeLinkParams({ item: internalItem.raw, name: 'workspace-project-jobs-job-run-metrics' })"
+        >
+          {{ getMetricTitle(internalItem.raw.metrics_meta.count) }}
         </AskAnnaTableItem>
       </tr>
     </template>
