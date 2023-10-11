@@ -151,14 +151,41 @@ export default ({ mode }) => {
           theme_color: '#5d3eb2',
           icons: [
             {
-              src: 'pwa-192x192.png',
+              src: 'askanna-icon-192x192.png',
               sizes: '192x192',
               type: 'image/png'
             },
             {
-              src: 'pwa-512x512.png',
+              src: 'askanna-icon-320x320.png',
+              sizes: '320x320',
+              type: 'image/png'
+            },
+            {
+              src: 'askanna-icon-512x512.png',
               sizes: '512x512',
               type: 'image/png'
+            },
+            {
+              src: 'askanna-maskable-icon-512x512.png',
+              sizes: '512x512',
+              type: 'image/png',
+              purpose: 'maskable'
+            },
+            {
+              src: 'askanna-maskable-icon-320x320.png',
+              sizes: '320x320',
+              type: 'image/png',
+              purpose: 'maskable'
+            },
+            {
+              src: 'askanna-maskable-icon-192x192.png',
+              sizes: '192x192',
+              type: 'image/png',
+              purpose: 'maskable'
+            },
+            {
+              src: "askanna-icon.svg",
+              sizes: "any"
             }
           ]
         }
