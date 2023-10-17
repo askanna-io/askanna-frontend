@@ -32,7 +32,10 @@ const initWorkspace = async workspaceId => {
   if (isValidShortUuid && isValidShortUuid[0] === workspaceId) {
     if (token) {
       await peopleStore.$reset()
-      await peopleStore.getCurrentPeople({ workspaceId })
+
+      if (!route?.name?.includes('project')) {
+        await peopleStore.getCurrentPeople({ workspaceId })
+      }
     }
 
     await workspaceStore.getWorkspace(workspaceId)

@@ -48,7 +48,8 @@ export const projectRoutes = [
         component: () => import('./views/ProjectRuns.vue'),
         meta: {
           hideAppBarIcon: true,
-          breadcrumb: 'Runs'
+          breadcrumb: 'Runs',
+          breadcrumbLevel: 2
         }
       },
       jobsRoutes,
@@ -58,7 +59,8 @@ export const projectRoutes = [
         component: () => import('./views/ProjectVariables.vue'),
         meta: {
           hideAppBarIcon: true,
-          breadcrumb: 'Variables'
+          breadcrumb: 'Variables',
+          breadcrumbLevel: 2
         }
       },
       codeRoutes,

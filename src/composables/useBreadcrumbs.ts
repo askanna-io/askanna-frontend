@@ -20,7 +20,8 @@ export default function ({ start = 0, end = undefined }) {
         let title = route.meta.breadcrumb
         Object.entries(crcRoute.params).forEach(([key, value]) => {
           path = path.replace(`:${key}`, value)
-          const name = get(generalStore.breadcrumbParams, key)
+          const keyName = key.slice(0, -2) + 'Name'
+          const name = get(generalStore.breadcrumbParams, keyName)
           title = title.replace(`:${key}`, name || value)
         })
 

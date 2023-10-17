@@ -12,7 +12,8 @@ export default function () {
 
       // replace suuid to name
       Object.entries(route.params).forEach(([key, value]) => {
-        const name = get(generalStore.breadcrumbParams, key)
+        const keyName = key.slice(0, -2) + 'Name'
+        const name = get(generalStore.breadcrumbParams, keyName)
         pageTitle = pageTitle.replace(key, name || value)
       })
 

@@ -60,7 +60,7 @@ export const useJobStore = defineStore(SERVICE_NAME, {
       this.loading = false
 
       const generalStore = useGeneralStore()
-      generalStore.setBreadcrumbParams({ jobId: job.name })
+      generalStore.setBreadcrumbParams({ jobName: job.name })
     },
 
     async updateJob(data) {
@@ -86,7 +86,7 @@ export const useJobStore = defineStore(SERVICE_NAME, {
       this.job = Object.assign({}, this.job, updatedJob)
 
       const generalStore = useGeneralStore()
-      generalStore.setBreadcrumbParams({ jobId: updatedJob.name })
+      generalStore.setBreadcrumbParams({ jobName: updatedJob.name })
 
       return true
     },

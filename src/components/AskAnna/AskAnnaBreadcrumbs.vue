@@ -72,7 +72,7 @@ interface Props {
 
 withDefaults(defineProps<Props>(), {
     items: () => [],
-    listClass: 'pt-2',
+    listClass: 'pt-2 sm:pt-0',
     contentClass: 'pl-4 sm:pl-6',
 })
 

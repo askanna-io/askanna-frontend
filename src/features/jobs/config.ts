@@ -5,7 +5,7 @@ export const jobsRoutes = {
   component: () => import('./views/ProjectJobsIndex.vue'),
   meta: {
     breadcrumb: 'Jobs',
-    hideAppBarIcon: true
+    hideAppBarIcon: true,
   },
   children: [
     {
@@ -13,7 +13,7 @@ export const jobsRoutes = {
       component: () => import('./views/ProjectJobs.vue'),
       name: 'workspace-project-jobs',
       meta: {
-        breadcrumbLevel: 3,
+        breadcrumbLevel: 2,
         hideAppBarIcon: true
       }
     },

@@ -101,6 +101,18 @@ export interface Run {
     size: number
     label_names: LabelName[]
   }
+  workspace: {
+    name: string
+    suuid: string
+  }
+  project: {
+    name: string
+    suuid: string
+  }
+  job: {
+    name: string
+    suuid: string
+  }
 }
 export interface File {
   path: string

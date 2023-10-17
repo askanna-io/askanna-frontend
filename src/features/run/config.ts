@@ -16,7 +16,8 @@ export const runRoutes = [
     redirect: { name: 'workspace-project-jobs-job-run-overview' },
     meta: {
       title: 'Run: runId',
-      breadcrumb: 'Run - :runId'
+      breadcrumb: 'Run - :runId',
+      breadcrumbLevel: 6
     },
     component: () => import('./views/RunIndex.vue'),
 

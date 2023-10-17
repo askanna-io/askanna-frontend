@@ -28,7 +28,7 @@ export const jobRoutes = [
         name: 'workspace-project-job-overiew',
         meta: {
           title: 'Overview',
-          breadcrumbLevel: 6,
+          breadcrumbLevel: 4,
           breadcrumb: 'Overview',
         }
       },
