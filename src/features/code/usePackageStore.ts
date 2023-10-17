@@ -64,7 +64,6 @@ export const usePackageStore = defineStore('package', {
         const logger = useLogger()
         const generalStore = useGeneralStore()
 
-        const name = failedRoute || 'workspace-project-code-does-not-exist'
         await generalStore.setRouteNotExist()
 
         if (loading) this.loading = false

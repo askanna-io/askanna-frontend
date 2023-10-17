@@ -4,7 +4,8 @@ export const runsRoutes = {
   path: 'runs',
   component: () => import('./views/JobRunsIndex.vue'),
   meta: {
-    breadcrumb: 'Runs'
+    breadcrumb: 'Runs',
+    breadcrumbLevel: 4
   },
   children: [
     {

@@ -35,7 +35,6 @@ const fetchData = async () => {
   const { runId } = route.params
 
   await runStore.getRun(runId)
-  await runStore.getRunStatus(runId)
   await metricStore.getMetricMeta()
 }
 

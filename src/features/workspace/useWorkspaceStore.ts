@@ -85,7 +85,7 @@ export const useWorkspaceStore = defineStore(WORKSPACE_STORE, {
 
       this.workspace = workspace
       const generalStore = useGeneralStore()
-      generalStore.setBreadcrumbParams({ workspaceId: workspace.name })
+      generalStore.setBreadcrumbParams({ workspaceName: workspace.name })
 
       const peopleStore = usePeopleStore()
       peopleStore.setCurretPeoplePermission(workspace.permission)
@@ -112,7 +112,7 @@ export const useWorkspaceStore = defineStore(WORKSPACE_STORE, {
       this.workspace = workspace
 
       const generalStore = useGeneralStore()
-      generalStore.setBreadcrumbParams({ workspaceId: workspace.name })
+      generalStore.setBreadcrumbParams({ workspaceName: workspace.name })
 
       return workspace
     },

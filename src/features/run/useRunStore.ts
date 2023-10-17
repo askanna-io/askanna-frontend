@@ -67,7 +67,12 @@ export const useRunStore = defineStore('run', {
       this.runLoading = false
 
       const generalStore = useGeneralStore()
-      generalStore.setBreadcrumbParams({ runId: this.run.name || '' })
+      generalStore.setBreadcrumbParams({
+        runName: this.run.name || '',
+        jobName: this.run.job.name || '',
+        projectName: this.run.project.name || '',
+        workspaceName: this.run.workspace.name || '',
+      })
     },
 
     async getRunStatus(runIdShortUuid: string, isNewRun: boolean = false) {
@@ -148,7 +153,7 @@ export const useRunStore = defineStore('run', {
       this.run = run
 
       const generalStore = useGeneralStore()
-      generalStore.setBreadcrumbParams({ runId: run.name })
+      generalStore.setBreadcrumbParams({ runName: run.name })
 
       return isUpdated
     },

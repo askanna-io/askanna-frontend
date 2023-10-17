@@ -33,7 +33,9 @@ export const codeRoutes = {
           component: () => import('./views/CodeSuuid.vue'),
           meta: {
             breadcrumb: 'Code - :packageId',
-            hideAppBarIcon: true
+            hideAppBarIcon: true,
+            breadcrumbLevel: 2,
+
           },
           children: [
             {
@@ -51,8 +53,9 @@ export const codeRoutes = {
               component: () => import('./views/CodeSuuid.vue'),
               name: 'workspace-project-code-package-folder',
               meta: {
+                breadcrumbLevel: 2,
+                hideAppBarIcon: true,
                 breadcrumb: ':folderName',
-                hideAppBarIcon: true
               }
             }
           ]

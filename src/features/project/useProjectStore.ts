@@ -57,7 +57,7 @@ export const useProjectStore = defineStore(PROJECT_STORE, {
       }
 
       const generalStore = useGeneralStore()
-      generalStore.setBreadcrumbParams({ projectId: project.name, workspaceId: project.workspace.name })
+      generalStore.setBreadcrumbParams({ projectName: project.name, workspaceName: project.workspace.name })
 
       this.projectLoading = false
 
@@ -154,7 +154,7 @@ export const useProjectStore = defineStore(PROJECT_STORE, {
       this.project = project
 
       const generalStore = useGeneralStore()
-      generalStore.setBreadcrumbParams({ projectId: project.name })
+      generalStore.setBreadcrumbParams({ projectName: project.name })
 
       return project
     },

@@ -3,19 +3,19 @@ import { defineStore } from 'pinia'
 export type IntervalMap = Record<string, Number>
 
 interface BreadcrumbParams {
-  jobId?: string
-  runId?: string
-  projectId?: string
-  workspaceId?: string
+  jobName?: string
+  runName?: string
+  projectName?: string
+  workspaceName?: string
 }
 
 export interface GeneralState {
   projectId: string
   breadcrumbParams: {
-    jobId: string
-    jobRunId: string
-    projectId: string
-    workspaceId: string
+    jobName: string
+    runName: string
+    projectName: string
+    workspaceName: string
   }
   interval: any,
   routeNotExist: boolean
@@ -28,10 +28,10 @@ export const useGeneralStore = defineStore(GENERAL_STORE, {
     return {
       projectId: '',
       breadcrumbParams: {
-        jobId: '',
-        runId: '',
-        projectId: '',
-        workspaceId: ''
+        jobName: '',
+        runName: '',
+        projectName: '',
+        workspaceName: ''
       },
       interval: new Map(),
       routeNotExist: false

@@ -1,5 +1,5 @@
 <template>
-  <AskAnnaBreadcrumbs :items="breadcrumbs" />
+  <AskAnnaBreadcrumbs :items="breadcrumbs.value" />
 
   <div class="px-0 sm:px-2 mb-2">
     <AskAnnaCard
@@ -49,9 +49,7 @@ const fileSource = ref('')
 
 const job = computed(() => jobStore.job)
 const routeName = computed(() => route.name)
-const routeMeta = computed(() => route.meta)
-const end = computed(() => routeMeta.value.breadcrumbLevel)
-const breadcrumbs = useBreadcrumbs({ start: 0, end: end.value })
+const breadcrumbs = computed(() => useBreadcrumbs({ start: 0, end: route.meta.breadcrumbLevel }))
 const isShowReadmeFile = computed(() => routeName.value === 'workspace-project-code')
 
 const readmeFile = computed(() =>
