@@ -5,24 +5,21 @@
       :class="styleClasses"
     >{{ text }}</span>
 
-    <AskAnnaButtonIcon
+    <AskAnnaButtonIconSquare
       v-show="show"
-      variant="text"
-      size="x-small"
+      iconSize="x-small"
+      :iconColor="iconColor"
+      icon="mdi-content-copy"
       class="invisible group-hover:visible group-focus:visible z-50"
       @click.prevent="handleCopy"
     >
-      <AskAnnaIcon
-        :color="iconColor"
-        icon="mdi-content-copy"
-      />
       <AskAnnaTooltip
         v-if="showTooltip"
         :location="tooltipLocation"
       >
         <span>{{ copyTitle }}</span>
       </AskAnnaTooltip>
-    </AskAnnaButtonIcon>
+    </AskAnnaButtonIconSquare>
   </span>
 </template>
 

@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { WORKSPACE_STORE } from './types'
 import apiService from '@/services/apiService'
+import { CreatedBy } from '@/features/run/types'
 import { apiStringify } from '@/services/api-settings'
 
 export enum WorkspaceVisibility {
@@ -13,6 +14,7 @@ export const defaultWorkspace = {
   suuid: '',
   description: '',
   is_member: false,
+  created_by: {} as CreatedBy,
   visibility: WorkspaceVisibility.PRIVATE
 }
 
@@ -34,7 +36,8 @@ export const useWorkspaceStore = defineStore(WORKSPACE_STORE, {
         suuid: '',
         description: '',
         is_member: false,
-        visibility: WorkspaceVisibility.PRIVATE
+        visibility: WorkspaceVisibility.PRIVATE,
+        created_by: {} as CreatedBy
       },
       newWorkspace: { ...defaultWorkspace }
     }

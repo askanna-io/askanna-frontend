@@ -134,17 +134,13 @@
                 </li>
             </ul>
             <div class="flex items-center flex-initial mr-1 z-10 ">
-                <button
+                <AskAnnaButtonIconSquare
                     v-if="selectedFilters.length || search"
                     @click="handleClearAll"
-                    class="rounded-full text-gray-800  p-1 text-sm font-medium hover:text-primary hover:bg-gray-100"
-                >
-                    <AskAnnaIcon
-                        icon="mdi-close"
-                        class="text-gray-400"
-                        :class="{ 'text-secondary hover:text-primary ': isOpen }"
-                    />
-                </button>
+                    icon="mdi-close"
+                    class="text-gray-400"
+                    :class="{ 'text-secondary hover:text-primary ': isOpen }"
+                />
             </div>
         </div>
         <p

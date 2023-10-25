@@ -8,8 +8,10 @@
       :isMember="isMember"
       :title="workspace.name"
       :workspaceUuid="workspace.suuid"
+      :description="workspace.description"
       :isWorkspacePublic="isWorkspacePublic"
       :isCurrentUserAdmin="isCurrentUserAdmin"
+      :createdBy="workspaceStore.workspace.created_by"
       @onOpenWorkspaceRemove="handleOpenWorkspaceRemove"
     />
   </div>

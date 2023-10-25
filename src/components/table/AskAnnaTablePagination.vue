@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-end items-center">
+  <div class="flex justify-end items-center mb-2">
     <template v-if="!autoPerPage">Rows per page:
       <VSelect
         hide-details
@@ -19,25 +19,23 @@
       class="ml-2 sm:ml-4"
     >{{ props.count }} {{ props.title }}</div>
     <div v-if="next || previous">
-      <AskAnnaButtonIcon
-        variant="text"
+      <AskAnnaButtonIconSquare
+        class="ml-2"
+        icon="mdi-chevron-left"
         :disabled="!previous || loading"
         @click.stop="handleUpdatePage(false)"
-      >
-        <AskAnnaIcon icon="mdi-chevron-left" />
-      </AskAnnaButtonIcon>
+      />
     </div>
     <div
       v-if="next || previous"
       class="v-data-footer__icons-after"
     >
-      <AskAnnaButtonIcon
-        variant="text"
+      <AskAnnaButtonIconSquare
+        class="mr-2"
+        icon="mdi-chevron-right"
         :disabled="!next || loading"
         @click.stop="handleUpdatePage(true)"
-      >
-        <AskAnnaIcon icon="mdi-chevron-right" />
-      </AskAnnaButtonIcon>
+      />
     </div>
   </div>
 </template>

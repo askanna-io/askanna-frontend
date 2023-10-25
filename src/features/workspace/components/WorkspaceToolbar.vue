@@ -38,10 +38,15 @@
       <div class="flex items-center justify-end sm:w-9/12 md:w-4/12 xl:w-4/12 text-end">
         <ProjectPopupCreate v-if="!$vuetify.display.xs" />
 
-        <AskAnnaButton
-          size="default"
-          variant="text"
+        <AskAnnaButtonIconSquare
+          @click="showInfo = !showInfo"
+          :icon="showInfo ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+        />
+
+        <AskAnnaButtonIconSquare
           @click="toggleFilter"
+          iconSize="small"
+          class="p-1"
           :icon="filterMenuStyle.icon"
           :color="filterMenuStyle.color"
           :colorIcon="filterMenuStyle.color"
@@ -129,8 +134,49 @@
       </div>
     </template>
   </AskAnnaToolbar>
+  <VExpandTransition>
+    <div v-show="showInfo">
+      <div class="flex flex-col md:flex-row items-start px-4 whitespace-nowrap">
+        <div class="md:basis-2/3 lg:basis-1/3">
+          <RunInfoCopyText
+            class="h-8"
+            title="SUUID"
+            copyTitle:="Copy SUUID"
+            :value="workspaceUuid"
+          />
+        </div>
+        <div class="md:basis-2/3 lg:basis-1/3 pr-5">
+          <RunInfoText
+            class="h-8"
+            text="Created at"
+            :value="dayjs().format('Do MMMM YYYY, h:mm:ss a')"
+          />
+        </div>
+        <div class="basis-1/3 ">
+          <RunInfoAvatar
+            class="h-8"
+            text="Created by"
+            :value="createdBy"
+          />
+        </div>
+      </div>
+      <template v-if="description !== '<p></p>'">
+        <RunInfoText
+          text="Description"
+          class="ml-4 h-8"
+        />
+        <AskAnnaDescription
+          class="ml-2 sm:ml-0"
+          readonly
+          :description="description"
+        />
+      </template>
+    </div>
+  </VExpandTransition>
 </template>
 <script setup lang="ts">
+import { CreatedBy } from '@/features/run/types'
+
 defineProps({
   isMember: {
     type: Boolean,
@@ -144,14 +190,22 @@ defineProps({
     type: String,
     default: ''
   },
+  description: {
+    type: String,
+    default: ''
+  },
   workspaceUuid: {
     type: String,
     default: ''
+  },
+  createdBy: {
+    type: Object as () => CreatedBy,
+    default: () => ({})
   }
 })
-
 const emit = defineEmits('onOpenWorkspaceRemove')
 
+const { dayjs } = useDayjs()
 const {
   search,
   sortStyle,
@@ -175,6 +229,8 @@ const {
 } = useSortFilter('Project', 'projects')
 
 const permission = useAskAnnaPermission()
+
+const showInfo = ref(false)
 
 const isSignIn = computed(() => permission.token.value)
 

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <AskAnnaCardTitle>
+    <AskAnnaCardTitle :class="{ 'pr-0': projectRunEdit }">
       <div class="flex w-full items-center justify-between">
         <span class="text-h6 group font-weight-light">Run:
           <span v-if="isEditRunView">{{ runName }} - Edit mode</span>
@@ -11,11 +11,14 @@
             :styleClasses="'px-0 white title font-weight-light'"
           />
         </span>
-        <RunInfoStatus
-          text=""
-          :value="runIdStatus"
-          class="text-h6 font-weight-light"
-        />
+        <div class="flex">
+          <RunInfoStatus
+            text=""
+            :value="runIdStatus"
+            class="text-h6 font-weight-light mr-1"
+          />
+          <RunPopupMenu v-if="!isEditRunView && projectRunEdit" />
+        </div>
       </div>
 
     </AskAnnaCardTitle>
@@ -38,7 +41,6 @@
           :isEditRunView="isEditRunView"
           :projectRunEdit="projectRunEdit"
         />
-        <RunPopupMenu v-if="!isEditRunView && projectRunEdit" />
       </div>
     </AskAnnaToolbar>
   </div>

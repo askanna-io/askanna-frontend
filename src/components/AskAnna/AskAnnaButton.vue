@@ -9,8 +9,10 @@
     <template v-if="$attrs.icon">
       <AskAnnaIcon
         :icon="$attrs.icon"
+        :size="$attrs.sizeIcon"
         :class="$attrs.classIcon"
         :color="$attrs.colorIcon || 'secondary'"
+        class="text-secondary hover:text-primary"
       />
     </template>
     <template

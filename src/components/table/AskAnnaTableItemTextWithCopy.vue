@@ -9,18 +9,17 @@
             {{ value }}
         </AskAnnaTooltip>
 
-        <AskAnnaButtonIcon
+        <AskAnnaButtonIconSquare
             v-if="!$vuetify.display.xs && copyBtn"
-            variant="text"
-            size="x-small"
-            class="invisible group-hover:visible group-focus:visible z-50"
+            icon="mdi-content-copy"
+            iconSize="x-small"
             @click.prevent="handleCopy"
+            class="invisible group-hover:visible group-focus:visible z-50"
         >
-            <AskAnnaIcon icon="mdi-content-copy" />
             <AskAnnaTooltip location="end">
                 {{ copyTitle }}
             </AskAnnaTooltip>
-        </AskAnnaButtonIcon>
+        </AskAnnaButtonIconSquare>
     </div>
 </template>
 

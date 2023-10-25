@@ -1,7 +1,17 @@
 <template>
   <div>
-    <AskAnnaCardTitle>
-      Job: {{ job.name }}<span v-if="isEditJobView"> - Edit mode</span>
+    <AskAnnaCardTitle class="pr-0">
+      <div class="flex items-center justify-between">
+        <div>
+          Job: {{ job.name }}<span v-if="isEditJobView"> - Edit mode</span>
+        </div>
+        <div class="flex">
+          <JobPopupMenu
+            v-if="projectJobEdit"
+            :job="job"
+          />
+        </div>
+      </div>
     </AskAnnaCardTitle>
     <AskAnnaDivider v-if="!$vuetify.display.xs && !isEditJobView" />
 
@@ -21,11 +31,6 @@
           :jobName="job.name"
           :projectName="project.name"
           :isEditJobView="isEditJobView"
-        />
-
-        <JobPopupMenu
-          v-if="projectJobEdit"
-          :job="job"
         />
       </div>
     </AskAnnaToolbar>

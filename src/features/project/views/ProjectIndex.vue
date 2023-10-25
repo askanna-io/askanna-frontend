@@ -12,6 +12,8 @@
         :project="projectStore.project"
         :projectVisibility="projectStore.form.visibility"
       />
+
+
       <RouterView />
 
     </AskAnnaCard>
@@ -46,6 +48,8 @@ const projectStore = useProjectStore()
 const packageStore = usePackageStore()
 
 const fileSource = ref('')
+
+
 
 const job = computed(() => jobStore.job)
 const routeName = computed(() => route.name)

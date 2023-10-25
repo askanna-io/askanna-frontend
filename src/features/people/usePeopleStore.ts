@@ -172,7 +172,7 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
           suuid: workspaceStore.workspace.suuid
         })
       } catch (e) {
-        logger.error('Error on upload package in registerPackage action.\nError: ', e)
+        logger.error('Error on sent invitation in sendInviteEmail action.\nError: ', e)
 
         return e
       }

@@ -1,3 +1,5 @@
+import { CreatedBy } from '@/features/run/types'
+
 export const enum ProjectVisibility {
   PUBLIC = 'PUBLIC',
   PRIVATE = 'PRIVATE'
@@ -13,6 +15,9 @@ interface Project {
   description: string
   package: {
     name: string
+    suuid: string
+  }
+  created_by: {
     suuid: string
   }
   visibility: ProjectVisibility
@@ -36,6 +41,7 @@ export class ProjectModel {
       name: '',
       flows: [],
       created_at: '',
+      created_by: {} as CreatedBy,
       modified_at: '',
       template: '',
       permission: {},
