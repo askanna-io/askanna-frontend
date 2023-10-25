@@ -23,6 +23,7 @@ yarn-error.log*
 
 .node-version
 .env
+.npmrc
 
 # Docker
 docker-compose.override.yml
