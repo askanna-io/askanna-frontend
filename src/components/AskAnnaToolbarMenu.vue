@@ -5,11 +5,10 @@
     :close-on-content-click="false"
   >
     <template v-slot:activator="{ props }">
-      <AskAnnaButton
-        class="mr-1"
+      <AskAnnaButtonIconSquare
         v-bind="props"
-        variant="text"
         @click.stop.prevent
+        class="sm:mr-2 mr-3"
         icon="mdi-dots-vertical"
       />
     </template>

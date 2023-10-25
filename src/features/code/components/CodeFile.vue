@@ -1,10 +1,11 @@
 <template>
   <AskAnnaToolbar class="z-10 askanna-sticky">
     <div class="flex w-full items-center justify-between ">
-      <div class="flex items-center">
-        <AskAnnaButtonIcon @click="handleBack">
-          <AskAnnaIcon icon="mdi-arrow-left" />
-        </AskAnnaButtonIcon>
+      <div class="flex items-center ml-2">
+        <AskAnnaButtonIconSquare
+          @click="handleBack"
+          icon="mdi-arrow-left"
+        />
         <div>
           {{ currentPath.name
           }}<span class="pl-3">({{ `${humanize.humanizeSize(currentPath.size)}` }}{{ metaInfo }})</span>

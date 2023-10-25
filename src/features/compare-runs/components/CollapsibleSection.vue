@@ -13,16 +13,12 @@
           {{ title }}{{ disabled ? ': ' : '' }}
         </h4>
 
-        <AskAnnaButtonIcon
+        <AskAnnaButtonIconSquare
           v-if="!readonly && !disabled"
-          size="small"
-          color="main"
-          variant="text"
+          :icon="icon"
           class="collapsible-section__icon"
           @click="handleIconClick"
-        >
-          <AskAnnaIcon :icon="icon" />
-        </AskAnnaButtonIcon>
+        />
         <div
           v-if="disabled"
           class="ml-1 collapsible-section__no-data"

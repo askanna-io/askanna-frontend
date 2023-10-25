@@ -14,6 +14,8 @@ declare module 'vue' {
     AskAnnaButton: typeof import('./components/AskAnna/AskAnnaButton.vue')['default']
     AskAnnaButtonActivator: typeof import('./components/AskAnna/AskAnnaButtonActivator.vue')['default']
     AskAnnaButtonIcon: typeof import('./components/AskAnna/AskAnnaButtonIcon.vue')['default']
+    AskAnnaButtonIcon2: typeof import('./components/AskAnna/AskAnnaButtonIcon2.vue')['default']
+    AskAnnaButtonIconSquare: typeof import('./components/AskAnna/AskAnnaButtonIconSquare.vue')['default']
     AskAnnaButtonScrollToTop: typeof import('./components/AskAnna/AskAnnaButtonScrollToTop.vue')['default']
     AskAnnaButtonText: typeof import('./components/AskAnna/AskAnnaButtonText.vue')['default']
     AskAnnaCard: typeof import('./components/AskAnna/AskAnnaCard.vue')['default']

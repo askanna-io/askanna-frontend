@@ -16,9 +16,8 @@
         <div class="flex items-center justify-between">
           <slot name="title" />
           <AskAnnaSpacer />
-          <AskAnnaIcon
+          <AskAnnaButtonIconSquare
             class="ml-4 hover:text-primary cursor"
-            size="xsmall"
             icon="mdi-close"
             @click="close"
           />

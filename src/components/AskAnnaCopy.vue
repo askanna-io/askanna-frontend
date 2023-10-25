@@ -2,27 +2,22 @@
   <div>
     <div v-if="!masked">
       <span class="text-no-wrap">{{ prefix }} {{ sliceText }}</span>
-      <AskAnnaButtonIcon
+      <AskAnnaButtonIconSquare
         v-if="(expanded && isSliced) || (expanded && isSliced && !masked)"
-        class="px-0"
-        variant="text"
-        size="small"
+        :icon="expand ? 'mdi-chevron-up' : 'mdi-chevron-down'"
         @click="expand = !expand"
-      >
-        <AskAnnaIcon :icon="expand ? 'mdi-chevron-up' : 'mdi-chevron-down'" />
-      </AskAnnaButtonIcon>
-      <AskAnnaButtonIcon
+      />
+      <AskAnnaButtonIconSquare
         v-if="text"
-        variant="text"
-        size="x-small"
+        iconSize="x-small"
+        icon="mdi-content-copy"
         class="invisible group-hover:visible group-focus:visible z-50"
         @click.prevent="handleCopyText(text)"
       >
-        <AskAnnaIcon icon="mdi-content-copy" />
         <AskAnnaTooltip location="end">
           {{ copyTitle }}
         </AskAnnaTooltip>
-      </AskAnnaButtonIcon>
+      </AskAnnaButtonIconSquare>
       <AskAnnaTooltip
         top
         left

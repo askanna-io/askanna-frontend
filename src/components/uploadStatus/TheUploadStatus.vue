@@ -14,9 +14,8 @@
         <div class="flex items-center justify-between">
           Upload status
           <AskAnnaSpacer />
-          <AskAnnaButton
+          <AskAnnaButtonIconSquare
             class="ml-4"
-            variant="text"
             icon="mdi-close"
             @click="close"
           />

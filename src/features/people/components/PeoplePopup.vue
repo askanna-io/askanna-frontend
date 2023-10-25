@@ -8,9 +8,8 @@
         <div class="flex items-start justify-between sm:items-center">
           <AskAnnaSpacer />
 
-          <AskAnnaButton
+          <AskAnnaButtonIconSquare
             class="ml-4"
-            variant="text"
             icon="mdi-close"
             @click="openVmodel = false"
           />
@@ -39,7 +38,7 @@
             :class="[people.avatar ? 'pt-1' : 'pt-0']"
           >
             <AskAnnaChip color="primary">
-              {{ roleName }}
+              {{ people.role.name }}
             </AskAnnaChip>
           </div>
         </div>
@@ -199,17 +198,6 @@ const permission = useAskAnnaPermission()
 const openVmodel = computed({
   get: () => props.value,
   set: value => emits('handleValue', value)
-})
-
-const roleFilters = {
-  WA: 'Workspace admin',
-  WM: 'Workspace member',
-  WV: 'Workspace viewer'
-}
-
-const roleName = computed(() => {
-  const val = props.people.role?.code
-  return roleFilters[val]
 })
 
 const buttonsVisible = computed(() => ({

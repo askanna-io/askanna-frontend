@@ -8,17 +8,15 @@
         <div class="sm:w-9/12 md:w-6/12 xl:w-4/12">
         </div>
         <div class="flex items-center justify-end sm:w-9/12 md:w-6/12 xl:w-4/12 text-end">
-          <AskAnnaButtonIcon
+          <AskAnnaButtonIconSquare
             v-if="currentViewIndex"
-            size="small"
-            variant="text"
             @click="handleFullScreen"
+            :icon="mobileStore.isFullScreen ? 'mdi-fullscreen-exit' : 'mdi-fullscreen'"
           >
-            <AskAnnaIcon :icon="mobileStore.isFullScreen ? 'mdi-fullscreen-exit' : 'mdi-fullscreen'" />
             <AskAnnaTooltip>
               <span>{{ mobileStore.isFullScreen ? 'Exit full screen' : 'Full screen' }}</span>
             </AskAnnaTooltip>
-          </AskAnnaButtonIcon>
+          </AskAnnaButtonIconSquare>
 
           <AskAnnaBtnToggle
             class="p-2 h-11 cursor-pointer"

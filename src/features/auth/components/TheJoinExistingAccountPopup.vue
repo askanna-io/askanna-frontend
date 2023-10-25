@@ -7,9 +7,8 @@
       <AskAnnaCardTitle>
         <div class="flex items-center justify-between">
           AskAnna warning
-          <AskAnnaButton
+          <AskAnnaButtonIconSquare
             class="ml-4"
-            variant="text"
             icon="mdi-close"
             @click="handleClose"
           />

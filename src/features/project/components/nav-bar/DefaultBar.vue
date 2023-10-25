@@ -1,13 +1,66 @@
 <template>
   <div>
-    <AskAnnaCardTitle>
-      <AskAnnaIcon
-        class="pr-2"
-        :icon="getIcon()"
-      />{{ project.name }}<span v-if="isEditProjectView"> - Edit mode</span>
+    <AskAnnaCardTitle class="pr-0">
+      <div class="flex items-center justify-between">
+        <div class="pr-3">
+          <AskAnnaIcon :icon="getIcon()" />{{ project.name }}<span v-if="isEditProjectView"> - Edit mode</span>
+        </div>
+        <div>
+          <AskAnnaButtonIconSquare
+            @click="showInfo = !showInfo"
+            :icon="showInfo ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+          />
+          <ProjectPopupMenu
+            v-if="!isEditProjectView && (projectRemove || projectInfoEdit)"
+            :project="project"
+            :routeToRedirect="'workspace'"
+          />
+        </div>
+      </div>
     </AskAnnaCardTitle>
-
+    <VExpandTransition>
+      <div v-show="showInfo">
+        <div
+          class="flex flex-col md:flex-row items-start px-4 whitespace-nowrap"
+          :class="{ 'pb-2': project.description === '<p></p>' }"
+        >
+          <div class="md:basis-2/3 lg:basis-1/3">
+            <RunInfoCopyText
+              class="h-8"
+              title="SUUID"
+              copyTitle:="Copy SUUID"
+              :value="projectStore.project.suuid"
+            />
+          </div>
+          <div class="md:basis-2/3 lg:basis-1/3 pr-5">
+            <RunInfoText
+              class="h-8"
+              text="Created at"
+              :value="dayjs(projectStore.project.created_at).format('Do MMMM YYYY, h:mm:ss a')"
+            />
+          </div>
+          <div class="basis-1/3">
+            <RunInfoAvatar
+              class="h-8"
+              text="Created by"
+              :value="projectStore.project.created_by"
+            />
+          </div>
+        </div>
+        <template v-if="project.description !== '<p></p>'">
+          <RunInfoText
+            text="Description"
+            class="ml-4 h-8"
+          />
+          <AskAnnaDescription
+            readonly
+            :description="project.description"
+          />
+        </template>
+      </div>
+    </VExpandTransition>
     <AskAnnaDivider v-if="!$vuetify.display.xs && !isEditProjectView" />
+
     <AskAnnaSlideYTransition>
       <AskAnnaToolbar
         v-if="!isEditProjectView"
@@ -19,17 +72,10 @@
           'pl-4': isMobilePlatform || (+$vuetify.display.width > 850)
         }"
       >
-        <div class="flex w-full items-center justify-between">
-          <ProjectMenu
-            :projectName="project.name"
-            :isEditProjectView="isEditProjectView"
-          />
-          <ProjectPopupMenu
-            v-if="!isEditProjectView && (projectRemove || projectInfoEdit)"
-            :project="project"
-            :routeToRedirect="'workspace'"
-          />
-        </div>
+        <ProjectMenu
+          :projectName="project.name"
+          :isEditProjectView="isEditProjectView"
+        />
       </AskAnnaToolbar>
     </AskAnnaSlideYTransition>
   </div>
@@ -52,8 +98,12 @@ const props = defineProps({
   },
 })
 
+const { dayjs } = useDayjs()
 const { route } = useRouterAskAnna()
+const projectStore = useProjectStore()
 const permission = useAskAnnaPermission()
+
+const showInfo = ref(false)
 
 const isEditProjectView = computed(() => route.name === 'workspace-project-edit')
 const projectRemove = computed(() => permission.getFor(permission.labels.projectRemove))
