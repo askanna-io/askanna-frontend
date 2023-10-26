@@ -2,8 +2,12 @@
   <div>
     <AskAnnaCardTitle class="pr-0">
       <div class="flex items-center justify-between">
-        <div class="pr-3">
-          <AskAnnaIcon :icon="getIcon()" />{{ project.name }}<span v-if="isEditProjectView"> - Edit mode</span>
+        <div class="truncate pr-3">
+          <AskAnnaIcon
+            :icon="getIcon()"
+            color="on-surface"
+          />
+          {{ project.name }}<span v-if="isEditProjectView"> - Edit mode</span>
         </div>
         <div>
           <AskAnnaButtonIconSquare
