@@ -2,6 +2,8 @@ import { api } from './api-settings'
 import $axios from '@/plugins/axios'
 import { Method, ResponseType, AxiosTransformer } from 'axios'
 
+const SUCCESS_CODES = [200, 201, 202, 204, 206]
+
 interface ServiceParams {
   data?: any
   suuid?: any
@@ -53,7 +55,7 @@ const apiService = async ({
       })
     }
 
-    if (result?.status === 200 || result?.status === 201 || result?.status === 204 || result?.status === 206) {
+    if (SUCCESS_CODES.includes(result?.status)) {
       if (returnFullResponse) {
         return result
       }
