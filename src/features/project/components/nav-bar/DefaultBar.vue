@@ -58,6 +58,7 @@
           />
           <AskAnnaDescription
             readonly
+            class="ml-2 sm:ml-0"
             :description="project.description"
           />
         </template>
