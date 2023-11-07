@@ -6,7 +6,7 @@
     <span
       @click="handleOpenPeoplePopUp"
       class="text-primary  cursor-pointer"
-    > {{ value?.name }}</span>
+    > {{ value?.name || value?.suuid }}</span>
     <PeoplePopup
       simple
       :people="value"
