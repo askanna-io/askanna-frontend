@@ -65,13 +65,23 @@ build_production:
         DOCKER_BASE_IMAGE: $CI_REGISTRY_IMAGE/base:main
     - if: $CI_COMMIT_BRANCH
       variables:
-        ENV_CONTENT: $ENV_REVIEW
+        ENV_CONTENT: |-
+          VITE_APP_URL=https://$DOMAIN_REVIEW
+          VITE_APP_API_URL=$API_URL_REVIEW
+
+          VITE_APP_ALLOW_ROBOTS=off
+
+          VITE_APP_SENTRY_URL=$SENTRY_URL_REVIEW
+          VITE_APP_SENTRY_ENV=review
+          VITE_APP_SENTRY_TRACES_RATE= 1
         DOCKER_DESTINATION: $DOCKER_REVIEW
   script:
     - echo "$ENV_CONTENT" >> .env.production.local
     - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $DOCKER_FILE --destination $DOCKER_DESTINATION --build-arg BASE_IMAGE=$DOCKER_BASE_IMAGE
 
 code_quality:
+  tags:
+    - docker
   artifacts:
     paths: [gl-code-quality-report.json]
   rules:

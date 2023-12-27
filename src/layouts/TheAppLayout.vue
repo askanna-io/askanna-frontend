@@ -4,7 +4,6 @@
 </template>
 
 <script setup lang="ts">
-import '@/plugins/intercom.js'
 import { shallowRef, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
