@@ -361,19 +361,6 @@ export const usePeopleStore = defineStore(PEOPLE_STORE, {
           ...people.permission
         }
       }
-      const userStore = useUserStore()
-
-      const name = people.name || userStore.globalProfile.name
-
-      if (people && import.meta.env.VITE_APP_INTERCOM_ID) {
-        window.Intercom('boot', {
-          app_id: import.meta.env.VITE_APP_INTERCOM_ID,
-          name: name,
-          email: people.email,
-          user_id: people.suuid,
-          created_at: userStore.userProfile?.date_joined
-        })
-      }
     },
 
     async setPeopleAvatar(data) {
