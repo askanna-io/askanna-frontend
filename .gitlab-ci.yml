@@ -80,6 +80,8 @@ build_production:
     - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $DOCKER_FILE --destination $DOCKER_DESTINATION --build-arg BASE_IMAGE=$DOCKER_BASE_IMAGE
 
 code_quality:
+  tags:
+    - docker
   artifacts:
     paths: [gl-code-quality-report.json]
   rules:
