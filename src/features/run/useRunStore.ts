@@ -195,7 +195,8 @@ export const useRunStore = defineStore('run', {
         logger.error('Error on run log in getRunLog action.\nError: ', e)
       }
 
-      const { count, next, results: list } = runLog
+      const { count, next } = runLog
+      const list = runLog.results || []
 
       this.runLog = {
         next,
