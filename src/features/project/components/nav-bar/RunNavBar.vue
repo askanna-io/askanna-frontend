@@ -71,7 +71,7 @@ const permission = useAskAnnaPermission()
 
 const run = computed(() => runStore.run)
 const runIdStatus = computed(() => runStore.run.status)
-const runName = computed(() => (run.value.name ? ` ${run.value.name}` : ` ${run.value.suuid}`))
+const runName = computed(() => (run.value.name ? run.value.name : run.value.suuid))
 const projectRunEdit = computed(() => permission.getFor(permission.labels.projectRunEdit))
 const isEditRunView = computed(() => route.name === 'workspace-project-jobs-job-run-edit')
 
