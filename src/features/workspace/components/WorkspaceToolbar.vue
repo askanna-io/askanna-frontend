@@ -149,7 +149,7 @@
           <RunInfoText
             class="h-8"
             text="Created at"
-            :value="dayjs().format('Do MMMM YYYY, h:mm:ss a')"
+            :value="dayjs(createdAt).format('Do MMMM YYYY, h:mm:ss a')"
           />
         </div>
         <div class="basis-1/3 ">
@@ -201,7 +201,11 @@ defineProps({
   createdBy: {
     type: Object as () => CreatedBy,
     default: () => ({})
-  }
+  },
+  createdAt: {
+    type: String,
+    default: ''
+  },
 })
 const emit = defineEmits('onOpenWorkspaceRemove')
 

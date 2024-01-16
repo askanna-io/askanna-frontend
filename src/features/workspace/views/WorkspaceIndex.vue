@@ -11,6 +11,7 @@
       :description="workspace.description"
       :isWorkspacePublic="isWorkspacePublic"
       :isCurrentUserAdmin="isCurrentUserAdmin"
+      :createdAt="workspaceStore.workspace.created_at"
       :createdBy="workspaceStore.workspace.created_by"
       @onOpenWorkspaceRemove="handleOpenWorkspaceRemove"
     />
