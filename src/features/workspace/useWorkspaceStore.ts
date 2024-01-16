@@ -36,6 +36,7 @@ export const useWorkspaceStore = defineStore(WORKSPACE_STORE, {
         suuid: '',
         description: '',
         is_member: false,
+        created_at: '',
         visibility: WorkspaceVisibility.PRIVATE,
         created_by: {} as CreatedBy
       },
